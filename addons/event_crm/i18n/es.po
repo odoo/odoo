@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# juankfj, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: juankfj, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
@@ -77,12 +76,15 @@ msgstr "Los participantes asistieron"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
 msgid "Automatically add these tags to the created leads."
-msgstr "Añade automáticamente estas etiquetas a los clientes potenciales creados."
+msgstr ""
+"Añade automáticamente estas etiquetas a los clientes potenciales creados."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
-msgstr "Asignar automáticamente a los clientes potenciales creados a este equipo de ventas."
+msgstr ""
+"Asignar automáticamente a los clientes potenciales creados a este equipo de "
+"ventas."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
@@ -200,12 +202,16 @@ msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
-msgid "Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied."
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
 msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
-msgid "Filter the attendees to include those of this specific event. If not set, no event restriction will be applied."
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
 msgstr ""
 
 #. module: event_crm
@@ -326,6 +332,7 @@ msgstr "Oportunidad"
 
 #. module: event_crm
 #: code:addons/event_crm/models/event_registration.py:0
+#: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
 msgstr "Participantes"
@@ -425,6 +432,7 @@ msgid "Trigger Type"
 msgstr "Tipo de activador"
 
 #. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"

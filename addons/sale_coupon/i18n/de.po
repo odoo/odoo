@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_coupon
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_coupon
@@ -206,8 +205,11 @@ msgstr "Es wird bereits ein Gutschein auf die gleiche Prämie angewandt."
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr "Ein Minimum von %(amount)s%(currency)ssollte erworben werden, um die Prämie zu erhalten"
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr ""
+"Ein Minimum von %(amount)s%(currency)ssollte erworben werden, um die Prämie "
+"zu erhalten"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -244,7 +246,9 @@ msgstr "Gutschein anwenden"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
-msgstr "Mindestens eine der erforderlichen Bedingungen für den Erhalt der Prämie ist nicht erfüllt!"
+msgstr ""
+"Mindestens eine der erforderlichen Bedingungen für den Erhalt der Prämie ist"
+" nicht erfüllt!"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -287,9 +291,11 @@ msgstr "Erstellt am"
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
-msgstr "Rabatt: %(program)s - Auf Produkte mit der folgenden Steuer: %(taxes)s"
+msgstr ""
+"Rabatt: %(program)s - Auf Produkte mit der folgenden Steuer: %(taxes)s"
 
 #. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
@@ -459,8 +465,12 @@ msgstr "Das Aktionsangebot wurde bereits auf diesen Auftrag angewandt"
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "The reward products should be in the sales order lines to apply the discount."
-msgstr "Die Prämienprodukte sollten in den Verkaufsauftragspositionen sein, um den Rabatt anzuwenden."
+msgid ""
+"The reward products should be in the sales order lines to apply the "
+"discount."
+msgstr ""
+"Die Prämienprodukte sollten in den Verkaufsauftragspositionen sein, um den "
+"Rabatt anzuwenden."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
@@ -491,20 +501,37 @@ msgstr "Verwendet in"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
-msgid "When clicked, the content of the order will be checked to detect (and apply) possible promotion programs."
-msgstr "Wenn Sie darauf klicken, wird der Inhalt der Bestellung überprüft, um mögliche Werbeprogramme zu erkennen (und anzuwenden)."
+msgid ""
+"When clicked, the content of the order will be checked to detect (and apply)"
+" possible promotion programs."
+msgstr ""
+"Wenn Sie darauf klicken, wird der Inhalt der Bestellung überprüft, um "
+"mögliche Werbeprogramme zu erkennen (und anzuwenden)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
-msgid "You don't have the required product quantities on your sales order. All the products should be recorded on the sales order. (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
-msgstr "Sie haben nicht die erforderlichen Produktmengen in Ihrem Kundenauftrag. Alle Produkte sollten auf dem Kundenauftrag erfasst sein. (Beispiel: Sie müssen 3 T-Shirts auf Ihrem Kundenauftrag haben, wenn die Aktion \"Kaufen Sie 2, erhalten Sie 1 gratis\" lautet)."
+msgid ""
+"You don't have the required product quantities on your sales order. All the "
+"products should be recorded on the sales order. (Example: You need to have 3"
+" T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr ""
+"Sie haben nicht die erforderlichen Produktmengen in Ihrem Kundenauftrag. "
+"Alle Produkte sollten auf dem Kundenauftrag erfasst sein. (Beispiel: Sie "
+"müssen 3 T-Shirts auf Ihrem Kundenauftrag haben, wenn die Aktion \"Kaufen "
+"Sie 2, erhalten Sie 1 gratis\" lautet)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'."
-msgstr "Sie haben nicht die erforderlichen Produktmengen auf Ihrem Verkaufsauftrag. Wenn die Prämie dieselbe Produktmenge"
+msgid ""
+"You don't have the required product quantities on your sales order. If the "
+"reward is same product quantity, please make sure that all the products are "
+"recorded on the sales order (Example: You need to have 3 T-shirts on your "
+"sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr ""
+"Sie haben nicht die erforderlichen Produktmengen auf Ihrem Verkaufsauftrag. "
+"Wenn die Prämie dieselbe Produktmenge"
 
 #. module: sale_coupon
 #: model:mail.template,report_name:sale_coupon.mail_template_sale_coupon

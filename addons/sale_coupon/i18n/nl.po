@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_coupon
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_coupon
@@ -206,8 +205,11 @@ msgstr "Er is al een kortingsbon toegepast voor dezelfde beloning"
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr "Een minimum van %(amount)s %(currency)s moet besteld worden om de beloning te krijgen"
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr ""
+"Een minimum van %(amount)s %(currency)s moet besteld worden om de beloning "
+"te krijgen"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -244,7 +246,9 @@ msgstr "Kortingsbon toepassen"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
-msgstr "Minimaal één van de vereiste voorwaarden is niet voldaan om de beloning te krijgen!"
+msgstr ""
+"Minimaal één van de vereiste voorwaarden is niet voldaan om de beloning te "
+"krijgen!"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -290,6 +294,7 @@ msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
 msgstr "Korting: %(program)s - Op product met de volgende BTW: %(taxes)s"
 
 #. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
@@ -459,8 +464,12 @@ msgstr "De promotie is al toegepast op dit order"
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "The reward products should be in the sales order lines to apply the discount."
-msgstr "De beloningsproducten moeten in een verkooporderregel worden opgenomen om de korting toe te passen."
+msgid ""
+"The reward products should be in the sales order lines to apply the "
+"discount."
+msgstr ""
+"De beloningsproducten moeten in een verkooporderregel worden opgenomen om de"
+" korting toe te passen."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
@@ -491,20 +500,39 @@ msgstr "Gebruikt in"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
-msgid "When clicked, the content of the order will be checked to detect (and apply) possible promotion programs."
-msgstr "Wanneer aangeklikt wordt de inhoud van de order gecontroleerd om mogelijke kortingsprogramma's te detecteren (en toe te passen)."
+msgid ""
+"When clicked, the content of the order will be checked to detect (and apply)"
+" possible promotion programs."
+msgstr ""
+"Wanneer aangeklikt wordt de inhoud van de order gecontroleerd om mogelijke "
+"kortingsprogramma's te detecteren (en toe te passen)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
-msgid "You don't have the required product quantities on your sales order. All the products should be recorded on the sales order. (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
-msgstr "Je hebt niet de benodigde producthoeveelheden op je verkooporder. Alle producten moeten toegevoegd worden op de verkooporder. (Bijvoorbeeld: Je moet 3 T-shirts hebben op je verkooporder als de promotie '2 kopen, 1 gratis' is)."
+msgid ""
+"You don't have the required product quantities on your sales order. All the "
+"products should be recorded on the sales order. (Example: You need to have 3"
+" T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr ""
+"Je hebt niet de benodigde producthoeveelheden op je verkooporder. Alle "
+"producten moeten toegevoegd worden op de verkooporder. (Bijvoorbeeld: Je "
+"moet 3 T-shirts hebben op je verkooporder als de promotie '2 kopen, 1 "
+"gratis' is)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
-msgid "You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'."
-msgstr "Je hebt niet de vereiste producthoeveelheden op je verkooporder. Als het beloningsproduct dezelfde producthoeveelheid heeft, zorg er dan voor dat alle producten zijn ingevoerd op de verkooporder (Bijvoorbeeld: Je hebt 3 T-shirts nodig op je verkooporder als de actie is '3 halen, 2 betalen'."
+msgid ""
+"You don't have the required product quantities on your sales order. If the "
+"reward is same product quantity, please make sure that all the products are "
+"recorded on the sales order (Example: You need to have 3 T-shirts on your "
+"sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr ""
+"Je hebt niet de vereiste producthoeveelheden op je verkooporder. Als het "
+"beloningsproduct dezelfde producthoeveelheid heeft, zorg er dan voor dat "
+"alle producten zijn ingevoerd op de verkooporder (Bijvoorbeeld: Je hebt 3 "
+"T-shirts nodig op je verkooporder als de actie is '3 halen, 2 betalen'."
 
 #. module: sale_coupon
 #: model:mail.template,report_name:sale_coupon.mail_template_sale_coupon

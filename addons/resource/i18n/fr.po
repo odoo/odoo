@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
@@ -46,13 +46,21 @@ msgstr "Archivé"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"
-msgstr "Êtes-vous sûr de vouloir passer à un calendrier d'une semaine ? Toutes les entrées seront perdues"
+msgid ""
+"Are you sure you want to switch this calendar to 1 week calendar ? All "
+"entries will be lost"
+msgstr ""
+"Êtes-vous sûr de vouloir passer à un calendrier d'une semaine ? Toutes les "
+"entrées seront perdues"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"
-msgstr "Êtes-vous sûr de vouloir passer à un calendrier de 2 semaines ? Toutes les entrées seront perdues"
+msgid ""
+"Are you sure you want to switch this calendar to 2 weeks calendar ? All "
+"entries will be lost"
+msgstr ""
+"Êtes-vous sûr de vouloir passer à un calendrier de 2 semaines ? Toutes les "
+"entrées seront perdues"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -67,8 +75,11 @@ msgstr "Nombre moyen d'heures par jour"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
-msgid "Average hours per day a resource is supposed to work with this calendar."
-msgstr "Le nombre d'heures en moyenne qu'un employé est supposé travailler avec ce calendrier. "
+msgid ""
+"Average hours per day a resource is supposed to work with this calendar."
+msgstr ""
+"Le nombre d'heures en moyenne qu'un employé est supposé travailler avec ce "
+"calendrier. "
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -141,8 +152,12 @@ msgstr "Définir la planification de la ressource"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid "Define working hours and time table that could be scheduled to your project members"
-msgstr "Définir les heures de travail et un emploi du temps qui pourrait être établi pour les membres de votre projet"
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+"Définir les heures de travail et un emploi du temps qui pourrait être établi"
+" pour les membres de votre projet"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -205,7 +220,9 @@ msgstr "Vendredi Matin"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr "Indique la séquence de cette ligne lors de l'affichage du calendrier des ressources."
+msgstr ""
+"Indique la séquence de cette ligne lors de l'affichage du calendrier des "
+"ressources."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -240,23 +257,34 @@ msgstr "ID"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
-msgid "If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource"
-msgstr "S'il est vide, il s'agit d'un congé générique pour l'entreprise. Si une ressource est définie, le congé est uniquement pour cette ressource."
+msgid ""
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
+msgstr ""
+"S'il est vide, il s'agit d'un congé générique pour l'entreprise. Si une "
+"ressource est définie, le congé est uniquement pour cette ressource."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
-msgstr "Si vous cochez la case \"Active\", la resource sera cachée mais pas supprimée."
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Si vous cochez la case \"Active\", la resource sera cachée mais pas "
+"supprimée."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
-msgid "If the active field is set to false, it will allow you to hide the Working Time without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
 msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
 
 #. module: resource
@@ -412,8 +440,15 @@ msgstr "Congé des ressources"
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
 #: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
-msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
-msgstr "Les ressources vous permettent de créer et de gérer les ressources qui sont impliquées dans une phase spécifique d'un projet. Vous pouvez aussi indiquer le niveau d'efficacité et la charge de travail en fonction des heures travaillées hebdomadairement."
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"Les ressources vous permettent de créer et de gérer les ressources qui sont "
+"impliquées dans une phase spécifique d'un projet. Vous pouvez aussi indiquer"
+" le niveau d'efficacité et la charge de travail en fonction des heures "
+"travaillées hebdomadairement."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -528,12 +563,21 @@ msgstr ""
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
 #: model:ir.model.fields,help:resource.field_resource_resource__tz
 #: model:ir.model.fields,help:resource.field_resource_test__tz
-msgid "This field is used in order to define in which timezone the resources will work."
-msgstr "Ce champ est utilisé pour définir dans quel fuseau horaire la ressource travaillera."
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+"Ce champ est utilisé pour définir dans quel fuseau horaire la ressource "
+"travaillera."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
-msgid "This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
+msgid ""
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
 
 #. module: resource
@@ -641,8 +685,12 @@ msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
-msgid "Whether this should be computed as a time off or as work time (eg: formation)"
-msgstr "Si cela doit être calculé en tant que congé ou en tant que temps de travail (ex : formation)"
+msgid ""
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
+msgstr ""
+"Si cela doit être calculé en tant que congé ou en tant que temps de travail "
+"(ex : formation)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

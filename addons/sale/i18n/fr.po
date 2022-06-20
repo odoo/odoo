@@ -3,86 +3,21 @@
 # 	* sale
 # 
 # Translators:
-# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# Nicolas Roussey <nro@odoo.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Hubert TETARD <htetard@apik-conseils.com>, 2017
-# François Lothaire <frl@odoo.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# e34d4dcb8e697b071167e94624cfbccb, 2017
-# 6534c450c77b2549e41c52e2051f5839, 2018
-# Olivier Dony <odo@odoo.com>, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
-# Nancy Bolognesi <nb@microcom.ca>, 2018
-# Micky Jault <micky037@hotmail.fr>, 2018
-# e2f <projects@e2f.com>, 2019
-# bb76cd9ac0cb7e20167a14728edb858b, 2019
-# f5f0a0dac17dde787a1d812a6989680e, 2019
-# Marie Willemyns <mwi@odoo.com>, 2019
-# Frédéric LIETART <stuff@tifred.fr>, 2019
-# Richard Mathot <rim@odoo.com>, 2019
-# Fabri Yohann <psn@fabri.pw>, 2019
-# Lucas Deliege <lud@odoo.com>, 2019
-# Laura Piraux <lap@odoo.com>, 2019
-# Nathan Noël <nathan070@me.com>, 2019
-# Alain van de Werve <avw@openerp.com>, 2019
-# Nathan Grognet <ngr@odoo.com>, 2019
-# Nicolas Bayet <nicolas.bayet@gmail.com>, 2019
-# Fred Gilson <fgi@odoo.com>, 2019
-# fr trans <e2ffr05@hotmail.com>, 2019
-# LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
-# Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
-# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
-# Florian Hatat, 2019
-# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
-# jwy_odoo <jwy@odoo.com>, 2019
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
-# Fabien Pinckaers <fp@openerp.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
-# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
-# gdp Odoo <gdp@odoo.com>, 2019
-# Celia Tydgat <cty@odoo.com>, 2019
-# omaodoo <oma@odoo.com>, 2019
-# edc <edc@odoo.com>, 2020
-# Pauline Thiry <pth@odoo.com>, 2020
-# 31c77b784710e4a287a92d851a40e039, 2020
-# Xavier Belmere <Info@cartmeleon.com>, 2020
-# Priscilla (prs) Odoo <prs@odoo.com>, 2020
-# Melanie Bernard <mbe@odoo.com>, 2020
-# Arnaud Willem <contact@arnaud-willem.eu>, 2020
-# Vincent Luba <vincent@biz-4-africa.com>, 2020
-# Benjamin Stienon <tsb@odoo.com>, 2021
-# Pierre Delacroix <pde@odoo.com>, 2021
-# Moka Tourisme <hello@mokatourisme.fr>, 2021
-# thomas quertinmont <tqu@odoo.com>, 2021
-# Christophe Ricevuto <cri@nalios.be>, 2021
-# qdelcourte <delcourte.quentin@hotmail.com>, 2021
-# Rémi CAZENAVE, 2021
-# Sebastien LANGE, 2021
-# Yann Papouin <ypa@decgroupe.com>, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
-# Thomas Deleval <thd@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jonathan Quique <jqu@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #. openerp-web
@@ -1736,6 +1671,12 @@ msgid "Down Payments"
 msgstr "Acomptes"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "Montant de l'acompte (montant fixe)"
@@ -1992,6 +1933,11 @@ msgstr "Poids brut"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "Regrouper par"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -3101,6 +3047,13 @@ msgstr ""
 "<b>%s<b> "
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "Article utilisé pour les acomptes"
@@ -3287,7 +3240,11 @@ msgid "Recompute all prices based on this pricelist"
 msgstr "Recalculer les prix à partir de cette lise de prix"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Recompute all taxes based on this fiscal position"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3975,6 +3932,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__show_update_fpos
+msgid ""
+"Technical Field, True if the fiscal position was changed;\n"
+" this will then display a recomputation button"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
 msgid ""
 "Technical Field, True if the pricelist was changed;\n"
@@ -4328,6 +4292,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"This will update all taxes based on the currently selected fiscal position."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
 "Cela mettre à jour tous les prix unitaires à partir de la liste de prix "
@@ -4530,6 +4500,11 @@ msgid "Update Prices"
 msgstr "Mettre à jour les prix"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Update Taxes"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4667,6 +4642,15 @@ msgstr ""
 "Vous pouvez définir le type de communication qui apparaitra sur les bons de "
 "commande. La communication sera donnée au client quand il choisira la "
 "méthode de paiement."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

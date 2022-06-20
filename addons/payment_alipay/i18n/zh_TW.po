@@ -3,16 +3,15 @@
 # 	* payment_alipay
 # 
 # Translators:
-# Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2019-08-12 11:51+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +46,6 @@ msgstr "支付寶賣家電子郵件"
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
 msgid "Cross-border"
 msgstr "跨境"
-
-#. module: payment_alipay
-#: code:addons/payment_alipay/models/payment_transaction.py:0
-#, python-format
-msgid "Expected signature %(sc) but received %(sign)s."
-msgstr ""
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
@@ -102,39 +95,9 @@ msgid "Received data with missing reference %(r)s or txn_id %(t)s."
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/controllers/main.py:0
-#, python-format
-msgid ""
-"Received notification data not acknowledged by Alipay:\n"
-"%s"
-msgstr ""
-
-#. module: payment_alipay
-#: code:addons/payment_alipay/controllers/main.py:0
-#, python-format
-msgid ""
-"Received notification data with unknown reference:\n"
-"%s"
-msgstr ""
-
-#. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr "與此收單行一起使用的支付服務供應商"
-
-#. module: payment_alipay
-#: code:addons/payment_alipay/models/payment_transaction.py:0
-#, python-format
-msgid "The amount does not match the total + fees."
-msgstr ""
-
-#. module: payment_alipay
-#: code:addons/payment_alipay/models/payment_transaction.py:0
-#, python-format
-msgid ""
-"The currency returned by Alipay %(rc)s does not match the transaction "
-"currency %(tc)s."
-msgstr ""
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
@@ -144,12 +107,6 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
-msgstr ""
-
-#. module: payment_alipay
-#: code:addons/payment_alipay/models/payment_transaction.py:0
-#, python-format
-msgid "The seller email does not match the configured Alipay account."
 msgstr ""
 
 #. module: payment_alipay

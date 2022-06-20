@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_mine
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
-# marcescu, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
@@ -55,8 +51,14 @@ msgstr ""
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
-msgstr "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Su petición no arrojó ningún resultado (no se usaron créditos). Intente quitar algunos filtros.</span>"
+msgid ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Su "
+"petición no arrojó ningún resultado (no se usaron créditos). Intente quitar "
+"algunos filtros.</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -288,7 +290,8 @@ msgstr "Generar Clientes Potenciales"
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Generar nuevas iniciativas en función de su país, industrias, tamaño, etc."
+msgstr ""
+"Generar nuevas iniciativas en función de su país, industrias, tamaño, etc."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
@@ -429,8 +432,11 @@ msgstr "Lista de estados disponibles de acuerdo con los países seleccionados"
 #. openerp-web
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid "Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
-msgstr "¿Estás buscando más oportunidades?<br>Prueba la herramienta de <b>Generación de leads</b>."
+msgid ""
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"¿Estás buscando más oportunidades?<br>Prueba la herramienta de <b>Generación"
+" de leads</b>."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
@@ -454,6 +460,9 @@ msgid "Name already exists!"
 msgstr "¡El nombre ya existe!"
 
 #. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
@@ -664,8 +673,12 @@ msgstr "Tipo"
 #. module: crm_iap_mine
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
-msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
-msgstr "Hasta un máximo de %d créditos adicionales serán consumidos para identificar %dcontactos por empresa."
+msgid ""
+"Up to %d additional credits will be consumed to identify %d contacts per "
+"company."
+msgstr ""
+"Hasta un máximo de %d créditos adicionales serán consumidos para identificar"
+" %dcontactos por empresa."
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form

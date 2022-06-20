@@ -3,27 +3,15 @@
 # 	* account
 # 
 # Translators:
-# 金儒 楊 <ce1123@cooleagle.com.tw>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
-# Bill Hsu <hcm86@icloud.com>, 2018
-# Michael Yeung, 2018
-# sejun huang <sejun.huang@gmail.com>, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# b8883a897ffe792b206781135cb3cc9f_88fbc07 <86c80291d97f41a0ef510b99643c04dd_991139>, 2021
-# Mandy Choy <mnc@odoo.com>, 2021
-# dott.dev <dottdot.dev@gmail.com>, 2021
-# Gerard Chen <gerardpublico@gmail.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
-"PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:48+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5341,6 +5329,11 @@ msgstr "不要在文件通信歷史中保留電子郵件備份(僅限群發郵�
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Documentation"
 msgstr "系統使用說明"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "Domestic country of your accounting"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
@@ -14152,6 +14145,15 @@ msgstr "這只能用於日記帳項目"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr "此分錄包含來自不被允許的國家/地區的一些稅款. 請檢查其財務狀況和您的稅務設定."
@@ -14164,6 +14166,14 @@ msgid ""
 "data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
 "此分錄已從<a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s 複製</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16179,3 +16189,11 @@ msgstr "{{ object.company_id.name }} 付款收據（編號 {{ object.name 或 'n
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 計數"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""

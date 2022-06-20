@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-#
+# 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -69,14 +67,26 @@ msgstr "Attivo"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "An administrator needs to configure Outlook Synchronization before you can use it!"
-msgstr "Per essere utilizzata, la sincronizzazione Outlook deve essere configurata da un amministratore."
+msgid ""
+"An administrator needs to configure Outlook Synchronization before you can "
+"use it!"
+msgstr ""
+"Per essere utilizzata, la sincronizzazione Outlook deve essere configurata "
+"da un amministratore."
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation."
-msgstr "Si è verificato un errore durante la generazione del token. Il tuo codice di autorizzazione potrebbe non essere valido o essere già scaduto [%s]. Dovresti controllare il tuo Client ID e secret sul portale Microsoft Azure o provare a fermare e riavviare la sincronizzazione del calendario."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Microsoft Azure portal or try to stop and restart your "
+"calendar synchronisation."
+msgstr ""
+"Si è verificato un errore durante la generazione del token. Il tuo codice di"
+" autorizzazione potrebbe non essere valido o essere già scaduto [%s]. "
+"Dovresti controllare il tuo Client ID e secret sul portale Microsoft Azure o"
+" provare a fermare e riavviare la sincronizzazione del calendario."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -117,6 +127,7 @@ msgstr "Impostazioni di configurazione"
 
 #. module: microsoft_calendar
 #. openerp-web
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Configuration"
@@ -195,8 +206,12 @@ msgstr "ID"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Se il campo Attivo è impostato a falso, consente di nascondere le informazioni di avviso eventi senza rimuoverle."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Se il campo Attivo è impostato a falso, consente di nascondere le "
+"informazioni di avviso eventi senza rimuoverle."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -263,7 +278,9 @@ msgstr "Microsoft Recurrence Master Id"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr "L'occorrenza modificata si incrocia o si sovrappone all'occorrenza adiacente."
+msgstr ""
+"L'occorrenza modificata si incrocia o si sovrappone all'occorrenza "
+"adiacente."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
@@ -360,8 +377,12 @@ msgstr "Sincronizza solo i nuovi eventi"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "Per essere usata, la sincronizzazione Outlook deve essere configurata, procedere ora?"
+msgid ""
+"The Outlook Synchronization needs to be configured before you can use it, do"
+" you want to do it now?"
+msgstr ""
+"Per essere usata, la sincronizzazione Outlook deve essere configurata, "
+"procedere ora?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
@@ -374,7 +395,8 @@ msgstr "Account non configurato per il service calendario Outlook."
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr "La sincronizzazione con il calendario Outlook è stata fermata con successo."
+msgstr ""
+"La sincronizzazione con il calendario Outlook è stata fermata con successo."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -410,12 +432,18 @@ msgstr "Utenti"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"
-msgstr "Stai per interrompere la sincronizzazione del tuo calendario con Outlook. Sei sicuro di voler continuare?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Outlook. Are"
+" you sure you want to continue?"
+msgstr ""
+"Stai per interrompere la sincronizzazione del tuo calendario con Outlook. "
+"Sei sicuro di voler continuare?"
 
 #. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "You will be redirected to Outlook to authorize the access to your calendar."
-msgstr "Sarai reindirizzato ad Outlook per autorizzare l'accesso al tuo calendario."
+msgid ""
+"You will be redirected to Outlook to authorize the access to your calendar."
+msgstr ""
+"Sarai reindirizzato ad Outlook per autorizzare l'accesso al tuo calendario."

@@ -3,16 +3,6 @@
 # 	* website_sale
 # 
 # Translators:
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
-# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
-# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Thomas Pot <thomas@open2bizz.nl>, 2019
-# Eric Geens <ericgeens@yahoo.com>, 2019
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -20,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"PO-Revision-Date: 2022-06-17 09:57+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -539,6 +529,11 @@ msgstr "Over cross-selling producten"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Acceptable file size"
 msgstr "Accepteerbare bestandsgrootte"
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -1786,6 +1781,9 @@ msgstr "Mijn winkelmandje"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+#, python-format
 msgid "Name"
 msgstr "Naam"
 
@@ -1809,6 +1807,7 @@ msgstr "Nieuw!"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr "Nieuwste producten"
 
@@ -2401,6 +2400,11 @@ msgid "Products Recently Sold With"
 msgstr "Producten die onlangs zijn verkocht met"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Productweergaves"
@@ -2523,11 +2527,13 @@ msgstr "Reden van de beoordeling"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr "Recent verkochte producten"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr "Recent bekeken producten"
 

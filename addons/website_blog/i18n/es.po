@@ -3,51 +3,21 @@
 # 	* website_blog
 # 
 # Translators:
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# David Vidal <david.vidal@trespinos.es>, 2017
-# e2f <projects@e2f.com>, 2018
-# oihane <oihanecruce@gmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2019
-# Carlos rodriguez <carlosalbertor436@gmail.com>, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# gabriumaa <gabriel.umana@delfixcr.com>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Alejandro Die Sanchis <marketing@domatix.com>, 2019
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
-# Jesse Garza <jga@odoo.com>, 2019
-# Carolina Gonzalez <cgo@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2020
-# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
-# Antonio Trueba, 2020
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
-# Jonatan Gk, 2022
 # Martin Trigaux, 2022
-# marcescu, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:0
@@ -716,6 +686,7 @@ msgstr "Último"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr "Últimas publicaciones en el blog"
 
@@ -771,6 +742,7 @@ msgstr "Meta-título"
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr "Publicaciones del blog más vistas"
 

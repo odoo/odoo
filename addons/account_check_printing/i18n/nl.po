@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:48+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
@@ -33,8 +32,11 @@ msgstr " : Controleer nummerreeks"
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
-msgstr "Pas de marges van de cheque aan zodat ze passen met je printerinstellingen."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr ""
+"Pas de marges van de cheque aan zodat ze passen met je printerinstellingen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -94,7 +96,8 @@ msgstr "Chequenummers kunnen alleen uit cijfers bestaan"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Vink deze optie aan als je her-afgedrukte cheques niet genummerd zijn."
+msgstr ""
+"Vink deze optie aan als je her-afgedrukte cheques niet genummerd zijn."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -155,6 +158,7 @@ msgstr "Schermnaam"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Ga naar het configuratiepaneel"
@@ -167,8 +171,12 @@ msgstr "ID"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "Om meerdere cheques tegelijk af te drukken moeten ze behoren tot hetzelfde bankdagboek."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"Om meerdere cheques tegelijk af te drukken moeten ze behoren tot hetzelfde "
+"bankdagboek."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -262,13 +270,21 @@ msgstr "Betalingen"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "Betalingen om af te drukken als cheques moeten 'Cheque' geselecteerd hebben als betaaalmethode en moeten al afgeletterd zijn"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"Betalingen om af te drukken als cheques moeten 'Cheque' geselecteerd hebben "
+"als betaaalmethode en moeten al afgeletterd zijn"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "Geef aub het nummer in van de eerste voorgedrukte cheque die je gaat afdrukken."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
+msgstr ""
+"Geef aub het nummer in van de eerste voorgedrukte cheque die je gaat "
+"afdrukken."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -280,8 +296,15 @@ msgstr "Voorkeursbetaalmethode"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "Voorkeursbetaalmethode bij het betalen van deze leverancier. Dit wordt gebruikt om facturen van leveranciers te filteren op de gewenste betalingsmethode om massale betalingen te registreren. Gebruiksscenario's: maak bankbestanden voor batchoverboekingen, controleer runs."
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
+msgstr ""
+"Voorkeursbetaalmethode bij het betalen van deze leverancier. Dit wordt "
+"gebruikt om facturen van leveranciers te filteren op de gewenste "
+"betalingsmethode om massale betalingen te registreren. Gebruiksscenario's: "
+"maak bankbestanden voor batchoverboekingen, controleer runs."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -345,8 +368,12 @@ msgstr "Reeksnummer van de volgende afgedrukte cheque."
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "Er is iets misgegaan met de lay-out controleren, selecteer een andere lay-out in de instellingen voor facturering/boekhouding en probeer het opnieuw."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"Er is iets misgegaan met de lay-out controleren, selecteer een andere lay-"
+"out in de instellingen voor facturering/boekhouding en probeer het opnieuw."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -361,19 +388,33 @@ msgstr ""
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "De laatste cheque nummer was %s. Om er voor te zorgen dat een cheque niet geweigerd wordt door de bank kun je enkel een groter nummer gebruiken."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"De laatste cheque nummer was %s. Om er voor te zorgen dat een cheque niet "
+"geweigerd wordt door de bank kun je enkel een groter nummer gebruiken."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "Het geselecteerde dagboek is geconfigureerd om chequenummers af te drukken. Als je voorgedrukt papier al nummers bevat of als het huidige nummer fout is kun je dit wijzigen op de dagboek configuratie pagina."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"Het geselecteerde dagboek is geconfigureerd om chequenummers af te drukken. "
+"Als je voorgedrukt papier al nummers bevat of als het huidige nummer fout is"
+" kun je dit wijzigen op de dagboek configuratie pagina."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "Deze optie staat je toe om chequegegevens (stub) af te drukken op meerdere pagina's indien deze niet passen op één pagina."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"Deze optie staat je toe om chequegegevens (stub) af te drukken op meerdere "
+"pagina's indien deze niet passen op één pagina."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -387,8 +428,11 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
-msgstr "Dit staat je toe om ook de referte van de cheque die correspondeert toe te voegen."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
+msgstr ""
+"Dit staat je toe om ook de referte van de cheque die correspondeert toe te "
+"voegen."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -403,5 +447,10 @@ msgstr "Ongeldige cheque"
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "Je moet een cheque-indeling kiezen. Ga hiervoor naar Facturering/Boekhoudinstellingen, zoek naar 'Cheque-indeling' en stel er een in."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"Je moet een cheque-indeling kiezen. Ga hiervoor naar "
+"Facturering/Boekhoudinstellingen, zoek naar 'Cheque-indeling' en stel er een"
+" in."

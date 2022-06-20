@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry_contract
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2021
-# Pauline Thiry <pth@odoo.com>, 2021
-# Vallen Delobel <edv@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:51+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
@@ -32,12 +28,18 @@ msgstr "%s n'a pas de de contrat de %s à %s."
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
-msgid "%s has multiple contracts from %s to %s. A work entry cannot overlap multiple contracts."
-msgstr "%s a de multiples contrats de %s à %s. Une prestation ne peut pas chevaucher plusieurs contrats."
+msgid ""
+"%s has multiple contracts from %s to %s. A work entry cannot overlap "
+"multiple contracts."
+msgstr ""
+"%s a de multiples contrats de %s à %s. Une prestation ne peut pas chevaucher"
+" plusieurs contrats."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
-msgid "<i class=\"fa fa-exclamation-triangle mr-1\" title=\"Warning\"/>You are not allowed to regenerate validated work entries"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle mr-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -154,7 +156,11 @@ msgstr "ID"
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
-msgid "In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to. In addition to that, the time interval defined by date_from and date_to must not contain any validated work entries."
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -214,13 +220,17 @@ msgstr "Congé maladie"
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
-msgid "Sorry, generating work entries from cancelled contracts is not allowed."
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
 msgstr ""
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
-msgid "The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval."
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
 msgstr ""
 
 #. module: hr_work_entry_contract

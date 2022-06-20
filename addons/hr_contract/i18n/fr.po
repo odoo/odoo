@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Tivisse <yti@odoo.com>, 2021
-# Eloïse Stilmant <est@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:50+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
@@ -88,8 +84,14 @@ msgstr ""
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
-msgid "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In Contract Since</span>"
-msgstr "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"In Contract Since\"> En contrat depuis</span>"
+msgid ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
+"Contract Since</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> En contrat"
+" depuis</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -207,7 +209,9 @@ msgstr "Contrat"
 #. module: hr_contract
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
-msgid "Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s)."
+msgid ""
+"Contract %(contract)s: start date (%(start)s) must be earlier than contract "
+"end date (%(end)s)."
 msgstr ""
 
 #. module: hr_contract
@@ -399,8 +403,11 @@ msgstr "Assistant de départ"
 #. module: hr_contract
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
-msgid "Departure date can't be earlier than the start date of current contract."
-msgstr "La date de départ ne peut pas être antérieure à la date de début du contrat actuel."
+msgid ""
+"Departure date can't be earlier than the start date of current contract."
+msgstr ""
+"La date de départ ne peut pas être antérieure à la date de début du contrat "
+"actuel."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
@@ -833,7 +840,9 @@ msgstr "Fixez la date de fin du contrat en cours."
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Show all records which have a next action date before today"
-msgstr "Affichez tous les enregistrements dont la prochaine date d'action est antérieure à aujourd'hui"
+msgstr ""
+"Affichez tous les enregistrements dont la prochaine date d'action est "
+"antérieure à aujourd'hui"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start

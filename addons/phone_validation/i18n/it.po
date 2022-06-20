@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: phone_validation
+#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
@@ -82,7 +82,8 @@ msgstr "Il telefono in lista nera è un telefono fisso"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
-msgstr "I numeri di telefono nella blacklist non riceveranno più messaggi SMS."
+msgstr ""
+"I numeri di telefono nella blacklist non riceveranno più messaggi SMS."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -119,8 +120,12 @@ msgstr "Nome visualizzato"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Campo usato per memorizzare il numero di telefono pulito. Aiuta a velocizzare le ricerche e i confronti."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Campo usato per memorizzare il numero di telefono pulito. Aiuta a "
+"velocizzare le ricerche e i confronti."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -162,8 +167,12 @@ msgstr "Se selezionato, alcuni messaggi presentano un errore di consegna."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Se il numero di telefono pulito è in lista nera, il contatto non sarà più soggetto all'invio massivo di sms, da nessuna lista."
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Se il numero di telefono pulito è in lista nera, il contatto non sarà più "
+"soggetto all'invio massivo di sms, da nessuna lista."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -173,13 +182,25 @@ msgstr "Numero non possibile %s: probabile errore nel numero di cifre."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Indica se un numero di telefono pulito in lista nera è un cellulare. Aiuta a distinguere qual'è il numero in lista nera             quando in un modello sono presenti sia il campo cellulare che telefono."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Indica se un numero di telefono pulito in lista nera è un cellulare. Aiuta a"
+" distinguere qual'è il numero in lista nera             quando in un modello"
+" sono presenti sia il campo cellulare che telefono."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Indica se un numero di telefono pulito in lista nera è un fisso. Aiuta a distinguere qual'è il numero in lista nera             quando in un modello sono presenti sia il campo cellulare che telefono."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Indica se un numero di telefono pulito in lista nera è un fisso. Aiuta a "
+"distinguere qual'è il numero in lista nera             quando in un modello "
+"sono presenti sia il campo cellulare che telefono."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -188,6 +209,7 @@ msgid "Invalid number %s: probably incorrect prefix."
 msgstr "Numero non valido %s: probabile prefisso non corretto."
 
 #. module: phone_validation
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
@@ -313,8 +335,11 @@ msgstr "Telefono/Cellulare"
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
-msgid "Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr "Si prega di inserire almeno 3 caratteri quando si cerca un numero di telefono/cellulare."
+msgid ""
+"Please enter at least 3 characters when searching a Phone/Mobile number."
+msgstr ""
+"Si prega di inserire almeno 3 caratteri quando si cerca un numero di "
+"telefono/cellulare."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason

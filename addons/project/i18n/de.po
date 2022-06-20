@@ -3,44 +3,6 @@
 # 	* project
 # 
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Renzo Meister, 2017
-# Constantin Ehrenstein <transifex@skiller.eu>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# Andi, 2017
-# Niki Waibel, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
-# JackTheHunter <Maximilian.N98@gmail.com>, 2018
-# Anja Funk <anja.funk@afimage.de>, 2018
-# e2f <projects@e2f.com>, 2018
-# DE T1 <e2f8846@yahoo.com>, 2018
-# dd5cd5bab88c61e9dedf84f5ea59b147, 2018
-# key six <mobile.umts@gmail.com>, 2018
-# Thomas Neu <t.neu@runbox.com>, 2018
-# Tom, 2018
-# brokemeister <work@maltejansen.de>, 2018
-# Jan Meyer, 2019
-# Johannes Croe <jcr@odoo.com>, 2019
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
-# Bettina Pfeifer <betzilla@web.de>, 2019
-# Wolfgang Taferner, 2020
-# Katharina Moritz <kmo@e2f.com>, 2020
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
-# Rudolf Schnapka <rs@techno-flex.de>, 2020
-# Sebastian <shu@odoo.com>, 2020
-# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
-# Bettina Pfeifer <bettina@dygytally.de>, 2021
-# Chris Egal <sodaswed@web.de>, 2021
-# Ralf Hilgenstock <rh@dialoge.info>, 2021
-# Leon Grill <leg@odoo.com>, 2021
-# Tobias Arndt, 2021
-# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Raymond Vetter, 2021
-# Robert Förster <hello@suppliot.eu>, 2021
-# Felix Schubert <felix.schubert@go-erp.com>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -48,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
-"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"PO-Revision-Date: 2022-06-17 09:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -813,6 +775,7 @@ msgid "Add Milestone"
 msgstr "Milestone hinzufügen"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Beschreibung hinzufügen …"
@@ -994,6 +957,7 @@ msgstr "Archiviere das Projekt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1715,17 +1679,21 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Definiert die Sichtbarkeit der Aufgaben in einem Projekts:\n"
-"- Eingeladene Mitarbeiter: Mitarbeiter können nur Projekte und Aufgaben sehen, denen sie folgen.\n"
-"- Alle Mitarbeiter: Mitarbeiter können alle Projekte und Aufgaben sehen.\n"
-"- Eingeladene Portalbenutzer und alle Mitarbeiter: Mitarbeiter dürfen alles sehen. Eingeladene Portalbenutzer können das Projekt und die Aufgaben sehen, die\n"
-"von ihnen oder von jemandem aus ihrem Unternehmen verfolgt werden."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1917,6 +1885,13 @@ msgstr "z.B: Produkteinführung"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Bearbeiten"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4634,6 +4609,7 @@ msgstr "Aufgabenwiederholung"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -5507,6 +5483,14 @@ msgstr "Sie wurden hinzugefügt zu "
 #, python-format
 msgid "You have not write access of %s field."
 msgstr "Sie haben keinen Schreibzugriff auf das Feld %s."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

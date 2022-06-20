@@ -3,42 +3,15 @@
 # 	* purchase_stock
 # 
 # Translators:
-# 苏州远鼎 <tiexinliu@126.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018
-# HQ Shang <shanghq@pharmarise.com.cn>, 2018
-# diaojiaolou <124412206@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# v2exerer <9010446@qq.com>, 2018
-# 湘子 南 <1360857908@qq.com>, 2019
-# roye w <159820@qq.com>, 2019
-# snow wang <147156565@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# 黎伟杰 <674416404@qq.com>, 2019
-# ryan ryan <itechr@outlook.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Datasource International <Hennessy@datasourcegroup.com>, 2020
-# ljsrzc007 <ljsrzc007@gmail.com>, 2020
-# bf2549c5415a9287249cba2b8a5823c7, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
-# Melvin Liu <betien@msn.cn>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# liAnGjiA <liangjia@qq.com>, 2021
-# Felix Yang <felixyangsh@aliyun.com>, 2021
-# Martin Trigaux, 2021
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2018-08-02 11:17+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,7 +121,7 @@ msgstr "平均收货延迟"
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
 #: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
-#: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
+#: model:stock.route,name:purchase_stock.route_warehouse0_buy
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #, python-format
 msgid "Buy"
@@ -368,7 +341,7 @@ msgid "Logistics"
 msgstr "物流"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_production_lot
+#: model:ir.model,name:purchase_stock.model_stock_lot
 msgid "Lot/Serial"
 msgstr "批次/序列号"
 
@@ -406,7 +379,7 @@ msgid "No data yet"
 msgstr "还没有数据耶"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/account_invoice.py:0
+#: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
@@ -514,8 +487,8 @@ msgid "Purchase Order Line"
 msgstr "采购订单行"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
 msgstr "采购订单"
@@ -532,7 +505,7 @@ msgid "Purchase Security Lead Time"
 msgstr "采购安全前置时间"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
 msgid "Purchase order count"
 msgstr "采购单号"
 

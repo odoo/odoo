@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-#
+# 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_subcontracting
@@ -43,8 +41,11 @@ msgstr "Kan worden uitbesteed"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
-msgid "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr "Kies een leverancier van het soort uitbesteder als je het product wilt uitbesteden"
+msgid ""
+"Choose a vendor of type subcontractor if you want to subcontract the product"
+msgstr ""
+"Kies een leverancier van het soort uitbesteder als je het product wilt "
+"uitbesteden"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -110,8 +111,12 @@ msgstr "Maak op order"
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
 #, python-format
-msgid "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
-msgstr "Zorg ervoor dat je de gerelateerde herbevoorradingspicking bevestigt of aanpast aan je onderaannemer om inconsistenties in de voorraad te voorkomen."
+msgid ""
+"Make sure you validate or adapt the related resupply picking to your "
+"subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+"Zorg ervoor dat je de gerelateerde herbevoorradingspicking bevestigt of "
+"aanpast aan je onderaannemer om inconsistenties in de voorraad te voorkomen."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -177,6 +182,7 @@ msgid "Reserved"
 msgstr "Gereserveerd"
 
 #. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
@@ -335,14 +341,20 @@ msgstr "De verplaatsing is een ontvangst van een uitbesteding"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
-msgid "The stock location used as source and destination when sending        goods to this contact during a subcontracting process."
-msgstr "De voorraadlocatie die wordt gebruikt als bron en bestemming bij het verzenden van goederen naar deze contactpersoon tijdens een uitbestedingsproces."
+msgid ""
+"The stock location used as source and destination when sending        goods "
+"to this contact during a subcontracting process."
+msgstr ""
+"De voorraadlocatie die wordt gebruikt als bron en bestemming bij het "
+"verzenden van goederen naar deze contactpersoon tijdens een "
+"uitbestedingsproces."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr "Deze productieorder is niet gerelateerd aan een uitbestede verplaatsing"
+msgstr ""
+"Deze productieorder is niet gerelateerd aan een uitbestede verplaatsing"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -367,14 +379,22 @@ msgstr "Magazijn"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
-msgid "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
-msgstr "Wizard in geval van verbruik in waarschuwing/strikt en meer component is gebruikt voor een productieorder (gerelateerd aan de stuklijst)"
+msgid ""
+"Wizard in case of consumption in warning/strict and more component has been "
+"used for a MO (related to the bom)"
+msgstr ""
+"Wizard in geval van verbruik in waarschuwing/strikt en meer component is "
+"gebruikt voor een productieorder (gerelateerd aan de stuklijst)"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
 #, python-format
-msgid "You can not set a Bill of Material with operations or by-product line as subcontracting."
-msgstr "Je kunt een stuklijst met bewerkingen of bijproductregel niet instellen als uitbesteding."
+msgid ""
+"You can not set a Bill of Material with operations or by-product line as "
+"subcontracting."
+msgstr ""
+"Je kunt een stuklijst met bewerkingen of bijproductregel niet instellen als "
+"uitbesteding."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
@@ -391,5 +411,9 @@ msgstr "Je moet een andere serienummer ingeven voor elk regel %s"
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
-msgid "You must indicate a non-zero amount consumed for at least one of your components"
-msgstr "Je moet een verbruikte hoeveelheid aangeven die niet gelijk is aan nul voor minstens één van je componenten"
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Je moet een verbruikte hoeveelheid aangeven die niet gelijk is aan nul voor "
+"minstens één van je componenten"

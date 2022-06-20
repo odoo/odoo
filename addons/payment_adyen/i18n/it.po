@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_api_key
@@ -34,15 +33,20 @@ msgstr "Adyen"
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
-msgid "An error occurred during the processing of your payment. Please try again."
-msgstr "Si è verificato un errore durante l'elaborazione di questo pagamento. Riprovalo più tardi."
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
+msgstr ""
+"Si è verificato un errore durante l'elaborazione di questo pagamento. "
+"Riprovalo più tardi."
 
 #. module: payment_adyen
 #. openerp-web
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr "Si è verificato un errore durante la visualizzazione di questo modulo di pagamento."
+msgstr ""
+"Si è verificato un errore durante la visualizzazione di questo modulo di "
+"pagamento."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
@@ -154,10 +158,15 @@ msgstr "API URL ricorrente"
 #: code:addons/payment_adyen/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been deleted."
-msgstr "I metodi di pagamento salvati non possono essere ripristinati una volta che sono stati cancellati."
+msgstr ""
+"I metodi di pagamento salvati non possono essere ripristinati una volta che "
+"sono stati cancellati."
 
 #. module: payment_adyen
 #. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server Error"
@@ -181,7 +190,8 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr "Il fornitore di servizi di pagamento da utilizzare con questo acquirente"
+msgstr ""
+"Il fornitore di servizi di pagamento da utilizzare con questo acquirente"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
@@ -222,6 +232,8 @@ msgstr "Il riferimento unico del partner che possiede questo token"
 
 #. module: payment_adyen
 #. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to process your payment."

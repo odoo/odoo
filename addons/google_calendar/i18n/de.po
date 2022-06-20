@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:50+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
@@ -68,14 +67,27 @@ msgstr "Aktiv"
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
-msgstr "Ein Administrator muss die Google-Synchronisation konfigurieren, bevor Sie diese verwenden können!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
+msgstr ""
+"Ein Administrator muss die Google-Synchronisation konfigurieren, bevor Sie "
+"diese verwenden können!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "Bei der Generierung des Tokens ist ein Fehler aufgetreten. Ihr Autorisierungscode ist möglicherweise ungültig oder ist bereits abgelaufen [%s]. Sie sollten Ihre Client-ID und Ihr Geheimwort auf der Google APIs-Plattform überprüfen oder versuchen, die Kalendersynchronisierung zu stoppen und neu zu starten."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"Bei der Generierung des Tokens ist ein Fehler aufgetreten. Ihr "
+"Autorisierungscode ist möglicherweise ungültig oder ist bereits abgelaufen "
+"[%s]. Sie sollten Ihre Client-ID und Ihr Geheimwort auf der Google APIs-"
+"Plattform überprüfen oder versuchen, die Kalendersynchronisierung zu stoppen"
+" und neu zu starten."
 
 #. module: google_calendar
 #. openerp-web
@@ -132,6 +144,7 @@ msgstr "Konfigurationseinstellungen"
 
 #. module: google_calendar
 #. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Configuration"
@@ -266,14 +279,22 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Wenn das Aktiv-Feld deaktiviert wird, wird die Erinnerung ausgeblendet ohne sie zu entfernen"
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Wenn das Aktiv-Feld deaktiviert wird, wird die Erinnerung ausgeblendet ohne "
+"sie zu entfernen"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
-msgstr "Zuletzt synchronisierte Calendar ID. Wenn sich diese ändert, werden alle Verbindungen zwischen der GoogleID und der Odoo Google Internal ID entfernt."
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
+msgstr ""
+"Zuletzt synchronisierte Calendar ID. Wenn sich diese ändert, werden alle "
+"Verbindungen zwischen der GoogleID und der Odoo Google Internal ID entfernt."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
@@ -371,8 +392,12 @@ msgstr "Nur neue Termine synchronisieren"
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "Die google Synchronisation muss vor seiner Benutzung eingerichtet werden, wollen Sie dies jetzt tun ?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"Die google Synchronisation muss vor seiner Benutzung eingerichtet werden, "
+"wollen Sie dies jetzt tun ?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
@@ -383,8 +408,13 @@ msgstr "Der Account für den Google Calendar-Dienst ist nicht konfiguriert."
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "The following event could not be synced with Google Calendar. </br>It will not be synced as long at it is not updated.</br>%(reason)s"
-msgstr "Der folgende Termin konnte nicht mit Google Calendar synchronisiert werden. </br>Er wird nicht synchronisiert, solange er nicht aktualisiert wird. </br>%(reason)s"
+msgid ""
+"The following event could not be synced with Google Calendar. </br>It will "
+"not be synced as long at it is not updated.</br>%(reason)s"
+msgstr ""
+"Der folgende Termin konnte nicht mit Google Calendar synchronisiert werden. "
+"</br>Er wird nicht synchronisiert, solange er nicht aktualisiert wird. "
+"</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
@@ -401,7 +431,9 @@ msgstr "Der Benutzer hat bereits einen Google Account"
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Dies wirkt sich nur auf Ereignisse aus, für die der Benutzer der Eigentümer ist"
+msgstr ""
+"Dies wirkt sich nur auf Ereignisse aus, für die der Benutzer der Eigentümer "
+"ist"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
@@ -435,17 +467,24 @@ msgstr "Benutzer"
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
-msgstr "Sie sind dabei, die Synchronisierung Ihres Kalenders mit Google zu beenden. Sind Sie sicher, dass Sie fortfahren möchten?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
+msgstr ""
+"Sie sind dabei, die Synchronisierung Ihres Kalenders mit Google zu beenden. "
+"Sind Sie sicher, dass Sie fortfahren möchten?"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr "Sie werden zu Google weitergeleitet, um dort die  Anmeldung an Ihren Kalender zu ermöglichen"
+msgstr ""
+"Sie werden zu Google weitergeleitet, um dort die  Anmeldung an Ihren "
+"Kalender zu ermöglichen"
 
 #. module: google_calendar
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -454,5 +493,8 @@ msgstr "nicht definierte Zeit"
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
-msgstr "Sie scheinen keine Berechtigung zu haben, diesen Termin in Google Calendar zu ändern."
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
+msgstr ""
+"Sie scheinen keine Berechtigung zu haben, diesen Termin in Google Calendar "
+"zu ändern."

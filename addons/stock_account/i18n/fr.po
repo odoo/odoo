@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# Thomas Deleval <thd@odoo.com>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -29,15 +27,21 @@ msgstr " Coût d'article mis à jour de   %(previous)s à %(new_cost)s."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr "%(user)scoût changé de%(previous)s à %(new_price)s - %(product)s"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
-msgid "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s"
-msgstr "%(user)s Valorisation changée de  %(previous)s to %(new_value)s - %(product)s"
+msgid ""
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
+"%(product)s"
+msgstr ""
+"%(user)s Valorisation changée de  %(previous)s to %(new_value)s - "
+"%(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -107,8 +111,11 @@ msgstr "Valeur Ajoutée"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr "Ajouter un coût additionnel (transport, douane,...) dans la valeur de l'article."
+msgid ""
+"Add additional cost (transport, customs, ...) in the value of the product."
+msgstr ""
+"Ajouter un coût additionnel (transport, douane,...) dans la valeur de "
+"l'article."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -123,8 +130,12 @@ msgstr "Valeur Ajoutée"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Affect landed costs on reception operations and split them among products to update their cost price."
-msgstr "Affecte les prix de revient effectifs pour les transactions reçues et les répartit en fonction des produits pour mettre à jour leur prix coûtant."
+msgid ""
+"Affect landed costs on reception operations and split them among products to"
+" update their cost price."
+msgstr ""
+"Affecte les prix de revient effectifs pour les transactions reçues et les "
+"répartit en fonction des produits pour mettre à jour leur prix coûtant."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
@@ -149,20 +160,36 @@ msgstr "Annuler"
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
-msgstr "Impossible de trouver un compte d'entrée en stock pour le produit %s. Vous devez en définir un sur la catégorie de produit ou l'emplacement avant d'effectuer cette opération."
+msgid ""
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
+msgstr ""
+"Impossible de trouver un compte d'entrée en stock pour le produit %s. Vous "
+"devez en définir un sur la catégorie de produit ou l'emplacement avant "
+"d'effectuer cette opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
-msgstr "Impossible de trouver un compte de stock/production pour le produit %s. Vous devez en définir un dans la catégorie de produit ou l'emplacement avant d'effectuer cette opération."
+msgid ""
+"Cannot find a stock output account for the product %s. You must define one "
+"on the product category, or on the location, before processing this "
+"operation."
+msgstr ""
+"Impossible de trouver un compte de stock/production pour le produit %s. Vous"
+" devez en définir un dans la catégorie de produit ou l'emplacement avant "
+"d'effectuer cette opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"
-msgstr "La modification de votre méthode de détermination du coût des stocks est un changement important qui influe sur la valorisation de votre inventaire. Voulez-vous vraiment effectuer cette modification ?"
+msgid ""
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
+msgstr ""
+"La modification de votre méthode de détermination du coût des stocks est un "
+"changement important qui influe sur la valorisation de votre inventaire. "
+"Voulez-vous vraiment effectuer cette modification ?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -178,8 +205,12 @@ msgstr "Paramètres de config"
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
-msgstr "Erreur de configuration. Configurez le compte de différence de prix sur le produit ou sa catégorie pour procéder à l'opération."
+msgid ""
+"Configuration error. Please configure the price difference account on the "
+"product or its category to process this operation."
+msgstr ""
+"Erreur de configuration. Configurez le compte de différence de prix sur le "
+"produit ou sa catégorie pour procéder à l'opération."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -192,7 +223,9 @@ msgstr "Méthode de coût"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr "Modification de la méthode de coût pour la catégorie de produit %s: de %s à %s."
+msgstr ""
+"Modification de la méthode de coût pour la catégorie de produit %s: de %s à "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -204,7 +237,12 @@ msgstr "Compte de contrepartie"
 msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
-msgstr "Les écritures de contrepartie de tous les mouvements de stock entrants seront passées sur ce compte, sauf si un compte de valorisation est spécifiquement précisé pour l'emplacement d'origine. C'est la valeur par défaut pour tous les articles de cette catégorie. Il est également possible de la préciser directement sur chaque article."
+msgstr ""
+"Les écritures de contrepartie de tous les mouvements de stock entrants "
+"seront passées sur ce compte, sauf si un compte de valorisation est "
+"spécifiquement précisé pour l'emplacement d'origine. C'est la valeur par "
+"défaut pour tous les articles de cette catégorie. Il est également possible "
+"de la préciser directement sur chaque article."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -249,13 +287,19 @@ msgstr "Date"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
-msgid "Date at which the accounting entries will be created in case of automated inventory valuation. If empty, the inventory date will be used."
-msgstr "Date à laquelle les écritures comptables seront créées en cas d'évaluation de stock automatisée. Si la date n'est pas renseignée, la date d'inventaire sera utilisée."
+msgid ""
+"Date at which the accounting entries will be created in case of automated "
+"inventory valuation. If empty, the inventory date will be used."
+msgstr ""
+"Date à laquelle les écritures comptables seront créées en cas d'évaluation "
+"de stock automatisée. Si la date n'est pas renseignée, la date d'inventaire "
+"sera utilisée."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Unité de mesure par défaut utilisée pour toutes les opérations de stock"
+msgstr ""
+"Unité de mesure par défaut utilisée pour toutes les opérations de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -286,8 +330,14 @@ msgstr "Documentation"
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "Due to a change of product category (from %s to %s), the costing method                                has changed for product template %s: from %s to %s."
-msgstr "Du fait d'un changement de catégorie de produit (de %s à %s), la méthode de coût                               a changé pour le modèle d'article %s: de %s à %s."
+msgid ""
+"Due to a change of product category (from %s to %s), the costing method"
+"                                has changed for product template %s: from %s"
+" to %s."
+msgstr ""
+"Du fait d'un changement de catégorie de produit (de %s à %s), la méthode de "
+"coût                               a changé pour le modèle d'article %s: de "
+"%s à %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -311,6 +361,7 @@ msgid "Inventory Locations"
 msgstr "Emplacements des stocks"
 
 #. module: stock_account
+#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -638,14 +689,23 @@ msgstr ""
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account."
-msgstr "Les comptes d'entrée et/ou de sortie de stock ne peuvent être les mêmes que le compte de valorisation d'inventaire."
+msgid ""
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
+"Valuation account."
+msgstr ""
+"Les comptes d'entrée et/ou de sortie de stock ne peuvent être les mêmes que "
+"le compte de valorisation d'inventaire."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "The action leads to the creation of a journal entry, for which you don't have the access rights."
-msgstr "L'action entraine la création d'une écriture comptable pour laquelle vous n'avez pas les droits d'accès"
+msgid ""
+"The action leads to the creation of a journal entry, for which you don't "
+"have the access rights."
+msgstr ""
+"L'action entraine la création d'une écriture comptable pour laquelle vous "
+"n'avez pas les droits d'accès"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -656,25 +716,44 @@ msgstr "La valeur ajoutée n'a pas d'impact sur la valorisation du stock"
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent state: some are entering and other are leaving the company."
-msgstr "Les lignes de mouvement ne sont pas cohérentes avec l'état: certaines entrent dans la société et d'autres en sortent."
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company."
+msgstr ""
+"Les lignes de mouvement ne sont pas cohérentes avec l'état: certaines "
+"entrent dans la société et d'autres en sortent."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."
-msgstr "Les lignes de mouvements ne sont pas cohérentes : déplacement interentreprises en une seule étape au lieu de passer par le lieu de transit interentreprises."
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+"Les lignes de mouvements ne sont pas cohérentes : déplacement "
+"interentreprises en une seule étape au lieu de passer par le lieu de transit"
+" interentreprises."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent states: they do not share the same origin or destination company."
-msgstr "Les lignes de mouvements ne sont pas cohérentes : elles ne partagent pas la même entreprise d'origine ou de destination."
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
+msgstr ""
+"Les lignes de mouvements ne sont pas cohérentes : elles ne partagent pas la "
+"même entreprise d'origine ou de destination."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
-msgid "There is no valuation layers. Valuation layers are created when some product moves should impact the valuation of the stock."
-msgstr "Il n'y a pas de couche de valorisation. Les couches de valorisation sont créées quand certains mouvements d'articles impactent la valorisation d'inventaire."
+msgid ""
+"There is no valuation layers. Valuation layers are created when some product"
+" moves should impact the valuation of the stock."
+msgstr ""
+"Il n'y a pas de couche de valorisation. Les couches de valorisation sont "
+"créées quand certains mouvements d'articles impactent la valorisation "
+"d'inventaire."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -690,8 +769,12 @@ msgstr "Transfert"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
-msgid "Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order"
-msgstr "Déclencher une réduction de la quantité livrée/reçue dans la commande client/fournisseur associée"
+msgid ""
+"Trigger a decrease of the delivered/received quantity in the associated Sale"
+" Order/Purchase Order"
+msgstr ""
+"Déclencher une réduction de la quantité livrée/reçue dans la commande "
+"client/fournisseur associée"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
@@ -712,13 +795,34 @@ msgstr "Mettre à jour les quantité sur le devis/bon de commande fournisseur"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
-msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved from an internal location into this location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
-msgstr "Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé pour enregistrer la valeur des articles qui ont été déplacés depuis un emplacement interne vers cet emplacement, à la place du compte générique de stock de sortie décrit dans l'article. Ceci n'a pas d'effet pour les emplacements internes."
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur"
+" un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé"
+" pour enregistrer la valeur des articles qui ont été déplacés depuis un "
+"emplacement interne vers cet emplacement, à la place du compte générique de "
+"stock de sortie décrit dans l'article. Ceci n'a pas d'effet pour les "
+"emplacements internes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
-msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved out of this location and into an internal location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
-msgstr "Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les articles qui sont déplacés de cet emplacement à un emplacement interne, à la place du compte de sortie de stock générique défini sur l'article. Ceci est sans effet sur les emplacements internes."
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit "
+"sur un emplacement virtuel, ce compte est utilisé pour valoriser les "
+"articles qui sont déplacés de cet emplacement à un emplacement interne, à la"
+" place du compte de sortie de stock générique défini sur l'article. Ceci est"
+" sans effet sur les emplacements internes."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -731,7 +835,9 @@ msgstr "Valorisation"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr "La méthode de valorisation de la catégorie d'articles %s a changé: de %s à %s."
+msgstr ""
+"La méthode de valorisation de la catégorie d'articles %s a changé: de %s à "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -751,8 +857,12 @@ msgstr "Avertissement"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid "When automated inventory valuation is enabled on a product, this account will hold the current value of the products."
-msgstr "Quand la valorisation d'inventaire automatique est activée sur un article, ce compte contient la valeur actuelle des articles."
+msgid ""
+"When automated inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+"Quand la valorisation d'inventaire automatique est activée sur un article, "
+"ce compte contient la valeur actuelle des articles."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -767,8 +877,13 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid "When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."
-msgstr "Quand la valorisation d'inventaire est automatique, c'est le journal comptable dans lequel les entrées seront automatiquement postées lorsque les mouvements de stock seront réalisés."
+msgid ""
+"When doing automated inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+"Quand la valorisation d'inventaire est automatique, c'est le journal "
+"comptable dans lequel les entrées seront automatiquement postées lorsque les"
+" mouvements de stock seront réalisés."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -779,50 +894,79 @@ msgstr "Modèle d'assistant pour revaloriser un inventaire pour un article"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr "Vous ne pouvez pas revaloriser un article avec la méthode de cout standard"
+msgstr ""
+"Vous ne pouvez pas revaloriser un article avec la méthode de cout standard"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr "Vous ne pouvez pas revaloriser un article avec un stock nul ou négatif"
+msgstr ""
+"Vous ne pouvez pas revaloriser un article avec un stock nul ou négatif"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."
-msgstr "Vous ne pouvez pas modifier le coût d'un article en valorisation automatique  car cela entraîne une écriture comptable, pour laquelle vous n'avez pas de droits d'accès"
+msgid ""
+"You cannot update the cost of a product in automated valuation as it leads "
+"to the creation of a journal entry, for which you don't have the access "
+"rights."
+msgstr ""
+"Vous ne pouvez pas modifier le coût d'un article en valorisation automatique"
+"  car cela entraîne une écriture comptable, pour laquelle vous n'avez pas de"
+" droits d'accès"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You don't have any input valuation account defined on your product category. You must define one before processing this operation."
-msgstr "Vous n'avez pas de compte d'entrée de valorisation définit sur la catégorie d'article. Vous devez en définir un avant de réaliser l'opération."
+msgid ""
+"You don't have any input valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+"Vous n'avez pas de compte d'entrée de valorisation définit sur la catégorie "
+"d'article. Vous devez en définir un avant de réaliser l'opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You don't have any stock input account defined on your product category. You must define one before processing this operation."
-msgstr "Vous n'avez aucun compte de valorisation d'inventaire défini dans votre catégorie de produit. Vous devez en définir un avant d'effectuer cette opération."
+msgid ""
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
+msgstr ""
+"Vous n'avez aucun compte de valorisation d'inventaire défini dans votre "
+"catégorie de produit. Vous devez en définir un avant d'effectuer cette "
+"opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts."
-msgstr "Vous n'avez pas de journal de stock défini pour votre catégorie d'article, veuillez vérifier si vous avez bien installé un plan comptable."
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts."
+msgstr ""
+"Vous n'avez pas de journal de stock défini pour votre catégorie d'article, "
+"veuillez vérifier si vous avez bien installé un plan comptable."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
-msgstr "Vous n'avez aucun compte de valorisation d'inventaire défini dans votre catégorie de produit. Vous devez en définir un avant d'effectuer cette opération."
+msgid ""
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+"Vous n'avez aucun compte de valorisation d'inventaire défini dans votre "
+"catégorie de produit. Vous devez en définir un avant d'effectuer cette "
+"opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr "Vous devez définir un compte contrepartie sur votre catégorie d'articles"
+msgstr ""
+"Vous devez définir un compte contrepartie sur votre catégorie d'articles"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

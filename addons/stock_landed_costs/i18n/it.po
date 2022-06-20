@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
@@ -176,8 +177,12 @@ msgstr "Righe di costo"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
-msgstr "Le righe di costo e di aggiustamento non corrispondono. Ricalcolare i costi di spedizione."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Le righe di costo e di aggiustamento non corrispondono. Ricalcolare i costi "
+"di spedizione."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -232,7 +237,9 @@ msgstr "Metodo di suddivisione predefinito"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr "Metodo di suddivisione predefinito quando viene utilizzato per costi sbarcati"
+msgstr ""
+"Metodo di suddivisione predefinito quando viene utilizzato per costi "
+"sbarcati"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -475,6 +482,8 @@ msgstr "Nome"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "New"
 msgstr "Nuova"
@@ -555,7 +564,9 @@ msgstr "Configurare il conto di costo di magazzino del prodotto: %s."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr "Per favore, definisci %s su quale/i costi aggiuntivi dovrebbero essere applicati."
+msgstr ""
+"Per favore, definisci %s su quale/i costi aggiuntivi dovrebbero essere "
+"applicati."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -691,8 +702,12 @@ msgstr "Valida"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
-msgstr "I costi di spedizione convalidati non possono essere cancellati, ma si possono creare costi di spedizione negativi per annullarli."
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"I costi di spedizione convalidati non possono essere cancellati, ma si "
+"possono creare costi di spedizione negativi per annullarli."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -738,11 +753,17 @@ msgstr "Peso"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
 msgstr ""
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
 #, python-format
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
-msgstr "Impossibile cambiare il tipo di prodotto o disabilitare l'opzione di costo sbarcato, il prodotto è utilizzato in una riga di movimento contabile."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"Impossibile cambiare il tipo di prodotto o disabilitare l'opzione di costo "
+"sbarcato, il prodotto è utilizzato in una riga di movimento contabile."

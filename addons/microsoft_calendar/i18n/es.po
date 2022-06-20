@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# juankfj, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: juankfj, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -68,14 +67,26 @@ msgstr "Activo"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "An administrator needs to configure Outlook Synchronization before you can use it!"
-msgstr "¡Un administrador necesita configurar la sincronización de Outlook antes de que puedas usarlo!"
+msgid ""
+"An administrator needs to configure Outlook Synchronization before you can "
+"use it!"
+msgstr ""
+"¡Un administrador necesita configurar la sincronización de Outlook antes de "
+"que puedas usarlo!"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation."
-msgstr "Un error ocurrio mientras se generaba el token. Su código de autorización puede ser inválido o estar caducado [%s]. Debe comprobar su ID de cliente y su secreto en el portal de Microsoft Azure o intentar detener y reiniciar la sincronización del calendario."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Microsoft Azure portal or try to stop and restart your "
+"calendar synchronisation."
+msgstr ""
+"Un error ocurrio mientras se generaba el token. Su código de autorización "
+"puede ser inválido o estar caducado [%s]. Debe comprobar su ID de cliente y "
+"su secreto en el portal de Microsoft Azure o intentar detener y reiniciar la"
+" sincronización del calendario."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -116,6 +127,7 @@ msgstr "Opciones de configuración"
 
 #. module: microsoft_calendar
 #. openerp-web
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Configuration"
@@ -194,8 +206,12 @@ msgstr "ID"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Si el campo activo es falso, le permitirá ocultar la notificación de aviso del evento sin eliminarlo."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Si el campo activo es falso, le permitirá ocultar la notificación de aviso "
+"del evento sin eliminarlo."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -262,7 +278,8 @@ msgstr "ID Master de recurrencia de Microsoft"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr "La ocurrencia modificada se cruza o solapa con la ocurrencia adyacente."
+msgstr ""
+"La ocurrencia modificada se cruza o solapa con la ocurrencia adyacente."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
@@ -359,8 +376,12 @@ msgstr "Sincroniza únicamente los eventos nuevos"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "La sincronización de Outlook debe configurarse antes de poder utilizarla, ¿quieres hacerlo ahora?"
+msgid ""
+"The Outlook Synchronization needs to be configured before you can use it, do"
+" you want to do it now?"
+msgstr ""
+"La sincronización de Outlook debe configurarse antes de poder utilizarla, "
+"¿quieres hacerlo ahora?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
@@ -409,12 +430,18 @@ msgstr "Usuarios"
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"
-msgstr "Esta a punto de detener la sincronización de su calendario con Outlook. ¿Está seguro de que desea continuar?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Outlook. Are"
+" you sure you want to continue?"
+msgstr ""
+"Esta a punto de detener la sincronización de su calendario con Outlook. "
+"¿Está seguro de que desea continuar?"
 
 #. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
-msgid "You will be redirected to Outlook to authorize the access to your calendar."
-msgstr "Se le redirigirá a Outlook para que autorice el acceso a su calendario."
+msgid ""
+"You will be redirected to Outlook to authorize the access to your calendar."
+msgstr ""
+"Se le redirigirá a Outlook para que autorice el acceso a su calendario."

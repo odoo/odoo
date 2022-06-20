@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-#
+# 
 # Translators:
 # Martin Trigaux, 2022
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-22 14:45+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
@@ -43,7 +42,9 @@ msgstr "Ottieni il tuo Secret e Publishable keys"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid "If a webhook is enabled on your Stripe account, this signing secret must be set to authenticate the messages sent from Stripe to Odoo."
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
 
 #. module: payment_stripe
@@ -136,7 +137,9 @@ msgstr "Errore di Stripe Proxy: %(error)s"
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr "Stripe Proxy: Si è verificato un errore durante la comunicazione con il proxy."
+msgstr ""
+"Stripe Proxy: Si è verificato un errore durante la comunicazione con il "
+"proxy."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -147,7 +150,8 @@ msgstr "Proxy di Stripe: Impossibile stabilire la connessione."
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr "Il fornitore di servizi di pagamento da utilizzare con questo acquirente"
+msgstr ""
+"Il fornitore di servizi di pagamento da utilizzare con questo acquirente"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -165,7 +169,8 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr "La chiave utilizzata esclusivamente per identificare l'account con Stripe"
+msgstr ""
+"La chiave utilizzata esclusivamente per identificare l'account con Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -193,13 +198,18 @@ msgstr "Il tuo Stripe Webhook è stato impostato con successo!"
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
-msgstr "Non puoi creare uno Stripe Webhook se il tuo Stripe Secret Key non è impostato."
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+"Non puoi creare uno Stripe Webhook se il tuo Stripe Secret Key non è "
+"impostato."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "You cannot set the acquirer to Test Mode while it is linked with your Stripe account."
+msgid ""
+"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+" account."
 msgstr ""
 
 #. module: payment_stripe

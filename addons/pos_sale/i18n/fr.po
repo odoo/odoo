@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-#
+# 
 # Translators:
-# Moka Tourisme <hello@mokatourisme.fr>, 2021
-# Eloïse Stilmant <est@odoo.com>, 2021
-# qdelcourte <delcourte.quentin@hotmail.com>, 2021
-# Martin Trigaux, 2021
-# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
-"PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_sale
 #. openerp-web
@@ -198,12 +194,14 @@ msgstr "Nouveau"
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
 msgstr "Liste des commandes suivantes"
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No"
@@ -290,6 +288,7 @@ msgstr "Comptabilisé"
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
 msgstr "Liste des commandes précédentes"
@@ -331,6 +330,7 @@ msgstr ""
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
@@ -409,6 +409,7 @@ msgstr "Session en cours"
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
 msgstr ""
@@ -424,8 +425,12 @@ msgstr ""
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
-msgid "Some of the products in your Sale Order are not available in POS, do you want to import them?"
-msgstr "Des articles de votre bon de commande ne sont pas disponible dans le PdV, souhaitez-vous les importer ?"
+msgid ""
+"Some of the products in your Sale Order are not available in POS, do you "
+"want to import them?"
+msgstr ""
+"Des articles de votre bon de commande ne sont pas disponible dans le PdV, "
+"souhaitez-vous les importer ?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
@@ -447,14 +452,19 @@ msgstr "État"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
-msgstr "Le taux de conversion de la devise vers la devise de taux applicable à la date de la commande"
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr ""
+"Le taux de conversion de la devise vers la devise de taux applicable à la "
+"date de la commande"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr "Les ventes du Point de Vente seront relatives à cette équipe commerciale."
+msgstr ""
+"Les ventes du Point de Vente seront relatives à cette équipe commerciale."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
@@ -510,6 +520,7 @@ msgstr "Que voulez-vous faire?"
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Yes"

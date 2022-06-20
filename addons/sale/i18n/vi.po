@@ -3,18 +3,6 @@
 # 	* sale
 # 
 # Translators:
-# Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
-# Dao Nguyen <trucdao.uel@gmail.com>, 2020
-# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
-# Thang Duong Bao <nothingctrl@gmail.com>, 2020
-# Manh Vu <vuducmanh96vp@gmail.com>, 2020
-# fanha99 <fanha99@hotmail.com>, 2021
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
-# Dung Nguyen Thi <dungnt@trobz.com>, 2021
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
-# Trần Hà <tranthuha13590@gmail.com>, 2021
-# Vo Thanh Thuy, 2021
-# Duy BQ <duybq86@gmail.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -22,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -1474,6 +1462,12 @@ msgid "Down Payments"
 msgstr "Đặt cọc"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "Tiền đặt cọc (số tiền cố định)"
@@ -1726,6 +1720,11 @@ msgstr "Tổng trọng lượng (cả bao bì)"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "Nhóm theo"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2823,6 +2822,13 @@ msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
 msgstr "Product prices have been recomputed according to pricelist <b>%s<b> "
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "Sản phẩm được sử dụng cho mục đích đặt cọc/ứng trước"
@@ -3009,7 +3015,11 @@ msgid "Recompute all prices based on this pricelist"
 msgstr "Recompute all prices based on this pricelist"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Recompute all taxes based on this fiscal position"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3686,6 +3696,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__show_update_fpos
+msgid ""
+"Technical Field, True if the fiscal position was changed;\n"
+" this will then display a recomputation button"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
 msgid ""
 "Technical Field, True if the pricelist was changed;\n"
@@ -4043,6 +4060,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"This will update all taxes based on the currently selected fiscal position."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
 "This will update all unit prices based on the currently set pricelist."
@@ -4244,6 +4267,11 @@ msgid "Update Prices"
 msgstr "Update Prices"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Update Taxes"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4378,6 +4406,15 @@ msgid ""
 msgstr ""
 "Bạn có thể đặt ở đây loại giao tiếp sẽ xuất hiện trên đơn đặt hàng. Giao "
 "tiếp sẽ được trao cho khách hàng khi họ chọn phương thức thanh toán."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

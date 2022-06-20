@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fetchmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -73,8 +73,12 @@ msgstr "La prueba de conexión ha fallado: %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__is_ssl
-msgid "Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"
-msgstr "Las conexiones son cifradas con SSL/TLS a través de un puerto dedicado (predeterminado: IMAPS = 993, POP3S = 995)"
+msgid ""
+"Connections are encrypted with SSL/TLS through a dedicated port (default: "
+"IMAPS=993, POP3S=995)"
+msgstr ""
+"Las conexiones son cifradas con SSL/TLS a través de un puerto dedicado "
+"(predeterminado: IMAPS = 993, POP3S = 995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
@@ -94,7 +98,9 @@ msgstr "Creado el"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Define el orden de procesamiento. Los valores más bajos significan una mayor prioridad."
+msgstr ""
+"Define el orden de procesamiento. Los valores más bajos significan una mayor"
+" prioridad."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
@@ -279,8 +285,15 @@ msgstr "Puerto"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__object_id
-msgid "Process each incoming mail as part of a conversation corresponding to this document type. This will create new documents for new conversations, or attach follow-up emails to the existing conversations (documents)."
-msgstr "Procesa cada correo entrante como parte de una conversación correspondiente a este tipo de documento. Esto creará nuevos documentos para nuevas conversaciones, o adjuntará correos electrónicos de seguimiento a las conversaciones existentes (documentos)."
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+"Procesa cada correo entrante como parte de una conversación correspondiente "
+"a este tipo de documento. Esto creará nuevos documentos para nuevas "
+"conversaciones, o adjuntará correos electrónicos de seguimiento a las "
+"conversaciones existentes (documentos)."
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -369,10 +382,21 @@ msgstr "Nombre de usuario"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__original
-msgid "Whether a full original copy of each email should be kept for reference and attached to each processed message. This will usually double the size of your message database."
-msgstr "Si se debe guardar una copia original completa de cada correo electrónico como referencia, adjunta a cada mensaje procesado. Esto usualmente duplica el tamaño de tu base de datos de mensajes."
+msgid ""
+"Whether a full original copy of each email should be kept for reference and "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
+"Si se debe guardar una copia original completa de cada correo electrónico "
+"como referencia, adjunta a cada mensaje procesado. Esto usualmente duplica "
+"el tamaño de tu base de datos de mensajes."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
-msgid "Whether attachments should be downloaded. If not enabled, incoming emails will be stripped of any attachments before being processed"
-msgstr "Indica si los archivos adjuntos deben ser descargados. Si no se habilita, cualquier archivo adjunto será eliminado de los correos entrantes antes de ser procesado"
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr ""
+"Indica si los archivos adjuntos deben ser descargados. Si no se habilita, "
+"cualquier archivo adjunto será eliminado de los correos entrantes antes de "
+"ser procesado"

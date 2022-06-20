@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_forum
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum
@@ -29,6 +28,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flagged"
@@ -124,17 +124,20 @@ msgstr "%d karma vereist om omlaag te stemmen."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to edit a post."
 msgstr "%d karma vereist om een post te wijzigen."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to flag a post."
 msgstr "%d karma vereist om een post te markeren."
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
@@ -255,19 +258,29 @@ msgstr "<b> [Beledigend]</b>"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Instead either edit the question or add a question comment."
-msgstr "<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats hier van wijzig je de vraag of voeg je een reactie toe."
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead either edit the "
+"question or add a question comment."
+msgstr ""
+"<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats hier"
+" van wijzig je de vraag of voeg je een reactie toe."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Insteadeither edit the question or add a comment."
-msgstr "<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats hiervan wijzig je de vraag of voeg je een reactie toe."
+msgid ""
+"<b>Answers should not add or expand questions</b>. Insteadeither edit the "
+"question or add a comment."
+msgstr ""
+"<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats "
+"hiervan wijzig je de vraag of voeg je een reactie toe."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not comment other answers</b>. Instead add a comment on the other answers."
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead add a comment on "
+"the other answers."
 msgstr ""
 "<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats hier van\n"
 "voeg je een reactie toe op de andere antwoorden."
@@ -275,7 +288,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not start debates</b> This community Q&amp;A is not a discussion group. Please avoid holding debates in your answers as they tend to dilute the essence of questions and answers. For brief discussions please use commenting facility."
+msgid ""
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
 msgstr ""
 "<b>Antwoorden moeten geen debat starten</b>\n"
 "Deze community Q&amp;A is geen discussiegroep. Vermijd aub debatten in je antwoord omdat ze vaak de essentie van de vraag en antwoorden vertroebelen. Voor korte discussies plaats je best een reactie."
@@ -283,19 +300,39 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other Questions</b>. Instead add a question comment indication \"Possible duplicate of...\". However, it's ok to include links to other questions or answers providing relevant additional information."
-msgstr "<b>Antwoorden moeten niet gewoon verwijzen naar andere vragen</b>. Voeg in plaats daarvan een vraag reactie indicatie toe \"Mogelijk duplicaat van...\". Hoewel het wel ok is om links naar andere vragen of antwoorden bij te voegen die extra relevante informatie toevoegen."
+msgid ""
+"<b>Answers shouldn't just point to other Questions</b>. Instead add a "
+"question comment indication \"Possible duplicate of...\". However, it's ok "
+"to include links to other questions or answers providing relevant additional"
+" information."
+msgstr ""
+"<b>Antwoorden moeten niet gewoon verwijzen naar andere vragen</b>. Voeg in "
+"plaats daarvan een vraag reactie indicatie toe \"Mogelijk duplicaat "
+"van...\". Hoewel het wel ok is om links naar andere vragen of antwoorden bij"
+" te voegen die extra relevante informatie toevoegen."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other questions</b>.Instead add a comment indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to include links to other questions or answers providing relevant additional information."
-msgstr "<b>Antwoorden moeten niet gewoon verwijzen naar andere vragen</b>. Voeg in plaats daarvan de reactie <i>\"Mogelijk duplicaat van...\"</i> toe. Het is bijgevolg wel ok om links naar andere vragen of antwoorden bij te voegen die extra relevante informatie toevoegen."
+msgid ""
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+"<b>Antwoorden moeten niet gewoon verwijzen naar andere vragen</b>. Voeg in "
+"plaats daarvan de reactie <i>\"Mogelijk duplicaat van...\"</i> toe. Het is "
+"bijgevolg wel ok om links naar andere vragen of antwoorden bij te voegen die"
+" extra relevante informatie toevoegen."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just provide a link a solution</b>. Instead provide the solution description text in your answer, even if it's just a copy/paste. Links are welcome, but should be complementary to answer, referring sources or additional reading."
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
 msgstr ""
 "<b>Antwoorden moeten niet gewoon een link geven naar\n"
 "een oplossing.</b> Bied in de plaats de oplossing\n"
@@ -306,14 +343,24 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Before you ask - please make sure to search for a similar question.</b> You can search questions by their title or tags. It’s also OK to answer your own question."
-msgstr "<b>Controleer of er al een gelijkaardige vraag bestaat - voordat je ze stelt.</b> Je kunt vragen zoeken op hun titel of labels. Het is tevens OK om je eigen vraag te beantwoorden."
+msgid ""
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
+msgstr ""
+"<b>Controleer of er al een gelijkaardige vraag bestaat - voordat je ze "
+"stelt.</b> Je kunt vragen zoeken op hun titel of labels. Het is tevens OK om"
+" je eigen vraag te beantwoorden."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Please avoid asking questions that are too subjective and argumentative</b> or not relevant to this community."
-msgstr "<b>Vermijd vragen die te subjectief en argumentatief zijn</b> of niet relevant zijn voor deze community."
+msgid ""
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
+msgstr ""
+"<b>Vermijd vragen die te subjectief en argumentatief zijn</b> of niet "
+"relevant zijn voor deze community."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -423,7 +470,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
-msgstr "<i class=\"fa fa-check\"/> Hoe de Canadese belastingen van TPS en TVQ te configureren?"
+msgstr ""
+"<i class=\"fa fa-check\"/> Hoe de Canadese belastingen van TPS en TVQ te "
+"configureren?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -509,13 +558,21 @@ msgstr "<i class=\"fa fa-labels fa-fw\"/> Gevolgde labels"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-label=\"Negative votes\" title=\"Negative votes\"/>"
-msgstr "<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-label=\"Negatieve stemmen\" title=\"Negatieve stemmen\"/>"
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negatieve stemmen\" title=\"Negatieve stemmen\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive votes\" title=\"Positive votes\"/>"
-msgstr "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positieve stemmen\" title=\"Positieve stemmen\"/>"
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-"
+"label=\"Positieve stemmen\" title=\"Positieve stemmen\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -525,8 +582,13 @@ msgstr "<i class=\"fa fa-times fa-fw mr-1\"/>Weigeren"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!"
-msgstr "<i class=\"fa fa-times\"/> Goedemorgen allemaal! Kan iemand alstublieft helpen bij het oplossen van mijn belastingberekeningsprobleem in Canada? Bedankt!"
+msgid ""
+"<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
+"solve my tax computation problem in Canada? Thanks!"
+msgstr ""
+"<i class=\"fa fa-times\"/> Goedemorgen allemaal! Kan iemand alstublieft "
+"helpen bij het oplossen van mijn belastingberekeningsprobleem in Canada? "
+"Bedankt!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -561,13 +623,21 @@ msgstr "<span class=\"badge badge-info\">Gesloten</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-label=\"Bronze badge\" title=\"Bronze badge\"/>"
-msgstr "<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgid ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgstr ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-label=\"Silver badge\" title=\"Silver badge\"/>"
-msgstr "<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-label=\"Zilveren badge\" title=\"Zilveren badge\"/>"
+msgid ""
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
+msgstr ""
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Zilveren badge\" title=\"Zilveren badge\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -694,6 +764,9 @@ msgstr "Accepteer een vraag"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Access Denied"
 msgstr "Toegang geweigerd"
@@ -731,8 +804,13 @@ msgstr "Toevoegen aan menu"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
-msgid "After posting the user will be proposed to share its question or answer on social networks, enabling social network propagation of the forum content."
-msgstr "Na het plaatsen zal de gebruiker voorgesteld worden om het antwoord op de vraag te delen op social media, waardoor social netwerk propagatie van de foruminhoud gebeurd. "
+msgid ""
+"After posting the user will be proposed to share its question or answer on "
+"social networks, enabling social network propagation of the forum content."
+msgstr ""
+"Na het plaatsen zal de gebruiker voorgesteld worden om het antwoord op de "
+"vraag te delen op social media, waardoor social netwerk propagatie van de "
+"foruminhoud gebeurd. "
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:0
@@ -970,6 +1048,7 @@ msgstr "Terug naar vraag"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Bad Request"
 msgstr "Slechte aanvraag"
@@ -1084,8 +1163,15 @@ msgstr "Wijzig de vraag labels"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
-msgid "Check this box to display a popup for posts older than 10 days without any given answer. The popup will offer to share it on social networks. When shared, a question is bumped at the top of the forum."
-msgstr "Vink deze optie aan om een pop-up te tonen voor vragen die ouder dan 10 dagen zijn en geen antwoord hebben. De pop-up vraagt om de vraag te delen op social netwerken. Wanneer gedeeld wordt de vraag omhoog geduwd naar de top van het forum."
+msgid ""
+"Check this box to display a popup for posts older than 10 days without any "
+"given answer. The popup will offer to share it on social networks. When "
+"shared, a question is bumped at the top of the forum."
+msgstr ""
+"Vink deze optie aan om een pop-up te tonen voor vragen die ouder dan 10 "
+"dagen zijn en geen antwoord hebben. De pop-up vraagt om de vraag te delen op"
+" social netwerken. Wanneer gedeeld wordt de vraag omhoog geduwd naar de top "
+"van het forum."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1128,6 +1214,7 @@ msgstr "Klik om je antwoord te plaatsen."
 
 #. module: website_forum
 #. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 #, python-format
@@ -1673,10 +1760,24 @@ msgstr "Volgend"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate 10 points, each vote against will subtract 10 points. There is a limit of 200 points that can be accumulated for a question or answer per day. The table given at the end explains reputation point requirements for each type of moderation task."
-msgstr "Bijvoorbeeld, als je een interessante vraag stelt of een nuttig antwoord geeft, zal er op je input omhoog worden gestemd. Als het antwoord misleidend is zal het naar beneden worden gestemd. Elke stem voor genereert 10 punten, elke stem tegen trekt 10 punten af. Er is een limiet voor een vraag of antwoord van 200 geaccumuleerde punten per dag. De tabel op het einde verklaart de vereisten voor reputatiepunten en de vereisten voor elke soort van moderator taak."
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 10 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
+msgstr ""
+"Bijvoorbeeld, als je een interessante vraag stelt of een nuttig antwoord "
+"geeft, zal er op je input omhoog worden gestemd. Als het antwoord misleidend"
+" is zal het naar beneden worden gestemd. Elke stem voor genereert 10 punten,"
+" elke stem tegen trekt 10 punten af. Er is een limiet voor een vraag of "
+"antwoord van 200 geaccumuleerde punten per dag. De tabel op het einde "
+"verklaart de vereisten voor reputatiepunten en de vereisten voor elke soort "
+"van moderator taak."
 
 #. module: website_forum
+#: code:addons/website_forum/models/website.py:0
 #: code:addons/website_forum/models/website.py:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.model,name:website_forum.model_forum_forum
@@ -1883,8 +1984,11 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
-msgid "If the author has not enough karma, a nofollow attribute is added to links"
-msgstr "Als de auteur niet genoeg karma heeft is een nofollow attribuut toegevoegd aan de links"
+msgid ""
+"If the author has not enough karma, a nofollow attribute is added to links"
+msgstr ""
+"Als de auteur niet genoeg karma heeft is een nofollow attribuut toegevoegd "
+"aan de links"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1907,8 +2011,18 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "If you fit in one of these example or if your motivation for asking the question is “I would like to participate in a discussion about ______”, then you should not be asking here but on our mailing lists. However, if your motivation is “I would like others to explain ______ to me”, then you are probably OK."
-msgstr "Als je in een van deze voorbeelden past of als je motivatie om de vraag te stellen is: \"Ik wil graag deelnemen aan een discussie over ______\", dan zou je dit niet hier moeten stellen, maar op onze mailinglijsten. Als je motivatie echter is: \"Ik zou graag willen dat anderen mij ______ uitleggen\", dan ben je waarschijnlijk op de goede plek."
+msgid ""
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
+msgstr ""
+"Als je in een van deze voorbeelden past of als je motivatie om de vraag te "
+"stellen is: \"Ik wil graag deelnemen aan een discussie over ______\", dan "
+"zou je dit niet hier moeten stellen, maar op onze mailinglijsten. Als je "
+"motivatie echter is: \"Ik zou graag willen dat anderen mij ______ "
+"uitleggen\", dan ben je waarschijnlijk op de goede plek."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2191,8 +2305,11 @@ msgstr "Meest gestemd"
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
-msgid "Move this question to the top of the list by sharing it on social networks."
-msgstr "Plaats deze vraag terug bovenaan de top van de lijst door het te delen op social netwerken."
+msgid ""
+"Move this question to the top of the list by sharing it on social networks."
+msgstr ""
+"Plaats deze vraag terug bovenaan de top van de lijst door het te delen op "
+"social netwerken."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2475,8 +2592,12 @@ msgstr "Vul dit veld in"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "Please wait for a moderator to validate your previous post before continuing."
-msgstr "Wacht op een moderator om je vorige posts te bevestigen voordat je verder gaat."
+msgid ""
+"Please wait for a moderator to validate your previous post before "
+"continuing."
+msgstr ""
+"Wacht op een moderator om je vorige posts te bevestigen voordat je verder "
+"gaat."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2569,7 +2690,9 @@ msgstr "Heeft 100 reacties verstuurd"
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
-msgstr "Een antwoord plaatsen op een [Verwijderde] of [Gesloten] vraag is niet mogelijk."
+msgstr ""
+"Een antwoord plaatsen op een [Verwijderde] of [Gesloten] vraag is niet "
+"mogelijk."
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_posts
@@ -2616,8 +2739,14 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
-msgid "Public: Forum is public\\nSigned In: Forum is visible for signed in users\\nSome users: Forum and their content are hidden for non members of selected group"
-msgstr "Openbaar: forum is openbaar \\ Aangemeld: forum is zichtbaar voor aangemelde gebruikers \\ Sommige gebruikers: forum en hun inhoud zijn verborgen voor niet-leden van de geselecteerde groep."
+msgid ""
+"Public: Forum is public\\nSigned In: Forum is visible for signed in "
+"users\\nSome users: Forum and their content are hidden for non members of "
+"selected group"
+msgstr ""
+"Openbaar: forum is openbaar \\ Aangemeld: forum is zichtbaar voor aangemelde"
+" gebruikers \\ Sommige gebruikers: forum en hun inhoud zijn verborgen voor "
+"niet-leden van de geselecteerde groep."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -2733,8 +2862,12 @@ msgstr "Vragen en Antwoorden"
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
-msgid "Questions and Answers mode: only one answer allowed\\n Discussions mode: multiple answers allowed"
-msgstr "Vraag- en antwoordmodus: slechts één antwoord toegestaan\\n Discussiemodus: meerdere antwoorden toegestaan."
+msgid ""
+"Questions and Answers mode: only one answer allowed\\n Discussions mode: "
+"multiple answers allowed"
+msgstr ""
+"Vraag- en antwoordmodus: slechts één antwoord toegestaan\\n Discussiemodus: "
+"meerdere antwoorden toegestaan."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__mode
@@ -2756,6 +2889,7 @@ msgid "Ranks"
 msgstr "Rangen"
 
 #. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"
@@ -2796,7 +2930,9 @@ msgstr "Redenen"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
-msgstr "Heeft voor de eerste keer minstens 3 omhoog stemmen ontvangen voor een antwoord"
+msgstr ""
+"Heeft voor de eerste keer minstens 3 omhoog stemmen ontvangen voor een "
+"antwoord"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2955,8 +3091,12 @@ msgstr "Reeks"
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
-msgid "Share this content to increase your chances to be featured on the front page and attract more visitors."
-msgstr "Deel deze inhoud om je kans te verhogen om op de voorpagina getoond te worden en meer bezoekers aan te trekken."
+msgid ""
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
+msgstr ""
+"Deel deze inhoud om je kans te verhogen om op de voorpagina getoond te "
+"worden en meer bezoekers aan te trekken."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
@@ -3139,8 +3279,15 @@ msgstr "Teaser"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post__bump_date
-msgid "Technical field allowing to bump a question. Writing on this field will trigger a write on write_date and therefore bump the post. Directly writing on write_date is currently not supported and this field is a workaround."
-msgstr "Technische veld voor het bumpen van een vraag toe te staan. Schrijven op dit velt doet een schrijfactie afgaan op write_date en bumpt daardoor de vraag. Direct schrijven op write_datels is momenteel niet ondersteund en dit veld is een tijdelijke oplossing."
+msgid ""
+"Technical field allowing to bump a question. Writing on this field will "
+"trigger a write on write_date and therefore bump the post. Directly writing "
+"on write_date is currently not supported and this field is a workaround."
+msgstr ""
+"Technische veld voor het bumpen van een vraag toe te staan. Schrijven op dit"
+" velt doet een schrijfactie afgaan op write_date en bumpt daardoor de vraag."
+" Direct schrijven op write_datels is momenteel niet ondersteund en dit veld "
+"is een tijdelijke oplossing."
 
 #. module: website_forum
 #. openerp-web
@@ -3153,8 +3300,12 @@ msgstr "Bedankt voor je bericht!"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "The goal of this site is create a relevant knowledge base that would answer questions related to Odoo."
-msgstr "Het doel van deze website is om een relevante kennisbasis te maken die vragen gerelateerd aan Odoo beantwoord."
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
+msgstr ""
+"Het doel van deze website is om een relevante kennisbasis te maken die "
+"vragen gerelateerd aan Odoo beantwoord."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3165,19 +3316,36 @@ msgstr "De vraag is gesloten"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough."
-msgstr "Daarom kunnen vragen en antwoorden gewijzigd worden zoals wiki pagina's door ervaren gebruikers van deze website om zo de algemene kwaliteit te verbeteren van de kennis en inhoud. Zulke privileges worden toegewezen gebaseerd op het karma niveau: je zal hetzelfde kunnen doen wanneer je karma hoog genoeg is."
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+"Daarom kunnen vragen en antwoorden gewijzigd worden zoals wiki pagina's door"
+" ervaren gebruikers van deze website om zo de algemene kwaliteit te "
+"verbeteren van de kennis en inhoud. Zulke privileges worden toegewezen "
+"gebaseerd op het karma niveau: je zal hetzelfde kunnen doen wanneer je karma"
+" hoog genoeg is."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid "This community is for professional and enthusiast users, partners and programmers."
-msgstr "Deze community is voor professionals en andere enthousiaste gebruikers, relaties en programmeurs."
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers."
+msgstr ""
+"Deze community is voor professionals en andere enthousiaste gebruikers, "
+"relaties en programmeurs."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "This community is for professional and enthusiast users, partners and programmers. You can ask questions about:"
-msgstr "Deze community is voor professionals en andere enthousiaste gebruikers, relaties en programmeurs. Je kunt vragen stellen over:"
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
+msgstr ""
+"Deze community is voor professionals en andere enthousiaste gebruikers, "
+"relaties en programmeurs. Je kunt vragen stellen over:"
 
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
@@ -3190,13 +3358,25 @@ msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
-msgid "This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
-msgstr "De community is voor professionals en enthousiasten van onze producten en diensten. Deel en discussieer over de beste inhoud en nieuwe marketing ideeën, bouw je professionele profiel en wordt samen een betere marketeer."
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services. Share and discuss the best content and new marketing ideas, build "
+"your professional profile and become a better marketer together."
+msgstr ""
+"De community is voor professionals en enthousiasten van onze producten en "
+"diensten. Deel en discussieer over de beste inhoud en nieuwe marketing "
+"ideeën, bouw je professionele profiel en wordt samen een betere marketeer."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
-msgid "This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation"
-msgstr "Deze formule wordt gebruikt om te sorteren op relevantie. De variabele 'stemmen' stellen het aantal stemmen voor een vraag voor, en 'dagen' is het aantal dagen sinds de aanmaak van de vraag"
+msgid ""
+"This formula is used in order to sort by relevance. The variable 'votes' "
+"represents number of votes for a post, and 'days' is number of days since "
+"the post creation"
+msgstr ""
+"Deze formule wordt gebruikt om te sorteren op relevantie. De variabele "
+"'stemmen' stellen het aantal stemmen voor een vraag voor, en 'dagen' is het "
+"aantal dagen sinds de aanmaak van de vraag"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3263,8 +3443,12 @@ msgstr "Goedkeuren"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "To prevent your question from being flagged and possibly removed, avoid asking subjective questions where …"
-msgstr "Om te voorkomen dat je vraag wordt gemarkeerd en mogelijk verwijderd, vermijd subjectieve vragen waar ..."
+msgid ""
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
+msgstr ""
+"Om te voorkomen dat je vraag wordt gemarkeerd en mogelijk verwijderd, "
+"vermijd subjectieve vragen waar ..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3551,8 +3735,17 @@ msgstr "Welkom!"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "When a question or answer is upvoted, the user who posted them will gain some points, which are called \"karma points\". These points serve as a rough measure of the community trust to him/her. Various moderation tasks are gradually assigned to the users based on those points."
-msgstr "Wanneer een vraag of antwoord omhoog wordt gestemd zal de gebruiker die deze heeft aangemaakt wat punten krijgen, genaamd  \"Karma punten\". Deze punten dienen als een ruwe betrouwheid graadmeter binnen de community. Verschillende moderator taken zijn gradueel toegewezen aan de gebruiker gebaseerd op deze punten."
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+msgstr ""
+"Wanneer een vraag of antwoord omhoog wordt gestemd zal de gebruiker die deze"
+" heeft aangemaakt wat punten krijgen, genaamd  \"Karma punten\". Deze punten"
+" dienen als een ruwe betrouwheid graadmeter binnen de community. "
+"Verschillende moderator taken zijn gradueel toegewezen aan de gebruiker "
+"gebaseerd op deze punten."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3595,8 +3788,15 @@ msgstr "Je moet genoeg karma hebben om labels te wijzigen"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "You should only ask practical, answerable questions based on actual problems that you face. Chatty, open-ended questions diminish the usefulness of this site and push other questions off the front page."
-msgstr "Het is aan te raden enkel praktische, beantwoordbare vragen te stellen die gebaseerd zijn op problemen die je ondervind. Chatterige, open vragen verminderen de bruikbaarheid van deze website en duwen andere vragen van de eerste pagina."
+msgid ""
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
+msgstr ""
+"Het is aan te raden enkel praktische, beantwoordbare vragen te stellen die "
+"gebaseerd zijn op problemen die je ondervind. Chatterige, open vragen "
+"verminderen de bruikbaarheid van deze website en duwen andere vragen van de "
+"eerste pagina."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3717,8 +3917,11 @@ msgstr "voor reden:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-msgid "has been posted and require your validation. Click here to access the question :"
-msgstr "is geplaatst en vereist je bevestiging. Klik hier om de vraag te bekijken:"
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
+msgstr ""
+"is geplaatst en vereist je bevestiging. Klik hier om de vraag te bekijken:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -3741,7 +3944,9 @@ msgstr "hier"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr "Hoe Odoo te configureren of personaliseren naar specifieke zakelijke behoeftes,"
+msgstr ""
+"Hoe Odoo te configureren of personaliseren naar specifieke zakelijke "
+"behoeftes,"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3866,8 +4071,12 @@ msgstr "label"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "there is no actual problem to be solved: “I’m curious if other people feel like I do.”"
-msgstr "er is geen probleem om op te lossen: \"Ik ben nieuwsgierig of andere mensen zich voelen zoals mij.\""
+msgid ""
+"there is no actual problem to be solved: “I’m curious if other people feel "
+"like I do.”"
+msgstr ""
+"er is geen probleem om op te lossen: \"Ik ben nieuwsgierig of andere mensen "
+"zich voelen zoals mij.\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3902,14 +4111,20 @@ msgstr "gebruikmakend van het"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "we are being asked an open-ended, hypothetical question: “What if ______ happened?”"
-msgstr "we krijgen een open-einde, hypothetische vraag gesteld: \"Wat als  ______ gebeurde?\""
+msgid ""
+"we are being asked an open-ended, hypothetical question: “What if ______ "
+"happened?”"
+msgstr ""
+"we krijgen een open-einde, hypothetische vraag gesteld: \"Wat als  ______ "
+"gebeurde?\""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "what's the best way to use Odoo for a specific business need,"
-msgstr "Wat is de beste manier om Odoo te gebruiken voor een specifieke bedrjifsbehoefte,"
+msgstr ""
+"Wat is de beste manier om Odoo te gebruiken voor een specifieke "
+"bedrjifsbehoefte,"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
@@ -3920,8 +4135,12 @@ msgstr "xp"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "your answer is provided along with the question, and you expect more answers: “I use ______ for ______, what do you use?”"
-msgstr "je antwoord is aangeboden samen met de vraag, en je verwacht meer antwoorden: “Ik gebruik ______ voor ______, wat gebruik je?”"
+msgid ""
+"your answer is provided along with the question, and you expect more "
+"answers: “I use ______ for ______, what do you use?”"
+msgstr ""
+"je antwoord is aangeboden samen met de vraag, en je verwacht meer "
+"antwoorden: “Ik gebruik ______ voor ______, wat gebruik je?”"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma

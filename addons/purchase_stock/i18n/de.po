@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Robert Förster <hello@suppliot.eu>, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
-"PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_stock
@@ -28,24 +26,40 @@ msgstr "% Termingerechte Lieferung"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
 msgstr "+ %d Tage(e)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time Delivery Data</span>"
-msgstr "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Keine Daten zur termingerechten Lieferung verfügbar</span>"
+msgid ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
+"Delivery Data</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Keine Daten "
+"zur termingerechten Lieferung verfügbar</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -92,8 +106,16 @@ msgstr "Aktion"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
-msgid "Amount of time between expected and effective receipt date. Due to a hack needed to calculate this,               every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg"
-msgstr "Zeitspanne zwischen erwartetem und tatsächlichem Eingangsdatum. Aufgrund eines Hacks, der für die Berechnung erforderlich ist, zeigt jeder Datensatz denselben Durchschnittswert an, daher sollte dieser Wert nur als aggregierter Wert mit group_operator=avg verwendet werden."
+msgid ""
+"Amount of time between expected and effective receipt date. Due to a hack "
+"needed to calculate this,               every record will show the same "
+"average value, therefore only use this as an aggregated value with "
+"group_operator=avg"
+msgstr ""
+"Zeitspanne zwischen erwartetem und tatsächlichem Eingangsdatum. Aufgrund "
+"eines Hacks, der für die Berechnung erforderlich ist, zeigt jeder Datensatz "
+"denselben Durchschnittswert an, daher sollte dieser Wert nur als "
+"aggregierter Wert mit group_operator=avg verwendet werden."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
@@ -160,7 +182,9 @@ msgstr "Benutzerdefinierte Beschreibung"
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
-msgstr "Erforderliche Tage für die Bestätigung einer Bestellung, Festlegung, wann eine Bestellung validiert werden soll"
+msgstr ""
+"Erforderliche Tage für die Bestätigung einer Bestellung, Festlegung, wann "
+"eine Bestellung validiert werden soll"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -178,8 +202,13 @@ msgstr "Ausliefern an"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
-msgid "Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc."
-msgstr "Abhängig von den installierten Modulen können Sie die Route des Produkts definieren: ob es gekauft, hergestellt, auf Bestellung aufgefüllt wird, usw."
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
+"Abhängig von den installierten Modulen können Sie die Route des Produkts "
+"definieren: ob es gekauft, hergestellt, auf Bestellung aufgefüllt wird, usw."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -232,8 +261,14 @@ msgstr "Ausnahme(n):"
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
-msgid "For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation."
-msgstr "Für das Produkt %s stimmt das Lager der Vorgangsart (%s) nicht mit dem Ort (%s) der Nachbestellungsregel (%s) überein. Ändern Sie die Vorgangsart oder stornieren Sie die Angebotsanfrage."
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"Für das Produkt %s stimmt das Lager der Vorgangsart (%s) nicht mit dem Ort "
+"(%s) der Nachbestellungsregel (%s) überein. Ändern Sie die Vorgangsart oder "
+"stornieren Sie die Angebotsanfrage."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -257,7 +292,8 @@ msgstr "Generieren Sie den Entwurf der Lieferantenrechnung."
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr "Gehen Sie zurück zur Bestellung um die Lieferantenrechnung zu generieren."
+msgstr ""
+"Gehen Sie zurück zur Bestellung um die Lieferantenrechnung zu generieren."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -281,8 +317,12 @@ msgstr "Lieferbedingung"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr "International Lieferbedingungen sind vordefinierte Konditionen und Bedingungen, die zumeist im internationalen Handel eingesetzt werden."
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"International Lieferbedingungen sind vordefinierte Konditionen und "
+"Bedingungen, die zumeist im internationalen Handel eingesetzt werden."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -326,8 +366,14 @@ msgstr "Manuelle Aktionen können erforderlich sein."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
-msgstr "Toleranz bei Lieferzeiten. Wenn das System Bestellungen für erneut zu bestellende Produkte generiert, werden sie mit diesem Vorlauf bestellt, um unerwartete Lieferverzögerungen einzuplanen."
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Toleranz bei Lieferzeiten. Wenn das System Bestellungen für erneut zu "
+"bestellende Produkte generiert, werden sie mit diesem Vorlauf bestellt, um "
+"unerwartete Lieferverzögerungen einzuplanen."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -352,8 +398,12 @@ msgstr "Noch keine Daten vorhanden"
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
-msgstr "Odoo ist nicht in der Lage, die angelsächsischen Einträge zu generieren. Die Gesamtbewertung von %s ist Null."
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo ist nicht in der Lage, die angelsächsischen Einträge zu generieren. Die"
+" Gesamtbewertung von %s ist Null."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -393,8 +443,12 @@ msgstr "Beschaffungsregel"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
-msgid "Over the past 12 months; the number of products received on time divided by the number of ordered products."
-msgstr "In den letzten 12 Monaten; die Anzahl der fristgerecht eingegangenen Produkte geteilt durch die Anzahl der bestellten Produkte."
+msgid ""
+"Over the past 12 months; the number of products received on time divided by "
+"the number of ordered products."
+msgstr ""
+"In den letzten 12 Monaten; die Anzahl der fristgerecht eingegangenen "
+"Produkte geteilt durch die Anzahl der bestellten Produkte."
 
 #. module: purchase_stock
 #. openerp-web
@@ -531,8 +585,12 @@ msgstr "Routen"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Schedule automatically generated request for quotations earlier to avoid delays"
-msgstr "Planen Sie automatisch erstellte Angebotsanfragen früher, um Verzögerungen zu vermeiden"
+msgid ""
+"Schedule automatically generated request for quotations earlier to avoid "
+"delays"
+msgstr ""
+"Planen Sie automatisch erstellte Angebotsanfragen früher, um Verzögerungen "
+"zu vermeiden"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -609,19 +667,41 @@ msgstr "Der folgende Auffüllungsauftrag wurde generiert."
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
-msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund."
-msgstr "Die auf Ihrer Bestellung angegebenen Menge ist geringer als die in Rechnung gestellte Menge. Sie sollten um eine Erstattung bitten."
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+"Die auf Ihrer Bestellung angegebenen Menge ist geringer als die in Rechnung "
+"gestellte Menge. Sie sollten um eine Erstattung bitten."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
-msgid "There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors."
-msgstr "Für das Produkt %s sind keine Einkaufsinformationen hinterlegt, weswegen keine Bestellung ausgelöst werden kann (kein Lieferant, Mindestabnahmemenge nicht erreicht, Datum nicht valide, ...). Gehen Sie zur Produktansicht und ergänzen Sie die Lieferantenliste."
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
+msgstr ""
+"Für das Produkt %s sind keine Einkaufsinformationen hinterlegt, weswegen "
+"keine Bestellung ausgelöst werden kann (kein Lieferant, Mindestabnahmemenge "
+"nicht erreicht, Datum nicht valide, ...). Gehen Sie zur Produktansicht und "
+"ergänzen Sie die Lieferantenliste."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
-msgid "This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse."
-msgstr "Dadurch wird eine Streckengeschäft-Route hinzugefügt, die auf Produkte angewendet werden kann, um Ihre Lieferanten anzuweisen, an Ihre Kunden zu liefern. Ein Produkt für das Streckengeschäft generiert eine Kaufanfrage für ein Angebot, sobald der Verkaufsauftrag bestätigt wurde. Dies ist ein Ablauf auf Abruf. Die gewünschte Lieferadresse ist die Lieferadresse des Kunden und nicht Ihr Lager."
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Dadurch wird eine Streckengeschäft-Route hinzugefügt, die auf Produkte "
+"angewendet werden kann, um Ihre Lieferanten anzuweisen, an Ihre Kunden zu "
+"liefern. Ein Produkt für das Streckengeschäft generiert eine Kaufanfrage für"
+" ein Angebot, sobald der Verkaufsauftrag bestätigt wurde. Dies ist ein "
+"Ablauf auf Abruf. Die gewünschte Lieferadresse ist die Lieferadresse des "
+"Kunden und nicht Ihr Lager."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -631,8 +711,12 @@ msgstr "Dies bestimmt den Vorgangstyp einer eingehenden Lieferung."
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
-msgid "Those dates couldn’t be modified accordingly on the receipt %s which had already been validated."
-msgstr "Diese Daten konnten auf dem bereits validierten Beleg %s nicht entsprechend geändert werden."
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+"Diese Daten konnten auf dem bereits validierten Beleg %s nicht entsprechend "
+"geändert werden."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -653,8 +737,12 @@ msgstr "Lieferung vornehmen"
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
-msgid "Unable to cancel purchase order %s as some receptions have already been done."
-msgstr "Es ist nicht möglich die Bestellung %s zu löschen, da einige Lieferungpositionen bereits geliefert wurden."
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Es ist nicht möglich die Bestellung %s zu löschen, da einige "
+"Lieferungpositionen bereits geliefert wurden."
 
 #. module: purchase_stock
 #. openerp-web
@@ -700,12 +788,16 @@ msgstr "Lager"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Sobald die Produkte bestellt sind, können Sie an dieses Lager geliefert werden."
+msgstr ""
+"Sobald die Produkte bestellt sind, können Sie an dieses Lager geliefert "
+"werden."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
-msgid "When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need."
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need."
 msgstr ""
 "Wenn Produkte benötigt werden in <b>%s</b>, <br/> wird eine Angebotsanfrage erstellt um den Bedarf zu decken.\n"
 "\n"

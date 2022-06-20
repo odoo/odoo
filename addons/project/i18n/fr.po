@@ -3,56 +3,6 @@
 # 	* project
 # 
 # Translators:
-# Henri Cornuau <hcornuau@gmail.com>, 2016
-# f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# 31c77b784710e4a287a92d851a40e039, 2017
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# Xavier Symons <xsy@openerp.com>, 2018
-# Micky Jault <micky037@hotmail.fr>, 2018
-# bb76cd9ac0cb7e20167a14728edb858b, 2018
-# Olivier Dony <odo@odoo.com>, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
-# Nancy Bolognesi <nb@microcom.ca>, 2018
-# Miguel Vidali <mvidali129@gmail.com>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
-# fr trans <e2ffr05@hotmail.com>, 2018
-# Fred Gilson <fgi@odoo.com>, 2019
-# Laura Piraux <lap@odoo.com>, 2019
-# Marie Willemyns <mwi@odoo.com>, 2019
-# Nathan Grognet <ngr@odoo.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
-# Clo <clo@odoo.com>, 2019
-# Fabien Pinckaers <fp@openerp.com>, 2019
-# Shark McGnark <peculiarcheese@gmail.com>, 2020
-# Fernanda Marques <fem@odoo.com>, 2020
-# 6534c450c77b2549e41c52e2051f5839, 2020
-# Arnaud Willem <contact@arnaud-willem.eu>, 2020
-# Frédéric LIETART <stuff@tifred.fr>, 2020
-# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Léonie Bouchat <lbo@odoo.com>, 2020
-# Celia Tydgat <cty@odoo.com>, 2020
-# khalid chamakh <elbissat@gmail.com>, 2021
-# Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
-# Cécile Perrez <cpe@odoo.com>, 2021
-# Xavier Belmere <Info@cartmeleon.com>, 2021
-# guillaume bauer <guillaume.bauer@syentys.fr>, 2021
-# Eloïse Stilmant <est@odoo.com>, 2021
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2021
-# Yann Papouin <ypa@decgroupe.com>, 2021
-# qdelcourte <delcourte.quentin@hotmail.com>, 2021
-# Melanie Bernard <mbe@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# SBO-Sebastien <sebastien@sbo-solutions.fr>, 2021
-# Sebastien LANGE, 2021
-# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
-# Camille Dantinne <cmd@odoo.com>, 2022
-# Alexandra Jubert <aju@odoo.com>, 2022
-# gdp Odoo <gdp@odoo.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -60,14 +10,14 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
-"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"PO-Revision-Date: 2022-06-17 09:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: project
 #. openerp-web
@@ -823,6 +773,7 @@ msgid "Add Milestone"
 msgstr "Ajouter un Jalon"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Ajouter une description…"
@@ -1005,6 +956,7 @@ msgstr "Archiver le projet"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1727,16 +1679,21 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Définie la visibilité des tâches du projet:\n"
-"- Employés invités: les employés peuvent seulement voir les projets et tâches auxquels ils sont abonnés.\n"
-"- Tous les employés: les employés peuvent voir tous les projets et tâches.\n"
-"- Utilisateurs portail et tous les employés: les employés peuvent tout voir. Les utilisateurs portail peuvent voir les projets et tâches auxquels ils (ou quelqu'un de leur société) sont abonnés.  "
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1927,6 +1884,13 @@ msgstr "par ex. Lancement du Produit"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Modifier"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4644,6 +4608,7 @@ msgstr "Récurrence de tâche"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -5503,6 +5468,14 @@ msgstr "Vous avez été assigné à "
 #, python-format
 msgid "You have not write access of %s field."
 msgstr "Vous n'avez pas de droits d'écriture pour le champ %s ."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

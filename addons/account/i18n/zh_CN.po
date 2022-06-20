@@ -3,75 +3,15 @@
 # 	* account
 # 
 # Translators:
-# lttlsnk <lttlsnk@gmail.com>, 2016
-# zpq001 <zpq001@live.com>, 2016
-# Mack <mackz@sina.com>, 2016
-# 訾明华 <565209960@qq.com>, 2016
-# Luke <cialuo@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Gang LIU <liu9ang@hotmail.com>, 2016
-# fausthuang, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Rona Lin <ssauapw@qq.com>, 2016
-# Ted Wang <feiyuwang2012@gmail.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# v2exerer <9010446@qq.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# Maie <m@maie.name>, 2018
-# 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
-# John Lin <linyinhuan@139.com>, 2018
-# bf2549c5415a9287249cba2b8a5823c7, 2018
-# Henry Zhou <zhouhenry@live.com>, 2018
-# e2f <projects@e2f.com>, 2019
-# Siyuan Gu <siyuancn@hotmail.com>, 2019
-# gary chk <garychk@163.com>, 2019
-# xu xiaohu <xu.xiaohu@gmail.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# bower Guo <124358678@qq.com>, 2019
-# SJ Z <welcomeing@gmail.com>, 2019
-# yuan wenpu <1140021222@qq.com>, 2019
-# 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
-# niulin lnc. <admin@niulin.net>, 2019
-# 老窦 北京 <2662059195@qq.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# rsh <263737@qq.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
-# 黎伟杰 <674416404@qq.com>, 2019
-# ryan ryan <itechr@outlook.com>, 2019
-# keecome <7017511@qq.com>, 2020
-# zilin wu <binggue@qq.com>, 2020
-# Felix Yang <felixyangsh@aliyun.com>, 2020
-# GritLuo <dooms21day@163.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# 晋 宋 <56457576@qq.com>, 2020
-# ChinaMaker <liuct@chinamaker.net>, 2021
-# Manga Tsang <mts@odoo.com>, 2021
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# 稀饭~~ <wangwhai@qq.com>, 2021
-# xu aaron, 2021
-# wei zhou, 2021
-# liAnGjiA <liangjia@qq.com>, 2021
-# 深圳市耀影科技有限公司_QQ1006399173, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
-# Tony Peng <umingpeng@gmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
-"PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: 智能科技奇客罗方 <alanljj@gmail.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:48+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5384,6 +5324,11 @@ msgstr "不要在單據通信历史中保留电子邮件备份(仅限群发邮�
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Documentation"
 msgstr "系统使用说明"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "你的会计所属国家"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
@@ -14195,6 +14140,15 @@ msgstr "这只能用于日记帐项目"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr "此分录包含来自不被允许的国家/地区的一些税款. 请检查其财务状况和您的税务设置."
@@ -14207,6 +14161,14 @@ msgid ""
 "data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
 "此分录已从<a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s 复制</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0

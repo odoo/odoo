@@ -3,28 +3,21 @@
 # 	* stock
 # 
 # Translators:
-# Vortex Storm <vortexstorm@protonmail.com>, 2022
-# Niccolò Lubello <nlubello@gmail.com>, 2022
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# sakodoo <sak@odoo.com>, 2022
-# Léonie Bouchat <lbo@odoo.com>, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -1050,7 +1043,10 @@ msgid "As soon as possible"
 msgstr "Prima possibile"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Assegna"
 
@@ -8502,7 +8498,10 @@ msgid "USPS Connector"
 msgstr "Connettore USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Disassegnare"
 
@@ -9473,15 +9472,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "È necessario fornire un numero di lotto/serie per i prodotti %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_slides_survey
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# marcescu, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -68,13 +66,21 @@ msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Todas las certificaciones"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
-msgid "<i class=\"fa fa-download\" aria-label=\"Download certification\" title=\"Download Certification\"/>"
-msgstr "<i class=\"fa fa-download\" aria-label=\"Download certification\" title=\"Download Certification\"/>"
+msgid ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
+msgstr ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
-msgid "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/> Download certification"
-msgstr "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/> Descargar certificación"
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Descargar certificación"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
@@ -132,7 +138,9 @@ msgstr "<span class=\"text-muted\">Completado</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "<span>Start Now</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
-msgstr "<span>Comemzar ahora</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
+msgstr ""
+"<span>Comemzar ahora</span><i class=\"fa fa-chevron-right ml-2 align-"
+"middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -188,6 +196,7 @@ msgstr "Categoría"
 
 #. module: website_slides_survey
 #. openerp-web
+#: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
@@ -248,7 +257,8 @@ msgstr "icono de certificación"
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
-msgstr "Las diapositivas de certificación se completan cuando la prueba es aprobada."
+msgstr ""
+"Las diapositivas de certificación se completan cuando la prueba es aprobada."
 
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
@@ -283,6 +293,8 @@ msgstr ""
 #. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Download certification"
 msgstr "Descargar certificación"
@@ -291,8 +303,12 @@ msgstr "Descargar certificación"
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
 #, python-format
-msgid "Follow this link to add questions to your certification. <a href=\"%s\">Edit certification</a>"
-msgstr "Clique en el enlace para agregar preguntas a su certificación. <a href=\"%s\">Editar certificación</a>"
+msgid ""
+"Follow this link to add questions to your certification. <a href=\"%s\">Edit"
+" certification</a>"
+msgstr ""
+"Clique en el enlace para agregar preguntas a su certificación. <a "
+"href=\"%s\">Editar certificación</a>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
@@ -366,7 +382,9 @@ msgstr "Información del suscritor"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
-msgid "Subtype of the slide category, allows more precision on the actual file type / source type."
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
 msgstr ""
 
 #. module: website_slides_survey
@@ -395,28 +413,40 @@ msgstr "Probar certificación"
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
-msgid "The Certification '%(certification_name)s' cannot be deleted because it is still being used by the Course(s) '%(courses_names)s'"
+msgid ""
+"The Certification '%(certification_name)s' cannot be deleted because it is "
+"still being used by the Course(s) '%(courses_names)s'"
 msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
-msgid "The course is accessible by anyone : the users don't need to join the channel to access the content of the course."
-msgstr "El curso es accesible por quien sea: Los usuarios no necesitan unirse al canal para acceder al contenido del curso."
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"El curso es accesible por quien sea: Los usuarios no necesitan unirse al "
+"canal para acceder al contenido del curso."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid "The courses this survey is linked to through the e-learning application"
-msgstr "Los cursos a los que está vinculada esta encuesta a través de la aplicación e-learning"
+msgid ""
+"The courses this survey is linked to through the e-learning application"
+msgstr ""
+"Los cursos a los que está vinculada esta encuesta a través de la aplicación "
+"e-learning"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
-msgstr "La diapositiva del curso relacionada cuando no hay información de membresía"
+msgstr ""
+"La diapositiva del curso relacionada cuando no hay información de membresía"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
-msgstr "Las diapositivas a las que está vinculada esta encuesta a través de la aplicación e-learning"
+msgstr ""
+"Las diapositivas a las que está vinculada esta encuesta a través de la "
+"aplicación e-learning"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
@@ -434,8 +464,12 @@ msgstr "No tiene permisos para enlazar una certificación."
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
-msgid "You can create your certification from here or use an existing one. Once your certification is created, you can still edit it in backend."
-msgstr "Puede crear su certificación desde aquí o utilizar una existente. Una vez que se crea su certificación, puede editarla en el backend."
+msgid ""
+"You can create your certification from here or use an existing one. Once "
+"your certification is created, you can still edit it in backend."
+msgstr ""
+"Puede crear su certificación desde aquí o utilizar una existente. Una vez "
+"que se crea su certificación, puede editarla en el backend."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
@@ -448,5 +482,6 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
-msgid "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
 msgstr "Reprobó el curso: {{ object.slide_partner_id.channel_id.name }}"

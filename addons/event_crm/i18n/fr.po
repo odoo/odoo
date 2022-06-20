@@ -1,26 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Fabien Pinckaers <fp@openerp.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# Gwladys Jouble <g.jouble@vieconnect.io>, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
@@ -84,7 +81,8 @@ msgstr "Ajouter automatiquement ces étiquettes aux pistes générées."
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
-msgstr "Attribuer automatiquement les pistes créées à cette équipe commerciale."
+msgstr ""
+"Attribuer automatiquement les pistes créées à cette équipe commerciale."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
@@ -205,13 +203,22 @@ msgstr "Filtrer les participants qui vont générer ou pas les pistes."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
-msgid "Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied."
-msgstr "Filtrer les participants afin d'inclure ceux de la catégorie d'événement spécifique. Si non paramétré, aucune restriction de catégorie d'événement ne sera appliquée."
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
+msgstr ""
+"Filtrer les participants afin d'inclure ceux de la catégorie d'événement "
+"spécifique. Si non paramétré, aucune restriction de catégorie d'événement ne"
+" sera appliquée."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
-msgid "Filter the attendees to include those of this specific event. If not set, no event restriction will be applied."
-msgstr "Filtrer les participants afin d'inclure ceux de cet événement spécifique. Si non paramétré, aucune restriction d'événement ne sera appliquée."
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
+msgstr ""
+"Filtrer les participants afin d'inclure ceux de cet événement spécifique. Si"
+" non paramétré, aucune restriction d'événement ne sera appliquée."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -331,6 +338,7 @@ msgstr "Opportunité"
 
 #. module: event_crm
 #: code:addons/event_crm/models/event_registration.py:0
+#: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
 msgstr "Participants"
@@ -426,7 +434,9 @@ msgstr "Étiquettes"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
-msgstr "Ces derniers créent automatiquement des pistes lorsque les participants s'enregistrent."
+msgstr ""
+"Ces derniers créent automatiquement des pistes lorsque les participants "
+"s'enregistrent."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -434,6 +444,7 @@ msgid "Trigger Type"
 msgstr "Type de déclencheur"
 
 #. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"

@@ -3,65 +3,15 @@
 # 	* project
 # 
 # Translators:
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Rafael Blasco <rafael.blasco@tecnativa.com>, 2016
-# Roberto Lizana <robertolizana@trey.es>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Miguel Orueta <mo@landoo.es>, 2016
-# b3f3300d6588d364d534a46dbff68ebb_f82c93d <25ccc199032c6e11a5e1ece329556b43_531019>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Miquel Torner <miq@odoo.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# Sergio Flores <vitavitae1@gmail.com>, 2018
-# Gustavo Valverde, 2018
-# Manuel Vázquez Acosta <mva.led@gmail.com>, 2018
-# oihane <oihanecruce@gmail.com>, 2018
-# Carlos Lopez <celm1990@hotmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
-# 966ff43e6966712895a590e7320ca288, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# Harald Panten <harald.panten@qubiq.es>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Jesse Garza <jga@odoo.com>, 2019
-# Nelson Ramírez <info@konos.cl>, 2020
-# RGB Consulting <odoo@rgbconsulting.com>, 2020
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
-# Mariana Santos Romo <msn@odoo.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2020
-# David Sanchez <david.sanchez@jarsa.com.mx>, 2020
-# Pablo Rojas <rojaspablo88@gmail.com>, 2020
-# Paulina Rodriguez <pauli.rodriguez.c@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
-# Antonio Trueba, 2021
-# Daniela Cervantes <dace@odoo.com>, 2021
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2021
-# Jon Perez <jop@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Jairo Llopis <yajo.sk8@gmail.com>, 2021
-# jabelchi, 2021
-# ramiadavid, 2022
-# ma fo, 2022
 # Martin Trigaux, 2022
-# marcescu, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
-"PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1729,17 +1679,21 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Determine la visibilidad de las tareas del proyecto:\n"
-"- Usuarios invitados: los empleados solo pueden ver el proyecto y las tareas seguidas.\n"
-"- Todos los usuarios: los empleados pueden ver todos los proyectos y tareas.\n"
-"- Usuarios invitados del portal y todos los usuarios: los empleados pueden ver todo. Los usuarios del portal pueden ver el proyecto y las tareas seguidas por\n"
-"ellos o por alguien de su empresa."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action

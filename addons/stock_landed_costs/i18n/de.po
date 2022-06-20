@@ -1,28 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Raymond Vetter, 2021
-# Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
@@ -177,8 +177,12 @@ msgstr "Kostenpositionen"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
-msgstr "Kosten- und Anpassungslinien stimmen nicht überein. Sie sollten vielleicht die Grundkosten neu berechnen."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Kosten- und Anpassungslinien stimmen nicht überein. Sie sollten vielleicht "
+"die Grundkosten neu berechnen."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -344,7 +348,8 @@ msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
-msgstr "Gibt an, ob es sich bei dem Produkt um einen Wareneinstandspreis handelt."
+msgstr ""
+"Gibt an, ob es sich bei dem Produkt um einen Wareneinstandspreis handelt."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -476,6 +481,8 @@ msgstr "Name"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "New"
 msgstr "Neu"
@@ -556,7 +563,9 @@ msgstr "Bitte Lagerkostenart für Produkt %s pflegen."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr "Bitte legen Sie %s fest, auf die die zusätzlichen Kosten angewendet werden sollen."
+msgstr ""
+"Bitte legen Sie %s fest, auf die die zusätzlichen Kosten angewendet werden "
+"sollen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -692,8 +701,12 @@ msgstr "Bestätigen"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
-msgstr "Bestätigte Grundkosten können nicht mehr gelöscht werden, aber man könnte negative Grundkosten erzeugen, um sie in der Summe zu löschen."
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Bestätigte Grundkosten können nicht mehr gelöscht werden, aber man könnte "
+"negative Grundkosten erzeugen, um sie in der Summe zu löschen."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -739,11 +752,21 @@ msgstr "Gewicht"
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
-msgstr "Sie können keine Wareneinstandspreise auf %s anwenden. Wareneinstandspreise können nur für Produkte mit FIFO- oder Durchschnittskostenmethode angewendet werden."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr ""
+"Sie können keine Wareneinstandspreise auf %s anwenden. Wareneinstandspreise "
+"können nur für Produkte mit FIFO- oder Durchschnittskostenmethode angewendet"
+" werden."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
 #, python-format
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
-msgstr "Sie können die Produktart nicht ändern oder die Option \"Wareneinstandspreis\" deaktivieren, da das Produkt in einer Kontobewegungszeile verwendet wird."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"Sie können die Produktart nicht ändern oder die Option "
+"\"Wareneinstandspreis\" deaktivieren, da das Produkt in einer "
+"Kontobewegungszeile verwendet wird."

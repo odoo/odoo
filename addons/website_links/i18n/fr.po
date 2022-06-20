@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"PO-Revision-Date: 2022-06-17 09:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_links
 #. openerp-web
@@ -82,8 +82,16 @@ msgstr "Tout le temps"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the context of your link. It might be an event you want to promote or a special promotion.\"/>"
-msgstr "Campagne <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit le contexte de votre lien. Il peut s'agir d'un événement que vous souhaitez promouvoir ou d'une promotion spéciale.\"/>"
+msgid ""
+"Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
+msgstr ""
+"Campagne <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit "
+"le contexte de votre lien. Il peut s'agir d'un événement que vous souhaitez "
+"promouvoir ou d'une promotion spéciale.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -102,6 +110,7 @@ msgstr "Copier"
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -146,8 +155,16 @@ msgstr "Suivi de liens"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance.\"/>"
-msgstr "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit le support utilisé pour partager votre lien. Ce peut être un email, ou une publicité Facebook par exemple.\"/>"
+msgid ""
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
+msgstr ""
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit "
+"le support utilisé pour partager votre lien. Ce peut être un email, ou une "
+"publicité Facebook par exemple.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -173,13 +190,24 @@ msgstr "Utilisé récemment"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Share this page with a <strong>short link</strong> that includes <strong>analytics trackers</strong>."
-msgstr "Partager cette page avec un <strong>lien court</strong> qui inclut <strong>des traceurs analytiques</strong>."
+msgid ""
+"Share this page with a <strong>short link</strong> that includes "
+"<strong>analytics trackers</strong>."
+msgstr ""
+"Partager cette page avec un <strong>lien court</strong> qui inclut "
+"<strong>des traceurs analytiques</strong>."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source from which your traffic will come from, Facebook or Twitter for instance.\"/>"
-msgstr "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit la source d'où proviendra votre trafic, Facebook ou Twitter par exemple.\"/>"
+msgid ""
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
+msgstr ""
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Définit "
+"la source d'où proviendra votre trafic, Facebook ou Twitter par exemple.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -205,6 +233,8 @@ msgstr "Le code ne peut pas être laissé vide"
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
 msgstr "Pas de données à afficher"
@@ -219,8 +249,13 @@ msgstr "Ce code est déjà pris"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues."
-msgstr "Ces mouchards peuvent être utilisés dans Google Analytics afin de surveiller les clics et les visiteurs, ou dans les rapports Odoo afin de surveiller les opportunités et revenus liés."
+msgid ""
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
+msgstr ""
+"Ces mouchards peuvent être utilisés dans Google Analytics afin de surveiller"
+" les clics et les visiteurs, ou dans les rapports Odoo afin de surveiller "
+"les opportunités et revenus liés."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
