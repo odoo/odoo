@@ -52,7 +52,7 @@ const LivechatButton = Widget.extend({
             if (!result.available_for_me) {
                 return Promise.reject();
             }
-            this._rule = result.rule;
+            this.messaging.livechatButtonView.update({ rule: result.rule });
         }
         return this._loadQWebTemplate();
     },
@@ -61,11 +61,11 @@ const LivechatButton = Widget.extend({
         if (this._history) {
             this._history.forEach(m => this._addMessage(m));
             this._openChat();
-        } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
+        } else if (!config.device.isMobile && this.messaging.livechatButtonView.rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                 this.messaging.livechatButtonView.update({
-                    autoOpenChatTimeout: setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000),
+                    autoOpenChatTimeout: setTimeout(this._openChat.bind(this), this.messaging.livechatButtonView.rule.auto_popup_timer * 1000),
                 });
             }
         }

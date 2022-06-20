@@ -20,10 +20,12 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
     init: function (parent, messaging, chatbotData) {
         this._super(...arguments);
 
-        this._rule = {
-            'action': 'auto_popup',
-            'auto_popup_timer': 0,
-        };
+        this.messaging.livechatButtonView.update({
+            rule: {
+                'action': 'auto_popup',
+                'auto_popup_timer': 0,
+            },
+        });
         this._chatbot = chatbotData.chatbot;
         this._chatbotCurrentStep = this._chatbot.chatbot_welcome_steps[
             this._chatbot.chatbot_welcome_steps.length - 1];
