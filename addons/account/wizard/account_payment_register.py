@@ -4,7 +4,7 @@ from psycopg2 import OperationalError
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
+from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 import logging
 _logger = logging.getLogger(__name__)
