@@ -168,10 +168,6 @@ FormRenderer.include({
     /**
      * @abstract
      * @private
-     * @param {OdooEvent} ev
-     * @param {Object} ev.data
-     * @param {Attachment[]} ev.data.attachments
-     * @param {Thread} ev.data.thread
      */
-    _onChatterRendered(ev) {},
+    async _onChatterRendered() {},
 });

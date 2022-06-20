@@ -104,6 +104,10 @@ registerModel({
         threadModel: attr({
             required: true,
         }),
+        webClientAttachmentView: one('WebClientAttachmentView', {
+            inverse: 'webClientViewOwner',
+            isCausal: true,
+        }),
     },
     onChanges: [
         new OnChange({
