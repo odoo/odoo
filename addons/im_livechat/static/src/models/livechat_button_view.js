@@ -99,6 +99,9 @@ registerModel({
             default: false,
         }),
         isTypingTimeout: attr(),
+        isWebsiteLivechatChatbotFlow: attr({
+            default: false,
+        }),
         // livechat model
         livechat: attr({
             default: null,
