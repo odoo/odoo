@@ -192,6 +192,16 @@
         </field>
     </record>
 
+    <record id="action_revert_inventory_adjustment" model="ir.actions.server">
+        <field name="name">Revert Inventory Adjustment</field>
+        <field name="model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_revert_inventory()
+        </field>
+    </record>
+
     <record id="stock_move_line_action" model="ir.actions.act_window">
             <field name="name">Moves History</field>
             <field name="res_model">stock.move.line</field>

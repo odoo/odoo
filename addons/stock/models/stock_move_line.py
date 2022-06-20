@@ -860,3 +860,56 @@ class StockMoveLine(models.Model):
             'views': [[False, "form"]],
             'res_id': self.id,
         }
+
+    def _get_revert_inventory_move_values(self):
+        self.ensure_one()
+        return {
+            'name':_('%s [reverted]', self.reference),
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+            'product_uom_qty': self.qty_done,
+            'company_id': self.company_id.id or self.env.company.id,
+            'state': 'confirmed',
+            'location_id': self.location_dest_id.id,
+            'location_dest_id': self.location_id.id,
+            'is_inventory': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom_id.id,
+                'qty_done': self.qty_done,
+                'location_id': self.location_dest_id.id,
+                'location_dest_id': self.location_id.id,
+                'company_id': self.company_id.id or self.env.company.id,
+                'lot_id': self.lot_id.id,
+                'package_id': self.package_id.id,
+                'result_package_id': self.package_id.id,
+                'owner_id': self.owner_id.id,
+            })]
+        }
+
+    def action_revert_inventory(self):
+        move_vals = []
+        processed_move_line = self.env['stock.move.line']
+        for move_line in self:
+            if move_line.is_inventory and not float_is_zero(move_line.qty_done, precision_digits=move_line.product_uom_id.rounding):
+                processed_move_line += move_line
+                move_vals.append(move_line._get_revert_inventory_move_values())
+        if not processed_move_line:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _("There are no inventory adjustments to revert."),
+                }
+            }
+        moves = self.env['stock.move'].create(move_vals)
+        moves._action_done()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("The inventory adjustments have been reverted."),
+            }
+        }
