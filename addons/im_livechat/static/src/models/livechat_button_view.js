@@ -48,6 +48,7 @@ registerModel({
         buttonText: attr({
             compute: '_computeButtonText',
         }),
+        chatbot: attr(),
         // livechat window
         chatWindow: attr({
             default: null,
