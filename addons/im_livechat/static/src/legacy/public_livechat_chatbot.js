@@ -24,8 +24,6 @@ const QWeb = core.qweb;
     init() {
         this._super(...arguments);
 
-        this._chatbotMessageDelay = 3500;  // in milliseconds
-
         // debounced to let the user type several sentences, see '_chatbotAwaitUserInput' for details
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),
@@ -150,7 +148,7 @@ const QWeb = core.qweb;
             } else {
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this._chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
             }
         }
     },
@@ -309,7 +307,7 @@ const QWeb = core.qweb;
                 // user has already typed a message in -> trigger next step
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this._chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
             } else {
                 this._chatbotEnableInput();
             }
@@ -324,7 +322,7 @@ const QWeb = core.qweb;
             }
 
             if (triggerNextStep) {
-                let nextStepDelay = this._chatbotMessageDelay;
+                let nextStepDelay = this.messaging.livechatButtonView.chatbotMessageDelay;
                 if (this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
@@ -418,7 +416,7 @@ const QWeb = core.qweb;
                 );
 
                 this.messaging.livechatButtonView.chatWindow.scrollToBottom();
-            }, this._chatbotMessageDelay / 3),
+            }, this.messaging.livechatButtonView.chatbotMessageDelay / 3),
         });
     },
     /**
@@ -674,7 +672,7 @@ const QWeb = core.qweb;
                 } else if (!this._chatbotShouldEndScript()) {
                     this._chatbotSetIsTyping();
                     this.nextStepTimeout = setTimeout(
-                        this._chatbotTriggerNextStep.bind(this), this._chatbotMessageDelay);
+                        this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
                 } else {
                     this._chatbotEndScript();
                 }
@@ -691,7 +689,7 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this._chatbotMessageDelay,
+                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbotMessageDelay,
             );
         } else {
             this._super(...arguments);
@@ -796,7 +794,7 @@ const QWeb = core.qweb;
         this._chatbotCurrentStep = null;
         this._chatbotSetIsTyping();
         this.nextStepTimeout = setTimeout(
-            this._chatbotTriggerNextStep.bind(this), this._chatbotMessageDelay);
+            this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
     },
 
     _onChatbotInputKeyDown() {

@@ -12,7 +12,6 @@ LivechatButton.include({
      */
     start: function () {
         this.messaging.livechatButtonView.update({ isWebsiteLivechatChatbotFlow: true });
-        this._chatbotMessageDelay = 100;
 
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),

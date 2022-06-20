@@ -18,6 +18,16 @@ registerModel({
             return this.env._t("Chat with one of our collaborators");
         },
         /**
+         * @private
+         * @returns {integer|FieldCommand}
+         */
+        _computeChatbotMessageDelay() {
+            if (this.isWebsiteLivechatChatbotFlow) {
+                return 100;
+            }
+            return clear();
+        },
+        /**
         * @private
         * @returns {string}
         */
@@ -69,6 +79,10 @@ registerModel({
             compute: '_computeButtonText',
         }),
         chatbot: attr(),
+        chatbotMessageDelay: attr({
+            compute: '_computeChatbotMessageDelay',
+            default: 3500, // in milliseconds
+        }),
         // livechat window
         chatWindow: attr({
             default: null,
