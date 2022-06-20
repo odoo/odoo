@@ -58,13 +58,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 _('The vendor you have selected or at least one of the products you are copying from the original '
                   'order has a blocking warning on it and cannot be selected to create an alternative.')
             )
-        vals = {
-            'date_order': self.origin_po_id.date_order,
-            'partner_id': self.partner_id.id,
-            'user_id': self.origin_po_id.user_id.id,
-        }
-        if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create({'product_id': line.product_id.id, 'product_qty': line.product_qty}) for line in self.origin_po_id.order_line]
+        vals = self._get_alternative_values()
         alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id).create(vals)
         return {
             'type': 'ir.actions.act_window',
@@ -75,3 +69,14 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 'active_id': alt_po.id,
             },
         }
+
+    def _get_alternative_values(self):
+        vals = {
+            'date_order': self.origin_po_id.date_order,
+            'partner_id': self.partner_id.id,
+            'user_id': self.origin_po_id.user_id.id,
+            'dest_address_id': self.origin_po_id.dest_address_id.id,
+        }
+        if self.copy_products and self.origin_po_id:
+            vals['order_line'] = [Command.create({'product_id': line.product_id.id, 'product_qty': line.product_qty}) for line in self.origin_po_id.order_line]
+        return vals
