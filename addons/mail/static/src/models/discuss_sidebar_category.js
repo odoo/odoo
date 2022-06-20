@@ -238,16 +238,16 @@ registerModel({
             switch (this.sortComputeMethod) {
                 case 'name':
                     return [
-                        ['defined-first', 'channel'],
-                        ['defined-first', 'channel.displayName'],
+                        ['truthy-first', 'channel'],
+                        ['truthy-first', 'channel.displayName'],
                         ['case-insensitive-asc', 'channel.displayName'],
                         ['smaller-first', 'channel.id'],
                     ];
                 case 'last_action':
                     return [
-                        ['defined-first', 'channel'],
-                        ['defined-first', 'channel.lastInterestDateTime'],
-                        ['greater-first', 'channel.lastInterestDateTime'],
+                        ['truthy-first', 'channel'],
+                        ['truthy-first', 'channel.lastInterestDateTime'],
+                        ['most-recent-first', 'channel.lastInterestDateTime'],
                         ['greater-first', 'channel.id'],
                     ];
             }

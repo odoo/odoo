@@ -1655,7 +1655,7 @@ registerModel({
          */
         _sortGuestMembers() {
             return [
-                ['defined-first', 'name'],
+                ['truthy-first', 'name'],
                 ['case-insensitive-asc', 'name'],
             ];
         },
@@ -1665,7 +1665,7 @@ registerModel({
          */
         _sortPartnerMembers() {
             return [
-                ['defined-first', 'nameOrDisplayName'],
+                ['truthy-first', 'nameOrDisplayName'],
                 ['case-insensitive-asc', 'nameOrDisplayName'],
             ];
         },
