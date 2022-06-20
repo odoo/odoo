@@ -394,23 +394,25 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotSetIsTyping(isWelcomeMessage=false) {
-        if (this.isTypingTimeout) {
+        if (this.messaging.livechatButtonView.isTypingTimeout) {
             clearTimeout(this.isTypingTimeout);
         }
 
         this._chatbotDisableInput('');
 
-        this.isTypingTimeout = setTimeout(() => {
-            this.messaging.livechatButtonView.chatWindow.$('.o_mail_thread_content').append(
-                $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                    'chatbotImageSrc': `/im_livechat/operator/${this._livechat.getOperatorPID()[0]}/avatar`,
-                    'chatbotName': this._chatbot.chatbot_name,
-                    'isWelcomeMessage': isWelcomeMessage,
-                }))
-            );
+        this.messaging.livechatButtonView.update({
+            isTypingTimeout: setTimeout(() => {
+                this.messaging.livechatButtonView.chatWindow.$('.o_mail_thread_content').append(
+                    $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
+                        'chatbotImageSrc': `/im_livechat/operator/${this._livechat.getOperatorPID()[0]}/avatar`,
+                        'chatbotName': this._chatbot.chatbot_name,
+                        'isWelcomeMessage': isWelcomeMessage,
+                    }))
+                );
 
-            this.messaging.livechatButtonView.chatWindow.scrollToBottom();
-        }, this._chatbotMessageDelay / 3);
+                this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+            }, this._chatbotMessageDelay / 3),
+        });
     },
     /**
      * Helper method that checks if the script should be ended or not.

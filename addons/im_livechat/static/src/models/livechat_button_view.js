@@ -65,5 +65,6 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
+        isTypingTimeout: attr(),
     },
 });
