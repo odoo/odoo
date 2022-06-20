@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         for item in data:
             procurement_groups = self.env['procurement.group'].browse(item['ids'])
             mrp_count[item['sale_id'][0]] = len(
-                set(procurement_groups.stock_move_ids.created_production_id.ids) |
+                set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |
                 set(procurement_groups.mrp_production_ids.ids))
         for sale in self:
             sale.mrp_production_count = mrp_count.get(sale.id)
@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
     def action_view_mrp_production(self):
         self.ensure_one()
         procurement_groups = self.env['procurement.group'].search([('sale_id', 'in', self.ids)])
-        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.ids) |\
+        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |\
             set(procurement_groups.mrp_production_ids.ids)
         action = {
             'res_model': 'mrp.production',
