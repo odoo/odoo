@@ -49,12 +49,6 @@ class AuthorizeTest(AuthorizeCommon):
         self.assertEqual(self.authorize._get_validation_amount(), 0.01)
         self.assertEqual(self.authorize._get_validation_currency(), self.currency_usd)
 
-    def test_token_activation(self):
-        """Activation of disabled authorize tokens is forbidden"""
-        token = self._create_token(active=False)
-        with self.assertRaises(UserError):
-            token._handle_reactivation_request()
-
     def test_authorize_neutralize(self):
         self.env['payment.acquirer']._neutralize()
 

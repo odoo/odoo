@@ -233,6 +233,35 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
         return self.env.ref('account.account_payment_method_manual_in').id
 
+    #=== ONCHANGE METHODS ===#
+
+    @api.onchange('state')
+    def _onchange_state(self):
+        """ Display a warning about the consequences of disabling an acquirer.
+
+        Let the user know that tokens related to an acquirer get archived if it is disabled or if
+        its state is changed from 'test' to 'enabled' and vice versa.
+
+        :return: The warning message in a client action.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        if self._origin.state in ('test', 'enabled') and self._origin.state != self.state:
+            related_tokens = self.env['payment.token'].search(
+                [('acquirer_id', '=', self._origin.id)]
+            )
+            if related_tokens:
+                return {
+                    'warning': {
+                        'title': _("Warning"),
+                        'message': _(
+                            "This action will also archive %s tokens that are registered with this "
+                            "acquirer. Archiving tokens is irreversible.", len(related_tokens)
+                        )
+                    }
+                }
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('fees_dom_var', 'fees_int_var')
@@ -257,8 +286,16 @@ class PaymentAcquirer(models.Model):
         return acquirers
 
     def write(self, values):
+        # Handle acquirer disabling.
+        if 'state' in values:
+            state_changed_acquirers = self.filtered(
+                lambda acq: acq.state not in ('disabled', values['state'])
+            )  # Don't handle acquirers being enabled or whose state is not updated.
+            state_changed_acquirers._handle_state_change()
+
         result = super().write(values)
         self._check_required_if_provider()
+
         return result
 
     def _check_required_if_provider(self):
@@ -286,6 +323,13 @@ class PaymentAcquirer(models.Model):
             raise ValidationError(
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
+
+    def _handle_state_change(self):
+        """ Archive all the payment tokens linked to these acquirers.
+
+        :return: None
+        """
+        self.env['payment.token'].search([('acquirer_id', 'in', self.ids)]).write({'active': False})
 
     #=== ACTION METHODS ===#
 

@@ -192,6 +192,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
             'acquirer_id': self.acquirer.id,
             'partner_id': self.partner.id,
             'acquirer_ref': "Acquirer Ref (TEST)",
+            'active': True,
         }
         return self.env['payment.token'].sudo(sudo).create(dict(default_values, **values))
 
