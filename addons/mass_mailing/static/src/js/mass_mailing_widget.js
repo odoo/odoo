@@ -347,7 +347,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
 
         for (const button of $snippets_menu.get(0).children) {
-            if (button.textContent === 'Select a template') {
+            if (!button.hasAttribute('tabindex') && !button.hasAttribute('accesskey')) {
                 button.style.display = 'none';
             }
         }
