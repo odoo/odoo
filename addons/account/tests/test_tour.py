@@ -8,15 +8,6 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_account_tour(self):
-        # Reset country and fiscal country, so that fields added by localizations are
-        # hidden and non-required, and don't make the tour crash.
-        # Also remove default taxes from the company and its accounts, to avoid inconsistencies
-        # with empty fiscal country.
-        self.env.company.write({
-            'country_id': None, # Also resets account_fiscal_country_id
-            'account_sale_tax_id': None,
-            'account_purchase_tax_id': None,
-        })
         account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_id', '=', self.env.company.id)])
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
