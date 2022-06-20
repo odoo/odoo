@@ -18,6 +18,10 @@ $o-searchpanel-filter-default-color: #D59244;
         overflow: auto; // make the renderer and search panel scroll individually
         max-height: 100%;
         position: relative;
+
+        @include media-breakpoint-down(sm) {
+            overflow: visible;
+        }    
     }
 }
 
