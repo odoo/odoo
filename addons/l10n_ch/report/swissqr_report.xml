@@ -22,6 +22,9 @@
 
                 <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
 
+                <t t-set="is_qrr" t-value="o.partner_bank_id.l10n_ch_qr_iban"/>
+                <t t-set="is_scor" t-value="o.partner_bank_id._is_iso11649_reference(o.payment_reference)"/>
+
                 <div class="swissqr_page_title">
                     <h1>QR-bill for invoice <t t-esc="o.name"/></h1>
                 </div>
@@ -53,12 +56,20 @@
                                 <br/>
                             </div>
 
-                            <t t-if="o.partner_bank_id.l10n_ch_qr_iban">
+                            <t t-if="is_qrr or is_scor">
                                 <div class="swissqr_text title">
                                     <span>Reference</span>
                                 </div>
+                            </t>
+                            <t t-if="is_qrr">
                                 <div class="swissqr_text content">
                                     <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+                            <t t-if="is_scor">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
@@ -157,17 +168,25 @@
                                 <br/>
                             </div>
 
-                            <t t-if="o.partner_bank_id.l10n_ch_qr_iban">
+                            <t t-if="is_qrr or is_scor">
                                 <div class="swissqr_text title">
                                     <span class="title">Reference</span>
                                 </div>
+                            </t>
+                            <t t-if="is_qrr">
                                 <div class="swissqr_text content">
                                     <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
+                            <t t-if="is_scor">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
 
-                            <t t-set="additional_info" t-value="(o.ref or o.name if o.partner_bank_id.l10n_ch_qr_iban else o.payment_reference or o.ref or o.name)"/>
+                            <t t-set="additional_info" t-value="(o.ref or o.name if is_qrr or is_scor else o.payment_reference or o.ref or o.name)"/>
                             <t t-if="additional_info">
                                 <div class="swissqr_text title">
                                     <span>Additional information</span>
