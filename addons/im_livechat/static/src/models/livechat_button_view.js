@@ -69,6 +69,7 @@ registerModel({
             compute: '_computeButtonText',
         }),
         chatbot: attr(),
+        chatbotCurrentStep: attr(),
         // livechat window
         chatWindow: attr({
             default: null,
