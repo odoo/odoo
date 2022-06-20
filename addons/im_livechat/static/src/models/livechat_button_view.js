@@ -62,6 +62,9 @@ registerModel({
         isChatbot: attr({
             default: false,
         }),
+        isChatbotBatchWelcomeMessages: attr({
+            default: false,
+        }),
         isOpeningChat: attr({
             default: false,
         }),

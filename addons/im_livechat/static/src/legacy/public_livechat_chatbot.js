@@ -94,7 +94,7 @@ const QWeb = core.qweb;
             this._rule = this._livechatInit.rule;
             this._chatbot = this._livechatInit.rule.chatbot;
             this.messaging.livechatButtonView.update({ isChatbot: true });
-            this._chatbotBatchWelcomeMessages = true;
+            this.messaging.livechatButtonView.update({ isChatbotBatchWelcomeMessages: true });
         } else if (this.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
             // -> restore the user's session (see '_chatbotRestoreSession')
@@ -680,7 +680,7 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this._chatbotBatchWelcomeMessages ? 0 : this._chatbotMessageDelay,
+                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this._chatbotMessageDelay,
             );
         } else {
             this._super(...arguments);
