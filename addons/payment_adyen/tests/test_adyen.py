@@ -39,12 +39,6 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 processing_values['access_token'], self.reference, converted_amount, self.partner.id
             ))
 
-    def test_token_activation(self):
-        """Activation of disabled adyen tokens is forbidden"""
-        token = self._create_token(active=False)
-        with self.assertRaises(UserError):
-            token._handle_reactivation_request()
-
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_send_refund_request(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False

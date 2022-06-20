@@ -23,30 +23,3 @@ class PaymentToken(models.Model):
         selection=[("credit_card", "Credit Card"), ("bank_account", "Bank Account (USA Only)")],
     )
 
-    def _handle_deactivation_request(self):
-        """ Override of payment to request Authorize.Net to delete the token.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._handle_deactivation_request()
-        if self.provider != 'authorize':
-            return
-
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        res_content = authorize_API.delete_customer_profile(self.authorize_profile)
-        _logger.info("delete_customer_profile request response:\n%s", pprint.pformat(res_content))
-
-    def _handle_reactivation_request(self):
-        """ Override of payment to raise an error informing that Auth.net tokens cannot be restored.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._handle_reactivation_request()
-        if self.provider != 'authorize':
-            return
-
-        raise UserError(_("Saved payment methods cannot be restored once they have been deleted."))

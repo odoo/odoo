@@ -10,7 +10,7 @@ import psycopg2
 from dateutil import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import consteq, format_amount, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
@@ -173,6 +173,12 @@ class PaymentTransaction(models.Model):
                 "Transaction authorization is not supported by the following payment acquirers: %s",
                 ', '.join(set(illegal_authorize_state_txs.mapped('acquirer_id.name')))
             ))
+
+    @api.constrains('token_id')
+    def _check_token_is_active(self):
+        """ Check that the token used to create the transaction is active. """
+        if self.token_id and not self.token_id.active:
+            raise ValidationError(_("Creating a transaction from an archived token is forbidden."))
 
     #=== CRUD METHODS ===#
 
@@ -547,6 +553,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
+        self._ensure_acquirer_is_not_disabled()
         self._log_sent_message()
 
     def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
@@ -563,6 +570,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
+        self._ensure_acquirer_is_not_disabled()
 
         if create_refund_transaction:
             refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
@@ -570,30 +578,6 @@ class PaymentTransaction(models.Model):
             return refund_tx
         else:
             return self.env['payment.transaction']
-
-    def _send_capture_request(self):
-        """ Request the provider of the acquirer handling the transaction to capture it.
-
-        For an acquirer to support authorization, it must override this method and request a capture
-        to its provider.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
-    def _send_void_request(self):
-        """ Request the provider of the acquirer handling the transaction to void it.
-
-        For an acquirer to support authorization, it must override this method and request the
-        transaction to be voided to its provider.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
 
     def _create_refund_transaction(self, amount_to_refund=None, **custom_create_values):
         """ Create a new transaction with operation 'refund' and link it to the current transaction.
@@ -616,6 +600,44 @@ class PaymentTransaction(models.Model):
             'partner_id': self.partner_id.id,
             **custom_create_values,
         })
+
+    def _send_capture_request(self):
+        """ Request the provider of the acquirer handling the transaction to capture it.
+
+        For an acquirer to support authorization, it must override this method and request a capture
+        to its provider.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        self._ensure_acquirer_is_not_disabled()
+
+    def _send_void_request(self):
+        """ Request the provider of the acquirer handling the transaction to void it.
+
+        For an acquirer to support authorization, it must override this method and request the
+        transaction to be voided to its provider.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        self._ensure_acquirer_is_not_disabled()
+
+    def _ensure_acquirer_is_not_disabled(self):
+        """ Ensure that the acquirer's state is not 'disabled' before sending a request to its
+        provider.
+
+        :return: None
+        :raise UserError: If the acquirer's state is 'disabled'.
+        """
+        if self.acquirer_id.state == 'disabled':
+            raise UserError(_(
+                "Making a request to the provider is not possible because the acquirer is disabled."
+            ))
 
     def _handle_notification_data(self, provider, notification_data):
         """ Match the transaction with the notification data, update its state and return it.
