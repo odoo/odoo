@@ -1144,7 +1144,7 @@ class TestQueries(TransactionCase):
         Model.search([('name', 'like', 'foo')])
 
         with self.assertQueries(['''
-            SELECT count(1)
+            SELECT count(*)
             FROM "res_partner"
             WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
         ''']):
@@ -1170,7 +1170,7 @@ class TestQueries(TransactionCase):
             Model.search([('name', 'like', 'foo')])
 
         with self.assertQueries(['''
-            SELECT COUNT(1)
+            SELECT COUNT(*)
             FROM "res_partner_title"
             WHERE ("res_partner_title"."id" = %s)
         ''']):
