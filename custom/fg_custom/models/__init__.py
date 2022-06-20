@@ -5,6 +5,7 @@ from . import FgPosOrder
 from . import FgCustomerMaster
 from . import FgOrderImport
 from . import FgMessageWizard
+from . import account_tax
 
 
 

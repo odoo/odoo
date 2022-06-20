@@ -45,6 +45,17 @@
         </field>
     </record>
 
+    <record id="pos_order_line_form_custom_fg" model="ir.ui.view">
+        <field name="name">pos.order.line.form.custom.fg</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_subtotal_incl']" position='after'>
+                <field name="is_non_zero_vat"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- PRODUCTS SETUP-->
     <!-- tree-->
 
