@@ -1235,7 +1235,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             });
         $(window).off('.o_animate');
         this.$scrollingElement[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
-        this.$scrollingElement[0].classList.remove('o_wanim_overflow_x_hidden');
+        this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
     },
 
     //--------------------------------------------------------------------------
@@ -1251,13 +1251,13 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     _startAnimation($el) {
         // Forces the browser to redraw using setTimeout.
         setTimeout(() => {
-            this._toggleOverflowXHidden(true);
+            this._toggleOverflowXYHidden(true);
             $el
             .css({"animation-play-state": "running"})
             .addClass("o_animating")
             .one('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
                 $el.addClass("o_animated").removeClass("o_animating");
-                this._toggleOverflowXHidden(false);
+                this._toggleOverflowXYHidden(false);
                 $(window).trigger("resize");
             });
         });
@@ -1271,22 +1271,23 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         $el.css({"animation-name": "dummy-none", "animation-play-state": ""})
            .removeClass("o_animated o_animating");
 
-        this._toggleOverflowXHidden(false);
+        this._toggleOverflowXYHidden(false);
         // trigger a DOM reflow
         void $el[0].offsetWidth;
         $el.css({'animation-name': animationName , 'animation-play-state': 'paused'});
     },
     /**
-     * Shows/hides the horizontal scrollbar (on the #wrapwrap).
+     * Shows/hides the horizontal scrollbar (on the #wrapwrap) and prevents
+     * flicker of the page height (on the slideout footer).
      *
      * @private
      * @param {Boolean} add
      */
-    _toggleOverflowXHidden(add) {
+    _toggleOverflowXYHidden(add) {
         if (add) {
-            this.$scrollingElement[0].classList.add('o_wanim_overflow_x_hidden');
+            this.$scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
         } else if (!this.$scrollingElement.find('.o_animating').length) {
-            this.$scrollingElement[0].classList.remove('o_wanim_overflow_x_hidden');
+            this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
         }
     },
     /**
@@ -1294,13 +1295,18 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      *
      * @private
      * @param {Element} el
+     * @param {HTMLElement} [topEl] if specified, calculates the top distance to
+     *     this element.
      */
-    _getElementOffsetTop(el) {
+    _getElementOffsetTop(el, topEl) {
         // Loop through the DOM tree and add its parent's offset to get page offset.
         var top = 0;
         do {
             top += el.offsetTop || 0;
             el = el.offsetParent;
+            if (topEl && el === topEl) {
+                return top;
+            }
         } while (el);
         return top;
     },
@@ -1325,12 +1331,29 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // Cookies bar might be opened and considered as a modal but it is
             // not really one (eg 'discrete' layout), and should not be used as
             // scrollTop value.
-            const scrollTop = document.body.classList.contains("modal-open") ?
-                this.$target.find('.modal:visible').scrollTop() :
-                this.$scrollingElement.scrollTop();
-            const elTop = this._getElementOffsetTop($el[0]) - scrollTop;
-
-            const visible = this.windowsHeight > (elTop + elOffset) && 0 < (elTop + elHeight - elOffset);
+            let visible;
+            const footerEl = el.closest('.o_footer_slideout');
+            const wrapEl = this.$target[0];
+            if (footerEl && wrapEl.classList.contains('o_footer_effect_enable')) {
+                // Since the footer slideout is always in the viewport but not
+                // always displayed, the way to calculate if an element is
+                // visible in the footer is different. We decided to handle this
+                // case specifically instead of a generic solution using
+                // elementFromPoint as it is a rare case and the implementation
+                // would have been too complicated for such a small use case.
+                const actualScroll = wrapEl.scrollTop + this.windowsHeight;
+                const totalScrollHeight = wrapEl.scrollHeight;
+                const heightFromFooter = this._getElementOffsetTop(el, footerEl);
+                visible = actualScroll >=
+                    totalScrollHeight - heightFromFooter - elHeight + elOffset;
+            } else {
+                const scrollTop = document.body.classList.contains("modal-open") ?
+                    this.$target.find('.modal:visible').scrollTop() :
+                    this.$scrollingElement.scrollTop();
+                const elTop = this._getElementOffsetTop($el[0]) - scrollTop;
+                visible = this.windowsHeight > (elTop + elOffset) &&
+                    0 < (elTop + elHeight - elOffset);
+            }
             if (visible && state === "paused") {
                 $el.addClass("o_visible");
                 this._startAnimation($el);
