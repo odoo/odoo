@@ -29,6 +29,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeDefaultUsername() {
+            if (this.messaging.publicLivechatOptions.default_username) {
+                return this.messaging.publicLivechatOptions.default_username;
+            }
+            return this.env._t("Visitor");
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeInputPlaceholder() {
@@ -42,18 +52,35 @@ registerModel({
             }
             return this.env._t("Ask something ...");
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeServerUrl() {
+            if (this.isChatbot) {
+                return this.messaging.publicLivechatServerUrlChatbot;
+            }
+            return this.messaging.publicLivechatServerUrl;
+        },
     },
     fields: {
         autoOpenChatTimeout: attr(),
         buttonText: attr({
             compute: '_computeButtonText',
         }),
+        chatbot: attr(),
         // livechat window
         chatWindow: attr({
             default: null,
         }),
         defaultMessage: attr({
             compute: '_computeDefaultMessage',
+        }),
+        defaultUsername: attr({
+            compute: '_computeDefaultUsername',
+        }),
+        history: attr({
+            default: null,
         }),
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
@@ -62,8 +89,27 @@ registerModel({
         isChatbot: attr({
             default: false,
         }),
+        isChatbotBatchWelcomeMessages: attr({
+            default: false,
+        }),
+        isChatbotRedirecting: attr({
+            default: false,
+        }),
         isOpeningChat: attr({
             default: false,
+        }),
+        isTypingTimeout: attr(),
+        // livechat model
+        livechat: attr({
+            default: null,
+        }),
+        livechatInit: attr(),
+        messages: attr({
+            default: [],
+        }),
+        rule: attr(),
+        serverUrl: attr({
+            compute: '_computeServerUrl',
         }),
     },
 });
