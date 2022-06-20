@@ -28,7 +28,6 @@
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # Kevin Harrings <kha@odoo.com>, 2020
 # Marco Gantenbein <gantemar@gmail.com>, 2020
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
@@ -41,6 +40,7 @@
 # Raymond Vetter, 2021
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Ralf Hilgenstock <rh@dialoge.info>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -316,7 +316,7 @@ msgstr "Status der Aktivität"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Aktivitätstyp-Icon"
 
 #. module: product
 #. openerp-web
@@ -430,7 +430,7 @@ msgstr "# Anhänge"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Attribut"
+msgstr "Merkmal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
@@ -441,7 +441,7 @@ msgstr "Attributzeile"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr "Attributname"
+msgstr "Bezeichnung Merkmal"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -456,7 +456,7 @@ msgstr "Attributwert"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Attributwerte"
+msgstr "Merkmalswerte"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -519,7 +519,7 @@ msgstr "Basispreisliste"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "Kan Bild 1024 herangezoomt werden"
+msgstr "Kann Bild 1024 herangezoomt werden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -531,14 +531,14 @@ msgstr "Kann Variant Image 1024 gezoomt werden"
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "Kann eingekauft werden"
+msgstr "Einkauf"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "Kann verkauft werden"
+msgstr "Verkauf"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -1108,7 +1108,7 @@ msgstr "Gruppieren nach"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr "HTML Farb-Index"
+msgstr "HTML Farbindex"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
@@ -1234,7 +1234,7 @@ msgstr "Importvorlage für Preislisten"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importier-Vorlage für Produkte "
+msgstr "Importvorlage für Produkte "
 
 #. module: product
 #: code:addons/product/models/product_supplierinfo.py:0
@@ -1551,7 +1551,7 @@ msgstr "Notiz:"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr "Zahl Verwandte Produkte"
+msgstr "Zahl verwandte Produkte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter

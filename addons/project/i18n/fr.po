@@ -1144,25 +1144,25 @@ msgstr "Évaluation moyenne"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Évaluation Moyenne (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "Évaluation moyenne: Insatisfait"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Évaluation moyenne: Moyen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "Évaluation moyenne: Satisfait"
 
 #. module: project
 #. openerp-web
@@ -1242,7 +1242,7 @@ msgstr "Par An"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
 msgid "By quarter"
-msgstr ""
+msgstr "Par trimestre"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1408,6 +1408,7 @@ msgstr "Confirmation"
 #, python-format
 msgid "Congratulations, you are now a master of project management."
 msgstr ""
+"Félicitations, vous êtes maintenant un expert de la gestion de projet."
 
 #. module: project
 #. openerp-web
@@ -1743,26 +1744,35 @@ msgstr ""
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
+"Définissez les étapes à travers lesquelles vos projets passent de la "
+"création à l'achèvement."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
+"Définissez les étapes à travers lesquelles vos tâches passent de la création"
+" à l'achèvement."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Définie la visibilité des tâches du projet:\n"
-"- Employés invités: les employés peuvent seulement voir les projets et tâches auxquels ils sont abonnés.\n"
-"- Tous les employés: les employés peuvent voir tous les projets et tâches.\n"
-"- Utilisateurs portail et tous les employés: les employés peuvent tout voir. Les utilisateurs portail peuvent voir les projets et tâches auxquels ils (ou quelqu'un de leur société) sont abonnés.  "
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1898,7 +1908,7 @@ msgstr "Afficher Nom"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr ""
+msgstr "Afficher le bouton Tâche Parente"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
@@ -1910,7 +1920,7 @@ msgstr "Afficher le projet"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Dissatisfied"
-msgstr ""
+msgstr "Insatisfait"
 
 #. module: project
 #: code:addons/project/models/digest.py:0
@@ -1964,7 +1974,7 @@ msgstr "Modifier"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "Modifier étape personnelle"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2574,6 +2584,9 @@ msgid ""
 "It seems that some tasks are part of a recurrence. At least one of them must"
 " be kept as a model to create the next occurences."
 msgstr ""
+"Il semblerait que certaines tâches fassent partie d'une récurrence. Au moins"
+" l'une d'entre elles doit être gardée comme modèle pour créer les prochaines"
+" occurrences."
 
 #. module: project
 #. openerp-web
@@ -2592,6 +2605,8 @@ msgid ""
 "It seems that this task is part of a recurrence. You must keep it as a model"
 " to create the next occurences."
 msgstr ""
+"Il semblerait que cette tâche fasse partie d'une récurrence. Vous devez la "
+"garder comme modèle pour créer les prochaines occurrences."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2921,6 +2936,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Mesurez la satisfaction client en envoyeant des demandes d'évaluation "
+"lorsque vos tâches atteignent une certaine étape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3160,7 +3177,7 @@ msgstr "Prochaines récurrences"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "No Rating"
-msgstr ""
+msgstr "Pas d'évaluation"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3227,7 +3244,7 @@ msgstr "Normale"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Starred"
-msgstr ""
+msgstr "Non favoris"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3843,6 +3860,8 @@ msgstr "Projets archivés"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"Les projets contiennent des tâches sur le même sujet, et chacun d'eux a son "
+"propre tableau de bord."
 
 #. module: project
 #. openerp-web
@@ -3879,7 +3898,7 @@ msgstr "Valeur de l'évaluation (/5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Texte de l'évaluation moyenne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -3921,7 +3940,7 @@ msgstr "Evaluation de la satisfaction"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Texte de l'évaluation"
 
 #. module: project
 #. openerp-web
@@ -4211,7 +4230,7 @@ msgstr "Sam."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Satisfaction"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4582,7 +4601,7 @@ msgstr "Heures prévues sous-tâches"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Soumis le"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4869,7 +4888,7 @@ msgstr "L'étape personnelle de tâche de l'utilisateur courant."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_deadline
 msgid "The deadline for the task, which appears in the calendar view."
-msgstr ""
+msgstr "La date limite de la tâche, qui apparaît dans la vue Calendrier."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4932,7 +4951,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
-msgstr ""
+msgstr "La date de début du projet doit être antérieure à sa date de fin."
 
 #. module: project
 #: code:addons/project/models/project.py:0

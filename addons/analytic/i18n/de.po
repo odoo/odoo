@@ -3,27 +3,41 @@
 # 	* analytic
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Niki Waibel, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Renzo Meister, 2018
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
+# Wolfgang Taferner, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# Michael Schütt <michael.schuett.lwl@gmail.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
-# Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">Bruttomarge</span>"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -77,6 +91,7 @@ msgid "Analytic Account Groups"
 msgstr "Kostenstellengruppen"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Kostenrechnung"
@@ -145,7 +160,9 @@ msgid "Analytic Tags"
 msgstr "Kostenstellen Tags"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Archiviert"
@@ -172,7 +189,8 @@ msgid "Balance:"
 msgstr "Saldo"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Category"
 msgstr "Kategorie"
 
@@ -210,6 +228,11 @@ msgid "Complete Name"
 msgstr "Vollständiger Name"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguration "
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -220,24 +243,14 @@ msgstr ""
 "Kennzahlen."
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "Kosten/Erlöse"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "Kosten & Erlöse"
-
-#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Spesen"
-" oder Stundenzettel erfassen."
+"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, "
+"Auslagen oder Stundenzettel erfassen."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -307,14 +320,14 @@ msgid "Followers"
 msgstr "Abonnenten"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Abonnenten (Kanäle)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Abonnenten (Partner)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "Bruttomarge"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -327,6 +340,11 @@ msgstr "Gruppe"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Gruppieren nach ..."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -458,6 +476,11 @@ msgid "Number of unread messages"
 msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "Andere"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "Übergeordnet"
@@ -502,10 +525,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Erlöse werden automatisch erzeugt, wenn Sie einen Kundenrechnung anlegen.\n"
-"Kundenrechnungen können auf der Grundlage von Kundenaufträgen erstellt werden.\n"
-"(Festpreisrechnungen), auf Stundenzetteln (auf der Grundlage der geleisteten Arbeit) oder\n"
-"auf Spesen (z.B. Neuabrechnung von Reisekosten)."
+"Umsätze werden automatisch erstellt, wenn Sie Kundenrechnungen\n"
+"generieren. Kundenrechnungen können auf der Grundlage von Kundenaufträgen erstellt werden\n"
+"(Festpreisrechnungen), auf Stundenzetteln (basierend auf der geleisteten Arbeit) oder\n"
+"auf Auslagen (z. B. Weiterberechnung von Reisekosten)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -541,16 +564,16 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"The selected account belongs to another company that the one you're trying "
+"The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
-"Das ausgewählte Konto gehört zu einem anderen Unternehmen, für das Sie ein "
-"Analyseelement erstellen möchten"
+"Das ausgewählte Konto gehört zu einem anderen Unternehmen als dem, für das "
+"Sie ein Analyseelement erstellen möchten"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
-msgstr "Auf diese Weise können Sie Ihre Analysekonten klassifizieren."
+msgid "This allows you to classify your analytic accounts."
+msgstr "So können Sie Ihre Analysekonten klassifizieren."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -560,7 +583,7 @@ msgstr "Total"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "Maßeinheit"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
@@ -571,6 +594,11 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Anzahl ungelesener Nachrichten"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "Maßeinheit Kategorie"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

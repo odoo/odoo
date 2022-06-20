@@ -38,10 +38,10 @@
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # yong liu, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: 智能科技奇客罗方 <alanljj@gmail.com>, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +88,7 @@ msgstr "销售订单笔数"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s 到期日期 %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -1482,7 +1482,7 @@ msgstr "首付款"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "预付款"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1722,6 +1722,11 @@ msgstr "毛重"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "分组"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2802,6 +2807,13 @@ msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "用于预付款的产品"
@@ -2991,6 +3003,11 @@ msgstr "重开结算单策略可见"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "根据此价目表重新计算所有价格"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Recompute all taxes based on this fiscal position"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3646,6 +3663,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__show_update_fpos
+msgid ""
+"Technical Field, True if the fiscal position was changed;\n"
+" this will then display a recomputation button"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
 msgid ""
 "Technical Field, True if the pricelist was changed;\n"
@@ -3967,6 +3991,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"This will update all taxes based on the currently selected fiscal position."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr "这将根据当前设置的价目表更新所有单价."
 
@@ -4157,6 +4187,11 @@ msgid "Update Prices"
 msgstr "更新价格"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Update Taxes"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4294,6 +4329,15 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr "您可以在此处设置将在销售订单上显示的通信类型。当客户选择付款方式时，将与客户进行通信。"
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr "您无法更改产品的类型，因为它已在销售订单中使用。"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

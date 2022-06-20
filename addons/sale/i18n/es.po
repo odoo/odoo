@@ -1568,7 +1568,7 @@ msgstr "Pagos anticipados"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "Anticipo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1823,6 +1823,11 @@ msgstr "Peso bruto"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "Agrupar por"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2926,6 +2931,13 @@ msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "Producto usado para pagos adelantados"
@@ -3115,6 +3127,11 @@ msgstr "Política de refacturación visible"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Vuelva a calcular todos los precios según esta tarifa"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Recompute all taxes based on this fiscal position"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3786,6 +3803,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__show_update_fpos
+msgid ""
+"Technical Field, True if the fiscal position was changed;\n"
+" this will then display a recomputation button"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
 msgid ""
 "Technical Field, True if the pricelist was changed;\n"
@@ -4158,6 +4182,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"This will update all taxes based on the currently selected fiscal position."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
 "Esto actualizará todos los precios unitarios según la tarifa establecida "
@@ -4355,6 +4385,11 @@ msgid "Update Prices"
 msgstr "Actualizar Precios"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Update Taxes"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4497,6 +4532,17 @@ msgstr ""
 "Puede establecer aquí el tipo de comunicación que aparecerá en los pedidos "
 "de venta. La comunicación se le dará al cliente cuando elija el método de "
 "pago."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"No puede cambiar el tipo de producto porque ya se está utilizando en algún "
+"pedido de venta."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

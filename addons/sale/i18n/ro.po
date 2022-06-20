@@ -1741,6 +1741,11 @@ msgid "Group By"
 msgstr "Grupează după"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr ""
@@ -2839,6 +2844,13 @@ msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Product taxes have been recomputed according to fiscal position <b>%s<b>."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "Produs implicit folosit pentru plăți în avans"
@@ -3028,6 +3040,11 @@ msgstr "Politica de re-facturare vizibilă"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Recomputați toate prețurile pe baza acestei liste de prețuri"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Recompute all taxes based on this fiscal position"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3694,6 +3711,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__show_update_fpos
+msgid ""
+"Technical Field, True if the fiscal position was changed;\n"
+" this will then display a recomputation button"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
 msgid ""
 "Technical Field, True if the pricelist was changed;\n"
@@ -4056,6 +4080,12 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"This will update all taxes based on the currently selected fiscal position."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
 "Aceasta va actualiza toate prețurile unitare pe baza listei de prețuri "
@@ -4253,6 +4283,11 @@ msgid "Update Prices"
 msgstr "Actualizare Prețuri"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Update Taxes"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4394,6 +4429,15 @@ msgid ""
 msgstr ""
 "Puteți seta aici tipul de comunicare care va apărea pe comenzile de vânzare."
 " Comunicarea va fi dată clientului atunci când alege metoda de plată."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
