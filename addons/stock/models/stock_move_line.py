@@ -828,3 +828,25 @@ class StockMoveLine(models.Model):
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
         }
+
+    def revert_inventory(self):
+        move_vals = []
+        stock_quant_id = self.env.context.get('stock_quant_id')
+        if not stock_quant_id:
+            raise UserError("Inventory Adjustments path not found. please come from Inventory Adjustments menu")
+        stock_quant = self.env['stock.quant'].browse(self.env.context.get('stock_quant_id'))
+        for move_line in self:
+            # Create and validate a move so that the quant matches its `inventory_quantity`.
+            if float_compare(move_line.qty_done, 0, precision_rounding=move_line.product_uom_id.rounding) > 0:
+                move_vals.append(
+                    stock_quant.with_context(inventory_name='[reverted] ' + move_line.reference)._get_inventory_move_values(
+                        move_line.qty_done,
+                        location_id=move_line.location_dest_id,
+                        location_dest_id=move_line.location_id,
+                        out=True
+                    )
+                )
+            else:
+                raise UserError("Quantity is zero in any one line. please un-select that line to revert inventory")
+        moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
+        moves._action_done()

@@ -426,6 +426,7 @@ class StockQuant(models.Model):
             'context': {
                 'search_default_inventory': 1,
                 'search_default_done': 1,
+                'stock_quant_id': self.id,
             },
             'domain': [
                 ('product_id', '=', self.product_id.id),

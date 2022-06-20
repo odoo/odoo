@@ -5,6 +5,9 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <tree string="Move Lines" create="0" default_order="date">
+                <header>
+                    <button string="Revert Inventory" name="revert_inventory" type="object" />
+                </header>
                 <field name="date"/>
                 <field name="reference" string="Reference"
                        invisible="context.get('no_reference', False)"/>

@@ -294,3 +294,43 @@ class TestEditableQuant(TransactionCase):
         warning = dupe_sn._onchange_serial_number()
         self.assertTrue(warning, 'Reuse of existing serial number not detected')
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+
+    def test_reverse_inventory_adjustment(self):
+        """Try to reverse inventory adjustment"""
+
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant_1 = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100
+        })
+        quant_1.action_apply_inventory()
+        self.assertEqual(self.product.qty_available, 100)
+        action = quant_1.action_inventory_history()
+        move_line = self.env['stock.move.line'].search(action['domain'])
+        move_line.with_context(action.get('context')).revert_inventory()
+        self.assertEqual(self.product.qty_available, 0)
+
+    def test_multi_reverse_inventory_adjustment(self):
+        """Try to reverse inventory adjustment with multiple lines"""
+
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant_1 = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100
+        })
+        quant_1.action_apply_inventory()
+        quant_2 = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 150
+        })
+        quant_2.action_apply_inventory()
+        self.assertEqual(self.product.qty_available, 150)
+        action = quant_2.action_inventory_history()
+        move_line = self.env['stock.move.line'].search(action['domain'])
+        move_line.with_context(action.get('context')).revert_inventory()
+        self.assertEqual(self.product.qty_available, 0)
