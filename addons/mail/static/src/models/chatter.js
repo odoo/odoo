@@ -2,28 +2,12 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-
-const getThreadNextTemporaryId = (function () {
-    let tmpId = 0;
-    return () => {
-        tmpId -= 1;
-        return tmpId;
-    };
-})();
-
-const getMessageNextTemporaryId = (function () {
-    let tmpId = 0;
-    return () => {
-        tmpId -= 1;
-        return tmpId;
-    };
-})();
 
 registerModel({
     name: 'Chatter',
-    identifyingFields: ['id'],
+    identifyingFields: ['webClientViewOwner'],
     recordMethods: {
         focus() {
             if (this.composerView) {
@@ -257,45 +241,7 @@ registerModel({
                 thread: this.thread ? replace(this.thread) : clear(),
             });
         },
-        /**
-         * @private
-         */
-        _onThreadIdOrThreadModelChanged() {
-            if (this.threadId) {
-                if (this.thread && this.thread.isTemporary) {
-                    this.thread.delete();
-                }
-                this.update({
-                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? insertAndReplace() : clear(),
-                    thread: insert({
-                        // If the thread was considered to have the activity
-                        // mixin once, it will have it forever.
-                        hasActivities: this.hasActivities ? true : undefined,
-                        id: this.threadId,
-                        model: this.threadModel,
-                    }),
-                });
-            } else if (!this.thread || !this.thread.isTemporary) {
-                const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['Message'].create({
-                    author: replace(currentPartner),
-                    body: this.env._t("Creating a new record..."),
-                    id: getMessageNextTemporaryId(),
-                    isTemporary: true,
-                });
-                const nextId = getThreadNextTemporaryId();
-                this.update({
-                    attachmentBoxView: clear(),
-                    thread: insert({
-                        areAttachmentsLoaded: true,
-                        id: nextId,
-                        isTemporary: true,
-                        model: this.threadModel,
-                    }),
-                });
-                this.thread.cache.update({ messages: link(message) });
-            }
-        },
+
         /**
          * @private
          */
@@ -421,15 +367,6 @@ registerModel({
             default: false,
         }),
         /**
-         * States the id of this chatter. This id does not correspond to any
-         * specific value, it is just a unique identifier given by the creator
-         * of this record.
-         */
-        id: attr({
-            readonly: true,
-            required: true,
-        }),
-        /**
          * Determiners whether the attachment box is visible initially.
          */
         isAttachmentBoxVisibleInitially: attr({
@@ -450,15 +387,9 @@ registerModel({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
-        /**
-         * Determines the id of the thread that will be displayed by `this`.
-         */
-        threadId: attr(),
-        /**
-         * Determines the model of the thread that will be displayed by `this`.
-         */
-        threadModel: attr(),
+        thread: one('Thread', {
+            related: 'webClientViewOwner.thread',
+        }),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
@@ -487,12 +418,13 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        webClientViewOwner: one('WebClientView', {
+            inverse: 'chatter',
+            readonly: true,
+            required: true,
+        }),
     },
     onChanges: [
-        new OnChange({
-            dependencies: ['threadId', 'threadModel'],
-            methodName: '_onThreadIdOrThreadModelChanged',
-        }),
         new OnChange({
             dependencies: ['thread.isLoadingAttachments'],
             methodName: '_onThreadIsLoadingAttachmentsChanged',

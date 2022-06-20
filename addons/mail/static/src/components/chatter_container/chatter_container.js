@@ -3,18 +3,10 @@
 import { useModels } from '@mail/component_hooks/use_models';
 // ensure components are registered beforehand.
 import '@mail/components/chatter/chatter';
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, onWillDestroy, onWillUpdateProps } = owl;
-
-const getChatterNextTemporaryId = (function () {
-    let tmpId = 0;
-    return () => {
-        tmpId += 1;
-        return tmpId;
-    };
-})();
 
 /**
  * This component abstracts chatter component to its parent, so that it can be
@@ -33,7 +25,6 @@ export class ChatterContainer extends Component {
         useModels();
         super.setup();
         this.chatter = undefined;
-        this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);
         onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
         onWillDestroy(this._onWillDestroy);
@@ -64,11 +55,18 @@ export class ChatterContainer extends Component {
         if (this.__owl__.status === 5 /* destroyed */) {
             return;
         }
-        const values = { id: this.chatterId, ...props };
-        if (values.threadId === undefined) {
-            values.threadId = clear();
-        }
-        this.chatter = messaging.models['Chatter'].insert(values);
+        const webClientView = messaging.models['WebClientView'].insert({
+            chatter: insertAndReplace({
+                ...props,
+                threadId: undefined,
+                threadModel: undefined,
+                webClientViewId: undefined,
+            }),
+            id: this.props.webClientViewId,
+            threadId: this.props.threadId || clear(),
+            threadModel: this.props.threadModel,
+        });
+        this.chatter = webClientView.chatter;
         /**
          * Refresh the chatter when the parent view is (re)loaded.
          * This serves mainly at loading initial data, but also on reload there
@@ -138,6 +136,7 @@ Object.assign(ChatterContainer, {
             optional: true,
         },
         threadModel: String,
+        webClientViewId: Number,
     },
     template: 'mail.ChatterContainer',
 });

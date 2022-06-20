@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
+import { getNextId } from '@mail/models/web_client_view';
 
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';
@@ -22,6 +23,7 @@ FormRenderer.include({
     init(parent, state, params) {
         this._super(...arguments);
         this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;
+        this.webClientViewId = getNextId();
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
         this._chatterContainerComponent = undefined;
@@ -134,6 +136,7 @@ FormRenderer.include({
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,
+            webClientViewId: this.webClientViewId,
         };
     },
     /**
