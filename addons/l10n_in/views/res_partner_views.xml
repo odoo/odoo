@@ -13,7 +13,7 @@
                 <field name="l10n_in_country_code" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='state_id']" position="attributes">
-                <attribute name="attrs">{'required': ['|', ('l10n_in_country_code','=', 'IN'), ('l10n_in_country_code','=', False)]}</attribute>
+                <attribute name="attrs">{'required': [('l10n_in_country_code','=', 'IN')]}</attribute>
             </xpath>
         </field>
     </record>
