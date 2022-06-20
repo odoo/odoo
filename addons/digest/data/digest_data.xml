@@ -65,10 +65,6 @@
                 color: #007e84;
                 font-size: 14px;
             }
-            .header_date {
-                color: #878d97;
-                font-size: 14px;
-            }
             .tip_title {
                 margin-top: 0;
                 font-weight: bold;
@@ -104,6 +100,11 @@
                 font-size: 14px;
                 font-weight: bold;
                 color: #374151;
+            }
+            .kpi_header_icon {
+                width: 2em;
+                height: 2em;
+                vertical-align: middle;
             }
             .kpi_cell {
                 width: 33%;
@@ -201,10 +202,6 @@
                 #button_connect {
                     font-size: 12px;
                 }
-                .header_date {
-                    margin-top: 10px;
-                    font-size: 10px;
-                }
                 .tip_title {
                     font-size: 14px;
                 }
@@ -291,16 +288,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding-left: 20px" class="p0" colspan="2">
+                            <td style="padding-left: 20px" class="p0" colspan="4">
                                 <div class="header_title">
-                                    <p t-out="title"/>
+                                    <p><t t-out="title"/> - <span t-out="formatted_date"/></p>
                                     <p t-if="sub_title" t-out="sub_title"/>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px 0px 20px 20px;" class="p0" colspan="2">
-                                <span t-out="formatted_date" class="header_date"/>
                             </td>
                         </tr>
                     </tbody>
@@ -335,7 +327,13 @@
                                                     t-att-data-field="kpi_info['kpi_name']" cellspacing="0" cellpadding="10" style="width: 100%;margin-bottom: 5px;">
                                                 <tr class="kpi_header">
                                                     <td colspan="2" style="padding: 0px 0px 5px 0px;">
+                                                        <img t-if="kpi_info.get('kpi_icon')"
+                                                            class="kpi_header_icon"
+                                                            t-att-src="kpi_info['kpi_icon']"
+                                                            valign="middle" width="30" height="30"
+                                                            style="padding-right: 3px"/>
                                                         <span style="text-transform: uppercase;" t-out="kpi_info['kpi_fullname']"  />
+                                                        <span t-if="kpi_info.get('kpi_is_cross_company')" style="color: #878d97; font-weight: normal; margin-left: 3px;">All Companies</span>
                                                     </td>
                                                     <td t-if="kpi_info['kpi_action']" align="right" style="padding: 0px 0px 5px 0px;">
                                                         <table>
@@ -477,10 +475,6 @@
                                             <img class="download_app" height="40" width="135"
                                                     src="https://download.odoocdn.com/digests/digest/static/src/img/google_play.png" />
                                     </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
                                     <a href="https://itunes.apple.com/us/app/odoo/id1272543640" target="_blank">
                                         <img class="download_app" height="40" width="135"
                                                 src="https://download.odoocdn.com/digests/digest/static/src/img/app_store.png" />
