@@ -73,17 +73,16 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     await this.start();
 
-    const channelItemAvatar = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: 20,
-                model: 'mail.channel',
-            }).localId
-        }"] .o_DiscussSidebarCategoryItem_image
-    `);
+    const channelLocalId = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    }).localId;
 
     assert.strictEqual(
-        channelItemAvatar.dataset.src,
+        document.querySelector(`
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+            channelLocalId
+        }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         '/web/image/mail.channel/20/avatar_128?unique=101010',
     );
 
@@ -101,9 +100,11 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     });
     const newCacheKey = result[0]['avatarCacheKey'];
 
-    // FIXME: current test framework does not replace `src` with `data-src` during the re-rendering.
     assert.strictEqual(
-        channelItemAvatar.getAttribute('src'),
+        document.querySelector(`
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+            channelLocalId
+        }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/20/avatar_128?unique=${newCacheKey}`,
     );
 });

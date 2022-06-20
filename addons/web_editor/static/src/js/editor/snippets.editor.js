@@ -2113,9 +2113,19 @@ var SnippetsMenu = Widget.extend({
             // TODO: adapt in master - used to hide XML 'img' options when image
             // is not supported.
             const xmlImageOption = !$style[0].hasAttribute('data-js') && (selector.indexOf('img') !== -1);
-            const nonSupportedImageSelector = '[data-oe-type="image"] > img';
+            const nonSupportedImageSelector = '[data-oe-type="image"] > img, [data-oe-xpath]';
             if (xmlImageOption && !noCheck) {
                 exclude = [exclude, nonSupportedImageSelector].filter(value => !!value).join(', ');
+            } else if (['ReplaceMedia', 'FontawesomeTools', 'WebsiteAnimate'].includes(optionID)) {
+                // TODO adapt in master: editable root elements are technically
+                // *potentially* supported (if the edited attributes are not
+                // computed inside the related view, they could technically be
+                // saved... but as we cannot tell the computed ones apart from
+                // the "static" ones, we choose to not support edition at all in
+                // those "root" cases). Here we explicitely exclude some options
+                // but we could exclude them all or do something smarter in
+                // future versions.
+                exclude = [exclude, '[data-oe-xpath]'].filter(value => !!value).join(', ');
             }
             var option = {
                 'option': optionID,

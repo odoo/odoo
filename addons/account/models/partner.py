@@ -519,11 +519,12 @@ class ResPartner(models.Model):
     def action_view_partner_invoices(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
+        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action['domain'] = [
             ('move_type', 'in', ('out_invoice', 'out_refund')),
-            ('partner_id', 'child_of', self.id),
+            ('partner_id', 'in', all_child.ids)
         ]
-        action['context'] = {'default_move_type':'out_invoice', 'move_type':'out_invoice', 'journal_type': 'sale', 'search_default_open': 1, 'active_test': False}
+        action['context'] = {'default_move_type': 'out_invoice', 'move_type': 'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1, 'active_test': False}
         return action
 
     def can_edit_vat(self):

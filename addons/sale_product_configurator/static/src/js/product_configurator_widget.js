@@ -198,6 +198,7 @@ ProductConfiguratorWidget.include({
             this._super.apply(this, arguments);
             return;
         }
+        this.restoreProductTemplateId = this.recordData.product_template_id;
         // If line has been set up through the product_configurator:
         this._openProductConfigurator({
                 configuratorMode: 'edit',

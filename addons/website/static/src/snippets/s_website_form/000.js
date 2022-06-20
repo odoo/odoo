@@ -257,7 +257,7 @@ odoo.define('website.s_website_form', function (require) {
 
             // Prepare form inputs
             this.form_fields = this.$target.serializeArray();
-            $.each(this.$target.find('input[type=file]'), function (outer_index, input) {
+            $.each(this.$target.find('input[type=file]:not([disabled])'), (outer_index, input) => {
                 $.each($(input).prop('files'), function (index, file) {
                     // Index field name as ajax won't accept arrays of files
                     // when aggregating multiple files into a single field value
@@ -540,6 +540,10 @@ odoo.define('website.s_website_form', function (require) {
                     return value >= comparable;
                 case 'less or equal':
                     return value <= comparable;
+                case 'fileSet':
+                    return value.name !== '';
+                case '!fileSet':
+                    return value.name === '';
             }
             // Date & Date Time comparison requires formatting the value
             if (value.includes(':')) {

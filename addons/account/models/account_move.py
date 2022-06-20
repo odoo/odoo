@@ -787,6 +787,12 @@ class AccountMove(models.Model):
 
             currency = self.env['res.currency'].browse(taxes_map_entry['grouping_dict']['currency_id'])
 
+            # Don't create tax lines with zero balance.
+            if currency.is_zero(taxes_map_entry['amount']):
+                if taxes_map_entry['tax_line'] and not recompute_tax_base_amount:
+                    self.line_ids -= taxes_map_entry['tax_line']
+                continue
+
             # tax_base_amount field is expressed using the company currency.
             tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
@@ -4386,16 +4392,15 @@ class AccountMoveLine(models.Model):
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids:
                 raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
 
-            failed_check = False
-            if (journal.type_control_ids - journal.default_account_id.user_type_id) or journal.account_control_ids:
-                failed_check = True
-                if journal.type_control_ids:
-                    failed_check = account.user_type_id not in (journal.type_control_ids - journal.default_account_id.user_type_id)
-                if failed_check and journal.account_control_ids:
-                    failed_check = account not in journal.account_control_ids
+            if account in (journal.default_account_id, journal.suspense_account_id):
+                continue
 
-            if failed_check:
-                raise UserError(_('You cannot use this account (%s) in this journal, check the section \'Control-Access\' under tab \'Advanced Settings\' on the related journal.', account.display_name))
+            is_account_control_ok = not journal.account_control_ids or account in journal.account_control_ids
+            is_type_control_ok = not journal.type_control_ids or account.user_type_id in journal.type_control_ids
+
+            if not is_account_control_ok or not is_type_control_ok:
+                raise UserError(_("You cannot use this account (%s) in this journal, check the section 'Control-Access' under "
+                                  "tab 'Advanced Settings' on the related journal.", account.display_name))
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
     def _check_off_balance(self):

@@ -3,6 +3,7 @@
 # 	* l10n_be
 # 
 # Translators:
+# Lixon Jean-Yves <jy.lixon@ls-development.net>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_be
 #: model:account.tax,name:l10n_be.1_attn_VAT-IN-V83-00
@@ -1967,7 +1968,7 @@ msgstr ""
 #: model:account.group,name:l10n_be.2_be_group_6
 #: model:account.group.template,name:l10n_be.be_group_6
 msgid "Charges"
-msgstr ""
+msgstr "Frais"
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_653
@@ -2369,13 +2370,15 @@ msgstr "Créanciers sous conditions concordataires"
 #: model:account.group.template,name:l10n_be.be_group_40
 msgid "Créances commerciales"
 msgstr ""
+"Créances commerciales\n"
+" "
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_416
 #: model:account.group,name:l10n_be.2_be_group_416
 #: model:account.group.template,name:l10n_be.be_group_416
 msgid "Créances diverses"
-msgstr ""
+msgstr "Créances diverses"
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_407
@@ -3781,7 +3784,7 @@ msgstr "Capital souscrit"
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_move
@@ -3871,7 +3874,7 @@ msgstr "Titres empruntés à restituer"
 #: model:account.account,name:l10n_be.2_l10nbe_chart_template_liquidity_transfer
 #: model:account.account.template,name:l10n_be.l10nbe_chart_template_liquidity_transfer
 msgid "Liquidity Transfer"
-msgstr ""
+msgstr "Transfert de liquidités"
 
 #. module: l10n_be
 #: model:account.account,name:l10n_be.1_a201
@@ -6737,6 +6740,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Vous pouvez choisir différents modèles par type de référence. Le modèle par "
+"défaut est la référence Odoo."
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_755
