@@ -68,10 +68,7 @@ export class RelationSet {
                             const valA = followRelations(a, relatedPath);
                             const valB = followRelations(b, relatedPath);
                             switch (compareMethod) {
-                                case 'defined-first': {
-                                    if (!valA && !valB) {
-                                        return 0;
-                                    }
+                                case 'truthy-first': {
                                     if (!valA) {
                                         return 1;
                                     }
@@ -81,6 +78,9 @@ export class RelationSet {
                                     break;
                                 }
                                 case 'case-insensitive-asc': {
+                                    if (typeof valA !== 'string' || typeof valB !== 'string') {
+                                        break;
+                                    }
                                     const cleanedValA = cleanSearchTerm(valA);
                                     const cleanedValB = cleanSearchTerm(valB);
                                     if (cleanedValA === cleanedValB) {
@@ -89,11 +89,25 @@ export class RelationSet {
                                     return cleanedValA < cleanedValB ? -1 : 1;
                                 }
                                 case 'smaller-first':
+                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                        break;
+                                    }
                                     if (valA === valB) {
                                         break;
                                     }
                                     return valA - valB;
                                 case 'greater-first':
+                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                        break;
+                                    }
+                                    if (valA === valB) {
+                                        break;
+                                    }
+                                    return valB - valA;
+                                case 'most-recent-first':
+                                    if (!(valA instanceof Date) || !(valB instanceof Date)) {
+                                        break;
+                                    }
                                     if (valA === valB) {
                                         break;
                                     }
