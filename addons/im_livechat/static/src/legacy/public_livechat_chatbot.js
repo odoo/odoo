@@ -58,9 +58,9 @@ const QWeb = core.qweb;
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.chatbotState = 'init';
         } else if (this._history !== null && this._history.length === 0) {
-            this._livechatInit = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
+            this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
 
-            if (this._livechatInit.rule.chatbot) {
+            if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
                 this.messaging.livechatButtonView.update({ isChatbot: true });
                 this.chatbotState = 'welcome';
             }
@@ -91,8 +91,8 @@ const QWeb = core.qweb;
             // -> batch welcome message (see '_sendWelcomeChatbotMessage')
             utils.set_cookie('im_livechat_auto_popup', '', -1);
             this._history = null;
-            this._rule = this._livechatInit.rule;
-            this._chatbot = this._livechatInit.rule.chatbot;
+            this._rule = this.messaging.livechatButtonView.livechatInit.rule;
+            this._chatbot = this.messaging.livechatButtonView.livechatInit.rule.chatbot;
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this._chatbotBatchWelcomeMessages = true;
         } else if (this.chatbotState === 'restore_session') {
