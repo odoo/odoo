@@ -46,4 +46,21 @@
             </form>
         </field>
     </record>
+
+    <record id="view_project_task_type_unarchive_wizard" model="ir.ui.view">
+        <field name="name">project.task.type.delete.wizard.form</field>
+        <field name="model">project.task.type.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>Would you like to unarchive all of the tasks contained in these stages as well?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_unarchive_task" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
 </odoo>
