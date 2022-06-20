@@ -376,7 +376,16 @@ var MassMailingFieldHtml = FieldHtml.extend({
         // Overide `d-flex` class which style is `!important`
         $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
+<<<<<<< HEAD
         var $selectTemplateBtn = $snippets_menu.find('.o_we_select_template');
+=======
+
+        for (const button of $snippets_menu.get(0).children) {
+            if (!button.hasAttribute('tabindex') && !button.hasAttribute('accesskey')) {
+                button.style.display = 'none';
+            }
+        }
+>>>>>>> 6a77b8b5c10... temp
 
         if (config.device.isMobile) {
             $snippetsSideBar.hide();
