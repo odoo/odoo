@@ -105,6 +105,11 @@
                 font-weight: bold;
                 color: #374151;
             }
+            .kpi_header_icon {
+                width: 2em;
+                height: 2em;
+                vertical-align: middle;
+            }
             .kpi_cell {
                 width: 33%;
                 text-align: center;
@@ -335,6 +340,12 @@
                                                     t-att-data-field="kpi_info['kpi_name']" cellspacing="0" cellpadding="10" style="width: 100%;margin-bottom: 5px;">
                                                 <tr class="kpi_header">
                                                     <td colspan="2" style="padding: 0px 0px 5px 0px;">
+                                                        <t t-if="kpi_info.get('kpi_module_name')">
+                                                            <img class="kpi_header_icon"
+                                                                 t-att-src="get_module_icon(kpi_info['kpi_module_name'])"
+                                                                 onError="this.onerror=null; this.remove();"
+                                                                 valign="middle" width="30" height="30"/>
+                                                        </t>
                                                         <span style="text-transform: uppercase;" t-esc="kpi_info['kpi_fullname']"  />
                                                     </td>
                                                     <td t-if="kpi_info['kpi_action']" align="right" style="padding: 0px 0px 5px 0px;">
