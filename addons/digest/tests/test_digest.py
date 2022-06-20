@@ -110,26 +110,28 @@ class TestDigest(TestDigestCommon):
     @users('admin')
     def test_digest_numbers(self):
         digest = self.env['digest.digest'].browse(self.digest_1.ids)
-        digest._action_subscribe_users(self.user_employee)
+        for user, expected_kpis in ((self.user_employee, []), (self.user_admin, ['3', '8', '15'])):
+            digest._action_unsubscribe_users(self.user_employee + self.user_admin)
+            digest._action_subscribe_users(user)
 
-        # digest creates its mails in auto_delete mode so we need to capture
-        # the formatted body during the sending process
-        digest.flush_recordset()
-        with self.mock_mail_gateway():
-            digest.action_send()
+            # digest creates its mails in auto_delete mode so we need to capture
+            # the formatted body during the sending process
+            digest.flush_recordset()
+            with self.mock_mail_gateway():
+                digest.action_send()
 
-        self.assertEqual(len(self._new_mails), 1, "A new mail.mail should have been created")
-        mail = self._new_mails[0]
-        # check mail.mail content
-        self.assertEqual(mail.author_id, self.partner_admin)
-        self.assertEqual(mail.email_from, self.company_admin.email_formatted)
-        self.assertEqual(mail.state, 'outgoing', 'Mail should use the queue')
+            self.assertEqual(len(self._new_mails), 1, "A new mail.mail should have been created")
+            mail = self._new_mails[0]
+            # check mail.mail content
+            self.assertEqual(mail.author_id, self.partner_admin)
+            self.assertEqual(mail.email_from, self.company_admin.email_formatted)
+            self.assertEqual(mail.state, 'outgoing', 'Mail should use the queue')
 
-        kpi_message_values = html.fromstring(mail.body_html).xpath('//table[@data-field="kpi_mail_message_total"]//*[hasclass("kpi_value")]/text()')
-        self.assertEqual(
-            [t.strip() for t in kpi_message_values],
-            ['3', '8', '15']
-        )
+            kpi_message_values = html.fromstring(mail.body_html).xpath('//table[@data-field="kpi_mail_message_total"]//*[hasclass("kpi_value")]/text()')
+            self.assertEqual(
+                [t.strip() for t in kpi_message_values],
+                expected_kpis
+            )
 
     @users('admin')
     def test_digest_subscribe(self):
