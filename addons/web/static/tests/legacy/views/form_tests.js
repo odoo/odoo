@@ -7356,7 +7356,6 @@ QUnit.module('Views', {
                 type: 'ir.actions.act_window',
                 views: [[false, 'list']],
                 target: 'current',
-                flags: {'search_view': true, 'action_buttons': true},
             }
         };
 

@@ -921,11 +921,6 @@ QUnit.module('Views', {
             res_model: 'foo',
             type: 'ir.actions.act_window',
             views: [[false, 'graph'], [false, 'kanban']],
-            flags: {
-                graph: {
-                    additionalMeasures: ['product_id'],
-                }
-            },
         });
 
         assert.containsOnce(target, '.o_control_panel .o_graph_measures_list',

@@ -154,8 +154,6 @@ odoo.define('web.ActionMenus', function (require) {
             });
             result.context = new Context(result.context || {}, activeIdsContext)
                 .set_eval_context(context);
-            result.flags = result.flags || {};
-            result.flags.new_window = true;
             this.trigger('do-action', {
                 action: result,
                 options: {
