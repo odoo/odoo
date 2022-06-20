@@ -78,10 +78,9 @@ class SaleOrderLine(models.Model):
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
-                dropship = False
-                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
+                dropship = any(m._is_dropshipped() for m in order_line.move_ids)
+                if not boms and dropship:
                     boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
-                    dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom shoud be the only one since bom_line_id was written on the moves
