@@ -41,6 +41,11 @@ class ProjectTaskTypeDelete(models.TransientModel):
             'context': self.env.context,
         }
 
+    def action_unarchive_task(self):
+        inactive_tasks = self.env['project.task'].with_context(active_test=False).search(
+            [('active', '=', False), ('stage_id', 'in', self.stage_ids.ids)])
+        inactive_tasks.action_unarchive()
+
     def action_confirm(self):
         tasks = self.with_context(active_test=False).env['project.task'].search([('stage_id', 'in', self.stage_ids.ids)])
         tasks.write({'active': False})

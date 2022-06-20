@@ -138,6 +138,27 @@ class ProjectTaskType(models.Model):
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
 
+    def toggle_active(self):
+        res = super().toggle_active()
+        stage_active = self.filtered('active')
+        inactive_tasks = self.env['project.task'].with_context(active_test=False).search(
+            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1)
+        if stage_active and inactive_tasks:
+            wizard = self.env['project.task.type.delete.wizard'].create({
+                'stage_ids': stage_active.ids,
+            })
+
+            return {
+                'name': _('Unarchive Tasks'),
+                'view_mode': 'form',
+                'res_model': 'project.task.type.delete.wizard',
+                'views': [(self.env.ref('project.view_project_task_type_unarchive_wizard').id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wizard.id,
+                'target': 'new',
+            }
+        return res
+
     @api.depends('project_ids', 'project_ids.rating_active')
     def _compute_disabled_rating_warning(self):
         for stage in self:
