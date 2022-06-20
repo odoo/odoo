@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from stdnum.util import clean
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_bank import sanitize_account_number
@@ -255,6 +256,9 @@ class ResPartnerBank(models.Model):
             reference_type = 'QRR'
             reference = structured_communication
             acc_number = sanitize_account_number(self.l10n_ch_qr_iban)
+        elif self._is_iso11649_reference(structured_communication):
+            reference_type = 'SCOR'
+            reference = structured_communication.replace(' ', '')
 
         currency = currency or self.currency_id or self.company_id.currency_id
 
@@ -331,11 +335,22 @@ class ResPartnerBank(models.Model):
                and re.match('\d+$', reference) \
                and reference == mod10r(reference[:-1])
 
+    @api.model
+    def _is_iso11649_reference(self, reference):
+        """ Checks whether the given reference is a ISO11649 (SCOR) reference.
+        """
+        return reference \
+               and len(reference) >= 5 \
+               and len(reference) <= 25 \
+               and reference.startswith('RF') \
+               and int(''.join(str(int(x, 36)) for x in clean(reference[4:] + reference[:4], ' -.,/:').upper().strip())) % 97 == 1
+               # see https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/iso11649.py
+
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
         if qr_method == 'ch_qr':
             error_messages = [_("The QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':
-                error_messages.append(_("The account type isn't QR-IBAN."))
+                error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
             if self.partner_id.country_id.code != 'CH':
                 error_messages.append(_("Your company isn't located in Switzerland."))
             if not debtor_partner or debtor_partner.country_id.code != 'CH':
