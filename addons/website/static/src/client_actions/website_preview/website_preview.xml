@@ -32,6 +32,8 @@
         <WebsiteTranslator t-if="websiteContext.translation"
             reloadIframe.bind="this.reloadIframe"
             removeWelcomeMessage.bind="this.removeWelcomeMessage"/>
+        <AceEditorAdapterComponent t-if="websiteContext.showAceEditor"/>
+        <PagePropertiesDialogWrapper t-if="websiteContext.showPageProperties"/>
     </div>
 </t>
 

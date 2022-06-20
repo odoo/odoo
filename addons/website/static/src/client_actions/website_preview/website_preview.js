@@ -3,6 +3,8 @@
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import core from 'web.core';
+import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
+import { PagePropertiesDialogWrapper } from '../../components/dialog/page_properties';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
@@ -256,6 +258,8 @@ WebsitePreview.components = {
     WebsiteEditorComponent,
     BlockIframe,
     WebsiteTranslator,
+    AceEditorAdapterComponent,
+    PagePropertiesDialogWrapper,
 };
 
 registry.category('actions').add('website_preview', WebsitePreview);

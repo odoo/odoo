@@ -258,7 +258,6 @@
             'website/static/src/components/dialog/*.xml',
             'website/static/src/components/editor/editor.xml',
             'website/static/src/components/fields/fields.xml',
-            'website/static/src/components/navbar/navbar.xml',
             'website/static/src/components/translator/*.xml',
             'website/static/src/systray_items/*.xml',
             'website/static/src/xml/website.backend.xml',

@@ -130,7 +130,7 @@ export class AceEditorAdapterComponent extends ComponentAdapter {
         return [
             this.website.pageDocument && this.website.pageDocument.documentElement.dataset.viewXmlid,
             {
-                toggleAceEditor: this.props.toggleAceEditor,
+                toggleAceEditor: () => this.website.context.showAceEditor = false,
                 defaultBundlesRestriction: [
                     'web.assets_frontend',
                     'web.assets_frontend_minimal',
@@ -142,5 +142,7 @@ export class AceEditorAdapterComponent extends ComponentAdapter {
             }
         ];
     }
-
 }
+AceEditorAdapterComponent.defaultProps = {
+    Component: WebsiteAceEditor,
+};
