@@ -53,17 +53,14 @@ const QWeb = core.qweb;
     async willStart() {
         const superResult = await this._super(...arguments);
 
-        this.chatbotState = null;
-
-        if (this.messaging.livechatButtonView.rule && this.messaging.livechatButtonView.rule.chatbot) {
+        if (this.messaging.livechatButtonView.rule && !!this.messaging.livechatButtonView.rule.chatbot) {
             this.messaging.livechatButtonView.update({ isChatbot: true });
-            this.chatbotState = 'init';
+            this.messaging.livechatButtonView.update({ chatbotState: 'init' });
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
             this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
-
             if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
                 this.messaging.livechatButtonView.update({ isChatbot: true });
-                this.chatbotState = 'welcome';
+                this.messaging.livechatButtonView.update({ chatbotState: 'welcome' });
             }
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
             const sessionCookie = utils.get_cookie('im_livechat_session');
@@ -71,12 +68,12 @@ const QWeb = core.qweb;
                 const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
                 if (localStorage.getItem(sessionKey)) {
                     this.messaging.livechatButtonView.update({ isChatbot: true });
-                    this.chatbotState = 'restore_session';
+                    this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
             }
         }
 
-        if (this.chatbotState === 'init') {
+        if (this.messaging.livechatButtonView.chatbotState === 'init') {
             // we landed on a website page where a channel rule is configured to run a chatbot.script
             // -> initialize necessary state
             this.messaging.livechatButtonView.update({
@@ -86,7 +83,7 @@ const QWeb = core.qweb;
                 this._chatbotCurrentStep = this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[
                     this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps.length - 1];
             }
-        } else if (this.chatbotState === 'welcome') {
+        } else if (this.messaging.livechatButtonView.chatbotState === 'welcome') {
             // we landed on a website page and a chatbot script was initialized on a previous one
             // however the end-user did not interact with the bot ( :( )
             // -> remove cookie to force opening the popup again
@@ -98,7 +95,7 @@ const QWeb = core.qweb;
             this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.livechatInit.rule.chatbot });
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ isChatbotBatchWelcomeMessages: true });
-        } else if (this.chatbotState === 'restore_session') {
+        } else if (this.messaging.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
             // -> restore the user's session (see '_chatbotRestoreSession')
             this._chatbotRestoreSession(utils.get_cookie('im_livechat_session'));
