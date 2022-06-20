@@ -161,5 +161,40 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         };
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, onChangeOrder, useBarcodeReader, useAsyncLockedMethod };
+    function useCheckLotNames() {
+        const self = Component.current;
+        return async (payload, product) => {
+            try {
+                if (self.env.pos.picking_type.use_create_lots) {
+                    return;
+                }
+                let lots = payload['newArray'];
+                const result = await self.env.services.rpc({
+                    model: 'stock.production.lot',
+                    method: 'check_lots_exist',
+                    args: [lots.map(item => {
+                        return {
+                            'name': item.text,
+
+                        };
+                    }), product.id],
+                });
+                if (result.length > 0) {
+                    const { confirmed } = await self.showPopup('ConfirmPopup', {
+                        title: self.env._t('Serial Number(s) Doesn\'t Exist'),
+                        body: self.env._t('The following serial numbers do not exists: ') + result.join(', ') + '\n' + self.env._t('Do you want to delete them?'),
+                        confirmText: self.env._t('Delete'),
+                        cancelText: self.env._t('Cancel'),
+                    });
+                    if (confirmed) {
+                        payload['newArray'] = lots.filter(item => !result.includes(item.text));
+                    }
+                }
+            } catch (e) {
+                console.warn("There was an error while checking the serial numbers", e);
+            }
+        };
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, onChangeOrder, useBarcodeReader, useAsyncLockedMethod, useCheckLotNames };
 });

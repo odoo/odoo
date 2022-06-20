@@ -6,7 +6,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
-    const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { onChangeOrder, useBarcodeReader, useCheckLotNames } = require('point_of_sale.custom_hooks');
     const { isConnectionError, posbus } = require('point_of_sale.utils');
     const { useState, onMounted } = owl.hooks;
     const { parse } = require('web.field_utils');
@@ -42,6 +42,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 numpadMode: 'quantity',
                 mobile_pane: this.props.mobile_pane || 'right',
             });
+            this.checkLotNames = useCheckLotNames();
         }
         mounted() {
             posbus.trigger('start-cash-control');
@@ -105,7 +106,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
                 });
+
                 if (confirmed) {
+                    // /!\ This function call can potentially replace the `newArray` of the given payload
+                    await this.checkLotNames(payload, product);
                     // Segregate the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
                         payload.newArray.filter(item => item.id).map(item => [item.id, item.text])

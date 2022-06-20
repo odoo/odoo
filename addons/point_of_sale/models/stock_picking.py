@@ -100,6 +100,15 @@ class StockPicking(models.Model):
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
 
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    @api.model
+    def check_lots_exist(self, lots, product_id):
+        """returns the list of serial numbers that do not exist"""
+        existing_sn = self.env['stock.production.lot'].search([('name', 'in', [lot['name'] for lot in lots]), ('product_id', '=', product_id)])
+        return list(set(map(lambda x: x['name'], lots)) - set(existing_sn.mapped('name')))
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 

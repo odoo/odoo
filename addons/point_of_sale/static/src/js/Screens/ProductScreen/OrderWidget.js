@@ -3,7 +3,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
 
     const { useState, useRef, onPatched } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
-    const { onChangeOrder } = require('point_of_sale.custom_hooks');
+    const { onChangeOrder, useCheckLotNames } = require('point_of_sale.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
@@ -25,6 +25,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 }
             });
             this.state = useState({ total: 0, tax: 0 });
+            this.checkLotNames = useCheckLotNames();
             this._updateSummary();
         }
         get order() {
@@ -52,7 +53,10 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 isSingleItem: isAllowOnlyOneLot,
                 array: packLotLinesToEdit,
             });
+
             if (confirmed) {
+                // /!\ This function call can potentially replace the `newArray` of the given payload
+                await this.checkLotNames(payload, orderline.product);
                 // Segregate the old and new packlot lines
                 const modifiedPackLotLines = Object.fromEntries(
                     payload.newArray.filter(item => item.id).map(item => [item.id, item.text])
