@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
+from odoo.tests import Form
 
 
 class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
@@ -195,3 +196,50 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             ('product_qty', '=', 5.0),
         ])
         self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
+
+    def test_04_purchase_requisition_stock(self):
+        """Check that alt PO correctly copies the original PO values"""
+        # create original PO
+        orig_po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'picking_type_id': self.env['stock.picking.type'].search([['code', '=', 'outgoing']], limit=1).id,
+            'dest_address_id': self.env['res.partner'].create({'name': 'delivery_partner'}).id,
+        })
+        unit_price = 50
+        po_form = Form(orig_po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+            line.price_unit = unit_price
+        po_form.save()
+
+        # create an alt PO
+        action = orig_po.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = self.res_partner_1
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+
+        # check alt PO was created with correct values
+        alt_po = orig_po.alternative_po_ids.filtered(lambda po: po.id != orig_po.id)
+        self.assertEqual(orig_po.picking_type_id, alt_po.picking_type_id,
+                         "Alternative PO should have copied the picking type from original PO")
+        self.assertEqual(orig_po.dest_address_id, alt_po.dest_address_id,
+                         "Alternative PO should have copied the destination address from original PO")
+        self.assertEqual(orig_po.order_line.product_id, alt_po.order_line.product_id,
+                         "Alternative PO should have copied the product to purchase from original PO")
+        self.assertEqual(orig_po.order_line.product_qty, alt_po.order_line.product_qty,
+                         "Alternative PO should have copied the qty to purchase from original PO")
+        self.assertEqual(len(alt_po.alternative_po_ids), 2,
+                         "Newly created PO should be auto-linked to itself and original PO")
+
+        # confirm the alt PO, original PO should be cancelled
+        action = alt_po.button_confirm()
+        warning_wiz = Form(
+            self.env['purchase.requisition.alternative.warning'].with_context(**action['context']))
+        warning_wiz = warning_wiz.save()
+        self.assertEqual(warning_wiz.alternative_po_count, 1,
+                         "POs not in a RFQ status should not be listed as possible to cancel")
+        warning_wiz.action_cancel_alternatives()
+        self.assertEqual(orig_po.state, 'cancel', "Original PO should have been cancelled")
