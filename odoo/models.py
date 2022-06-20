@@ -4879,7 +4879,7 @@ class BaseModel(metaclass=MetaModel):
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str, params = query.select("count(1)")
+            query_str, params = query.select("count(*)")
             self._cr.execute(query_str, params)
             res = self._cr.fetchone()
             return res[0]
