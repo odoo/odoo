@@ -294,3 +294,37 @@ class TestEditableQuant(TransactionCase):
         warning = dupe_sn._onchange_serial_number()
         self.assertTrue(warning, 'Reuse of existing serial number not detected')
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+
+    def test_revert_inventory_adjustment(self):
+        """Try to revert inventory adjustment"""
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100,
+        })
+        quant.action_apply_inventory()
+        move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
+        self.assertEqual(len(move_lines), 1, "One inventory adjustment move lines should have been created")
+        self.assertEqual(self.product.qty_available, 100, "Before revert inventory adjustment qty is 100")
+        move_lines.action_revert_inventory()
+        self.assertEqual(self.product.qty_available, 0, "After revert inventory adjustment qty is not zero")
+
+    def test_multi_revert_inventory_adjustment(self):
+        """Try to revert inventory adjustment with multiple lines"""
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100,
+        })
+        quant.action_apply_inventory()
+        quant.inventory_quantity = 150
+        quant.action_apply_inventory()
+        move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
+        self.assertEqual(self.product.qty_available, 150, "Before revert multi inventory adjustment qty is 150")
+        self.assertEqual(len(move_lines), 2, "Two inventory adjustment move lines should have been created")
+        move_lines.action_revert_inventory()
+        self.assertEqual(self.product.qty_available, 0, "After revert multi inventory adjustment qty is not zero")
