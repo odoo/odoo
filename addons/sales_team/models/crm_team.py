@@ -17,7 +17,7 @@ class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
     _description = "Sales Team"
-    _order = "sequence"
+    _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
@@ -25,13 +25,16 @@ class CrmTeam(models.Model):
         method is not called by default_get as it takes some additional
         parameters and is meant to be called by other default methods.
 
-        Heuristic (when multiple match: take first sequence ordered)
+        Heuristic (when multiple match: take from default context value or first
+        sequence ordered)
 
-          1- any of my teams (member OR responsible) matching domain
-          2- any of my teams (member OR responsible)
+          1- any of my teams (member OR responsible) matching domain, either from
+             context or based on _order;
+          2- any of my teams (member OR responsible), either from context or based
+             on _order;
           3- default from context
-          4- any team matching my company and domain
-          5- any team matching my company
+          4- any team matching my company and domain (based on company rule)
+          5- any team matching my company (based on company rule)
 
         Note: ResPartner.team_id field is explicitly not taken into account. We
         think this field causes a lot of noises compared to its added value.
@@ -45,6 +48,9 @@ class CrmTeam(models.Model):
             user = self.env.user
         else:
             user = self.env['res.users'].sudo().browse(user_id)
+        default_team = self.env['crm.team'].browse(
+            self.env.context['default_team_id']
+        ) if self.env.context.get('default_team_id') else self.env['crm.team']
         valid_cids = [False] + [c for c in user.company_ids.ids if c in self.env.companies.ids]
 
         # 1- find in user memberships - note that if current user in C1 searches
@@ -52,23 +58,32 @@ class CrmTeam(models.Model):
         team = self.env['crm.team']
         teams = self.env['crm.team'].search([
             ('company_id', 'in', valid_cids),
-            '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id]),
+             '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id])
         ])
         if teams and domain:
-            team = teams.filtered_domain(domain)[:1]
+            filtered_teams = teams.filtered_domain(domain)
+            if default_team and default_team in filtered_teams:
+                team = default_team
+            else:
+                team = filtered_teams[:1]
+
         # 2- any of my teams
         if not team:
-            team = teams[:1]
+            if default_team and default_team in teams:
+                team = default_team
+            else:
+                team = teams[:1]
 
         # 3- default: context
-        if not team and 'default_team_id' in self.env.context:
-            team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
+        if not team and default_team:
+            team = default_team
 
-        # 4- default: first one matching domain, then first one
         if not team:
             teams = self.env['crm.team'].search([('company_id', 'in', valid_cids)])
+            # 4- default: based on company rule, first one matching domain
             if teams and domain:
                 team = teams.filtered_domain(domain)[:1]
+            # 5- default: based on company rule, first one
             if not team:
                 team = teams[:1]
 
