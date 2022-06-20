@@ -32,13 +32,6 @@ const WebsitePageListController = ListController.extend({
             this.$buttons.appendTo($node);
         }
     },
-    /**
-     * Used to set the new dialog (created by PagePropertiesDialogWrapper for page
-     * record).
-     */
-    setPageManagerDialog(dialog) {
-        this.pageManagerDialog = dialog;
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -56,15 +49,12 @@ const WebsitePageListController = ListController.extend({
                 break;
             case 'action_manage_page':
                 await this._addDialog(record);
-                this.pageManagerDialog.open();
                 break;
             case 'action_clone_page':
                 await this._addDialog(record, 'clone');
-                this.pageManagerDialog.open();
                 break;
             case 'action_delete_page':
                 await this._addDialog(record, 'delete');
-                this.pageManagerDialog.open();
                 break;
             case 'action_edit_page':
                 this.do_action({
@@ -97,7 +87,6 @@ const WebsitePageListController = ListController.extend({
      */
     async _addDialog(record, mode = '') {
         this._pagePropertiesDialog = new ComponentWrapper(this, PagePropertiesDialogWrapper, {
-            setPagePropertiesDialog: this.setPageManagerDialog.bind(this),
             currentPage: record.data.id,
             onClose: this._onCloseDialog.bind(this),
             mode: mode,

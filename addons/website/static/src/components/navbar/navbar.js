@@ -6,8 +6,6 @@ import { registry } from "@web/core/registry";
 import { patch } from 'web.utils';
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
-import {WebsiteAceEditor, AceEditorAdapterComponent} from '@website/components/ace_editor/ace_editor';
-import {PagePropertiesDialogWrapper} from '@website/components/dialog/page_properties';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 const { useState } = owl;
@@ -17,7 +15,6 @@ patch(NavBar.prototype, 'website_navbar', {
         this._super();
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);
-        this.aceEditor = WebsiteAceEditor;
 
         // The navbar is rerendered with an event, as it can not naturally be
         // with props/state (the WebsitePreview client action and the navbar
@@ -30,13 +27,6 @@ patch(NavBar.prototype, 'website_navbar', {
 
         useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
 
-        this.toggleAceEditor = (show) => {
-            this.websiteContext.showAceEditor = show;
-        };
-        this.setPagePropertiesDialog = (dialog) => {
-            this.pagePropertiesDialog = dialog;
-        };
-
         this.websiteEditingMenus = {
             'website.menu_edit_menu': {
                 Component: EditMenuDialog,
@@ -47,11 +37,11 @@ patch(NavBar.prototype, 'website_navbar', {
                 isDisplayed: () => this.websiteService.currentWebsite && !!this.websiteService.currentWebsite.metadata.mainObject,
             },
             'website.menu_ace_editor': {
-                openWidget: () => this.toggleAceEditor(true),
+                openWidget: () => this.websiteContext.showAceEditor = true,
                 isDisplayed: () => this.canShowAceEditor(),
             },
             'website.menu_page_properties': {
-                openWidget: () => this.pagePropertiesDialog.open(),
+                openWidget: () => this.websiteContext.showPageProperties = true,
                 isDisplayed: () => this.canShowPageProperties(),
             },
         };
@@ -125,5 +115,3 @@ patch(NavBar.prototype, 'website_navbar', {
             && !this.websiteContext.showNewContentModal && !this.websiteContext.edition;
     },
 });
-
-NavBar.components = {...NavBar.components, AceEditorAdapterComponent, PagePropertiesDialogWrapper};

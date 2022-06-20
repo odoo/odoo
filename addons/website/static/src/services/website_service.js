@@ -44,6 +44,7 @@ export const websiteService = {
             isPublicRootReady: false,
             snippetsLoaded: false,
             isMobile: false,
+            showPageProperties: false,
         });
         const bus = new EventBus();
 
