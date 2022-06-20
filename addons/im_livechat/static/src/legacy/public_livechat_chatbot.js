@@ -54,7 +54,7 @@ const QWeb = core.qweb;
 
         this.chatbotState = null;
 
-        if (this._rule && !!this._rule.chatbot) {
+        if (this.messaging.livechatButtonView.rule && this.messaging.livechatButtonView.rule.chatbot) {
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.chatbotState = 'init';
         } else if (this._history !== null && this._history.length === 0) {
@@ -78,8 +78,8 @@ const QWeb = core.qweb;
         if (this.chatbotState === 'init') {
             // we landed on a website page where a channel rule is configured to run a chatbot.script
             // -> initialize necessary state
-            this._chatbot = this._rule.chatbot;
-            if (this._rule.chatbot_welcome_steps && this._rule.chatbot_welcome_steps.length !== 0) {
+            this._chatbot = this.messaging.livechatButtonView.rule.chatbot;
+            if (this.messaging.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
                 this._chatbotCurrentStep = this._chatbot.chatbot_welcome_steps[
                     this._chatbot.chatbot_welcome_steps.length - 1];
             }
@@ -91,7 +91,7 @@ const QWeb = core.qweb;
             // -> batch welcome message (see '_sendWelcomeChatbotMessage')
             utils.set_cookie('im_livechat_auto_popup', '', -1);
             this._history = null;
-            this._rule = this._livechatInit.rule;
+            this.messaging.livechatButtonView.update({ rule: this._livechatInit.rule });
             this._chatbot = this._livechatInit.rule.chatbot;
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this._chatbotBatchWelcomeMessages = true;
