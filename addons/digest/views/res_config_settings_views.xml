@@ -9,9 +9,9 @@
                 <setting id="digest" string="Digest Email" help="Add new users as recipient of a periodic email with key metrics" documentation="/applications/general/digest_emails.html" title="New users are automatically added as recipient of the following digest email." name="digest_email_setting_container">
                     <field name="digest_emails"/>
                     <div class="content-group" invisible="not digest_emails">
-                        <div class="mt16">
+                        <div class="mt16 d-flex">
                             <label for="digest_id" class="o_light_label mr8"/>
-                            <field name="digest_id" class="oe_inline"/>
+                            <field name="digest_id" class="oe_inline flex-grow-1"/>
                         </div>
                         <div class="mt8">
                             <button type="action" name="%(digest.digest_digest_action)d" string="Configure Digest Emails" icon="oi-arrow-right" class="btn-link"/>

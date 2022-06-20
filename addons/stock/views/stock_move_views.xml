@@ -373,6 +373,50 @@
             </field>
         </record>
 
+        <record id="stock_move_action_incoming" model="ir.actions.act_window">
+            <field name="name">Stock Moves (receipts)</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_move_search"/>
+            <field name="context">{
+                'search_default_done': 1,
+                'search_default_groupby_location_id': 2,
+                'search_default_incoming': 3
+            }</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No stock move found
+              </p><p>
+                This menu gives you the full traceability of inventory
+                operations on a specific product. You can filter on the product
+                to see all the past or future movements for the product.
+              </p>
+            </field>
+        </record>
+
+        <record id="stock_move_action_outgoing" model="ir.actions.act_window">
+            <field name="name">Stock Moves (deliveries)</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_move_search"/>
+            <field name="context">{
+                'search_default_done': 1,
+                'search_default_groupby_location_id': 2,
+                'search_default_outgoing': 3
+            }</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No stock move found
+              </p><p>
+                This menu gives you the full traceability of inventory
+                operations on a specific product. You can filter on the product
+                to see all the past or future movements for the product.
+              </p>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">list</field>

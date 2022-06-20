@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
-from odoo.exceptions import AccessError
+from odoo import fields, models
 
 
 class DigestDigest(models.Model):
@@ -11,10 +10,8 @@ class DigestDigest(models.Model):
     kpi_website_sale_total_value = fields.Monetary(compute='_compute_kpi_website_sale_total_value')
 
     def _compute_kpi_website_sale_total_value(self):
-        if not self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            raise AccessError(_("Do not have access, skip this data for user's digest email"))
-
-        self._calculate_company_based_kpi(
+        self._raise_if_not_member_of('sales_team.group_sale_salesman_all_leads')
+        self._calculate_kpi(
             'sale.report',
             'kpi_website_sale_total_value',
             date_field='date',
@@ -22,7 +19,9 @@ class DigestDigest(models.Model):
             sum_field='price_subtotal',
         )
 
-    def _compute_kpis_actions(self, company, user):
-        res = super()._compute_kpis_actions(company, user)
-        res['kpi_website_sale_total'] = 'website.backend_dashboard?menu_id=%s' % self.env.ref('website.menu_website_configuration').id
+    def _get_kpi_custom_settings(self, company, user):
+        res = super()._get_kpi_custom_settings(company, user)
+        menu_id = self.env.ref('website.menu_website_configuration').id
+        res['kpi_action']['kpi_website_sale_total'] = f'website.backend_dashboard?menu_id={menu_id}'
+        res['kpi_sequence']['kpi_website_sale_total'] = 2505
         return res

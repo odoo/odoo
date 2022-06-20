@@ -14,26 +14,26 @@ class DigestDigest(models.Model):
     kpi_crm_opportunities_won_value = fields.Integer(compute='_compute_kpi_crm_opportunities_won_value')
 
     def _compute_kpi_crm_lead_created_value(self):
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
-            raise AccessError(_("Do not have access, skip this data for user's digest email"))
-
-        self._calculate_company_based_kpi('crm.lead', 'kpi_crm_lead_created_value')
+        self._raise_if_not_member_of('sales_team.group_sale_salesman')
+        self._calculate_kpi('crm.lead', 'kpi_crm_lead_created_value')
 
     def _compute_kpi_crm_opportunities_won_value(self):
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
-            raise AccessError(_("Do not have access, skip this data for user's digest email"))
-
-        self._calculate_company_based_kpi(
+        self._raise_if_not_member_of('sales_team.group_sale_salesman')
+        self._calculate_kpi(
             'crm.lead',
             'kpi_crm_opportunities_won_value',
             date_field='date_closed',
             additional_domain=[('type', '=', 'opportunity'), ('probability', '=', '100')],
         )
 
-    def _compute_kpis_actions(self, company, user):
-        res = super()._compute_kpis_actions(company, user)
-        res['kpi_crm_lead_created'] = 'crm.crm_lead_action_pipeline?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
-        res['kpi_crm_opportunities_won'] = 'crm.crm_lead_action_pipeline?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
+    def _get_kpi_custom_settings(self, company, user):
+        res = super()._get_kpi_custom_settings(company, user)
+        menu_id = self.env.ref('crm.crm_menu_root').id
+        res['kpi_action']['kpi_crm_opportunities_won'] = f'crm.crm_lead_action_pipeline?menu_id={menu_id}'
         if user.has_group('crm.group_use_lead'):
-            res['kpi_crm_lead_created'] = 'crm.crm_lead_all_leads?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
+            res['kpi_action']['kpi_crm_lead_created'] = f'crm.crm_lead_all_leads?menu_id={menu_id}'
+        else:
+            res['kpi_action']['kpi_crm_lead_created'] = f'crm.crm_lead_action_pipeline?menu_id={menu_id}'
+        res['kpi_sequence']['kpi_crm_lead_created'] = 4550
+        res['kpi_sequence']['kpi_crm_opportunities_won'] = 4555
         return res

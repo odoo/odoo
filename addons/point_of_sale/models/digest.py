@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
-from odoo.exceptions import AccessError
+from odoo import fields, models
 
 
 class DigestDigest(models.Model):
@@ -12,10 +11,8 @@ class DigestDigest(models.Model):
     kpi_pos_total_value = fields.Monetary(compute='_compute_kpi_pos_total_value')
 
     def _compute_kpi_pos_total_value(self):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access, skip this data for user's digest email"))
-
-        self._calculate_company_based_kpi(
+        self._raise_if_not_member_of('point_of_sale.group_pos_user')
+        self._calculate_kpi(
             'pos.order',
             'kpi_pos_total_value',
             date_field='date_order',
@@ -23,7 +20,9 @@ class DigestDigest(models.Model):
             sum_field='amount_total',
         )
 
-    def _compute_kpis_actions(self, company, user):
-        res = super()._compute_kpis_actions(company, user)
-        res['kpi_pos_total'] = 'point_of_sale.action_pos_sale_graph?menu_id=%s' % self.env.ref('point_of_sale.menu_point_root').id
+    def _get_kpi_custom_settings(self, company, user):
+        res = super()._get_kpi_custom_settings(company, user)
+        menu_id = self.env.ref('point_of_sale.menu_point_root').id
+        res['kpi_action']['kpi_pos_total'] = f'point_of_sale.action_pos_sale_graph?menu_id={menu_id}'
+        res['kpi_sequence']['kpi_pos_total'] = 1500
         return res
