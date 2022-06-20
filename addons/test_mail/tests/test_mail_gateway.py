@@ -89,11 +89,6 @@ class TestEmailParsing(TestMailCommon):
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
 
-    def test_message_parse_wrong_content_charset(self):
-        mail = test_mail_data.MAIL_WRONG_CONTENT_CHARSET
-        res = self.env['mail.thread'].message_parse(self.from_string(mail))
-        self.assertIn("Tonton, ton thé t'a-t-il oté ta toux ?", res['body'])
-
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))

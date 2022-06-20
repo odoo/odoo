@@ -1013,22 +1013,3 @@ Remote-MTA: 10.245.192.40
 
 
 --_av-UfLe6y6qxNo54-urtAxbJQ--"""
-
-
-MAIL_WRONG_CONTENT_CHARSET = """\
-Return-Path: <whatever-2a840@postmaster.twitter.com>
-To: gaston.lagaffe@example.com
-Received: by mail1.openerp.com (Postfix, from userid 10002)
-    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
-From: spirou@example.com
-Subject: Ze Subject
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-    boundary="----=_Part_4200734_24778174.1344608186754"
-------=_Part_4200734_24778174.1344608186754
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Tonton, ton th=C3=A9 t'a-t-il ot=C3=A9 ta toux ?
-------=_Part_4200734_24778174.1344608186754
-"""
