@@ -765,7 +765,6 @@ class IrTranslation(models.Model):
             'view_mode': 'tree',
             'view_id': self.env.ref('base.view_translation_dialog_tree').id,
             'target': 'current',
-            'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
             'context': {},
         }

@@ -731,7 +731,7 @@ class Partner(models.Model):
                 'view_mode': 'form',
                 'res_id': self.commercial_partner_id.id,
                 'target': 'current',
-                'flags': {'form': {'action_buttons': True}}}
+                }
 
     def open_parent(self):
         """ Utility method used to add an "Open Parent" button in partner views """
@@ -743,7 +743,7 @@ class Partner(models.Model):
                 'views': [(address_form_id, 'form')],
                 'res_id': self.parent_id.id,
                 'target': 'new',
-                'flags': {'form': {'action_buttons': True}}}
+                }
 
     def _get_contact_name(self, partner, name):
         return "%s, %s" % (partner.commercial_company_name or partner.sudo().parent_id.name, name)
