@@ -8,7 +8,7 @@ import {FormViewDialog} from 'web.view_dialogs';
 import {standaloneAdapter} from 'web.OwlCompatibility';
 import {qweb} from 'web.core';
 
-const {Component, onWillStart, useState, xml, useRef, markup, onWillRender} = owl;
+const {Component, onWillStart, useState, xml, useRef, markup, onRendered} = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -173,32 +173,26 @@ export class PagePropertiesDialogWrapper extends Component {
             this.orm = useWowlService('orm');
         }
 
-        onWillRender(this.setDialogWidget);
+        onRendered(this.createDialog);
     }
 
     createDialog() {
         if (this.props.mode === 'clone') {
-            return {
-                component: DuplicatePageDialog,
-                open: () => this.dialogService.add(DuplicatePageDialog, {
-                    pageId: this.pageId,
-                    onClose: this.props.onClose,
-                }),
-            };
+            this.dialogService.add(DuplicatePageDialog, {
+                pageId: this.pageId,
+                onClose: this.props.onClose,
+            });
         } else if (this.props.mode === 'delete') {
-            return {
-                component: DeletePageDialog,
-                open: () => this.dialogService.add(DeletePageDialog, {
-                    pageId: this.pageId,
-                    onClose: this.props.onClose,
-                }),
-            };
+            this.dialogService.add(DeletePageDialog, {
+                pageId: this.pageId,
+                onClose: this.props.onClose,
+            });
         } else {
             const parent = standaloneAdapter({Component});
             const formViewDialog = new FormViewDialog(parent, this.dialogOptions);
             formViewDialog.buttons = [...formViewDialog.buttons, ...this.extraButtons];
-            formViewDialog.on('form_dialog_discarded', parent, this.setDialogWidget.bind(this));
-            return formViewDialog;
+            formViewDialog.on('form_dialog_discarded', parent, () => this.websiteService.context.showPageProperties = false);
+            formViewDialog.open();
         }
     }
 
@@ -250,14 +244,9 @@ export class PagePropertiesDialogWrapper extends Component {
             },
         }];
     }
-
-    setDialogWidget() {
-        this.props.setPagePropertiesDialog(this.createDialog());
-    }
 }
 PagePropertiesDialogWrapper.template = xml``;
 PagePropertiesDialogWrapper.props = {
-    setPagePropertiesDialog: Function,
     onClose: {
         type: Function,
         optional: true,
