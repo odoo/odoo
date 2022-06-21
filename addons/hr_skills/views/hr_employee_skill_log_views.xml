@@ -4,7 +4,7 @@
           <field name="name">hr.employee.skill.log.view.graph</field>
           <field name="model">hr.employee.skill.log</field>
           <field name="arch" type="xml">
-            <graph string="Skills History" type="line">
+            <graph string="Skills History" type="line" js_class="skills_graph">
                 <field name="date" interval="day" type="row"/>
                 <field name="employee_id" type="row"/>
                 <field name="skill_id" type="row"/>
@@ -17,7 +17,7 @@
           <field name="name">hr.employee.skill.log.view.graph</field>
           <field name="model">hr.employee.skill.log</field>
           <field name="arch" type="xml">
-            <graph string="Skills History" type="line">
+            <graph string="Skills History" type="line" js_class="skills_graph">
                 <field name="date" interval="day" type="row"/>
                 <field name="skill_id" type="row"/>
                 <field name="level_progress" type="measure"/>
@@ -67,7 +67,6 @@
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="hr_employee_skill_log_view_graph_employee"/>
         <field name="context">{'fill_temporal': 0}</field>
-        <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="target">current</field>
     </record>
 
@@ -77,8 +76,7 @@
         <field name="res_model">hr.employee.skill.log</field>
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="hr_employee_skill_log_view_graph_department"/>
-        <field name="context">{'fill_temporal': 0}</field>
-        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="context">{'fill_temporal': 0, 'search_default_group_by_skill_type_id': 1, 'search_default_group_by_skill_id': 2}</field>
         <field name="target">current</field>
     </record>
 </odoo>

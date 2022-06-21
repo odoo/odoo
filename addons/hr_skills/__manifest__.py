@@ -35,7 +35,7 @@ This module introduces skills and resumé management for employees.
     'assets': {
         'web.assets_backend': [
             'hr_skills/static/src/css/hr_skills.scss',
-            'hr_skills/static/src/js/resume_widget.js',
+            'hr_skills/static/src/js/*.js',
         ],
         'web.qunit_suite_tests': [
             'hr_skills/static/tests/**/*',
