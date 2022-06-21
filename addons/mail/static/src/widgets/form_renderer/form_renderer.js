@@ -46,7 +46,13 @@ FormRenderer.include({
             if (this._isFromFormViewDialog) {
                 return $('<div/>');
             }
-            return this._makeChatterContainerTarget();
+            if (!this._chatterContainerTarget) {
+                this._chatterContainerTarget = document.createElement("div");
+                this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
+            }
+            this.$chatterContainerHook = $('<div class="o_FormRenderer_chatterContainer"/>');
+            this._updateChatterContainerTarget();
+            return this.$chatterContainerHook;
         }
         return this._super(...arguments);
     },
@@ -139,23 +145,6 @@ FormRenderer.include({
             threadId: this.state.res_id,
             threadModel: this.state.model,
         };
-    },
-    /**
-     * Create the DOM element that will contain the chatter. This is made in
-     * a separate method so it can be overridden (like in mail_enterprise for
-     * example).
-     *
-     * @private
-     * @returns {jQuery.Element}
-     */
-    _makeChatterContainerTarget() {
-        if (!this._chatterContainerTarget) {
-            this._chatterContainerTarget = document.createElement("div");
-            this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
-        }
-        this.$chatterContainerHook = $('<div class="o_FormRenderer_chatterContainer"/>');
-        this._updateChatterContainerTarget();
-        return this.$chatterContainerHook;
     },
     /**
      * Mount the chatter
