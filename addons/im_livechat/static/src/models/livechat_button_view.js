@@ -18,6 +18,12 @@ registerModel({
             return this.env._t("Chat with one of our collaborators");
         },
         /**
+         * @returns {string}
+         */
+         _computeButtonTextColor() {
+            return this.messaging.publicLivechatOptions.button_text_color;
+        },
+        /**
          * @private
          * @returns {integer|FieldCommand}
          */
@@ -77,6 +83,9 @@ registerModel({
         autoOpenChatTimeout: attr(),
         buttonText: attr({
             compute: '_computeButtonText',
+        }),
+        buttonTextColor: attr({
+            compute: '_computeButtonTextColor',
         }),
         chatbot: attr(),
         chatbotCurrentStep: attr(),

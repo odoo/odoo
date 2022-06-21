@@ -73,8 +73,8 @@ const LivechatButton = Widget.extend({
         if (this.options.button_background_color) {
             this.$el.css('background-color', this.options.button_background_color);
         }
-        if (this.options.button_text_color) {
-            this.$el.css('color', this.options.button_text_color);
+        if (this.messaging.livechatButtonView.buttonTextColor) {
+            this.$el.css('color', this.messaging.livechatButtonView.buttonTextColor);
         }
 
         // If website_event_track installed, put the livechat banner above the PWA banner.
