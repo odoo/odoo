@@ -26,7 +26,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="o.picking_ids" t-as="pick">
+                                    <tr t-foreach="o.picking_ids.sorted(lambda l: l.location_id.display_name)" t-as="pick">
                                         <td>
                                             <span t-field="pick.name"/>
                                         </td>
@@ -43,7 +43,7 @@
                                 </tbody>
                             </table>
                             <p style="page-break-after: always;"/>
-                            <t t-foreach="locations" t-as="location">
+                            <t t-foreach="locations.sorted(lambda l: l.display_name)" t-as="location">
                                 <t t-set="loc_move_line" t-value="move_line_ids.filtered(lambda x: x.location_id==location)"/>
                                 <t t-set="products" t-value="loc_move_line.mapped('product_id')"/>
                                 <h3><span t-field="o.name"/></h3>
