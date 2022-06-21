@@ -550,7 +550,7 @@
                                     </span>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('privacy_visibility_warning', '=', '')]}">
                                         <i class="fa fa-warning">&amp;nbsp;</i>
-                                        <field name="privacy_visibility_warning" nolabel="1"/>  
+                                        <field name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
                                 <group>
@@ -928,7 +928,7 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
+                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'hide_label': 1}"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                         <field name="user_id" widget="many2one_avatar_user" t-if="record.user_id.raw_value"/>
                                     </div>
