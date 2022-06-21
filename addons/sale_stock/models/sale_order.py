@@ -435,6 +435,7 @@ class SaleOrderLine(models.Model):
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
             'company_id': self.order_id.company_id,
+            'sequence': self.sequence,
         })
         for line in self.filtered("order_id.commitment_date"):
             date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
