@@ -15,7 +15,7 @@ export const displayNotificationAction = (env, action) => {
         type: params.type || "info",
     };
     let links = (params.links || []).map((link) => {
-        let target = '_blank'
+        let target = '_blank';
         if ('target' in link) {
             if (link.target == 'current') {
                 target = '_self';
