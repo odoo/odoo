@@ -70,11 +70,11 @@ const LivechatButton = Widget.extend({
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
-        if (this.options.button_background_color) {
-            this.$el.css('background-color', this.options.button_background_color);
+        if (this.messaging.livechatButtonView.buttonBackgroundColor) {
+            this.$el.css('background-color', this.messaging.livechatButtonView.buttonBackgroundColor);
         }
-        if (this.options.button_text_color) {
-            this.$el.css('color', this.options.button_text_color);
+        if (this.messaging.livechatButtonView.buttonTextColor) {
+            this.$el.css('color', this.messaging.livechatButtonView.buttonTextColor);
         }
 
         // If website_event_track installed, put the livechat banner above the PWA banner.
@@ -168,7 +168,7 @@ const LivechatButton = Widget.extend({
                     return;
                 }
                 const partnerID = payload.partner_id;
-                if (partnerID === this.options.current_partner_id) {
+                if (partnerID === this.messaging.livechatButtonView.currentPartnerId) {
                     // ignore typing display of current partner.
                     return;
                 }
@@ -313,9 +313,9 @@ const LivechatButton = Widget.extend({
      _openChatWindow() {
         const options = {
             displayStars: false,
-            headerBackgroundColor: this.options.header_background_color,
+            headerBackgroundColor: this.messaging.livechatButtonView.headerBackgroundColor,
             placeholder: this.messaging.livechatButtonView.inputPlaceholder,
-            titleColor: this.options.title_color,
+            titleColor: this.messaging.livechatButtonView.titleColor,
         };
         this.messaging.livechatButtonView.update({
             chatWindow: new WebsiteLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
