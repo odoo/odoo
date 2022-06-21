@@ -313,7 +313,7 @@ const LivechatButton = Widget.extend({
      _openChatWindow() {
         const options = {
             displayStars: false,
-            headerBackgroundColor: this.options.header_background_color,
+            headerBackgroundColor: this.messaging.livechatButtonView.headerBackgroundColor,
             placeholder: this.messaging.livechatButtonView.inputPlaceholder,
             titleColor: this.options.title_color,
         };

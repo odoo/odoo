@@ -39,6 +39,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeHeaderBackgroundColor() {
+            return this.messaging.publicLivechatOptions.header_background_color;
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeInputPlaceholder() {
@@ -78,6 +85,9 @@ registerModel({
         }),
         defaultUsername: attr({
             compute: '_computeDefaultUsername',
+        }),
+        headerBackgroundColor: attr({
+            compute: '_computeHeaderBackgroundColor',
         }),
         history: attr({
             default: null,
