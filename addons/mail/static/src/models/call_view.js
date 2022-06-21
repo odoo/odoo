@@ -184,8 +184,10 @@ registerModel({
          * @private
          */
         _computeCallSideBarView() {
-            const willShowSidebar = this.hasSidebar;
-            return  willShowSidebar ? insertAndReplace() : clear();
+            if (this.mainParticipantCard && this.hasSidebar && !this.threadView.compact) {
+                return insertAndReplace();
+            }
+            return clear();
         },
         /**
          * @private
