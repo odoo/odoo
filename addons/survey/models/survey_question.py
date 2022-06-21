@@ -134,7 +134,7 @@ class SurveyQuestion(models.Model):
 
     # Conditional display
     is_conditional = fields.Boolean(
-        string='Conditional Display', copy=True, help="""If checked, this question will be displayed only
+        string='Conditional Display', copy=False, help="""If checked, this question will be displayed only
         if the specified conditional answer have been selected in a previous question""")
     triggering_question_id = fields.Many2one(
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
@@ -160,7 +160,13 @@ class SurveyQuestion(models.Model):
         ('scored_datetime_have_answers', "CHECK (is_scored_question != True OR question_type != 'datetime' OR answer_datetime is not null)",
             'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
-            'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
+            'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
+        ('conditional_questions_have_triggering_question', 'CHECK (is_conditional != True OR triggering_question_id is not null)',
+            'All conditional display questions need a triggering question.\n'
+            'Please disable "Conditional Display" or specify a triggering question.'),
+        ('triggered_questions_have_triggering_answer', 'CHECK (triggering_question_id is null OR triggering_answer_id is not null)',
+            'All questions triggered by another need a triggering answer.\n'
+            'Please disable "Conditional Display" or specify a triggering answer.'),
     ]
 
     # -------------------------------------------------------------------------
@@ -325,6 +331,20 @@ class SurveyQuestion(models.Model):
         self.validation_max_datetime = False
         self.validation_min_float_value = 0
         self.validation_max_float_value = 0
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    def unlink(self):
+        """ Makes sure no question is left depending on the question we're deleting."""
+        depending_questions = self.env['survey.question'].search([('triggering_question_id', 'in', self.ids)])
+        depending_questions.write({
+            'is_conditional': False,
+            'triggering_question_id': False,
+            'triggering_answer_id': False,
+        })
+        return super().unlink()
 
     # ------------------------------------------------------------
     # VALIDATION
@@ -626,3 +646,13 @@ class SurveyQuestionAnswer(models.Model):
         for label in self:
             if not bool(label.question_id) != bool(label.matrix_question_id):
                 raise ValidationError(_("A label must be attached to only one question."))
+
+    def unlink(self):
+        """ Makes sure no question is left depending on the answer we're deleting."""
+        depending_questions = self.env['survey.question'].search([('triggering_answer_id', 'in', self.ids)])
+        depending_questions.write({
+            'is_conditional': False,
+            'triggering_question_id': False,
+            'triggering_answer_id': False,
+        })
+        return super().unlink()
