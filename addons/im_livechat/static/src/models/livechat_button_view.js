@@ -28,6 +28,16 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {integer}
+         */
+        _computeCurrentPartnerId() {
+            if (!this.messaging.isPublicLivechatAvailable) {
+                return clear();
+            }
+            return this.messaging.publicLivechatOptions.current_partner_id;
+        },
+        /**
         * @private
         * @returns {string}
         */
@@ -88,6 +98,9 @@ registerModel({
         // livechat window
         chatWindow: attr({
             default: null,
+        }),
+        currentPartnerId: attr({
+            compute: '_computeCurrentPartnerId',
         }),
         defaultMessage: attr({
             compute: '_computeDefaultMessage',

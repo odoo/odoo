@@ -168,7 +168,7 @@ const LivechatButton = Widget.extend({
                     return;
                 }
                 const partnerID = payload.partner_id;
-                if (partnerID === this.options.current_partner_id) {
+                if (partnerID === this.messaging.livechatButtonView.currentPartnerId) {
                     // ignore typing display of current partner.
                     return;
                 }
