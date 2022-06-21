@@ -105,6 +105,11 @@ class _Cleaner(clean.Cleaner):
                 del el.attrib['style']
 
 
+# ----------------------------------------------------------
+# Email Quote
+# ----------------------------------------------------------
+
+
 def tag_quote(el):
     def _create_new_node(tag, text, tail=None, attrs=None):
         new_node = etree.Element(tag)
@@ -205,11 +210,6 @@ def html_normalize(src, filter_callback=None):
             return u""
         raise
 
-    # perform quote detection before cleaning and class removal
-    if doc is not None:
-        for el in doc.iter(tag=etree.Element):
-            tag_quote(el)
-
     if filter_callback:
         doc = filter_callback(doc)
 
@@ -278,6 +278,23 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         sanitized = '<p>Unknown error when sanitizing</p>'
 
     return markupsafe.Markup(sanitized)
+
+
+def quote_email(src):
+    root = etree.HTML(src)
+    for el in root.iter(tag=etree.Element):
+        tag_quote(el)
+
+    quoted_src = etree.tostring(root, method='html').decode()
+
+    quoted_src = quoted_src.replace('&#233;', 'é')
+    quoted_src = quoted_src.replace('&#224;', 'à')
+    quoted_src = quoted_src.replace('&#232;', 'è')
+    quoted_src = quoted_src.replace('&#8364;', '€')
+    quoted_src = quoted_src.replace('&#163;', '£')
+
+    return quoted_src
+
 
 # ----------------------------------------------------------
 # HTML/Text management

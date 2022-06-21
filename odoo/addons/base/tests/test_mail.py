@@ -18,6 +18,7 @@ from odoo.tools import (
     email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
+    quote_email,
 )
 
 from . import test_mail_examples
@@ -155,49 +156,54 @@ class TestSanitizer(BaseCase):
             'html_sanitize removed valid img')
         self.assertNotIn('</body></html>', html, 'html_sanitize did not remove extra closing tags')
 
+    def test_quote_escape(self):
+        """Test that the email quoting do not escape some specials characters."""
+        src = 'éàè@$€£%~#'
+        self.assertIn(src, quote_email(src))
+
     def test_quote_blockquote(self):
-        html = html_sanitize(test_mail_examples.QUOTE_BLOCKQUOTE)
+        html = quote_email(test_mail_examples.QUOTE_BLOCKQUOTE)
         for ext in test_mail_examples.QUOTE_BLOCKQUOTE_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_BLOCKQUOTE_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
 
     def test_quote_thunderbird(self):
-        html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_1)
+        html = quote_email(test_mail_examples.QUOTE_THUNDERBIRD_1)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_hotmail_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_HOTMAIL_HTML)
+        html = quote_email(test_mail_examples.QUOTE_HOTMAIL_HTML)
         for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_OUT:
             self.assertIn(ext, html)
 
-        html = html_sanitize(test_mail_examples.HOTMAIL_1)
+        html = quote_email(test_mail_examples.HOTMAIL_1)
         for ext in test_mail_examples.HOTMAIL_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.HOTMAIL_1_OUT:
             self.assertIn(ext, html)
 
     def test_quote_outlook_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_OUTLOOK_HTML)
+        html = quote_email(test_mail_examples.QUOTE_OUTLOOK_HTML)
         for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_thunderbird_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
+        html = quote_email(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_yahoo_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_YAHOO_HTML)
+        html = quote_email(test_mail_examples.QUOTE_YAHOO_HTML)
         for ext in test_mail_examples.QUOTE_YAHOO_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_YAHOO_HTML_OUT:
@@ -224,50 +230,50 @@ class TestSanitizer(BaseCase):
             )
         ]
         for test, in_lst, out_lst in test_data:
-            new_html = html_sanitize(test)
+            new_html = quote_email(test)
             for text in in_lst:
                 self.assertIn(text, new_html)
             for text in out_lst:
-                self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
+                self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
 
     def test_quote_signature(self):
         test_data = [
             (
                 """<div>Hello<pre>--<br />Administrator</pre></div>""",
-                ["<pre data-o-mail-quote=\"1\">--", "<br data-o-mail-quote=\"1\">"],
+                ["<pre data-o-mail-quote=\"1\">--", '<br data-o-mail-quote="1">'],
             )
         ]
         for test, in_lst in test_data:
-            new_html = html_sanitize(test)
+            new_html = quote_email(test)
             for text in in_lst:
                 self.assertIn(text, new_html)
 
     def test_quote_gmail(self):
-        html = html_sanitize(test_mail_examples.GMAIL_1)
+        html = quote_email(test_mail_examples.GMAIL_1)
         for ext in test_mail_examples.GMAIL_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.GMAIL_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_text(self):
-        html = html_sanitize(test_mail_examples.TEXT_1)
+        html = quote_email(test_mail_examples.TEXT_1)
         for ext in test_mail_examples.TEXT_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.TEXT_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
-        html = html_sanitize(test_mail_examples.TEXT_2)
+        html = quote_email(test_mail_examples.TEXT_2)
         for ext in test_mail_examples.TEXT_2_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.TEXT_2_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_bugs(self):
-        html = html_sanitize(test_mail_examples.BUG1)
+        html = quote_email(test_mail_examples.BUG1)
         for ext in test_mail_examples.BUG_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.BUG_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_misc(self):
         # False / void should not crash

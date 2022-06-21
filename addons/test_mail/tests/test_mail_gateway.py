@@ -55,7 +55,7 @@ class TestEmailParsing(TestMailCommon):
             'Should create a multipart/mixed: from gmail, *bold*, with attachment', res['body'],
             'message_parse: text version should not be in body after parsing multipart/mixed')
         self.assertIn(
-            '<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res['body'],
+            '<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"/><div><br/></div>', res['body'],
             'message_parse: html version should be in body after parsing multipart/mixed')
 
         res = self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_MULTIPART_MIXED_TWO))
@@ -133,7 +133,7 @@ class TestEmailParsing(TestMailCommon):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
-        self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
+        self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n<span data-o-mail-quote="1">\n--\nSylvie\n</span></pre>', res['body'])
 
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
