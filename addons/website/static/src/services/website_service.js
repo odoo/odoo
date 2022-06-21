@@ -93,6 +93,7 @@ export const websiteService = {
                     currentMetadata = {};
                 } else {
                     const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = document.documentElement.dataset;
+                    const contentMenuEl = document.querySelector('[data-content_menu_id]');
                     currentMetadata = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
@@ -102,6 +103,7 @@ export const websiteService = {
                         editableInBackend: editableInBackend === 'True',
                         title: document.title,
                         translatable: !!translatable,
+                        contentMenuId: contentMenuEl && contentMenuEl.dataset.content_menu_id,
                         // TODO: Find a better way to figure out if
                         // a page is editable or not. For now, we use
                         // the editable selector because it's the common
