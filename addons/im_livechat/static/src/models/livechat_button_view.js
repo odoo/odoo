@@ -9,6 +9,13 @@ registerModel({
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeButtonBackgroundColor() {
+            return this.messaging.publicLivechatOptions.button_background_color;
+        },
+        /**
          * @returns {string}
          */
         _computeButtonText() {
@@ -16,6 +23,12 @@ registerModel({
                 return this.messaging.publicLivechatOptions.button_text;
             }
             return this.env._t("Chat with one of our collaborators");
+        },
+        /**
+         * @returns {string}
+         */
+         _computeButtonTextColor() {
+            return this.messaging.publicLivechatOptions.button_text_color;
         },
         /**
          * @private
@@ -26,6 +39,16 @@ registerModel({
                 return 100;
             }
             return clear();
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeCurrentPartnerId() {
+            if (!this.messaging.isPublicLivechatAvailable) {
+                return clear();
+            }
+            return this.messaging.publicLivechatOptions.current_partner_id;
         },
         /**
         * @private
@@ -46,6 +69,13 @@ registerModel({
                 return this.messaging.publicLivechatOptions.default_username;
             }
             return this.env._t("Visitor");
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeHeaderBackgroundColor() {
+            return this.messaging.publicLivechatOptions.header_background_color;
         },
         /**
          * @private
@@ -72,11 +102,24 @@ registerModel({
             }
             return this.messaging.publicLivechatServerUrl;
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeTitleColor() {
+            return this.messaging.publicLivechatOptions.title_color;
+        },
     },
     fields: {
         autoOpenChatTimeout: attr(),
+        buttonBackgroundColor: attr({
+            compute: '_computeButtonBackgroundColor',
+        }),
         buttonText: attr({
             compute: '_computeButtonText',
+        }),
+        buttonTextColor: attr({
+            compute: '_computeButtonTextColor',
         }),
         chatbot: attr(),
         chatbotCurrentStep: attr(),
@@ -89,11 +132,17 @@ registerModel({
         chatWindow: attr({
             default: null,
         }),
+        currentPartnerId: attr({
+            compute: '_computeCurrentPartnerId',
+        }),
         defaultMessage: attr({
             compute: '_computeDefaultMessage',
         }),
         defaultUsername: attr({
             compute: '_computeDefaultUsername',
+        }),
+        headerBackgroundColor: attr({
+            compute: '_computeHeaderBackgroundColor',
         }),
         history: attr({
             default: null,
@@ -129,6 +178,9 @@ registerModel({
         rule: attr(),
         serverUrl: attr({
             compute: '_computeServerUrl',
+        }),
+        titleColor: attr({
+            compute: '_computeTitleColor',
         }),
     },
 });
