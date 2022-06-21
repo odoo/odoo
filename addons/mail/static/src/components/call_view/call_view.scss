@@ -19,25 +19,19 @@
     min-width: 0;
 }
 
-.o_CallView_grid {
-    overflow: hidden;
-
-    .o_CallView_participantCard {
-        width: var(--width);
-        height: var(--height);
-        min-width: var(--width);
-        min-height: var(--height);
-    }
-}
-
-.o_CallView_gridTile {
+.o_CallView_gridParticipantCard {
+    width: var(--width);
+    height: var(--height);
+    min-width: var(--width);
+    min-height: var(--height);
     aspect-ratio: 16/9;
 }
 
 .o_CallView_sidebarButton {
     font-size: 1.2rem;
     padding: map-get($spacers, 2);
-    top: 48%;
+    top: 50%;
+    transform: translateY(50%);
     right: 0;
 }
 

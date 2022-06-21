@@ -13,25 +13,22 @@
                         <div class="o_CallView_mainParticipantContainer d-flex flex-grow-1 justify-content-center position-relative mw-100 mh-100">
                             <CallParticipantCard className="'o_CallView_participantCard'" record="callView.mainParticipantCard"/>
                             <t t-if="callView.showOverlay and !callView.threadView.compact">
-                                <i t-if="callView.hasSidebar" class="o_CallView_sidebarButton position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callView.onClickHideSidebar"/>
-                                <i t-else="" class="o_CallView_sidebarButton position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callView.onClickShowSidebar"/>
+                                <i t-if="callView.hasSidebar" class="o_CallView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callView.onClickHideSidebar"/>
+                                <i t-else="" class="o_CallView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callView.onClickShowSidebar"/>
                             </t>
                         </div>
                     </t>
                     <t t-elif="callView.tileParticipantCards.length > 0">
                         <div
-                            class="o_CallView_grid d-flex align-items-center h-100 w-100 flex-wrap justify-content-center"
+                            class="o_CallView_grid d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                             t-ref="tileContainer"
                             t-attf-style="--height:{{callView.tileHeight}}px; --width:{{callView.tileWidth}}px;"
                         >
                             <t t-foreach="callView.tileParticipantCards" t-as="participantCard" t-key="'grid_tile_'+participantCard.localId">
-                                <t t-if="!callView.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
-                                    <!-- maybe filter focused partner out? -->
-                                    <CallParticipantCard
-                                        className="'o_CallView_participantCard o_CallView_gridTile'"
-                                        record="participantCard"
-                                    />
-                                </t>
+                                <CallParticipantCard
+                                    className="'o_CallView_gridParticipantCard'"
+                                    record="participantCard"
+                                />
                             </t>
                         </div>
                     </t>
@@ -48,9 +45,7 @@
 
             </div>
 
-            <t t-if="callView.callSidebarView">
-                <CallSidebarView record="callView.callSidebarView"/>
-            </t>
+            <CallSidebarView t-if="callView.callSidebarView" record="callView.callSidebarView"/>
             <!-- Dialogs -->
             <t t-if="messaging.userSetting.callSettingsMenu.isOpen">
                 <Dialog size="'small'" title="callView.settingsTitle" onClosed="callView.onRtcSettingsDialogClosed">
