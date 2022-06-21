@@ -9,6 +9,13 @@ registerModel({
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeButtonBackgroundColor() {
+            return this.messaging.publicLivechatOptions.button_background_color;
+        },
+        /**
          * @returns {string}
          */
         _computeButtonText() {
@@ -65,6 +72,9 @@ registerModel({
     },
     fields: {
         autoOpenChatTimeout: attr(),
+        buttonBackgroundColor: attr({
+            compute: '_computeButtonBackgroundColor',
+        }),
         buttonText: attr({
             compute: '_computeButtonText',
         }),

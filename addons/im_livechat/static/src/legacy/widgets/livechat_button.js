@@ -70,8 +70,8 @@ const LivechatButton = Widget.extend({
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
-        if (this.options.button_background_color) {
-            this.$el.css('background-color', this.options.button_background_color);
+        if (this.messaging.livechatButtonView.buttonBackgroundColor) {
+            this.$el.css('background-color', this.messaging.livechatButtonView.buttonBackgroundColor);
         }
         if (this.options.button_text_color) {
             this.$el.css('color', this.options.button_text_color);
