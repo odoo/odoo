@@ -30,6 +30,10 @@ FormRenderer.include({
          * This is set when arch contains `div.oe_chatter`.
          */
         this._chatterContainerTarget = undefined;
+        if (this.hasChatter) {
+            this._chatterContainerTarget = document.createElement("div");
+            this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
+        }
         /**
          * This element will be set when rendering the form view, and
          * used as a hook to insert the ChatterContainer in the right place,
@@ -44,10 +48,6 @@ FormRenderer.include({
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
             if (!this.hasChatter) {
                 return $('<div/>');
-            }
-            if (!this._chatterContainerTarget) {
-                this._chatterContainerTarget = document.createElement("div");
-                this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
             }
             this._updateChatterContainerTarget();
             this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
