@@ -30,8 +30,9 @@ class Home(web_home.Home):
             cookies = request.httprequest.cookies
             key = cookies.get(TRUSTED_DEVICE_COOKIE)
             if key:
-                checked_credentials = request.env['auth_totp.device']._check_credentials(scope="browser", key=key)
-                if checked_credentials == user.id:
+                user_match = request.env['auth_totp.device']._check_credentials_for_uid(
+                    scope="browser", key=key, uid=user.id)
+                if user_match:
                     request.session.finalize(request.env)
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
