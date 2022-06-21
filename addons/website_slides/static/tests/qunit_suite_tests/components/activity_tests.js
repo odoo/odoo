@@ -18,7 +18,7 @@ QUnit.test('grant course access', async function (assert) {
         request_partner_id: resPartnerId1,
         res_model: 'slide.channel',
     });
-    const { createChatterContainerComponent } = await start({
+    const { openView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
                 assert.strictEqual(args.args.length, 1);
@@ -31,9 +31,10 @@ QUnit.test('grant course access', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: slideChannelId1,
-        threadModel: 'slide.channel',
+    await openView({
+        res_id: slideChannelId1,
+        res_model: 'slide.channel',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(document.body, '.o_Activity', "should have activity component");
@@ -55,7 +56,7 @@ QUnit.test('refuse course access', async function (assert) {
         request_partner_id: resPartnerId1,
         res_model: 'slide.channel',
     });
-    const { createChatterContainerComponent } = await start({
+    const { openView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
                 assert.strictEqual(args.args.length, 1);
@@ -68,9 +69,10 @@ QUnit.test('refuse course access', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: slideChannelId1,
-        threadModel: 'slide.channel',
+    await openView({
+        res_id: slideChannelId1,
+        res_model: 'slide.channel',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(document.body, '.o_Activity', "should have activity component");

@@ -12,10 +12,11 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be", partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsOnce(
@@ -31,10 +32,11 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be", partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsNone(
@@ -50,10 +52,11 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
@@ -69,10 +72,11 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
 
     const pyEnv = await startServer();
     const resFakeId1 = pyEnv['res.fake'].create({ email_cc: "john@test.be" });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]');
@@ -88,10 +92,11 @@ QUnit.test("suggested recipient with partner are checked by default", async func
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
@@ -114,10 +119,11 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     const resFakeId1 = pyEnv['res.fake'].create({
         partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
@@ -141,10 +147,11 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
     const resFakeId1 = pyEnv['res.fake'].create({
         partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
@@ -170,10 +177,11 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
     const resFakeId1 = pyEnv['res.fake'].create({
         partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
@@ -198,10 +206,11 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     const resFakeId1 = pyEnv['res.fake'].create({
         partner_ids: [resPartnerId1, resPartnerId2, resPartnerId3, resPartnerId4],
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
@@ -226,7 +235,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent, insertText } = await start({
+    const { click, insertText, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.strictEqual(
@@ -237,9 +246,10 @@ QUnit.test("suggested recipients should not be notified when posting an internal
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resFakeId1,
-        threadModel: 'res.fake',
+    await openView({
+        res_id: resFakeId1,
+        res_model: 'res.fake',
+        views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonLogNote`);
     await insertText('.o_ComposerTextInput_textarea', "Dummy Message");

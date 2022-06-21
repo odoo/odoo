@@ -11,11 +11,19 @@ QUnit.test('base empty rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { createChatterContainerComponent } = await start();
-    const chatterContainerComponent = await createChatterContainerComponent({
-        isAttachmentBoxVisibleInitially: true,
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const views = {
+        'res.partner,false,form':
+            `<form>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    };
+    const { messaging, openView } = await start({ serverData: { views } });
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox`).length,
@@ -28,7 +36,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        chatterContainerComponent.chatter.attachmentBoxView.fileUploader,
+        messaging.models['Chatter'].all()[0].attachmentBoxView.fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
@@ -57,11 +65,19 @@ QUnit.test('base non-empty rendering', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent } = await start();
-    const chatterContainerComponent = await createChatterContainerComponent({
-        isAttachmentBoxVisibleInitially: true,
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const views = {
+        'res.partner,false,form':
+            `<form>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    };
+    const { messaging, openView } = await start({ serverData: { views } });
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox`).length,
@@ -74,7 +90,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        chatterContainerComponent.chatter.attachmentBoxView.fileUploader,
+        messaging.models['Chatter'].all()[0].attachmentBoxView.fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
@@ -103,11 +119,19 @@ QUnit.test('view attachments', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent, messaging } = await start();
-    await createChatterContainerComponent({
-        isAttachmentBoxVisibleInitially: true,
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const views = {
+        'res.partner,false,form':
+            `<form>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    };
+    const { click, messaging, openView } = await start({ serverData: { views } });
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 });
 
@@ -167,11 +191,19 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        isAttachmentBoxVisibleInitially: true,
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const views = {
+        'res.partner,false,form':
+            `<form>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    };
+    const { click, openView } = await start({ serverData: { views } });
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
