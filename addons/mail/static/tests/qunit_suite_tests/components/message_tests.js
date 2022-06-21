@@ -25,10 +25,11 @@ QUnit.test('basic rendering', async function (assert) {
         model: 'res.partner',
         res_id: threadId,
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
@@ -111,10 +112,11 @@ QUnit.test('Notification Sent', async function (assert) {
         notification_type: 'email',
         res_partner_id: resPartnerId,
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -183,7 +185,12 @@ QUnit.test('Notification Error', async function (assert) {
         res_partner_id: resPartnerId,
     });
     const openResendActionDef = makeDeferred();
-    const { createChatterContainerComponent, env } = await start();
+    const { env, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');
@@ -199,10 +206,6 @@ QUnit.test('Notification Error', async function (assert) {
             );
             openResendActionDef.resolve();
         },
-    });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
     });
 
     assert.containsOnce(
@@ -695,10 +698,11 @@ QUnit.test('subtype description should be displayed if it is different than body
         res_id: threadId,
         subtype_id: subtypeId,
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -724,10 +728,11 @@ QUnit.test('subtype description should not be displayed if it is similar to body
         res_id: threadId,
         subtype_id: subtypeId,
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -751,7 +756,12 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         model: 'res.partner',
         res_id: threadId,
     });
-    const { createChatterContainerComponent, env } = await start();
+    const { env, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.strictEqual(
@@ -771,10 +781,6 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
             );
             assert.step('do-action:openFormView_some.model_250');
         },
-    });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
     });
     assert.containsOnce(
         document.body,
@@ -806,10 +812,11 @@ QUnit.test('chat with author should be opened after clicking on their avatar', a
         model: 'res.partner',
         res_id: threadId,
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -850,10 +857,13 @@ QUnit.test('chat with author should be opened after clicking on their im status 
         model: 'res.partner',
         res_id: threadId,
     });
-    const { advanceTime, click, createChatterContainerComponent } = await start({ hasTimeControl: true });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { advanceTime, click, openView } = await start({
+        hasTimeControl: true,
+    });
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
     assert.containsOnce(
@@ -928,31 +938,6 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     );
 });
 
-QUnit.test('message should not be considered as "clicked" after clicking on its author name', async function (assert) {
-    assert.expect(1);
-
-    const pyEnv = await startServer();
-    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
-    pyEnv['mail.message'].create({
-        author_id: partnerId,
-        body: "<p>Test</p>",
-        model: 'res.partner',
-        res_id: threadId,
-    });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
-    });
-    document.querySelector(`.o_Message_authorName`).click();
-    await nextAnimationFrame();
-    assert.doesNotHaveClass(
-        document.querySelector(`.o_Message`),
-        'o-clicked',
-        "message should not be considered as 'clicked' after clicking on its author name"
-    );
-});
-
 QUnit.test('message should not be considered as "clicked" after clicking on its author avatar', async function (assert) {
     assert.expect(1);
 
@@ -964,10 +949,11 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
         model: 'res.partner',
         res_id: threadId,
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     document.querySelector(`.o_Message_authorAvatar`).click();
     await nextAnimationFrame();
@@ -993,14 +979,15 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
         notification_status: 'exception',
         notification_type: 'email',
     });
-    const { createChatterContainerComponent, env } = await start();
+    const { env, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         // intercept the action: this action is not relevant in the context of this test.
         doAction() {},
-    });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
     });
     document.querySelector('.o_Message_notificationIconClickable.o-error').click();
     await nextAnimationFrame();

@@ -1438,21 +1438,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    };
-    const { click, openView } = await start({
-        serverData: { views },
-    });
+    const { click, openView } = await start();
     await openView({
         res_model: 'res.partner',
         res_id: resPartnerId1,
@@ -1471,21 +1457,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "test name" });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    };
-    const { click, messaging, openView } = await start({
-        serverData: { views },
-    });
+    const { click, messaging, openView } = await start();
     await openView({
         res_model: 'res.partner',
         res_id: resPartnerId1,

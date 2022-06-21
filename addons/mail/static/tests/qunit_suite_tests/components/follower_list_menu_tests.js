@@ -15,21 +15,7 @@ QUnit.module('follower_list_menu_tests.js');
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    };
-    const { openView } = await start({
-        serverData: { views },
-    });
+    const { openView } = await start();
     await openView(
         {
             res_model: 'res.partner',
@@ -72,7 +58,7 @@ QUnit.test('base rendering editable', async function (assert) {
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
 
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
@@ -82,9 +68,10 @@ QUnit.test('base rendering editable', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(
@@ -133,7 +120,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         res_model: 'res.partner',
     });
 
-    const { click, createChatterContainerComponent, env } = await start({
+    const { click, env, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
@@ -142,6 +129,11 @@ QUnit.test('click on "add followers" button', async function (assert) {
                 return res;
             }
         },
+    });
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
@@ -176,10 +168,6 @@ QUnit.test('click on "add followers" button', async function (assert) {
             });
             options.onClose();
         },
-    });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
     });
 
     assert.containsOnce(
@@ -255,7 +243,7 @@ QUnit.test('click on remove follower', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
@@ -273,9 +261,10 @@ QUnit.test('click on remove follower', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_FollowerListMenu_buttonFollowers');
@@ -323,7 +312,7 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with no write access
@@ -333,9 +322,10 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_FollowerListMenu_buttonFollowers');
@@ -388,7 +378,7 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
@@ -398,9 +388,10 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_FollowerListMenu_buttonFollowers');
@@ -438,7 +429,7 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
     const pyEnv = await startServer();
 
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user without write access
@@ -448,9 +439,10 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_FollowerListMenu_buttonFollowers');

@@ -13,10 +13,11 @@ QUnit.test('base rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -64,10 +65,11 @@ QUnit.test('base rendering', async function (assert) {
 QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadModel: 'res.partner',
-    }, { waitUntilMessagesLoaded: false });
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
         1,
@@ -111,18 +113,19 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { advanceTime, createChatterContainerComponent } = await start({
+    const { advanceTime, openView } = await start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
-        }
+        },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -154,16 +157,17 @@ QUnit.test('attachment counter while loading attachments', async function (asser
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { createChatterContainerComponent } = await start({
+    const { openView } = await start({
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
         }
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -194,16 +198,17 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
     const attachmentPromise = makeTestPromise();
-    const { createChatterContainerComponent } = await start({
+    const { openView } = await start({
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
                 await attachmentPromise;
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -250,10 +255,11 @@ QUnit.test('attachment counter without attachments', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -297,10 +303,11 @@ QUnit.test('attachment counter with attachments', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(
@@ -330,10 +337,11 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(
@@ -406,10 +414,11 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId3,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId3,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(
@@ -458,10 +467,11 @@ QUnit.test('log note/send message switching', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -514,10 +524,11 @@ QUnit.test('log note toggling', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -550,10 +561,11 @@ QUnit.test('send message toggling', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,

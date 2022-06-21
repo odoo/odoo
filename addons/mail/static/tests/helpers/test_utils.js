@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
@@ -129,13 +128,6 @@ async function getModelDefinitions() {
 }
 
 let pyEnv;
-const VIEW_TYPE_TO_ARCH = {
-    activity: '<activity><templates></templates></activity>',
-    form: '<form/>',
-    list: '<tree/>',
-    search: '<search/>',
-    kanban: '<kanban><templates></templates></kanban>',
-};
 /**
  * Creates an environment that can be used to setup test data as well as
  * creating data after test start.
@@ -157,8 +149,10 @@ const VIEW_TYPE_TO_ARCH = {
         models[modelName] = { fields: { ...fields }, records };
 
         // generate default views for this model.
-        for (const [viewType, viewArch] of Object.entries(VIEW_TYPE_TO_ARCH)) {
-            views[`${modelName},false,${viewType}`] = viewArch;
+        const viewArchsSubRegistries = registry.category('mail.view.archs').subRegistries;
+        for (const [viewType, archsRegistry] of Object.entries(viewArchsSubRegistries)) {
+            views[`${modelName},false,${viewType}`] =
+                archsRegistry.get(modelName, archsRegistry.get('default'));
         }
     }
     pyEnv = new Proxy(
@@ -378,37 +372,6 @@ function getClick({ afterNextRender }) {
     };
 }
 
-function getCreateChatterContainerComponent({ afterEvent, env, target }) {
-    return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
-        let chatterContainerComponent;
-        async function func() {
-            chatterContainerComponent = await createRootComponent(env, ChatterContainer, {
-                props,
-                target,
-            });
-        }
-        if (waitUntilMessagesLoaded) {
-            await afterNextRender(() => afterEvent({
-                eventName: 'o-thread-view-hint-processed',
-                func,
-                message: "should wait until chatter loaded messages after creating chatter container component",
-                predicate: ({ hint, threadViewer }) => {
-                    return (
-                        hint.type === 'messages-loaded' &&
-                        threadViewer &&
-                        threadViewer.chatter &&
-                        threadViewer.chatter.threadModel === props.threadModel &&
-                        threadViewer.chatter.threadId === props.threadId
-                    );
-                },
-            }));
-        } else {
-            await func();
-        }
-        return chatterContainerComponent;
-    };
-}
-
 function getCreateComposerComponent({ env, target }) {
     return async function createComposerComponent(composer, props) {
         const composerView = env.services.messaging.modelManager.messaging.models['ComposerView'].create({
@@ -625,7 +588,6 @@ async function start(param0 = {}) {
         afterEvent,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: webClient.env, target }),
         createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
         createMessageComponent: getCreateMessageComponent({ env: webClient.env, target }),

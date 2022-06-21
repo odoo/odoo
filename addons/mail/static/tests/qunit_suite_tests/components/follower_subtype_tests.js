@@ -27,18 +27,6 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
     const { click, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
         async mockRPC(route, args, performRPC) {
@@ -49,7 +37,6 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
                 return res;
             }
         },
-        serverData: { views },
     });
     await openView({
         res_model: 'res.partner',
@@ -101,18 +88,6 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
     const { click, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
         async mockRPC(route, args, performRPC) {
@@ -123,7 +98,6 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
                 return res;
             }
         },
-        serverData: { views },
     });
     await openView({
         res_model: 'res.partner',
@@ -155,18 +129,6 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
     const { click, messaging, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
         async mockRPC(route, args, performRPC) {
@@ -177,7 +139,6 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
                 return res;
             }
         },
-        serverData: { views },
     });
     await openView({
         res_model: 'res.partner',

@@ -30,10 +30,11 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
             res_id: resPartnerId1,
         });
     }
-    const { createChatterContainerComponent, messaging } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { messaging, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
@@ -71,12 +72,13 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 });
 
 QUnit.test('base rendering when chatter has no record', async function (assert) {
-    assert.expect(10);
+    assert.expect(9);
 
-    const { click, createChatterContainerComponent } = await start();
-    const chatterContainerComponent = await createChatterContainerComponent({
-        threadModel: 'res.partner',
-    }, { waitUntilMessagesLoaded: false });
+    const { click, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -96,10 +98,6 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         document.querySelectorAll(`.o_Chatter_thread`).length,
         1,
         "should have a thread in the chatter"
-    );
-    assert.ok(
-        chatterContainerComponent.chatter.thread.isTemporary,
-        "thread should have a temporary thread linked to chatter"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -149,10 +147,11 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
@@ -190,10 +189,11 @@ QUnit.test('show attachment box', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
@@ -234,10 +234,11 @@ QUnit.test('chatter: drop attachments', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     const files = [
         await createFile({
@@ -296,10 +297,11 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonSendMessage`).length,
@@ -374,10 +376,11 @@ QUnit.test('should display subject when subject is not the same as the thread na
         res_id: resPartnerId1,
         subject: "Salutations, voyageur",
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(
@@ -403,10 +406,11 @@ QUnit.test('should not display subject when subject is the same as the thread na
         res_id: resPartnerId1,
         subject: "Salutations, voyageur",
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsNone(
@@ -426,10 +430,11 @@ QUnit.test('should not display user notification messages in chatter', async fun
         model: 'res.partner',
         res_id: resPartnerId1,
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     assert.containsNone(
@@ -444,10 +449,11 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent, insertText } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, insertText, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsNone(
         document.body,
@@ -473,10 +479,11 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent, insertText } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, insertText, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsNone(
         document.body,
@@ -505,10 +512,11 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { click, createChatterContainerComponent, insertText } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, insertText, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsNone(
         document.body,

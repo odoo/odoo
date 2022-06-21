@@ -19,10 +19,11 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     await click('.o_Activity_markDoneButton');
 
@@ -70,10 +71,11 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     await click('.o_Activity_markDoneButton');
 
@@ -120,7 +122,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -138,9 +140,10 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     await click('.o_Activity_markDoneButton');
     await click('.o_ActivityMarkDonePopoverContent_doneButton');
@@ -161,7 +164,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -179,9 +182,10 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     await click('.o_Activity_markDoneButton');
 
@@ -206,7 +210,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, env, createChatterContainerComponent } = await start({
+    const { click, env, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
@@ -222,15 +226,16 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
             }
         },
     });
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction() {
             assert.step('activity_action');
             throw new Error("The do-action event should not be triggered when the route doesn't return an action");
         },
-    });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
 
@@ -255,12 +260,17 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent, env } = await start({
+    const { click, env, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 return { type: 'ir.actions.act_window' };
             }
         },
+    });
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -271,10 +281,6 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
                 "The content of the action should be correct"
             );
         },
-    });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
     });
     await click('.o_Activity_markDoneButton');
 
