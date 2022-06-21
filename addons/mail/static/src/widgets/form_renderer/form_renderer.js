@@ -49,7 +49,6 @@ FormRenderer.include({
             if (!this.hasChatter) {
                 return $('<div/>');
             }
-            this._updateChatterContainerTarget();
             this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
             return this.chatterContainerTargetPlaceholder;
         }
@@ -89,6 +88,7 @@ FormRenderer.include({
         this._super(...arguments);
         if (this.hasChatter) {
             this.chatterContainerTargetPlaceholder.replaceWith(this._chatterContainerTarget);
+            this._updateChatterContainerTarget();
         }
     },
     /**
