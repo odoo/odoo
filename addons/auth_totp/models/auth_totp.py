@@ -12,3 +12,8 @@ class AuthTotpDevice(models.Model):
     _inherit = "res.users.apikeys"
     _description = "Authentication Device"
     _auto = False
+
+    def _check_credentials_for_uid(self, *, scope, key, uid):
+        """Return True if device key matches given `scope` for user ID `uid`"""
+        assert uid, "uid is required"
+        return self._check_credentials(scope=scope, key=key) == uid
