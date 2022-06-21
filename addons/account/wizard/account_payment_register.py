@@ -688,7 +688,7 @@ class AccountPaymentRegister(models.TransientModel):
             refs = '\n - '.join([ref for ref in payment_refs])
 
             message = _("Could not reconcile payments due to a concurrent access error. The payment must be reconciled manually.\n"
-                        "Payment refs in the batch: %s" % refs)
+                        "Payment refs in the batch: %s", refs)
 
             for invoice_id in invoice_ids:
                 invoice_id.message_post(body=message)
