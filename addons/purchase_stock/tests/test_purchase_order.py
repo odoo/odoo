@@ -240,7 +240,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertTrue(activity)
         self.assertEqual(
             '<p>partner_a modified receipt dates for the following products:</p>\n'
-            '<p> - Large Desk from %s to %s</p>\n'
+            '<p> - Large Desk from %s to %s</p>'
             '<p>Those dates have been updated accordingly on the receipt %s.</p>' % (today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,
         )
@@ -256,8 +256,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.order_line[1].date_planned, old_date)
         self.assertEqual(
             '<p>partner_a modified receipt dates for the following products:</p>\n'
-            '<p> - Large Desk from %s to %s</p>\n'
-            '<p> - Conference Chair from %s to %s</p>\n'
+            '<p> - Large Desk from %s to %s</p>'
+            '<p> - Conference Chair from %s to %s</p>'
             '<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (
                 today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,

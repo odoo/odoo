@@ -14,7 +14,7 @@ class SaleOrderTemplateOption(models.Model):
         store=True, readonly=False,
         translate=html_translate,
         sanitize_overridable=True,
-        sanitize_attributes=False)
+        restricted_attributes=False)
 
     @api.depends('product_id')
     def _compute_website_description(self):

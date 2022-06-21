@@ -41,26 +41,26 @@ class TestLivechatChatbotUI(tests.HttpCase, TestLivechatCommon, ChatbotCase):
         conversation_messages = livechat_mail_channel.message_ids.sorted('id')
 
         expected_messages = [
-            ("Hello! I'm a bot!", operator, False),
+            ("Hello! I&#39;m a bot!", operator, False),
             ("I help lost visitors find their way.", operator, False),
             # next message would normally have 'self.step_dispatch_buy_software' as answer
             # but it's wiped when restarting the script
             ("How can I help you?", operator, False),
             ("I want to buy the software", False, False),
             ("Can you give us your email please?", operator, False),
-            ("No, you won't get my email!", False, False),
-            ("'No, you won't get my email!' does not look like a valid email. Can you please try again?", operator, False),
+            ("No, you won&#39;t get my email!", False, False),
+            ("&#39;No, you won&#39;t get my email!&#39; does not look like a valid email. Can you please try again?", operator, False),
             ("okfine@fakeemail.com", False, False),
             ("Your email is validated, thank you!", operator, False),
             ("Would you mind providing your website address?", operator, False),
             ("https://www.fakeaddress.com", False, False),
             ("Great, do you want to leave any feedback for us to improve?", operator, False),
-            ("Yes, actually, I'm glad you asked!", False, False),
-            ("I think it's outrageous that you ask for all my personal information!", False, False),
+            ("Yes, actually, I&#39;m glad you asked!", False, False),
+            ("I think it&#39;s outrageous that you ask for all my personal information!", False, False),
             ("I will be sure to take this to your manager!", False, False),
             ("Ok bye!", operator, False),
             ("Restarting conversation...", operator, False),
-            ("Hello! I'm a bot!", operator, False),
+            ("Hello! I&#39;m a bot!", operator, False),
             ("I help lost visitors find their way.", operator, False),
             ("How can I help you?", operator, self.step_dispatch_pricing),
             ("Pricing Question", False, False),

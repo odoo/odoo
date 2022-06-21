@@ -480,7 +480,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         def _get_description():
             values = [_find_value(lead, 'description') for lead in leads]
-            return '<br><br>'.join(value for value in values if value)
+            return '<br /><br />'.join(value for value in values if value)
 
         def _get_priority():
             values = [_find_value(lead, 'priority') for lead in leads]

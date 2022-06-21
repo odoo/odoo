@@ -11,9 +11,9 @@ class KarmaRank(models.Model):
     _order = 'karma_min'
 
     name = fields.Text(string='Rank Name', translate=True, required=True)
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False,)
+    description = fields.Html(string='Description', translate=html_translate, restricted_attributes=False,)
     description_motivational = fields.Html(
-        string='Motivational', translate=html_translate, sanitize_attributes=False,
+        string='Motivational', translate=html_translate, restricted_attributes=False,
         help="Motivational phrase to reach this rank on your profile page")
     karma_min = fields.Integer(
         string='Required Karma', required=True, default=1)

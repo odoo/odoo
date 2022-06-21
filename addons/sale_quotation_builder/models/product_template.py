@@ -11,13 +11,13 @@ class ProductTemplate(models.Model):
     quotation_only_description = fields.Html(
         string="Quotation Only Description",
         translate=html_translate,
-        sanitize_attributes=False,
+        restricted_attributes=False,
         help="The quotation description (not used on eCommerce)")
 
     quotation_description = fields.Html(
         string="Quotation Description",
         compute='_compute_quotation_description',
-        sanitize_attributes=False,
+        restricted_attributes=False,
         help="This field uses the Quotation Only Description if it is defined, "
             "otherwise it will try to read the eCommerce Description.")
 

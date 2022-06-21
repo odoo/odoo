@@ -19,5 +19,5 @@ class ImLivechatChannel(models.Model):
     website_description = fields.Html(
         "Website description", default=False, translate=html_translate,
         sanitize_overridable=True,
-        sanitize_attributes=False, sanitize_form=False,
+        restricted_attributes=False, sanitize_form=False,
         help="Description of the channel displayed on the website page")

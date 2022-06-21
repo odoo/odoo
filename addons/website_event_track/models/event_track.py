@@ -29,7 +29,7 @@ class Track(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
-    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    description = fields.Html(translate=html_translate, restricted_attributes=False, sanitize_form=False)
     color = fields.Integer('Color')
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),

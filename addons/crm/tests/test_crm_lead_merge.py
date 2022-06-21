@@ -177,7 +177,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         # and exclude inactive leads, but that's not written anywhere ... intended ??
         self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_partner_company - self.lead_w_email_lost)
         ordered_merge = self.lead_w_contact + self.lead_w_email + self.lead_1 + self.lead_w_partner
-        ordered_merge_description = '<br><br>'.join(l.description for l in ordered_merge)
+        ordered_merge_description = '<br /><br />'.join(l.description for l in ordered_merge)
 
         # merged opportunity: in this test, all input are leads. Confidence is based on stage
         # sequence -> lead_w_contact has a stage sequence of 3 and probability is greater

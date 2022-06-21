@@ -31,6 +31,15 @@ function openUserProfileAtSecurityTab() {
         content: "Switch to security tab",
         trigger: 'a[role=tab]:contains("Account Security")',
         run: 'click',
+    }, {
+        // the web editor of the signature is always dirty, switching the tab
+        // will ask to save the change even if there's no change
+        // and can make this tour fail
+        content: "Discard web editor changes",
+        trigger: '.o_form_button_cancel',
+        run: 'click',
+    }, {
+        trigger: '.o_form_status_indicator_buttons.invisible'
     }];
 }
 

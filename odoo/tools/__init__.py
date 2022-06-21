@@ -9,6 +9,7 @@ from . import pycompat
 from . import win32
 from .barcode import *
 from .config import config
+from .html_sanitize import html_sanitize, html_compare
 from .date_utils import *
 from .debugger import *
 from .float_utils import *

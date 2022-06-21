@@ -68,7 +68,7 @@ class Forum(models.Model):
                             </div>
                         </div>
                     </section>""",
-        sanitize_attributes=False,
+        restricted_attributes=False,
         sanitize_form=False)
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
@@ -830,7 +830,7 @@ class Post(models.Model):
         values = {
             'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
             'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
-            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
+            'body': tools.html_sanitize(self.content, restricted_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
             'subtype_xmlid': 'mail.mt_comment',
             'date': self.create_date,

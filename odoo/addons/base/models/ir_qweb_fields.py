@@ -13,7 +13,7 @@ from lxml import etree, html
 
 from odoo import api, fields, models, _, _lt, tools
 from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration, pycompat
-from odoo.tools.mail import safe_attrs
+from odoo.tools.html_sanitize import SAFE_ATTRIBUTES
 from odoo.tools.misc import get_lang, babel_locale_parse
 
 _logger = logging.getLogger(__name__)
@@ -716,7 +716,7 @@ class BarcodeConverter(models.AbstractModel):
 
         img_element = html.Element('img')
         for k, v in options.items():
-            if k.startswith('img_') and k[4:] in safe_attrs:
+            if k.startswith('img_') and k[4:] in SAFE_ATTRIBUTES:
                 img_element.set(k[4:], v)
         if not img_element.get('alt'):
             img_element.set('alt', _('Barcode %s') % value)

@@ -26,9 +26,9 @@ class TestSMSPost(TestSMSCommon, TestSMSRecipients):
     def test_message_sms_internals_body(self):
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', partner_ids=self.partner_1.ids)
+            messages = test_record._message_sms('<p>Mega SMS<br>Top moumoutte</p>', partner_ids=self.partner_1.ids)
 
-        self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.body, '<p>Mega SMS<br />Top moumoutte</p>')
         self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_note'))
         self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
 
@@ -56,7 +56,7 @@ class TestSMSPost(TestSMSCommon, TestSMSRecipients):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', subtype_id=self.env.ref('mail.mt_comment').id, partner_ids=self.partner_1.ids)
 
-        self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.body, '<p>Mega SMS<br />Top moumoutte</p>')
         self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
 

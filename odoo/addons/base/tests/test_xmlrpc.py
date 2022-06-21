@@ -53,7 +53,7 @@ class TestXMLRPC(common.HttpCase):
         )
 
     def test_xmlrpc_html_field(self):
-        sig = '<p>bork bork bork <span style="font-weight: bork">bork</span><br></p>'
+        sig = '<p>bork bork bork <span style="font-weight: bork;">bork</span><br /></p>'
         r = self.env['res.users'].create({
             'name': 'bob',
             'login': 'bob',
