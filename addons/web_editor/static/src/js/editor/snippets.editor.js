@@ -17,6 +17,12 @@ const {getCSSVariableValue, shouldEditableMediaBeEditable} = require('web_editor
 const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const QWeb = core.qweb;
 const {closestElement, isUnremovable} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+const rpc = require('web.rpc');
+const {
+    loadImageInfo,
+    applyModifications,
+    removeOnImageChangeAttrs,
+} = require('web_editor.image_processing');
 
 var _t = core._t;
 
@@ -3401,6 +3407,7 @@ var SnippetsMenu = Widget.extend({
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
 
+        const promisedBeforeDrop = [];
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
@@ -3466,6 +3473,37 @@ var SnippetsMenu = Widget.extend({
                         });
                         dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                     });
+                    // Apply missing image processing.
+                    const processImgEls = $toInsert[0].querySelectorAll('img[data-original-src]:not([src])');
+                    promisedBeforeDrop.push(Promise.all([...processImgEls].map(async img => {
+                        // TODO Patch original too so that it does not need to be done again.
+                        if (removeOnImageChangeAttrs.some(attr => !!img.dataset[attr])) {
+                            const originalSrc = img.dataset.originalSrc;
+                            delete img.dataset.originalSrc;
+                            if (originalSrc.startsWith('/web_editor/image_shape/')) {
+                                img.src = '/web/image/' + originalSrc.split('/')[3];
+                            } else {
+                                img.src = originalSrc;
+                            }
+                            await loadImageInfo(img, rpc.query);
+                            let imgDataURL = await applyModifications(img, {});
+                            if (originalSrc.startsWith('/web_editor/image_shape/')) {
+                                // Reuse the SVG that already takes the options into account.
+                                const response = await window.fetch(originalSrc);
+                                const svg = await response.text();
+                                // Not using a regex replace because Safari
+                                // does not support negative lookahead.
+                                // /(?<=image[^>]+xlink:href=")data:image\/.*;base64,[^"]*/
+                                const match = svg.match(/image[^>]+xlink:href="data:image\/.*;base64,/);
+                                const begin = svg.indexOf('data:image/', match.index);
+                                const end = svg.indexOf('"', begin);
+                                const updatedSvg = svg.substr(0, begin) + imgDataURL + svg.substr(end);
+                                imgDataURL = 'data:image/svg+xml;base64,' + window.btoa(updatedSvg);
+                                img.dataset.mimetype = 'image/svg+xml';
+                            }
+                            img.src = imgDataURL;
+                        }
+                    })));
 
                     if (!$selectorSiblings.length && !$selectorChildren.length) {
                         console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
@@ -3519,6 +3557,7 @@ var SnippetsMenu = Widget.extend({
                     self.trigger_up('drop_zone_start');
                 },
                 stop: async function (ev, ui) {
+                    await Promise.all(promisedBeforeDrop);
                     const doc = self.options.wysiwyg.odooEditor.document;
                     $(doc.body).removeClass('oe_dropzone_active');
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
