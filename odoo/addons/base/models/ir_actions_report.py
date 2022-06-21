@@ -717,15 +717,12 @@ class IrActionsReport(models.Model):
 
             # Split the pdf for each record using the PDF outlines.
 
-            html_ids_wo_none = [x for x in html_ids if x]
-            if len(res_ids_wo_stream) == 1:
+            if not self.attachment:
+                # Splitting the pdf is not needed since we don't have any attachment to generate.
+                collected_streams[False] = {'stream': pdf_content_stream}
+            elif len(res_ids_wo_stream) == 1:
                 # Only one record: append the whole PDF.
                 collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
-            elif not html_ids_wo_none:
-                # When rendering some html without a one to one match between each res_id and a document
-                # 'html_ids' contains some 'None' values. In that case, there is nothing to split and the content
-                # can be returned directly.
-                collected_streams[False] = {'stream': pdf_content_stream}
             else:
                 # In case of multiple docs, we need to split the pdf according the records.
                 # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
