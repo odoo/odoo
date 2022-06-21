@@ -64,6 +64,7 @@
             'project/static/src/stop_recurrence_confirmation_dialog/*',
             'project/static/src/services/**/*',
             'project/static/src/task_name_with_subtask_count_char_field/*',
+            'project/static/src/project_private_task_many2one_field/*',
             'project/static/src/project_task_kanban/*',
             'project/static/src/project_task_list/*',
             'project/static/src/css/project.css',
@@ -102,6 +103,7 @@
             'project/static/src/project_control_panel/**/*.xml',
             'project/static/src/stop_recurrence_confirmation_dialog/*.xml',
             'project/static/src/task_name_with_subtask_count_char_field/*.xml',
+            'project/static/src/project_private_task_many2one_field/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
