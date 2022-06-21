@@ -3,13 +3,14 @@
 
 from datetime import datetime
 
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
+from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, users, warmup
 from odoo.tools import mute_logger
 
 
-class TestRatingCommon(TestMailFullCommon, TestMailFullRecipients):
+class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestRatingCommon, cls).setUpClass()

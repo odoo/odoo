@@ -4,55 +4,14 @@
 from ast import literal_eval
 
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
+from odoo.addons.test_mass_mailing.tests.common import TestMassSMSCommon
 from odoo import exceptions
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-@tagged('mass_mailing')
-class TestMassSMSCommon(TestMailFullCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestMassSMSCommon, cls).setUpClass()
-        cls._test_body = 'Mass SMS in your face'
-
-        records = cls.env['mail.test.sms']
-        partners = cls.env['res.partner']
-        country_be_id = cls.env.ref('base.be').id,
-        country_us_id = cls.env.ref('base.us').id,
-
-        for x in range(10):
-            partners += cls.env['res.partner'].with_context(**cls._test_context).create({
-                'name': 'Partner_%s' % (x),
-                'email': '_test_partner_%s@example.com' % (x),
-                'country_id': country_be_id,
-                'mobile': '045600%s%s99' % (x, x)
-            })
-            records += cls.env['mail.test.sms'].with_context(**cls._test_context).create({
-                'name': 'MassSMSTest_%s' % (x),
-                'customer_id': partners[x].id,
-                'phone_nbr': '045600%s%s44' % (x, x)
-            })
-        cls.records = cls._reset_mail_context(records)
-        cls.records_numbers = [phone_validation.phone_format(r.phone_nbr, 'BE', '32', force_format='E164') for r in cls.records]
-        cls.partners = partners
-
-        cls.sms_template = cls.env['sms.template'].create({
-            'name': 'Test Template',
-            'model_id': cls.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear {{ object.display_name }} this is a mass SMS.',
-        })
-
-        cls.partner_numbers = [
-            phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
-            for partner in partners
-        ]
-
-
-@tagged('mass_mailing')
+@tagged('mass_mailing', 'mass_mailing_sms')
 class TestMassSMSInternals(TestMassSMSCommon):
 
     @users('user_marketing')

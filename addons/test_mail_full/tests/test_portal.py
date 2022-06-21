@@ -4,13 +4,14 @@
 import json
 
 from odoo import http
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
+from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
 
 
 @tagged('portal')
-class TestPortal(HttpCase, TestMailFullCommon, TestMailFullRecipients):
+class TestPortal(HttpCase, TestMailFullCommon, TestSMSRecipients):
 
     def setUp(self):
         super(TestPortal, self).setUp()

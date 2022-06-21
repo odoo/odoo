@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
+from odoo.addons.test_mail_sms.tests.common import TestSMSCommon, TestSMSRecipients
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-class TestSMSActionsCommon(TestMailFullCommon, TestMailFullRecipients):
+class TestSMSActionsCommon(TestSMSCommon, TestSMSRecipients):
 
     @classmethod
     def setUpClass(cls):

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, users
-from odoo.exceptions import AccessError
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import AccessError
+from odoo.tests import Form, users
 
 
 class TestMailTemplate(MailCommon):
+
     @classmethod
     def setUpClass(cls):
         super(TestMailTemplate, cls).setUpClass()
