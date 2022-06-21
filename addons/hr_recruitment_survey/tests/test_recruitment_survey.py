@@ -37,7 +37,7 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
 
     def test_send_survey(self):
         # We ensure that response is False because we don't know test order
-        self.job_sysadmin.response_id = False
+        self.job_sysadmin.response_ids = False
         Answer = self.env['survey.user_input']
         answers = Answer.search([('survey_id', '=', self.survey_sysadmin.id)])
         answers.unlink()
@@ -52,19 +52,19 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         invite.action_invite()
 
         self.assertEqual(invite.applicant_id, self.job_sysadmin)
-        self.assertNotEqual(self.job_sysadmin.response_id.id, False)
+        self.assertNotEqual(self.job_sysadmin.response_ids.ids, False)
         answers = Answer.search([('survey_id', '=', self.survey_sysadmin.id)])
         self.assertEqual(len(answers), 1)
-        self.assertEqual(self.job_sysadmin.response_id, answers)
+        self.assertEqual(self.job_sysadmin.response_ids, answers)
         self.assertEqual(
             set(answers.mapped('email')),
             set([self.job_sysadmin.email_from]))
 
     def test_print_survey(self):
         # We ensure that response is False because we don't know test order
-        self.job_sysadmin.response_id = False
+        self.job_sysadmin.response_ids = False
         action_print = self.job_sysadmin.action_print_survey()
         self.assertEqual(action_print['type'], 'ir.actions.act_url')
-        self.job_sysadmin.response_id = self.env['survey.user_input'].create({'survey_id': self.survey_sysadmin.id})
+        self.job_sysadmin.response_ids = self.env['survey.user_input'].create({'survey_id': self.survey_sysadmin.id})
         action_print_with_response = self.job_sysadmin.action_print_survey()
-        self.assertIn(self.job_sysadmin.response_id.access_token, action_print_with_response['url'])
+        self.assertIn(self.job_sysadmin.response_ids.access_token, action_print_with_response['url'])
