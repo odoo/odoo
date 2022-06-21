@@ -523,6 +523,7 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
             'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
+            'sequence': self.sequence,
         })
         return values
 
