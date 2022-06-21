@@ -8,7 +8,9 @@ const chatterFields = ["message_ids", "message_follower_ids", "activity_ids"];
 
 BasicView.include({
     init: function () {
+        this.hasChatter = false;
         this._super.apply(this, arguments);
+        this.rendererParams.hasChatter = this.hasChatter;
         const post_refresh = this._getFieldOption('message_ids', 'post_refresh', false);
         const followers_post_refresh = this._getFieldOption('message_follower_ids', 'post_refresh', false);
         this.chatterFields = {
@@ -73,6 +75,7 @@ BasicView.include({
      */
     _processNode(node, fv) {
         if (node.tag === "div" && node.attrs.class && node.attrs.class.includes("oe_chatter")) {
+            this.hasChatter = true;
             const viewType = fv.type;
             const fieldsInfo = fv.fieldsInfo[viewType];
             const fields = fv.viewFields;
