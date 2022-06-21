@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='source_id']" position="after">
                 <field name="survey_id" invisible="1"/>
-                <field name="response_id" invisible="1"/>
+                <field name="response_ids" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='archive_applicant']" position="before">
-                <button name="action_send_survey" string="SEND INTERVIEW" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('survey_id', '=', False)]}"/>
+                <button name="action_send_survey" string="Send Interview" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('survey_id', '=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_makeMeeting']" position="after">
                 <button name="action_print_survey"
@@ -26,7 +26,7 @@
                     icon="fa-pencil-square-o"
                     type="object"
                     help="See interview report"
-                    attrs="{'invisible':['|',('survey_id','=',False),('response_id','=',False)]}">
+                    attrs="{'invisible':['|',('survey_id','=',False),('response_ids','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Consult</span>
                         <span class="o_stat_text">Interview</span>
@@ -35,8 +35,7 @@
             </xpath>
             <xpath expr="//field[@name='job_id']" position="before">
                 <field name="survey_id" invisible="1"/>
-                <field name="response_id" invisible="1"/>
-                <field name="response_state" invisible="1"/>
+                <field name="response_ids" invisible="1"/>
             </xpath>
         </field>
     </record>

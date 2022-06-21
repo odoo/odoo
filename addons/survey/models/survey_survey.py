@@ -902,8 +902,7 @@ class Survey(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_send_survey(self):
-        """ Open a window to compose an email, pre-filled with the survey message """
+    def check_validity(self):
         # Ensure that this survey has at least one question.
         if not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
@@ -917,6 +916,10 @@ class Survey(models.Model):
 
         if not self.active:
             raise exceptions.UserError(_("You cannot send invitations for closed surveys."))
+
+    def action_send_survey(self):
+        """ Open a window to compose an email, pre-filled with the survey message """
+        self.check_validity()
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
 
