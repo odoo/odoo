@@ -117,6 +117,13 @@ FormRenderer.include({
     },
     /**
      * @private
+     * @returns {boolean}
+     */
+    _isChatterAside() {
+        return false;
+    },
+    /**
+     * @private
      */
     _makeChatterContainerComponent() {
         const props = this._makeChatterContainerProps();
@@ -134,10 +141,13 @@ FormRenderer.include({
      * @returns {Object}
      */
     _makeChatterContainerProps() {
+        const isChatterAside = this._isChatterAside();
         return {
             hasActivities: this.chatterFields.hasActivityIds,
+            hasExternalBorder: !isChatterAside,
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
             hasMessageList: this.chatterFields.hasMessageIds,
+            hasMessageListScrollAdjust: isChatterAside,
             hasParentReloadOnAttachmentsChanged: this.chatterFields.hasRecordReloadOnAttachmentsChanged,
             hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
             hasParentReloadOnMessagePosted: this.chatterFields.hasRecordReloadOnMessagePosted,
@@ -178,10 +188,18 @@ FormRenderer.include({
         }
     },
     /**
-     * @abstract
+     * Add a class to allow styling of chatter depending on the fact is is
+     * printed aside or underneath the form sheet.
+     *
      * @private
      */
-    _updateChatterContainerTarget() {},
+    _updateChatterContainerTarget() {
+        if (this._isChatterAside()) {
+            $(this._chatterContainerTarget).addClass('o-aside');
+        } else {
+            $(this._chatterContainerTarget).removeClass('o-aside');
+        }
+    },
     /**
      * @abstract
      * @private
