@@ -56,24 +56,29 @@
                                         <!-- Bank -->
                                         <field name="default_account_id" string="Bank Account"
                                                attrs="{'required': [('id', '!=', False), ('type', '=', 'bank')], 'invisible': [('type', '!=', 'bank')]}"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Cash -->
                                         <field name="default_account_id" string="Cash Account"
                                                attrs="{'required': [('id', '!=', False), ('type', '=', 'cash')], 'invisible': [('type', '!=', 'cash')]}"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
 
                                         <field name="suspense_account_id"
                                                attrs="{'required': [('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <field name="profit_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
                                         <field name="loss_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
                                         <!-- Sales -->
                                         <field name="default_account_id" string="Default Income Account"
                                                attrs="{'required': [('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Purchase -->
                                         <field name="default_account_id" string="Default Expense Account"
                                                attrs="{'required': [('type', '=', 'purchase')], 'invisible': [('type', '!=', 'purchase')]}"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="code" placeholder="e.g. INV"/>

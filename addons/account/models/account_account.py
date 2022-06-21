@@ -2,7 +2,10 @@
 from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
+from bisect import bisect_left
+import re
 
+ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
 
 class AccountAccount(models.Model):
     _name = "account.account"
@@ -58,6 +61,7 @@ class AccountAccount(models.Model):
         ],
         string="Type", tracking=True,
         required=True,
+        compute='_compute_account_type', store=True, readonly=False, precompute=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
     )
     include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
@@ -366,6 +370,19 @@ class AccountAccount(models.Model):
             record.opening_credit = res['credit']
             record.opening_balance = res['balance']
 
+    @api.depends('code')
+    def _compute_account_type(self):
+        """ Compute the account type based on the account code.
+        Search for the closest parent account code and sets the account type according to the parent.
+        """
+        accounts_to_process = self.filtered(lambda r: r.code and not r.account_type)
+        accounts_with_codes = {r['code']: r['account_type'] for r in self.search_read(domain=[(
+            'code', '!=', False), ('company_id', '=', self.company_id.id)], fields=['code', 'account_type'])}
+        codes_list = list(accounts_with_codes.keys())
+        for account in accounts_to_process:
+            closest_index = bisect_left(codes_list, account.code) - 1
+            account.account_type = accounts_with_codes[codes_list[closest_index]]
+
     @api.depends('internal_group')
     def _compute_is_off_balance(self):
         for account in self:
@@ -513,6 +530,18 @@ class AccountAccount(models.Model):
         elif self.internal_group == 'expense' and not self.tax_ids:
             self.tax_ids = self.company_id.account_purchase_tax_id
 
+    def _split_code_name(self, code_name):
+        # We only want to split the name on the first word if there is a digit in it
+        code, name = ACCOUNT_REGEX.match(code_name or '').groups()
+        return code, name.strip()
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        code, name = self._split_code_name(self.name)
+        if code:
+            self.name = name
+            self.code = code
+
     def name_get(self):
         result = []
         for account in self:
@@ -591,6 +620,17 @@ class AccountAccount(models.Model):
             WHERE full_reconcile_id IS NULL AND account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
+
+    @api.model
+    def name_create(self, name):
+        """ Split the account name into account code and account name in import.
+        When importing a file with accounts, the account code and name may be both entered in the name column.
+        In this case, the name will be split into code and name.
+        """
+        if 'import_file' in self.env.context:
+            code, name = self._split_code_name(name)
+            return self.create({'code': code, 'name': name}).name_get()[0]
+        raise ValueError(_("The values for the created account need to be verified."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
