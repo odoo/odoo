@@ -46,6 +46,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <t t-esc="record.scheduled_date.value and record.scheduled_date.value.split(' ')[0] or False"/>
+                                        <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
                                     </div>
                                 </div>
                             </div>
@@ -370,6 +371,7 @@
                         string="Package"
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
+                    <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
