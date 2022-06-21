@@ -21,6 +21,7 @@ FormRenderer.include({
      */
     init(parent, state, params) {
         this._super(...arguments);
+        this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
         this._chatterContainerComponent = undefined;
@@ -35,15 +36,13 @@ FormRenderer.include({
          * when applying the rendering into the DOM.
          */
         this.$chatterContainerHook = undefined;
-        // Do not load chatter in form view dialogs
-        this._isFromFormViewDialog = params.isFromFormViewDialog;
     },
     /**
      * @override
      */
     _renderNode(node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
-            if (this._isFromFormViewDialog) {
+            if (!this.hasChatter) {
                 return $('<div/>');
             }
             if (!this._chatterContainerTarget) {
@@ -64,7 +63,7 @@ FormRenderer.include({
      */
     async __renderView() {
         await this._super(...arguments);
-        if (this._hasChatter()) {
+        if (this.hasChatter) {
             if (!this._chatterContainerComponent) {
                 this._makeChatterContainerComponent();
             } else {
@@ -84,11 +83,11 @@ FormRenderer.include({
          * The chatter is detached before it's removed on the super._updateView function,
          * this is done to avoid losing the event handlers.
          */
-        if (this._hasChatter()) {
+        if (this.hasChatter) {
             this._chatterContainerTarget.remove();
         }
         this._super(...arguments);
-        if (this._hasChatter()) {
+        if (this.hasChatter) {
             this.$chatterContainerHook.replaceWith(this._chatterContainerTarget);
         }
     },
@@ -105,16 +104,6 @@ FormRenderer.include({
     // Mail Methods
     //--------------------------------------------------------------------------
 
-    /**
-     * Returns whether the form renderer has a chatter to display or not.
-     * This is based on arch, which should have `div.oe_chatter`.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _hasChatter() {
-        return !!this._chatterContainerTarget;
-    },
     /**
      * @private
      * @returns {boolean}
