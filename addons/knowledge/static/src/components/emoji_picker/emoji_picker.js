@@ -3,7 +3,7 @@
 import emojis from '@mail/js/emojis';
 const { Component } = owl;
 
-class Emoji extends Component {
+class LegacyEmoji extends Component {
     /**
      * @override
      */
@@ -14,8 +14,8 @@ class Emoji extends Component {
     }
 }
 
-Emoji.template = 'mail.Emoji';
-Emoji.props = {
+LegacyEmoji.template = 'mail.LegacyEmoji';
+LegacyEmoji.props = {
     emojiView: Object
 };
 
@@ -53,8 +53,8 @@ class EmojiPicker extends Component {
     }
 }
 
-EmojiPicker.template = 'knowledge.EmojiList';
+EmojiPicker.template = 'knowledge.LegacyEmojiList';
 EmojiPicker.props = ['onClickEmoji'];
-EmojiPicker.components = { Emoji };
+EmojiPicker.components = { LegacyEmoji };
 
 export default EmojiPicker;
