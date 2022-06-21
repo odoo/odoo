@@ -175,6 +175,8 @@ class StockPickingBatch(models.Model):
             if batch_without_picking_type:
                 picking = self.picking_ids and self.picking_ids[0]
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
+        if vals.get('user_id'):
+            self.picking_ids.assign_batch_user(vals['user_id'])
         return res
 
     @api.ondelete(at_uninstall=False)
