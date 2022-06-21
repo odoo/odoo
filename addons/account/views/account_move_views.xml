@@ -155,7 +155,7 @@
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="journal_id" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" optional="show" widget="open_move_widget"/>
-                    <field name="account_id" options="{'no_open': True}" groups="account.group_account_readonly"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
                     <field name="partner_id" optional="hide" attrs="{'readonly':[('account_internal_type','in', ('payable','receivable'))]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="product_id" optional="hide"/>
@@ -172,6 +172,8 @@
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
                     <field name="cumulated_balance" optional="hide"/>
                     <field name="matching_number" optional="show"/>
+                    <field name="amount_residual" string="Residual" optional="hide" attrs="{'invisible':[('account_internal_type', 'not in', ('payable','receivable'))]}"/>
+                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('account_internal_type', 'not in', ('payable','receivable'))]}"/>
 
                     <field name="parent_state" invisible="1"/>
                     <field name="account_internal_type" invisible="1"/>
@@ -346,21 +348,10 @@
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
                     </group>
-                </search>
-            </field>
-        </record>
-        <record id="view_account_move_line_filter_with_root_selection" model="ir.ui.view">
-            <field name="name">account.move.line.search</field>
-            <field name="model">account.move.line</field>
-            <field name="mode">primary</field>
-            <field name="priority">20</field>
-            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group" position="after">
                     <searchpanel class="account_root">
-                        <field name="account_root_id" icon="fa-filter" limit="0"/>
+                        <field name="account_root_id" icon="fa-filter" groupby="account_id" limit="0"/>
                     </searchpanel>
-                </xpath>
+                </search>
             </field>
         </record>
 
@@ -1431,16 +1422,6 @@
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
             <field name="view_mode">tree,pivot,graph,kanban</field>
-        </record>
-
-        <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_account': 1, 'search_default_posted':1}</field>
-            <field name="name">General Ledger</field>
-            <field name="res_model">account.move.line</field>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
-            <field name="view_id" ref="view_move_line_tree_grouped_general"/>
-            <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
-            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_ledger_partner" model="ir.actions.act_window">
