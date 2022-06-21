@@ -8,6 +8,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
+import { isMacOS } from "../browser/feature_detection";
 import { escapeRegExp } from "../utils/strings";
 
 const { Component, onWillStart, useRef, useState, markRaw, useExternalListener } = owl;
@@ -88,6 +89,9 @@ export class CommandPalette extends Component {
         this.inputRef = useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
+        useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
+            bypassEditableProtection: true,
+        });
         useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
             bypassEditableProtection: true,
             allowRepeat: true,
@@ -230,8 +234,12 @@ export class CommandPalette extends Component {
         scrollTo(command, { scrollable: this.listboxRef.el });
     }
 
-    onCommandClicked(index) {
+    onCommandClicked(event, index) {
         this.selectCommand(index);
+        const newTab = isMacOS() ? event.metaKey : event.ctrlKey;
+        if (newTab && this.state.selectedCommand.href) {
+            return;
+        }
         this.executeSelectedCommand();
     }
 
@@ -250,10 +258,15 @@ export class CommandPalette extends Component {
         }
     }
 
-    async executeSelectedCommand() {
+    async executeSelectedCommand(newTab) {
         await this.searchValuePromise;
-        if (this.state.selectedCommand) {
-            this.executeCommand(this.state.selectedCommand);
+        const selectedCommand = this.state.selectedCommand;
+        if (selectedCommand) {
+            if (newTab && selectedCommand.href) {
+                window.open(selectedCommand.href, "_blank");
+            } else {
+                this.executeCommand(selectedCommand);
+            }
         }
     }
 
@@ -329,6 +342,10 @@ export class CommandPalette extends Component {
             searchValue = searchValue.slice(1);
         }
         return { namespace, searchValue };
+    }
+
+    get isMacOS() {
+        return isMacOS();
     }
 }
 CommandPalette.template = "web.CommandPalette";
