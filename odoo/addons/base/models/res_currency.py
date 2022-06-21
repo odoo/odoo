@@ -8,6 +8,7 @@ import time
 
 from lxml import etree
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -399,6 +400,8 @@ class CurrencyRate(models.Model):
     @api.onchange('inverse_company_rate')
     def _inverse_inverse_company_rate(self):
         for currency_rate in self:
+            if currency_rate.inverse_company_rate == 0:
+                raise ValidationError(_("The currency inverse rate must be other than 0"))
             currency_rate.company_rate = 1.0 / currency_rate.inverse_company_rate
 
     @api.onchange('company_rate')
