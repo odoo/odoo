@@ -11,7 +11,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('digest')
+@tagged('digest', 'mass_mailing')
 class TestMailingStatistics(TestMassMailCommon):
 
     @classmethod
