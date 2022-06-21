@@ -13,21 +13,7 @@ QUnit.module('follow_button_tests.js');
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(2);
 
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
-    const { openView, pyEnv } = await start({
-        serverData: { views },
-    });
+    const { openView, pyEnv } = await start();
     await openView({
         res_id: pyEnv.currentPartnerId,
         res_model: 'res.partner',
@@ -59,21 +45,7 @@ QUnit.test('hover following button', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
-    const { openView } = await start({
-        serverData: { views },
-    });
+    const { openView } = await start();
     await openView({
         res_id: threadId,
         res_model: 'res.partner',
@@ -131,21 +103,7 @@ QUnit.test('hover following button', async function (assert) {
 QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(4);
 
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
-    const { click, openView, pyEnv } = await start({
-        serverData: { views },
-    });
+    const { click, openView, pyEnv } = await start();
     await openView({
         res_id: pyEnv.currentPartnerId,
         res_model: 'res.partner',
@@ -189,21 +147,7 @@ QUnit.test('click on "unfollow" button', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const views = {
-        'res.partner,false,form':
-            `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-    };
-    const { click, openView } = await start({
-        serverData: { views },
-    });
+    const { click, openView } = await start();
     await openView({
         res_id: threadId,
         res_model: 'res.partner',

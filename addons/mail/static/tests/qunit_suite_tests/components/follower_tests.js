@@ -20,7 +20,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         res_id: threadId,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args, performRpc) {
             if (route === '/mail/thread/data') {
                 // mimic user without write access
@@ -30,9 +30,10 @@ QUnit.test('base rendering not editable', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -73,10 +74,11 @@ QUnit.test('base rendering editable', async function (assert) {
         res_id: threadId,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -123,10 +125,11 @@ QUnit.test('click on partner follower details', async function (assert) {
         res_model: 'res.partner',
     });
     const openFormDef = makeDeferred();
-    const { click, createChatterContainerComponent, env } = await start();
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    const { click, env, openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -180,21 +183,27 @@ QUnit.test('click on edit follower', async function (assert) {
         res_id: threadId,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent, messaging } = await start({
+    const { click, messaging, openView } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
             }
         },
     });
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     const thread = messaging.models['Thread'].create({
         id: threadId,
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -231,7 +240,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         res_id: threadId,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -246,9 +255,10 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(

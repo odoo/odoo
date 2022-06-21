@@ -18,10 +18,11 @@ QUnit.test('activity simplest layout', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -95,10 +96,11 @@ QUnit.test('activity with note layout', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -131,10 +133,11 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -171,10 +174,11 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
         res_model: 'res.partner',
         state: 'planned',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -208,10 +212,11 @@ QUnit.test('activity info layout when planned today', async function (assert) {
         res_model: 'res.partner',
         state: 'today',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -248,10 +253,11 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -288,10 +294,11 @@ QUnit.test('activity info layout when planned before yesterday', async function 
         res_model: 'res.partner',
         state: 'overdue',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -324,10 +331,11 @@ QUnit.test('activity with a summary layout', async function (assert) {
         res_model: 'res.partner',
         summary: 'test summary',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -361,10 +369,11 @@ QUnit.test('activity without summary layout', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -409,10 +418,11 @@ QUnit.test('activity details toggle', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -465,10 +475,11 @@ QUnit.test('activity details layout', async function (assert) {
         state: 'planned',
         user_id: resUsersId1,
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -542,10 +553,11 @@ QUnit.test('activity with mail template layout', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -602,7 +614,12 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent, env } = await start();
+    const { env, openView } = await start();
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -637,10 +654,6 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
             );
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
-    });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
         1,
@@ -672,7 +685,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({
+    const { openView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'activity_send_mail') {
                 assert.step('activity_send_mail');
@@ -684,9 +697,10 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_model: 'res.partner',
+        res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -719,10 +733,11 @@ QUnit.test('activity upload document is available', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
-    const chatterContainerComponent = await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { messaging, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -735,7 +750,7 @@ QUnit.test('activity upload document is available', async function (assert) {
         "should have activity upload button"
     );
     assert.ok(
-        chatterContainerComponent.chatter.activityBoxView.activityViews[0].fileUploader,
+        messaging.models['Chatter'].all()[0].activityBoxView.activityViews[0].fileUploader,
         "should have a file uploader"
     );
 });
@@ -753,10 +768,11 @@ QUnit.test('activity click on mark as done', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -797,10 +813,11 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -835,7 +852,12 @@ QUnit.test('activity click on edit', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent, env } = await start();
+    const { click, env, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -867,10 +889,6 @@ QUnit.test('activity click on edit', async function (assert) {
             return this._super(...arguments);
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
-    });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
         1,
@@ -900,7 +918,12 @@ QUnit.test('activity edition', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent, env } = await start();
+    const { click, env, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');
@@ -932,10 +955,6 @@ QUnit.test('activity edition', async function (assert) {
             pyEnv['mail.activity'].write([mailActivityId1], { icon: 'fa-check' });
             options.onClose();
         },
-    });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
     });
     assert.containsOnce(
         document.body,
@@ -992,7 +1011,7 @@ QUnit.test('activity click on cancel', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, openView } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
@@ -1001,9 +1020,10 @@ QUnit.test('activity click on cancel', async function (assert) {
             }
         },
     });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Activity').length,
@@ -1042,10 +1062,11 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_Activity_markDoneButton');
@@ -1081,10 +1102,11 @@ QUnit.test('activity mark done popover click on discard', async function (assert
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { click, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     await click('.o_Activity_markDoneButton');
@@ -1120,7 +1142,12 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent, env } = await start();
+    const { env, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.strictEqual(
@@ -1140,10 +1167,6 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
             );
             assert.step('do-action:openFormView_some.model_250');
         },
-    });
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
     });
     assert.containsOnce(
         document.body,
@@ -1177,10 +1200,11 @@ QUnit.test('button related to file uploading is replaced when updating activity 
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent, messaging } = await start();
-    await createChatterContainerComponent({
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
+    const { messaging, openView } = await start();
+    await openView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
 
     // Update the record server side then fetch updated data in order to
