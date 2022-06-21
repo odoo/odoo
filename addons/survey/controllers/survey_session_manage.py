@@ -37,7 +37,7 @@ class UserInputSession(http.Controller):
         right arrow (next slide) icon to the presenter """
         next_question = survey._get_session_next_question(False)
         if show_results and any(answer.answer_score for answer in survey.session_question_id.suggested_answer_ids):
-            return _("Show Results")
+            return _("Show Answers")
         if not is_leaderboard and survey.session_question_id.is_scored_question and survey.session_question_id.scoring_type != 'no_scoring':
             return _('Leaderboard')
         if next_question:

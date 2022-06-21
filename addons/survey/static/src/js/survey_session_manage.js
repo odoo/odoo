@@ -183,6 +183,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        if (screenToDisplay === 'userInputs' && this._getNextScreen() == 'results') {
+            this._updateNextPageTooltip({data: {nextPageTooltip: _t('Show Results')}});
+        }
     },
 
     /**
@@ -228,6 +231,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        if (screenToDisplay === 'userInputs' && this._getNextScreen() == 'results') {
+            this._updateNextPageTooltip({data: {nextPageTooltip: _t('Show Results')}});
+        }
     },
 
     /**
