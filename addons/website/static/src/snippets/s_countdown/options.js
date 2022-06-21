@@ -8,6 +8,7 @@ const CountdownWidget = require('website.s_countdown');
 const qweb = core.qweb;
 
 options.registry.countdown = options.Class.extend({
+    xmlDependencies: ['/website/static/src/snippets/s_countdown/options.xml'],
     events: _.extend({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
