@@ -315,7 +315,7 @@ const LivechatButton = Widget.extend({
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
             placeholder: this.messaging.livechatButtonView.inputPlaceholder,
-            titleColor: this.options.title_color,
+            titleColor: this.messaging.livechatButtonView.titleColor,
         };
         this.messaging.livechatButtonView.update({
             chatWindow: new WebsiteLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),

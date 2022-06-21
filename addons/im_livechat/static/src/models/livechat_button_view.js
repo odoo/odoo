@@ -62,6 +62,13 @@ registerModel({
             }
             return this.messaging.publicLivechatServerUrl;
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeTitleColor() {
+            return this.messaging.publicLivechatOptions.title_color;
+        },
     },
     fields: {
         autoOpenChatTimeout: attr(),
@@ -110,6 +117,9 @@ registerModel({
         rule: attr(),
         serverUrl: attr({
             compute: '_computeServerUrl',
+        }),
+        titleColor: attr({
+            compute: '_computeTitleColor',
         }),
     },
 });
