@@ -154,6 +154,7 @@ FormRenderer.include({
             this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
         }
         this.$chatterContainerHook = $('<div class="o_FormRenderer_chatterContainer"/>');
+        this._updateChatterContainerTarget();
         return this.$chatterContainerHook;
     },
     /**
@@ -187,6 +188,11 @@ FormRenderer.include({
             }
         }
     },
+    /**
+     * @abstract
+     * @private
+     */
+    _updateChatterContainerTarget() {},
     /**
      * @abstract
      * @private
