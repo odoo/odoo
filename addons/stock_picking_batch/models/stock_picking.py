@@ -82,13 +82,15 @@ class StockPicking(models.Model):
         return pickings
 
     def write(self, vals):
-        batches = self.batch_id
+        old_batches = self.batch_id
         res = super().write(vals)
         if vals.get('batch_id'):
-            batches.filtered(lambda b: not b.picking_ids).state = 'cancel'
+            old_batches.filtered(lambda b: not b.picking_ids).state = 'cancel'
             if not self.batch_id.picking_type_id:
                 self.batch_id.picking_type_id = self.picking_type_id[0]
             self.batch_id._sanity_check()
+            # assign batch users to batch pickings
+            self.batch_id.picking_ids.assign_batch_user(self.batch_id.user_id.id)
         return res
 
     def action_add_operations(self):
@@ -215,6 +217,15 @@ class StockPicking(models.Model):
             domain = expression.AND([domain, [('picking_ids.location_dest_id', '=', self.location_dest_id.id)]])
 
         return domain
+
+    def assign_batch_user(self, user_id):
+        if not user_id:
+            return
+        pickings = self.filtered(lambda p: p.user_id.id != user_id)
+        pickings.write({'user_id': user_id})
+        for pick in pickings:
+            log_message = _('Assigned to %s Responsible', (pick.batch_id._get_html_link()))
+            pick.message_post(body=log_message)
 
     def action_view_batch(self):
         self.ensure_one()

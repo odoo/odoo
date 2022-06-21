@@ -224,6 +224,9 @@
                 <field name="name" string="Batch Transfer"/>
                 <field name="picking_type_id" invisible="1"/>
                 <field name="user_id"/>
+                <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
+                <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
+                <separator/>
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]" help="Batch Transfers not finished"/>
                 <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
