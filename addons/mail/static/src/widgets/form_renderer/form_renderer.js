@@ -31,11 +31,11 @@ FormRenderer.include({
          */
         this._chatterContainerTarget = undefined;
         /**
-         * This jQuery element will be set when rendering the form view, and
+         * This element will be set when rendering the form view, and
          * used as a hook to insert the ChatterContainer in the right place,
          * when applying the rendering into the DOM.
          */
-        this.$chatterContainerHook = undefined;
+        this.chatterContainerTargetPlaceholder = undefined;
     },
     /**
      * @override
@@ -49,9 +49,9 @@ FormRenderer.include({
                 this._chatterContainerTarget = document.createElement("div");
                 this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
             }
-            this.$chatterContainerHook = $('<div class="o_FormRenderer_chatterContainer"/>');
             this._updateChatterContainerTarget();
-            return this.$chatterContainerHook;
+            this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
+            return this.chatterContainerTargetPlaceholder;
         }
         return this._super(...arguments);
     },
@@ -88,7 +88,7 @@ FormRenderer.include({
         }
         this._super(...arguments);
         if (this.hasChatter) {
-            this.$chatterContainerHook.replaceWith(this._chatterContainerTarget);
+            this.chatterContainerTargetPlaceholder.replaceWith(this._chatterContainerTarget);
         }
     },
     /**
