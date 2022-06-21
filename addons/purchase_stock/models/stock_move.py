@@ -35,7 +35,9 @@ class StockMove(models.Model):
             order = line.order_id
             invoice_lines = line.invoice_lines.sorted('id', reverse=True)
             if invoice_lines:
-                received_qty = line.product_uom._compute_quantity(line.qty_received, self.product_uom) - self.quantity_done
+                received_qty = line.product_uom._compute_quantity(line.qty_received, self.product_uom)
+                if self.state == 'done':
+                    received_qty -= self.quantity_done
                 invoiced_qty = line.product_uom._compute_quantity(line.qty_invoiced, self.product_uom)
                 if float_compare(invoiced_qty, received_qty, precision_rounding=self.product_uom.rounding) == 1:
                     # Get the price unit from last invoice(s).

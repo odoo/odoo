@@ -169,11 +169,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         invoice.action_post()
 
         # Check the price difference amount.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_stock_valuation_account_id)
-        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.price_total, -6100.446)
+        invoice_layer = self.env['stock.valuation.layer'].search([('account_move_line_id', 'in', invoice.line_ids.ids)])
+        self.assertTrue(len(invoice_layer) == 1, "A price difference line should be created")
+        self.assertAlmostEqual(invoice_layer.value, -3050.22)
 
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.assertAlmostEqual(invoice_layer.value + picking.move_ids.stock_valuation_layer_ids.value, invoice.line_ids[0].debit)
+        self.assertAlmostEqual(invoice_layer.value + picking.move_ids.stock_valuation_layer_ids.value, invoice.invoice_line_ids.price_subtotal/2, 2)
         self.check_reconciliation(invoice, picking)
 
     def test_rounding_price_unit(self):
@@ -181,7 +183,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         test_product = self.test_product_delivery
         date_po_and_delivery = '2018-01-01'
-
         purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=1000000, price_unit=0.0005)
         self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
 
@@ -192,14 +193,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 0.0006
         move_form.save()
-
         invoice.action_post()
 
         # Check the price difference amount. It's expected that price_unit * qty != price_total.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_stock_valuation_account_id)
-        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.price_unit, 0.0001)
-        self.assertAlmostEqual(price_diff_line.price_total, 100.0)
+        invoice_layer = self.env['stock.valuation.layer'].search([('account_move_line_id', 'in', invoice.line_ids.ids)])
+        self.assertTrue(len(invoice_layer) == 1, "A price difference line should be created")
+        # self.assertAlmostEqual(invoice_layer.price_unit, 0.0001)
+        self.assertAlmostEqual(invoice_layer.value, 50.0)
 
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)

@@ -2,6 +2,7 @@
 
 from odoo import fields, models
 from odoo.tools.float_utils import float_is_zero
+from odoo.tools.misc import groupby
 
 
 class AccountMove(models.Model):
@@ -57,6 +58,14 @@ class AccountMove(models.Model):
         if valued_lines:
             stock_valuation_layers |= valued_lines._create_in_invoice_svl()
 
+        for (product, company), dummy in groupby(stock_valuation_layers, key=lambda svl: (svl.product_id, svl.company_id)):
+            product = product.with_company(company.id)
+            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+
+        if stock_valuation_layers:
+            stock_valuation_layers._validate_accounting_entries()
+
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
@@ -64,12 +73,13 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for layer in stock_valuation_layers:
-            # layer.description = layer.description.replace('/', layer.account_move_line_id.move_id.name)
-            # layer.stock_valuation_layer_id._validate_accounting_entries()
-            layer._validate_difference_price_accounting_entries()
+            # layer.description.replace('/', layer.account_move_line_id.move_id.name)
+            layer.account_move_id.line_ids.write({'name': layer.description})
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
-        posted._stock_account_anglo_saxon_reconcile_valuation()
+        # We don't have currency loss or gain at this point. The invoice price with the daily
+        # rate is used for the inventory valuation.
+        posted.with_context(no_exchange_difference=True)._stock_account_anglo_saxon_reconcile_valuation()
         return posted
 
     def button_draft(self):
@@ -256,10 +266,14 @@ class AccountMoveLine(models.Model):
                 continue
             # Computes price difference between invoice line and SVL.
             previous_invoices = (po_line.invoice_lines - self).filtered(lambda aml: aml.move_id.move_type == move.move_type)
+            previous_price = 0
+            for inv_line in previous_invoices:
+                previous_price += inv_line.currency_id._convert(
+                    inv_line.price_subtotal, inv_line.company_id.currency_id, inv_line.company_id, inv_line.date, round=False)
             if move.move_type == 'in_refund':
-                total_prices = sum(layers.mapped('value')) - sum(previous_invoices.mapped('price_subtotal'))
+                total_prices = sum(layers.mapped('value')) - previous_price
             else:
-                total_prices = sum(layers.mapped('remaining_value')) - sum(previous_invoices.mapped('price_subtotal'))
+                total_prices = sum(layers.mapped('remaining_value')) - previous_price
             total_quantity = abs(sum(layers.mapped('quantity'))) - sum(previous_invoices.mapped('quantity'))
             if float_is_zero(total_quantity, precision_rounding=uom.rounding):
                 continue
@@ -283,9 +297,11 @@ class AccountMoveLine(models.Model):
 
             layers_price_unit = total_prices / total_quantity
             layers_price_unit = line.company_id.currency_id._convert(
-                layers_price_unit, po_line.currency_id, line.company_id, fields.Date.context_today(self), round=False)
+                layers_price_unit, po_line.currency_id, line.company_id, line.date, round=False)
             price_difference = price_unit - layers_price_unit
-            if float_is_zero(price_difference, precision_rounding=line.currency_id.rounding):
+            price_difference = po_line.currency_id._convert(
+                price_difference, line.company_id.currency_id, line.company_id, line.date, round=False)
+            if float_is_zero(price_difference * total_quantity, precision_rounding=line.currency_id.rounding):
                 continue
             # Don't create value for more quantity than received
             quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
