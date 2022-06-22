@@ -4,19 +4,20 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 
-/**
- * Mirrors the fields of the python model res.users.settings.volumes.
- */
 registerModel({
-    name: 'res.users.settings.volumes',
+    name: 'VolumeSetting',
     identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
          */
         _onChangeVolume() {
-            const { rtcSessions } = this.partner_id || this.guest_id;
-            if (!rtcSessions) {
+            let rtcSessions;
+            if (this.partner) {
+                rtcSessions = this.partner.rtcSessions;
+            } else if (this.guest) {
+                rtcSessions = this.guest.rtcSessions;
+            } else {
                 return;
             }
             for (const rtcSession of rtcSessions) {
@@ -27,19 +28,18 @@ registerModel({
         },
     },
     fields: {
-        guest_id: one('Guest', {
+        guest: one('Guest', {
             inverse: 'volumeSetting',
         }),
         id: attr({
             readonly: true,
             required: true,
         }),
-        partner_id: one('Partner', {
+        partner: one('Partner', {
             inverse: 'volumeSetting',
         }),
-        user_setting_id: one('res.users.settings', {
-            inverse: 'volume_settings_ids',
-            readonly: true,
+        userSetting: one('UserSetting', {
+            inverse: 'volumeSettings',
             required: true,
         }),
         volume: attr({

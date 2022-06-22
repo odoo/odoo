@@ -27,15 +27,7 @@ tour.register('newsletter_block_edition', {
     wTourUtils.clickOnEdit(),
     {
         content: 'Wait for the editor to be fully started',
-        trigger: '#oe_snippets.o_loaded',
-    },
-    {
-        content: 'Click on the Subscribe button',
-        trigger: '.s_newsletter_block .js_subscribe_btn',
-    },
-    {
-        content: 'Toggle the option to display the Thanks button',
-        trigger: 'we-button[data-toggle-thanks-button] we-checkbox',
+        trigger: '#oe_snippets',
     },
     {
         content: 'Click on the Thanks button',

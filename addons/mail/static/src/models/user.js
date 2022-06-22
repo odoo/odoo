@@ -195,8 +195,9 @@ registerModel({
         partner: one('Partner', {
             inverse: 'user',
         }),
-        res_users_settings_id: one('res.users.settings', {
-            inverse: 'user_id',
-        }),
+        /**
+         * Id of this user's res.users.settings record.
+         */
+        resUsersSettingsId: attr(),
     },
 });

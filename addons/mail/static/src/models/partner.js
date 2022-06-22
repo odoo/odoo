@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link } from '@mail/model/model_field_command';
+import { clear, insert, link } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -350,13 +350,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeIsImStatusSet() {
-            return Boolean(this.im_status && this.im_status !== 'im_partner');
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeIsOnline() {
             return ['online', 'away'].includes(this.im_status);
         },
@@ -417,10 +410,6 @@ registerModel({
             required: true,
         }),
         im_status: attr(),
-        isImStatusSet: attr({
-            compute: '_computeIsImStatusSet',
-            readonly: true,
-        }),
         /**
          * States whether this partner is online.
          */
@@ -441,21 +430,14 @@ registerModel({
             inverse: 'partner',
             isCausal: true,
         }),
-        persona: one('Persona', {
-            default: insertAndReplace(),
-            inverse: 'partner',
-            isCausal: true,
-            readonly: true,
-            required: true,
-        }),
         rtcSessions: many('RtcSession', {
             inverse: 'partner',
         }),
         user: one('User', {
             inverse: 'partner',
         }),
-        volumeSetting: one('res.users.settings.volumes', {
-            inverse: 'partner_id',
+        volumeSetting: one('VolumeSetting', {
+            inverse: 'partner',
         }),
     },
 });

@@ -6,6 +6,7 @@
         <field name="model">payment.acquirer</field>
         <field name="arch" type="xml">
             <form string="Payment Acquirer">
+                <field name="published" invisible="1"/>
                 <field name="support_fees" invisible="1"/>
                 <field name="support_manual_capture" invisible="1"/>
                 <field name="support_tokenization" invisible="1"/>
@@ -21,6 +22,25 @@
                 <field name="show_done_msg" invisible="1"/>
                 <field name="show_cancel_msg" invisible="1"/>
                 <sheet>
+                    <!-- Stat Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_published"
+                                attrs="{'invisible': [('published', '=', False)]}"
+                                class="oe_stat_button"
+                                type="object" icon="fa-play">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Published</span>
+                            </div>
+                        </button>
+                        <button name="toggle_published"
+                                attrs="{'invisible': [('published', '=', True)]}"
+                                class="oe_stat_button"
+                                type="object" icon="fa-stop">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-danger">Unpublished</span>
+                            </div>
+                        </button>
+                    </div>
                     <field name="image_128" widget="image" class="oe_avatar"/>
                     <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
                     <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
@@ -118,6 +138,7 @@
                 <field name="name"/>
                 <field name="description"/>
                 <field name="provider"/>
+                <field name="published"/>
                 <field name="module_id"/>
                 <field name="module_state"/>
                 <field name="module_to_buy"/>
@@ -126,6 +147,7 @@
                     <t t-name="kanban-box">
                         <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                         <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
+                        <t t-set="published" t-value="record.published.raw_value === true"/>
                         <div t-attf-class="oe_kanban_global_click #{kanban_color(record.color.raw_value)}">
                             <div class="o_payment_acquirer_desc">
                                 <div class="o_kanban_image">
@@ -137,6 +159,12 @@
                             <div class="o_payment_acquirer_bottom">
                                 <t t-if="installed">
                                     <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
+                                </t>
+                                <t t-if="published &amp;&amp; installed">
+                                    <span class="badge badge-success">Published</span>
+                                </t>
+                                <t t-if="!published &amp;&amp; installed">
+                                    <span class="badge badge-danger">Unpublished</span>
                                 </t>
                                 <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
                                 <t t-if="!installed and to_buy">

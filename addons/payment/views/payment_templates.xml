@@ -44,9 +44,10 @@
                t-value="footer_template_id or 'payment.footer'"/>
 
             <div class="card">
+                <!-- #{'bg-secondary' if acquirer.published == False else ''} -->
                 <!-- === Acquirers === -->
                 <t t-foreach="acquirers" t-as="acquirer">
-                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                    <div name="o_payment_option_card" t-attf-class="card-body o_payment_option_card #{'o_unpublished_payment_option_card' if acquirer.published == False else ''}">
                         <label>
                             <!-- === Radio button === -->
                             <!-- Only shown if linked to the only payment option -->
@@ -58,13 +59,17 @@
                                    t-att-data-provider="acquirer.provider"
                                    data-payment-option-type="acquirer"/>
                             <!-- === Acquirer name === -->
-                            <span class="payment_option_name">
+                            <span t-attf-class="payment_option_name #{'text-muted' if acquirer.published == False else ''}">
                                 <b t-esc="acquirer.display_as or acquirer.name"/>
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
                                   class="badge-pill badge-warning ml-1">
                                 Test Mode
+                            </span>
+                            <span t-if="acquirer.published == False"
+                                  class="badge-pill badge-danger ml-1">
+                                Unpublished
                             </span>
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_acquirer.get(acquirer)">
@@ -263,7 +268,7 @@
             <t t-set="MAX_ICONS" t-value="3"/>
             <!-- === Icons === -->
             <!-- Only shown if in the first 3 icons -->
-            <t t-foreach="acquirer.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
+            <t t-foreach="acquirer.payment_icon_ids" t-as="icon">
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
                     <span t-esc="icon.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"

@@ -104,7 +104,8 @@ tour.register('test_custom_snippet', {
     },
     {
         content: "ensure custom snippet disappeared",
-        trigger: "#oe_snippets:not(:has(.oe_snippet[name='Bruce Banner']))",
+        trigger: "#oe_snippets",
+        extra_trigger: "#oe_snippets:not(:has(.oe_snippet[name='Bruce Banner']))",
         run: function () {}, // check
     },
 ]);

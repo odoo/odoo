@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, replace } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 /**
@@ -65,13 +65,6 @@ registerModel({
             if (this.thread) {
                 return this.thread.name;
             }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            return this.partner && this.partner.isImStatusSet ? insertAndReplace() : clear();
         },
         /**
          * @private
@@ -148,12 +141,6 @@ registerModel({
             compute: '_computeRecord',
         }),
         partner: one('Partner', {
-            readonly: true,
-        }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
-            inverse: 'composerSuggestionViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         thread: one('Thread', {

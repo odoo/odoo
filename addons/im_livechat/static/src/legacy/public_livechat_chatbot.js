@@ -204,7 +204,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotDisableInput(disableText) {
-        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field')
+        this._chatWindow.$('.o_composer_text_field')
             .prop('disabled', true)
             .addClass('text-center font-italic bg-200')
             .val(disableText);
@@ -214,7 +214,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEnableInput() {
-        const $composerTextField = this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field');
+        const $composerTextField = this._chatWindow.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
             .removeClass('text-center font-italic bg-200')
@@ -237,9 +237,9 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEndScript() {
-        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field').addClass('d-none');
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').show();
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_restart').one('click',
+        this._chatWindow.$('.o_composer_text_field').addClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').show();
+        this._chatWindow.$('.o_livechat_chatbot_restart').one('click',
             this._onChatbotRestartScript.bind(this));
 
     },
@@ -339,7 +339,7 @@ const QWeb = core.qweb;
         }
 
         if (!this._chatbotDisplayRestartButton()) {
-            this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },
      /**
@@ -568,9 +568,9 @@ const QWeb = core.qweb;
      _askFeedback() {
         this._super(...arguments);
 
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').hide();
-        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field')
+        this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').hide();
+        this._chatWindow.$('.o_composer_text_field')
             .removeClass('d-none')
             .val('');
      },
@@ -588,8 +588,8 @@ const QWeb = core.qweb;
     _openChatWindow() {
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
-                if (this.messaging.livechatButtonView.chatWindow) {
-                    this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+                if (this._chatWindow) {
+                    this._chatWindow.scrollToBottom();
                 }
             });
 
@@ -619,11 +619,11 @@ const QWeb = core.qweb;
 
         const self = this;
 
-        this.messaging.livechatButtonView.chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
+        this._chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));
         });
 
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').on('click',
+        this._chatWindow.$('.o_livechat_chatbot_main_restart').on('click',
             this._onChatbotRestartScript.bind(this));
 
         if (this.messaging.livechatButtonView.messages.length !== 0) {
@@ -690,7 +690,7 @@ const QWeb = core.qweb;
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.livechatButtonView.isChatbot) {
+        if (this._isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
                 this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbotMessageDelay,
@@ -775,8 +775,8 @@ const QWeb = core.qweb;
      * @private
      */
     async _onChatbotRestartScript(ev) {
-        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field').removeClass('d-none');
-        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').hide();
+        this._chatWindow.$('.o_composer_text_field').removeClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').hide();
 
         if (this.nextStepTimeout) {
             clearTimeout(this.nextStepTimeout);

@@ -127,7 +127,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _askFeedback() {
-        this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled', true);
+        this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
         const feedback = new Feedback(this, this.messaging.livechatButtonView.livechat);
         this.messaging.livechatButtonView.chatWindow.replaceContentWith(feedback);
@@ -139,7 +139,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _closeChat() {
-        this.messaging.livechatButtonView.chatWindow.destroy();
+        this._chatWindow.destroy();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
     /**
@@ -221,7 +221,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _openChat: _.debounce(function () {
-        if (this.messaging.livechatButtonView.isOpeningChat) {
+        if (this._openingChat) {
             return;
         }
         const cookie = utils.get_cookie('im_livechat_session');
@@ -283,9 +283,9 @@ const LivechatButton = Widget.extend({
                 });
             }
         }).then(() => {
-            this.messaging.livechatButtonView.update({ isOpeningChat: false });
+            this._openingChat = false;
         }).guardedCatch(() => {
-            this.messaging.livechatButtonView.update({ isOpeningChat: false });
+            this._openingChat = false;
         });
     }, 200, true),
     /**
@@ -314,7 +314,7 @@ const LivechatButton = Widget.extend({
         const options = {
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
-            placeholder: this.messaging.livechatButtonView.inputPlaceholder,
+            placeholder: this.options.input_placeholder || "",
             titleColor: this.options.title_color,
         };
         this.messaging.livechatButtonView.update({
@@ -323,7 +323,7 @@ const LivechatButton = Widget.extend({
         return this.messaging.livechatButtonView.chatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            this.messaging.livechatButtonView.chatWindow.$el.css(cssProps);
+            this._chatWindow.$el.css(cssProps);
             this.$el.hide();
         });
     },
@@ -345,7 +345,7 @@ const LivechatButton = Widget.extend({
         this.messaging.livechatButtonView.livechat.setMessages(this.messaging.livechatButtonView.messages);
         this.messaging.livechatButtonView.chatWindow.render();
         if (shouldScroll) {
-            this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+            this._chatWindow.scrollToBottom();
         }
     },
     /**
@@ -377,14 +377,14 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+                this._chatWindow.scrollToBottom();
             });
     },
     /**
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.livechatButtonView.defaultMessage) {
+        if (this.options.default_message) {
             this._addMessage({
                 id: '_welcome',
                 attachment_ids: [],
@@ -412,7 +412,7 @@ const LivechatButton = Widget.extend({
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this.messaging.livechatButtonView.chatWindow.toggleFold(false);
+            this._chatWindow.toggleFold(false);
             this._askFeedback();
         } else {
             this._closeChat();
@@ -455,7 +455,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this.messaging.livechatButtonView.chatWindow.renderHeader();
+        this._chatWindow.renderHeader();
     },
     /**
      * @private
@@ -463,7 +463,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this.messaging.livechatButtonView.chatWindow.renderHeader();
+        this._chatWindow.renderHeader();
     },
     /**
      * @private

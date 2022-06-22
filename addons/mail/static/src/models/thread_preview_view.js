@@ -74,13 +74,6 @@ registerModel({
             }
             return clear();
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            return this.thread.correspondent && this.thread.correspondent.isImStatusSet ? insertAndReplace() : clear();
-        },
     },
     fields: {
         inlineLastMessageBody: attr({
@@ -93,7 +86,7 @@ registerModel({
             readonly: true,
         }),
         lastTrackingValue: one('TrackingValue', {
-            compute: '_computeLastTrackingValue',
+            compute:'_computeLastTrackingValue',
             readonly: true,
         }),
         /**
@@ -110,12 +103,6 @@ registerModel({
             inverse: 'threadPreviewViews',
             readonly: true,
             required: true,
-        }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
-            inverse: 'threadPreviewViewOwner',
-            isCausal: true,
-            readonly: true,
         }),
         thread: one('Thread', {
             inverse: 'threadPreviewViews',

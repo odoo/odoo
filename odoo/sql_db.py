@@ -198,11 +198,9 @@ class BaseCursor:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        try:
-            if exc_type is None:
-                self.commit()
-        finally:
-            self.close()
+        if exc_type is None:
+            self.commit()
+        self.close()
 
 
 class Cursor(BaseCursor):

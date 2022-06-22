@@ -3,18 +3,12 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
-/**
- * Models various user settings. It is used as a complement to
- * `res.users.settings`, in order to compute and add data only relevant to the
- * client-side. This is particularly useful for allowing guests to have their
- * own settings.
- */
 registerModel({
     name: 'UserSetting',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {
             this._loadLocalSettings();
@@ -26,6 +20,28 @@ registerModel({
                 this.messaging.browser.clearTimeout(timeout);
             }
             this.messaging.browser.clearTimeout(this.globalSettingsTimeout);
+        },
+    },
+    modelMethods: {
+        /**
+         * @param {Object} data
+         * @returns {Object}
+         */
+        convertData(data) {
+            const data2 = {};
+            if ('use_push_to_talk' in data) {
+                data2.usePushToTalk = data.use_push_to_talk;
+            }
+            if ('push_to_talk_key' in data) {
+                data2.pushToTalkKey = data.push_to_talk_key || '';
+            }
+            if ('voice_active_duration' in data) {
+                data2.voiceActiveDuration = data.voice_active_duration;
+            }
+            if ('id' in data) {
+                data2.id = data.id;
+            }
+            return data2;
         },
     },
     recordMethods: {
@@ -49,7 +65,7 @@ registerModel({
          */
         isPushToTalkKey(ev, { ignoreModifiers = false } = {}) {
             if (!this.usePushToTalk || !this.pushToTalkKey) {
-                return false;
+                return;
             }
             const { key, shiftKey, ctrlKey, altKey } = this.pushToTalkKeyFormat();
             if (ignoreModifiers) {
@@ -93,8 +109,9 @@ registerModel({
          * @param {String} value
          */
         setDelayValue(value) {
-            this.update({ voiceActiveDuration: parseInt(value, 10) });
-            if (this.messaging.currentUser) {
+            const voiceActiveDuration = parseInt(value, 10);
+            this.update({ voiceActiveDuration });
+            if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
         },
@@ -104,7 +121,7 @@ registerModel({
         async setPushToTalkKey(ev) {
             const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
             this.update({ pushToTalkKey });
-            if (this.messaging.currentUser) {
+            if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
         },
@@ -139,7 +156,7 @@ registerModel({
         async togglePushToTalk() {
             this.update({ usePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
-            if (this.messaging.currentUser) {
+            if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
         },
@@ -148,45 +165,6 @@ registerModel({
          */
         toggleWindow() {
             this.update({ isOpen: !this.isOpen });
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computePushToTalkKey() {
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeUsePushToTalk() {
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeVoiceActiveDuration() {
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
         },
         /**
          * @private
@@ -225,7 +203,7 @@ registerModel({
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',
-                    args: [[this.messaging.currentUser.res_users_settings_id.id], {
+                    args: [[this.messaging.currentUser.resUsersSettingsId], {
                         push_to_talk_key: this.pushToTalkKey,
                         use_push_to_talk: this.usePushToTalk,
                         voice_active_duration: this.voiceActiveDuration,
@@ -252,7 +230,7 @@ registerModel({
                     model: 'res.users.settings',
                     method: 'set_volume_setting',
                     args: [
-                        [this.messaging.currentUser.res_users_settings_id.id],
+                        [this.messaging.currentUser.resUsersSettingsId],
                         partnerId,
                         volume,
                     ],
@@ -283,6 +261,17 @@ registerModel({
         audioInputDeviceId: attr({
             default: '',
         }),
+        globalSettingsTimeout: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
+        /**
+         * Formatted string that represent the push to talk key with its modifiers.
+         */
+        pushToTalkKey: attr({
+            default: '',
+        }),
         /**
          * Model for the component with the controls for RTC related settings.
          */
@@ -291,19 +280,10 @@ registerModel({
             inverse: 'userSetting',
             isCausal: true,
         }),
-        globalSettingsTimeout: attr(),
         /**
-         * String that encodes the push-to-talk key with its modifiers.
-         */
-        pushToTalkKey: attr({
-            compute: '_computePushToTalkKey',
-            default: '',
-        }),
-        /**
-         * If true, push-to-talk will be used over voice activation.
+         * true if the user wants to use push to talk (over voice activation)
          */
         usePushToTalk: attr({
-            compute: '_computeUsePushToTalk',
             default: false,
         }),
         /**
@@ -313,12 +293,17 @@ registerModel({
             default: 0.05,
         }),
         /**
-         * Duration in milliseconds the voice remains active after releasing the
-         * push-to-talk key.
+         * how long the voice remains active after releasing the push-to-talk key in ms
          */
         voiceActiveDuration: attr({
-            compute: '_computeVoiceActiveDuration',
             default: 0,
+        }),
+        /**
+         * Determines the volume chosen by the current user for each other user.
+         */
+        volumeSettings: many('VolumeSetting', {
+            inverse: 'userSetting',
+            isCausal: true,
         }),
         volumeSettingsTimeouts: attr({
             default: {},

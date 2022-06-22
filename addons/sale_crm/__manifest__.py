@@ -16,7 +16,7 @@ The case is then closed and linked to the generated sales order.
 We suggest you to install this module, if you installed both the sale and the crm
 modules.
     """,
-    'depends': ['sale', 'crm'],
+    'depends': ['sale_management', 'crm'],
     'data': [
         'security/ir.model.access.csv',
         'data/crm_lead_merge_template.xml',

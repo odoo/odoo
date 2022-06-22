@@ -35,18 +35,18 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative mx-1">
                                 <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_Message_authorRedirect o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" role="button" tabindex="0" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" t-att-alt="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''"/>
-                                <t t-if="messageView.personaImStatusIconView">
-                                    <PersonaImStatusIcon
-                                        className="'o_Message_personaImStatusIcon d-flex align-items-center justify-content-center'"
+                                <t t-if="messageView.message.author and messageView.message.author.im_status">
+                                    <PartnerImStatusIcon
+                                        className="'o_Message_partnerImStatusIcon d-flex align-items-center justify-content-center'"
                                         classNameObj="{
                                             'o-message-selected text-400': messageView.isSelected,
-                                            'o_Message_personaImStatusIcon-mobile': messaging.device.isSmall,
+                                            'o_Message_partnerImStatusIcon-mobile': messaging.device.isSmall,
                                             'small': !messaging.device.isSmall,
                                             'text-white': !messageView.isSelected and messageView.message.isDiscussionOrNotification,
                                             'text-100': !messageView.message.isDiscussionOrNotification and !messageView.isSelected,
                                         }"
                                         hasOpenChat="messageView.hasAuthorOpenChat"
-                                        record="messageView.personaImStatusIconView"
+                                        partner="messageView.message.author"
                                     />
                                 </t>
                             </div>

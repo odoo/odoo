@@ -69,8 +69,13 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             this._renderMessages();
             this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.livechat.getUUID());
             this.call('bus_service', 'startPolling');
+<<<<<<< HEAD
             utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.livechat.toData()), true), 60 * 60);
             this.messaging.livechatButtonView.update({ isOpeningChat: false });
+=======
+            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
+            this._openingChat = false;
+>>>>>>> [IMP] payment: Allow (un)publishing of payment acquirers
         });
     },
 });

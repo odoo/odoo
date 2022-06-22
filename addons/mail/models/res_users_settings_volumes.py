@@ -26,15 +26,12 @@ class ResUsersSettingsVolumes(models.Model):
         return [{
             'id': volume_setting.id,
             'volume': volume_setting.volume,
-            'guest_id': [('insert-and-replace', {
+            'guest': [('insert-and-replace', {
                 'id': volume_setting.guest_id.id,
                 'name': volume_setting.guest_id.name,
             })] if volume_setting.guest_id else [('clear',)],
-            'partner_id': [('insert-and-replace', {
+            'partner': [('insert-and-replace', {
                 'id': volume_setting.partner_id.id,
                 'name': volume_setting.partner_id.name,
-            })] if volume_setting.partner_id else [('clear',)],
-            'user_setting_id': [('insert-and-replace', {
-                'id': volume_setting.user_setting_id.id,
-            })],
+            })] if volume_setting.partner_id else [('clear',)]
         } for volume_setting in self]

@@ -16,11 +16,10 @@
                     <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.record.help"/></em>
                 </t>
                 <t t-if="composerSuggestion.partner">
-                    <PersonaImStatusIcon
-                        t-if="composerSuggestion.personaImStatusIconView"
-                        className="'o_ComposerSuggestion_personaImStatusIcon flex-shrink-0 mr-1'"
+                    <PartnerImStatusIcon
+                        className="'o_ComposerSuggestion_partnerImStatusIcon flex-shrink-0 mr-1'"
                         hasBackground="false"
-                        record="composerSuggestion.personaImStatusIconView"
+                        partner="composerSuggestion.record"
                     />
                     <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.nameOrDisplayName"/></strong>
                     <t t-if="composerSuggestion.record.email">

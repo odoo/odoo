@@ -5,7 +5,7 @@ import logging
 from psycopg2 import sql
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -31,6 +31,10 @@ class PaymentAcquirer(models.Model):
              "This mode is advised when setting up the acquirer.",
         selection=[('disabled', "Disabled"), ('enabled', "Enabled"), ('test', "Test Mode")],
         default='disabled', required=True, copy=False)
+    published = fields.Boolean(
+        string="Published", default=False,
+        help="When unpublished, the acquirer is no longer available in any payment/manage form, "
+             "but not disabled (meaning it's tokens are still functional).")
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
         string="Company", comodel_name='res.company', default=lambda self: self.env.company.id,
         required=True, index=True)
@@ -227,6 +231,12 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
         return self.env.ref('account.account_payment_method_manual_in').id
 
+    #=== ONCHANGE METHODS ===#
+
+    @api.onchange('state')
+    def _onchange_state_switch_published(self):
+        self.published = True if self.state == 'enabled' else False
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('fees_dom_var', 'fees_int_var')
@@ -298,6 +308,14 @@ class PaymentAcquirer(models.Model):
                 'tag': 'reload',
             }
 
+    def toggle_published(self):
+        if not self.state == 'disabled':
+            self.published = not self.published
+        else:
+            raise UserError(_(
+                "You cannot publish a disabled acquirer. Enable the acquirer first to publish."
+            ))
+
     #=== BUSINESS METHODS ===#
 
     @api.model
@@ -329,6 +347,11 @@ class PaymentAcquirer(models.Model):
                 domain,
                 ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
             ])
+
+        # Handle published state of acquirer
+        if not partner.env.user._is_internal():
+            # if the partner is external, then the unpublished payment acquirers should not be shown
+            domain = expression.AND([domain, [('published', '=', True)]])
 
         # Handle tokenization support requirements
         if force_tokenization or self._is_tokenization_required(**kwargs):

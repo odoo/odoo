@@ -481,7 +481,6 @@ registerModel({
          */
         starred: one('Thread'),
         userSetting: one('UserSetting', {
-            default: insertAndReplace(),
             isCausal: true,
         }),
     },
