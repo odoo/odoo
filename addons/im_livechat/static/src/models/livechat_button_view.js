@@ -229,9 +229,6 @@ registerModel({
             compute: '_computeIsChatbot',
             default: false,
         }),
-        isChatbotBatchWelcomeMessages: attr({
-            default: false,
-        }),
         isChatbotRedirecting: attr({
             default: false,
         }),

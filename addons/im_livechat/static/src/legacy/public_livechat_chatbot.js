@@ -85,7 +85,6 @@ const QWeb = core.qweb;
             utils.set_cookie('im_livechat_auto_popup', '', -1);
             this.messaging.livechatButtonView.update({ history: clear() });
             this.messaging.livechatButtonView.update({ rule: this.messaging.livechatButtonView.livechatInit.rule });
-            this.messaging.livechatButtonView.update({ isChatbotBatchWelcomeMessages: true });
         } else if (this.messaging.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
             // -> restore the user's session (see '_chatbotRestoreSession')
@@ -720,7 +719,7 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbot.messageDelay,
+                this.messaging.livechatButtonView.chatbotState === 'welcome' ? 0 : this.messaging.livechatButtonView.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);
