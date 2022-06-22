@@ -25,9 +25,10 @@ class MailTemplatePreview(models.TransientModel):
         if not result.get('mail_template_id') or 'resource_ref' not in fields:
             return result
         mail_template = self.env['mail.template'].browse(result['mail_template_id'])
-        res = self.env[mail_template.model_id.model].search([], limit=1)
+        model = mail_template.sudo().model
+        res = self.env[model].search([], limit=1)
         if res:
-            result['resource_ref'] = '%s,%s' % (mail_template.model_id.model, res.id)
+            result['resource_ref'] = '%s,%s' % (model, res.id)
         return result
 
     mail_template_id = fields.Many2one('mail.template', string='Related Mail Template', required=True)
@@ -53,7 +54,8 @@ class MailTemplatePreview(models.TransientModel):
     @api.depends('model_id')
     def _compute_no_record(self):
         for preview in self:
-            preview.no_record = (self.env[preview.model_id.model].search_count([]) == 0) if preview.model_id else True
+            model_id = preview.sudo().model_id
+            preview.no_record = (self.env[model_id.model].search_count([]) == 0) if model_id else True
 
     @api.depends('lang', 'resource_ref')
     def _compute_mail_template_fields(self):
