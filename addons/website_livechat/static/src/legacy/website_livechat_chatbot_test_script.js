@@ -28,10 +28,9 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         });
         this.messaging.livechatButtonView.update({ isTestChatbot: true });
         this.messaging.livechatButtonView.update({ testChatbotData: chatbotData });
-        this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.testChatbotData });
         this.messaging.livechatButtonView.update({
-            chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[
-                this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps.length - 1
+            chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[
+                this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length - 1
             ],
         });
         this._channelData = this.messaging.livechatButtonView.testChatbotData.channel;
