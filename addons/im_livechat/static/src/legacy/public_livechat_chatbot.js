@@ -410,7 +410,7 @@ const QWeb = core.qweb;
                         'chatbotImageSrc': `/im_livechat/operator/${
                             this.messaging.livechatButtonView.livechat.getOperatorPID()[0]
                         }/avatar`,
-                        'chatbotName': this.messaging.livechatButtonView.chatbot.data.chatbot_name,
+                        'chatbotName': this.messaging.livechatButtonView.chatbot.name,
                         'isWelcomeMessage': isWelcomeMessage,
                     }))
                 );
