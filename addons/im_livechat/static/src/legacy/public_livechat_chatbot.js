@@ -52,12 +52,10 @@ const QWeb = core.qweb;
         const superResult = await this._super(...arguments);
 
         if (this.messaging.livechatButtonView.rule && !!this.messaging.livechatButtonView.rule.chatbot) {
-            this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ chatbotState: 'init' });
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
             this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
             if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
-                this.messaging.livechatButtonView.update({ isChatbot: true });
                 this.messaging.livechatButtonView.update({ chatbotState: 'welcome' });
             }
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
@@ -65,7 +63,6 @@ const QWeb = core.qweb;
             if (sessionCookie) {
                 const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
                 if (localStorage.getItem(sessionKey)) {
-                    this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
             }
@@ -94,7 +91,6 @@ const QWeb = core.qweb;
             this.messaging.livechatButtonView.update({ history: clear() });
             this.messaging.livechatButtonView.update({ rule: this.messaging.livechatButtonView.livechatInit.rule });
             this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.livechatInit.rule.chatbot });
-            this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ isChatbotBatchWelcomeMessages: true });
         } else if (this.messaging.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
@@ -375,7 +371,6 @@ const QWeb = core.qweb;
 
         if (chatbotState) {
             this.messaging.livechatButtonView.update({ localStorageChatbotState: JSON.parse(chatbotState) });
-            this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.localStorageChatbotState._chatbot });
             this.messaging.livechatButtonView.update({ chatbotCurrentStep: this.messaging.livechatButtonView.localStorageChatbotState._chatbotCurrentStep });
         }

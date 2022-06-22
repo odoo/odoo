@@ -94,6 +94,28 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsChatbot() {
+            if (this.isTestChatbot) {
+                return true;
+            }
+            if (this.rule && this.rule.chatbot) {
+                return true;
+            }
+            if (this.livechatInit && this.livechatInit.rule.chatbot) {
+                return true;
+            }
+            if (this.chatbotState === 'welcome') {
+                return true;
+            }
+            if (this.localStorageChatbotState) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeServerUrl() {
@@ -152,6 +174,7 @@ registerModel({
             default: '',
         }),
         isChatbot: attr({
+            compute: '_computeIsChatbot',
             default: false,
         }),
         isChatbotBatchWelcomeMessages: attr({
