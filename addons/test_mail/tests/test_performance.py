@@ -818,6 +818,51 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.assertEqual(len(rec1.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('employee')
+    @warmup
+    def test_complex_tracking_compute_fields(self):
+        # create some dummy partner titles to be able to test our compute method queries
+        partner_titles = self.env['res.partner.title'].create([
+            {'name': 'Title 1'},
+            {'name': 'Title 2'},
+        ])
+        self.customer.write({'title': partner_titles[0].id})
+        self.partners[0].write({'title': partner_titles[1].id})
+
+        with self.assertQueryCount(employee=9):
+            rec = self.env['mail.test.track.compute'].create({
+                'description': 'Description',
+                'partner_id': self.customer.id,
+            })
+            self.flush_tracking()
+
+        self.assertEqual(
+            rec.sudo().message_ids.tracking_value_ids,
+            self.env['mail.tracking.value']
+        )
+
+        self.env.invalidate_all()
+        with self.assertQueryCount(employee=10):
+            rec.write({'partner_id': self.partners[0].id})
+            self.flush_tracking()
+
+        # should properly create a tracking message for 'partner_title_name' and
+        # 'partner_title_name_stored' even if changed indirectly through a computed field
+        self.assertIn('partner_title_name', rec.sudo().message_ids.tracking_value_ids.mapped('field.name'))
+        self.assertIn('partner_title_name_stored', rec.sudo().message_ids.tracking_value_ids.mapped('field.name'))
+
+        # unlink tracking values to be able to easily test next case
+        rec.sudo().message_ids.tracking_value_ids.unlink()
+
+        self.env.invalidate_all()
+        with self.assertQueryCount(employee=4):
+            rec.write({'description': 'Updated Description'})
+            self.flush_tracking()
+
+        # should not have tracked anything, we only changed a untracked stored field
+        self.assertEqual(rec.sudo().message_ids.tracking_value_ids, self.env['mail.tracking.value'])
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'employee')
     @warmup
     def test_complex_tracking_subscription_create(self):

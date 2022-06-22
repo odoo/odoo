@@ -89,10 +89,27 @@ class MailTestTrackCompute(models.Model):
     _description = "Test tracking with computed fields"
     _inherit = ['mail.thread']
 
+    description = fields.Char('Description')
     partner_id = fields.Many2one('res.partner', tracking=True)
     partner_name = fields.Char(related='partner_id.name', store=True, tracking=True)
     partner_email = fields.Char(related='partner_id.email', store=True, tracking=True)
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
+    partner_title_name = fields.Char(compute='_compute_partner_title_name', tracking=True)
+    partner_title_name_stored = fields.Char(compute='_compute_partner_title_name_stored', tracking=True, store=True)
+
+    @api.depends('partner_id')
+    def _compute_partner_title_name(self):
+        # make it purposefully "bad" and go through relationship every time
+        # this will be useful for future query counters
+        for record in self:
+            record.partner_title_name = record.partner_id.title.name
+
+    @api.depends('partner_id')
+    def _compute_partner_title_name_stored(self):
+        # make it purposefully "bad" and go through relationship every time
+        # this will be useful for future query counters
+        for record in self:
+            record.partner_title_name_stored = record.partner_id.title.name
 
 
 class MailTestTrackMonetary(models.Model):
