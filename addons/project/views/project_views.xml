@@ -33,18 +33,15 @@
                     <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
                     <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', '=', 1)]"/>
-                    <filter string="Not Starred" name="not_starred" domain="[('priority', '=', 0)]"/>
-                    <separator/>
-                    <filter string="Tasks Due Today" name="tasks_due_today" domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
                     <filter string="Blocked" name="blocked" domain="[('is_blocked', '=', True)]" groups="project.group_project_task_dependencies"/>
                     <filter string="Not Blocked" name="not_blocked" domain="[('is_blocked', '=', False), ('is_private', '=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <filter string="Not Blocking" name="not_blocking" domain="['|', ('is_closed', '=', True), ('dependent_ids', '=', False), ('is_private', '=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator groups="project.group_project_task_dependencies"/>
+                    <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
+                    <filter string="Tasks Due Today" name="tasks_due_today" domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Stalling for 30 Days+" name="stall_last_30_days" domain="[('is_closed', '=', False), ('date_last_stage_update', '&lt;=', datetime.datetime.now() - relativedelta(days=30))]"/>
                     <separator/>
                     <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>

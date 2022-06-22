@@ -102,8 +102,8 @@
                 <field name="allow_billable" invisible="1"/>
                 <group attrs="{'invisible': [('allow_billable', '=', False)]}">
                     <field name="project_partner_id" invisible="1"/>
-                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_open': True}" readonly="1"/>
-                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" readonly="0"/>
+                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" placeholder="Non-billable" options="{'no_open': True}" readonly="1"/>
+                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" placeholder="Non-billable" readonly="0"/>
                     <field name="quantity_percentage" groups="!sales_team.group_sale_salesman" widget="percentage" readonly="1"/>
                     <field name="quantity_percentage" groups="sales_team.group_sale_salesman" widget="percentage" readonly="0"/>
                 </group>
@@ -120,8 +120,8 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="project_partner_id" invisible="1"/>
                 <field name="allow_billable" invisible="1"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
-                <field name="sale_line_id" optional="hide" options="{'no_create': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
                 <field name="quantity_percentage" optional="hide" widget="percentage" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="quantity_percentage" optional="hide" widget="percentage" groups="sales_team.group_sale_salesman"/>
             </xpath>

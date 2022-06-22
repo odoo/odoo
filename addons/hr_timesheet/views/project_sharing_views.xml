@@ -6,9 +6,11 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='child_ids']/tree/field[@name='kanban_state']" position="after">
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='portal_user_names']" position="after">
                 <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                 <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
+                <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide"/>
+                <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                 <field name="progress" widget="progressbar" optional="hide"/>
             </xpath>
@@ -146,12 +148,24 @@
                 <field name="allow_subtasks" invisible="1"/>
                 <field name="allow_timesheets" invisible="1"/>
                 <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
-                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
-                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
                 <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
                 <field name="total_hours_spent" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
-                <field name="progress" widget="progressbar" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}" optional="show"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
+                <field name="progress" widget="progressbar" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}" optional="hide"/>
             </field>
+        </field>
+    </record>
+
+    <record id="project_sharing_project_task_view_search_inherit_timesheet" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.search.inherit.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late']" position='after'>
+                <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
+                <filter string="Tasks Soon in Overtime" name="remaining_hours_percentage" domain="[('remaining_hours_percentage', '&lt;=', 0.2)]"/>
+            </xpath>
         </field>
     </record>
 

@@ -135,7 +135,7 @@
                 <field name="portal_user_names" string="Assignees" optional="show"/>
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="kanban_state" widget="state_selection" optional="hide"/>
+                <field name="kanban_state" widget="state_selection" options="{'hide_label': True}" nolabel="1" optional="show"/>
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
@@ -220,6 +220,7 @@
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
                                     <field name="name"/>
                                     <field name="display_project_id" string="Project" optional="hide" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
@@ -231,10 +232,10 @@
                                     <field name="company_id" invisible="1"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
                                     <field name="user_ids" invisible="1" />
-                                    <field name="portal_user_names" string="Assignees"/>
+                                    <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="kanban_state" widget="state_selection" optional="hide"/>
+                                    <field name="kanban_state" widget="state_selection" options="{'hide_label': True}" nolabel="1" optional="show"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
@@ -258,16 +259,23 @@
                 <field name="name" string="Task"/>
                 <field name="tag_ids"/>
                 <field name="portal_user_names" string="Assignees"/>
-                <field name="partner_id" operator="child_of"/>
-                <field name="stage_id"/>
                 <field string="Project" name="display_project_id"/>
                 <field name="milestone_id" groups="project.group_project_milestone"/>
+                <field name="stage_id"/>
+                <field name="partner_id" operator="child_of"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                 <separator/>
                 <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
                 <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                 <separator/>
                 <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
+                <filter string="Tasks Due Today" name="tasks_due_today" domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
+                <separator/>
+                <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
+                <filter string="Closed Last 7 Days" name="closed_last_7_days" domain="[('is_closed', '=', True), ('date_last_stage_update', '&gt;', datetime.datetime.now() - relativedelta(days=7))]"/>
+                <filter string="Closed Last 30 Days" name="closed_last_30_days" domain="[('is_closed', '=', True), ('date_last_stage_update', '&gt;', datetime.datetime.now() - relativedelta(days=30))]"/>
                 <separator/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>

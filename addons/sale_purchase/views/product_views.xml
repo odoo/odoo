@@ -8,7 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='bill']" position="before">
                 <group string="Reordering" attrs="{'invisible': [('type','!=','service')]}">
-                    <field name="service_to_purchase"/>
+                    <div class="o_td_label">
+                        <field name="service_to_purchase"/>
+                        <label for='service_to_purchase'/>
+                        <span class='fa fa-lg fa-building-o fa-fw' title="Service to Purchase"/>
+                    </div>
                 </group>
             </xpath>
         </field>

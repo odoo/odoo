@@ -105,10 +105,10 @@
                     <field name="allow_billable" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
                 </xpath>
 
             </field>
@@ -120,7 +120,7 @@
             <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide"/>
                 </xpath>
             </field>
         </record>
