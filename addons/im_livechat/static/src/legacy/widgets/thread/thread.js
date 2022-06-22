@@ -100,7 +100,7 @@ const ThreadWidget = Widget.extend({
         this._super();
     },
     /**
-     * @param {@im_livechat/legacy/models/abstract_thread} thread the thread to render.
+     * @param {@im_livechat/legacy/models/public_livechat} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -434,7 +434,7 @@ const ThreadWidget = Widget.extend({
      * There is at most one such popover at any given time.
      *
      * @private
-     * @param {@im_livechat/legacy/models/abstract_message[]} messages list of messages in the
+     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages list of messages in the
      *   rendered thread, for which popover on mouseover interaction is
      *   permitted.
      */

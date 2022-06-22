@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <!--
-        @param {im_livechat.legacy.mail.AbstractThreadWindow} widget
+        @param {im_livechat.legacy.PublicLivechatWindow} widget
     -->
-    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow">
+    <t t-name="im_livechat.legacy.PublicLivechatWindow">
         <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
             <div class="o_thread_window_header">
-                <t t-call="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+                <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
                     <t t-set="status" t-value="widget.getThreadStatus()"/>
                     <t t-set="title" t-value="widget.getTitle()"/>
                     <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
@@ -32,7 +32,7 @@
         @param {function} widget.isMobile function without any param that
           states whether it should render for desktop or mobile screen.
     -->
-    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+    <t t-name="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
         <span t-if="widget.isMobile()">
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
         </span>

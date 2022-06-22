@@ -37,6 +37,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeScriptId() {
+            return this.data.chatbot_script_id;
+        },
+        /**
+         * @private
          * @returns {Array|FieldCommand}
          */
         _computeWelcomeSteps() {
@@ -63,6 +70,9 @@ registerModel({
         messageDelay: attr({
             compute: '_computeMessageDelay',
             default: 3500, // in milliseconds
+        }),
+        scriptId: attr({
+            compute: '_computeScriptId',
         }),
         welcomeSteps: attr({
             compute: '_computeWelcomeSteps',
