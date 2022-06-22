@@ -8,6 +8,7 @@ import {_t, _lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { getWysiwygClass } from 'web_editor.loader';
 
 const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useExternalListener } = owl;
 
@@ -350,6 +351,52 @@ Object.assign(PaletteSelectionScreen, {
 class ApplyConfiguratorScreen extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.rpc = useService("rpc");
+        this.imageProcessingLoader = getWysiwygClass({
+            moduleName: 'web_editor.image_processing',
+            additionnalAssets: ['web_editor.assets_wysiwyg']
+        });
+    }
+
+    async generateImage(imgId, rawData) {
+        const imgAttrs = JSON.parse(rawData.replaceAll("'", '"'));
+        // Apply missing image processing.
+        const imgEl = document.createElement('img');
+        for (const attr in imgAttrs) {
+            imgEl.setAttribute(attr, imgAttrs[attr]);
+        }
+        const originalSrc = imgEl.dataset.originalSrc;
+        delete imgEl.dataset.originalSrc;
+        if (originalSrc.startsWith('/web_editor/image_shape/')) {
+            imgEl.src = '/web/image/' + originalSrc.split('/')[3];
+        } else {
+            imgEl.src = originalSrc;
+        }
+        const { loadImageInfo, applyModifications } = await this.imageProcessingLoader;
+        // This is here only to avoid changing the loadImageInfo api
+        const _rpc = ({ route, params }) => this.rpc(route, params);
+        await loadImageInfo(imgEl, _rpc.bind(this));
+        const imgDataURL = await applyModifications(imgEl, {});
+        let newAttachmentSrc = await this.rpc(
+            `/web_editor/modify_image/${imgEl.dataset.originalId}`,
+            {
+                data: imgDataURL.split(',')[1],
+                mimetype: imgEl.dataset.mimetype,
+                name: (imgEl.dataset.fileName ? imgEl.dataset.fileName : null),
+            },
+        );
+        if (originalSrc.startsWith('/web_editor/image_shape/')) {
+            // Get id from '/web/image/[id]-[unique]/[name]'.
+            const newAttachmentId = newAttachmentSrc.match(/\/web\/image\/([^-]*)/)[1];
+            // Turn '/web_editor/image_shape/[xmlid]/...'
+            // into '/web_editor/image_shape/[id]/...'.
+            newAttachmentSrc = originalSrc.replace(originalSrc.split('/')[3], newAttachmentId);
+        }
+        imgEl.src = newAttachmentSrc;
+        const updatedAttrs = imgEl.getAttributeNames().reduce((acc, name) => {
+            return {...acc, [name]: imgEl.getAttribute(name)};
+        }, {});
+        return [imgId, updatedAttrs];
     }
 
     async applyConfigurator(themeName) {
@@ -362,9 +409,19 @@ class ApplyConfiguratorScreen extends Component {
 
         const attemptConfiguratorApply = async (data, retryCount = 0) => {
             try {
-                return await this.orm.silent.call('website',
+                let resp = await this.orm.silent.call('website',
                     'configurator_apply', [], data
                 );
+                // If response asks for image processing: generate images and call again.
+                if (resp.imageProcessings) {
+                    const keyValues = Object.entries(resp.imageProcessings);
+                    const newImages = await Promise.all(keyValues.map(([imgId, rawData]) => this.generateImage(imgId, rawData)));
+                    data['image_processings'] = Object.fromEntries(newImages);
+                    resp = await this.orm.silent.call('website',
+                        'configurator_apply', [], data
+                    );
+                }
+                return resp;
             } catch (error) {
                 // Wait a bit before retrying or allowing manual retry.
                 await concurrency.delay(5000);
