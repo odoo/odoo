@@ -1237,10 +1237,6 @@ export class ModelManager {
             for (const fieldName of Object.keys(model.__fieldMap)) {
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
-                        if (!this.exists()) {
-                            // Deprecated, allows reading fields on deleted records. Use exists() instead.
-                            return undefined;
-                        }
                         const field = model.__fieldMap[fieldName];
                         if (this.modelManager._listeners.size) {
                             if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {

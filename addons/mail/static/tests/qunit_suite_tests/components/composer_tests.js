@@ -1550,7 +1550,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
         }
     );
     // Simulates the completion of the upload of the first attachment
-    uploadPromise.resolve();
+    await afterNextRender(() => uploadPromise.resolve());
     assert.containsOnce(
         document.body,
         '.o_AttachmentCard:contains("text1.txt")',
