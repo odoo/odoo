@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, models, _
 from odoo.addons.http_routing.models.ir_http import url_for
 
@@ -26,7 +28,7 @@ class Website(models.Model):
             dep[page_key] = []
         for p in posts:
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to have a link to this page !', p.name),
+                'content': Markup(_('Blog Post <b>%s</b> seems to have a link to this page !', p.name)),
                 'item': p.name,
                 'link': p.website_url,
             })
@@ -51,7 +53,7 @@ class Website(models.Model):
             dep[page_key] = []
         for p in posts:
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to be calling this file !', p.name),
+                'content': Markup(_('Blog Post <b>%s</b> seems to be calling this file !', p.name)),
                 'item': p.name,
                 'link': p.website_url,
             })

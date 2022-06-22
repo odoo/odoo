@@ -128,6 +128,48 @@
             </field>
         </record>
 
+        <record id="website_page_properties_view_form" model="ir.ui.view">
+            <field name="name">website.page.properties.form.view</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <form>
+                    <notebook>
+                        <page string="Name">
+                            <group class="mt-4">
+                                <field name="name" string="Page Name" widget="page_name"/>
+                            </group>
+                            <group>
+                                <field name="website_id" invisible="1"/>
+                                <field name="url" string="Page URL" widget="page_url" required="True"/>
+                            </group>
+                        </page>
+                        <page string="Publish">
+                            <group class="mt-4">
+                                <field name="is_in_menu" string="Show in Top Menu" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="is_homepage" string="Use as Homepage" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="website_indexed" string="Indexed" widget="boolean_toggle" help="Hide this page from search results"/>
+                            </group>
+                            <group>
+                                <field name="is_published" string="Published" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="date_publish" widget="datetime"/>
+                            </group>
+                            <group>
+                                <field name="visibility"/>
+                                <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')], 'required': [('visibility', '=', 'password')]}" password="True" string="Password"/>
+                                <field name="groups_id" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" string="Authorized Groups" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
         <record id="website_pages_tree_view" model="ir.ui.view">
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
@@ -567,6 +609,12 @@
             parent="menu_site"
             sequence="40"
             name="HTML / CSS Editor"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_page_properties"
+            parent="menu_site"
+            sequence="50"
+            name="Page Properties"
             action="website.website_preview"/>
 
         <menuitem id="menu_website_dashboard"
