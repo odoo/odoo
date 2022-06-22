@@ -52,12 +52,14 @@ tour.register('personal_stage_tour', {
     trigger: ".dropdown-item.o_column_edit",
 }, {
     content: "Change title",
-    trigger: 'input.o_field_char[name="name"]',
+    trigger: 'div.o_field_char[name="name"] input',
     run: 'text  (Todo)',
 }, {
     content: "Save changes",
     trigger: '.btn-primary:contains("Save")',
-}, {
+},
+{
     content: "Check that column was updated",
     trigger: '.o_kanban_header:contains("Todo")',
-}]);
+},
+]);
