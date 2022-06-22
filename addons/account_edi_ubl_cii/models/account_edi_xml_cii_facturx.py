@@ -15,7 +15,7 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountEdiXmlCII(models.AbstractModel):
     _name = "account.edi.xml.cii"
     _inherit = 'account.edi.common'
-    _description = "Factur-x/XRechnung CII 2.2.0"
+    _description = "Factur-X/XRechnung CII 2.2.0"
 
     def _export_invoice_filename(self, invoice):
         return "factur-x.xml"

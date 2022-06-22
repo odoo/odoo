@@ -127,6 +127,11 @@ class AccountEdiFormat(models.Model):
                 'success': True,
                 'attachment': attachment,
             }
+
+            # We only want to display warnings/errors for Factur-X for German and French companies
+            if self.code == 'facturx_1_0_05' and invoice.company_id.country_id.code not in ['FR', 'DE']:
+                errors = []
+
             if errors:
                 res[invoice].update({
                     'success': False,
