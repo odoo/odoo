@@ -117,6 +117,23 @@ class Website(Home):
         website._force()
         return request.redirect(path)
 
+    @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False)
+    def client_action_redirect(self, path='', **kw):
+        """ Redirect internal users to the backend preview of the requested path
+        URL (client action iframe).
+        Non internal users will be redirected to the regular frontend version of
+        that URL.
+        """
+        path = '/' + path
+        mode_edit = bool(kw.pop('enable_editor', False))
+        if kw:
+            path += '?' + werkzeug.urls.url_encode(kw)
+
+        if request.env.user._is_internal():
+            path = request.website.get_client_action_url(path, mode_edit)
+
+        return request.redirect(path)
+
     # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
     # while portal users are redirected to the frontend by default
