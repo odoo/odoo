@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LivechatButtonView',
@@ -29,6 +29,25 @@ registerModel({
          */
          _computeButtonTextColor() {
             return this.messaging.publicLivechatOptions.button_text_color;
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChatbot() {
+            if (this.isTestChatbot) {
+                return insertAndReplace({ data: this.testChatbotData.chatbot });
+            }
+            if (this.chatbotState === 'init') {
+                return insertAndReplace({ data: this.rule.chatbot });
+            }
+            if (this.chatbotState === 'welcome') {
+                return insertAndReplace({ data: this.livechatInit.rule.chatbot });
+            }
+            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
+                return insertAndReplace({ data: this.localStorageChatbotState._chatbot });
+            }
+            return clear();
         },
         /**
          * @private
@@ -121,7 +140,11 @@ registerModel({
         buttonTextColor: attr({
             compute: '_computeButtonTextColor',
         }),
-        chatbot: attr(),
+        chatbot: one('Chatbot', {
+            compute: '_computeChatbot',
+            inverse: 'livechatButtonViewOwner',
+            isCausal: true,
+        }),
         chatbotCurrentStep: attr(),
         chatbotMessageDelay: attr({
             compute: '_computeChatbotMessageDelay',
