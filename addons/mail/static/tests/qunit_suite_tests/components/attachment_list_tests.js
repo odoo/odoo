@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { link, replace } from '@mail/model/model_field_command';
-
-import { afterNextRender, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -11,20 +9,27 @@ QUnit.module('attachment_list_tests.js');
 QUnit.test('simplest layout', async function (assert) {
     assert.expect(8);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.txt",
+        mimetype: 'text/plain',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { messaging, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll('.o_AttachmentList').length,
@@ -34,7 +39,7 @@ QUnit.test('simplest layout', async function (assert) {
     const attachmentEl = document.querySelector('.o_AttachmentList .o_AttachmentCard');
     assert.strictEqual(
         attachmentEl.dataset.id,
-        messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }).localId,
+        messaging.models['Attachment'].findFromIdentifyingData({ id: messageAttachmentId }).localId,
         "attachment component should be linked to attachment store model"
     );
     assert.strictEqual(
@@ -73,7 +78,25 @@ QUnit.test('simplest layout', async function (assert) {
 QUnit.test('simplest layout + editable', async function (assert) {
     assert.expect(7);
 
-    const { createMessageComponent, messaging } = await start({
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
+        name: "test.txt",
+        mimetype: 'text/plain',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
+        body: "<p>Test</p>",
+        model: 'mail.channel',
+        res_id: channelId
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
         async mockRPC(route, args) {
             if (route.includes('web/image/750')) {
                 assert.ok(
@@ -83,19 +106,7 @@ QUnit.test('simplest layout + editable', async function (assert) {
             }
         },
     });
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
-    });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
-        body: "<p>Test</p>",
-        id: 100,
-    });
-    await createMessageComponent(message);
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll('.o_AttachmentList').length,
@@ -138,20 +149,27 @@ QUnit.test('simplest layout + editable', async function (assert) {
 QUnit.test('layout with card details and filename and extension', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.txt",
+        mimetype: 'text/plain',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentCard_details`).length,
@@ -168,20 +186,27 @@ QUnit.test('layout with card details and filename and extension', async function
 QUnit.test('view attachment', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.png",
+        mimetype: 'image/png',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { click, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -204,20 +229,27 @@ QUnit.test('view attachment', async function (assert) {
 QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.png",
+        mimetype: 'image/png',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { click, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -243,26 +275,32 @@ QUnit.test('close attachment viewer', async function (assert) {
 QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
     assert.expect(2);
 
-    const { click, createMessageComponent, messaging } = await start({
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
+        name: "test.txt",
+        mimetype: 'text/plain',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
+        body: "<p>Test</p>",
+        model: 'mail.channel',
+        res_id: channelId
+    });
+    const { click, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
                 assert.step('attachment_unlink');
             }
         },
     });
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
-    });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
-        body: "<p>Test</p>",
-        id: 100,
-    });
-    await createMessageComponent(message);
+    await openDiscuss();
 
     await click('.o_AttachmentCard_asideItemUnlink');
 
@@ -289,20 +327,27 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
      */
     assert.expect(1);
 
-    const { click, createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.png",
+        mimetype: 'image/png',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { click, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
     await click('.o_AttachmentImage');
     const imageEl = document.querySelector('.o_AttachmentViewer_viewImage');
     await click('.o_AttachmentViewer_headerItemButtonClose');
@@ -321,20 +366,27 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
 QUnit.test('plain text file is viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.txt",
+        mimetype: 'text/plain',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
 
     assert.hasClass(
         document.querySelector('.o_AttachmentCard'),
@@ -346,20 +398,27 @@ QUnit.test('plain text file is viewable', async function (assert) {
 QUnit.test('HTML file is viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.html",
-        id: 750,
-        mimetype: 'text/html',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.html",
+        mimetype: 'text/html',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
     assert.hasClass(
         document.querySelector('.o_AttachmentCard'),
         'o-viewable',
@@ -370,20 +429,27 @@ QUnit.test('HTML file is viewable', async function (assert) {
 QUnit.test('ODT file is not viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.odt",
-        id: 750,
-        mimetype: 'application/vnd.oasis.opendocument.text',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.odt",
+        mimetype: 'application/vnd.oasis.opendocument.text',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
     assert.doesNotHaveClass(
         document.querySelector('.o_AttachmentCard'),
         'o-viewable',
@@ -394,20 +460,27 @@ QUnit.test('ODT file is not viewable', async function (assert) {
 QUnit.test('DOCX file is not viewable', async function (assert) {
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.docx",
-        id: 750,
-        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.docx",
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
     assert.doesNotHaveClass(
         document.querySelector('.o_AttachmentCard'),
         'o-viewable',

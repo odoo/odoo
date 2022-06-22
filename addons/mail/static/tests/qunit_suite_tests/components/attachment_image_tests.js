@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { link, replace } from '@mail/model/model_field_command';
-import { start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -10,20 +9,27 @@ QUnit.module('attachment_image_tests.js');
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent, messaging } = await start();
-    const attachment = messaging.models['Attachment'].create({
-        filename: "test.png",
-        id: 750,
-        mimetype: 'image/png',
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
         name: "test.png",
+        mimetype: 'image/png',
     });
-    const message = messaging.models['Message'].create({
-        attachments: link(attachment),
-        author: replace(messaging.currentPartner),
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
         body: "<p>Test</p>",
-        id: 100,
+        model: 'mail.channel',
+        res_id: channelId
     });
-    await createMessageComponent(message);
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentImage img`).length,
         1,

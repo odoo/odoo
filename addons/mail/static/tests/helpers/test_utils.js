@@ -400,19 +400,6 @@ function getCreateComposerSuggestionComponent({ env, target }) {
     };
 }
 
-function getCreateMessageComponent({ env, target }) {
-    return async function createMessageComponent(message) {
-        const messageView = env.services.messaging.modelManager.messaging.models['MessageView'].create({
-            message: replace(message),
-            qunitTest: insertAndReplace(),
-        });
-        await createRootMessagingComponent(env, "Message", {
-            props: { record: messageView },
-            target,
-        });
-    };
-}
-
 function getCreateNotificationListComponent({ env, target }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
         const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
@@ -590,7 +577,6 @@ async function start(param0 = {}) {
         click: getClick({ afterNextRender }),
         createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
-        createMessageComponent: getCreateMessageComponent({ env: webClient.env, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: webClient.env, target }),
