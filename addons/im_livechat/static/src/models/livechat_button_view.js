@@ -94,6 +94,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeLocalStorageChatbotState() {
+            if (!this.sessionCookie) {
+                return clear();
+            }
+            let data = localStorage.getItem(this.sessionCookieKey);
+            if (!data) {
+                return clear();
+            }
+            return JSON.parse(JSON.parse(data));
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeServerUrl() {
@@ -185,7 +199,9 @@ registerModel({
             default: null,
         }),
         livechatInit: attr(),
-        localStorageChatbotState: attr(),
+        localStorageChatbotState: attr({
+            compute: '_computeLocalStorageChatbotState',
+        }),
         messages: attr({
             default: [],
         }),

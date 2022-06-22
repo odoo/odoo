@@ -373,7 +373,6 @@ const QWeb = core.qweb;
         let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey);
 
         if (chatbotState) {
-            this.messaging.livechatButtonView.update({ localStorageChatbotState: JSON.parse(chatbotState) });
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.localStorageChatbotState._chatbot });
             this.messaging.livechatButtonView.update({ chatbotCurrentStep: this.messaging.livechatButtonView.localStorageChatbotState._chatbotCurrentStep });
