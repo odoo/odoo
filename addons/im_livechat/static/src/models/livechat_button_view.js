@@ -175,6 +175,7 @@ registerModel({
             default: null,
         }),
         livechatInit: attr(),
+        localStorageChatbotState: attr(),
         messages: attr({
             default: [],
         }),
