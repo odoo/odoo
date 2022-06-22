@@ -8,6 +8,10 @@ registerModel({
     identifyingFields: ['livechatButtonViewOwner'],
     fields: {
         data: attr(),
+        currentStep: one('ChatbotStep', {
+            inverse: 'chabotOwner',
+            isCausal: true,
+        }),
         livechatButtonViewOwner: one('LivechatButtonView', {
             inverse: 'chatbot',
             readonly: true,

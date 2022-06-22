@@ -6,6 +6,8 @@ import utils from 'web.utils';
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 
+import { insertAndReplace } from '@mail/model/model_field_command';
+
 /**
  * Override of the LivechatButton to create a testing environment for the chatbot script.
  *
@@ -28,10 +30,12 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         });
         this.messaging.livechatButtonView.update({ isTestChatbot: true });
         this.messaging.livechatButtonView.update({ testChatbotData: chatbotData });
-        this.messaging.livechatButtonView.update({
-            chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[
-                this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length - 1
-            ],
+        this.messaging.livechatButtonView.chatbot.update({
+            currentStep: insertAndReplace({
+                data: this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[
+                    this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length - 1
+                ],
+            }),
         });
         this._channelData = this.messaging.livechatButtonView.testChatbotData.channel;
         this.messaging.livechatButtonView.update({ isChatbot: true });
