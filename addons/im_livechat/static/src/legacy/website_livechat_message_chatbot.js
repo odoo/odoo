@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
+import PublicLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
 
 /**
- * Override of the WebsiteLivechatMessage that includes chatbot capabilities.
+ * Override of the PublicLivechatMessage that includes chatbot capabilities.
  * The main changes are:
  * - Allow to display options for the end-user to click on ("_chatbotStepAnswers")
  * - Show a different name/icon for the chatbot (instead of the 'OdooBot' operator name/icon)
  */
-WebsiteLivechatMessage.include({
+PublicLivechatMessage.include({
     /**
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Object} data
@@ -62,4 +62,4 @@ WebsiteLivechatMessage.include({
     }
 });
 
-export default WebsiteLivechatMessage;
+export default PublicLivechatMessage;

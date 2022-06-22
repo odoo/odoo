@@ -4,7 +4,7 @@ import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
+import PublicLivechat from '@im_livechat/legacy/models/website_livechat';
 
 import { insertAndReplace } from '@mail/model/model_field_command';
 
@@ -60,7 +60,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      */
     _openChat: function () {
         this.messaging.livechatButtonView.update({
-            livechat: new WebsiteLivechat({
+            livechat: new PublicLivechat({
                 parent: this,
                 data: this._channelData,
             }),

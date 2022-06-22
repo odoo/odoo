@@ -155,6 +155,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeLocalStorageChatbotState() {
+            if (!this.sessionCookie) {
+                return clear();
+            }
+            const data = localStorage.getItem(this.sessionCookieKey);
+            if (!data) {
+                return clear();
+            }
+            return JSON.parse(data);
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeServerUrl() {
@@ -229,9 +243,6 @@ registerModel({
             compute: '_computeIsChatbot',
             default: false,
         }),
-        isChatbotBatchWelcomeMessages: attr({
-            default: false,
-        }),
         isChatbotRedirecting: attr({
             default: false,
         }),
@@ -250,7 +261,9 @@ registerModel({
             default: null,
         }),
         livechatInit: attr(),
-        localStorageChatbotState: attr(),
+        localStorageChatbotState: attr({
+            compute: '_computeLocalStorageChatbotState',
+        }),
         messages: attr({
             default: [],
         }),

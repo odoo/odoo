@@ -8,7 +8,7 @@
      -->
 
     <!-- Extend the base livechat window to include a div allowing to restart the script at the end -->
-    <t t-extend="im_livechat.legacy.mail.AbstractThreadWindow">
+    <t t-extend="im_livechat.legacy.PublicLivechatWindow">
         <t t-jquery='div.o_chat_mini_composer' t-operation="after">
             <div class="o_livechat_chatbot_end bg-200 font-italic text-center border" style="display: none;">
                 <span>Conversation ended...</span>
@@ -18,7 +18,7 @@
     </t>
 
     <!-- Extend the base livechat window header to include a button allowing to restart the script -->
-    <t t-extend="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+    <t t-extend="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
         <t t-jquery="span.o_thread_window_title" t-operation="after">
             <a t-if="widget.isMobile() &amp;&amp; widget.getParent() &amp;&amp; widget.getParent()._chatbotDisplayRestartButton()"
                 href="#" class="o_livechat_chatbot_main_restart fa fa-1x fa-refresh"
