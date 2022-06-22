@@ -197,7 +197,9 @@ registerModel({
             if (isEventHandled(ev, 'MessageActionList.replyTo')) {
                 return;
             }
-            this.discard();
+            if (this.exists()) {
+                this.discard();
+            }
         },
         /**
          * Called when clicking on "discard" button.
