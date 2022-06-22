@@ -66,7 +66,8 @@ class StockPicking(models.Model):
     @api.depends('package_ids', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
-            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight for pack in picking.package_ids])
+            # if shipping weight is not assigned => default to calculated product weight
+            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight or pack.weight for pack in picking.package_ids])
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
