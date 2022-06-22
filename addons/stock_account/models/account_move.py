@@ -47,9 +47,6 @@ class AccountMove(models.Model):
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
 
-        # Post entries.
-        posted = super()._post(soft)
-
         # Create correction layer if invoice price is different
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         valued_lines = self.env['account.move.line'].sudo()
@@ -71,6 +68,9 @@ class AccountMove(models.Model):
 
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
+
+        # Post entries.
+        posted = super()._post(soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         # We don't have currency loss or gain at this point. The invoice price with the daily
