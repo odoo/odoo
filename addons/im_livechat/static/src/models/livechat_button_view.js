@@ -267,6 +267,10 @@ registerModel({
         messages: attr({
             default: [],
         }),
+        publicLivechat: one('PublicLivechat', {
+            inverse: 'livechatButtonOwner',
+            isCausal: true,
+        }),
         rule: attr(),
         serverUrl: attr({
             compute: '_computeServerUrl',

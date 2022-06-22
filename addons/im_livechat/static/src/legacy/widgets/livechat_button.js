@@ -9,11 +9,10 @@ import Widget from 'web.Widget';
 
 import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
-import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
 
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -110,8 +109,8 @@ const LivechatButton = Widget.extend({
             return;
         }
 
-        if (this.messaging.livechatButtonView.livechat) {
-            this.messaging.livechatButtonView.livechat.addMessage(message);
+        if (this.messaging.livechatButtonView.publicLivechat && this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat) {
+            this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.addMessage(message);
         }
 
         if (options && options.prepend) {
@@ -130,7 +129,7 @@ const LivechatButton = Widget.extend({
     _askFeedback() {
         this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
-        const feedback = new Feedback(this, this.messaging.livechatButtonView.livechat);
+        const feedback = new Feedback(this, this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat);
         this.messaging.livechatButtonView.chatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
@@ -152,20 +151,20 @@ const LivechatButton = Widget.extend({
     _handleNotification({ payload, type }) {
         switch (type) {
             case 'im_livechat.history_command': {
-                if (payload.id !== this.messaging.livechatButtonView.livechat._id) {
+                if (payload.id !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id) {
                     return;
                 }
                 const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
-                    pid: this.messaging.livechatButtonView.livechat.getOperatorPID()[0],
-                    channel_uuid: this.messaging.livechatButtonView.livechat.getUUID(),
+                    pid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getOperatorPID()[0],
+                    channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getUUID(),
                     page_history: history,
                 });
                 return;
             }
             case 'mail.channel.partner/typing_status': {
-                if (payload.channel_id !== this.messaging.livechatButtonView.livechat._id) {
+                if (payload.channel_id !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id) {
                     return;
                 }
                 const partnerID = payload.partner_id;
@@ -174,14 +173,14 @@ const LivechatButton = Widget.extend({
                     return;
                 }
                 if (payload.is_typing) {
-                    this.messaging.livechatButtonView.livechat.registerTyping({ partnerID });
+                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.registerTyping({ partnerID });
                 } else {
-                    this.messaging.livechatButtonView.livechat.unregisterTyping({ partnerID });
+                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.unregisterTyping({ partnerID });
                 }
                 return;
             }
             case 'mail.channel/new_message': {
-                if (payload.id !== this.messaging.livechatButtonView.livechat._id) {
+                if (payload.id !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id) {
                     return;
                 }
                 const notificationData = payload.message;
@@ -192,7 +191,7 @@ const LivechatButton = Widget.extend({
                 notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
                 if (this.messaging.livechatButtonView.chatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.isAtBottom()) {
-                    this.messaging.livechatButtonView.livechat.incrementUnreadCounter();
+                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.incrementUnreadCounter();
                 }
                 this._renderMessages();
                 return;
@@ -259,20 +258,17 @@ const LivechatButton = Widget.extend({
                 }
             } else {
                 this.messaging.livechatButtonView.update({
-                    livechat: new PublicLivechat({
-                        parent: this,
-                        data: livechatData
-                    }),
+                    publicLivechat: insertAndReplace({ data: livechatData }),
                 });
                 return this._openChatWindow().then(() => {
                     if (!this.messaging.livechatButtonView.history) {
                         this._sendWelcomeMessage();
                     }
                     this._renderMessages();
-                    this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.livechat.getUUID());
+                    this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getUUID());
                     this.call('bus_service', 'startPolling');
 
-                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.livechat.toData()), true), 60 * 60);
+                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
@@ -319,7 +315,7 @@ const LivechatButton = Widget.extend({
             titleColor: this.messaging.livechatButtonView.titleColor,
         };
         this.messaging.livechatButtonView.update({
-            chatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
+            chatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat, options),
         });
         return this.messaging.livechatButtonView.chatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
@@ -343,7 +339,7 @@ const LivechatButton = Widget.extend({
      */
      _renderMessages() {
         const shouldScroll = !this.messaging.livechatButtonView.chatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.isAtBottom();
-        this.messaging.livechatButtonView.livechat.setMessages(this.messaging.livechatButtonView.messages);
+        this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.setMessages(this.messaging.livechatButtonView.messages);
         this.messaging.livechatButtonView.chatWindow.render();
         if (shouldScroll) {
             this.messaging.livechatButtonView.chatWindow.scrollToBottom();
@@ -355,9 +351,9 @@ const LivechatButton = Widget.extend({
      * @return {Promise}
      */
      _sendMessage(message) {
-        this.messaging.livechatButtonView.livechat._notifyMyselfTyping({ typing: false });
+        this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
         return session
-            .rpc('/mail/chat_post', { uuid: this.messaging.livechatButtonView.livechat.getUUID(), message_content: message.content })
+            .rpc('/mail/chat_post', { uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getUUID(), message_content: message.content })
             .then((messageId) => {
                 if (!messageId) {
                     try {
@@ -389,11 +385,11 @@ const LivechatButton = Widget.extend({
             this._addMessage({
                 id: '_welcome',
                 attachment_ids: [],
-                author_id: this.messaging.livechatButtonView.livechat.getOperatorPID(),
+                author_id: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getOperatorPID(),
                 body: this.messaging.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
-                res_id: this.messaging.livechatButtonView.livechat.getID(),
+                res_id: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.getID(),
             }, { prepend: true });
         }
     },
@@ -448,7 +444,7 @@ const LivechatButton = Widget.extend({
      */
     _onSaveChatWindow(ev) {
         ev.stopPropagation();
-        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.livechat.toData()), true), 60 * 60);
+        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
     },
     /**
      * @private
