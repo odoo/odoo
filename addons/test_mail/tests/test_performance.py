@@ -842,20 +842,21 @@ class TestMailComplexPerformance(BaseMailPerformance):
         )
 
         self.env.invalidate_all()
-        with self.assertQueryCount(employee=10):
+        with self.assertQueryCount(employee=9):
             rec.write({'partner_id': self.partners[0].id})
             self.flush_tracking()
 
-        # should properly create a tracking message for 'partner_title_name' and
-        # 'partner_title_name_stored' even if changed indirectly through a computed field
-        self.assertIn('partner_title_name', rec.sudo().message_ids.tracking_value_ids.mapped('field.name'))
+        # should properly create a tracking message for 'partner_title_name_stored'
+        # even if changed indirectly through a computed field
         self.assertIn('partner_title_name_stored', rec.sudo().message_ids.tracking_value_ids.mapped('field.name'))
+        # 'partner_title_name' however should NOT be tracked as it is not stored
+        self.assertNotIn('partner_title_name', rec.sudo().message_ids.tracking_value_ids.mapped('field.name'))
 
         # unlink tracking values to be able to easily test next case
         rec.sudo().message_ids.tracking_value_ids.unlink()
 
         self.env.invalidate_all()
-        with self.assertQueryCount(employee=4):
+        with self.assertQueryCount(employee=2):
             rec.write({'description': 'Updated Description'})
             self.flush_tracking()
 

@@ -296,7 +296,15 @@ class MailThread(models.AbstractModel):
             return super(MailThread, self).write(values)
 
         if not self._context.get('mail_notrack'):
-            self._track_prepare(self._fields)
+            # only prepare tracking of modified fields
+            # indirectly modified fields to track (such as stored compute)
+            # are handled by '_compute_field_value'
+            computed_stored_fields = {
+                field.name
+                for field in self._fields.values()
+                if field.store and field.compute
+            }
+            self._track_prepare(values.keys() | computed_stored_fields)
 
         # Perform write
         result = super(MailThread, self).write(values)

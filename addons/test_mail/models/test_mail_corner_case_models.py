@@ -118,7 +118,8 @@ class MailTestTrackMonetary(models.Model):
     _inherit = ['mail.thread']
 
     company_id = fields.Many2one('res.company')
-    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id',
+        readonly=True, tracking=True, store=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
 

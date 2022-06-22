@@ -248,12 +248,11 @@ class TestTracking(TestMailCommon):
         record.partner_id = partner
         self.flush_tracking()
         self.assertEqual(len(record.message_ids), 2)
-        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 4)
+        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 3)
         self.assertTracking(record.message_ids[0], [
             ('partner_id', 'many2one', False, partner),
             ('partner_name', 'char', False, 'Foo'),
             ('partner_email', 'char', False, 'foo@example.com'),
-            ('partner_phone', 'char', False, '1234567890'),
         ])
 
         # modify partner: one tracking message for the only recomputed field
