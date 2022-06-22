@@ -103,6 +103,15 @@ registerModel({
             return this.messaging.publicLivechatServerUrl;
         },
         /**
+         * @returns {string|FieldCommand}
+         */
+        _computeSessionCookieKey() {
+            if (!this.sessionCookie) {
+                return clear();
+            }
+            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
+        },
+        /**
          * @private
          * @returns {string}
          */
@@ -180,6 +189,9 @@ registerModel({
             compute: '_computeServerUrl',
         }),
         sessionCookie: attr(),
+        sessionCookieKey: attr({
+            compute: '_computeSessionCookieKey',
+        }),
         titleColor: attr({
             compute: '_computeTitleColor',
         }),
