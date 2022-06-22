@@ -8,6 +8,7 @@ html {
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
+    overflow: hidden;
 
     > .o_action_manager {
       direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
@@ -19,10 +20,9 @@ html {
         height: 100%;
         display: flex;
         flex-flow: column nowrap;
+        overflow: hidden;
 
         @include media-breakpoint-up(lg) {
-          overflow: auto;
-
           -ms-overflow-style: none; // IE and Edge
           scrollbar-width: none;    // Firefox
 
@@ -39,6 +39,18 @@ html {
           position: relative; // Allow to redistribute the 100% height to its child
           overflow: auto;
           height: 100%;
+        }
+
+        @include media-breakpoint-down(sm) {
+          // Made the o_action scroll instead of its o_content.
+          // Except when the view wants to handle the scroll itself.
+          &:not(.o_action_delegate_scroll) {
+            overflow: auto;
+
+            > .o_content {
+              overflow: initial;
+            }
+          }
         }
       }
     }
@@ -66,6 +78,11 @@ html {
         direction: ltr;
       }
     }
+  }
+
+  // FIXME: Fix scrolling in modal on focus input due to a bug between Chrome (Android) and Bootstrap
+  body.modal-open {
+    position: fixed;
   }
 }
 

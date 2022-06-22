@@ -7,6 +7,7 @@ odoo.define('web.kanban_column_quick_create', function (require) {
  */
 
 var core = require('web.core');
+var config = require('web.config');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 
@@ -35,7 +36,7 @@ var ColumnQuickCreate = Widget.extend({
         this.applyExamplesText = options.applyExamplesText || _t("Use This For My Kanban");
         this.examples = options.examples;
         this.folded = true;
-        this.isMobile = false;
+        this.isMobile = config.device.isMobile;
         this.isFirstColumn = options.isFirstColumn;
     },
     /**
@@ -204,6 +205,7 @@ var ColumnQuickCreate = Widget.extend({
                 text: _t('Close'),
             }],
             size: "large",
+            fullscreen: config.device.isMobile,
             title: _t("Kanban Examples"),
         }).open();
         dialog.on('closed', this, function () {
