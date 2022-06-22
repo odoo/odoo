@@ -26,13 +26,14 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
                 'auto_popup_timer': 0,
             },
         });
-        this.messaging.livechatButtonView.update({ chatbot: chatbotData.chatbot });
+        this.messaging.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
+        this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.testChatbotData });
         this.messaging.livechatButtonView.update({
             chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[
                 this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps.length - 1
             ],
         });
-        this._channelData = chatbotData.channel;
+        this._channelData = this.messaging.livechatButtonView.testChatbotData.channel;
         this.messaging.livechatButtonView.update({ isChatbot: true });
     },
 
