@@ -36,6 +36,7 @@ const LivechatButton = Widget.extend({
         this.options = _.defaults(this.messaging.publicLivechatOptions || {});
     },
     async willStart() {
+        this.messaging.livechatButtonView.update({ widget: this });
         const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
             const channel = JSON.parse(cookie);

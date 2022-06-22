@@ -182,5 +182,6 @@ registerModel({
         titleColor: attr({
             compute: '_computeTitleColor',
         }),
+        widget: attr(),
     },
 });
