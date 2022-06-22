@@ -183,6 +183,7 @@ registerModel({
         serverUrl: attr({
             compute: '_computeServerUrl',
         }),
+        sessionCookie: attr(),
         testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',

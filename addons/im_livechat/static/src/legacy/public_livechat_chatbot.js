@@ -63,7 +63,8 @@ const QWeb = core.qweb;
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
-                const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
+                this.messaging.livechatButtonView.update({ sessionCookie });
+                const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.livechatButtonView.sessionCookie).uuid;
                 if (localStorage.getItem(sessionKey)) {
                     this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
@@ -99,7 +100,7 @@ const QWeb = core.qweb;
         } else if (this.messaging.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
             // -> restore the user's session (see '_chatbotRestoreSession')
-            this._chatbotRestoreSession(utils.get_cookie('im_livechat_session'));
+            this._chatbotRestoreSession();
         }
 
         return superResult;
@@ -359,8 +360,8 @@ const QWeb = core.qweb;
       *
       * @private
       */
-    _chatbotRestoreSession(sessionCookie) {
-        const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
+    _chatbotRestoreSession() {
+        const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.livechatButtonView.sessionCookie).uuid;
         const browserLocalStorage = window.localStorage;
         if (browserLocalStorage && browserLocalStorage.length) {
             for (let i = 0; i < browserLocalStorage.length; i++) {
