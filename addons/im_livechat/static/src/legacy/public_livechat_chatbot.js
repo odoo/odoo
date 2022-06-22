@@ -53,12 +53,10 @@ const QWeb = core.qweb;
 
         if (this.messaging.livechatButtonView.rule && !!this.messaging.livechatButtonView.rule.chatbot) {
             this.messaging.livechatButtonView.update({ isChatbot: true });
-            this.messaging.livechatButtonView.update({ chatbotState: 'init' });
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
             this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
             if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
                 this.messaging.livechatButtonView.update({ isChatbot: true });
-                this.messaging.livechatButtonView.update({ chatbotState: 'welcome' });
             }
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
             const sessionCookie = utils.get_cookie('im_livechat_session');

@@ -42,6 +42,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeChatbotState() {
+            if (this.rule && !!this.rule.chatbot) {
+                return 'init';
+            }
+            if (this.livechatInit && this.livechatInit.rule.chatbot) {
+                return 'welcome';
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {integer}
          */
         _computeCurrentPartnerId() {
@@ -151,7 +164,9 @@ registerModel({
             compute: '_computeChatbotMessageDelay',
             default: 3500, // in milliseconds
         }),
-        chatbotState: attr(),
+        chatbotState: attr({
+            compute: '_computeChatbotState',
+        }),
         // livechat window
         chatWindow: attr({
             default: null,
