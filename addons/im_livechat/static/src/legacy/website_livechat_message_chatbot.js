@@ -20,10 +20,6 @@ WebsiteLivechatMessage.include({
         this._super(...arguments);
 
         if (parent.messaging.livechatButtonView.isChatbot) {
-            this._chatbotId = parent.messaging.livechatButtonView.chatbot.chatbot_script_id;
-            this._chatbotName = parent.messaging.livechatButtonView.chatbot.chatbot_name;
-            this._chatbotOperatorPartnerId = parent.messaging.livechatButtonView.chatbot.chatbot_operator_partner_id;
-
             this._chatbotStepId = data.chatbot_script_step_id;
             this._chatbotStepAnswers = data.chatbot_step_answers;
             this._chatbotStepAnswerId = data.chatbot_selected_answer_id;
