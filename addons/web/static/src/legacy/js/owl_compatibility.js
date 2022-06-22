@@ -153,7 +153,7 @@ odoo.define('web.OwlCompatibility', function (require) {
         onWillStart() {
             if (!(this.props.Component.prototype instanceof Component)) {
                 this.widget = new this.props.Component(this, ...this.widgetArgs);
-                return this.widget._widgetRenderAndInsert(() => {});
+                return this.widget._widgetRenderAndInsert(() => { });
             }
         }
 
@@ -290,7 +290,7 @@ odoo.define('web.OwlCompatibility', function (require) {
     }
 
     const bodyRef = { get el() { return document.body } };
-    function standaloneAdapter(props = {}, ref=bodyRef) {
+    function standaloneAdapter(props = {}, ref = bodyRef) {
         const env = owl.Component.env;
         const app = new App(null, {
             templates: window.__OWL_TEMPLATES__,
@@ -413,7 +413,7 @@ odoo.define('web.OwlCompatibility', function (require) {
     function prepareForFinish(node) {
         const fiber = node.fiber;
         const complete = fiber.complete;
-        fiber.complete = function() {
+        fiber.complete = function () {
             // if target is not in dom
             // just trigger mounted hooks on the Proxy, not on any other node
             if (!this.target.ownerDocument.contains(this.target)) {
@@ -439,15 +439,18 @@ odoo.define('web.OwlCompatibility', function (require) {
         node.mounted.push(() => {
             toRemount = false;
         });
-        node.updateAndRender = function (props, parentFiber) {
-            const res = updateAndRender.call(this, ...arguments);
-            const rootMounted = parentFiber.root.mounted;
-            if (toRemount && !rootMounted.includes(this.fiber)) {
-                rootMounted.push(this.fiber);
+        if (!node.isPatched) {
+            node.isPatched = true;
+            const renderFn = node.renderFn;
+            node.renderFn = () => {
+                const res = renderFn.call(node, ...arguments);
+                const rootMounted = node.fiber.root.mounted;
+                if (toRemount && !rootMounted.includes(node.fiber)) {
+                    rootMounted.push(node.fiber);
+                }
+                return res;
             }
-            return res;
-        };
-
+        }
         return () => toRemount = true;
     }
     /**
@@ -586,7 +589,7 @@ odoo.define('web.OwlCompatibility', function (require) {
             return this.app.makeNode(ProxyComponent, props);
         }
 
-        setup() {}
+        setup() { }
 
         get el() {
             return this.node.component.el;
@@ -685,7 +688,7 @@ odoo.define('web.OwlCompatibility', function (require) {
                 return;
             }
             recursiveCall(this.node, true, (node) => {
-               for (const cb of node.mounted) {
+                for (const cb of node.mounted) {
                     cb();
                 }
             });
