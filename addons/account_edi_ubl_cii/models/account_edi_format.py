@@ -90,7 +90,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code not in FORMAT_CODES:
             return super()._is_compatible_with_journal(journal)
-        return self._is_ubl_cii_available(journal.company_id)
+        return self._is_ubl_cii_available(journal.company_id) and journal.type == 'sale'
 
     def _is_enabled_by_default_on_journal(self, journal):
         # EXTENDS account_edi
@@ -110,6 +110,7 @@ class AccountEdiFormat(models.Model):
         res = {}
         for invoice in invoices:
             builder = self._get_xml_builder(invoice.company_id)
+            # For now, the errors are not displayed anywhere, don't want to annoy the user
             xml_content, errors = builder._export_invoice(invoice)
 
             # DEBUG: send directly to the test platform (the one used by ecosio)
@@ -130,14 +131,6 @@ class AccountEdiFormat(models.Model):
                 'success': True,
                 'attachment': attachment,
             }
-            if errors:
-                res[invoice].update({
-                    'success': False,
-                    'error': _("Errors occured while creating the EDI document (format: %s). The receiver "
-                               "might refuse it.", builder._description)
-                             + '<p> <li>' + "</li> <li>".join(errors) + '</li> </p>',
-                    'blocking_level': 'info',
-                })
 
         return res
 
