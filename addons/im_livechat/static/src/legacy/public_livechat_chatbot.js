@@ -144,7 +144,7 @@ const QWeb = core.qweb;
             } else {
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
             }
         }
     },
@@ -308,7 +308,7 @@ const QWeb = core.qweb;
                 // user has already typed a message in -> trigger next step
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
             } else {
                 this._chatbotEnableInput();
             }
@@ -323,7 +323,7 @@ const QWeb = core.qweb;
             }
 
             if (triggerNextStep) {
-                let nextStepDelay = this.messaging.livechatButtonView.chatbotMessageDelay;
+                let nextStepDelay = this.messaging.livechatButtonView.chatbot.messageDelay;
                 if (this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
@@ -416,7 +416,7 @@ const QWeb = core.qweb;
                 );
 
                 this.messaging.livechatButtonView.chatWindow.scrollToBottom();
-            }, this.messaging.livechatButtonView.chatbotMessageDelay / 3),
+            }, this.messaging.livechatButtonView.chatbot.messageDelay / 3),
         });
     },
     /**
@@ -685,7 +685,7 @@ const QWeb = core.qweb;
                 } else if (!this._chatbotShouldEndScript()) {
                     this._chatbotSetIsTyping();
                     this.nextStepTimeout = setTimeout(
-                        this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                        this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
                 } else {
                     this._chatbotEndScript();
                 }
@@ -702,7 +702,7 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbotMessageDelay,
+                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);
@@ -807,7 +807,7 @@ const QWeb = core.qweb;
         this.messaging.livechatButtonView.update({ chatbotCurrentStep: clear() });
         this._chatbotSetIsTyping();
         this.nextStepTimeout = setTimeout(
-            this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+            this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
     },
 
     _onChatbotInputKeyDown() {

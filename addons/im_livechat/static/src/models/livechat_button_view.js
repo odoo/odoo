@@ -146,10 +146,6 @@ registerModel({
             isCausal: true,
         }),
         chatbotCurrentStep: attr(),
-        chatbotMessageDelay: attr({
-            compute: '_computeChatbotMessageDelay',
-            default: 3500, // in milliseconds
-        }),
         chatbotState: attr(),
         // livechat window
         chatWindow: attr({
