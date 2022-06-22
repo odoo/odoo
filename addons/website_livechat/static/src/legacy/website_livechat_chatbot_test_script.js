@@ -26,6 +26,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
                 'auto_popup_timer': 0,
             },
         });
+        this.messaging.livechatButtonView.update({ isTestChatbot: true });
         this.messaging.livechatButtonView.update({ chatbot: chatbotData.chatbot });
         this.messaging.livechatButtonView.update({
             chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[
