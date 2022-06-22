@@ -64,8 +64,7 @@ const QWeb = core.qweb;
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
                 this.messaging.livechatButtonView.update({ sessionCookie });
-                const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.livechatButtonView.sessionCookie).uuid;
-                if (localStorage.getItem(sessionKey)) {
+                if (localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey)) {
                     this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
@@ -361,18 +360,17 @@ const QWeb = core.qweb;
       * @private
       */
     _chatbotRestoreSession() {
-        const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.livechatButtonView.sessionCookie).uuid;
         const browserLocalStorage = window.localStorage;
         if (browserLocalStorage && browserLocalStorage.length) {
             for (let i = 0; i < browserLocalStorage.length; i++) {
                 const key = browserLocalStorage.key(i);
-                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== sessionKey) {
+                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.sessionCookieKey) {
                     browserLocalStorage.removeItem(key);
                 }
             }
         }
 
-        let chatbotState = localStorage.getItem(sessionKey);
+        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey);
 
         if (chatbotState) {
             this.messaging.livechatButtonView.update({ localStorageChatbotState: JSON.parse(chatbotState) });

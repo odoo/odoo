@@ -104,6 +104,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeSessionCookieKey() {
+            if (!this.sessionCookie) {
+                return clear();
+            }
+            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeTitleColor() {
@@ -184,6 +194,9 @@ registerModel({
             compute: '_computeServerUrl',
         }),
         sessionCookie: attr(),
+        sessionCookieKey: attr({
+            compute: '_computeSessionCookieKey',
+        }),
         testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',
