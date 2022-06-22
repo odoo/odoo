@@ -36,6 +36,7 @@ const LivechatButton = Widget.extend({
         this.options = _.defaults(this.messaging.publicLivechatOptions || {});
     },
     async willStart() {
+        this.messaging.livechatButtonView.update({ widget: this });
         const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
             const channel = JSON.parse(cookie);
@@ -46,7 +47,7 @@ const LivechatButton = Widget.extend({
                 message.body = utils.Markup(message.body);
             }
         } else {
-            const result = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
+            const result = await session.rpc('/im_livechat/init', {channel_id: this.messaging.livechatButtonView.channelId});
             if (!result.available_for_me) {
                 return Promise.reject();
             }
@@ -332,7 +333,7 @@ const LivechatButton = Widget.extend({
      */
     _prepareGetSessionParameters() {
         return {
-            channel_id: this.options.channel_id,
+            channel_id: this.messaging.livechatButtonView.channelId,
             anonymous_name: this.messaging.livechatButtonView.defaultUsername,
             previous_operator_id: this._get_previous_operator_id(),
         };
