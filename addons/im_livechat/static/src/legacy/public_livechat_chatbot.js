@@ -76,8 +76,8 @@ const QWeb = core.qweb;
             // -> initialize necessary state
             if (this.messaging.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
                 this.messaging.livechatButtonView.update({
-                    chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[
-                        this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length - 1
+                    chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.welcomeSteps[
+                        this.messaging.livechatButtonView.chatbot.welcomeSteps.length - 1
                     ],
                 });
             }
@@ -730,7 +730,7 @@ const QWeb = core.qweb;
      * @private
      */
     _sendWelcomeChatbotMessage(stepIndex, welcomeMessageDelay) {
-        const chatbotStep = this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[stepIndex];
+        const chatbotStep = this.messaging.livechatButtonView.chatbot.welcomeSteps[stepIndex];
         this.messaging.livechatButtonView.update({ chatbotCurrentStep: chatbotStep });
 
         if (chatbotStep.chatbot_step_message) {
@@ -749,7 +749,7 @@ const QWeb = core.qweb;
             });
         }
 
-        if (stepIndex + 1 < this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length) {
+        if (stepIndex + 1 < this.messaging.livechatButtonView.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
                 this._chatbotSetIsTyping(true);
             }

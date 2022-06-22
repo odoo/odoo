@@ -29,8 +29,8 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         this.messaging.livechatButtonView.update({ isTestChatbot: true });
         this.messaging.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
         this.messaging.livechatButtonView.update({
-            chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps[
-                this.messaging.livechatButtonView.chatbot.data.chatbot_welcome_steps.length - 1
+            chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.welcomeSteps[
+                this.messaging.livechatButtonView.chatbot.data.welcomeSteps.length - 1
             ],
         });
         this._channelData = this.messaging.livechatButtonView.testChatbotData.channel;
