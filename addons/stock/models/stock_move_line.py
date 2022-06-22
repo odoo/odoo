@@ -102,6 +102,15 @@ class StockMoveLine(models.Model):
             if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        if self.env.user.has_group("stock.group_tracking_owner"):
+            owner = next((q.owner_id for q in self.lot_id.quant_ids
+                          if self.location_id.parent_path in q.location_id.parent_path
+                          and float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0),
+                         self.env['res.partner'])
+            self.owner_id = owner
+
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
