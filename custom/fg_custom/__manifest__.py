@@ -15,6 +15,7 @@
         'views/FgCustomerMaster.xml',
         'views/FgPosOrder.xml',
         'views/FgPosSessionView.xml',
+        'views/account_tax_views.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",

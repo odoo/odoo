@@ -20,14 +20,26 @@ class PosOrderInherit(models.Model):
     #point_of_sale.view_pos_pos_form
     x_ext_order_ref = fields.Char("External Order Ref")
     x_ext_source = fields.Char("Channel")
-
     x_receipt_note = fields.Char("Receipt Note")
     x_receipt_printed = fields.Boolean("Is Receipt Printed")
     x_receipt_printed_date = fields.Date("OR Printed Date")
-
     x_receipt_printed_date = fields.Date("OR Printed Date")
-
     website_order_id = fields.Char("Website Order ID")
+
+class PosOrderLineInherit(models.Model):
+    _inherit = "pos.order.line"
+    
+    is_non_zero_vat = fields.Selection(string="Is Vat (V)", readonly=True,
+                                       selection=[('is_vat', 'Is Vat (V)'), ('is_non_vat', 'Is Non Vat (E)'),
+                                                  ('is_zero_vat', 'Is Zero Vat (Z)')], store=True)
+
+    @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id', 'tax_ids_after_fiscal_position')
+    def _compute_is_non_zero_vat(self):
+        for line in self:
+            is_non_zero_vat = False
+            for tax in line.tax_ids_after_fiscal_position:
+                is_non_zero_vat = tax.is_non_zero_vat
+            line.is_non_zero_vat = is_non_zero_vat
 
 class FgImportOrders(models.TransientModel):
     _name = 'fg.custom.import.order'
@@ -37,10 +49,7 @@ class FgImportOrders(models.TransientModel):
         string='CSV Format', required=True)
     order_filename = fields.Char(string='Filename')
 
-
-
     def cancel_button(self):
-
         return {
             'name': _('Import Order'),
             'type': 'ir.actions.act_window',
@@ -49,14 +58,12 @@ class FgImportOrders(models.TransientModel):
             'target': 'inline'
         }
 
-
     @api.onchange('order_file')
     def order_file_change(self):
         if self.order_filename and self.order_file:
             filetype = mimetypes.guess_type(self.order_filename)
             logger.info('Order file mimetype: %s', filetype)
             if filetype and filetype[0] not in ('text/csv', 'text/plain', 'application/vnd.ms-excel'):
-
                 return {'warning': {
                     'title': _('Unsupported file format'),
                     'message': _(
@@ -69,7 +76,6 @@ class FgImportOrders(models.TransientModel):
     def _read_csv_and_validate2(self):
         csv_data = base64.b64decode(self.order_file)
         data_file = io.StringIO(csv_data.decode("utf-8"))
-
         data_file.seek(0)
         file_reader = []
         csv_reader = csv.reader(data_file, delimiter=',')

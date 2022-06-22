@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form_val_inherit" model="ir.ui.view">
+            <field name="name">account.tax.form.val.inherit</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="inside">
+                    <group>
+                        <field name="is_non_zero_vat" widget="radio"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
