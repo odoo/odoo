@@ -66,6 +66,11 @@
                                   class="rounded-pill text-bg-warning ms-1">
                                 Test Mode
                             </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not acquirer.is_published"
+                                  class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_acquirer.get(acquirer)">
                                 <span class="rounded-pill text-bg-secondary ms-1">
@@ -118,6 +123,10 @@
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.acquirer_id.is_published" class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
                         </label>
                     </div>
                     <!-- === Token inline form === -->
@@ -195,13 +204,17 @@
                                    data-payment-option-type="acquirer"/>
                             <!-- === Acquirer name === -->
                             <span class="payment_option_name">
-                                <b><t t-esc="acquirer.display_as or acquirer.name"/></b>
+                                <b t-esc="acquirer.display_as or acquirer.name"/>
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
                                   class="rounded-pill text-bg-warning"
                                   style="margin-left:5px">
                                 Test Mode
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not acquirer.is_published" class="badge text-bg-danger">
+                                Unpublished
                             </span>
                         </label>
                         <!-- === Payment icon list === -->
@@ -244,6 +257,11 @@
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.acquirer_id.is_published and token.env.user._is_internal()"
+                                  class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
                         </label>
                         <!-- === "Delete" token button === -->
                         <button name="o_payment_delete_token"
