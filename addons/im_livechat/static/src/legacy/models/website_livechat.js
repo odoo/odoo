@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
-import AbstractThread from '@im_livechat/legacy/models/abstract_thread';
 import ThreadTypingMixin from '@im_livechat/legacy/models/thread_typing_mixin';
 
+import Class from 'web.Class';
 import session from 'web.session';
+import Mixins from 'web.mixins';
 
 /**
  * Thread model that represents a livechat on the website-side. This livechat
  * is not linked to the mail service.
  */
-const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
+const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, ThreadTypingMixin, {
 
     /**
      * @override
@@ -26,11 +27,19 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {string} params.data.name the name of this livechat.
      * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
+     * @param {string} [params.data.status=''] the status of this thread
      * @param {string} params.data.uuid the UUID of this livechat.
      * @param {@im_livechat/legacy/widgets/livechat_button} params.parent
      */
     init(params) {
-        this._super(...arguments);
+        Mixins.EventDispatcherMixin.init.call(this, arguments);
+        this.setParent(params.parent);
+
+        this._folded = false; // threads are unfolded by default
+        this._id = params.data.id;
+        this._name = params.data.name;
+        this._status = params.data.status || '';
+        this._unreadCounter = 0; // amount of messages not yet been read
         ThreadTypingMixin.init.call(this, arguments);
 
         this._members = [];
@@ -60,12 +69,45 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Add a message to this thread.
+     *
+     * @param {@im_livechat/legacy/models/public_livechat_message} message
+     */
+    addMessage(message) {
+        this.trigger('message_added', message);
+    },
+    /**
+     * Updates the folded state of the thread
+     *
+     * @param {boolean} folded
+     */
+    fold(folded) {
+        this._folded = folded;
+    },
+    /**
+     * Get the ID of this thread
+     *
+     * @returns {integer|string}
+     */
+    getID() {
+        return this._id;
+    },
+    /**
      * @override
-     * @returns {@im_livechat/legacy/models/website_livechat_message[]}
+     * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
      getMessages() {
         // ignore removed messages
         return this._messages.filter(message => !message.isEmpty());
+    },
+    /**
+     * Get the name of this thread. If the name of the thread has been created
+     * by the user from an input, it may be escaped.
+     *
+     * @returns {string}
+     */
+    getName() {
+        return this._name;
     },
     /**
      * @returns {Array}
@@ -74,10 +116,38 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         return this._operatorPID;
     },
     /**
+     * Get the status of the thread (e.g. 'online', 'offline', etc.)
+     *
+     * @returns {string}
+     */
+    getStatus() {
+        return this._status;
+    },
+    /**
+     * Returns the title to display in thread window's headers.
+     *
+     * @returns {string} the name of the thread by default (see @getName)
+     */
+    getTitle() {
+        return this.getName();
+    },
+    /**
+     * @returns {integer}
+     */
+    getUnreadCounter() {
+        return this._unreadCounter;
+    },
+    /**
      * @returns {string}
      */
     getUUID() {
         return this._uuid;
+    },
+    /**
+     * @returns {boolean}
+     */
+    hasMessages() {
+        return !_.isEmpty(this.getMessages());
     },
     /**
      * Increments the unread counter of this livechat by 1 unit.
@@ -90,9 +160,46 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         this._incrementUnreadCounter();
     },
     /**
+     * States whether this thread is folded or not.
+     *
+     * @return {boolean}
+     */
+    isFolded() {
+        return this._folded;
+    },
+    /**
+     * Mark the thread as read, which resets the unread counter to 0. This is
+     * only performed if the unread counter is not 0.
+     *
+     * @returns {Promise}
+     */
+    markAsRead() {
+        if (this._unreadCounter > 0) {
+            return this._markAsRead();
+        }
+        return Promise.resolve();
+    },
+    /**
+     * Post a message on this thread
+     *
+     * @returns {Promise} resolved with the message object to be sent to the
+     *   server
+     */
+    postMessage() {
+        return this._postMessage(...arguments)
+                                .then(this.trigger.bind(this, 'message_posted'));
+    },
+    /**
+     * Resets the unread counter of this thread to 0.
+     */
+    resetUnreadCounter() {
+        this._unreadCounter = 0;
+        this._warnUpdatedUnreadCounter();
+    },
+    /**
      * AKU: hack for the moment
      *
-     * @param {@im_livechat/legacy/models/website_livechat_message[]} messages
+     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages
      */
     setMessages(messages) {
         this._messages = messages;
@@ -116,6 +223,14 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Increments the unread counter of this thread by 1 unit.
+     *
+     * @private
+     */
+    _incrementUnreadCounter() {
+        this._unreadCounter++;
+    },
+    /**
      * @override {mail.model.ThreadTypingMixin}
      * @private
      * @param {Object} params
@@ -124,6 +239,16 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      */
     _isTypingMyselfInfo(params) {
         return params.isWebsiteUser;
+    },
+    /**
+     * Mark the thread as read
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _markAsRead() {
+        this.resetUnreadCounter();
+        return Promise.resolve();
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
@@ -139,6 +264,16 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         }, { shadow: true });
     },
     /**
+     * Post a message on this thread
+     *
+     * @private
+     * @returns {Promise} resolved with the message object to be sent to the
+     *   server
+     */
+    _postMessage() {
+        return Promise.resolve();
+    },
+    /**
      * Warn views that the list of users that are currently typing on this
      * livechat has been updated.
      *
@@ -151,7 +286,6 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     /**
      * Warn that the unread counter has been updated on this livechat
      *
-     * @override
      * @private
      */
     _warnUpdatedUnreadCounter() {
@@ -181,4 +315,4 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     },
 });
 
-export default WebsiteLivechat;
+export default PublicLivechat;
