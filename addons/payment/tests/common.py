@@ -92,6 +92,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
             'name': "Dummy Acquirer",
             'provider': 'none',
             'state': 'test',
+            'is_published': True,
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
             'journal_id': cls.company_data['default_journal_bank'].id,

@@ -5,7 +5,7 @@ import logging
 from psycopg2 import sql
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -31,6 +31,11 @@ class PaymentAcquirer(models.Model):
              "This mode is advised when setting up the acquirer.",
         selection=[('disabled', "Disabled"), ('enabled', "Enabled"), ('test', "Test Mode")],
         default='disabled', required=True, copy=False)
+    is_published = fields.Boolean(
+        string="Published",
+        help="Whether the acquirer is visible on the website or not. Tokens remain functional but "
+             "are only visible on manage forms.",
+    )
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
         string="Company", comodel_name='res.company', default=lambda self: self.env.company.id,
         required=True, index=True)
@@ -236,7 +241,15 @@ class PaymentAcquirer(models.Model):
     #=== ONCHANGE METHODS ===#
 
     @api.onchange('state')
-    def _onchange_state(self):
+    def _onchange_state_switch_is_published(self):
+        """ Automatically publish or unpublish the acquirer depending on its state.
+
+        :return: None
+        """
+        self.is_published = self.state == 'enabled'
+
+    @api.onchange('state')
+    def _onchange_state_warn_before_disabling_tokens(self):
         """ Display a warning about the consequences of disabling an acquirer.
 
         Let the user know that tokens related to an acquirer get archived if it is disabled or if
@@ -348,6 +361,17 @@ class PaymentAcquirer(models.Model):
                 'tag': 'reload',
             }
 
+    def action_toggle_is_published(self):
+        """ Toggle the acquirer's is_published state.
+
+        :return: none
+        :raise UserError: If the acquirer is disabled.
+        """
+        if self.state != 'disabled':
+            self.is_published = not self.is_published
+        else:
+            raise UserError(_("You cannot publish a disabled acquirer."))
+
     #=== BUSINESS METHODS ===#
 
     @api.model
@@ -371,6 +395,10 @@ class PaymentAcquirer(models.Model):
         """
         # Compute the base domain for compatible acquirers
         domain = ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', company_id)]
+
+        # Handle the is_published state.
+        if not self.env.user._is_internal():
+            domain = expression.AND([domain, [('is_published', '=', True)]])
 
         # Handle partner country
         partner = self.env['res.partner'].browse(partner_id)
