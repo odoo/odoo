@@ -47,6 +47,7 @@ class Job(models.Model):
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
+    no_of_hired_employee = fields.Integer(compute='_compute_no_of_hired_employee', store=True)
 
     @api.depends('application_ids.interviewer_id')
     def _compute_extended_interviewer_ids(self):
@@ -60,6 +61,11 @@ class Job(models.Model):
             interviewers_by_job[result_raw['job_id'][0]].add(result_raw['interviewer_id'][0])
         for job in self:
             job.extended_interviewer_ids = [(6, 0, list(interviewers_by_job[job.id]))]
+
+    @api.depends('application_ids.date_closed')
+    def _compute_no_of_hired_employee(self):
+        for job in self:
+            job.no_of_hired_employee = len(job.application_ids.filtered('date_closed'))
 
     def _compute_is_favorite(self):
         for job in self:
