@@ -163,6 +163,9 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
+        isTestChatbot: attr({
+            default: false,
+        }),
         isTypingTimeout: attr(),
         isWebsiteLivechatChatbotFlow: attr({
             default: false,
