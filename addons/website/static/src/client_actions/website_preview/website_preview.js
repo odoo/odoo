@@ -184,9 +184,10 @@ export class WebsitePreview extends Component {
 
         // This replaces the browser url (/web#action=website...) with
         // the iframe's url (it is clearer for the user).
-        this.currentUrl = this.iframe.el.contentDocument.location.href;
+        const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
+        currentUrl.pathname = `/@${currentUrl.pathname}`;
         this.currentTitle = this.iframe.el.contentDocument.title;
-        history.replaceState({}, this.currentTitle, this.currentUrl);
+        history.replaceState({}, this.currentTitle, currentUrl.href);
         this.title.setParts({ action: this.currentTitle });
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
