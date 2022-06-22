@@ -16,6 +16,9 @@
                     context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                     optional="hide"/>
             </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="after">
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+            </xpath>
             <xpath expr="//field[@name='remaining_hours']" position="after">
                 <field name="allow_billable" invisible="1" />
                 <field name="remaining_hours_available" invisible="1"/>
@@ -31,6 +34,17 @@
                             attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
                 </span>
                 <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"></field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_tree_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.task.tree.inherit.sale.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='remaining_hours']" position="after">
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
             </xpath>
         </field>
     </record>
