@@ -769,12 +769,11 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
+    const { afterEvent, click, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
     });
-    await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
@@ -834,13 +833,12 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
+    const { afterEvent, click, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
     });
 
-    await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
