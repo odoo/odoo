@@ -156,7 +156,8 @@ class AccountMove(models.Model):
             else:
                 number_ref = str(move.name) + " " + nik
 
-            street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
+            shipping_partner = self.env['res.partner'].browse(move._get_invoice_delivery_partner_id())
+            street = ', '.join([x for x in (shipping_partner.street, shipping_partner.street2) if x])
 
             invoice_npwp = '000000000000000'
             if move.partner_id.vat and len(move.partner_id.vat) >= 12:
@@ -174,7 +175,7 @@ class AccountMove(models.Model):
             eTax['TANGGAL_FAKTUR'] = '{0}/{1}/{2}'.format(move.invoice_date.day, move.invoice_date.month, move.invoice_date.year)
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
+            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else shipping_partner.l10n_id_tax_address or street
             eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0))
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
