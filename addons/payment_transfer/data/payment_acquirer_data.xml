@@ -4,6 +4,7 @@
     <record id="payment.payment_acquirer_transfer" model="payment.acquirer">
         <field name="provider">transfer</field>
         <field name="state">enabled</field>
+        <field name="is_published">True</field>
         <field name="redirect_form_view_id" ref="redirect_form"/>
         <!-- Clear the default value to trigger the computation of the message -->
         <field name="pending_msg" eval="False"/>
