@@ -105,6 +105,15 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return journal.type == 'sale'
 
+    def _is_enabled_by_default_on_journal(self, journal):
+        """ Indicate if the EDI format should be selected by default on the journal passed as parameter.
+        If True, this EDI format will be selected by default on the journal.
+
+        :param journal: The journal.
+        :returns: True if this format should be enabled by default on the journal, False otherwise.
+        """
+        return True
+
     def _is_embedding_to_invoice_pdf_needed(self):
         """ Indicate if the EDI must be embedded inside the PDF report.
 
