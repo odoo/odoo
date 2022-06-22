@@ -23,8 +23,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { createMessagingMenuComponent, messaging } = await start();
-    await createMessagingMenuComponent();
+    const { messaging } = await start();
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu',

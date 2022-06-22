@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
-import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
@@ -451,12 +450,6 @@ function getCreateMessageComponent({ env, target }) {
     };
 }
 
-function getCreateMessagingMenuComponent({ env, target }) {
-    return async function createMessagingMenuComponent() {
-        return await createRootComponent(env, MessagingMenuContainer, { target });
-    };
-}
-
 function getCreateNotificationListComponent({ env, target }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
         const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
@@ -636,7 +629,6 @@ async function start(param0 = {}) {
         createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
         createMessageComponent: getCreateMessageComponent({ env: webClient.env, target }),
-        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: webClient.env, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: webClient.env, target }),
