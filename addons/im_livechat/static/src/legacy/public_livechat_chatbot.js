@@ -7,7 +7,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -52,19 +52,14 @@ const QWeb = core.qweb;
         const superResult = await this._super(...arguments);
 
         if (this.messaging.livechatButtonView.rule && !!this.messaging.livechatButtonView.rule.chatbot) {
-            this.messaging.livechatButtonView.update({ isChatbot: true });
-            this.messaging.livechatButtonView.update({ chatbotState: 'init' });
+            // noop
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
-            this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
-            if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
-                this.messaging.livechatButtonView.update({ isChatbot: true });
-                this.messaging.livechatButtonView.update({ chatbotState: 'welcome' });
-            }
+            this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.messaging.livechatButtonView.channelId}) });
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
-                const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
-                if (localStorage.getItem(sessionKey)) {
+                this.messaging.livechatButtonView.update({ sessionCookie });
+                if (localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey)) {
                     this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
@@ -74,14 +69,11 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.chatbotState === 'init') {
             // we landed on a website page where a channel rule is configured to run a chatbot.script
             // -> initialize necessary state
-            this.messaging.livechatButtonView.update({
-                chatbot: this.messaging.livechatButtonView.rule.chatbot,
-            });
             if (this.messaging.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
-                this.messaging.livechatButtonView.update({
-                    chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[
-                        this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps.length - 1
-                    ],
+                this.messaging.livechatButtonView.chatbot.update({
+                    currentStep: insertAndReplace({
+                        data: this.messaging.livechatButtonView.chatbot.lastWelcomeStep,
+                    }),
                 });
             }
         } else if (this.messaging.livechatButtonView.chatbotState === 'welcome') {
@@ -93,13 +85,11 @@ const QWeb = core.qweb;
             utils.set_cookie('im_livechat_auto_popup', '', -1);
             this.messaging.livechatButtonView.update({ history: clear() });
             this.messaging.livechatButtonView.update({ rule: this.messaging.livechatButtonView.livechatInit.rule });
-            this.messaging.livechatButtonView.update({ chatbot: this.messaging.livechatButtonView.livechatInit.rule.chatbot });
-            this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ isChatbotBatchWelcomeMessages: true });
         } else if (this.messaging.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
             // -> restore the user's session (see '_chatbotRestoreSession')
-            this._chatbotRestoreSession(utils.get_cookie('im_livechat_session'));
+            this._chatbotRestoreSession();
         }
 
         return superResult;
@@ -148,7 +138,7 @@ const QWeb = core.qweb;
             } else {
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
             }
         }
     },
@@ -176,7 +166,7 @@ const QWeb = core.qweb;
 
         const postedWelcomeMessages = await session.rpc('/chatbot/post_welcome_steps', {
             channel_uuid: this.messaging.livechatButtonView.livechat.getUUID(),
-            chatbot_script_id: this.messaging.livechatButtonView.chatbot.chatbot_script_id,
+            chatbot_script_id: this.messaging.livechatButtonView.chatbot.data.chatbot_script_id,
         });
 
         const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage._id);
@@ -225,7 +215,7 @@ const QWeb = core.qweb;
             $composerTextField.off('keydown', this.chatbotInputKeyDownHandler);
         }
 
-        if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'free_input_multi') {
+        if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
             this.chatbotInputKeyDownHandler = this._onChatbotInputKeyDown.bind(this);
             $composerTextField.on('keydown', this.chatbotInputKeyDownHandler);
         }
@@ -237,7 +227,11 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEndScript() {
-        if (this.messaging.livechatButtonView.chatbotCurrentStep &&  this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed) {
+        if (
+            this.messaging.livechatButtonView.chatbot.currentStep &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data.conversation_closed
+        ) {
             // don't touch anything if the user has closed the conversation, let the chat window
             // handle the display
             return;
@@ -257,9 +251,9 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotDisplayRestartButton() {
-        return this.messaging.livechatButtonView.isChatbot && (!this.messaging.livechatButtonView.chatbotCurrentStep ||
-            (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_operator_found));
+        return this.messaging.livechatButtonView.isChatbot && (!this.messaging.livechatButtonView.chatbot.currentStep ||
+            (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+             !this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found));
     },
     /**
      * Works as a hook since other modules can add their own step types.
@@ -272,7 +266,7 @@ const QWeb = core.qweb;
             'question_email',
             'free_input_single',
             'free_input_multi',
-        ].includes(this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type);
+        ].includes(this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type);
     },
     /**
      * Processes the step, depending on the current state of the script and the author of the last
@@ -304,21 +298,21 @@ const QWeb = core.qweb;
     _chatbotProcessStep() {
         if (this._chatbotShouldEndScript()) {
             this._chatbotEndScript();
-        } else if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'forward_operator'
-                   && this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_operator_found) {
+        } else if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
+                   && this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
         }  else if (this._chatbotIsExpectingUserInput()) {
             if (this._isLastMessageFromCustomer()) {
                 // user has already typed a message in -> trigger next step
                 this._chatbotSetIsTyping();
                 this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                    this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
             } else {
                 this._chatbotEnableInput();
             }
         } else {
             let triggerNextStep = true;
-            if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'question_selection') {
+            if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_selection') {
                 if (!this._isLastMessageFromCustomer()) {
                     // if there is no last message or if the last message is from the bot
                     // -> don't trigger the next step, we are waiting for the user to pick an option
@@ -327,7 +321,7 @@ const QWeb = core.qweb;
             }
 
             if (triggerNextStep) {
-                let nextStepDelay = this.messaging.livechatButtonView.chatbotMessageDelay;
+                let nextStepDelay = this.messaging.livechatButtonView.chatbot.messageDelay;
                 if (this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
@@ -359,25 +353,22 @@ const QWeb = core.qweb;
       *
       * @private
       */
-    _chatbotRestoreSession(sessionCookie) {
-        const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
+    _chatbotRestoreSession() {
         const browserLocalStorage = window.localStorage;
         if (browserLocalStorage && browserLocalStorage.length) {
             for (let i = 0; i < browserLocalStorage.length; i++) {
                 const key = browserLocalStorage.key(i);
-                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== sessionKey) {
+                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.sessionCookieKey) {
                     browserLocalStorage.removeItem(key);
                 }
             }
         }
 
-        let chatbotState = localStorage.getItem(sessionKey);
+        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey);
 
         if (chatbotState) {
-            chatbotState = JSON.parse(chatbotState);
-            this.messaging.livechatButtonView.update({ isChatbot: true });
-            this.messaging.livechatButtonView.update({ chatbot: chatbotState._chatbot });
-            this.messaging.livechatButtonView.update({ chatbotCurrentStep: chatbotState._chatbotCurrentStep });
+            this.messaging.livechatButtonView.update({ localStorageChatbotState: JSON.parse(chatbotState) });
+            this.messaging.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.livechatButtonView.localStorageChatbotState._chatbotCurrentStep }) });
         }
      },
     /**
@@ -392,8 +383,8 @@ const QWeb = core.qweb;
     _chatbotSaveSession() {
         const chatUuid = this.messaging.livechatButtonView.livechat.toData().uuid;
         localStorage.setItem('im_livechat.chatbot.state.uuid_' + chatUuid, JSON.stringify({
-            '_chatbot': this.messaging.livechatButtonView.chatbot,
-            '_chatbotCurrentStep': this.messaging.livechatButtonView.chatbotCurrentStep,
+            '_chatbot': this.messaging.livechatButtonView.chatbot.data,
+            '_chatbotCurrentStep': this.messaging.livechatButtonView.chatbot.currentStep.data,
         }));
     },
     /**
@@ -415,13 +406,13 @@ const QWeb = core.qweb;
                         'chatbotImageSrc': `/im_livechat/operator/${
                             this.messaging.livechatButtonView.livechat.getOperatorPID()[0]
                         }/avatar`,
-                        'chatbotName': this.messaging.livechatButtonView.chatbot.chatbot_name,
+                        'chatbotName': this.messaging.livechatButtonView.chatbot.name,
                         'isWelcomeMessage': isWelcomeMessage,
                     }))
                 );
 
                 this.messaging.livechatButtonView.chatWindow.scrollToBottom();
-            }, this.messaging.livechatButtonView.chatbotMessageDelay / 3),
+            }, this.messaging.livechatButtonView.chatbot.messageDelay / 3),
         });
     },
     /**
@@ -439,21 +430,21 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotShouldEndScript() {
-        if (this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed) {
+        if (this.messaging.livechatButtonView.chatbot.currentStep.data.conversation_closed) {
             return true;
         }
-        if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_is_last &&
-            (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_operator_found)
+        if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last &&
+            (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+             !this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found)
         ) {
-            if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'question_email'
-                && !this.messaging.livechatButtonView.chatbotCurrentStep.is_email_valid
+            if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_email'
+                && !this.messaging.livechatButtonView.chatbot.currentStep.data.is_email_valid
             ) {
                 // email is not (yet) valid, let the user answer / try again
                 return false;
             } else if (
                 (this._chatbotIsExpectingUserInput() ||
-                this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'question_selection') &&
+                this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_selection') &&
                 this.messaging.livechatButtonView.messages.length !== 0
             ) {
                 const lastMessage = this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1];
@@ -489,7 +480,7 @@ const QWeb = core.qweb;
         });
 
         if (emailValidResult.success) {
-            this.messaging.livechatButtonView.chatbotCurrentStep.is_email_valid = true;
+            this.messaging.livechatButtonView.chatbot.currentStep.data.is_email_valid = true;
             this._chatbotSaveSession();
 
             return true;
@@ -511,7 +502,11 @@ const QWeb = core.qweb;
      */
     async _chatbotTriggerNextStep() {
         let triggerNextStep = true;
-        if (this.messaging.livechatButtonView.chatbotCurrentStep && this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'question_email') {
+        if (
+            this.messaging.livechatButtonView.chatbot.currentStep &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_email'
+        ) {
             triggerNextStep = await this._chatbotValidateEmail();
         }
 
@@ -521,7 +516,7 @@ const QWeb = core.qweb;
 
         const nextStep = await session.rpc('/chatbot/step/trigger', {
             channel_uuid:this.messaging.livechatButtonView.livechat.getUUID(),
-            chatbot_script_id: this.messaging.livechatButtonView.chatbot.chatbot_script_id,
+            chatbot_script_id: this.messaging.livechatButtonView.chatbot.data.chatbot_script_id,
         });
 
         if (nextStep) {
@@ -529,12 +524,12 @@ const QWeb = core.qweb;
                 this._chatbotAddMessage(nextStep.chatbot_posted_message);
             }
 
-            this.messaging.livechatButtonView.update({ chatbotCurrentStep: nextStep.chatbot_step });
+            this.messaging.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: nextStep.chatbot_step }) });
 
             this._chatbotProcessStep();
         } else {
             // did not find next step -> end the script
-            this.messaging.livechatButtonView.chatbotCurrentStep['chatbot_step_is_last'] = true;
+            this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last = true;
             this._renderMessages();
             this._chatbotEndScript();
         }
@@ -578,8 +573,12 @@ const QWeb = core.qweb;
      _askFeedback() {
         this._super(...arguments);
 
-        if (this.messaging.livechatButtonView.chatbotCurrentStep) {
-            this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed = true;
+        if (
+            this.messaging.livechatButtonView.chatbot &&
+            this.messaging.livechatButtonView.chatbot.currentStep &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data
+        ) {
+            this.messaging.livechatButtonView.chatbot.currentStep.data.conversation_closed = true;
             this._chatbotSaveSession();
         }
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
@@ -607,7 +606,13 @@ const QWeb = core.qweb;
                 }
             });
 
-            if (this.messaging.livechatButtonView.chatbotCurrentStep && this.messaging.livechatButtonView.messages && this.messaging.livechatButtonView.messages.length !== 0) {
+            if (
+                this.messaging.livechatButtonView.chatbot &&
+                this.messaging.livechatButtonView.chatbot.currentStep &&
+                this.messaging.livechatButtonView.chatbot.currentStep.data &&
+                this.messaging.livechatButtonView.messages &&
+                this.messaging.livechatButtonView.messages.length !== 0
+            ) {
                 this._chatbotProcessStep();
             }
         });
@@ -620,7 +625,7 @@ const QWeb = core.qweb;
         const parameters = this._super(...arguments);
 
         if (this.messaging.livechatButtonView.isChatbot) {
-            parameters.chatbot_script_id = this.messaging.livechatButtonView.chatbot.chatbot_script_id;
+            parameters.chatbot_script_id = this.messaging.livechatButtonView.chatbot.data.chatbot_script_id;
         }
 
         return parameters;
@@ -670,7 +675,11 @@ const QWeb = core.qweb;
         const superArguments = arguments;
         const superMethod = this._super;
 
-        if (this.messaging.livechatButtonView.isChatbot && this.messaging.livechatButtonView.chatbotCurrentStep) {
+        if (
+            this.messaging.livechatButtonView.isChatbot &&
+            this.messaging.livechatButtonView.chatbot.currentStep &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data
+        ) {
             await this._chatbotPostWelcomeMessages();
         }
 
@@ -679,18 +688,22 @@ const QWeb = core.qweb;
                 return;
             }
 
-            if (this.messaging.livechatButtonView.isChatbot && this.messaging.livechatButtonView.chatbotCurrentStep) {
+            if (
+                this.messaging.livechatButtonView.isChatbot &&
+                this.messaging.livechatButtonView.chatbot.currentStep &&
+                this.messaging.livechatButtonView.chatbot.currentStep.data
+            ) {
                 if (
-                    this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'forward_operator' &&
-                    this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_operator_found
+                    this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                    this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found
                 ) {
                     return;  // operator has taken over the conversation, let them speak
-                } else if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'free_input_multi') {
+                } else if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this._debouncedChatbotAwaitUserInput();
                 } else if (!this._chatbotShouldEndScript()) {
                     this._chatbotSetIsTyping();
                     this.nextStepTimeout = setTimeout(
-                        this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+                        this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
                 } else {
                     this._chatbotEndScript();
                 }
@@ -707,7 +720,7 @@ const QWeb = core.qweb;
         if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbotMessageDelay,
+                this.messaging.livechatButtonView.isChatbotBatchWelcomeMessages ? 0 : this.messaging.livechatButtonView.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);
@@ -735,8 +748,8 @@ const QWeb = core.qweb;
      * @private
      */
     _sendWelcomeChatbotMessage(stepIndex, welcomeMessageDelay) {
-        const chatbotStep = this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps[stepIndex];
-        this.messaging.livechatButtonView.update({ chatbotCurrentStep: chatbotStep });
+        const chatbotStep = this.messaging.livechatButtonView.chatbot.welcomeSteps[stepIndex];
+        this.messaging.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: chatbotStep }) });
 
         if (chatbotStep.chatbot_step_message) {
             this._addMessage({
@@ -754,7 +767,7 @@ const QWeb = core.qweb;
             });
         }
 
-        if (stepIndex + 1 < this.messaging.livechatButtonView.chatbot.chatbot_welcome_steps.length) {
+        if (stepIndex + 1 < this.messaging.livechatButtonView.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
                 this._chatbotSetIsTyping(true);
             }
@@ -764,7 +777,7 @@ const QWeb = core.qweb;
                 this._renderMessages();
             }, welcomeMessageDelay);
         } else {
-            if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'forward_operator') {
+            if (this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator') {
                 // special case when the last welcome message is a forward to an operator
                 // we need to save the welcome messages before continuing the script
                 // indeed, if there are no operator available, the script will continue
@@ -802,23 +815,24 @@ const QWeb = core.qweb;
 
         const postedMessage = await session.rpc('/chatbot/restart', {
             channel_uuid: this.messaging.livechatButtonView.livechat.getUUID(),
-            chatbot_script_id: this.messaging.livechatButtonView.chatbot.chatbot_script_id,
+            chatbot_script_id: this.messaging.livechatButtonView.chatbot.data.chatbot_script_id,
         });
 
         if (postedMessage) {
             this._chatbotAddMessage(postedMessage);
         }
 
-        this.messaging.livechatButtonView.update({ chatbotCurrentStep: clear() });
+        this.messaging.livechatButtonView.chatbot.update({ currentStep: clear() });
         this._chatbotSetIsTyping();
         this.nextStepTimeout = setTimeout(
-            this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbotMessageDelay);
+            this._chatbotTriggerNextStep.bind(this), this.messaging.livechatButtonView.chatbot.messageDelay);
     },
 
     _onChatbotInputKeyDown() {
         if (
-            this.messaging.livechatButtonView.chatbotCurrentStep &&
-            this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type === 'free_input_multi'
+            this.messaging.livechatButtonView.chatbot.currentStep &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data &&
+            this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi'
         ) {
             this._debouncedChatbotAwaitUserInput();
         }
@@ -863,7 +877,7 @@ const QWeb = core.qweb;
         }
         const messageId = stepMessage.getID();
         stepMessage.setChatbotStepAnswerId(selectedAnswer);
-        this.messaging.livechatButtonView.chatbotCurrentStep['chatbot_selected_answer_id'] = selectedAnswer;
+        this.messaging.livechatButtonView.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
         this._chatbotSaveSession();
 

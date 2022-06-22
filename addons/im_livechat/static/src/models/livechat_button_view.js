@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LivechatButtonView',
@@ -27,8 +27,34 @@ registerModel({
         /**
          * @returns {string}
          */
-         _computeButtonTextColor() {
+        _computeButtonTextColor() {
             return this.messaging.publicLivechatOptions.button_text_color;
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeChannelId() {
+            return this.messaging.publicLivechatOptions.channel_id;
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChatbot() {
+            if (this.isTestChatbot) {
+                return insertAndReplace({ data: this.testChatbotData.chatbot });
+            }
+            if (this.chatbotState === 'init') {
+                return insertAndReplace({ data: this.rule.chatbot });
+            }
+            if (this.chatbotState === 'welcome') {
+                return insertAndReplace({ data: this.livechatInit.rule.chatbot });
+            }
+            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
+                return insertAndReplace({ data: this.localStorageChatbotState._chatbot });
+            }
+            return clear();
         },
         /**
          * @private
@@ -37,6 +63,19 @@ registerModel({
         _computeChatbotMessageDelay() {
             if (this.isWebsiteLivechatChatbotFlow) {
                 return 100;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeChatbotState() {
+            if (this.rule && !!this.rule.chatbot) {
+                return 'init';
+            }
+            if (this.livechatInit && this.livechatInit.rule.chatbot) {
+                return 'welcome';
             }
             return clear();
         },
@@ -94,6 +133,28 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsChatbot() {
+            if (this.isTestChatbot) {
+                return true;
+            }
+            if (this.rule && this.rule.chatbot) {
+                return true;
+            }
+            if (this.livechatInit && this.livechatInit.rule.chatbot) {
+                return true;
+            }
+            if (this.chatbotState === 'welcome') {
+                return true;
+            }
+            if (this.localStorageChatbotState) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeServerUrl() {
@@ -101,6 +162,15 @@ registerModel({
                 return this.messaging.publicLivechatServerUrlChatbot;
             }
             return this.messaging.publicLivechatServerUrl;
+        },
+        /**
+         * @returns {string|FieldCommand}
+         */
+        _computeSessionCookieKey() {
+            if (!this.sessionCookie) {
+                return clear();
+            }
+            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
         },
         /**
          * @private
@@ -121,13 +191,17 @@ registerModel({
         buttonTextColor: attr({
             compute: '_computeButtonTextColor',
         }),
-        chatbot: attr(),
-        chatbotCurrentStep: attr(),
-        chatbotMessageDelay: attr({
-            compute: '_computeChatbotMessageDelay',
-            default: 3500, // in milliseconds
+        channelId: attr({
+            compute: '_computeChannelId',
         }),
-        chatbotState: attr(),
+        chatbot: one('Chatbot', {
+            compute: '_computeChatbot',
+            inverse: 'livechatButtonViewOwner',
+            isCausal: true,
+        }),
+        chatbotState: attr({
+            compute: '_computeChatbotState',
+        }),
         // livechat window
         chatWindow: attr({
             default: null,
@@ -152,6 +226,7 @@ registerModel({
             default: '',
         }),
         isChatbot: attr({
+            compute: '_computeIsChatbot',
             default: false,
         }),
         isChatbotBatchWelcomeMessages: attr({
@@ -163,6 +238,9 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
+        isTestChatbot: attr({
+            default: false,
+        }),
         isTypingTimeout: attr(),
         isWebsiteLivechatChatbotFlow: attr({
             default: false,
@@ -172,6 +250,7 @@ registerModel({
             default: null,
         }),
         livechatInit: attr(),
+        localStorageChatbotState: attr(),
         messages: attr({
             default: [],
         }),
@@ -179,8 +258,14 @@ registerModel({
         serverUrl: attr({
             compute: '_computeServerUrl',
         }),
+        sessionCookie: attr(),
+        sessionCookieKey: attr({
+            compute: '_computeSessionCookieKey',
+        }),
+        testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',
         }),
+        widget: attr(),
     },
 });
