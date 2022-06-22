@@ -438,9 +438,9 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format.with_company(self.env.company)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                        res = edi_format.with_company(invoice.company_id)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
                     elif file_data['type'] == 'pdf':
-                        res = edi_format.with_company(self.env.company)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        res = edi_format.with_company(invoice.company_id)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
                         file_data['pdf_reader'].stream.close()
                     else:  # file_data['type'] == 'binary'
                         res = edi_format._update_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'], invoice)
@@ -587,7 +587,10 @@ class AccountEdiFormat(models.Model):
             if value is not None:
                 domains.append([domain])
 
-        domain = expression.OR(domains)
+        domain = expression.AND([
+            expression.OR(domains),
+            [('company_id', 'in', [False, self.env.company.id])],
+        ])
         return self.env['product.product'].search(domain, limit=1)
 
     def _retrieve_tax(self, amount, type_tax_use):
@@ -599,7 +602,8 @@ class AccountEdiFormat(models.Model):
         '''
         domains = [
             [('amount', '=', float(amount))],
-            [('type_tax_use', '=', type_tax_use)]
+            [('type_tax_use', '=', type_tax_use)],
+            [('company_id', '=', self.env.company.id)]
         ]
 
         return self.env['account.tax'].search(expression.AND(domains), order='sequence ASC', limit=1)
