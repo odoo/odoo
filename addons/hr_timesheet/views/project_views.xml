@@ -149,7 +149,7 @@
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
                             <field name="name" required="0"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id" invisible="1"/>
@@ -159,7 +159,7 @@
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"/>
                             <field name="name"/>
                             <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
@@ -194,7 +194,7 @@
                                  <group>
                                     <field name="date"/>
                                     <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
                                     <field name="name" required="0"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
