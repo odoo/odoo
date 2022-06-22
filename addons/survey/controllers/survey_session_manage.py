@@ -7,7 +7,7 @@ import json
 from dateutil.relativedelta import relativedelta
 from werkzeug.exceptions import NotFound
 
-from odoo import fields, http
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.tools import is_html_empty
 
@@ -119,6 +119,32 @@ class UserInputSession(http.Controller):
             }
         else:
             return {}
+
+    @http.route('/survey/session/tooltip/<string:survey_token>', type='json', auth='user', website=True)
+    def survey_session_tooltip(self, survey_token, current_screen=False, **kwargs):
+        survey = self._fetch_from_token(survey_token)
+
+        is_last_question = False
+        if survey.question_ids:
+            most_voted_answers = survey._get_session_most_voted_answers()
+            is_last_question = survey._is_last_page_or_question(most_voted_answers, survey.session_question_id)
+
+        has_suggested_answers = any(answer.answer_score for answer in survey.session_question_id.suggested_answer_ids)
+        next_question = survey._get_session_next_question(False)
+
+        if survey.session_question_id.is_scored_question and has_suggested_answers:
+            if current_screen == 'question':
+                return _("Show Answers")
+            elif current_screen == 'userInputs':
+                return _("Show Results")
+        elif is_last_question and not survey.session_show_leaderboard:
+            return _("Closing Words")
+        elif current_screen in ['question', 'userInputs', 'results'] and survey.session_show_leaderboard:
+            if is_last_question:
+                return _("Final Leaderboard")
+            elif survey.session_question_id.is_scored_question:
+                return _("Leaderboard")
+        return _("Next Section") if next_question.is_page else _("Next Question")
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):

@@ -28,6 +28,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     start: function () {
         var self = this;
         this.fadeInOutTime = 500;
+        this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
         return this._super.apply(this, arguments).then(function () {
             if (self.$el.data('isSessionClosed')) {
                 self._displaySessionClosedPage();
@@ -68,6 +69,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             setupPromises.push(self._setupLeaderboard());
 
             self.$el.removeClass('invisible');
+            if (!self.isStartScreen) {
+                self._updateNextPageTooltip();
+            }
             return Promise.all(setupPromises);
         });
     },
@@ -178,6 +182,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        if (['userInputs', 'results', 'leaderboard', 'leaderboardFinal'].includes(screenToDisplay)) {
+            this._updateNextPageTooltip();
+        }
     },
 
     /**
@@ -213,6 +220,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        if (['question', 'userInputs', 'results'].includes(screenToDisplay)) {
+            this._updateNextPageTooltip();
+        }
     },
 
     /**
@@ -413,6 +423,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             $('div.o_survey_background').css("background-image", "url(" + this.nextQuestion.background_image_url + ")");
             $('div.o_survey_background').removeClass('o_survey_background_transition');
         }
+        this._updateNextPageTooltip();
     },
 
     /**
@@ -656,6 +667,25 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             this.resultsChart.setShowAnswers(showAnswers);
             this.resultsChart.updateChart();
         }
+    },
+
+    /**
+     * Updates the tooltip for current page (on right arrow icon for 'Next' content).
+     * this method will be called on Clicking of Next and Previous Arrow to fetch the
+     * tooltip for the Next Content.
+     */
+    _updateNextPageTooltip: function() {
+        this._rpc({
+            route: _.str.sprintf('/survey/session/tooltip/%s', this.surveyAccessToken),
+            params: {
+                current_screen: this.currentScreen
+            }
+        }).then((tooltip) => {
+            const sessionNavigationNextEl = this.el.querySelector('.o_survey_session_navigation_next');
+            if (sessionNavigationNextEl && tooltip) {
+                sessionNavigationNextEl.dataset.originalTitle = tooltip;
+            }
+        });
     }
 });
 
