@@ -127,7 +127,7 @@
         <input type="text" class="o_datepicker_input o_input datetimepicker-input"
             t-att-name="props.name"
             t-att-placeholder="props.placeholder"
-            t-attf-data-target="#{{ datePickerId }}"
+            t-attf-data-target="#{ '#' + datePickerId }"
             t-att-readonly="props.readonly"
             t-ref="autofocus"
             t-on-change="_onInputChange"
