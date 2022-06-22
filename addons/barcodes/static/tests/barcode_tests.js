@@ -13,7 +13,6 @@ var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
-var triggerKeypressEvent = testUtils.dom.triggerKeypressEvent;
 var triggerEvent = testUtils.dom.triggerEvent;
 var core = require('web.core');
 
@@ -438,83 +437,6 @@ QUnit.test('specification of widget barcode_handler', async function (assert) {
     delete fieldRegistry.map.test_barcode_handler;
 });
 
-QUnit.test('specification of widget barcode_handler with keypress and notifyChange', async function (assert) {
-    assert.expect(6);
-    var done = assert.async();
-
-    this.data.order.onchanges = {
-        _barcode_scanned: function () {},
-    };
-
-    // Define a specific barcode_handler widget for this test case
-    var TestBarcodeHandler = AbstractField.extend({
-        init: function () {
-            this._super.apply(this, arguments);
-
-            this.trigger_up('activeBarcode', {
-                name: 'test',
-                fieldName: 'line_ids',
-                notifyChange: false,
-                setQuantityWithKeypress: true,
-                quantity: 'quantity',
-                commands: {
-                    barcode: '_barcodeAddX2MQuantity',
-                }
-            });
-        },
-    });
-    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
-
-    var form = await createView({
-        View: FormView,
-        model: 'order',
-        data: this.data,
-        arch: '<form>' +
-                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
-                    '<field name="line_ids">' +
-                        '<tree>' +
-                            '<field name="product_id"/>' +
-                            '<field name="product_barcode" invisible="1"/>' +
-                            '<field name="quantity"/>' +
-                        '</tree>' +
-                    '</field>' +
-                '</form>',
-        mockRPC: function (route, args) {
-            assert.step(args.method);
-            return this._super.apply(this, arguments);
-        },
-        res_id: 1,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
-    simulateBarCode(['1','2','3','4','5','6','7','8','9','0','Enter']);
-    await testUtils.nextTick();
-    // Quantity listener should open a dialog.
-    triggerKeypressEvent('5');
-    await testUtils.nextTick();
-
-    setTimeout(async function () {
-        var keycode = $.ui.keyCode.ENTER;
-
-        assert.strictEqual($('.modal .modal-body').length, 1, 'should open a modal with a quantity as input');
-        assert.strictEqual($('.modal .modal-body .o_set_qty_input').val(), '5', 'the quantity by default in the modal shoud be 5');
-
-        $('.modal .modal-body .o_set_qty_input').val('7');
-        await testUtils.nextTick();
-
-        $('.modal .modal-body .o_set_qty_input').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
-        await testUtils.nextTick();
-        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(1)').text(), '7',
-            "quantity checked should be 7");
-
-        assert.verifySteps(['read', 'read']);
-
-        form.destroy();
-        delete fieldRegistry.map.test_barcode_handler;
-        done();
-    });
-});
 QUnit.test('barcode_scanned only trigger error for active view', async function (assert) {
     assert.expect(2);
 

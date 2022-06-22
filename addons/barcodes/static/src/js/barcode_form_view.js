@@ -3,7 +3,6 @@ odoo.define('barcodes.FormView', function (require) {
 
 var concurrency = require('web.concurrency');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 
@@ -193,14 +192,12 @@ FormController.include({
      */
     _barcodeStartListening: function () {
         core.bus.on('barcode_scanned', this, this._barcodeScanned);
-        core.bus.on('keypress', this, this._quantityListener);
     },
     /**
      * @private
      */
     _barcodeStopListening: function () {
         core.bus.off('barcode_scanned', this, this._barcodeScanned);
-        core.bus.off('keypress', this, this._quantityListener);
     },
     /**
      * @private
@@ -344,72 +341,6 @@ FormController.include({
                 }
             });
         });
-    },
-    /**
-     * @private
-     * @param {KeyEvent} event
-     */
-    _quantityListener: function (event) {
-        var character = String.fromCharCode(event.which);
-
-        if (! $.contains(event.target, this.el)) {
-            return;
-        }
-        // only catch the event if we're not focused in
-        // another field and it's a number
-        if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
-            return;
-        }
-
-        var barcodeInfos = _.filter(this.activeBarcode, 'setQuantityWithKeypress');
-        if (!barcodeInfos.length) {
-            return;
-        }
-
-        if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
-            return this.displayNotification({ message: _t('Scan a barcode to set the quantity'), type: 'danger' });
-        }
-
-        for (var k in this.activeBarcode) {
-            if (this.activeBarcode[k].candidate) {
-                this._quantityOpenDialog(character, this.activeBarcode[k]);
-            }
-        }
-    },
-    /**
-     * @private
-     * @param {string} character
-     * @param {Object} activeBarcode: options sent by the field who use barcode features
-     */
-    _quantityOpenDialog: function (character, activeBarcode) {
-        var self = this;
-        var $content = $('<div>').append($('<input>', {type: 'text', class: 'o_set_qty_input'}));
-        this.dialog = new Dialog(this, {
-            title: _t('Set quantity'),
-            buttons: [{text: _t('Select'), classes: 'btn-primary', close: true, click: function () {
-                var new_qty = this.$content.find('.o_set_qty_input').val();
-                var record = self.model.get(self.handle);
-                return self._barcodeSelectedCandidate(activeBarcode.candidate, record,
-                        self.current_barcode, activeBarcode, parseFloat(new_qty))
-                .then(function () {
-                    self.update({}, {reload: false});
-                });
-            }}, {text: _t('Discard'), close: true}],
-            $content: $content,
-        });
-        this.dialog.opened().then(function () {
-            // This line set the value of the key which triggered the _set_quantity in the input
-            var $input = self.dialog.$('.o_set_qty_input').focus().val(character);
-            var $selectBtn = self.dialog.$footer.find('.btn-primary');
-            $input.on('keypress', function (event){
-                if (event.which === 13) {
-                    event.preventDefault();
-                    $input.off();
-                    $selectBtn.click();
-                }
-            });
-        });
-        this.dialog.open();
     },
 });
 
