@@ -29,14 +29,13 @@ QUnit.test('mark as read', async function (assert) {
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
 
-    const { click, createMessagingMenuComponent } = await start({
+    const { click } = await start({
         async mockRPC(route, args) {
             if (route.includes('set_last_seen_message')) {
                 assert.step('set_last_seen_message');
             }
         },
     });
-    await createMessagingMenuComponent();
     await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,

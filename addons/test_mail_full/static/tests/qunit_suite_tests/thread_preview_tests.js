@@ -21,8 +21,7 @@ QUnit.test('rating value displayed on the thread preview', async function (asser
         rating_image_url: "/rating/static/src/img/rating_5.png",
         rating_text: "top",
     });
-    const { afterEvent, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { afterEvent } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),

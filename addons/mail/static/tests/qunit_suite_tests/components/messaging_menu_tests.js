@@ -28,11 +28,10 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
     assert.expect(2);
 
     const messagingBeforeCreationDeferred = makeTestPromise();
-    const { createMessagingMenuComponent } = await start({
+    await start({
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
-    await createMessagingMenuComponent();
     assert.containsOnce(
         document.body,
         '.o_MessagingMenuContainer_spinner',
@@ -51,7 +50,7 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
-    const { click, createMessagingMenuComponent } = await start({
+    const { click } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 // simulate messaging never initialized
@@ -60,7 +59,6 @@ QUnit.test('messaging not initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
-    await createMessagingMenuComponent();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu_loading').length,
         1,
@@ -80,7 +78,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     const messagingInitializedProm = makeTestPromise();
 
-    const { click, createMessagingMenuComponent } = await start({
+    const { click } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 await messagingInitializedProm;
@@ -88,7 +86,6 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
-    await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
 
     // simulate messaging becomes initialized
@@ -113,8 +110,7 @@ QUnit.test('basic rendering', async function (assert) {
             permission: 'denied',
         },
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu').length,
         1,
@@ -258,8 +254,7 @@ QUnit.test('counter is taking into account failure notification', async function
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email',
     });
-    const { createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    await start();
 
     assert.containsOnce(
         document.body,
@@ -276,8 +271,7 @@ QUnit.test('counter is taking into account failure notification', async function
 QUnit.test('switch tab', async function (assert) {
     assert.expect(15);
 
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -378,8 +372,7 @@ QUnit.test('switch tab', async function (assert) {
 QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
 
@@ -401,10 +394,9 @@ QUnit.test('new message', async function (assert) {
 QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessagingMenuComponent, openDiscuss, openView } = await start({
+    const { click, openDiscuss, openView } = await start({
         autoOpenDiscuss: true,
     });
-    await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -444,8 +436,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
         model: 'mail.channel', // necessary to link message to channel
         res_id: mailChannelId1, // id of related channel
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -542,8 +533,7 @@ QUnit.test('filtered previews', async function (assert) {
             res_id: mailChannelId2, // id of related channel
         },
     ]);
-    const { click, createMessagingMenuComponent, messaging } = await start();
-    await createMessagingMenuComponent();
+    const { click, messaging } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -686,8 +676,7 @@ QUnit.test('open chat window from preview', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({});
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`);
@@ -708,8 +697,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
@@ -750,8 +738,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
@@ -792,8 +779,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
@@ -827,8 +813,7 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
             permission: 'default',
         },
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     assert.ok(
         document.querySelector('.o_MessagingMenu_counter'),
@@ -861,8 +846,7 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
             permission: 'denied',
         },
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     assert.containsNone(
         document.body,
@@ -886,8 +870,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
             permission: 'granted',
         },
     });
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
 
     assert.containsNone(
         document.body,
@@ -915,7 +898,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
             },
         },
     });
-    const { click, createMessagingMenuComponent } = await start({
+    const { click } = await start({
         services: {
             notification: makeFakeNotificationService(() => {
                 assert.step(
@@ -924,7 +907,6 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
             }),
         },
     });
-    await createMessagingMenuComponent();
 
     await click('.o_MessagingMenu_toggler');
     await click('.o_NotificationRequest');
@@ -953,8 +935,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'group',
     });
-    const { click, createMessagingMenuComponent, messaging } = await start();
-    await createMessagingMenuComponent();
+    const { click, messaging } = await start();
 
     await click('.o_MessagingMenu_toggler');
     await click(`.o_MessagingMenuTab[data-tab-id="chat"]`);

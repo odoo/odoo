@@ -162,8 +162,7 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
 
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { click } = await start();
     await testUtils.nextTick();
 
     await testUtils.dom.click(document.querySelector('.dropdown-toggle[title="Activities"]'));

@@ -25,7 +25,7 @@ QUnit.test('mark as read', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start({
+    const { afterEvent, click } = await start({
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -40,7 +40,6 @@ QUnit.test('mark as read', async function (assert) {
             }
         },
     });
-    await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -84,7 +83,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start({
+    const { afterEvent, click } = await start({
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -99,7 +98,6 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
             }
         },
     });
-    await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -148,7 +146,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent, env } = await start();
+    const { afterEvent, click, env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -164,7 +162,6 @@ QUnit.test('click on expand from chat window should close the chat window and op
             );
         },
     });
-    await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -222,7 +219,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start({
+    const { afterEvent, click } = await start({
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -232,7 +229,6 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
             }
         },
     });
-    await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -287,8 +283,7 @@ QUnit.test('preview should display last needaction message preview even if there
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { afterEvent } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -328,8 +323,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
+    const { afterEvent, click } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
