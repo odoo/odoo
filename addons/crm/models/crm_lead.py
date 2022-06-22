@@ -268,7 +268,7 @@ class Lead(models.Model):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             lead.team_id = team.id
 
-    @api.depends('user_id', 'team_id')
+    @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
         """ Compute company_id coherency. """
         for lead in self:
@@ -286,7 +286,9 @@ class Lead(models.Model):
                 if lead.team_id and not lead.team_id.company_id and not lead.user_id:
                     proposal = False
                 # no user and no team -> void company and let assignment do its job
-                if not lead.team_id and not lead.user_id:
+                # unless customer has a company
+                if not lead.team_id and not lead.user_id and \
+                   (not lead.partner_id or lead.partner_id.company_id != proposal):
                     proposal = False
 
             # propose a new company based on responsible, limited by team
@@ -297,6 +299,8 @@ class Lead(models.Model):
                     proposal = lead.user_id.company_id & self.env.companies
                 elif lead.team_id:
                     proposal = lead.team_id.company_id
+                elif lead.partner_id:
+                    proposal = lead.partner_id.company_id
                 else:
                     proposal = False
 

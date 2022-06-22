@@ -67,7 +67,7 @@ tour.register("snippets_all_drag_and_drop", {
             // safety check, otherwise the test might "break" one day and
             // receive no steps. The test would then not test anything anymore
             // without us noticing it.
-            if (steps.lenth < 280) {
+            if (steps.length < 280) {
                 console.error("This test is not behaving as it should.");
             }
         },
