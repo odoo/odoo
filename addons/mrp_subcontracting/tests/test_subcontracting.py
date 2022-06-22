@@ -981,3 +981,72 @@ class TestSubcontractingTracking(TransactionCase):
                 wizard.process()
 
             self.assertEqual(picking_receipt.state, 'done')
+
+    def test_flow_backorder_production(self):
+        """ Test subcontracted MO backorder (i.e. through record production window, NOT through
+        picking backorder). Finished product is serial tracked to ensure subcontracting MO window
+        is opened. Check that MO backorder auto-reserves components
+        """
+        todo_nb = 3
+        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        finished_product, component = self.env['product.product'].create([{
+            'name': 'Pepper Spray',
+            'type': 'product',
+            'tracking': 'serial',
+        }, {
+            'name': 'Pepper',
+            'type': 'product',
+            'route_ids': [(4, resupply_sub_on_order_route.id)],
+        }])
+
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.type = 'subcontract'
+        bom_form.subcontractor_ids.add(self.subcontractor_partner1)
+        bom_form.product_tmpl_id = finished_product.product_tmpl_id
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = component
+            bom_line.product_qty = 1
+        bom = bom_form.save()
+
+        finished_serials = self.env['stock.production.lot'].create([{
+            'name': 'sn_%s' % str(i),
+            'product_id': finished_product.id,
+            'company_id': self.env.company.id,
+        } for i in range(todo_nb)])
+
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb)
+
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished_product
+            move.product_uom_qty = todo_nb
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom.id)])
+
+        # Process the delivery of the components
+        compo_picking = mo.picking_ids
+        compo_picking.action_assign()
+        wizard_data = compo_picking.button_validate()
+        wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+        wizard.process()
+
+        picking_receipt = self.env['stock.picking'].search([('partner_id', '=', self.subcontractor_partner1.id), ('state', '!=', 'done')])
+        for sn in finished_serials:
+            # Record the production of each serial number separately
+            action = picking_receipt.action_record_components()
+            mo = self.env['mrp.production'].browse(action['res_id'])
+            self.assertEqual(mo.move_raw_ids.state, 'assigned')
+            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
+            mo_form.qty_producing = 1
+            mo_form.lot_producing_id = sn
+            mo = mo_form.save()
+            mo.subcontracting_record_component()
+
+        # Validate the picking
+        picking_receipt.button_validate()
+        self.assertEqual(picking_receipt.state, 'done')
