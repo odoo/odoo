@@ -76,9 +76,7 @@ const QWeb = core.qweb;
             // -> initialize necessary state
             if (this.messaging.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
                 this.messaging.livechatButtonView.update({
-                    chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.welcomeSteps[
-                        this.messaging.livechatButtonView.chatbot.welcomeSteps.length - 1
-                    ],
+                    chatbotCurrentStep: this.messaging.livechatButtonView.chatbot.lastWelcomeStep,
                 });
             }
         } else if (this.messaging.livechatButtonView.chatbotState === 'welcome') {

@@ -10,6 +10,16 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {Object|FieldCommand}
+         */
+        _computeLastWelcomeStep() {
+            if (!this.welcomeSteps) {
+                return clear();
+            }
+            return this.welcomeSteps[this.welcomeSteps.length - 1];
+        },
+        /**
+         * @private
          * @returns {Array|FieldCommand}
          */
         _computeWelcomeSteps() {
@@ -21,6 +31,9 @@ registerModel({
     },
     fields: {
         data: attr(),
+        lastWelcomeStep: attr({
+            compute: '_computeLastWelcomeStep',
+        }),
         livechatButtonViewOwner: one('LivechatButtonView', {
             inverse: 'chatbot',
             readonly: true,
