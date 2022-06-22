@@ -51,10 +51,10 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         # Create correction layer if invoice price is different
-        stock_valuation_layers = self.env['stock.valuation.layer']
-        valued_lines = self.env['account.move.line']
+        stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
+        valued_lines = self.env['account.move.line'].sudo()
         for invoice in self:
-            if invoice.stock_valuation_layer_ids:
+            if invoice.sudo().stock_valuation_layer_ids:
                 continue
             if invoice.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
                 valued_lines |= invoice.invoice_line_ids
