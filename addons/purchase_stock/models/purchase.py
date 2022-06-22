@@ -526,6 +526,7 @@ class PurchaseOrderLine(models.Model):
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
             'product_packaging_id': self.product_packaging_id.id,
+            'sequence': self.sequence,
         }
 
     @api.model
