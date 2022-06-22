@@ -438,3 +438,23 @@ class TestTimesheet(TestCommonTimesheet):
             'company_id': company_3.id,
         })
         self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+
+    def test_create_timesheet_with_archived_employee(self):
+        ''' the timesheet can be created or edited only with an active employee
+        '''
+        self.empl_employee2.active = False
+        batch_vals = {
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'archived employee timesheet',
+            'unit_amount': 3,
+            'employee_id': self.empl_employee2.id
+        }
+
+        self.assertRaises(UserError, self.env['account.analytic.line'].create, batch_vals)
+
+        batch_vals["employee_id"] = self.empl_employee.id
+        timesheet = self.env['account.analytic.line'].create(batch_vals)
+
+        with self.assertRaises(UserError):
+            timesheet.employee_id = self.empl_employee2
