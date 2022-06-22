@@ -746,7 +746,10 @@ class Web_Editor(http.Controller):
     def image_shape(self, module, filename, img_key, **kwargs):
         svg = self._get_shape_svg(module, 'image_shapes', filename)
 
-        record = request.env['ir.binary']._find_record(img_key)
+        record = request.env['ir.binary']._find_record(
+            res_id=int(img_key) if '.' not in img_key else None,
+            xmlid=img_key if '.' in img_key else None,
+        )
         stream = request.env['ir.binary']._get_image_stream_from(record)
         if stream.type == 'url':
             return stream.get_response()
