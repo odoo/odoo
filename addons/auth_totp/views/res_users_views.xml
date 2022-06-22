@@ -34,32 +34,6 @@
                                 <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable" type="object"
                                         class="fa fa-toggle-on o_auth_2fa_btn text-primary enabled" aria-label="Disable 2FA"></button>
                             </div>
-                            <div colspan="2" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
-                                <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
-
-                                    <tree create="false" delete="false">
-                                        <field name="name" string="Trusted Devices"/>
-                                        <field name="create_date" string="Added On"/>
-                                        <button type="object" name="remove"
-                                                title="Revoke" icon="fa-trash"/>
-                                    </tree>
-                                    <form string="Trusted Device">
-                                        <group>
-                                            <group>
-                                                <field name="name" string="Device Name"/>
-                                                <field name="create_date" string="Added On"/>
-                                            </group>
-                                        </group>
-                                        <footer>
-                                            <button name="remove" string="Revoke" type="object" icon="fa-trash"/>
-                                            <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
-                                        </footer>
-                                    </form>
-
-                                </field>
-                                <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
-                                        confirm="Are you sure? Two-factor authentication will be required again on all your devices"/>
-                            </div>
                             <span attrs="{'invisible': [('totp_enabled', '!=', False)]}" class="text-muted">
                                 Two-factor Authentication ("2FA") is a system of double authentication.
                                 The first one is done with your password and the second one with a code you get from a dedicated mobile app.
@@ -67,7 +41,21 @@
                                 <a href="https://www.odoo.com/documentation/saas-15.4/applications/general/auth/2fa.html"
                                    title="Learn More" target="_blank">Learn More</a>
                             </span>
-                            <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">Your account is protected!</span>
+                            <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">This account is protected!</span>
+                            <group name="auth_devices" string="Trusted Devices" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
+                                <div colspan="2">
+                                    <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
+                                        <tree create="false" delete="false">
+                                            <field name="name" string="Device"/>
+                                            <field name="create_date" string="Added On"/>
+                                            <button type="object" name="remove"
+                                                    title="Revoke" icon="fa-trash"/>
+                                        </tree>
+                                    </field>
+                                    <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
+                                            confirm="Are you sure? The user may be asked to enter two-factor codes again on those devices"/>
+                                </div>
+                            </group>
                         </div>
                     </group>
                 </page>
@@ -90,6 +78,7 @@
                             <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable"
                                type="object" class="fa fa-toggle-on o_auth_2fa_btn text-primary" aria-label="Disable 2FA"/>
                         </div>
+                        <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">Your account is protected!</span>
                         <span attrs="{'invisible': [('totp_enabled', '!=', False)]}" class="text-muted">
                             Two-factor Authentication ("2FA") is a system of double authentication.
                             The first one is done with your password and the second one with a code you get from a dedicated mobile app.
@@ -97,7 +86,20 @@
                             <a href="https://www.odoo.com/documentation/saas-15.4/applications/general/auth/2fa.html"
                                title="Learn More" target="_blank">Learn More</a>
                         </span>
-                        <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">Your account is protected!</span>
+                        <group name="auth_devices" string="Trusted Devices" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
+                            <div colspan="2">
+                                <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
+                                    <tree create="false" delete="false">
+                                        <field name="name" string="Device"/>
+                                        <field name="create_date" string="Added On"/>
+                                        <button type="object" name="remove"
+                                                title="Revoke" icon="fa-trash"/>
+                                    </tree>
+                                </field>
+                                <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
+                                        confirm="Are you sure? You may be asked to enter two-factor codes again on those devices"/>
+                            </div>
+                        </group>
                     </div>
                 </group>
             </group>
