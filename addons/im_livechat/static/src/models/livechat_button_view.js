@@ -32,6 +32,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeChannelId() {
+            return this.messaging.publicLivechatOptions.channel_id;
+        },
+        /**
+         * @private
          * @returns {integer|FieldCommand}
          */
         _computeChatbotMessageDelay() {
@@ -120,6 +127,9 @@ registerModel({
         }),
         buttonTextColor: attr({
             compute: '_computeButtonTextColor',
+        }),
+        channelId: attr({
+            compute: '_computeChannelId',
         }),
         chatbot: attr(),
         chatbotCurrentStep: attr(),

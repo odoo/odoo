@@ -55,7 +55,7 @@ const QWeb = core.qweb;
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.messaging.livechatButtonView.update({ chatbotState: 'init' });
         } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
-            this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id}) });
+            this.messaging.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.messaging.livechatButtonView.channelId}) });
             if (this.messaging.livechatButtonView.livechatInit.rule.chatbot) {
                 this.messaging.livechatButtonView.update({ isChatbot: true });
                 this.messaging.livechatButtonView.update({ chatbotState: 'welcome' });
