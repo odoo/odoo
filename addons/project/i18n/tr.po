@@ -20,12 +20,12 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Yedigen, 2019
-# abc Def <hdogan1974@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# abc Def <hdogan1974@gmail.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -510,8 +510,8 @@ msgstr "Tüm Görevler"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "All employees"
-msgstr "Tüm personel"
+msgid "All internal users"
+msgstr "Tüm dahili kullanıcılar"
 
 #. module: project
 #. openerp-web
@@ -1022,16 +1022,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Projenin görevlerinin görünürlüğünü tanımlar:\n"
-"- Davet edilen çalışanlar: çalışanlar yalnızca takip edilen projeyi ve görevleri görebilir.\n"
-"- Tüm çalışanlar: çalışanlar tüm proje ve görevleri görebilir.\n"
-"- Portal kullanıcıları ve tüm çalışanlar: çalışanlar her şeyi görebilir. Portal kullanıcıları, proje ve görevleri kendileri veya şirketlerinden biri tarafından görülebilir."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1569,8 +1571,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited employees"
-msgstr "Davetli personel"
+msgid "Invited internal users"
+msgstr "Davet edilen dahili kullanıcılar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2186,8 +2188,8 @@ msgstr "Portal Erişim URL"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Portal users and all employees"
-msgstr "Portal kullanıcıları ve tüm personel"
+msgid "Invited portal users and all internal users"
+msgstr "Davet edilen portal kullanıcıları ve tüm dahili kullanıcılar"
 
 #. module: project
 #. openerp-web

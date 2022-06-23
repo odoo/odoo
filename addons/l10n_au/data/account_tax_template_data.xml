@@ -11,7 +11,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -25,7 +25,7 @@
                     'minus_report_line_ids': [ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -50,7 +50,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -64,7 +64,7 @@
                     'minus_report_line_ids': [ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -89,7 +89,7 @@
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -100,7 +100,7 @@
                     'repartition_type': 'tax',
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -122,7 +122,7 @@
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -133,7 +133,7 @@
                     'repartition_type': 'tax',
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -155,7 +155,7 @@
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -166,7 +166,7 @@
                     'repartition_type': 'tax',
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -188,7 +188,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -202,7 +202,7 @@
                     'minus_report_line_ids': [ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -227,7 +227,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -240,7 +240,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g11'), ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -264,7 +264,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -277,7 +277,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g11'), ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -301,7 +301,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -314,7 +314,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g10'), ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -338,7 +338,7 @@
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -349,7 +349,7 @@
                     'repartition_type': 'tax',
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -371,7 +371,7 @@
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -382,7 +382,7 @@
                     'repartition_type': 'tax',
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -404,7 +404,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -416,7 +416,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g11'), ref('account_tax_report_gstrpt_g13')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -439,7 +439,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -451,7 +451,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g11'), ref('account_tax_report_gstrpt_g15')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -483,7 +483,7 @@
         -->
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_100000000"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -495,7 +495,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_gstonly'), ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -518,7 +518,7 @@
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -531,7 +531,7 @@
                     'plus_report_line_ids': [ref('account_tax_report_gstrpt_g18'), ref('account_tax_report_gstrpt_comparison_gl')],
                 }),
             ]"/>
-        <field name="refund_repartition_line_ids" eval="[
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',

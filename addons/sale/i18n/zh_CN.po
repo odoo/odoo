@@ -26,12 +26,12 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # Mandy Choy <mnc@odoo.com>, 2019
 # Martin Trigaux, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2019
 # wangting <39181819@qq.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2020
 # JZH-Odoo <jzh@odoo.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: JZH-Odoo <jzh@odoo.com>, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1296,7 +1296,7 @@ msgstr "自定义报价的外观。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 快递连接器"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4214,6 +4214,15 @@ msgid ""
 "                than initially ordered, with an invoicing policy based on\n"
 "                ordered quantities."
 msgstr "当交付的数量比最初订购的数量多时，您可以追加销售订单，并根据订购数量制定发票策略。"
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr "您无法更改产品的类型，因为它已在销售订单中使用。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

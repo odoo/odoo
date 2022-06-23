@@ -18,10 +18,8 @@
 # oihane <oihanecruce@gmail.com>, 2019
 # Nelson Ramírez <info@konos.cl>, 2020
 # Omar Torres <otorresgi18@gmail.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
-# marcescu, 2022
-# Marian Cuadra, 2022
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
@@ -509,8 +507,8 @@ msgstr "Todas las tareas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "All employees"
-msgstr "Todos los empleados"
+msgid "All internal users"
+msgstr "Todos los usuarios internos"
 
 #. module: project
 #. openerp-web
@@ -1024,17 +1022,29 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Define la visibilidad de las tareas del proyecto:\n"
-"- Empleados invitados: los empleados solo pueden ver el proyecto y las tareas seguidas.\n"
-"- Todos los empleados: los empleados pueden ver todos los proyectos y tareas.\n"
-"- Usuarios del portal y todos los empleados: los empleados pueden ver todo.   Los usuarios del portal pueden ver el proyecto y las tareas seguidas.\n"
-"   ellos o por alguien de su compañía."
+"Personas para quienes este proyecto y sus tareas serán visibles.\n"
+"\n"
+"- Usuarios internos invitados: al seguir un proyecto, los usuarios internos tendrán acceso a todas sus tareas sin distinción. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo..\n"
+" Un usuario con el proyecto > nivel de derechos de acceso de administrador aún puede acceder a este proyecto y sus tareas, incluso si no es explícitamente parte de los seguidores.\n"
+"\n"
+"- Todos los usuarios internos: todos los usuarios internos pueden acceder al proyecto y a todas sus tareas sin distinción.\n"
+"\n"
+"- Usuarios del portal invitados y todos los usuarios internos: todos los usuarios internos pueden acceder al proyecto y a todas sus tareas sin distinción.\n"
+"Al seguir un proyecto, los usuarios del portal tendrán acceso a todas sus tareas sin distinción. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo.\n"
+"\n"
+"En cualquier caso, un usuario interno sin derechos de acceso al proyecto aún puede acceder a una tarea, siempre que se le proporcione la URL correspondiente (y que forme parte de los seguidores si el proyecto es privado)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1578,8 +1588,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited employees"
-msgstr "Empleados invitados"
+msgid "Invited internal users"
+msgstr "Usuarios internos invitados"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2196,8 +2206,8 @@ msgstr "URL de acceso al portal"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Portal users and all employees"
-msgstr "Usuarios del portal y todos los empleados"
+msgid "Invited portal users and all internal users"
+msgstr "Usuarios del portal invitados y todos los usuarios internos"
 
 #. module: project
 #. openerp-web
