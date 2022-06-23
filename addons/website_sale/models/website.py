@@ -80,6 +80,27 @@ class Website(models.Model):
         ],
         default='optional')
 
+    product_page_image_layout = fields.Selection([
+        ('carousel', 'Carousel'),
+        ('grid', 'Grid'),
+        ], default='carousel', required=True,
+    )
+    product_page_grid_columns = fields.Integer(default=2)
+    product_page_image_width = fields.Selection([
+        ('none', 'Hidden'),
+        ('50_pc', '50 %'),
+        ('66_pc', '66 %'),
+        ('100_pc', '100 %'),
+        ], default='50_pc', required=True,
+    )
+    product_page_image_spacing = fields.Selection([
+        ('none', 'None'),
+        ('small', 'Small'),
+        ('medium', 'Medium'),
+        ('big', 'Big'),
+        ], default='small', required=True,
+    )
+
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         for website in self:
@@ -462,6 +483,33 @@ class Website(models.Model):
             result.append(self.env['product.template']._search_get_detail(self, order, options))
         return result
 
+    def _get_product_page_proportions(self):
+        """
+        Returns the number of columns (css) that both the images and the product details should take.
+        """
+        self.ensure_one()
+
+        return {
+            'none': (0, 12),
+            '50_pc': (6, 6),
+            '66_pc': (8, 4),
+            '100_pc': (12, 12),
+        }.get(self.product_page_image_width)
+
+    def _get_product_page_grid_image_classes(self):
+        spacing_map = {
+            'none': 'p-0',
+            'small': 'p-2',
+            'medium': 'p-3',
+            'big': 'p-4',
+        }
+        columns_map = {
+            1: 'col-12',
+            2: 'col-6',
+            3: 'col-4',
+        }
+        return spacing_map.get(self.product_page_image_spacing) + ' ' +\
+                columns_map.get(self.product_page_grid_columns)
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

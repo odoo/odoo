@@ -624,11 +624,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6 mt-lg-4">
-                            <t t-call="website_sale.shop_product_carousel"/>
+                    <div class="row" id="product_detail_main" data-name="Product Page"
+                        t-att-data-image_width="website.product_page_image_width"
+                        t-att-data-image_layout="website.product_page_image_layout">
+                        <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
+                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images" t-if="website.product_page_image_width != 'none'">
+                            <t t-call="website_sale.shop_product_images"/>
                         </div>
-                        <div class="col-lg-6 mt-md-4" id="product_details">
+                        <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
                             <t t-if="is_view_active('website_sale.product_comment')">
@@ -1975,27 +1978,38 @@
         </xpath>
     </template>
 
-    <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
+    <!-- Product page images -->
+    <template id="website_sale.shop_product_images" name="Shop Product Images">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <t t-set="product_carousel_block_name">Product Image</t>
+        <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
+    </template>
+
+    <template id="website_sale.shop_product_image">
+        <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + 'ratio ratio-16x9'">
+            <t t-out="product_image.embed_code"/>
+        </div>
+        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+    </template>
+
+    <!-- Product page images: Carousel -->
+    <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
+        <t t-set="product_carousel_block_name">Product Carousel</t>
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
                 <div class="carousel-inner h-100">
+                    <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
-                            <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 ratio ratio-16x9">
-                                <t t-out="product_image.embed_code"/>
-                            </div>
-                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+                            <t t-call="website_sale.shop_product_image"/>
                         </div>
                     </t>
                 </div>
                 <t t-if="len(product_images) > 1">
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
-                        <span class="fa fa-chevron-left fa-2x" role="img" aria-label="Previous" title="Previous"/>
+                        <span class="fa fa-chevron-left fa-2x oe_unmovable" role="img" aria-label="Previous" title="Previous"/>
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
-                        <span class="fa fa-chevron-right fa-2x" role="img" aria-label="Next" title="Next"/>
+                        <span class="fa fa-chevron-right fa-2x oe_unmovable" role="img" aria-label="Next" title="Next"/>
                     </a>
                 </t>
             </div>
@@ -2035,23 +2049,26 @@
         </div>
     </template>
 
-    <record id="view_website_sale_website_form" model="ir.ui.view">
-        <field name="name">website_sale.website.form</field>
-        <field name="model">website</field>
-        <field name="inherit_id" ref="website.view_website_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="Product Page Extra Fields" groups="base.group_no_one">
-                    <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
-                        <tree editable="bottom">
-                            <field name="sequence" widget="handle"/>
-                            <field name="field_id"/>
-                        </tree>
-                    </field>
-                </page>
-            </xpath>
-        </field>
-    </record>
+    <!-- Product page images: Grid -->
+    <template id="website_sale.shop_product_grid" name="Shop Product Grid">
+        <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
+            <div class="container">
+                <!-- One row for every two images -->
+                <t t-set="image_classes" t-value="'w-100'"/>
+                <t t-set="col_classes" t-value="website._get_product_page_grid_image_classes()"/>
+                <t t-foreach="range(ceil(len(product_images) / website.product_page_grid_columns))" t-as="row_idx">
+                    <div class="row m-0">
+                        <t t-foreach="range(row_idx * website.product_page_grid_columns, (row_idx + 1) * website.product_page_grid_columns)" t-as="image_idx">
+                            <t t-set="product_image" t-value="image_idx &lt; len(product_images) and product_images[image_idx] or False"/>
+                            <div t-if="product_image" t-att-class="col_classes">
+                                <t t-call="website_sale.shop_product_image"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
 
     <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
         <xpath expr="//div[@id='product_details']" position="inside">
