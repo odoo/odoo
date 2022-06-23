@@ -13,7 +13,7 @@ import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
 
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -128,10 +128,10 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _askFeedback() {
-        this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled', true);
+        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
 
         const feedback = new Feedback(this, this.messaging.livechatButtonView.livechat);
-        this.messaging.livechatButtonView.chatWindow.replaceContentWith(feedback);
+        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
         feedback.on('feedback_sent', this, this._closeChat);
@@ -140,7 +140,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _closeChat() {
-        this.messaging.livechatButtonView.chatWindow.destroy();
+        this.messaging.livechatButtonView.update({ chatWindow: clear() });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
     /**
@@ -191,7 +191,7 @@ const LivechatButton = Widget.extend({
                 }
                 notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
-                if (this.messaging.livechatButtonView.chatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.isAtBottom()) {
+                if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom()) {
                     this.messaging.livechatButtonView.livechat.incrementUnreadCounter();
                 }
                 this._renderMessages();
@@ -319,12 +319,14 @@ const LivechatButton = Widget.extend({
             titleColor: this.messaging.livechatButtonView.titleColor,
         };
         this.messaging.livechatButtonView.update({
-            chatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
+            chatWindow: insertAndReplace({
+                legacyChatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
+            }),
         });
-        return this.messaging.livechatButtonView.chatWindow.appendTo($('body')).then(() => {
+        return this.messaging.livechatButtonView.chatWindow.legacyChatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            this.messaging.livechatButtonView.chatWindow.$el.css(cssProps);
+            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$el.css(cssProps);
             this.$el.hide();
         });
     },
@@ -342,11 +344,11 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.isAtBottom();
+        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom();
         this.messaging.livechatButtonView.livechat.setMessages(this.messaging.livechatButtonView.messages);
-        this.messaging.livechatButtonView.chatWindow.render();
+        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
         }
     },
     /**
@@ -378,7 +380,7 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this.messaging.livechatButtonView.chatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
             });
     },
     /**
@@ -408,12 +410,12 @@ const LivechatButton = Widget.extend({
      */
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        const isComposerDisabled = this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled');
+        const isComposerDisabled = this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this.messaging.livechatButtonView.messages.find(function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this.messaging.livechatButtonView.chatWindow.toggleFold(false);
+            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);
             this._askFeedback();
         } else {
             this._closeChat();
@@ -456,7 +458,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this.messaging.livechatButtonView.chatWindow.renderHeader();
+        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
     },
     /**
      * @private
@@ -464,7 +466,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this.messaging.livechatButtonView.chatWindow.renderHeader();
+        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
     },
     /**
      * @private

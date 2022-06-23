@@ -216,9 +216,9 @@ registerModel({
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),
-        // livechat window
-        chatWindow: attr({
-            default: null,
+        chatWindow: one('PublicLivechatWindow', {
+            inverse: 'livechatButtonViewOwner',
+            isCausal: true,
         }),
         currentPartnerId: attr({
             compute: '_computeCurrentPartnerId',
