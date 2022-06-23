@@ -568,7 +568,7 @@ QUnit.test('Format Error', async function (assert) {
                 "action should be the one for format error"
             );
             assert.strictEqual(
-                options.additional_context.message_id,
+                options.additionalContext.message_id,
                 mailMessageId1,
                 "action should have correct message id"
             );
@@ -645,7 +645,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
                 "action should be the one for missing fields"
             );
             assert.strictEqual(
-                options.additional_context.default_letter_id,
+                options.additionalContext.default_letter_id,
                 snailMailLetterId1,
                 "action should have correct letter id"
             );
