@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const editInBackendUserDropdownLinkEl = document.getElementById('o_edit_in_backend_user_dropdown_link');
+
     if (!window.frameElement) {
         const websiteId = document.documentElement.dataset.websiteId;
         const {pathname, search} = window.location;
@@ -55,7 +57,21 @@ document.addEventListener('DOMContentLoaded', () => {
             backendEditButtonEl.prepend(backendEditButtonIconEl);
             frontendToBackendNavEl.appendChild(backendEditButtonEl);
 
+            if (editInBackendUserDropdownLinkEl) {
+                editInBackendUserDropdownLinkEl.href = backendEditButtonEl.href;
+            }
+
             document.body.appendChild(frontendToBackendNavEl);
+        }
+    } else {
+        const backendUserDropdownLinkEl = document.getElementById('o_backend_user_dropdown_link');
+        if (backendUserDropdownLinkEl) {
+            backendUserDropdownLinkEl.classList.add('d-none');
+            backendUserDropdownLinkEl.classList.remove('d-flex');
+        }
+        if (editInBackendUserDropdownLinkEl) {
+            editInBackendUserDropdownLinkEl.classList.add('d-none');
+            editInBackendUserDropdownLinkEl.classList.remove('d-flex');
         }
     }
 });
