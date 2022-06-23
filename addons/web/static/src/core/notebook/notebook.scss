@@ -1,0 +1,18 @@
+.o_notebook {
+    &.horizontal {
+        flex-direction: column;
+
+        .nav.nav-tabs {
+            flex-flow: row nowrap;
+        }
+        
+    }
+
+    &.vertical {
+        flex-direction: row;
+
+        .nav.nav-pills {
+            width: max-content;
+        }
+    }
+}
