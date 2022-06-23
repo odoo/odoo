@@ -35,6 +35,7 @@ class AccountAnalyticLine(models.Model):
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+    allow_billable = fields.Boolean(related="project_id.allow_billable")
 
     @api.depends('project_id.commercial_partner_id', 'task_id.commercial_partner_id')
     def _compute_commercial_partner(self):
