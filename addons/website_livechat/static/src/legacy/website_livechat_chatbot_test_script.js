@@ -4,7 +4,7 @@ import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import PublicLivechat from '@im_livechat/legacy/models/website_livechat';
+import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 
 import { insertAndReplace } from '@mail/model/model_field_command';
 
