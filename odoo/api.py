@@ -682,7 +682,7 @@ class Environment(Mapping):
 
         :rtype: str
         """
-        return self.context.get('lang')
+        return self.context.get('lang') or None
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -720,7 +720,7 @@ class Environment(Mapping):
     def flush_all(self):
         """ Flush all pending computations and updates to the database. """
         self._recompute_all()
-        for model_name in list(self.all.towrite):
+        for model_name in OrderedSet(field.model_name for field in self.cache.get_dirty_fields()):
             self[model_name].flush_model()
 
     def is_protected(self, field, record):
@@ -810,6 +810,8 @@ class Environment(Mapping):
                     return self.company.id
                 elif key == 'uid':
                     return (self.uid, self.su)
+                elif key == 'lang':
+                    return get_context('lang') or None
                 elif key == 'active_test':
                     return get_context('active_test', field.context.get('active_test', True))
                 else:
@@ -844,8 +846,6 @@ class Transaction:
         self.protected = StackMap()
         # pending computations {field: ids}
         self.tocompute = defaultdict(OrderedSet)
-        # pending updates {model: {id: {field: value}}}
-        self.towrite = defaultdict(lambda: defaultdict(dict))
 
     def flush(self):
         """ Flush pending computations and updates in the transaction. """
@@ -860,9 +860,8 @@ class Transaction:
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the translations. """
-        self.cache.invalidate()
+        self.cache.clear()
         self.tocompute.clear()
-        self.towrite.clear()
 
     def reset(self):
         """ Reset the transaction.  This clears the transaction, and reassigns
@@ -882,10 +881,54 @@ EMPTY_DICT = frozendict()
 
 
 class Cache(object):
-    """ Implementation of the cache of records. """
+    """ Implementation of the cache of records.
+
+    For most fields, the cache is simply a mapping from a record and a field to
+    a value.  In the case of context-dependent fields, the mapping also depends
+    on the environment of the given record.  For the sake of performance, the
+    cache is first partitioned by field, then by record.  This makes some
+    common ORM operations pretty fast, like determining which records have a
+    value for a given field, or invalidating a given field on all possible
+    records.
+
+    The cache can also mark some entries as "dirty".  Dirty entries essentially
+    marks values that are different from the database.  They represent database
+    updates that haven't been done yet.  Note that dirty entries only make
+    sense for stored fields.  Note also that if a field is dirty on a given
+    record, and the field is context-dependent, then all the values of the
+    record for that field are considered dirty.  For the sake of consistency,
+    the values that should be in the database must be in a context where all
+    the field's context keys are ``None``.
+    """
+
     def __init__(self):
         # {field: {record_id: value}, field: {context_key: {record_id: value}}}
         self._data = defaultdict(dict)
+
+        # {field: set[id]} stores the fields and ids that are changed in the
+        # cache, but not yet written in the database; their changed values are
+        # in `_data`
+        self._dirty = defaultdict(OrderedSet)
+
+    def __repr__(self):
+        # for debugging: show the cache content and dirty flags as stars
+        data = {}
+        for field, field_cache in sorted(self._data.items(), key=lambda item: str(item[0])):
+            dirty_ids = self._dirty.get(field, ())
+            if field_cache and isinstance(next(iter(field_cache)), tuple):
+                data[field] = {
+                    key: {
+                        Starred(id_) if id_ in dirty_ids else id_: val
+                        for id_, val in key_cache.items()
+                    }
+                    for key, key_cache in field_cache.items()
+                }
+            else:
+                data[field] = {
+                    Starred(id_) if id_ in dirty_ids else id_: val
+                    for id_, val in field_cache.items()
+                }
+        return repr(data)
 
     def _get_field_cache(self, model, field):
         """ Return the field cache of the given field, but not for modifying it. """
@@ -915,15 +958,63 @@ class Cache(object):
                 raise CacheMiss(record, field)
             return default
 
-    def set(self, record, field, value):
-        """ Set the value of ``field`` for ``record``. """
+    def set(self, record, field, value, dirty=False, check_dirty=True):
+        """ Set the value of ``field`` for ``record``.
+        One can normally make a clean field dirty but not the other way around.
+        Updating a dirty field without ``dirty=True`` is a programming error and
+        raises an exception.
+
+        :param dirty: whether ``field`` must be made dirty on ``record`` after
+            the update
+        :param check_dirty: whether updating a dirty field without making it
+            dirty must raise an exception
+        """
         field_cache = self._set_field_cache(record, field)
         field_cache[record._ids[0]] = value
+        if not check_dirty:
+            return
+        if dirty:
+            assert field.column_type and field.store and record.id
+            self._dirty[field].add(record.id)
+            if record.pool.field_depends_context[field]:
+                # put the values under conventional context key values {'context_key': None},
+                # in order to ease the retrieval of those values to flush them
+                context_none = dict.fromkeys(record.pool.field_depends_context[field])
+                record = record.with_env(record.env(context=context_none))
+                field_cache = self._set_field_cache(record, field)
+                field_cache[record._ids[0]] = value
+        elif record.id in self._dirty.get(field, ()):
+            _logger.error("cache.set() removing flag dirty on %s.%s", record, field.name, stack_info=True)
 
-    def update(self, records, field, values):
-        """ Set the values of ``field`` for several ``records``. """
+    def update(self, records, field, values, dirty=False, check_dirty=True):
+        """ Set the values of ``field`` for several ``records``.
+        One can normally make a clean field dirty but not the other way around.
+        Updating a dirty field without ``dirty=True`` is a programming error and
+        raises an exception.
+
+        :param dirty: whether ``field`` must be made dirty on ``record`` after
+            the update
+        :param check_dirty: whether updating a dirty field without making it
+            dirty must raise an exception
+        """
         field_cache = self._set_field_cache(records, field)
         field_cache.update(zip(records._ids, values))
+        if not check_dirty:
+            return
+        if dirty:
+            assert field.column_type and field.store and all(records._ids)
+            self._dirty[field].update(records._ids)
+            if records.pool.field_depends_context[field]:
+                # put the values under conventional context key values {'context_key': None},
+                # in order to ease the retrieval of those values to flush them
+                context_none = dict.fromkeys(records.pool.field_depends_context[field])
+                records = records.with_env(records.env(context=context_none))
+                field_cache = self._set_field_cache(records, field)
+                field_cache.update(zip(records._ids, values))
+        else:
+            dirty_ids = self._dirty.get(field)
+            if dirty_ids and not dirty_ids.isdisjoint(records._ids):
+                _logger.error("cache.update() removing flag dirty on %s.%s", records, field.name, stack_info=True)
 
     def insert_missing(self, records, field, values):
         """ Set the values of ``field`` for the records in ``records`` that
@@ -936,6 +1027,7 @@ class Cache(object):
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
+        assert record.id not in self._dirty.get(field, ())
         try:
             field_cache = self._set_field_cache(record, field)
             del field_cache[record._ids[0]]
@@ -994,8 +1086,48 @@ class Cache(object):
             if record_id not in field_cache:
                 yield record_id
 
+    def get_dirty_fields(self):
+        """ Return the fields that have dirty records in cache. """
+        return self._dirty.keys()
+
+    def has_dirty_fields(self, records, fields=None):
+        """ Return whether any of the given records has dirty fields.
+
+        :param fields: a collection of fields or ``None``; the value ``None`` is
+            interpreted as any field on ``records``
+        """
+        if fields is None:
+            return any(
+                not ids.isdisjoint(records._ids)
+                for field, ids in self._dirty.items()
+                if field.model_name == records._name
+            )
+        else:
+            return any(
+                field in self._dirty and not self._dirty[field].isdisjoint(records._ids)
+                for field in fields
+            )
+
+    def clear_dirty_field(self, field):
+        """ Make the given field clean on all records, and return the ids of the
+        formerly dirty records for the field.
+        """
+        return self._dirty.pop(field, ())
+
     def invalidate(self, spec=None):
-        """ Invalidate the cache, partially or totally depending on ``spec``. """
+        """ Invalidate the cache, partially or totally depending on ``spec``.
+
+        If a field is context-dependent, invalidating it for a given record
+        actually invalidates all the values of that field on the record.  In
+        other words, the field is invalidated for the record in all
+        environments.
+
+        This operation is unsafe by default, and must be used with care.
+        Indeed, invalidating a dirty field on a record may lead to an error,
+        because doing so drops the value to be written in database.
+
+            spec = [(field, ids), (field, None), ...]
+        """
         if spec is None:
             self._data.clear()
         elif spec:
@@ -1011,6 +1143,11 @@ class Cache(object):
                     for id_ in ids:
                         field_cache.pop(id_, None)
 
+    def clear(self):
+        """ Invalidate the cache and its dirty flags. """
+        self._data.clear()
+        self._dirty.clear()
+
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
         depends_context = env.registry.field_depends_context
@@ -1018,8 +1155,8 @@ class Cache(object):
 
         def process(model, field, field_cache):
             # ignore new records and records to flush
-            towrite = env.all.towrite.get(model._name) or {}
-            ids = [id_ for id_ in field_cache if id_ and field.name not in towrite.get(id_, ())]
+            dirty_ids = self._dirty.get(field, ())
+            ids = [id_ for id_ in field_cache if id_ and id_ not in dirty_ids]
             if not ids:
                 return
 
@@ -1061,6 +1198,17 @@ class Cache(object):
 
         if invalids:
             _logger.warning("Invalid cache: %s", pformat(invalids))
+
+
+class Starred:
+    """ Simple helper class to ``repr`` a value with a star suffix. """
+    __slots__ = ['value']
+
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return f"{self.value!r}*"
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

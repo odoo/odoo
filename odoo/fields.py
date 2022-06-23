@@ -1087,16 +1087,8 @@ class Field(MetaField('DummyField', (object,), {})):
             return records
 
         # update the cache
-        cache.update(records, self, itertools.repeat(cache_value))
-
-        # update towrite
-        if self.store:
-            towrite = records.env.all.towrite[self.model_name]
-            record = records[:1]
-            write_value = self.convert_to_write(cache_value, record)
-            column_value = self.convert_to_column(write_value, record)
-            for record in records.filtered('id'):
-                towrite[record.id][self.name] = column_value
+        dirty = self.store and any(records._ids)
+        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
         return records
 
@@ -1681,29 +1673,29 @@ class _String(Field):
         if not records:
             return records
 
-        lang = records.env.lang or None  # used in _update_translations below
+        lang = records.env.lang
         installed = records.env['res.lang'].get_installed()
         single_lang = installed[0][0] if len(installed) <= 1 else None
 
         # modify the column (source)
         if single_lang or lang in (None, 'en_US') or callable(self.translate) or not cache_value:
-            towrite = records.env.all.towrite[self.model_name]
-            for rid in records._ids:
-                # cache_value is already in database format
-                towrite[rid][self.name] = cache_value
             if self.translate is True and cache_value:
                 tname = f"{self.model_name},{self.name}"
                 records.env['ir.translation']._set_source(tname, records._ids, value)
             # invalidate the field in all languages because the fallback value
             # for translations is modified
             cache.invalidate([(self, records.ids)])
-            if single_lang or lang == 'en_US':
-                # modifying with lang=None also updates the installed language,
-                # and modifying with a lang also updates for lang=None
-                others = records.with_context(lang=None if lang else single_lang)
-                cache.update(others, self, itertools.repeat(cache_value))
-
-        cache.update(records, self, itertools.repeat(cache_value))
+            cache.update(records, self, itertools.repeat(cache_value), dirty=True)
+            if single_lang and not lang:
+                # modifying with lang=None also updates the installed language
+                others = records.with_context(lang=single_lang)
+                cache.update(others, self, itertools.repeat(cache_value), dirty=True)
+        else:
+            # Ignore the dirty flag when updating the value in cache.  This is
+            # necessary for translated fields, when you have to update the
+            # field's value in a language without making it dirty while the
+            # field's column value is already dirty.
+            cache.update(records, self, itertools.repeat(cache_value), check_dirty=False)
 
         if callable(self.translate):
             # the source value of self has been updated, synchronize translated
@@ -2222,7 +2214,8 @@ class Binary(Field):
                     except (TypeError):
                         pass
                     cache_value = self.convert_to_cache(value, record)
-                    cache.set(record, self, cache_value)
+                    dirty = self.column_type and self.store and any(records._ids)
+                    cache.set(record, self, cache_value, dirty=dirty)
                 except CacheMiss:
                     pass
         else:
@@ -2363,7 +2356,8 @@ class Image(Binary):
 
         super(Image, self).write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
-        records.env.cache.update(records, self, itertools.repeat(cache_value))
+        dirty = self.column_type and self.store and any(records._ids)
+        records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
     def _image_process(self, value):
         if self.readonly and not self.max_width and not self.max_height:
@@ -2928,14 +2922,8 @@ class Many2one(_Relational):
         self._remove_inverses(records, cache_value)
 
         # update the cache of self
-        cache.update(records, self, itertools.repeat(cache_value))
-
-        # update towrite
-        if self.store:
-            towrite = records.env.all.towrite[self.model_name]
-            for record in records.filtered('id'):
-                # cache_value is already in database format
-                towrite[record.id][self.name] = cache_value
+        dirty = self.store and any(records._ids)
+        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
         # update the cache of one2many fields of new corecord
         self._update_inverses(records, cache_value)
