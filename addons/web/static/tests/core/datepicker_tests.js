@@ -4,6 +4,7 @@ import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import ActionModel from "web.ActionModel";
 import CustomFilterItem from "web.CustomFilterItem";
 import { createComponent } from "web.test_utils";
@@ -25,7 +26,7 @@ let target;
  * @param {Object} props
  * @returns {Promise<DatePicker>}
  */
-const mountPicker = async (Picker, props) => {
+async function mountPicker(Picker, props) {
     serviceRegistry
         .add(
             "localization",
@@ -34,7 +35,8 @@ const mountPicker = async (Picker, props) => {
                 dateTimeFormat: "dd/MM/yyyy HH:mm:ss",
             })
         )
-        .add("ui", uiService);
+        .add("ui", uiService)
+        .add("hotkey", hotkeyService);
 
     class Parent extends Component {
         setup() {
@@ -54,9 +56,9 @@ const mountPicker = async (Picker, props) => {
 
     const env = await makeTestEnv();
     await mount(Parent, target, { env, props: { Picker } });
-};
+}
 
-const useFRLocale = () => {
+function useFRLocale() {
     if (!window.moment.locales().includes("fr")) {
         // Mocks the FR locale if not loaded
         const originalLocale = window.moment.locale();
@@ -76,9 +78,9 @@ const useFRLocale = () => {
         registerCleanup(() => window.moment.updateLocale("fr", null));
     }
     return "fr";
-};
+}
 
-const useNOLocale = () => {
+function useNOLocale() {
     if (!window.moment.locales().includes("nb")) {
         const originalLocale = window.moment.locale();
         window.moment.defineLocale("nb", {
@@ -97,7 +99,7 @@ const useNOLocale = () => {
         registerCleanup(() => window.moment.updateLocale("nb", null));
     }
     return "nb";
-};
+}
 
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(() => {
@@ -526,5 +528,30 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(valueInput);
         await editSelect(valueInput, "05/05/2005");
         await applyFilter(target);
+    });
+
+    QUnit.test("start with no value", async function (assert) {
+        assert.expect(6);
+
+        await mountPicker(DateTimePicker, {
+            onDateTimeChanged(date) {
+                assert.step("datetime-changed");
+                assert.strictEqual(
+                    date.toFormat("dd/MM/yyyy HH:mm:ss"),
+                    "08/02/1997 15:45:05",
+                    "Event should transmit the correct date"
+                );
+            },
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+        assert.strictEqual(input.value, "");
+
+        assert.verifySteps([]);
+        input.value = "08/02/1997 15:45:05";
+        await triggerEvent(target, ".o_datepicker_input", "change");
+
+        assert.verifySteps(["datetime-changed"]);
+        assert.strictEqual(input.value, "08/02/1997 15:45:05");
     });
 });
