@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.EmailField" owl="1">
+        <t t-if="props.readonly">
+            <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="props.value ? 'mailto:'+props.value : undefined" t-esc="props.value || ''"/>
+        </t>
+        <t t-else="">
+            <input
+                class="o_input"
+                t-att-id="props.id"
+                type="email"
+                t-att-placeholder="props.placeholder"
+                t-att-required="props.required"
+                t-ref="input"
+            />
+        </t>
+    </t>
+
+</templates>

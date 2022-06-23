@@ -202,7 +202,7 @@ odoo.define('web.ActionMenus', function (require) {
             },
         },
     };
-    ActionMenus.template = 'web.ActionMenus';
+    ActionMenus.template = 'web.Legacy.ActionMenus';
 
     return ActionMenus;
 });

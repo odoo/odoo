@@ -1631,7 +1631,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    
+
     /**
      * @private
      * @override
@@ -4155,7 +4155,7 @@ var FieldColorPicker = FieldInteger.extend({
         if (!$colorpicker.length) {
             return;
         }
-        $colorpicker.html(qweb.render('KanbanColorPicker', { colors: this.RECORD_COLORS }));
+        $colorpicker.html(qweb.render('web.Legacy.KanbanColorPicker', { colors: this.RECORD_COLORS }));
         $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
     },
     /**

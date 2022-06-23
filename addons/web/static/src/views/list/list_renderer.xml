@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListRenderer" owl="1">
+        <div
+            class="o_list_renderer"
+            t-att-class="{'table-responsive': showTable}"
+            t-on-focusin="onFocusIn"
+            tabindex="-1"
+            t-ref="root"
+        >
+            <t t-if="showNoContentHelper" t-call="web.ActionHelper">
+                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+            </t>
+            <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}" t-ref="table">
+                <thead>
+                    <tr>
+                        <th t-if="hasSelectors" class="o_list_record_selector" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
+                            <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" onChange.bind="toggleSelection"/>
+                        </th>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                            <th t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false">
+                                <t t-if="column.hasLabel and column.widget !== 'handle'">
+                                    <t t-esc="column.label"/>
+                                    <span t-if="!isEmpty" class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="onStartResize"/>
+                                </t>
+                            </th>
+                            <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+                        </t>
+                        <th t-if="props.activeActions and props.activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <t t-call="web.ListRenderer.Rows">
+                        <t t-set="list" t-value="props.list"/>
+                    </t>
+                    <t t-set="activeActions" t-value="props.activeActions" />
+                    <tr t-if="activeActions and ('canLink' in activeActions ? activeActions.canLink : activeActions.canCreate)">
+                        <td t-if="withHandleColumn"/>
+                        <td t-att-colspan="state.columns.length + 1"
+                            class="o_field_x2many_list_row_add"
+                            t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, null)"
+                        >
+                            <t t-foreach="creates" t-as="create" t-key="create_index">
+                                <a
+                                    href="#"
+                                    role="button"
+                                    t-att-class="create_index !== 0 ? 'ml16' : ''"
+                                    t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                                    t-on-click.stop.prevent="() => this.onCreateAction(create.context)"
+                                >
+                                    <t t-esc="create.description"/>
+                                </a>
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot t-on-click="() => props.list.unselectRecord(true)" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                    <tr>
+                        <td t-if="hasSelectors"/>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                            <t t-set="aggregate" t-value="aggregates[column.name]"/>
+                            <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
+                                <t t-esc="aggregate.value"/>
+                            </td>
+                            <td t-else=""/>
+                        </t>
+                        <td t-if="props.activeActions and props.activeActions.onDelete"/>
+                    </tr>
+                </tfoot>
+                <Dropdown t-if="getOptionalFields.length" class="'o_optional_columns_dropdown'" position="'bottom-end'">
+                    <t t-set-slot="toggler">
+                        <i class="oi oi-settings-adjust o_optional_columns_dropdown_toggle"/>
+                    </t>
+                    <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                            <CheckBox
+                                onChange="() => this.toggleOptionalField(field.name)"
+                                value="field.value"
+                                name="field.name"
+                            >
+                                <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                            </CheckBox>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web.ListRenderer.Rows" owl="1">
+        <t t-if="!list.isGrouped">
+            <t t-foreach="list.records" t-as="record" t-key="record.id">
+                <t t-call="web.ListRenderer.RecordRow"/>
+            </t>
+            <t t-if="!props.list.isGrouped">
+                <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
+                    <td t-att-colspan="state.columns.length + 1">&#8203;</td>
+                </tr>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-foreach="list.groups" t-as="group" t-key="group.id">
+                <t t-call="web.ListRenderer.GroupRow"/>
+                <t t-if="!group.isFolded">
+                    <t t-call="web.ListRenderer.Rows">
+                        <t t-set="list" t-value="group.list"/>
+                    </t>
+                    <tr t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">
+                        <td t-if="hasSelectors"/>
+                        <td
+                            t-att-colspan="state.columns.length + 1"
+                            class="o_group_field_row_add"
+                        >
+                            <a href="#"
+                                role="button"
+                                t-on-click.stop.prevent="() => group.createRecord({}, props.editable === 'top')"
+                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                            >
+                                Add a line
+                            </a>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.ListRenderer.GroupRow" owl="1">
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}}"
+            t-on-click="() => this.toggleGroup(group)"
+        >
+            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" tabindex="-1" class="o_group_name" t-att-colspan="getGroupNameCellColSpan(group)">
+                <span t-attf-class="fa {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
+                    t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
+                <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
+                <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
+                    <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
+                        <t t-if="!evalModifier(button.modifiers.invisible, group.record)">
+                            <t t-if="button.clickParams.type === 'edit'">
+                                <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)" tabindex="-1">
+                                    <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <ViewButton
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    icon="button.icon"
+                                    record="group.record"
+                                    string="button.string"
+                                    title="button.title"
+                                    tabindex="'-1'"
+                                />
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </th>
+            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="showGroupPager(group)">
+                <Pager t-props="getGroupPagerProps(group)"/>
+            </th>
+            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" class="o_list_number">
+                <t t-esc="group.aggregates[column.name]"/>
+            </td>
+            <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
+            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
+        </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.RecordRow" owl="1">
+        <tr class="o_data_row"
+            t-att-class="getRowClass(record)"
+            t-att-data-id="record.id"
+            t-on-touchstart="(ev) => this.onRowTouchStart(record, ev)"
+            t-on-touchend="() => this.onRowTouchEnd(record)"
+            t-on-touchmove="() => this.onRowTouchMove(record)"
+        >
+            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
+                <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)" />
+            </td>
+            <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                <t t-if="column.type === 'field'">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-name="column.name" t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="() => this.onCellClicked(record, column)" tabindex="-1">
+                        <t t-if="!evalModifier(column.modifiers.invisible, record)">
+                            <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
+                            <Field t-else="" name="column.name" record="record" type="column.widget" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
+                        </t>
+                    </td>
+                </t>
+                <t t-if="column.type === 'button_group'">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                        <t t-foreach="column.buttons" t-as="button" t-key="button.id">
+                            <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
+                                className="button.className"
+                                clickParams="button.clickParams"
+                                defaultRank="button.defaultRank"
+                                disabled="record.isVirtual"
+                                icon="button.icon"
+                                record="record"
+                                string="button.string"
+                                title="button.title"
+                                tabindex="props.list.editedRecord ? '-1' : '0'"
+                            />
+                        </t>
+                    </td>
+                </t>
+            </t>
+
+            <t t-set="activeActions" t-value="props.activeActions" />
+            <t t-if="activeActions">
+                <t t-set="canDelete" t-value="activeActions.canDelete" />
+                <t t-set="canUnlink" t-value="activeActions.canUnlink" />
+                <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)" tabindex="-1">
+                    <button class="fa"
+                        t-att-class="{ 'fa-trash-o': 'canUnlink' in activeActions ? false : canDelete, 'fa-times': 'canUnlink' in activeActions ? canUnlink : false }"
+                        name="delete"
+                        aria-label="Delete row"
+                        tabindex="-1"
+                    />
+                </td>
+            </t>
+        </tr>
+    </t>
+
+</templates>

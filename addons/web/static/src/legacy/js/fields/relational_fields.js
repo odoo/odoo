@@ -1363,7 +1363,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
             if (extraInfo.subFieldName) {
                 parts.push(`[name="${extraInfo.subFieldName}"]`);
             }
-    
+
             if (parts.length) {
                 const el = this.el.querySelector(parts.join(' '));
                 if (el) {
@@ -2041,7 +2041,7 @@ var FieldOne2Many = FieldX2Many.extend({
 
     /**
      * @private
-     * @param {*} data 
+     * @param {*} data
      */
     _addCreateRecordRow(data) {
         const self = this;
@@ -3308,7 +3308,7 @@ var FieldStatus = AbstractField.extend({
  */
 var FieldSelection = AbstractField.extend({
     description: _lt("Selection"),
-    template: 'FieldSelection',
+    template: 'web.Legacy.FieldSelection',
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection'],
     events: _.extend({}, AbstractField.prototype.events, {

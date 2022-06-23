@@ -5,16 +5,27 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import { Model } from "web.Model";
 import Registry from "web.Registry";
+import FormView from 'web.FormView';
+import ListView from 'web.ListView';
+import KanbanView from 'web.KanbanView';
 import SearchBar from "web.SearchBar";
 import { registry } from "@web/core/registry";
 import * as cpHelpers from "@web/../tests/search/helpers";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
+import legacyViewRegistry from 'web.view_registry';
 
 let serverData;
 let target;
 QUnit.module("Search Bar (legacy)", (hooks) => {
     hooks.beforeEach(() => {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
         serverData = {
             models: {
                 partner: {

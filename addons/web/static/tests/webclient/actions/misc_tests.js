@@ -11,9 +11,8 @@ import {
     getFixture,
     hushConsole,
     legacyExtraNextTick,
-    makeDeferred,
+    nextTick,
     patchWithCleanup,
-    triggerEvents,
 } from "../../helpers/utils";
 import {
     createWebClient,
@@ -22,7 +21,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import * as cpHelpers from "@web/../tests/search/helpers";
-import ListController from "web.ListController";
+import { listView } from "@web/views/list/list_view";
 
 let serverData;
 let target;
@@ -375,7 +374,6 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
-        assert.expect(2);
         serverData.actions[4].context = { no_breadcrumbs: true };
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -386,7 +384,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
-        assert.expect(8);
         const defaultTitle = { zopenerp: "Odoo" };
         const webClient = await createWebClient({ serverData });
         let currentTitle = webClient.env.services.title.getParts();
@@ -409,8 +406,8 @@ QUnit.module("ActionManager", (hooks) => {
         });
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
-        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await nextTick();
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {
             ...defaultTitle,
@@ -458,18 +455,18 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(3);
-        let controller;
-        patchWithCleanup(ListController.prototype, {
-            init() {
+        let list;
+        patchWithCleanup(listView.Controller.prototype, {
+            setup() {
                 this._super(...arguments);
-                controller = this;
+                list = this;
             },
         });
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
         assert.containsN(target, ".o_control_panel .breadcrumb-item", 2);
-        controller.trigger_up("history_back");
+        list.env.config.historyBack();
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
@@ -500,29 +497,26 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
         // go back using the breadcrumbs
         await click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
     });
 
     QUnit.test(
         'executing an action with target != "new" closes all dialogs',
         async function (assert) {
-            assert.expect(4);
             serverData.views["partner,false,form"] = `
-      <form>
-        <field name="o2m">
-          <tree><field name="foo"/></tree>
-          <form><field name="foo"/></form>
-        </field>
-      </form>`;
+                <form>
+                    <field name="o2m">
+                    <tree><field name="foo"/></tree>
+                    <form><field name="foo"/></form>
+                    </field>
+                </form>
+                `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row .o_list_char"));
             assert.containsOnce(target, ".o_form_view");
-            await testUtils.dom.click(target.querySelector(".o_form_view .o_data_row"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_form_view .o_data_row .o_data_cell"));
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 1); // target != 'new'
             assert.containsNone(document.body, ".modal");
@@ -534,95 +528,22 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(4);
             serverData.views["partner,false,form"] = `
-      <form>
-        <field name="o2m">
-          <tree><field name="foo"/></tree>
-          <form><field name="foo"/></form>
-        </field>
-      </form>`;
+                <form>
+                    <field name="o2m">
+                    <tree><field name="foo"/></tree>
+                    <form><field name="foo"/></form>
+                    </field>
+                </form>
+                `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             assert.containsOnce(target, ".o_form_view");
-            await testUtils.dom.click($(target).find(".o_form_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_form_view .o_data_row .o_data_cell"));
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
             assert.containsN(document.body, ".modal .o_form_view", 2);
         }
     );
-
-    QUnit.test("bootstrap tooltip in dialog action auto destroy", async (assert) => {
-        assert.expect(2);
-
-        const mockRPC = (route, args) => {
-            if (route === "/web/dataset/call_button") {
-                return false;
-            }
-        };
-
-        serverData.views["partner,3,form"] = /*xml*/ `
-            <form>
-                <field name="display_name" />
-                <footer>
-                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
-                </footer>
-            </form>
-        `;
-        const webClient = await createWebClient({ serverData, mockRPC });
-
-        await doAction(webClient, 25);
-
-        const tooltipProm = makeDeferred();
-        $(target).one("shown.bs.tooltip", () => {
-            tooltipProm.resolve();
-        });
-
-        triggerEvents(target, ".modal footer button", ["mouseover", "focusin"]);
-        await tooltipProm;
-        // check on webClient dom
-        assert.containsOnce(document.body, ".tooltip");
-        await doAction(webClient, {
-            type: "ir.actions.act_window_close",
-        });
-        // check on the whole DOM
-        assert.containsNone(document.body, ".tooltip");
-    });
-
-    QUnit.test("bootstrap tooltip destroyed on click", async (assert) => {
-        assert.expect(2);
-
-        const mockRPC = (route, args) => {
-            if (route === "/web/dataset/call_button") {
-                return false;
-            }
-        };
-
-        serverData.views["partner,666,form"] = /*xml*/ `
-            <form>
-                <header>
-                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
-                </header>
-                <field name="display_name" />
-            </form>
-        `;
-        const webClient = await createWebClient({ serverData, mockRPC });
-
-        await doAction(webClient, 24);
-
-        const tooltipProm = makeDeferred();
-        $(target).one("shown.bs.tooltip", () => {
-            tooltipProm.resolve();
-        });
-
-        triggerEvents(target, ".o_form_statusbar button", ["mouseover", "focusin"]);
-        await tooltipProm;
-        // check on webClient DOM
-        assert.containsOnce(document.body, ".tooltip");
-        await click(target, ".o_content");
-        // check on the whole DOM
-        assert.containsNone(document.body, ".tooltip");
-    });
 });

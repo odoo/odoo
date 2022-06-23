@@ -6,7 +6,7 @@ var testUtils = require('web.test_utils');
 
 var createModel = testUtils.createModel;
 
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     beforeEach: function () {
         this.data = {
             partner: {
@@ -60,7 +60,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('KanbanModel');
+    QUnit.module('KanbanModel (legacy)');
 
     QUnit.test('load grouped + add a new group', async function (assert) {
         var done = assert.async();

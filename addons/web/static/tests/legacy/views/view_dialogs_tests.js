@@ -18,7 +18,7 @@ async function createParent(params) {
     return widget;
 }
 
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     beforeEach: function () {
         this.data = {
             partner: {
@@ -63,7 +63,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('view_dialogs');
+    QUnit.module('ViewDialog (legacy)');
 
     QUnit.test('formviewdialog buttons in footer are positioned properly', async function (assert) {
         assert.expect(2);
