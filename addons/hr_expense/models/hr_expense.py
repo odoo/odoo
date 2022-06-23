@@ -393,7 +393,7 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return super(HrExpense, self).get_empty_list_help(help_message + self._get_empty_list_mail_alias())
+        return super(HrExpense, self).get_empty_list_help(help_message or '' + self._get_empty_list_mail_alias())
 
     @api.model
     def _get_empty_list_mail_alias(self):
