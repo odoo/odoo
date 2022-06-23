@@ -16,6 +16,28 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('use_google_gmail_service', '=', False), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Gmail Credentials</span>"
 msgstr ""
@@ -33,9 +55,21 @@ msgid "Access Token Expiration Timestamp"
 msgstr ""
 
 #. module: google_gmail
+#: code:addons/google_gmail/controllers/main.py:0
+#: code:addons/google_gmail/controllers/main.py:0
+#, python-format
+msgid "An error occur during the authentication process: %s."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token."
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Authorization Code"
 msgstr ""
 
@@ -98,6 +132,18 @@ msgstr ""
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
 msgid "Mail Server"
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Only the administrator can link a Gmail mail server."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Please configure your Gmail credentials."
 msgstr ""
 
 #. module: google_gmail
