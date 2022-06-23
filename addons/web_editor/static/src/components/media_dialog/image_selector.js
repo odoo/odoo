@@ -239,11 +239,14 @@ export class ImageSelector extends FileSelector {
             const imageEl = document.createElement('img');
             let src = attachment.image_src;
             if (!attachment.public) {
-                const [accessToken] = await orm.call(
-                    'ir.attachment',
-                    'generate_access_token',
-                    [attachment.id],
-                );
+                let accessToken = attachment.access_token;
+                if (!accessToken) {
+                    [accessToken] = await orm.call(
+                        'ir.attachment',
+                        'generate_access_token',
+                        [attachment.id],
+                    );
+                }
                 src += `?access_token=${accessToken}`;
             }
             imageEl.src = src;

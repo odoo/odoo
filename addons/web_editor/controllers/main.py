@@ -313,6 +313,8 @@ class Web_Editor(http.Controller):
 
         if data:
             attachment_data['raw'] = data
+            if url:
+                attachment_data['url'] = url
         elif url:
             attachment_data.update({
                 'type': 'url',
@@ -321,7 +323,24 @@ class Web_Editor(http.Controller):
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
-        attachment = request.env['ir.attachment'].create(attachment_data)
+        # If the user is a portal and has access rights on the res_model (and
+        # on the res_id if it exists), we can create the attachment. Otherwise,
+        # one of the check will raise an error and the attachment will not be
+        # created
+        if request.env.user.has_group('base.group_portal'):
+            request.env[res_model].check_access_rights('write')
+            if res_id:
+                request.env[res_model].browse(res_id).check_access_rule('write')
+            attachment = request.env['ir.attachment'].sudo().create(attachment_data)
+            # When portal users upload an attachment with the wysiwyg widget,
+            # the access token is needed to use the image in the editor. If
+            # the attachment is not public, the user won't be able to generate
+            # the token, so we need to generate it using sudo
+            if not attachment_data['public']:
+                attachment.sudo().generate_access_token()
+        else:
+            attachment = request.env['ir.attachment'].create(attachment_data)
+
         return attachment
 
     def _clean_context(self):

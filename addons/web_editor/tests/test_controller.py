@@ -2,16 +2,38 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import binascii
-
-from odoo.tools.json import scriptsafe as json_safe
-from odoo.addons.http_routing.models.ir_http import slug
+import json
 
 import odoo.tests
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, new_test_user
+from odoo.tools.json import scriptsafe as json_safe
 
+from odoo.addons.http_routing.models.ir_http import slug
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestController(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        portal_user = new_test_user(cls.env, login='portal_user', groups='base.group_portal')
+        cls.portal = portal_user.login
+        admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_user,base.group_system')
+        cls.admin = admin_user.login
+        cls.headers = {"Content-Type": "application/json"}
+        cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
+
+    def _build_payload(self, params=None):
+        """
+        Helper to properly build jsonrpc payload
+        """
+        return {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "id": 0,
+            "params": params or {},
+        }
+
     def test_01_upload_document(self):
         self.authenticate('admin', 'admin')
         # Upload document.
@@ -115,3 +137,16 @@ class TestController(HttpCase):
         self.assertEqual(attachment_id, response['result']['original']['id'], "Wrong id")
         self.assertEqual(image_src, response['result']['original']['image_src'], "Wrong image_src")
         self.assertEqual(mimetype, response['result']['original']['mimetype'], "Wrong mimetype")
+
+    def test_04_admin_attachment(self):
+        self.authenticate(self.admin, self.admin)
+        payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True})
+        response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
+        self.assertEqual(200, response.status_code)
+        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
+        self.assertTrue(attachment)
+
+        domain = [('name', '=', 'pixel')]
+        result = attachment.search_read(domain)
+        self.assertTrue(len(result), "No attachment fetched")
+        self.assertEqual(result[0]['id'], attachment.id)
