@@ -18,11 +18,13 @@ class WebsiteSaleVariantController(VariantController):
         if request.website.google_analytics_key:
             combination['product_tracking_info'] = request.env['product.template'].get_google_analytics_data(combination)
 
-        carousel_view = request.env['ir.ui.view']._render_template('website_sale.shop_product_carousel', values={
-            'product': request.env['product.template'].browse(combination['product_template_id']),
-            'product_variant': request.env['product.product'].browse(combination['product_id']),
-        })
-        combination['carousel'] = carousel_view
+        if request.website.product_page_image_width != 'none':
+            carousel_view = request.env['ir.ui.view']._render_template('website_sale.shop_product_images', values={
+                'product': request.env['product.template'].browse(combination['product_template_id']),
+                'product_variant': request.env['product.product'].browse(combination['product_id']),
+                'website': request.env['website'].get_current_website(),
+            })
+            combination['carousel'] = carousel_view
         return combination
 
     @http.route(auth="public")
