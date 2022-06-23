@@ -352,6 +352,15 @@ QUnit.module("domain", {}, () => {
         );
     });
 
+    QUnit.test("Arrays comparison", (assert) => {
+        const domain = new Domain(["&", ["a", "==", []], ["b", "!=", []]]);
+
+        assert.ok(domain.contains({ a: [] }));
+        assert.ok(domain.contains({ a: [], b: [4] }));
+        assert.notOk(domain.contains({ a: [1] }));
+        assert.notOk(domain.contains({ b: [] }));
+    });
+
     // ---------------------------------------------------------------------------
     // Normalization
     // ---------------------------------------------------------------------------
