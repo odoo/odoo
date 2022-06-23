@@ -124,6 +124,7 @@ ViewButton.props = [
     "size?",
     "tabindex?",
     "title?",
+    "style?",
     "string?",
     "slots?",
 ];
