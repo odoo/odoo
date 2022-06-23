@@ -679,7 +679,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         payment_vals = {
-            'amount': self.amount,
+            'amount': abs(self.amount),
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,
