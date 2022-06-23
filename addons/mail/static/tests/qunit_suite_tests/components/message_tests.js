@@ -193,7 +193,7 @@ QUnit.test('Notification Error', async function (assert) {
                 "action should be the one to resend email"
             );
             assert.strictEqual(
-                options.additional_context.mail_message_to_resend,
+                options.additionalContext.mail_message_to_resend,
                 mailMessageId,
                 "action should have correct message id"
             );

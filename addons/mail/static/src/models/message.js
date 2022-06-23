@@ -233,7 +233,7 @@ registerModel({
             this.env.services.action.doAction(
                 'mail.mail_resend_message_action',
                 {
-                    additional_context: {
+                    additionalContext: {
                         mail_message_to_resend: this.id,
                     },
                 }
