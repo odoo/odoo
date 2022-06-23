@@ -43,14 +43,6 @@ export const barcodeService = {
         const endRegexp = /[\n\r\t]+/;
         const barcodeRegexp = /(.{3,})[\n\r\t]*/;
         let timeout = null;
-        let blurTimeout = null;
-
-        // To be able to receive the barcode value, an input must be focused.
-        // On mobile devices, this causes the virtual keyboard to open.
-        // Unfortunately it is not possible to avoid this behavior...
-        // To avoid keyboard flickering at each detection of a barcode value,
-        // we want to keep it open for a while (800 ms).
-        const inputTimeOut = 8000;
 
         let bufferedBarcode = "";
         let currentTarget = null;
@@ -74,7 +66,7 @@ export const barcodeService = {
                 handleBarcode(barcode, currentTarget);
             }
             if (barcodeInput) {
-                blurBarcodeInput();
+                barcodeInput.value = "";
             }
             bufferedBarcode = "";
             currentTarget = null;
@@ -121,17 +113,6 @@ export const barcodeService = {
                 barcodeInput.focus();
             }
             keydownHandler(ev);
-            clearTimeout(blurTimeout);
-            // if the barcode input doesn't receive keydown for a while, remove it.
-            blurTimeout = setTimeout(() => blurBarcodeInput(), inputTimeOut);
-        }
-
-        function blurBarcodeInput() {
-            barcodeInput.value = "";
-            // fixme: blurring the input should not be necessary, but for some
-            // reason, doing it fix some weird scrolling issue in a mobile (non
-            // native) device. 
-            barcodeInput.blur();
         }
 
         whenReady(() => {
