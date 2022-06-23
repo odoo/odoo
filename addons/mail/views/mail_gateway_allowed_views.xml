@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <tree string="Mail Gateway Allowed" editable="top">
                 <field name="email"/>
-                <field name="email_normalized"/>
             </tree>
         </field>
     </record>
@@ -25,5 +24,16 @@
         <field name="name">Mail Gateway Allowed</field>
         <field name="res_model">mail.gateway.allowed</field>
         <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add addresses to the Allowed List
+            </p><p>
+                To protect you from spam and reply loops, Odoo automatically blocks emails
+                coming to your gateway past a threshold of <b>mail.gateway.loop.threshold</b>
+                every <b>mail.gateway.loop.minutes</b> minutes.
+                If there are some addresses from which you need to receive very frequent
+                update, you can however add them below and Odoo will let them go through.
+            </p>
+        </field>
     </record>
 </odoo>

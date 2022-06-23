@@ -717,6 +717,11 @@ msgid "Add a new %(document)s or send an email to %(email_link)s"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_gateway_allowed_action
+msgid "Add an address to the Allowed List"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
 msgstr ""
@@ -6976,6 +6981,16 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To Do"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_gateway_allowed_action
+msgid ""
+"To protect you from spam and reply loops, Odoo automatically blocks emails\n"
+"                coming to your gateway past a threshold of <b>mail.gateway.loop.threshold</b>\n"
+"                every <b>mail.gateway.loop.minutes</b> minutes.\n"
+"                If there are some addresses from which you need to receive very frequent\n"
+"                update, you can however add them below and Odoo will let them go through."
 msgstr ""
 
 #. module: mail
