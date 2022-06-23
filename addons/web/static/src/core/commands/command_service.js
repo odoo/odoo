@@ -18,11 +18,8 @@ const { Component, xml } = owl;
  */
 
 /**
- * @typedef {{
- *  activeElement?: HTMLElement;
+ * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions & {
  *  category?: string;
- *  global?: boolean;
- *  hotkey?: string;
  * }} CommandOptions
  */
 
