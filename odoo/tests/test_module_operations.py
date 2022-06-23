@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     init_logger()
     logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)
-    logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
+    logging.getLogger('odoo.sql_db').setLevel(logging.WARNING)
 
     try:
         if args.uninstall:

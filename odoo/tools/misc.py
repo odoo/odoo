@@ -786,6 +786,30 @@ class mute_logger(logging.Handler):
         pass
 
 
+class intercept_logger(mute_logger):
+    def __init__(self, *loggers, max_log_level=None):
+        super().__init__(*loggers)
+        self.max_log_level = max_log_level
+        self._records = []
+
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        super().__exit__(exc_type, exc_val, exc_tb)
+        if self.max_log_level is None:
+            return
+
+        for record in self._records:
+            logger = logging.getLogger(record.name)
+            record.levelno = min(record.levelno, self.max_log_level)
+            record.levelname = logging.getLevelName(record.levelno)
+            if logger.isEnabledFor(record.levelno):
+                logger.emit(record)
+
+        self._records = []
+
+    def emit(self, record):
+        self._records.push(record)
+
+
 class lower_logging(logging.Handler):
     """Temporary lower the max logging level.
     """

@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import itertools
 import logging
 import random
 import re
-import psycopg2
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
-from operator import itemgetter
 
 from psycopg2 import sql
 from psycopg2.extras import Json
@@ -18,6 +15,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
+from odoo.uninstall import Uninstaller
 
 _logger = logging.getLogger(__name__)
 
@@ -2139,8 +2137,6 @@ class IrModelData(models.Model):
         dropping tables, columns, FKs, etc, as long as there is no other
         ir.model.data entry holding a reference to them (which indicates that
         they are still owned by another module).
-        Attempts to perform the deletion in an appropriate order to maximize
-        the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
         """
         if not self.env.is_system():
@@ -2150,138 +2146,12 @@ class IrModelData(models.Model):
         # we deactivate prefetching to not try to read a column that has been deleted
         self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
-        # determine records to unlink
-        records_items = []              # [(model, id)]
-        model_ids = []
-        field_ids = []
-        selection_ids = []
-        constraint_ids = []
-
         module_data = self.search([('module', 'in', modules_to_remove)], order='id DESC')
-        for data in module_data:
-            if data.model == 'ir.model':
-                model_ids.append(data.res_id)
-            elif data.model == 'ir.model.fields':
-                field_ids.append(data.res_id)
-            elif data.model == 'ir.model.fields.selection':
-                selection_ids.append(data.res_id)
-            elif data.model == 'ir.model.constraint':
-                constraint_ids.append(data.res_id)
-            else:
-                records_items.append((data.model, data.res_id))
-
-        # avoid prefetching fields that are going to be deleted: during uninstall, it is
-        # possible to perform a recompute (via flush) after the database columns have been
-        # deleted but before the new registry has been created, meaning the recompute will
-        # be executed on a stale registry, and if some of the data for executing the compute
-        # methods is not in cache it will be fetched, and fields that exist in the registry but not
-        # in the database will be prefetched, this will of course fail and prevent the uninstall.
-        for ir_field in self.env['ir.model.fields'].browse(field_ids):
-            model = self.pool.get(ir_field.model)
-            if model is not None:
-                field = model._fields.get(ir_field.name)
-                if field is not None:
-                    field.prefetch = False
-
-        # to collect external ids of records that cannot be deleted
-        undeletable_ids = []
-
-        def delete(records):
-            # do not delete records that have other external ids (and thus do
-            # not belong to the modules being installed)
-            ref_data = self.search([
-                ('model', '=', records._name),
-                ('res_id', 'in', records.ids),
-            ])
-            records -= records.browse((ref_data - module_data).mapped('res_id'))
-            if not records:
-                return
-
-            # special case for ir.model.fields
-            if records._name == 'ir.model.fields':
-                missing = records - records.exists()
-                if missing:
-                    # delete orphan external ids right now;
-                    # an orphan ir.model.data can happen if the ir.model.field is deleted via
-                    # an ONDELETE CASCADE, in which case we must verify that the records we're
-                    # processing exist in the database otherwise a MissingError will be raised
-                    orphans = ref_data.filtered(lambda r: r.res_id in missing._ids)
-                    _logger.info('Deleting orphan ir_model_data %s', orphans)
-                    orphans.unlink()
-                    # /!\ this must go before any field accesses on `records`
-                    records -= missing
-                # do not remove LOG_ACCESS_COLUMNS unless _log_access is False
-                # on the model
-                records -= records.filtered(lambda f: f.name == 'id' or (
-                    f.name in models.LOG_ACCESS_COLUMNS and
-                    f.model in self.env and self.env[f.model]._log_access
-                ))
-
-            # now delete the records
-            _logger.info('Deleting %s', records)
-            try:
-                with self._cr.savepoint():
-                    records.unlink()
-            except Exception:
-                if len(records) <= 1:
-                    undeletable_ids.extend(ref_data._ids)
-                else:
-                    # divide the batch in two, and recursively delete them
-                    half_size = len(records) // 2
-                    delete(records[:half_size])
-                    delete(records[half_size:])
-
-        # remove non-model records first, grouped by batches of the same model
-        for model, items in itertools.groupby(unique(records_items), itemgetter(0)):
-            delete(self.env[model].browse(item[1] for item in items))
-
-        # Remove copied views. This must happen after removing all records from
-        # the modules to remove, otherwise ondelete='restrict' may prevent the
-        # deletion of some view. This must also happen before cleaning up the
-        # database schema, otherwise some dependent fields may no longer exist
-        # in database.
         modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
-        modules._remove_copied_views()
-
-        # remove constraints
-        delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
-        constraints._module_data_uninstall()
-
-        # If we delete a selection field, and some of its values have ondelete='cascade',
-        # we expect the records with that value to be deleted. If we delete the field first,
-        # the column is dropped and the selection is gone, and thus the records above will not
-        # be deleted.
-        delete(self.env['ir.model.fields.selection'].browse(unique(selection_ids)).exists())
-        delete(self.env['ir.model.fields'].browse(unique(field_ids)))
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
-        relations._module_data_uninstall()
-
-        # remove models
-        delete(self.env['ir.model'].browse(unique(model_ids)))
-
-        # log undeletable ids
-        _logger.info("ir.model.data could not be deleted (%s)", undeletable_ids)
-
-        # sort out which undeletable model data may have become deletable again because
-        # of records being cascade-deleted or tables being dropped just above
-        for data in self.browse(undeletable_ids).exists():
-            record = self.env[data.model].browse(data.res_id)
-            try:
-                with self.env.cr.savepoint():
-                    if record.exists():
-                        # record exists therefore the data is still undeletable,
-                        # remove it from module_data
-                        module_data -= data
-                        continue
-            except psycopg2.ProgrammingError:
-                # This most likely means that the record does not exist, since record.exists()
-                # is rougly equivalent to `SELECT id FROM table WHERE id=record.id` and it may raise
-                # a ProgrammingError because the table no longer exists (and so does the
-                # record), also applies to ir.model.fields, constraints, etc.
-                pass
-        # remove remaining module data records
-        module_data.unlink()
+        module_data = Uninstaller(module_data, constraints, relations).uninstall()
+        # raise RuntimeError('Uninstall succeeded')
 
     @api.model
     def _process_end_unlink_record(self, record):

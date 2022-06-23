@@ -13,6 +13,7 @@ from .date_utils import *
 from .debugger import *
 from .float_utils import *
 from .func import *
+from .graph import *
 from .image import *
 from .mail import *
 from .misc import *
