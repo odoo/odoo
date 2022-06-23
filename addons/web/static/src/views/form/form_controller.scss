@@ -73,6 +73,11 @@ $o-form-label-margin-right: 0px;
         min-height: $font-size-base * $line-height-base;
     }
 
+    // Explicitly set elements as full-width
+    .o_form_content_fullwidth {
+        @include o-form-nosheet-negative-margin();
+    }
+
     .o_row {
         &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
             display: flex;
