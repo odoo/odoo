@@ -33,7 +33,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/run",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -92,8 +92,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("action with html help returned by a server action", async function (assert) {
-        assert.expect(1);
-
         serverData.actions[2].context = { someKey: 44 };
         const mockRPC = async (route, args) => {
             if (route === "/web/action/run") {

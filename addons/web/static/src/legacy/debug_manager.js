@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { FormViewDialog } from 'web.view_dialogs';
+import { FormViewDialog } from "web.view_dialogs";
 import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
-import { formatMany2one } from "@web/fields/formatters";
+import { formatMany2one } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
-import { standaloneAdapter } from 'web.OwlCompatibility';
+import { standaloneAdapter } from "web.OwlCompatibility";
 
 const { Component, onWillStart, useState } = owl;
 
@@ -14,7 +13,7 @@ const debugRegistry = registry.category("debug");
 
 class GetMetadataDialog extends Component {
     setup() {
-        super.setup();
+        this.title = this.env._t("View Metadata");
         this.state = useState({});
         onWillStart(this.onWillStart);
     }
@@ -25,7 +24,7 @@ class GetMetadataDialog extends Component {
 
     async onClickCreateXmlid() {
         const context = Object.assign({}, this.context, {
-            default_module: '__custom__',
+            default_module: "__custom__",
             default_res_id: this.state.id,
             default_model: this.props.res_model,
         });
@@ -34,9 +33,9 @@ class GetMetadataDialog extends Component {
             context: context,
             on_saved: () => this.getMetadata(),
             disable_multiple_selection: true,
-            res_model: 'ir.model.data',
+            res_model: "ir.model.data",
         });
-        dialog.on('dialog_form_loaded', this, () => {
+        dialog.on("dialog_form_loaded", this, () => {
             dialog.$el.find('[name="name"]').focus();
         });
         await dialog.open();
@@ -61,16 +60,20 @@ class GetMetadataDialog extends Component {
         this.state.creator = formatMany2one(metadata.create_uid);
         this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
         this.state.noupdate = metadata.noupdate;
-        this.state.create_date = formatDateTime(parseDateTime(metadata.create_date), { timezone: true });
-        this.state.write_date = formatDateTime(parseDateTime(metadata.write_date), { timezone: true });
+        this.state.createDate = formatDateTime(parseDateTime(metadata.create_date), {
+            timezone: true,
+        });
+        this.state.writeDate = formatDateTime(parseDateTime(metadata.write_date), {
+            timezone: true,
+        });
     }
 }
 GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";
 GetMetadataDialog.components = { Dialog };
-GetMetadataDialog.title = _lt("View Metadata");
+
 class SetDefaultDialog extends Component {
     setup() {
-        super.setup();
+        this.title = this.env._t("Set Defaults");
         this.state = {
             fieldToSet: "",
             condition: "",
@@ -212,11 +215,9 @@ class SetDefaultDialog extends Component {
 }
 SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
 SetDefaultDialog.components = { Dialog };
-SetDefaultDialog.title = _lt("Set Default");
 
 // Form view items
-
-export function setDefaults({ action, component, env }) {
+function setDefaults({ action, component, env }) {
     return {
         type: "item",
         description: env._t("Set Defaults"),
@@ -282,7 +283,7 @@ function manageAttachments({ action, component, env }) {
 }
 
 debugRegistry
-    .category("form")
+    .category("form_legacy")
     .add("setDefaults", setDefaults)
     .add("viewMetadata", viewMetadata)
     .add("manageAttachments", manageAttachments);

@@ -348,12 +348,6 @@
     border-color: $border-color;
     z-index: $zindex-dropdown + 1;
 }
-@mixin o-kanban-dropdown-menu {
-    @include o-position-absolute($right: -1px);
-    margin-top: -2px;
-    border-color: $border-color;
-    border-top-right-radius: 0;
-}
 @mixin o-kanban-colorpicker {
     max-width: 150px;
     padding: 3px ($o-dropdown-hpadding - $o-kanban-inner-hmargin) 3px $o-dropdown-hpadding;

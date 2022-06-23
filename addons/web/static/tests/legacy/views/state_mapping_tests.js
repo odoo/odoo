@@ -32,7 +32,7 @@ const viewRegistry = registry.category("views");
 
 let serverData;
 let target;
-QUnit.module("Views", (hooks) => {
+QUnit.module("LegacyViews", (hooks) => {
     hooks.beforeEach(async () => {
         target = getFixture();
 

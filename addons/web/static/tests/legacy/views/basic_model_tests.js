@@ -9,7 +9,7 @@ odoo.define('web.basic_model_tests', function (require) {
     var createModel = testUtils.createModel;
     var createView = testUtils.createView;
 
-    QUnit.module('Views', {
+    QUnit.module('LegacyViews', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -106,7 +106,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 groupedBy: ['product_id'],
                 fieldNames: ['foo'],
             });
-    
+
             model.load(params)
                 .then(function (stateID) {
                     return model.resequence('product', [41, 37], stateID);

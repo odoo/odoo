@@ -238,7 +238,7 @@ var KanbanController = BasicController.extend({
         const state = this.model.get(this.handle, {raw: true});
         if (!state.count || state.isSample) {
             const classesList = [
-                'o_kanban_view',
+                'o_legacy_kanban_view',
                 'o_kanban_group',
                 'o_kanban_header',
                 'o_column_quick_create',

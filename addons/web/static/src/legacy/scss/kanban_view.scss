@@ -1,5 +1,5 @@
 // ------- Kanban View Layout -------
-.o_kanban_view {
+.o_legacy_kanban_view {
     display: flex;
     align-content: stretch;
 
@@ -249,7 +249,6 @@
                 @include o-kanban-dropdown-open;
             }
             .dropdown-menu {
-                @include o-kanban-dropdown-menu;
                 min-width: 11rem;
             }
         }
@@ -619,6 +618,7 @@
 
             &.o_kanban_ghost {
                 height: 0;
+                border: none;
                 min-height: 0!important; // to prevent view writers to override this height
                 visibility: hidden;
                 margin-top: 0;
@@ -645,7 +645,7 @@
 }
 
 // ----------------- Set Cover Dialog -----------------
-.modal .o_kanban_cover_container .o_kanban_cover_image {
+.modal .o_legacy_kanban_cover_container .o_kanban_cover_image {
     border: 1px solid $border-color;
     height: 120px;
     width: 120px;

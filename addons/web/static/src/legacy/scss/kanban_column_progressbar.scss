@@ -41,20 +41,20 @@
 }
 
 // If columns has the progressbar, adapt the layout
-.o_kanban_view .o_kanban_group.o_kanban_has_progressbar {
+.o_legacy_kanban_view .o_kanban_group.o_kanban_has_progressbar {
     > .o_kanban_header .o_kanban_header_title {
         height: $o-kanban-header-title-height*0.6;
         margin-top: 5px;
     }
 
     &.o_kanban_no_records {
-        .o_kanban_counter {
+        .o_legacy_kanban_counter {
             opacity: 0.3;
         }
     }
 }
 
-.o_kanban_counter {
+.o_legacy_kanban_counter {
     position: relative;
     display: flex;
     align-items: center;
@@ -102,11 +102,11 @@
         }
     }
 }
-.o_column_folded .o_kanban_counter {
+.o_column_folded .o_legacy_kanban_counter {
     display: none;
 }
 
-.o_kanban_view .o_kanban_group {
+.o_legacy_kanban_view .o_kanban_group {
     @include o-kanban-css-filter(success, theme-color('success'));
     @include o-kanban-css-filter(warning, theme-color('warning'));
     @include o-kanban-css-filter(danger, theme-color('danger'));

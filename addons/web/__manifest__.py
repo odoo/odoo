@@ -96,9 +96,10 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
-            'web/static/src/fields/**/*',
+            'web/static/src/legacy/legacy_fields.scss',
             'web/static/src/search/**/*',
             'web/static/src/views/**/*',
+            ('remove', 'web/static/src/views/form/button_box/*.scss'),
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/navbar/navbar.scss'), # already in _assets_common_styles
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
@@ -141,6 +142,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/profiling_qweb_view.scss',
             'base/static/src/scss/res_partner.scss',
 
+            # Form style should be computed before
+            'web/static/src/views/form/button_box/*.scss',
+
             'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/debug_manager.js',
             'web/static/src/legacy/legacy_service_provider.js',
@@ -148,6 +152,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_dialog.js',
             'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_views.js',
+            'web/static/src/legacy/legacy_fields.js',
+            'web/static/src/legacy/legacy_view_widgets.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/root_widget.js',
@@ -355,7 +361,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/legacy/scss/web.zoomodoo.scss',
-            'web/static/src/legacy/scss/color_picker.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
         ],
         'web._assets_common_scripts': [
@@ -490,6 +495,7 @@ This module provides the core of the Odoo Web Client.
 
             # 'web/static/tests/legacy/main_tests.js',
             'web/static/tests/helpers/**/*.js',
+            'web/static/tests/views/helpers.js',
             'web/static/tests/search/helpers.js',
             'web/static/tests/webclient/**/helpers.js',
             'web/static/tests/qunit.js',
@@ -511,10 +517,10 @@ This module provides the core of the Odoo Web Client.
             'base/static/tests/base_settings_tests.js',
             'web/static/tests/env_tests.js',
             'web/static/tests/core/**/*.js',
-            'web/static/tests/fields/**/*.js',
             'web/static/tests/search/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),
             'web/static/tests/views/**/*.js',
+            ('remove', 'web/static/tests/views/helpers.js'),
             'web/static/tests/webclient/**/*.js',
             ('remove', 'web/static/tests/webclient/**/helpers.js'),
             'web/static/tests/legacy/**/*.js',

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanView" owl="1">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-component="props.Renderer"
+                    list="model.root"
+                    archInfo="props.archInfo"
+                    readonly="true"
+                    forceGlobalClick="props.forceGlobalClick"
+                    openRecord.bind="openRecord"
+                    noContentHelp="props.info.noContentHelp"
+                />
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanView.Buttons" owl="1">
+        <div t-if="props.showButtons" class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions">
+            <t t-if="canCreate">
+                <button type="button" class="btn btn-primary o-kanban-button-new" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
+                    Create
+                </button>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -36,6 +36,7 @@ import {
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeHTTPService,
+    makeFakeUserService,
 } from "../helpers/mock_services";
 import {
     getFixture,
@@ -47,7 +48,6 @@ import {
 import session from "web.session";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
-import { userService } from "@web/core/user_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
@@ -95,7 +95,7 @@ export function setupWebClientRegistries() {
         router: () => makeFakeRouterService(),
         title: () => fakeTitleService,
         ui: () => uiService,
-        user: () => userService,
+        user: () => makeFakeUserService(),
         view: () => viewService,
     };
     for (let serviceName in services) {

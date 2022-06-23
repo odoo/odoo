@@ -5,8 +5,8 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { Model } from "@web/views/helpers/model";
-import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
+import { Model } from "@web/views/model";
+import { computeReportMeasures, processMeasure } from "@web/views/utils";
 
 export const SEP = " / ";
 

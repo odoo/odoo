@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatusBarField" owl="1">
+        <div class="o_statusbar_status">
+            <t t-set="items" t-value="computeItems()" />
+
+            <t t-if="items.folded.length">
+                <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle">
+                    <Dropdown toggler="'parent'">
+                        <t t-foreach="items.folded" t-as="item" t-key="item.id">
+                            <DropdownItem class="dropdownClassNames" onSelected="() => this.selectItem(item)">
+                                <t t-esc="item.name" />
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                    More
+                </button>
+                
+            </t>
+
+            <t t-foreach="items.unfolded.reverse()" t-as="item" t-key="item.id">
+                <t t-if="item.isSelected">
+                    <button
+                        type="button"
+                        class="btn btn-primary o_arrow_button disabled"
+                        disabled="disabled"
+                        role="radio"
+                        aria-label="Current state"
+                        aria-checked="true"
+                        aria-current="step"
+                        t-att-disabled="props.isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-elif="props.isDisabled">
+                    <button
+                        type="button"
+                        class="btn btn-secondary o_arrow_button disabled"
+                        disabled="disabled"
+                        role="radio"
+                        aria-label="Not active state"
+                        aria-checked="false"
+                        t-att-disabled="props.isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-else="">
+                    <button
+                        type="button"
+                        class="btn btn-secondary o_arrow_button"
+                        role="radio"
+                        aria-label="Not active state, click to change it"
+                        aria-checked="false"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                        t-on-click="() => this.selectItem(item)"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

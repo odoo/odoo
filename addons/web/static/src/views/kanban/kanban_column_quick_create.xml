@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanColumnQuickCreate" owl="1">
+        <div class="o_column_quick_create" t-ref="root">
+            <div t-if="props.folded" class="o_quick_create_folded" t-on-click="unfold">
+                <button class="o_kanban_add_column btn btn-outline-secondary w-100">
+                    <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/>
+                    Add a Column
+                </button>
+            </div>
+            <div t-else="" class="o_quick_create_unfolded">
+                <div class="o_kanban_header">
+                    <div class="input-group">
+                        <input type="text"
+                            class="form-control o_input"
+                            placeholder="Column title"
+                            t-ref="autofocus"
+                            t-model.trim="state.columnTitle"
+                            t-on-focus="() => state.hasInputFocused = true"
+                            t-on-blur="() => state.hasInputFocused = false"
+                        />
+                        <span class="input-group-append">
+                            <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
+                                Add
+                            </button>
+                        </span>
+                    </div>
+                    <span t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-right">
+                        Esc to discard
+                    </span>
+                    <t t-if="props.exampleData and !env.isSmall">
+                        <button type="button" class="btn btn-link o_kanban_examples" t-on-click="showExamples">See examples</button>
+                    </t>
+                </div>
+                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record" />
+            </div>
+        </div>
+    </t>
+
+</templates>

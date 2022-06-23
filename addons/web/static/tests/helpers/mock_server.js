@@ -94,7 +94,7 @@ export class MockServer {
     async performRPC(route, args) {
         args = JSON.parse(JSON.stringify(args));
         if (this.debug) {
-            console.log("%c[rpc] request " + route, "color: blue; font-weight: bold;", args);
+            console.log("%c[rpc] request " + route, "color: #66e; font-weight: bold;", args);
             args = JSON.parse(JSON.stringify(args));
         }
         let result;
@@ -115,7 +115,7 @@ export class MockServer {
         if (this.debug) {
             console.log(
                 "%c[rpc] response" + route,
-                "color: blue; font-weight: bold;",
+                "color: #66e; font-weight: bold;",
                 JSON.parse(resultString)
             );
         }
@@ -456,6 +456,8 @@ export class MockServer {
                 return this.mockLoadAction(args);
             case "/web/dataset/search_read":
                 return this.mockSearchReadController(args);
+            case "/web/dataset/resequence":
+                return this.mockResequence(args);
         }
         if (
             route.indexOf("/web/image") >= 0 ||
@@ -463,12 +465,19 @@ export class MockServer {
         ) {
             return;
         }
+
         switch (args.method) {
             case "render_public_asset": {
                 return true;
             }
+            case "action_archive":
+                return this.mockWrite(args.model, [args.args[0], { active: false }]);
+            case "action_unarchive":
+                return this.mockWrite(args.model, [args.args[0], { active: true }]);
+            case "copy":
+                return this.mockCopy(args.model, args.args[0]);
             case "create":
-                return this.mockCreate(args.model, args.args[0]);
+                return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
                 return this.mockFieldsGet(args.model);
             case "get_views":
@@ -501,6 +510,8 @@ export class MockServer {
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
                 return this.mockWebReadGroup(args.model, args.kwargs);
+            case "read_progress_bar":
+                return this.mockReadProgressBar(args.model, args.kwargs);
             case "write":
                 return this.mockWrite(args.model, args.args);
         }
@@ -512,7 +523,26 @@ export class MockServer {
         throw new Error(`Unimplemented route: ${route}`);
     }
 
-    mockCreate(modelName, values) {
+    /**
+     * Simulate a 'copy' operation, so we simply try to duplicate a record in
+     * memory
+     *
+     * @private
+     * @param {string} modelName
+     * @param {integer} id the ID of a valid record
+     * @returns {integer} the ID of the duplicated record
+     */
+    mockCopy(modelName, id) {
+        const model = this.models[modelName];
+        const newID = this.getUnusedID(modelName);
+        const originalRecord = model.records.find((record) => record.id === id);
+        const duplicatedRecord = { ...originalRecord, id: newID };
+        duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
+        model.records.push(duplicatedRecord);
+        return newID;
+    }
+
+    mockCreate(modelName, values, kwargs = {}) {
         if ("id" in values) {
             throw new Error("Cannot create a record with a predefinite id");
         }
@@ -520,7 +550,7 @@ export class MockServer {
         const id = this.getUnusedID(modelName);
         const record = { id };
         model.records.push(record);
-        this.applyDefaults(model, values);
+        this.applyDefaults(model, values, kwargs.context);
         this.writeRecord(modelName, values, id);
         this.updateComodelRelationalFields(modelName, record);
         return id;
@@ -611,7 +641,7 @@ export class MockServer {
      * Simulate a 'name_create' operation
      *
      * @private
-     * @param {string} model
+     * @param {string} modelName
      * @param {string} name
      * @returns {Array} a couple [id, name]
      */
@@ -668,7 +698,7 @@ export class MockServer {
         const result = [];
         for (const r of records) {
             const isInDomain = this.evaluateDomain(domain, r);
-            if (isInDomain && (!str.length || r.display_name.includes(str))) {
+            if (isInDomain && (!str.length || (r.display_name && r.display_name.includes(str)))) {
                 result.push([r.id, r.display_name]);
             }
         }
@@ -1068,6 +1098,29 @@ export class MockServer {
             groups: groups,
             length: allGroups.length,
         };
+    }
+
+    mockReadProgressBar(modelName, kwargs) {
+        const { domain, group_by: groupBy, progress_bar: progressBar } = kwargs;
+        const records = this.getRecords(modelName, domain || []);
+
+        const data = {};
+        for (const record of records) {
+            const groupByValue = record[groupBy]; // always technical value here
+            if (!(groupByValue in data)) {
+                data[groupByValue] = {};
+                for (const key in progressBar.colors) {
+                    data[groupByValue][key] = 0;
+                }
+            }
+
+            const fieldValue = record[progressBar.field];
+            if (fieldValue in data[groupByValue]) {
+                data[groupByValue][fieldValue]++;
+            }
+        }
+
+        return data;
     }
 
     /**
@@ -1685,6 +1738,19 @@ export class MockServer {
         };
     }
 
+    mockResequence(args) {
+        const offset = args.offset ? Number(args.offset) : 0;
+        const field = args.field || "sequence";
+        if (!(field in this.models[args.model].fields)) {
+            return false;
+        }
+        for (const index in args.ids) {
+            const record = this.models[args.model].records.find((r) => r.id === args.ids[index]);
+            record[field] = Number(index) + offset;
+        }
+        return true;
+    }
+
     mockWrite(modelName, args) {
         args[0].forEach((id) => {
             const [originalRecord] = this.mockSearchRead(modelName, [[["id", "=", id]]], {});
@@ -2049,14 +2115,16 @@ export class MockServer {
         );
     }
 
-    applyDefaults(model, record) {
+    applyDefaults(model, record, context = {}) {
         record.display_name = record.display_name || record.name;
         for (const fieldName in model.fields) {
             if (fieldName === "id") {
                 continue;
             }
             if (!(fieldName in record)) {
-                if ("default" in model.fields[fieldName]) {
+                if (`default_${fieldName}` in context) {
+                    record[fieldName] = context[`default_${fieldName}`];
+                } else if ("default" in model.fields[fieldName]) {
                     const def = model.fields[fieldName].default;
                     record[fieldName] = typeof def === "function" ? def.call(this) : def;
                 } else if (["one2many", "many2many"].includes(model.fields[fieldName].type)) {
@@ -2081,6 +2149,10 @@ export async function makeMockServer(serverData, mockRPC) {
     await mockServer.setup();
     const _mockRPC = async (route, args = {}) => {
         let res;
+        if (args.method !== "POST") {
+            // simulates that we serialized the call to be passed in a real request
+            args = JSON.parse(JSON.stringify(args));
+        }
         const performRPC = (route, args) => mockServer.performRPC(route, args);
         if (mockRPC) {
             res = await mockRPC(route, args, performRPC);

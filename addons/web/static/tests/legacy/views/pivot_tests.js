@@ -36,7 +36,7 @@ var getCurrentValues = function (pivot) {
 let serverData;
 let target;
 
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     beforeEach: function () {
         registry.category("views").remove("pivot"); // remove new pivot from registry
         legacyViewRegistry.add("pivot", PivotView); // add legacy pivot -> will be wrapped and added to new registry
@@ -129,7 +129,7 @@ QUnit.module('Views', {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     },
 }, function () {
-    QUnit.module('Legacy PivotView');
+    QUnit.module('PivotView (legacy)');
 
     QUnit.test('simple pivot rendering', async function (assert) {
         assert.expect(3);
@@ -2031,7 +2031,7 @@ QUnit.module('Views', {
             [
                 "Total",
                     "xphone",
-                    "xpad" 
+                    "xpad"
             ]
         );
 

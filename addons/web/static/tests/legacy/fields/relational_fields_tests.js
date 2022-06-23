@@ -20,9 +20,9 @@ const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-QUnit.module('relational_fields', {
+QUnit.module('Legacy relational_fields', {
     beforeEach: function () {
         this.data = {
             partner: {
@@ -1025,7 +1025,7 @@ QUnit.module('relational_fields', {
     });
 
     // TODO: Once the code base is converted with wowl, replace webclient by formview.
-    QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
+    QUnit.skip('statusbar edited by the smart action "Move to stage..."', async function (assert) {
         assert.expect(3);
 
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
@@ -4108,14 +4108,14 @@ QUnit.module('relational_fields', {
 
         await testUtils.fields.editInput(form.$('.o_field_many2one input'), 'ABC');
         // click create and edit
-        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item a:contains(Create and)').trigger('mouseenter'));
+        testUtils.dom.click($('.ui-autocomplete .ui-menu-item a:contains(Create and)').trigger('mouseenter'));
 
         // hit escape immediately
         var escapeKey = $.ui.keyCode.ESCAPE;
         $(document.activeElement).trigger(
             $.Event('keydown', {which: escapeKey, keyCode: escapeKey}));
 
-        assert.ok('did not crash');
+        assert.containsNone(document.body, ".modal");
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         form.destroy();
     });

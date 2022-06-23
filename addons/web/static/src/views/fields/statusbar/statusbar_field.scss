@@ -1,0 +1,71 @@
+.o_field_statusbar {
+    > .o_statusbar_status {
+        display: flex;
+        align-content: space-around;
+        margin-left: auto;
+        flex-flow: row-reverse wrap-reverse;
+        align-self: stretch;
+        align-items: stretch;
+
+        > .o_arrow_button {
+            min-height: $o-statusbar-height;
+            position: relative;
+            padding-left: $o-statusbar-arrow-width*2;
+            border-width: 0;
+            font-size: $font-size-sm;
+
+            &:first-child {
+                padding-right: $o-horizontal-padding; // Compensate container padding
+                overflow-x: hidden; // to prevent horizontal scroll due to last arrow
+            }
+            &:last-child {
+                padding-left: $o-horizontal-padding - 1;
+
+                &:not(.disabled) {
+                    border-left: 1px solid $border-color;
+                }
+            }
+
+            &:not(:first-child):before, &:not(:first-child):after {
+                content: " ";
+                display: block;
+                @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
+
+                border-top: floor($o-statusbar-height/2) solid transparent;
+                border-bottom: ceil($o-statusbar-height/2) solid transparent;
+                border-right: none;
+                border-left: $o-statusbar-arrow-width solid $o-view-background-color;
+                -moz-transform: scale(0.9999); // Smooth the triangle on firefox
+            }
+
+            &:not(:first-child):before {
+                right: -$o-statusbar-arrow-width;
+                border-left-color: gray('300');
+            }
+
+            &.disabled {
+                opacity: 1;
+                pointer-events: none;
+
+                &:not(.btn-primary) {
+                    @include plain-hover-focus() {
+                        color: $text-muted;
+                    }
+                }
+            }
+
+            &.btn-primary.disabled {
+                background-color: $o-brand-odoo;
+                color: color-yiq($o-brand-odoo);
+
+                &:after, &:before {
+                    border-left-color: $o-brand-odoo;
+                }
+
+                + .o_arrow_button:before {
+                    display: none;
+                }
+            }
+        }
+    }
+}

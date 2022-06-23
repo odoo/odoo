@@ -1,0 +1,49 @@
+.o_tags_list {
+    gap: 2px;
+
+    .o_tag {
+        user-select: none;
+    
+        .o_badge_text, a {
+            color: inherit;
+        }
+    
+        .o_tag_badge_text {
+            font-size: 12px;
+        }
+    
+        img {
+            height: 1.6em;
+            aspect-ratio: 1/1;
+    
+            + .o_tag_badge_text {
+                padding: 0.25em 0;
+            }
+        }
+    
+        @for $size from 1 through length($o-colors) {
+            &.o_tag_color_#{$size - 1} {
+                @if $size == 1 {
+                    & {
+                        background-color: $o-view-background-color;
+                        color: nth($o-colors, $size);
+                    }
+                    &:focus-within {
+                        color: darken(nth($o-colors, $size), 40%) ;
+                    }
+                    &::after {
+                        background-color: nth($o-colors, $size);
+                    }
+                } @else {
+                    &, &::after {
+                        background-color: nth($o-colors, $size);
+                        color: color-yiq(nth($o-colors, $size));
+                    }
+                    &:focus-within {
+                        background-color: darken(nth($o-colors, $size), 20%);
+                    }
+                }
+            }
+        }
+    }   
+}
