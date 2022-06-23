@@ -593,7 +593,7 @@ class IrTranslation(models.Model):
         # When assigning a translation to a field
         # e.g. email.with_context(lang='fr_FR').label = "bonjour"
         # and then search on translations for this translation, must flush as the translation has not yet been written in database
-        if any(self.env[model]._fields[field].translate for model, ids in self.env.all.towrite.items() for record_id, fields in ids.items() for field in fields):
+        if any(field.translate for field in self.env.cache.get_dirty_fields()):
             self.env.flush_all()
         return super(IrTranslation, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
