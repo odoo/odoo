@@ -2,7 +2,12 @@
 <templates xml:space="preserve">
 
   <t t-name="web.WithSearch" owl="1">
-    <t t-component="Component" t-props="componentProps" />
+    <t t-slot="default"
+      context="searchModel.context"
+      domain="searchModel.domain"
+      groupBy="searchModel.groupBy"
+      orderBy="searchModel.orderBy"
+      comparison="searchModel.comparison"/>
   </t>
 
 </templates>

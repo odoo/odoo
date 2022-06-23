@@ -322,18 +322,23 @@ QUnit.module("Search", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.state = useState({
+                this.searchState = useState({
                     resModel: "animal",
-                    Component: TestComponent,
                     domain: [["type", "=", "carnivorous"]],
                 });
             }
         }
-        Parent.template = xml`<WithSearch t-props="state"/>`;
-        Parent.components = { WithSearch };
+        Parent.template = xml`
+            <WithSearch t-props="searchState" t-slot-scope="search">
+                <TestComponent
+                    domain="search.domain"
+                />
+            </WithSearch>
+        `;
+        Parent.components = { WithSearch, TestComponent };
 
         const parent = await mount(Parent, target, { env });
-        parent.state.domain = [["type", "=", "herbivorous"]];
+        parent.searchState.domain = [["type", "=", "herbivorous"]];
 
         await nextTick();
     });
