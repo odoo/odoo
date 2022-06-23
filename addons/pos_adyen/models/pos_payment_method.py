@@ -68,6 +68,7 @@ class PosPaymentMethod(models.Model):
         }
 
     def get_latest_adyen_status(self, pos_config_name):
+        _logger.info('get_latest_adyen_status\n%s', pos_config_name)
         self.ensure_one()
 
         # Poll the status of the terminal if there's no new

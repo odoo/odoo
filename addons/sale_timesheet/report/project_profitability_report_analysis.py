@@ -167,7 +167,7 @@ class ProfitabilityAnalysis(models.Model):
                                     AAL.so_line AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    AAL.amount AS other_revenues,
+                                    AAL.amount + COALESCE(AAL_RINV.amount, 0) AS other_revenues,
                                     0.0 AS expense_cost,
                                     0.0 AS expense_amount_untaxed_to_invoice,
                                     0.0 AS expense_amount_untaxed_invoiced,
@@ -194,10 +194,10 @@ class ProfitabilityAnalysis(models.Model):
                                                                   AND RINVL.parent_state = 'posted'
                                                                   AND RINVL.exclude_from_invoice_tab = 'f'
                                                                   AND RINVL.product_id = AML.product_id
+                                    LEFT JOIN account_analytic_line AAL_RINV ON RINVL.id = AAL_RINV.move_id
                                 WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't'
                                     AND P.allow_timesheets = 't'
                                     AND BILLL.id IS NULL
-                                    AND RINVL.id IS NULL
                                     AND (SOL.id IS NULL
                                         OR (SOL.is_expense IS NOT TRUE AND SOL.is_downpayment IS NOT TRUE AND SOL.is_service IS NOT TRUE))
 
@@ -211,7 +211,7 @@ class ProfitabilityAnalysis(models.Model):
                                     0.0 AS timesheet_unit_amount,
                                     0.0 AS timesheet_cost,
                                     0.0 AS other_revenues,
-                                    AAL.amount AS expense_cost,
+                                    AAL.amount + COALESCE(AML_RBILLL.amount, 0) AS expense_cost,
                                     0.0 AS expense_amount_untaxed_to_invoice,
                                     0.0 AS expense_amount_untaxed_invoiced,
                                     0.0 AS amount_untaxed_to_invoice,
@@ -235,12 +235,12 @@ class ProfitabilityAnalysis(models.Model):
                                                                       AND RBILLL.parent_state = 'posted'
                                                                       AND RBILLL.exclude_from_invoice_tab = 'f'
                                                                       AND RBILLL.product_id = AML.product_id
+                                    LEFT JOIN account_analytic_line AML_RBILLL ON RBILLL.id = AML_RBILLL.move_id
                                     -- Check if the AAL is not related to a consumed downpayment (when the SOL is fully invoiced - with downpayment discounted.)
                                     LEFT JOIN sale_order_line_invoice_rel SOINVDOWN ON SOINVDOWN.invoice_line_id = AML.id
                                     LEFT JOIN sale_order_line SOLDOWN on SOINVDOWN.order_line_id = SOLDOWN.id AND SOLDOWN.is_downpayment = 't'
                                 WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL
                                   AND INVL.id IS NULL
-                                  AND RBILLL.id IS NULL
                                   AND SOLDOWN.id IS NULL
                                   AND P.active = 't' AND P.allow_timesheets = 't'
 
