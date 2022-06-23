@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { browser } from "../browser/browser";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * Creates a version of the function where only the last call between two
@@ -33,7 +33,7 @@ export function throttleForAnimation(func) {
 
 /**
  * Creates and returns a new debounced version of the passed function (func)
- * which will postpone its execution until after wait milliseconds
+ * which will postpone its execution until after 'delay' milliseconds
  * have elapsed since the last time it was invoked. The debounced function
  * will return a Promise that will be resolved when the function (func)
  * has been fully executed. If `immediate` is passed, trigger the function
@@ -41,26 +41,31 @@ export function throttleForAnimation(func) {
  *
  * @template T the return type of the original function
  * @param {(...args) => T} func the function to debounce
- * @param {number} wait how long should elapse before the function is called
+ * @param {number | "animationFrame"} delay how long should elapse before the function
+ *      is called. If 'animationFrame' is given instead of a number, 'requestAnimationFrame'
+ *      will be used instead of 'setTimeout'.
  * @param {boolean} [immediate=false] whether the function should be called on
  *      the leading edge instead of the trailing edge.
  * @returns {{ (...args): Promise<T>, cancel: () => void }} the debounced function
  */
-export function debounce(func, wait, immediate = false) {
-    let timeout;
+export function debounce(func, delay, immediate = false) {
+    let handle;
     const funcName = func.name ? func.name + " (debounce)" : "debounce";
+    const useAnimationFrame = delay === "animationFrame";
+    const setFnName = useAnimationFrame ? "requestAnimationFrame" : "setTimeout";
+    const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
     return Object.assign(
         {
             [funcName](...args) {
                 return new Promise((resolve) => {
-                    const callNow = immediate && !timeout;
-                    browser.clearTimeout(timeout);
-                    timeout = browser.setTimeout(() => {
-                        timeout = null;
+                    const callNow = immediate && !handle;
+                    browser[clearFnName](handle);
+                    handle = browser[setFnName](() => {
+                        handle = null;
                         if (!immediate) {
                             Promise.resolve(func.apply(this, args)).then(resolve);
                         }
-                    }, wait);
+                    }, delay);
                     if (callNow) {
                         Promise.resolve(func.apply(this, args)).then(resolve);
                     }
@@ -69,7 +74,7 @@ export function debounce(func, wait, immediate = false) {
         }[funcName],
         {
             cancel() {
-                browser.clearTimeout(timeout);
+                browser[clearFnName](handle);
             },
         }
     );
@@ -82,10 +87,10 @@ export function debounce(func, wait, immediate = false) {
  * @deprecated this function has behaviour that is unexpected considering its
  *      name, prefer _.throttle until this function is rewritten
  * @param {Function} func
- * @param {number} wait
+ * @param {number} delay
  * @returns {Function}
  */
-export function throttle(func, wait) {
+export function throttle(func, delay) {
     let waiting = false;
     const funcName = func.name ? func.name + " (throttle)" : "throttle";
     return {
@@ -96,7 +101,7 @@ export function throttle(func, wait) {
                 browser.setTimeout(function () {
                     waiting = false;
                     func.call(context, ...args);
-                }, wait);
+                }, delay);
             }
         },
     }[funcName];
