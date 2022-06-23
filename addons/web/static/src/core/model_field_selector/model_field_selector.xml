@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web._ModelFieldSelector" owl="1">
+        <div
+            class="o_field_selector"
+            aria-atomic="true"
+            t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode o_input'"
+            t-on-click="onFieldSelectorClick"
+        >
+            <div class="o_field_selector_value" tabindex="0">
+                <t t-foreach="chain" t-as="node" t-key="node_index">
+                    <t t-if="node.field">
+                        <t t-if="!node_first">
+                            <i class="fa fa-chevron-right" role="img" aria-label="Followed by" title="Followed-by" />
+                        </t>
+                        <span class="o_field_selector_chain_part">
+                            <t t-esc="node.field.string" />
+                        </span>
+                    </t>
+                </t>
+            </div>
+            <t t-if="!fieldNameChain.length">
+                <div class="o_field_selector_controls" tabindex="0">
+                    <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning" title="Invalid field chain" aria-label="Invalid field chain"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
