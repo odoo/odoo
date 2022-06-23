@@ -313,9 +313,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         const options = this._super.apply(this, arguments);
         options.resizable = false;
         options.defaultDataForLinkTools = { isNewWindow: true };
-        if (this._wysiwygSnippetsActive) {
-            options.wysiwygAlias = 'mass_mailing.wysiwyg';
-        } else {
+        options.wysiwygAlias = 'mass_mailing.wysiwyg';
+        if (!this._wysiwygSnippetsActive) {
             delete options.snippets;
         }
         return options;
