@@ -73,7 +73,13 @@
 
 <t t-inherit="web_editor.FileSelectorControlPanel" t-inherit-mode="extension">
     <xpath expr="//option[@value='media-library']" position="after">
-        <option t-att-selected="props.searchService === 'unsplash'" value="unsplash">Photos (via Unsplash)</option>
+        <option t-if="props.useUnsplash" t-att-selected="props.searchService === 'unsplash'" value="unsplash">Photos (via Unsplash)</option>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
+    <xpath expr="//FileSelectorControlPanel" position="attributes">
+        <attribute name="useUnsplash">state.useUnsplash</attribute>
     </xpath>
 </t>
 </templates>
