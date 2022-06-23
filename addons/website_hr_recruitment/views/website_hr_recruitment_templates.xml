@@ -42,7 +42,7 @@
                                 </h4>
                             </div>
                         </div>
-                        <a t-foreach="jobs" t-as="job" t-attf-href="/jobs/detail/#{ slug(job) }" t-attf-class="text-decoration-none#{' mt-3' if job_index else ''}">
+                        <a t-foreach="jobs" t-as="job" t-attf-href="/jobs/detail_apply/#{ slug(job) }" t-attf-class="text-decoration-none#{' mt-3' if job_index else ''}">
                             <div class="card card-default mb32">
                                 <div class="card-body" t-att-data-publish="job.website_published and 'on' or 'off'">
                                     <span t-if="not job.website_published" class="badge badge-danger mb8 p-2">unpublished</span>
@@ -225,7 +225,7 @@
                                     </div>
                                     <div class="col-md-4 pb32 pt32 o_sticky_apply_now" id="sticky_apply_now">
                                         <div class="text-center">
-                                            <a role="button" t-attf-href="/jobs/detail/#{job.id}" class="btn btn-link btn-lg"><i class="fa fa-arrow-left fa-fw"/> Job Description</a>
+                                            <a role="button" t-attf-href="/jobs/detail_apply/#{job.id}" class="btn btn-link btn-lg"><i class="fa fa-arrow-left fa-fw"/> Job Description</a>
                                             <h3 t-field="job.name"/>
                                             <h5 class="font-weight-light" t-field="job.address_id" t-options='{
                                                 "widget": "contact",
@@ -251,6 +251,180 @@
             </div>
             <div class="oe_structure mt-2"/>
         </div>
+    </t>
+</template>
+
+<template id="detail_apply">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Job Detail</t>
+        <t t-set="additional_title">Apply Job</t>
+        <div id="wrap" class="js_hr_recruitment">
+            <!-- Breadcrumb -->
+            <section class="bg-200">
+                <div class="container">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb pl-0 mb-0">
+                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary font-weight-bold">Jobs</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
+                        </ol>
+                    </nav>
+                </div>
+            </section>
+            <!-- Job name -->
+            <section>
+                <div class="container">
+                    <div class="mt32">
+                        <h1 t-field="job.name"/>
+                    </div>
+                    <div class="o_detail_apply_button_container text-center mb-2 o_recruitment_mobile_only">
+                        <p class="o_detail_apply_text btn btn-lg btn-primary m-0">Apply Now!</p>
+                        <input class="o_detail_apply_switch" type="checkbox"/>
+                    </div>
+                </div>
+            </section>
+            <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
+            <div id="jobs_section">
+                <section id="forms" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="o_hr_recruitment_form_container">
+                        <form id="hr_recruitment_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="o_hr_recruitment_form_content row px-2">
+                                    <div class="col-md-8 o_detail_apply_container">
+                                        <div id="detail_container" class="active">
+                                            <div t-field="job.website_description"/>
+                                            <div class="o_detail_apply_button_container o_recruitment_mobile_only text-center mb-2">
+                                                <p class="o_detail_apply_text btn btn-lg btn-primary m-0">Apply Now!</p>
+                                                <input class="o_detail_apply_switch" type="checkbox"/>
+                                            </div>
+                                        </div>
+                                        <div id="apply_container" class="row mx-2">
+                                            <div class="form-group col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">
+                                                        <span class="s_website_form_label_content">Your Name</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required="" data-fill-with="name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">
+                                                        <span class="s_website_form_label_content">Your Email</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">
+                                                        <span class="s_website_form_label_content">Your Phone Number</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment3" type="tel" class="form-control s_website_form_input" name="partner_phone" required="" data-fill-with="phone"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field" data-type="text" data-name="Field">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">
+                                                        <span class="s_website_form_label_content">Short Introduction</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <textarea id="recruitment4" class="form-control s_website_form_input" name="description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">
+                                                        <span class="s_website_form_label_content">Resume</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment5" type="file" class="form-control s_website_form_input" name="Resume"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">
+                                                        <span class="s_website_form_label_content">Job</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment6" type="hidden" class="form-control s_website_form_input" name="job_id"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">
+                                                        <span class="s_website_form_label_content">Department</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input id="recruitment7" type="hidden" class="form-control s_website_form_input" name="department_id"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_submit o_recruitment_mobile_only" data-name="Apply Button">
+                                                <div class="s_website_form_label"/>
+                                                <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Apply</a>
+                                                <span id="s_website_form_result"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pb32 pt32 o_sticky_apply_now o_recruitment_desktop_only" id="sticky_apply_now">
+                                        <div class="text-center d-flex flex-column align-items-center">
+                                            <div class="o_detail_apply_button_container text-center mb-2">
+                                                <p class="o_detail_apply_text btn btn-lg btn-primary m-0">Apply Now!</p>
+                                                <input class="o_detail_apply_switch" type="checkbox"/>
+                                            </div>
+                                            <h3 t-field="job.name"/>
+                                            <h5 class="font-weight-light" t-field="job.address_id" t-options='{
+                                                "widget": "contact",
+                                                "fields": ["city"],
+                                                "no_tag_br": True
+                                            }'/>
+                                            <div class="d-flex align-items-baseline">
+                                                <i class="fa fa-fw fa-users mr4" title="Department" role="img" aria-label="Department"/>
+                                                <h5 class="font-weight-light text-center" t-field="job.department_id"/>
+                                            </div>
+                                            <div class="form-group col-12 s_website_form_submit" data-name="Apply Button">
+                                                <div class="s_website_form_label"/>
+                                                <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Apply</a>
+                                                <span id="s_website_form_result"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <div class="oe_structure mt-2"/>
+        </div>
+        <script>
+            document.querySelectorAll('.o_detail_apply_switch').forEach(x => x.addEventListener('click', () => {
+                document.querySelector('#detail_container').classList.toggle('active')
+                document.querySelector('#apply_container').classList.toggle('active')
+                document.querySelectorAll('.s_website_form_submit').forEach(x => x.classList.toggle('active'))
+                textElements = document.querySelectorAll('.o_detail_apply_text')
+                textElements.forEach(t => {
+                    t.classList.toggle('btn-primary')
+                    t.classList.toggle('btn-link')
+                    t.innerHTML = t.innerText == 'Apply Now!'
+                        ? '<i class="fa fa-arrow-left fa-fw"/>Job Description'
+                        : 'Apply Now!'
+                })
+                document.querySelector('#wrapwrap').scrollTo({top: 0, behavior: 'smooth'});
+            }))
+        </script>
     </t>
 </template>
 

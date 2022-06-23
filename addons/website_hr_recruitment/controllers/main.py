@@ -111,3 +111,17 @@ class WebsiteHrRecruitment(http.Controller):
             'error': error,
             'default': default,
         })
+
+    @http.route('''/jobs/detail_apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    def jobs_detail_apply(self, job, **kwargs):
+        error = {}
+        default = {}
+        if 'website_hr_recruitment_error' in request.session:
+            error = request.session.pop('website_hr_recruitment_error')
+            default = request.session.pop('website_hr_recruitment_default')
+        return request.render("website_hr_recruitment.detail_apply", {
+            'job': job,
+            'main_object': job,
+            'error': error,
+            'default': default,
+        })

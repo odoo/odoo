@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
-from odoo import api, fields, models, _
+from odoo import fields, models
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
@@ -23,7 +21,7 @@ class Job(models.Model):
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
-            job.website_url = "/jobs/detail/%s" % job.id
+            job.website_url = "/jobs/detail_apply/%s" % job.id
 
     def set_open(self):
         self.write({'website_published': False})
