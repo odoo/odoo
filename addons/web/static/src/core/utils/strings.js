@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+export const nbsp = "\u00a0";
+
 /**
  * Escapes a string for HTML.
  * Note that it doesn't work for escaping node attributes.

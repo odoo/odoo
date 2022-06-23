@@ -39,7 +39,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.containsOnce(target, ".o_cp_top");
         assert.containsOnce(target, ".o_cp_top_left");
-        assert.containsNone(target, ".o_cp_top_right");
+        assert.strictEqual(target.querySelector(".o_cp_top_right").innerHTML, "");
         assert.containsOnce(target, ".o_cp_bottom");
         assert.containsOnce(target, ".o_cp_bottom_left");
         assert.containsOnce(target, ".o_cp_bottom_right");

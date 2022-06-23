@@ -38,6 +38,7 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
 
     var timeInterval = actualDate.getTime() - fakeDate.getTime();
 
+    // eslint-disable-next-line no-global-assign
     window.Date = (function (NativeDate) {
         function Date(Y, M, D, h, m, s, ms) {
             var length = arguments.length;
@@ -169,42 +170,59 @@ function findElement(el, selector) {
     return target;
 }
 
-const keyboardEventBubble = (args) =>
-    Object.assign({}, args, { bubbles: true, keyCode: args.which });
+function keyboardEventBubble(args) {
+    return Object.assign({}, args, { bubbles: true, keyCode: args.which });
+}
 
-const mouseEventMapping = (args) =>
-    Object.assign({}, args, {
+function mouseEventMapping(args) {
+    return {
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        ...args,
         bubbles: true,
         cancelable: true,
+        view: window,
+    };
+}
+
+function mouseEventNoBubble(args) {
+    return {
         clientX: args ? args.pageX : undefined,
         clientY: args ? args.pageY : undefined,
-        view: window,
-    });
-
-const mouseEventNoBubble = (args) =>
-    Object.assign({}, args, {
+        ...args,
         bubbles: false,
         cancelable: false,
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
         view: window,
-    });
+    };
+}
 
-const touchEventMapping = (args) => ({
-    ...args,
-    bubbles: true,
-    cancelable: true,
-    touches: args.touches ? [...args.touches.map((e) => new Touch(e))] : undefined,
-});
+function touchEventMapping(args) {
+    return {
+        ...args,
+        cancelable: true,
+        bubbles: true,
+        composed: true,
+        view: window,
+        rotation: 0.0,
+        zoom: 1.0,
+        touches: args.touches ? [...args.touches.map((e) => new Touch(e))] : undefined,
+    };
+}
 
-const touchEventCancelMapping = (args) => ({
-    ...touchEventMapping(args),
-    cancelable: false,
-});
+function touchEventCancelMapping(args) {
+    return {
+        ...touchEventMapping(args),
+        cancelable: false,
+    };
+}
 
-const noBubble = (args) => Object.assign({}, args, { bubbles: false });
+function noBubble(args) {
+    return Object.assign({}, args, { bubbles: false });
+}
 
-const onlyBubble = (args) => Object.assign({}, args, { bubbles: true });
+function onlyBubble(args) {
+    return Object.assign({}, args, { bubbles: true });
+}
 
 // TriggerEvent constructor/args processor mapping
 const EVENT_TYPES = {
@@ -249,7 +267,7 @@ if (typeof TouchEvent === "function") {
     });
 }
 
-export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
+function _makeEvent(eventType, eventAttrs) {
     let event;
     if (eventType in EVENT_TYPES) {
         const { constructor, processParameters } = EVENT_TYPES[eventType];
@@ -257,25 +275,39 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
     } else {
         event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
     }
+    return event;
+}
+
+export async function triggerEvent(el, selector, eventType, eventAttrs = {}, options = {}) {
+    const event = _makeEvent(eventType, eventAttrs);
     const target = findElement(el, selector);
     if (!target) {
         throw new Error(`Can't find a target to trigger ${eventType} event`);
     }
-    const isVisible =
-        target === document ||
-        target === window ||
-        target.offsetWidth > 0 ||
-        target.offsetHeight > 0;
-    if (!isVisible) {
-        throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+    if (!options.skipVisibilityCheck) {
+        const isVisible =
+            target === document ||
+            target === window ||
+            target.offsetWidth > 0 ||
+            target.offsetHeight > 0;
+        if (!isVisible) {
+            throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+        }
     }
     target.dispatchEvent(event);
-    await nextTick();
+    if (!options.fast) {
+        await nextTick();
+    }
+    return event;
 }
 
 export async function triggerEvents(el, querySelector, events) {
     for (let e = 0; e < events.length; e++) {
-        triggerEvent(el, querySelector, events[e]);
+        if (Array.isArray(events[e])) {
+            triggerEvent(el, querySelector, events[e][0], events[e][1]);
+        } else {
+            triggerEvent(el, querySelector, events[e]);
+        }
     }
     await nextTick();
 }
@@ -322,6 +354,7 @@ export async function triggerScroll(
         });
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
+        await nextTick();
         if (!canPropagate || !Object.entries(coordinates).length) return;
     }
     target.parentElement
@@ -330,12 +363,94 @@ export async function triggerScroll(
     await nextTick();
 }
 
-export function click(el, selector) {
-    return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
+export function click(el, selector, skipVisibilityCheck = false) {
+    return triggerEvent(
+        el,
+        selector,
+        "click",
+        { bubbles: true, cancelable: true },
+        { skipVisibilityCheck }
+    );
 }
 
-export async function mouseEnter(el, selector) {
-    return triggerEvent(el, selector, "mouseenter");
+export function clickCreate(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_button_create").length) {
+        return click(htmlElement, ".o_form_button_create");
+    } else if (htmlElement.querySelectorAll(".o_list_button_create").length) {
+        return click(htmlElement, ".o_list_button_create");
+    } else {
+        throw new Error("No edit button found to be clicked.");
+    }
+}
+
+export function clickEdit(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_button_edit").length) {
+        return click(htmlElement, ".o_form_button_edit");
+    } else if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
+        return click(htmlElement, ".o_list_button_edit");
+    } else {
+        throw new Error("No edit button found to be clicked.");
+    }
+}
+
+export function clickSave(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_button_save").length) {
+        return click(htmlElement, ".o_form_button_save");
+    } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
+        return click(htmlElement, ".o_list_button_save");
+    } else {
+        throw new Error("No save button found to be clicked.");
+    }
+}
+
+export function clickDiscard(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
+        return click(htmlElement, ".o_form_button_cancel");
+    } else if (htmlElement.querySelectorAll(".o_list_button_discard").length) {
+        return click(htmlElement, ".o_list_button_discard");
+    } else {
+        throw new Error("No discard button found to be clicked.");
+    }
+}
+
+/**
+ * Triggers a mouseenter event on the given target. If no
+ * coordinates are given, the event is located by default
+ * in the middle of the target to simplify the test process
+ *
+ * @param {HTMLElement} el
+ * @param {string} selector
+ * @param {Object} coordinates position of the mouseenter event
+ */
+export async function mouseEnter(el, selector, coordinates) {
+    const target = el.querySelector(selector) || el;
+    const atPos = coordinates || {
+        clientX: target.getBoundingClientRect().left + target.getBoundingClientRect().width / 2,
+        clientY: target.getBoundingClientRect().top + target.getBoundingClientRect().height / 2,
+    };
+    return triggerEvent(target, null, "mouseenter", atPos);
+}
+
+export async function editInput(el, selector, value) {
+    const input = findElement(el, selector);
+    if (
+        !["INPUT", "TEXTAREA"].includes(input.tagName) ||
+        !["text", "textarea", "email", "number", "search", "color"].includes(input.type)
+    ) {
+        throw new Error("Only inputs tag and textarea tag can be edited with editInput.");
+    }
+    input.value = value;
+    await triggerEvent(input, null, "input");
+    return triggerEvent(input, null, "change");
+}
+
+export function editSelect(el, selector, value) {
+    const select = findElement(el, selector);
+    if (select.tagName !== "SELECT") {
+        throw new Error("Only select tag can be edited with selectInput.");
+    }
+    select.value = value;
+    return triggerEvent(select, null, "change");
 }
 
 /**
@@ -468,7 +583,7 @@ export function destroy(comp) {
 }
 
 export function findChildren(comp, predicate = (e) => e) {
-    let queue = [];
+    const queue = [];
     [].unshift.apply(queue, Object.values(comp.__owl__.children));
 
     while (queue.length > 0) {
@@ -514,4 +629,163 @@ export function useLogLifeCycle(logFn, name = "") {
             logFn(`${hook} ${loggedName}`);
         });
     }
+}
+
+/**
+ * Returns the list of nodes containing n2 (included) that do not contain n1.
+ *
+ * @param {Node} n1
+ * @param {Node} n2
+ * @returns {Node[]}
+ */
+function getDifferentParents(n1, n2) {
+    const parents = [n2];
+    while (parents[0].parentNode) {
+        const parent = parents[0].parentNode;
+        if (parent.contains(n1)) {
+            break;
+        }
+        parents.unshift(parent);
+    }
+    return parents;
+}
+
+/**
+ * Helper performing a drag and drop sequence.
+ *
+ * - the 'fromSelector' is used to determine the element on which the drag will
+ *  start;
+ * - the 'toSelector' will determine the element on which the first one will be
+ * dropped.
+ *
+ * The first element will be dragged by its center, and will be dropped on the
+ * bottom-right inner pixel of the target element. This behavior covers both
+ * cases of appending the first element to the end of a list (toSelector =
+ * target list) or moving it at the position of another element, effectively
+ * placing the first element before the second (toSelector = other element).
+ *
+ * A position can be given to drop the first element above, below, or on the
+ * side of the second (default is inside, as specified above).
+ *
+ * Note that only the last event is awaited, since all the others are
+ * considered to be synchronous.
+ *
+ * @param {Element|string} from
+ * @param {Element|string} to
+ * @param {string} [position] "top" | "bottom" | "left" | "right"
+ * @returns {Promise<void>}
+ */
+export async function dragAndDrop(from, to, position) {
+    const fixture = getFixture();
+    from = from instanceof Element ? from : fixture.querySelector(from);
+    to = to instanceof Element ? to : fixture.querySelector(to);
+
+    // Mouse down on main target
+    const fromRect = from.getBoundingClientRect();
+    const toRect = to.getBoundingClientRect();
+    triggerEvent(from, null, "mousedown", {
+        clientX: fromRect.x + fromRect.width / 2,
+        clientY: fromRect.y + fromRect.height / 2,
+    });
+
+    // Find target position
+    const toPos = {
+        clientX: toRect.x + toRect.width / 2,
+        clientY: toRect.y + toRect.height / 2,
+    };
+    switch (position) {
+        case "top": {
+            toPos.clientY = toRect.y - 1;
+            break;
+        }
+        case "bottom": {
+            toPos.clientY = toRect.y + toRect.height + 1;
+            break;
+        }
+        case "left": {
+            toPos.clientX = toRect.x - 1;
+            break;
+        }
+        case "right": {
+            toPos.clientX = toRect.x + toRect.width + 1;
+            break;
+        }
+    }
+
+    // Move, enter and drop the element on the target
+    triggerEvent(window, null, "mousemove", toPos);
+    // "mouseenter" is fired on every parent of `to` that do not contain
+    // `from` (typically: different parent lists).
+    for (const target of getDifferentParents(from, to)) {
+        triggerEvent(target, null, "mouseenter", toPos);
+    }
+    await triggerEvent(from, null, "mouseup", toPos);
+}
+
+export async function clickDropdown(target, fieldName) {
+    const dropdownInput = target.querySelector(`[name='${fieldName}'] .dropdown input`);
+    dropdownInput.focus();
+    await click(dropdownInput);
+}
+
+export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
+    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .dropdown ul li`);
+    const indexToClick = Array.from(dropdownItems)
+        .map((html) => html.textContent)
+        .indexOf(itemContent);
+    if (indexToClick === -1) {
+        throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
+    }
+    await click(dropdownItems[indexToClick], null, "click");
+}
+
+export async function selectDropdownItem(target, fieldName, itemContent) {
+    await clickDropdown(target, fieldName);
+    await clickOpenedDropdownItem(target, fieldName, itemContent);
+}
+
+export function getNodesTextContent(nodes) {
+    return Array.from(nodes).map((n) => n.textContent);
+}
+
+/**
+ * Click to open the dropdown on a many2one
+ */
+export async function clickOpenM2ODropdown(el, fieldName, selector) {
+    const m2oSelector = `${selector || ""} .o_field_many2one[name=${fieldName}] input`;
+    const matches = el.querySelectorAll(m2oSelector);
+    if (matches.length !== 1) {
+        throw new Error(
+            `cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`
+        );
+    }
+
+    await click(matches[0]);
+    return matches[0];
+}
+
+/**
+ * Click on the active (highlighted) selection in a m2o dropdown.
+ */
+// TO FIX
+export async function clickM2OHighlightedItem(el, fieldName, selector) {
+    const m2oSelector = `${selector || ""} .o_field_many2one[name=${fieldName}] input`;
+    // const $dropdown = $(m2oSelector).autocomplete('widget');
+    const matches = el.querySelectorAll(m2oSelector);
+    if (matches.length !== 1) {
+        throw new Error(
+            `cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`
+        );
+    }
+    // clicking on an li (no matter which one), will select the focussed one
+    return click(matches[0].parentElement.querySelector("li"));
+}
+
+// X2Many
+export async function addRow(target, selector) {
+    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add a`));
+}
+
+export async function removeRow(target, index) {
+    await click(target.querySelectorAll(".o_list_record_remove")[index]);
 }

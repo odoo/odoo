@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanCoverImageDialog" owl="1">
+        <SimpleDialog t-props="props" title="'Set a Cover Image'" size="'modal-lg'">
+            <div t-if="attachments.length" class="o_kanban_cover_container bg-100">
+                <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
+                    <div class="o_kanban_cover_image position-relative d-inline-block m-2 bg-white" t-att-class="{
+                        o_selected: state.selectedAttachmentId === attachment.id,
+                    }">
+                        <img t-attf-src="/web/image/{{attachment.id}}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" class="m-auto mw-100" alt="Attachment" t-on-click="() => this.selectAttachment(attachment)" t-on-dblclick="() => {this.selectAttachment(attachment); this.setCover();}"/>
+                    </div>
+                </t>
+            </div>
+            <t t-else="">There is no available image to be set as cover.</t>
+            <div t-attf-class="d-none o_hidden_input_file {{fileupload_class}}" t-att-style="fileupload_style" aria-atomic="true">
+                <form class="o_form_binary_form" t-att-target="id"
+                    method="post" enctype="multipart/form-data" t-att-action="'/web/binary/upload_attachment'">
+                    <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                    <input type="hidden" name="callback" t-att-value="id"/>
+                    <input type="file" class="o_input_file" name="ufile "
+                        t-att-multiple="multi_upload ? 'multiple' : null" accept="image/*" t-ref="fileInput" t-on-change="upload"/>
+                    <input type="hidden" name="model" t-att-value="props.record.resModel" />
+                    <input type="hidden" name="id" t-att-value="props.record.resId" />
+                </form>
+                <iframe t-att-id="id" t-att-name="id" style="display: none"/>
+            </div>
+            <t t-set-slot="footer" t-slot-scope="dialog">
+                <t t-if="attachments.length">
+                    <button class="btn btn-primary" t-on-click="setCover" t-att-disabled="!state.selectedAttachmentId">Select</button>
+                    <button class="btn btn-primary" t-on-click="uploadImage">Upload and Set</button>
+                </t>
+                <button t-if="coverId" class="btn btn-secondary" t-on-click="removeCover">Remove Cover Image</button>
+                <button class="btn btn-secondary" t-on-click="dialog.close">Discard</button>
+            </t>
+        </SimpleDialog>
+    </t>
+
+</templates>

@@ -25,7 +25,7 @@ export const defaultLocalization = {
     dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
     decimalPoint: ".",
     direction: "ltr",
-    grouping: [3, 0],
+    grouping: [],
     multiLang: false,
     thousandsSep: ",",
     weekStart: 7,
@@ -95,7 +95,9 @@ export function makeMockXHR(response, sendCb, def) {
                     if (typeof data === "string") {
                         try {
                             data = JSON.parse(data);
-                        } catch (_e) {}
+                        } catch (_e) {
+                            // Ignore
+                        }
                     }
                     try {
                         await sendCb.call(this, data);

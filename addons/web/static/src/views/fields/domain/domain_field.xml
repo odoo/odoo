@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainField" owl="1">
+        <div t-att-class="{ o_inline_mode: !env.inDialog }">
+            <t t-if="props.resModel">
+                <DomainSelector
+                    resModel="props.resModel"
+                    value="displayedDomain || '[]'"
+                    readonly="props.readonly"
+                    update.bind="update"
+                    isDebugMode="!!env.debug"
+                    className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+                />
+                <div class="o_field_domain_panel">
+                    <t t-if="state.recordCount !== null">
+                        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
+                        <t t-if="state.isValid and isValidDomain">
+                            <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
+                                <t t-esc="state.recordCount" /> record(s)
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <span class="text-warning" role="alert">
+                                <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning" /> Invalid domain
+                            </span>
+                        </t>
+                        <t t-if="!!env.debug and !props.readonly">
+                            <button
+                                class="btn btn-sm btn-icon fa fa-refresh o_refresh_count"
+                                role="img"
+                                aria-label="Refresh"
+                                title="Refresh"
+                                t-on-click="() => this.loadCount(props)"
+                            />
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading" />
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div>Select a model to add a filter.</div>
+            </t>
+        </div>
+    </t>
+
+</templates>

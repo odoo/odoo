@@ -1,9 +1,25 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import {
+    setupControlPanelFavoriteMenuRegistry,
+    setupControlPanelServiceRegistry,
+} from "../search/helpers";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
+import {
+    makeFakeLocalizationService,
+    makeFakeRouterService,
+    makeFakeUserService,
+} from "../helpers/mock_services";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { popoverService } from "@web/core/popover/popover_service";
+import { createDebugContext } from "@web/core/debug/debug_context";
+
+const serviceRegistry = registry.category("services");
 
 /**
  * @typedef {{
@@ -19,7 +35,7 @@ import { addLegacyMockEnvironment } from "../webclient/helpers";
  * @param {MakeViewParams} params
  * @returns {Component}
  */
-export const makeView = async (params) => {
+export async function makeView(params) {
     const props = { ...params };
     const serverData = props.serverData;
     const mockRPC = props.mockRPC;
@@ -36,7 +52,7 @@ export const makeView = async (params) => {
 
     if (props.arch) {
         serverData.views = serverData.views || {};
-        props.viewId = 100000001; // hopefully will not conflict with an id already in views
+        props.viewId = params.viewId || 100000001; // hopefully will not conflict with an id already in views
         serverData.views[`${props.resModel},${props.viewId},${props.type}`] = props.arch;
         delete props.arch;
         props.searchViewId = 100000002; // hopefully will not conflict with an id already in views
@@ -46,6 +62,7 @@ export const makeView = async (params) => {
     }
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
+    Object.assign(env, createDebugContext(env)); // This is needed if the views are in debug mode
 
     /** Legacy Environment, for compatibility sakes
      *  Remove this as soon as we drop the legacy support
@@ -63,11 +80,28 @@ export const makeView = async (params) => {
     }
     await addLegacyMockEnvironment(env, legacyParams);
 
-    const view = await mount(View, getFixture(), { env, props });
+    const target = getFixture();
+    const view = await mount(View, target, { env, props });
+    await mount(MainComponentsContainer, target, { env, props });
+
     const viewNode = view.__owl__;
     const withSearchNode = Object.values(viewNode.children)[0];
     const concreteViewNode = Object.values(withSearchNode.children)[0];
     const concreteView = concreteViewNode.component;
 
     return concreteView;
-};
+}
+
+export function setupViewRegistries() {
+    setupControlPanelFavoriteMenuRegistry();
+    setupControlPanelServiceRegistry();
+    serviceRegistry.add(
+        "user",
+        makeFakeUserService((group) => group === "base.group_allow_export"),
+        { force: true }
+    );
+    serviceRegistry.add("router", makeFakeRouterService(), { force: true });
+    serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
+    serviceRegistry.add("dialog", dialogService), { force: true };
+    serviceRegistry.add("popover", popoverService), { force: true };
+}

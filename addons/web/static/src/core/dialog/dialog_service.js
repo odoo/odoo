@@ -3,7 +3,7 @@
 import { registry } from "../registry";
 import { DialogContainer } from "./dialog_container";
 
-const { reactive } = owl;
+const { markRaw, reactive } = owl;
 
 /**
  *  @typedef {{
@@ -51,8 +51,8 @@ export const dialogService = {
             const dialog = {
                 id,
                 class: dialogClass,
-                props: { ...props, close },
-                dialogData: { isActive: true, close },
+                props: markRaw({ ...props, close }),
+                dialogData: { isActive: true, close, id },
             };
             dialogs[id] = dialog;
 

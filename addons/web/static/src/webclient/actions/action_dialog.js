@@ -21,9 +21,17 @@ class ActionDialog extends Dialog {
     setup() {
         super.setup();
         useOwnDebugContext();
-        const actionProps = this.props && this.props.actionProps;
-        const action = actionProps && actionProps.action;
-        this.actionType = action && action.type;
+        useEffect(
+            () => {
+                if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
+                    const defaultButton = this.modalRef.el.querySelector(
+                        ".modal-footer button.o-default-button"
+                    );
+                    defaultButton.classList.add("d-none");
+                }
+            },
+            () => []
+        );
     }
 }
 ActionDialog.components = { ...Dialog.components, DebugMenu };
@@ -34,6 +42,7 @@ ActionDialog.props = {
     slots: { optional: true },
     ActionComponent: { optional: true },
     actionProps: { optional: true },
+    actionType: { optional: true },
     title: { optional: true },
 };
 
