@@ -154,3 +154,18 @@ export class Race {
         return this.currentProm;
     }
 }
+
+/**
+ * Deferred is basically a resolvable/rejectable extension of Promise.
+ */
+export class Deferred {
+    constructor() {
+        let resolve;
+        let reject;
+        const prom = new Promise((res, rej) => {
+            resolve = res;
+            reject = rej;
+        });
+        return Object.assign(prom, { resolve, reject });
+    }
+}
