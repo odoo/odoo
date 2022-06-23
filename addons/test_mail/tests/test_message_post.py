@@ -88,7 +88,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         recipients_data = self._generate_notify_recipients(self.partner_1 + self.partner_2 + self.partner_employee)
         for email_xmlid in ['mail.message_notification_email',
                             'mail.mail_notification_light',
-                            'mail.mail_notification_paynow']:
+                            'mail.mail_notification_layout',
+                            'mail.mail_notification_layout_with_responsible_signature']:
             test_message.sudo().notification_ids.unlink()  # otherwise partner/message constraint fails
             test_message.write({'email_layout_xmlid': email_xmlid})
             with self.mock_mail_gateway():
@@ -118,14 +119,14 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
         signature = self.env.user.signature
 
-        template = self.env.ref('mail.mail_notification_paynow', raise_if_not_found=True).sudo()
+        template = self.env.ref('mail.mail_notification_layout_with_responsible_signature', raise_if_not_found=True).sudo()
         self.assertIn("record.user_id.sudo().signature", template.arch)
 
         with self.mock_mail_gateway():
             test_track.message_post(
                 body="Test body",
                 email_add_signature=True,
-                email_layout_xmlid="mail.mail_notification_paynow",
+                email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                 mail_auto_delete=False,
                 partner_ids=[self.partner_1.id, self.partner_2.id],
             )
@@ -137,7 +138,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             test_track.message_post(
                 body="Test body",
                 email_add_signature=False,
-                email_layout_xmlid="mail.mail_notification_paynow",
+                email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                 mail_auto_delete=False,
                 partner_ids=[self.partner_1.id, self.partner_2.id],
             )

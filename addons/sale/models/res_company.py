@@ -94,7 +94,7 @@ class ResCompany(models.Model):
         message_composer = self.env['mail.compose.message'].with_context(
             default_use_template=bool(template),
             mark_so_as_sent=True,
-            default_email_layout_xmlid='mail.mail_notification_paynow',
+            default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
             force_email=True, mail_notify_author=True
         ).create({
