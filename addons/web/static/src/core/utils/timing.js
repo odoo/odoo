@@ -2,6 +2,8 @@
 
 import { browser } from "@web/core/browser/browser";
 
+const { onWillUnmount, useComponent } = owl;
+
 /**
  * Creates a version of the function where only the last call between two
  * animation frames is executed before the browser's next repaint. This
@@ -29,6 +31,33 @@ export function throttleForAnimation(func) {
             },
         }
     );
+}
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will be
+ * triggered every N milliseconds.
+ *
+ * @deprecated this function has behaviour that is unexpected considering its
+ *      name, prefer _.throttle until this function is rewritten
+ * @param {Function} func
+ * @param {number} delay
+ * @returns {Function}
+ */
+export function throttle(func, delay) {
+    let waiting = false;
+    const funcName = func.name ? func.name + " (throttle)" : "throttle";
+    return {
+        [funcName](...args) {
+            const context = this;
+            if (!waiting) {
+                waiting = true;
+                browser.setTimeout(function () {
+                    waiting = false;
+                    func.call(context, ...args);
+                }, delay);
+            }
+        },
+    }[funcName];
 }
 
 /**
@@ -81,28 +110,13 @@ export function debounce(func, delay, immediate = false) {
 }
 
 /**
- * Returns a function, that, as long as it continues to be invoked, will be
- * triggered every N milliseconds.
- *
- * @deprecated this function has behaviour that is unexpected considering its
- *      name, prefer _.throttle until this function is rewritten
- * @param {Function} func
- * @param {number} delay
- * @returns {Function}
+ * Hook that returns a debounced version of the given function, and cancels
+ * the potential pending execution on willUnmount.
+ * @see debounce
  */
-export function throttle(func, delay) {
-    let waiting = false;
-    const funcName = func.name ? func.name + " (throttle)" : "throttle";
-    return {
-        [funcName](...args) {
-            const context = this;
-            if (!waiting) {
-                waiting = true;
-                browser.setTimeout(function () {
-                    waiting = false;
-                    func.call(context, ...args);
-                }, delay);
-            }
-        },
-    }[funcName];
+export function useDebounced(callback, delay) {
+    const component = useComponent();
+    const debounced = debounce(callback.bind(component), delay);
+    onWillUnmount(() => debounced.cancel());
+    return debounced;
 }
