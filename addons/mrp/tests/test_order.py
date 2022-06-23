@@ -2617,3 +2617,60 @@ class TestMrpOrder(TestMrpCommon):
         wizard.change_prod_qty()
 
         self.assertFalse(mo.move_raw_ids.move_line_ids)
+
+    def test_source_and_child_mo(self):
+        """
+        Suppose three manufactured products A, B and C. C is a component of B
+        and B is a component of A. If B and C have the routes MTO + Manufacture,
+        when producing one A, it should generate a MO for B and C. Moreover,
+        starting from one of the MOs, we should be able to find the source/child
+        MO.
+        (The test checks the flow in 1-step, 2-steps and 3-steps manufacturing)
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route.active = True
+
+        grandparent, parent, child = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+            'route_ids': [(6, 0, mto_route.ids + manufacture_route.ids)],
+        } for n in ['grandparent', 'parent', 'child']])
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1}),
+            ],
+        } for finished_product, compo in [(grandparent, parent), (parent, child), (child, component)]])
+
+        none_production = self.env['mrp.production']
+        for steps, case_description, in [('mrp_one_step', '1-step Manufacturing'), ('pbm', '2-steps Manufacturing'), ('pbm_sam', '3-steps Manufacturing')]:
+            warehouse.manufacture_steps = steps
+
+            grandparent_production_form = Form(self.env['mrp.production'])
+            grandparent_production_form.product_id = grandparent
+            grandparent_production = grandparent_production_form.save()
+            grandparent_production.action_confirm()
+
+            child_production, parent_production = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids)], order='id desc', limit=2)
+
+            for source_mo, mo, product, child_mo in [(none_production, grandparent_production, grandparent, parent_production),
+                                                     (grandparent_production, parent_production, parent, child_production),
+                                                     (parent_production, child_production, child, none_production)]:
+
+                self.assertEqual(mo.product_id, product, '[%s] There should be a MO for product %s' % (case_description, product.display_name))
+                self.assertEqual(mo.mrp_production_source_count, len(source_mo), '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+                self.assertEqual(mo.mrp_production_child_count, len(child_mo), '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+
+                source_action = mo.action_view_mrp_production_sources()
+                child_action = mo.action_view_mrp_production_childs()
+                self.assertEqual(source_action.get('res_id', False), source_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+                self.assertEqual(child_action.get('res_id', False), child_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))

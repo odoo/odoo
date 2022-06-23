@@ -176,18 +176,33 @@ class ProductProduct(models.Model):
         """
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
-        res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+        regular_products = self - kits
+        res = (
+            super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+            if regular_products
+            else {}
+        )
         qties = self.env.context.get("mrp_compute_quantities", {})
         qties.update(res)
+        # pre-compute bom lines and identify missing kit components to prefetch
+        bom_sub_lines_per_kit = {}
+        prefetch_component_ids = set()
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+            bom_sub_lines_per_kit[product] = bom_sub_lines
+            for bom_line, __ in bom_sub_lines:
+                if bom_line.product_id.id not in qties:
+                    prefetch_component_ids.add(bom_line.product_id.id)
+        # compute kit quantities
+        for product in bom_kits:
+            bom_sub_lines = bom_sub_lines_per_kit[product]
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
             ratios_outgoing_qty = []
             ratios_free_qty = []
             for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
+                component = bom_line.product_id.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
                 if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                     # to avoid a division by zero. The same logic is applied to non-storable products as those
