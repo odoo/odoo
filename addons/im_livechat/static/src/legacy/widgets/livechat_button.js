@@ -11,7 +11,6 @@ import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constant
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
-import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
 
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
@@ -312,17 +311,7 @@ const LivechatButton = Widget.extend({
      * @return {Promise}
      */
      _openChatWindow() {
-        const options = {
-            displayStars: false,
-            headerBackgroundColor: this.messaging.livechatButtonView.headerBackgroundColor,
-            placeholder: this.messaging.livechatButtonView.inputPlaceholder,
-            titleColor: this.messaging.livechatButtonView.titleColor,
-        };
-        this.messaging.livechatButtonView.update({
-            chatWindow: insertAndReplace({
-                legacyChatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
-            }),
-        });
+        this.messaging.livechatButtonView.update({ chatWindow: insertAndReplace() });
         return this.messaging.livechatButtonView.chatWindow.legacyChatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
