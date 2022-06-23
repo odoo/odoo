@@ -728,7 +728,7 @@ class SaleOrder(models.Model):
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
@@ -837,7 +837,7 @@ class SaleOrder(models.Model):
             self.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
                 composition_mode='comment',
-                email_layout_xmlid='mail.mail_notification_paynow',
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             )
 
     def action_done(self):
@@ -873,7 +873,7 @@ class SaleOrder(models.Model):
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+                'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
                 'model_description': self.with_context(lang=lang).type_name,
             }
             return {

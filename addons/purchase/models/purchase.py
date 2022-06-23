@@ -423,7 +423,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': "mail.mail_notification_paynow",
+            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -747,7 +747,7 @@ class PurchaseOrder(models.Model):
                     if send_single:
                         return order._send_reminder_open_composer(template.id)
                     else:
-                        order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+                        order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature", composition_mode='comment')
 
     def send_reminder_preview(self):
         self.ensure_one()
@@ -760,7 +760,7 @@ class PurchaseOrder(models.Model):
                 self.id,
                 force_send=True,
                 raise_exception=False,
-                email_layout_xmlid="mail.mail_notification_paynow",
+                email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
             )
             return {'toast_message': escape(_("A sample email has been sent to %s.", self.env.user.email))}
@@ -780,7 +780,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': "mail.mail_notification_paynow",
+            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
