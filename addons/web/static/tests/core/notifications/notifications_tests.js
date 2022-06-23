@@ -38,6 +38,19 @@ QUnit.test("can display a basic notification", async (assert) => {
     assert.hasClass(notif, "border-warning");
 });
 
+QUnit.test("can display a notification with a className", async (assert) => {
+    const env = await makeTestEnv({ serviceRegistry });
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    const notifService = env.services.notification;
+    await mount(NotificationContainer, target, { env, props });
+
+    notifService.add("I'm a basic notification", { className: "abc" });
+    await nextTick();
+    assert.containsOnce(target, ".o_notification.abc");
+});
+
 QUnit.test("title and message are escaped by default", async (assert) => {
     const env = await makeTestEnv({ serviceRegistry });
     const { Component: NotificationContainer, props } = registry
