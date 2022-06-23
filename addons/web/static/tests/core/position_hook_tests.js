@@ -153,7 +153,7 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
-const getPositionTest = (position, positionToCheck) => {
+function getPositionTest(position, positionToCheck) {
     return async (assert) => {
         assert.expect(2);
         positionToCheck = positionToCheck || position;
@@ -167,7 +167,8 @@ const getPositionTest = (position, positionToCheck) => {
         });
         await mount(TestComp, container);
     };
-};
+}
+
 QUnit.test("position top", getPositionTest("top"));
 QUnit.test("position left", getPositionTest("left"));
 QUnit.test("position bottom", getPositionTest("bottom"));
@@ -198,7 +199,8 @@ const CONTAINER_STYLE_MAP = {
     h125: { height: "125px" }, // height of popper + 1/2 reference
     w125: { width: "125px" }, // width of popper + 1/2 reference
 };
-const getRepositionTest = (from, to, containerStyleChanges) => {
+
+function getRepositionTest(from, to, containerStyleChanges) {
     return async (assert) => {
         assert.expect(4);
         const TestComp = getTestComponent({
@@ -220,7 +222,8 @@ const getRepositionTest = (from, to, containerStyleChanges) => {
         [d, v = "middle"] = to.split("-");
         assert.verifySteps([`${d}-${v}`], `has ${to} position`);
     };
-};
+}
+
 // -----------------------------------------------------------------------------
 QUnit.test(
     "reposition from top-start to bottom-start",

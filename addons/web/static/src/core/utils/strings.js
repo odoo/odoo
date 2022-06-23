@@ -91,9 +91,9 @@ export function intersperse(str, indices, separator = "") {
 export function sprintf(s, ...values) {
     if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
         const valuesDict = values[0];
-        s = s.replace(/\%\(?([^\)]+)\)s/g, (match, value) => valuesDict[value]);
+        s = s.replace(/%\(?([^)]+)\)s/g, (match, value) => valuesDict[value]);
     } else if (values.length > 0) {
-        s = s.replace(/\%s/g, () => values.shift());
+        s = s.replace(/%s/g, () => values.shift());
     }
     return s;
 }
@@ -108,6 +108,7 @@ export function capitalize(s) {
     return s ? s[0].toUpperCase() + s.slice(1) : "";
 }
 
+/* eslint-disable */
 // prettier-ignore
 const diacriticsMap = {
 '\u0041': 'A','\u24B6': 'A','\uFF21': 'A','\u00C0': 'A','\u00C1': 'A','\u00C2': 'A','\u1EA6': 'A','\u1EA4': 'A','\u1EAA': 'A','\u1EA8': 'A',
