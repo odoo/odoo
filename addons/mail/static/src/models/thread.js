@@ -1621,6 +1621,23 @@ registerModel({
         /**
          * @private
          */
+        _onChangeCounter() {
+            if (this === this.messaging.inbox) {
+                if (
+                    this.threadViews.length > 0 &&
+                    this.lastCounter > 0 && this.counter === 0
+                ) {
+                    this.env.services.effect.add({
+                        message: this.env._t("Congratulations, your inbox is empty!"),
+                        type: 'rainbow_man',
+                    });
+                }
+                this.update({ lastCounter: this.counter });
+            }
+        },
+        /**
+         * @private
+         */
         _onChangeLastSeenByCurrentPartnerMessageId() {
             this.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
@@ -2061,6 +2078,10 @@ registerModel({
             default: 0,
         }),
         /**
+         * Useful to display rainbow man on inbox.
+         */
+        lastCounter: attr(),
+        /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
          */
@@ -2370,6 +2391,10 @@ registerModel({
         new OnChange({
             dependencies: ['lastSeenByCurrentPartnerMessageId'],
             methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
+        }),
+        new OnChange({
+            dependencies: ['counter'],
+            methodName: '_onChangeCounter',
         }),
         new OnChange({
             dependencies: ['isServerPinned'],
