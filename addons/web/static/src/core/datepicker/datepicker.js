@@ -1,7 +1,14 @@
 /** @odoo-module **/
 
+import {
+    areDateEquals,
+    formatDate,
+    formatDateTime,
+    parseDate,
+    parseDateTime,
+} from "@web/core/l10n/dates";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 const {
@@ -15,38 +22,47 @@ const {
 } = owl;
 const { DateTime } = luxon;
 
-const formatters = registry.category("formatters");
-const parsers = registry.category("parsers");
-
 let datePickerId = 0;
 
 /**
  * @param {DateTime} date
  * @returns {moment}
  */
-const luxonDateToMomentDate = (date) => {
+function luxonDateToMomentDate(date) {
     return window.moment(String(date));
-};
+}
 
 /**
  * @param {string} format
  * @returns {string}
  */
-const luxonFormatToMomentFormat = (format) => {
+function luxonFormatToMomentFormat(format) {
     return format.replace(/[dy]/g, (x) => x.toUpperCase());
-};
+}
 
 /**
  * @param {string} format
  * @returns {boolean}
  */
-const isValidStaticFormat = (format) => {
-    try {
-        return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
-    } catch (_err) {
-        return false;
-    }
-};
+function isValidStaticFormat(format) {
+    return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
+}
+
+/**
+ * @param {Function} fn
+ * @returns {[any, null] | [null, Error]}
+ */
+function wrapError(fn) {
+    return (...args) => {
+        const result = [null, null];
+        try {
+            result[0] = fn(...args);
+        } catch (_err) {
+            result[1] = _err;
+        }
+        return result;
+    };
+}
 
 /**
  * Date picker
@@ -63,7 +79,7 @@ const isValidStaticFormat = (format) => {
  */
 export class DatePicker extends Component {
     setup() {
-        this.root = useRef("root");
+        this.rootRef = useRef("root");
         this.inputRef = useRef("input");
         this.state = useState({ warning: false });
 
@@ -73,8 +89,7 @@ export class DatePicker extends Component {
         this.datePickerShown = false;
 
         this.initFormat();
-        this.setDate(this.props);
-        this.setFormat(this.props);
+        this.setDateAndFormat(this.props);
 
         useAutofocus();
         useExternalListener(window, "scroll", this.onWindowScroll);
@@ -88,43 +103,33 @@ export class DatePicker extends Component {
         this.bootstrapDateTimePicker(this.props);
         this.updateInput();
 
-        window.$(this.root.el).on("show.datetimepicker", () => {
+        window.$(this.rootRef.el).on("show.datetimepicker", () => {
             this.datePickerShown = true;
             this.inputRef.el.select();
         });
-        window.$(this.root.el).on("hide.datetimepicker", () => {
+        window.$(this.rootRef.el).on("hide.datetimepicker", () => {
             this.datePickerShown = false;
             this.onDateChange({ useStatic: true });
         });
-        window.$(this.root.el).on("error.datetimepicker", () => false);
+        window.$(this.rootRef.el).on("error.datetimepicker", () => false);
     }
 
     onWillUpdateProps(nextProps) {
         const pickerParams = {};
-        let shouldUpdateInput = false;
         for (const prop in nextProps) {
-            const prev = this.props[prop];
-            const next = nextProps[prop];
-            if ((prev instanceof DateTime && !prev.equals(next)) || prev !== next) {
+            if (!areDateEquals(this.props[prop], nextProps[prop])) {
                 pickerParams[prop] = nextProps[prop];
-                if (prop === "date") {
-                    this.setDate(nextProps);
-                    shouldUpdateInput = true;
-                } else if (prop === "format") {
-                    this.setFormat(nextProps);
-                    shouldUpdateInput = true;
-                }
             }
         }
-        if (shouldUpdateInput) {
+        this.setDateAndFormat(nextProps);
+        if ("date" in pickerParams || "format" in pickerParams) {
             this.updateInput();
         }
         this.bootstrapDateTimePicker(pickerParams);
     }
 
     onWillUnmount() {
-        window.$(this.root.el).off(); // Removes all jQuery events
-
+        window.$(this.rootRef.el).off(); // Removes all jQuery events
         this.bootstrapDateTimePicker("destroy");
     }
 
@@ -136,7 +141,7 @@ export class DatePicker extends Component {
         return {
             format:
                 !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
-            locale: this.date.locale,
+            locale: this.props.locale || (this.date && this.date.locale),
             timezone: this.isLocal,
         };
     }
@@ -147,8 +152,8 @@ export class DatePicker extends Component {
     initFormat() {
         this.defaultFormat = localization.dateFormat;
         this.staticFormat = "yyyy/MM/dd";
-        this.formatValue = formatters.get("date");
-        this.parseValue = parsers.get("date");
+        this.formatValue = wrapError(formatDate);
+        this.parseValue = wrapError(parseDate);
         this.isLocal = false;
     }
 
@@ -158,17 +163,10 @@ export class DatePicker extends Component {
      * @param {Object} params
      * @param {DateTime} params.date
      * @param {string} [params.locale]
-     */
-    setDate({ date, locale }) {
-        this.date = locale ? date.setLocale(locale) : date;
-    }
-
-    /**
-     * Sets the current format.
-     * @param {Object} params
      * @param {string} [params.format]
      */
-    setFormat({ format }) {
+    setDateAndFormat({ date, locale, format }) {
+        this.date = date && locale ? date.setLocale(locale) : date;
         // Fallback to default localization format in `@web/core/l10n/dates.js`.
         this.format = format || this.defaultFormat;
     }
@@ -179,10 +177,9 @@ export class DatePicker extends Component {
      * @param {boolean} [params.useStatic]
      */
     updateInput({ useStatic } = {}) {
-        try {
-            this.inputRef.el.value = this.formatValue(this.date, this.getOptions(useStatic));
-        } catch (_err) {
-            // Do nothing
+        const [formattedDate] = this.formatValue(this.date, this.getOptions(useStatic));
+        if (formattedDate) {
+            this.inputRef.el.value = formattedDate;
         }
     }
 
@@ -197,20 +194,20 @@ export class DatePicker extends Component {
     bootstrapDateTimePicker(commandOrParams) {
         if (typeof commandOrParams === "object") {
             const format = isValidStaticFormat(this.format) ? this.format : this.staticFormat;
-            const params = { ...commandOrParams, format: luxonFormatToMomentFormat(format) };
-            if (!params.locale && commandOrParams.date) {
-                params.locale = commandOrParams.date.locale;
-            }
+            const params = {
+                ...commandOrParams,
+                date: this.date || null,
+                format: luxonFormatToMomentFormat(format),
+                locale: commandOrParams.locale || (this.date && this.date.locale),
+            };
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
-                    const luxonDate = params[prop];
-                    const momentDate = luxonDateToMomentDate(luxonDate);
-                    params[prop] = momentDate;
+                    params[prop] = luxonDateToMomentDate(params[prop]);
                 }
             }
             commandOrParams = params;
         }
-        return window.$(this.root.el).datetimepicker(commandOrParams);
+        return window.$(this.rootRef.el).datetimepicker(commandOrParams);
     }
 
     //---------------------------------------------------------------------
@@ -232,17 +229,26 @@ export class DatePicker extends Component {
      * @param {boolean} [params.useStatic]
      */
     onDateChange({ useStatic } = {}) {
-        let date;
-        try {
-            date = this.parseValue(this.inputRef.el.value, this.getOptions(useStatic));
-        } catch (_err) {
+        const { value } = this.inputRef.el;
+        const options = this.getOptions(useStatic);
+        const parsedDate = value && this.parseValue(value, options)[0];
+        this.state.warning = parsedDate && parsedDate > DateTime.local();
+        if (value && !parsedDate) {
             // Reset to default (= given) date.
-        }
-        if (!date || date.equals(this.date)) {
             this.updateInput();
-        } else {
-            this.state.warning = date > DateTime.local();
-            this.props.onDateTimeChanged(date);
+        }
+        if (!areDateEquals(this.date, parsedDate)) {
+            this.props.onDateTimeChanged(parsedDate);
+        }
+    }
+
+    onInputKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (this.datePickerShown && hotkey === "escape") {
+            this.bootstrapDateTimePicker("hide");
+            this.inputRef.el.select();
+            ev.preventDefault();
+            ev.stopPropagation();
         }
     }
 
@@ -277,7 +283,7 @@ DatePicker.defaultProps = {
 DatePicker.props = {
     // Components props
     onDateTimeChanged: Function,
-    date: DateTime,
+    date: { type: [DateTime, { value: false }], optional: true },
     warn_future: { type: Boolean, optional: true },
     // Bootstrap datepicker options
     buttons: {
@@ -313,6 +319,7 @@ DatePicker.props = {
     readonly: { type: Boolean, optional: true },
     useCurrent: { type: Boolean, optional: true },
     widgetParent: { type: String, optional: true },
+    daysOfWeekDisabled: { type: Array, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 
@@ -333,8 +340,8 @@ export class DateTimePicker extends DatePicker {
     initFormat() {
         this.defaultFormat = localization.dateTimeFormat;
         this.staticFormat = "yyyy/MM/dd HH:mm:ss";
-        this.formatValue = formatters.get("datetime");
-        this.parseValue = parsers.get("datetime");
+        this.formatValue = wrapError(formatDateTime);
+        this.parseValue = wrapError(parseDateTime);
         this.isLocal = true;
     }
 }
