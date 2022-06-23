@@ -37,7 +37,7 @@ export class SearchBar extends Component {
 
         this.inputRef = useAutofocus();
 
-        useBus(this.env.bus, "FOCUS-SEARCH-BAR", () => {
+        useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
         });
 
@@ -345,7 +345,7 @@ export class SearchBar extends Component {
                         focusedIndex = this.state.focusedIndex + 1;
                     }
                 } else {
-                    this.env.bus.trigger("FOCUS-VIEW");
+                    this.env.searchModel.trigger("focus-view");
                 }
                 break;
             case "ArrowUp":

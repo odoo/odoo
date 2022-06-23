@@ -2,6 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Layout" owl="1">
+        <t t-if="env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
+            <t t-slot="layout-buttons"/>
+        </t>
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel"/>
         <div class="o_content" t-attf-class="{{props.className}}" t-att-class="{ o_component_with_search_panel: display.searchPanel }">
             <t t-component="components.Banner" t-if="components.Banner and display.banner"/>
