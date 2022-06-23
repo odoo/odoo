@@ -9558,4 +9558,32 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_record", 3);
     });
+
+    QUnit.test("basic rendering with 2 groupbys", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar", "product_id"],
+            async mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
+    });
 });

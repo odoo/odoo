@@ -328,6 +328,8 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
     setup() {
         super.setup(...arguments);
 
+        this.groupBy = this.groupBy.slice(0, 1);
+
         this.model.addEventListener("group-updated", ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
                 this.updateGroupProgressData([detail.group], detail.withProgressBars);
