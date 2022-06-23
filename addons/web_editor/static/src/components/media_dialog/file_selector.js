@@ -186,19 +186,29 @@ export class FileSelector extends Component {
 
     async fetchAttachments(limit, offset) {
         this.state.isFetchingAttachments = true;
-        const attachments = await this.orm.call(
-            'ir.attachment',
-            'search_read',
-            [],
-            {
-                domain: this.attachmentsDomain,
-                fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
-                order: 'id desc',
-                // Try to fetch first record of next page just to know whether there is a next page.
-                limit: limit + 1,
-                offset,
+        let attachments = [];
+        try {
+            attachments = await this.orm.call(
+                'ir.attachment',
+                'search_read',
+                [],
+                {
+                    domain: this.attachmentsDomain,
+                    fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
+                    order: 'id desc',
+                    // Try to fetch first record of next page just to know whether there is a next page.
+                    limit: limit + 1,
+                    offset,
+                }
+            );
+        } catch (e) {
+            // Reading attachments as a portal user is not permitted and will raise
+            // an access error so we catch the error silently and don't return any
+            // attachment so he can still use the wizard and upload an attachment
+            if (e.exceptionName !== 'odoo.exceptions.AccessError') {
+                throw e;
             }
-        );
+        }
         this.state.canLoadMoreAttachments = attachments.length >= this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this.state.isFetchingAttachments = false;
         return attachments;

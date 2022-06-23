@@ -51,11 +51,14 @@ export class DocumentSelector extends FileSelector {
             const linkEl = document.createElement('a');
             let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&dowload=true`;
             if (!attachment.public) {
-                const [accessToken] = await orm.call(
-                    'ir.attachment',
-                    'generate_access_token',
-                    [attachment.id],
-                );
+                let accessToken = attachment.access_token;
+                if (!accessToken) {
+                    [accessToken] = await orm.call(
+                        'ir.attachment',
+                        'generate_access_token',
+                        [attachment.id],
+                    );
+                }
                 href += `&access_token=${accessToken}`;
             }
             linkEl.href = href;
