@@ -36,7 +36,10 @@ const AbstractMessage = Class.extend({
      * @param {string} [data.message_type = undefined]
      */
     init(parent, data) {
-        this._attachmentIDs = data.attachment_ids || [];
+        // Attachments are not supported in (public) livechat.
+        // We ignore data from server, otherwise field commands
+        // will be wrongly considered as unamed attachments.
+        this._attachmentIDs = [];
         this._body = data.body || "";
         // by default: current datetime
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
