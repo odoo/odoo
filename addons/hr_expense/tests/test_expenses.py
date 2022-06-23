@@ -8,6 +8,44 @@ from odoo import fields
 @tagged('-at_install', 'post_install')
 class TestExpenses(TestExpenseCommon):
 
+    def test_expense_sheet_changing_employee(self):
+        """ Test changing an employee on the expense that is linked with the sheet.
+            - In case sheet has only one expense linked with it, than changing an employee
+            on expense should trigger changing an employee on the sheet itself.
+            - In case sheet has more than one expense linked with it, than changing an employee
+            on one of the expenses, should cause unlinking the expense from the sheet."""
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Gabriel Iglesias',
+        })
+
+        expense1 = self.env['hr.expense'].create({
+            'name': 'Dinner with client - Expenses',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': 350.00,
+        })
+
+        expense2 = self.env['hr.expense'].create({
+            'name': 'Team building at Huy',
+            'employee_id': employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': 2500.00,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for Jannette',
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': expense1,
+        })
+
+        expense1.employee_id = employee
+        self.assertEqual(expense_sheet.employee_id, employee, 'Employee should have changed on the sheet')
+
+        expense_sheet.expense_line_ids |= expense2
+        expense2.employee_id = self.expense_employee.id
+        self.assertEqual(expense2.sheet_id.id, False, 'Sheet should be unlinked from the expense')
+
     def test_expense_sheet_payment_state(self):
         ''' Test expense sheet payment states when partially paid, in payment and paid. '''
 
