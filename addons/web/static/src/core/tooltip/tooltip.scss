@@ -1,5 +1,5 @@
 .o-tooltip {
-    font-size: smaller;
+    font-size: small;
 
     .o-tooltip--string {
         background-color: $o-tooltip-title-background-color;
@@ -8,18 +8,21 @@
     }
 
     .o-tooltip--help {
+        font-size: smaller;
         white-space: pre-line;
         padding: 8px;
         margin-bottom: 0px;
     }
 
     .o-tooltip--technical {
+        font-size: smaller;
         padding: 8px;
         margin: 0 0 0 15px;
         list-style-type: circle;
 
         .o-tooltip--technical--title {
             font-weight: bold;
+            margin-right: 4px;
         }
     }
 }
