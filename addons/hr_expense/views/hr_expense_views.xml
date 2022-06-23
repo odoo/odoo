@@ -538,7 +538,7 @@
                             </group>
                             <group string="Accounting">
                                 <field name="property_account_expense_id" groups="account.group_account_readonly"/>
-                                <field name="supplier_taxes_id" domain="[('price_include', '=', True)]" widget="many2many_tags" 
+                                <field name="supplier_taxes_id" widget="many2many_tags" 
                                        context="{'default_type_tax_use':'purchase', 'default_price_include': 1}" 
                                        options="{'no_quick_create': True}"/>
                             </group>
