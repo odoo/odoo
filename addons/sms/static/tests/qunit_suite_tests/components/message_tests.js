@@ -123,7 +123,7 @@ QUnit.test('Notification Error', async function (assert) {
                 "action should be the one to resend sms"
             );
             assert.strictEqual(
-                options.additional_context.default_mail_message_id,
+                options.additionalContext.default_mail_message_id,
                 mailMessageId1,
                 "action should have correct message id"
             );

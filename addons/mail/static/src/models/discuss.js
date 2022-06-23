@@ -166,7 +166,7 @@ registerModel({
                     'mail.action_discuss',
                     {
                         active_id: this.threadToActiveId(this),
-                        clear_breadcrumbs: false,
+                        clearBreadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway
                     },
                 );

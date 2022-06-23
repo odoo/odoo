@@ -13,7 +13,7 @@ patchRecordMethods('Message', {
             this.env.services.action.doAction(
                 'sms.sms_resend_action',
                 {
-                    additional_context: {
+                    additionalContext: {
                         default_mail_message_id: this.id,
                     },
                 },

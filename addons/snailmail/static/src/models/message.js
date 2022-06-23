@@ -25,7 +25,7 @@ addRecordMethods('Message', {
         this.env.services.action.doAction(
             'snailmail.snailmail_letter_format_error_action',
             {
-                additional_context: {
+                additionalContext: {
                     message_id: this.id,
                 },
             },
@@ -43,7 +43,7 @@ addRecordMethods('Message', {
         this.env.services.action.doAction(
             'snailmail.snailmail_letter_missing_required_fields_action',
             {
-                additional_context: {
+                additionalContext: {
                     default_letter_id: letterIds[0],
                 },
             }
