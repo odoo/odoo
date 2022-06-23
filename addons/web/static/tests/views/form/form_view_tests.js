@@ -11986,4 +11986,22 @@ QUnit.module("Views", (hooks) => {
             "xmlHelp"
         );
     });
+
+    QUnit.test("onSave/onDiscard props", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            resId: 1,
+            onSave: () => assert.step("save"),
+            onDiscard: () => assert.step("discard"),
+        });
+
+        await click(target, ".o_form_button_edit");
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
+        await click(target, ".o_form_button_cancel");
+        assert.verifySteps(["save", "discard"]);
+    });
 });
