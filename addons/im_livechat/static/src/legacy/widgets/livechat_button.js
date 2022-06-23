@@ -9,9 +9,9 @@ import Widget from 'web.Widget';
 
 import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
-import PublicLivechat from '@im_livechat/legacy/models/website_livechat';
-import PublicLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
-import PublicLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
+import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
+import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
+import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
 
 import { clear } from '@mail/model/model_field_command';
 

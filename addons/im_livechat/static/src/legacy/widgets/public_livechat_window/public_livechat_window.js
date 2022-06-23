@@ -9,7 +9,7 @@ import Widget from 'web.Widget';
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
- * @see @im_livechat/legacy/widgets/abstract_thread_window for more information
+ * @see @im_livechat/legacy/widgets/public_livechat_window/public_livechat_window for more information
  */
 const PublicLivechatWindow = Widget.extend({
     FOLD_ANIMATION_DURATION: 200, // duration in ms for (un)fold transition
