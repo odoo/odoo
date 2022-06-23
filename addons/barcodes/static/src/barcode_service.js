@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
@@ -24,9 +23,6 @@ export const barcodeService = {
     // Keys from a barcode scanner are usually processed as quick as possible,
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
     maxTimeBetweenKeysInMs: session.max_time_between_keys_in_ms || 55,
-
-    // this is done here to make it easily mockable in mobile tests
-    isMobileChrome: isMobileOS() && isBrowserChrome(),
 
     start() {
         const bus = new EventBus();
@@ -64,10 +60,24 @@ export const barcodeService = {
             // Note: shiftKey is not ignored because it can be used by some barcode scanner for digits.
             const isSpecialKey = ev.key.length > 1 || ev.ctrlKey || ev.metaKey || ev.altKey;
             const isEndCharacter = ev.key.match(/(Enter|Tab)/);
+            const isVirtualKeyboard = ev.key === "Unidentified" && ev.keyCode === 229;
 
             // Don't catch non-printable keys except 'enter' and 'tab'
-            if (isSpecialKey && !isEndCharacter) {
+            if (isSpecialKey && !isEndCharacter && !isVirtualKeyboard) {
                 return;
+            }
+
+            // Detects keydown triggered  by the Android virtual keyboard (used by some barcode scanners)
+            if (isVirtualKeyboard && !barcodeInput) {
+                barcodeInput = makeBarcodeInput();
+                document.body.appendChild(barcodeInput);
+            }
+
+            if (barcodeInput) {
+                if ($(document.activeElement).not('input:text, textarea, [contenteditable], ' +
+                    '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]').length) {
+                    barcodeInput.focus();
+                }
             }
 
             currentTarget = ev.target;
@@ -90,25 +100,8 @@ export const barcodeService = {
             }
         }
 
-        function mobileChromeHandler(ev) {
-            if (ev.key === "Unidentified") {
-                return;
-            }
-            if ($(document.activeElement).not('input:text, textarea, [contenteditable], ' +
-                '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]').length) {
-                barcodeInput.focus();
-            }
-            keydownHandler(ev);
-        }
-
         whenReady(() => {
-            const isMobileChrome = barcodeService.isMobileChrome;
-            if (isMobileChrome) {
-                barcodeInput = makeBarcodeInput();
-                document.body.appendChild(barcodeInput);
-            }
-            const handler = isMobileChrome ? mobileChromeHandler : keydownHandler;
-            document.body.addEventListener('keydown', handler);
+            document.body.addEventListener('keydown', keydownHandler);
         });
 
         return {

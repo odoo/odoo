@@ -8,10 +8,9 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
     var testUtils = require('web.test_utils');
 
     const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
-    const isMobileChrome = barcodeService.isMobileChrome;
     var triggerEvent = testUtils.dom.triggerEvent;
 
-    function triggerKeyDown(char, target = document.body) {
+    function triggerKeyDown(char, target = document.body, virtualKeyboard = false) {
         let keycode;
         if (char === 'Enter') {
             keycode = $.ui.keyCode.ENTER;
@@ -20,16 +19,22 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
         } else {
             keycode = char.charCodeAt(0);
         }
-        triggerEvent(target, 'keydown', {
-            key: char,
-            keyCode: keycode,
-        });
+        if (virtualKeyboard) {
+            triggerEvent(target, 'keydown', {
+                key: 'Unidentified',
+                keyCode: 229,
+            });
+        } else {
+            triggerEvent(target, 'keydown', {
+                key: char,
+                keyCode: keycode,
+            });
+        }
     }
     
     QUnit.module('Barcodes', {
         before() {
             barcodeService.maxTimeBetweenKeysInMs = 0;
-            barcodeService.isMobileChrome = true;
             registry.category("services").add("barcode", barcodeService, { force: true});
             // remove this one later
             registry.category("services").add("barcode_remapper", barcodeRemapperService);
@@ -37,7 +42,6 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
         },
         after() {
             barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
-            barcodeService.isMobileChrome = isMobileChrome;
         },
     }, function () {
 
@@ -64,13 +68,13 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
             $('#qunit-fixture').append($form);
 
             // Some elements doesn't need to keep the focus
-            triggerKeyDown('a', document.body)
+            triggerKeyDown('a', document.body, true)
             assert.strictEqual(document.activeElement.name, 'barcode',
                 "hidden barcode input should have the focus");
 
             var $element = $form.find('select');
             $element.focus();
-            triggerKeyDown('b', $element[0]);
+            triggerKeyDown('b', $element[0], true);
             assert.strictEqual(document.activeElement.name, 'barcode',
                 "hidden barcode input should have the focus");
 
@@ -81,7 +85,7 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
             for (var i = 0; i < keepFocusedElements.length; ++i) {
                 $element = $form.find('input[name=' + keepFocusedElements[i] + ']');
                 $element.focus();
-                triggerKeyDown('c', $element[0]);
+                triggerKeyDown('c', $element[0], true);
     
                 assert.strictEqual(document.activeElement, $element[0],
                     "input " + keepFocusedElements[i] + " should keep focus");
@@ -94,7 +98,7 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
             // contenteditable elements
             $element = $form.find('[contenteditable=true]');
             $element.focus();
-            triggerKeyDown('d', $element[0]);
+            triggerKeyDown('d', $element[0], true);
             assert.strictEqual(document.activeElement, $element[0],
                 "contenteditable should keep focus");
 
