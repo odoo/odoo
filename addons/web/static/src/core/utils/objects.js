@@ -21,3 +21,13 @@ export function shallowEqual(obj1, obj2) {
 export function deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
+/**
+ * @template {T}
+ * @param {T} object
+ * @param {...(keyof T)} properties
+ * @returns {Partial<T>}
+ */
+export function pluck(object, ...properties) {
+    return Object.fromEntries(Object.entries(object).filter(([k]) => properties.includes(k)));
+}
