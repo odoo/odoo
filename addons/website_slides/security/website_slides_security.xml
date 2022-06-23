@@ -20,10 +20,6 @@
             <field name="groups_id" eval="[(4,ref('group_website_slides_manager'))]"/>
         </record>
 
-        <record id="base.group_system" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('group_website_slides_manager'))]"/>
-        </record>
-
         <data noupdate="1">
         <!-- CHANNEL -->
         <record id="rule_slide_channel_global" model="ir.rule">

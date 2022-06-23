@@ -17,6 +17,7 @@
             <field name="model">res.config.settings</field>
             <field name="priority" eval="40"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'), 0)]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <field name="country_code" invisible="1"/>
