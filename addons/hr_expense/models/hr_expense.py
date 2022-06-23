@@ -393,7 +393,18 @@ class HrExpense(models.Model):
         if 'reference' in vals:
             if any(not expense.is_ref_editable for expense in self):
                 raise UserError(_('You are not authorized to edit the reference of this expense report.'))
-        return super(HrExpense, self).write(vals)
+        res = super(HrExpense, self).write(vals)
+        if 'employee_id' in vals:
+            # In case expense has sheet which has only one expense_line_ids,
+            # then changing the expense.employee_id triggers changing the sheet.employee_id too.
+            # Otherwise we unlink the expense line from sheet, (so that the user can create a new report).
+            if self.sheet_id:
+                employees = self.sheet_id.expense_line_ids.mapped('employee_id')
+                if len(employees) == 1:
+                    self.sheet_id.write({'employee_id': vals['employee_id']})
+                elif len(employees) > 1:
+                    self.sheet_id = False
+        return res
 
     @api.model
     def get_empty_list_help(self, help_message):
