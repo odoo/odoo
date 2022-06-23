@@ -139,3 +139,39 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # No timesheet should have been created on the day off
         timesheet = self.env['account.analytic.line'].search([('date', '=', day_off), ('task_id', '=', leave_task.id)])
         self.assertFalse(timesheet.id)
+
+    # This tests that timesheets are created/deleted for every employee with the same calendar
+    # when a global time off has a calendar_id set/remove
+    def test_timesheet_creation_and_deletion_for_calendar_set_and_remove(self):
+        leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)  # This is a monday
+        leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)  # This is a friday
+
+        global_time_off = self.env['resource.calendar.leaves'].create({
+            'name': 'Test',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': leave_start_datetime,
+            'date_to': leave_end_datetime,
+        })
+
+        # 5 Timesheets should have been created for full_time_employee and full_time_employee_2
+        # but none for part_time_employee
+        leave_task = self.test_company.leave_timesheet_task_id
+
+        # Now we delete the calendar_id. The timesheets should be deleted too.
+        global_time_off.calendar_id = False
+
+        self.assertFalse(leave_task.timesheet_ids.ids)
+
+        # Now we reset the calendar_id. The timesheets should be created and have the right value.
+        global_time_off.calendar_id = self.test_company.resource_calendar_id.id
+
+        timesheets_by_employee = defaultdict(lambda: self.env['account.analytic.line'])
+        for timesheet in leave_task.timesheet_ids:
+            timesheets_by_employee[timesheet.employee_id] |= timesheet
+        self.assertFalse(timesheets_by_employee.get(self.part_time_employee, False))
+        self.assertEqual(len(timesheets_by_employee.get(self.full_time_employee)), 5)
+        self.assertEqual(len(timesheets_by_employee.get(self.full_time_employee_2)), 5)
+
+        # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
+        # So we need to check that the timesheets don't have more than 8 hours per day.
+        self.assertEqual(leave_task.effective_hours, 80)
