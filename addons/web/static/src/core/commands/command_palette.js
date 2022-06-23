@@ -45,7 +45,7 @@ const FUZZY_NAMESPACES = ["default"];
 
 /**
  * @typedef {{
- *  configByNamespace?: {[namespace]: NamespaceConfig};
+ *  configByNamespace?: {[namespace: string]: NamespaceConfig};
  *  FooterComponent?: Component;
  *  providers: Provider[];
  *  searchValue?: string;

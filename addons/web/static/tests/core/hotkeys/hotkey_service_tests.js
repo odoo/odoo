@@ -16,7 +16,7 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 
-const { Component, useState, xml } = owl;
+const { Component, useRef, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -242,18 +242,18 @@ QUnit.test("non-MacOS usability", async (assert) => {
 
     const hotkey = env.services.hotkey;
     const key = "q";
+    const commentEventAttrs = { key, bubbles: true };
 
     // On non-MacOS, ALT is NOT replaced by CONTROL key
     let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
-
-    let keydown = new KeyboardEvent("keydown", { key, altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, altKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`alt+${key}`]);
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
@@ -263,13 +263,13 @@ QUnit.test("non-MacOS usability", async (assert) => {
     removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`control+${key}`]);
 
-    keydown = new KeyboardEvent("keydown", { key, metaKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, metaKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
@@ -407,18 +407,19 @@ QUnit.test("MacOS usability", async (assert) => {
 
     const hotkey = env.services.hotkey;
     const key = "q";
+    const commentEventAttrs = { key, bubbles: true };
 
     // On MacOS, ALT is replaced by CONTROL key
     let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
 
-    let keydown = new KeyboardEvent("keydown", { key, altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, altKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`alt+${key}`]);
 
@@ -428,13 +429,13 @@ QUnit.test("MacOS usability", async (assert) => {
     removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key, metaKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, metaKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`control+${key}`]);
 
@@ -761,11 +762,12 @@ QUnit.test("protects editable elements", async (assert) => {
     const input = target.querySelector(".foo");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    input.focus();
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(
         [],
@@ -785,11 +787,12 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
     const input = target.querySelector(".foo");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    input.focus();
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(
         ["called"],
@@ -809,15 +812,17 @@ QUnit.test("protects editable elements: an editable can allow hotkeys", async (a
     const barInput = target.querySelector(".bar");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    fooInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    fooInput.focus();
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(["called"], "the callback gets called as the foo editable allows it");
 
-    barInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    barInput.focus();
+    triggerHotkey("ArrowLeft");
     await nextTick();
     assert.verifySteps(
         [],
@@ -829,17 +834,21 @@ QUnit.test("ignore numpad keys", async (assert) => {
     assert.expect(3);
 
     const key = "1";
+    const commonEventAttrs = {
+        altKey: true,
+        bubbles: true,
+    };
 
     env.services.hotkey.add(`alt+${key}`, () => assert.step(key));
     await nextTick();
 
-    let keydown = new KeyboardEvent("keydown", { key, code: "Numpad1", altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commonEventAttrs, key, code: "Numpad1" });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key: "&", code: "Digit1", altKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commonEventAttrs, key: "&", code: "Digit1" });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps(["1"]);
 });
@@ -873,4 +882,216 @@ QUnit.test("within iframes", async (assert) => {
     h1.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     await nextTick();
     assert.verifySteps(["called"]);
+});
+
+QUnit.test("callback: received context", async (assert) => {
+    class A extends Component {
+        setup() {
+            useHotkey("a", (context) => {
+                assert.deepEqual(context, {
+                    area: undefined,
+                    target: document.activeElement,
+                });
+            });
+        }
+    }
+    A.template = xml``;
+
+    class B extends Component {
+        setup() {
+            useHotkey(
+                "b",
+                (context) => {
+                    assert.deepEqual(context, {
+                        area: target,
+                        target: target,
+                    });
+                },
+                { area: () => target }
+            );
+        }
+    }
+    B.template = xml``;
+
+    await mount(A, target, { env });
+    await mount(B, target, { env });
+    triggerHotkey("A");
+    triggerHotkey("B");
+    await nextTick();
+});
+
+QUnit.test("operating area can be restricted", async (assert) => {
+    class A extends Component {
+        setup() {
+            const areaRef = useRef("area");
+            useHotkey(
+                "space",
+                ({ area }) => {
+                    assert.step("RGNTDJÛ!");
+                    assert.strictEqual(area, target.querySelector(".two"));
+                },
+                {
+                    area: () => areaRef.el,
+                }
+            );
+        }
+    }
+    A.template = xml`
+        <div class="one" tabindex="0"/>
+        <div class="two" tabindex="0" t-ref="area"/>
+    `;
+    await mount(A, target, { env });
+
+    target.querySelector(".one").focus();
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps([]);
+
+    target.querySelector(".two").focus();
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps(["RGNTDJÛ!"]);
+});
+
+QUnit.test("operating area and UI active element", async (assert) => {
+    class UIOwnershipTakerComponent extends Component {
+        setup() {
+            useActiveElement("bouh");
+        }
+    }
+    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh">bouh</p>`;
+    class C extends Component {
+        setup() {
+            this.state = useState({ foo: false });
+            const areaRef = useRef("area");
+            useHotkey(
+                "space",
+                ({ area }) => {
+                    assert.step("RGNTDJÛ!");
+                    assert.strictEqual(area, target.querySelector(".two"));
+                },
+                {
+                    area: () => areaRef.el,
+                }
+            );
+            useHotkey(
+                "backspace",
+                ({ area }) => {
+                    assert.step("RGNTDJÛ! (global)");
+                    assert.strictEqual(area, target.querySelector(".two"));
+                },
+                {
+                    area: () => areaRef.el,
+                    global: true,
+                }
+            );
+        }
+    }
+    C.components = { UIOwnershipTakerComponent };
+    C.template = xml`
+        <main>
+            <UIOwnershipTakerComponent t-if="state.foo" />
+            <div class="one" tabindex="0"/>
+            <div class="two" tabindex="0" t-ref="area"/>
+        </main>
+    `;
+    const comp = await mount(C, target, { env });
+    assert.strictEqual(env.services.ui.activeElement, document);
+
+    // Show the UIOwnershipTaker
+    comp.state.foo = true;
+    await nextTick();
+    assert.hasClass(env.services.ui.activeElement, "owner");
+
+    // Trigger hotkeys from the 'one'
+    target.querySelector(".one").focus();
+    triggerHotkey("Space");
+    triggerHotkey("BackSpace");
+    await nextTick();
+    assert.verifySteps([]);
+
+    // Trigger hotkeys from the 'two'
+    target.querySelector(".two").focus();
+    triggerHotkey("Space");
+    triggerHotkey("BackSpace");
+    await nextTick();
+    assert.verifySteps(["RGNTDJÛ! (global)"]);
+});
+
+QUnit.test("validating option", async (assert) => {
+    let isValid = false;
+    class A extends Component {
+        setup() {
+            useHotkey(
+                "space",
+                () => {
+                    assert.step("RGNTDJÛ!");
+                },
+                {
+                    validate: (eventTarget) => {
+                        assert.strictEqual(eventTarget, document.activeElement);
+                        return isValid;
+                    },
+                }
+            );
+        }
+    }
+    A.template = xml``;
+    await mount(A, target, { env });
+
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps([]);
+
+    isValid = true;
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps(["RGNTDJÛ!"]);
+});
+
+QUnit.test("operation area with validating option", async (assert) => {
+    let isValid;
+    class A extends Component {
+        setup() {
+            const areaRef = useRef("area");
+            useHotkey(
+                "space",
+                () => {
+                    assert.step("RGNTDJÛ!");
+                },
+                { area: () => areaRef.el, validate: () => isValid }
+            );
+        }
+    }
+    A.template = xml`
+        <div class="one" tabindex="0"/>
+        <div class="two" tabindex="0" t-ref="area"/>
+    `;
+    await mount(A, target, { env });
+
+    // Trigger hotkeys from the 'one'
+    target.querySelector(".one").focus();
+
+    isValid = false;
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps([]);
+
+    isValid = true;
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps([]);
+
+    // Trigger hotkeys from the 'two'
+    target.querySelector(".two").focus();
+
+    isValid = false;
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps([]);
+
+    isValid = true;
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps(["RGNTDJÛ!"]);
 });
