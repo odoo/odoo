@@ -22,7 +22,7 @@ delete originalEvents['click .o_existing_attachment_cell'];
 
 widgetsMedia.ImageWidget.include({
     xmlDependencies: widgetsMedia.ImageWidget.prototype.xmlDependencies.concat(
-        ['/web_unsplash/static/src/xml/unsplash_image_widget.xml']
+        ['/web_unsplash/static/src/components/media_dialog/image_selector.xml']
     ),
     events: _.extend({}, widgetsMedia.ImageWidget.prototype.events, {
         'click .o_unsplash_attachment_cell[data-imgid]': '_onUnsplashImgClick',

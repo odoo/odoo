@@ -18,7 +18,7 @@ var localStorageNoDialogKey = 'website_translator_nodialog';
 var TranslatorInfoDialog = Dialog.extend({
     template: 'website.TranslatorInfoDialog',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/translator.xml']
+        ['/website/static/src/components/translator/translator.xml']
     ),
 
     /**

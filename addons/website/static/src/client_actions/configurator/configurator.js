@@ -746,7 +746,7 @@ async function setup() {
     if (!env.state.industries) {
         await skipConfigurator(env.services);
     } else {
-        const templates = await (await fetch('/website/static/src/components/configurator/configurator.xml')).text();
+        const templates = await (await fetch('/website/static/src/client_actions/configurator/configurator.xml')).text();
         const app = new App(Configurator, {
             env,
             dev: env.debug,

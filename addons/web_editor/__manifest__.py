@@ -78,6 +78,9 @@ Odoo Web Editor widget.
 
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
+            'web_editor/static/src/components/media_dialog/file_selector.js',
+            'web_editor/static/src/components/media_dialog/media_dialog.js',
+            'web_editor/static/src/components/upload_progress_toast/upload_progress_toast.js',
             'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/toolbar.js',
             'web_editor/static/src/js/editor/snippets.options.js',

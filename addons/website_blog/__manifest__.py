@@ -35,7 +35,7 @@
             'website_blog/static/src/snippets/s_blog_posts/options.js',
         ],
         'website.assets_editor': [
-            'website_blog/static/src/js/website_blog.editor.js',
+            'website_blog/static/src/js/systray_items/new_content.js',
             'website_blog/static/src/js/tours/website_blog.js',
         ],
         'web.assets_frontend': [

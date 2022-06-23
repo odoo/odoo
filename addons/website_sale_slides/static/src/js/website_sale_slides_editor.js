@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {ChannelCreateDialog} from '@website_slides/js/website_slides.editor';
+import {ChannelCreateDialog} from '@website_slides/js/systray_items/new_content';
 
 ChannelCreateDialog.include({
     xmlDependencies: ChannelCreateDialog.prototype.xmlDependencies.concat(

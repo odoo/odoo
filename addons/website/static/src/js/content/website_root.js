@@ -7,7 +7,7 @@ import {Markup} from 'web.utils';
 import session from 'web.session';
 import publicRootData from 'web.public.root';
 import "web.zoomodoo";
-import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
+import { FullscreenIndication } from '@website/components/fullscreen_indication/fullscreen_indication';
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     // TODO remove KeyboardNavigationMixin in master

@@ -26,7 +26,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_meet/static/src/scss/event_meet_templates.scss',
-            'website_event_meet/static/src/js/customize_options.js',
+            'website_event_meet/static/src/js/snippets/options.js',
             'website_event_meet/static/src/js/website_event_meeting_room.js',
             'website_event_meet/static/src/js/website_event_create_meeting_room_button.js',
         ],

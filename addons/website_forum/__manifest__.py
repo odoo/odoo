@@ -42,7 +42,7 @@ Ask questions, get answers, no distractions
     'assets': {
         'website.assets_editor': [
             'website_forum/static/src/js/tours/website_forum.js',
-            'website_forum/static/src/js/website_forum.editor.js',
+            'website_forum/static/src/js/systray_items/new_content.js',
         ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',

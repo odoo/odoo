@@ -58,10 +58,10 @@
             'website_event/static/src/js/register_toaster_widget.js',
             'website_event/static/src/js/website_event.js',
             'website_event/static/src/js/website_event_ticket_details.js',
-            'website_event/static/src/js/website_event_set_customize_options.js',
+            'website_event/static/src/snippets/options.js',
         ],
         'website.assets_editor': [
-            'website_event/static/src/js/website_event.editor.js',
+            'website_event/static/src/js/systray_items/new_content.js',
         ],
         'website.assets_wysiwyg': [
             '/website_event/static/src/snippets/s_events/options.js',

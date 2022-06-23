@@ -13,8 +13,8 @@
     'auto_install': True,
     'assets': {
         'web_editor.assets_wysiwyg': [
-            'web_unsplash/static/src/js/unsplashapi.js',
-            'web_unsplash/static/src/js/unsplash_image_widget.js',
+            'web_unsplash/static/src/services/unsplash_service.js',
+            'web_unsplash/static/src/components/media_dialog/image_selector.js',
         ],
         'web.assets_frontend': [
             'web_unsplash/static/src/js/unsplash_beacon.js',
