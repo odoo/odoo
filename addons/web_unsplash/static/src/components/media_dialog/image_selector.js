@@ -45,6 +45,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
         this.state.isFetchingUnsplash = false;
         this.state.isMaxed = false;
         this.state.unsplashError = null;
+        this.state.useUnsplash = true;
 
         this.errorMessages = {
             'key_not_found': {
@@ -134,8 +135,12 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
             return { isMaxed, records };
         } catch (e) {
             this.state.isFetchingUnsplash = false;
-            this.state.unsplashError = e;
-            return { records: [], isMaxed: false };
+            if (e === 'no_access') {
+                this.state.useUnsplash = false;
+            } else {
+                this.state.unsplashError = e;
+            }
+            return { records: [], isMaxed: true };
         }
     },
 
