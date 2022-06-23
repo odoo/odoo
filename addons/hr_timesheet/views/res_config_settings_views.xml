@@ -5,6 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="priority" eval="55"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="groups_id" eval="[(4, ref('hr_timesheet.group_timesheet_manager'), 0)]"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="js_class">hr_timesheet_config_form</attribute>
