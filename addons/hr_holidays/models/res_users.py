@@ -16,6 +16,7 @@ class User(models.Model):
     allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
+    show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display')
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -29,6 +30,7 @@ class User(models.Model):
             'allocation_remaining_display',
             'allocation_display',
             'hr_icon_display',
+            'show_hr_icon_display',
         ]
 
     def _compute_im_status(self):
