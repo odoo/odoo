@@ -1,9 +1,17 @@
 /** @odoo-module **/
 
-import { shallowEqual } from "@web/core/utils/objects";
+import { pluck, shallowEqual } from "@web/core/utils/objects";
 
 QUnit.module("utils", () => {
     QUnit.module("Objects");
+
+    QUnit.test("pluck", function (assert) {
+        assert.deepEqual(pluck({}), {});
+        assert.deepEqual(pluck({}, "a"), {});
+        assert.deepEqual(pluck({ a: 3, b: "a", c: [] }, "a"), { a: 3 });
+        assert.deepEqual(pluck({ a: 3, b: "a", c: [] }, "a", "c"), { a: 3, c: [] });
+        assert.deepEqual(pluck({ a: 3, b: "a", c: [] }, "a", "b", "c"), { a: 3, b: "a", c: [] });
+    });
 
     QUnit.test("shallowEqual: simple valid cases", function (assert) {
         assert.ok(shallowEqual({}, {}));
