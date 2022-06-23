@@ -72,6 +72,15 @@ export function parseFloat(value) {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
     });
+    if (isNaN(parsed)) {
+        parsed = parseNumber(value, {
+            thousandsSep: ",",
+            decimalPoint: ".",
+        });
+        if (isNaN(parsed)) {
+            throw new InvalidNumberError(`"${value}" is not a correct number`);
+        }
+    }
     return parsed;
 }
 
@@ -114,6 +123,16 @@ export function parseInteger(value) {
         decimalPoint: decimalPointRegex,
         truncate: true,
     });
+    if (!Number.isInteger(parsed)) {
+        parsed = parseNumber(value, {
+            thousandsSep: ",",
+            decimalPoint: ".",
+            truncate: true,
+        });
+        if (!Number.isInteger(parsed)) {
+            throw new InvalidNumberError(`"${value}" is not a correct number`);
+        }
+    }
     return parsed;
 }
 

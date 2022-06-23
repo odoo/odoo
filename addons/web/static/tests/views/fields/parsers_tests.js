@@ -127,4 +127,14 @@ QUnit.module("Fields", (hooks) => {
         assert.throws(() => parseMonetary("1$\u00a01", { currencyId: 1 }));
         assert.throws(() => parseMonetary("$\u00a012.00\u00a034", { currencyId: 3 }));
     });
+
+    QUnit.test("parsers fallback on english localisation", function (assert) {
+        patchWithCleanup(localization, {
+            decimalPoint: ",",
+            thousandsSep: ".",
+        });
+
+        assert.strictEqual(parseInteger("1,000,000"), 1000000);
+        assert.strictEqual(parseFloat("1,000,000.50"), 1000000.5);
+    });
 });
