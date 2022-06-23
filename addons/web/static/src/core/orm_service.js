@@ -125,6 +125,14 @@ export class ORM {
         return this.call(model, "create", [state], { context: ctx });
     }
 
+    nameGet(model, ids, ctx) {
+        validatePrimitiveList("ids", "number", ids);
+        if (!ids.length) {
+            return Promise.resolve([]);
+        }
+        return this.call(model, "name_get", [ids], { context: ctx });
+    }
+
     read(model, ids, fields, ctx) {
         validatePrimitiveList("ids", "number", ids);
         if (fields) {
@@ -187,7 +195,7 @@ export class ORM {
             fields,
             context: ctx,
         };
-        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit"]);
+        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit", "expand"]);
         return this.call(model, "web_read_group", [], kwargs);
     }
 
@@ -223,6 +231,7 @@ export const ormService = {
     async: [
         "call",
         "create",
+        "name_get",
         "read",
         "readGroup",
         "search",
