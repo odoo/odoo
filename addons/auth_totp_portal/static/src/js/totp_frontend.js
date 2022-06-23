@@ -207,7 +207,7 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
         const w = await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
             model: 'res.users',
             method: 'action_totp_enable_wizard',
-            args: [this.getSession().user_id]
+            args: [this.getSession().uid]
         }));
 
         if (!w) {
@@ -260,7 +260,7 @@ publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
         e.preventDefault();
         await handleCheckIdentity(
             this.proxy('_rpc'),
-            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().user_id]})
+            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().uid]})
         )
         window.location = window.location;
     }
@@ -297,7 +297,7 @@ publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend
             this._rpc({
                 model: 'res.users',
                 method: 'revoke_all_devices',
-                args: [this.getSession().user_id]
+                args: [this.getSession().uid]
             })
         );
         window.location = window.location;
