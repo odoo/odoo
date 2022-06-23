@@ -25,9 +25,9 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 
 const { onMounted, onWillUnmount, xml } = owl;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-    QUnit.module('relational_fields', {
+    QUnit.module('Legacy relational_fields', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -171,7 +171,7 @@ QUnit.module('fields', {}, function () {
             };
         },
     }, function () {
-        QUnit.module('FieldOne2Many');
+        QUnit.module('Legacy FieldOne2Many');
 
         QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', async function (assert) {
             assert.expect(2);
@@ -2431,7 +2431,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.ok(!form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(!form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should not be visible in readonly');
             assert.ok(!form.$('.o_field_one2many .o-kanban-button-new').length,
                 '"Create" button should not be visible in readonly');
@@ -2444,7 +2444,7 @@ QUnit.module('fields', {}, function () {
                 'display_name of subrecord should be the one in DB');
             assert.strictEqual(form.$('.o_kanban_record span:nth(1)').text(), 'Red',
                 'color of subrecord should be the one in DB');
-            assert.ok(form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should be visible in edit');
             assert.ok(form.$('.o_field_one2many .o-kanban-button-new').length,
                 '"Create" button should be visible in edit');
@@ -2487,8 +2487,8 @@ QUnit.module('fields', {}, function () {
             assert.containsNone($('.o_modal'), "modal should have been closed");
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 3,
                 'should contain 3 records');
-            await testUtils.dom.click(form.$('.o_kanban_view .delete_icon:first()'));
-            await testUtils.dom.click(form.$('.o_kanban_view .delete_icon:first()'));
+            await testUtils.dom.click(form.$('.o_legacy_kanban_view .delete_icon:first()'));
+            await testUtils.dom.click(form.$('.o_legacy_kanban_view .delete_icon:first()'));
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 'should contain 1 records');
             assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new subrecord 3',
@@ -2563,7 +2563,7 @@ QUnit.module('fields', {}, function () {
 
             assert.ok(!form.$('.o-kanban-button-new').length,
                 '"Add" button should not be available in edit');
-            assert.ok(form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should be visible in edit');
             form.destroy();
         });
@@ -5759,9 +5759,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 4,
             });
 
-            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
+            assert.containsOnce(form, '.o_field_widget .o_legacy_kanban_view',
                 "should have one inner kanban view for the one2many field");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 0,
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 0,
                 "should not have kanban records yet");
 
             // // switch to edit mode and create a new kanban record
@@ -5773,24 +5773,24 @@ QUnit.module('fields', {}, function () {
                 "should already have the default value for field foo");
             await testUtils.dom.click($('.modal-content .btn-primary').first());
 
-            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
+            assert.containsOnce(form, '.o_field_widget .o_legacy_kanban_view',
                 "should have one inner kanban view for the one2many field");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 "should now have one kanban record");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
                 '', "should not have a value for the id field");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
                 'My little Foo Value', "should have a value for the foo field");
 
             // save the view to force a create of the new record in the one2many
             await testUtils.form.clickSave(form);
-            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
+            assert.containsOnce(form, '.o_field_widget .o_legacy_kanban_view',
                 "should have one inner kanban view for the one2many field");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 "should now have one kanban record");
-            assert.notEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
+            assert.notEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
                 '', "should now have a value for the id field");
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
+            assert.strictEqual(form.$('.o_field_widget .o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
                 'My little Foo Value', "should still have a value for the foo field");
 
             form.destroy();
@@ -5848,7 +5848,7 @@ QUnit.module('fields', {}, function () {
             });
 
             // 1. Define all css selector
-            var oKanbanView = '.o_field_widget .o_kanban_view';
+            var oKanbanView = '.o_field_widget .o_legacy_kanban_view';
             var oKanbanRecordActive = oKanbanView + ' .o_kanban_record:not(.o_kanban_ghost)';
             var oAllKanbanButton = oKanbanRecordActive + ' button[data-type="object"]';
             var btn1 = oKanbanRecordActive + ':nth-child(1) button[data-type="object"]';
@@ -6124,7 +6124,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.containsOnce(form, '.o_field_one2many .o_kanban_view',
+            assert.containsOnce(form, '.o_field_one2many .o_legacy_kanban_view',
                 "should have rendered a kanban view");
 
             form.destroy();
@@ -8497,8 +8497,6 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('one2many with onchange, required field, shortcut enter', async function (assert) {
-            assert.expect(5);
-
             this.data.turtle.onchanges = {
                 turtle_foo: function () { },
             };
@@ -8517,6 +8515,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 mockRPC: function (route, args) {
                     var result = this._super.apply(this, arguments);
+                    assert.step(args.method);
                     if (args.method === 'onchange') {
                         return Promise.resolve(prom).then(_.constant(result));
                     }
@@ -8537,13 +8536,17 @@ QUnit.module('fields', {}, function () {
 
             // write something in the field
             var $input = form.$('input[name="turtle_foo"]');
-            await testUtils.fields.editInput($input, value);
-            await testUtils.fields.triggerKeydown($input, 'enter');
+            $input[0].value = value;
+            await testUtils.dom.triggerEvent($input, "input");
+            testUtils.fields.triggerKeydown($input, 'enter');
+            await testUtils.dom.triggerEvent($input, "change");
 
             // check that nothing changed before the onchange finished
             assert.strictEqual($input.val(), value, "input content shouldn't change");
             assert.containsOnce(form, '.o_data_row',
                 "should still contain only one row");
+
+            assert.verifySteps(["onchange", "onchange", "onchange"]);
 
             // unlock onchange
             prom.resolve();
@@ -8554,6 +8557,8 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('input[name="turtle_foo"]').val(), '');
             assert.containsN(form, '.o_data_row', 2,
                 "should now contain two rows");
+
+            assert.verifySteps(["onchange"]);
 
             form.destroy();
         });
@@ -8982,14 +8987,14 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'yopblipkawa');
-            assert.doesNotHaveClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+            assert.doesNotHaveClass(form.$('.o_field_one2many .o_legacy_kanban_view'), 'ui-sortable');
 
             await testUtils.form.clickEdit(form);
 
-            assert.hasClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+            assert.hasClass(form.$('.o_field_one2many .o_legacy_kanban_view'), 'ui-sortable');
 
-            var $record = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:first');
-            var $to = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:nth-child(3)');
+            var $record = form.$('.o_field_one2many[name=turtles] .o_legacy_kanban_view .o_kanban_record:first');
+            var $to = form.$('.o_field_one2many[name=turtles] .o_legacy_kanban_view .o_kanban_record:nth-child(3)');
             await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
 
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'blipkawayop');
@@ -10057,7 +10062,6 @@ QUnit.module('fields', {}, function () {
             const form = await createView({
                 View: FormView,
                 model: 'partner',
-                debug: 1,
                 data: this.data,
                 arch: `<form>
                         <field name="p">

@@ -2,17 +2,19 @@
 
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
+import { useForwardRefToParent } from "@web/core/utils/hooks";
 
-const { Component, useRef, useChildSubEnv, useState } = owl;
+const { Component, useChildSubEnv, useState } = owl;
 export class Dialog extends Component {
     setup() {
-        this.modalRef = useRef("modal");
-        useActiveElement("modal");
+        this.modalRef = useForwardRefToParent("modalRef");
+        useActiveElement("modalRef");
         this.data = useState(this.env.dialogData);
         useHotkey("escape", () => {
             this.data.close();
         });
-        useChildSubEnv({ inDialog: true });
+        this.id = `dialog_${this.data.id}`;
+        useChildSubEnv({ inDialog: true, dialogId: this.id });
     }
 }
 Dialog.template = "web.Dialog";
@@ -24,6 +26,7 @@ Dialog.props = {
     size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg", "xl"].includes(s) },
     technical: { type: Boolean, optional: true },
     title: { type: String, optional: true },
+    modalRef: { type: Function, optional: true },
     slots: {
         type: Object,
         shape: {
@@ -40,4 +43,20 @@ Dialog.defaultProps = {
     size: "lg",
     technical: true,
     title: "Odoo",
+};
+
+export class SimpleDialog extends Component {
+    setup() {
+        useActiveElement("modal");
+        useHotkey("escape", () => {
+            this.props.close();
+        });
+        useChildSubEnv({ inDialog: true });
+    }
+}
+SimpleDialog.template = "web.SimpleDialog";
+SimpleDialog.props = {
+    close: Function,
+    isActive: { optional: true },
+    "*": true,
 };

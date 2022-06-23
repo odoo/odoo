@@ -4,7 +4,9 @@ import { browser } from "@web/core/browser/browser";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { registry } from "@web/core/registry";
+import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
@@ -37,6 +39,8 @@ QUnit.module("Navbar", {
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("view", viewService); // #action-serv-leg-compat-js-class
+        serviceRegistry.add("orm", ormService); // #action-serv-leg-compat-js-class
         systrayRegistry.add("addon.myitem", { Component: MySystrayItem });
         patchWithCleanup(browser, {
             setTimeout: (handler, delay, ...args) => handler(...args),
@@ -179,21 +183,21 @@ QUnit.test("navbar updates after adding a systray item", async (assert) => {
     MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
 
     clearRegistryWithCleanup(systrayRegistry);
-    systrayRegistry.add('addon.myitem1', { Component: MyItem1 });
+    systrayRegistry.add("addon.myitem1", { Component: MyItem1 });
 
     const env = await makeTestEnv(baseConfig);
 
     patchWithCleanup(NavBar.prototype, {
         setup() {
             onRendered(() => {
-                if (!systrayRegistry.contains('addon.myitem2')) {
+                if (!systrayRegistry.contains("addon.myitem2")) {
                     class MyItem2 extends Component {}
                     MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
-                    systrayRegistry.add('addon.myitem2', {Component: MyItem2});
+                    systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
                 }
             });
             this._super();
-        }
+        },
     });
 
     await mount(NavBar, target, { env });

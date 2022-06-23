@@ -4121,9 +4121,9 @@ QUnit.module("Views", (hooks) => {
                     }
                     readGroupCount++;
                 }
-                if (route === "/web/dataset/search_read") {
+                if (args.method === "web_search_read") {
                     assert.step("search_read");
-                    const domain = args.domain;
+                    const domain = args.kwargs.domain;
                     assert.deepEqual(
                         domain,
                         ["&", ["customer", "=", 1], ["foo", "=", 12]],
@@ -4799,7 +4799,7 @@ QUnit.module("Views", (hooks) => {
         await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view");
-        assert.verifySteps(["/web/dataset/search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         // switch back to pivot
         await click(target.querySelector(".o_control_panel .o_switch_view.o_pivot"));

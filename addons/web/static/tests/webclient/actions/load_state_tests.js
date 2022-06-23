@@ -133,7 +133,6 @@ QUnit.module("ActionManager", (hooks) => {
                     additional_context: {
                         active_id: 4,
                         active_ids: [4, 8],
-                        active_model: undefined,
                     },
                 });
             }
@@ -217,7 +216,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -310,7 +309,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -347,7 +346,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "get_views",
                 "read",
-                "/web/dataset/search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -464,8 +463,8 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
-            "/web/dataset/search_read",
+            "web_search_read",
+            "web_search_read",
             "read",
         ]);
     });
@@ -478,7 +477,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         // execute action 3 and open the first record in a form view
         await doAction(webClient, 3);
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.strictEqual(
@@ -513,7 +512,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
             "read",
         ]);
@@ -542,7 +541,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "list",
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
-        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
+        await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await legacyExtraNextTick();
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
@@ -718,10 +717,10 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "setItem session current_action",
             "getItem session current_action",
-            "/web/dataset/search_read",
+            "web_search_read",
             "setItem session current_action",
         ]);
     });
@@ -750,7 +749,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 
@@ -800,7 +799,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 
@@ -839,7 +838,7 @@ QUnit.module("ActionManager", (hooks) => {
             id: "",
         });
         assert.verifySteps(["/web/dataset/call_kw/partner/onchange"]);
-        assert.containsOnce(target, ".o_form_view.o_form_editable");
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
             $(target).find(".o_control_panel .breadcrumb-item.active").text(),
@@ -927,7 +926,7 @@ QUnit.module("ActionManager", (hooks) => {
             await loadState(webClient.env, hash);
             assert.containsOnce(
                 target,
-                ".o_form_view.o_form_editable",
+                ".o_form_view .o_form_editable",
                 "should now display the form view in edit mode"
             );
         }

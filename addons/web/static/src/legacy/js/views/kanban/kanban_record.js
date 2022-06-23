@@ -614,7 +614,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
         if (!$colorpicker.length) {
             return;
         }
-        $colorpicker.html(QWeb.render('KanbanColorPicker', { colors: KANBAN_RECORD_COLORS}));
+        $colorpicker.html(QWeb.render('web.Legacy.KanbanColorPicker', { colors: KANBAN_RECORD_COLORS}));
         $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
     },
     /**

@@ -322,7 +322,7 @@
     }
 
     // Stars
-    &.o_priority {
+    &.o_priority, & .o_priority {
         display: inline-block;
         padding: 0;
         margin: 0;
@@ -349,7 +349,7 @@
     }
 
     // Favorite
-    &.o_favorite {
+    &.o_favorite, & .o_favorite {
         i.fa {
             font-size: 16px;
         }
@@ -367,7 +367,7 @@
     }
 
     // Handle widget
-    &.o_row_handle {
+    .o_row_handle {
         @include o-grab-cursor;
         color: #adb5bd;
         text-align: center;
@@ -477,7 +477,7 @@
     }
 
     // Image
-    &.o_field_image {
+    &.o_field_image, &.o_field_image_url {
         position: relative;
 
         .o_form_image_controls {
@@ -577,7 +577,6 @@
                 right: 0;
             }
             &.o_btn_char_copy {
-                padding-top: 2px;
                 height: 100%;
             }
         }
@@ -596,18 +595,6 @@
         display: inline-block;
     }
 
-    &.o_field_badge {
-        border: 0;
-        font-size: 12px;
-        user-select: none;
-        background-color: rgba(lightgray, 0.5);
-        font-weight: 500;
-        @include o-text-overflow;
-        transition: none; // remove transition to prevent badges from flickering at reload
-        &.o_field_empty {
-            display: none !important;
-        }
-    }
 }
 
 span.o_field_copy:empty {

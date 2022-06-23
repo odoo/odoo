@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.WeekDays" owl="1">
+        <div class="o_recurrent_weekdays border mt-2 mb-2">
+            <table class="table table-responsive mb-0">
+                <tr>
+                    <t t-foreach="weekdays" t-as="day" t-key="day">
+                        <th class="text-center border font-weight-bold">
+                            <div class="o_recurrent_weekday_label" t-att-data-tooltip="props.record.fields[day].string">
+                                <t t-esc="props.record.fields[day].string" />
+                            </div>
+                        </th>
+                    </t>
+                </tr>
+                <tr>
+                    <t t-foreach="weekdays" t-as="day" t-key="day">
+                        <td>
+                            <CheckBox
+                                disabled="props.readonly"
+                                value="data[day]"
+                                className="'o_recurrent_weekday_checkbox text-center'"
+                                onChange="(checked) => this.onChange(day, checked)"
+                            />
+                        </td>
+                    </t>
+                </tr>
+            </table>
+        </div>
+    </t>
+
+</templates>

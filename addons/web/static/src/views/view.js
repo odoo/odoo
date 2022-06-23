@@ -4,12 +4,12 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { deepCopy } from "@web/core/utils/objects";
+import { deepCopy, pluck } from "@web/core/utils/objects";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { useActionLinks } from "@web/views/helpers/view_hook";
+import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -89,6 +89,8 @@ export function getDefaultConfig() {
  *  @property {Object} [globalState]
  */
 
+export class ViewNotFoundError extends Error {}
+
 const STANDARD_PROPS = [
     "resModel",
     "type",
@@ -120,6 +122,8 @@ const STANDARD_PROPS = [
     "globalState",
 
     "activateFavorite",
+    "dynamicFilters",
+    "searchMenuTypes",
 
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)
     "searchPanel",
@@ -129,7 +133,6 @@ const STANDARD_PROPS = [
 export class View extends Component {
     setup() {
         const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
-
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
         }
@@ -156,19 +159,19 @@ export class View extends Component {
 
         this.handleActionLinks = useActionLinks({ resModel });
 
-        onWillStart(this.onWillStart);
-        onWillUpdateProps(this.onWillUpdateProps);
+        onWillStart(() => this.loadView(this.props));
+        onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
     }
 
-    async onWillStart() {
+    async loadView(props) {
         // determine view type
-        let descr = viewRegistry.get(this.props.type);
+        let descr = viewRegistry.get(props.type);
         const type = descr.type;
 
         // determine views for which descriptions should be obtained
-        let { viewId, searchViewId } = this.props;
+        let { viewId, searchViewId } = props;
 
-        const views = deepCopy(this.env.config.views);
+        const views = deepCopy(props.views || this.env.config.views);
         const view = views.find((v) => v[1] === type) || [];
         if (view.length) {
             view[0] = viewId !== undefined ? viewId : view[0];
@@ -188,7 +191,7 @@ export class View extends Component {
         // searchViewId will remains undefined if loadSearchView=false
 
         // prepare view description
-        const { context, resModel, loadActionMenus, loadIrFilters } = this.props;
+        const { context, resModel, loadActionMenus, loadIrFilters } = props;
         let {
             arch,
             fields,
@@ -197,7 +200,7 @@ export class View extends Component {
             searchViewFields,
             irFilters,
             actionMenus,
-        } = this.props;
+        } = props;
 
         let loadView = !arch || (!actionMenus && loadActionMenus);
         let loadSearchView =
@@ -212,7 +215,7 @@ export class View extends Component {
                 { context, resModel, views },
                 { actionId: this.env.config.actionId, loadActionMenus, loadIrFilters }
             );
-            // Note: if this.props.views is different from views, the cached descriptions
+            // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as
             // before)
             viewDescription = result.views[type];
@@ -228,8 +231,8 @@ export class View extends Component {
                 }
             }
             this.env.config.views = views;
-            fields = fields || result.fields;
-            relatedModels = relatedModels || result.relatedModels;
+            fields = fields || markRaw(result.fields);
+            relatedModels = relatedModels || markRaw(result.relatedModels);
         }
 
         if (!arch) {
@@ -243,13 +246,17 @@ export class View extends Component {
         const xml = parser.parseFromString(arch, "text/xml");
         const rootNode = xml.documentElement;
 
-        const subType = rootNode.getAttribute("js_class");
+        let subType = rootNode.getAttribute("js_class");
         const bannerRoute = rootNode.getAttribute("banner_route");
         const sample = rootNode.getAttribute("sample");
 
         // determine ViewClass to instantiate (if not already done)
         if (subType) {
-            descr = viewRegistry.get(subType);
+            if (viewRegistry.contains(subType)) {
+                descr = viewRegistry.get(subType);
+            } else {
+                subType = null;
+            }
         }
 
         Object.assign(this.env.config, {
@@ -257,47 +264,65 @@ export class View extends Component {
             viewType: type,
             viewSubType: subType,
             bannerRoute,
+            noBreadcrumbs: props.noBreadcrumbs,
             ...extractLayoutComponents(descr),
         });
+        const info = {
+            actionMenus,
+            mode: props.display.mode,
+            irFilters,
+            searchViewArch,
+            searchViewFields,
+            searchViewId,
+        };
 
         // prepare the view props
         const viewProps = {
-            info: { actionMenus, mode: this.props.display.mode },
+            info,
             arch,
             fields,
             relatedModels,
             resModel,
             useSampleModel: false,
-            className: `${this.props.className} o_view_controller o_${this.env.config.viewType}_view`,
+            className: `${props.className} o_view_controller o_${this.env.config.viewType}_view`,
         };
-        if (this.props.globalState) {
-            viewProps.globalState = this.props.globalState;
+        if (viewDescription.custom_view_id) {
+            // for dashboard
+            viewProps.info.customViewId = viewDescription.custom_view_id;
+        }
+        if (props.globalState) {
+            viewProps.globalState = props.globalState;
         }
 
-        if ("useSampleModel" in this.props) {
-            viewProps.useSampleModel = this.props.useSampleModel;
+        if ("useSampleModel" in props) {
+            viewProps.useSampleModel = props.useSampleModel;
         } else if (sample) {
             viewProps.useSampleModel = Boolean(evaluateExpr(sample));
         }
 
-        for (const key in this.props) {
+        for (const key in props) {
             if (!STANDARD_PROPS.includes(key)) {
-                viewProps[key] = this.props[key];
+                viewProps[key] = props[key];
             }
         }
 
-        let { noContentHelp } = this.props;
+        let { noContentHelp } = props;
         if (noContentHelp) {
             viewProps.info.noContentHelp = noContentHelp;
         }
 
+        const searchMenuTypes =
+            props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
+        viewProps.searchMenuTypes = searchMenuTypes;
+
         const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
         // prepare the WithSearch component props
+        this.Controller = descr.Controller;
+        this.componentProps = finalProps;
         this.withSearchProps = {
-            ...toRaw(this.props),
-            Component: descr.Controller,
+            ...toRaw(props),
+            searchMenuTypes,
             SearchModel: descr.SearchModel,
-            componentProps: finalProps,
         };
 
         if (searchViewId !== undefined) {
@@ -311,11 +336,20 @@ export class View extends Component {
             this.withSearchProps.irFilters = irFilters;
         }
 
-        if (!this.withSearchProps.searchMenuTypes) {
-            this.withSearchProps.searchMenuTypes =
-                this.props.searchMenuTypes ||
-                descr.searchMenuTypes ||
-                this.constructor.searchMenuTypes;
+        if (descr.display) {
+            // FIXME: there's something inelegant here: display might come from
+            // the View's defaultProps, in which case, modifying it in place
+            // would have unwanted effects.
+            const viewDisplay = deepCopy(descr.display);
+            const display = { ...this.withSearchProps.display };
+            for (const key in viewDisplay) {
+                if (typeof display[key] === "object") {
+                    Object.assign(display[key], viewDisplay[key]);
+                } else if (!(key in display) || display[key]) {
+                    display[key] = viewDisplay[key];
+                }
+            }
+            this.withSearchProps.display = display;
         }
 
         for (const key in this.withSearchProps) {
@@ -325,13 +359,20 @@ export class View extends Component {
         }
     }
 
-    async onWillUpdateProps(nextProps) {
+    onWillUpdateProps(nextProps) {
+        const oldProps = pluck(this.props, "arch", "type", "resModel");
+        const newProps = pluck(nextProps, "arch", "type", "resModel");
+        if (JSON.stringify(oldProps) !== JSON.stringify(newProps)) {
+            return this.loadView(nextProps);
+        }
         // we assume that nextProps can only vary in the search keys:
         // comparison, context, domain, groupBy, orderBy
         const { comparison, context, domain, groupBy, orderBy } = nextProps;
         Object.assign(this.withSearchProps, { comparison, context, domain, groupBy, orderBy });
     }
 }
+
+View._download = async function () {};
 
 View.template = "web.View";
 View.components = { WithSearch };
@@ -344,33 +385,3 @@ View.defaultProps = {
 };
 
 View.searchMenuTypes = ["filter", "groupBy", "favorite"];
-
-/** @todo rework doc */
-
-// - create a fakeORM service? --> use sampleServer and mockServer parts?
-
-// - action service uses View comp --> see if things cannot be simplified (we will use also maybe a ClientAction comp similar to view)
-
-// - see if we want to simplify things related to callback recorders --> the class should be put elsewhere too (maybe in core along registry?)
-
-/**
- * To manage (how?):
- *
-  Relate to search
-      searchModel // search model state (searchItems, query)
-      searchPanel // search panel component state (expanded (hierarchy), scrollbar)
-
-  Related to config/display/layout
-      breadcrumbs
-      withBreadcrumbs // 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
-      withControlPanel // this.withControlPanel from constructor
-      withSearchBar // 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
-      withSearchPanel // this.withSearchPanel from constructor
-      search_panel // = params.search_panel or context.search_panel
-
-  Prepare for concrete view ???
-      activeActions
-
-  Do stuff in View comp ???
-      banner // from arch = this.arch.attrs.banner_route
-*/

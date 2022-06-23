@@ -44,7 +44,6 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
  */
 
 export const viewService = {
-    name: "view",
     dependencies: ["orm"],
     start(env, { orm }) {
         let cache = {};
@@ -61,10 +60,10 @@ export const viewService = {
          * fields of the corresponding model, and optionally the filters.
          *
          * @param {LoadViewsParams} params
-         * @param {LoadViewsOptions} options
+         * @param {LoadViewsOptions} [options={}]
          * @returns {Promise<ViewDescriptions>}
          */
-        async function loadViews(params, options) {
+        async function loadViews(params, options = {}) {
             const loadViewsOptions = {
                 action_id: options.actionId || false,
                 load_filters: options.loadIrFilters || false,
@@ -74,7 +73,9 @@ export const viewService = {
                 loadViewsOptions.mobile = true;
             }
             const { context, resModel, views } = params;
-            let filteredContext = Object.fromEntries(Object.entries(context || {}).filter((k,v) => !String(k).startsWith("default_")));
+            let filteredContext = Object.fromEntries(
+                Object.entries(context || {}).filter((k, v) => !String(k).startsWith("default_"))
+            );
             const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);
             if (!cache[key]) {
                 cache[key] = orm
@@ -89,8 +90,8 @@ export const viewService = {
                             views: {},
                         };
                         for (const viewType in views) {
-                            const { arch, toolbar, id, filters } = views[viewType];
-                            const viewDescription = { arch, id };
+                            const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
+                            const viewDescription = { arch, id, custom_view_id };
                             if (toolbar) {
                                 viewDescription.actionMenus = toolbar;
                             }

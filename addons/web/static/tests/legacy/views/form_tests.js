@@ -11,6 +11,8 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 const { FieldBoolean } = require("web.basic_fields_owl");
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
+var ListView = require('web.ListView');
+var KanbanView = require('web.KanbanView');
 var mixins = require('web.mixins');
 var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
@@ -19,6 +21,8 @@ var ViewDialogs = require('web.view_dialogs');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 var _t = core._t;
 var createView = testUtils.createView;
@@ -28,7 +32,6 @@ const { createWebClient, doAction } = require('@web/../tests/webclient/helpers')
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const makeTestEnvironment = require("web.test_env");
 const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
-const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 
@@ -36,11 +39,18 @@ const { onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
 let target;
-QUnit.module('Views', {
-    beforeEach: async function () {
+QUnit.module('LegacyViews', {
+    beforeEach: function () {
+        target = getFixture();
+
         registry.category("services").add("scroller", scrollerService);
 
-        target = getFixture();
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
 
         this.data = {
             partner: {
@@ -180,7 +190,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('FormView');
+    QUnit.module('FormView (legacy)');
 
     QUnit.test('simple form rendering', async function (assert) {
         assert.expect(12);
@@ -1057,7 +1067,7 @@ QUnit.module('Views', {
                             <notebook>
                                 <page string="Non scrollable page">
                                     <div id="anchor1">No scrollbar!</div>
-                                    <a href="#anchor2" class="link2">TO ANCHOR 2</a> 
+                                    <a href="#anchor2" class="link2">TO ANCHOR 2</a>
                                 </page>
                                 <page string="Other scrollable page">
                                     <p style="font-size: large">
@@ -1082,7 +1092,7 @@ QUnit.module('Views', {
                                         at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
                                         placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
                                         augue.
-                                    </p>   
+                                    </p>
                                 </page>
                             </notebook>
                         </sheet>
@@ -1377,7 +1387,7 @@ QUnit.module('Views', {
         assert.containsN(form, 'button.oe_stat_button[disabled]', 1);
         await testUtils.dom.click('button[name=action_to_perform]');
         assert.containsN(form, 'button.oe_stat_button[disabled]', 1, "After performing the action, only one button should be disabled.");
-        
+
         form.destroy();
     });
 
@@ -9369,7 +9379,7 @@ QUnit.module('Views', {
         await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
         await legacyExtraNextTick();
         assert.containsNone(target, '.o_form_view');
-        assert.containsOnce(target, '.o_kanban_view');
+        assert.containsOnce(target, '.o_legacy_kanban_view');
     });
 
     QUnit.test("one2many create record dialog shouldn't have a 'remove' button", async function (assert) {

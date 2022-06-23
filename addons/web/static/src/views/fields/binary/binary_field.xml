@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BinaryField" owl="1">
+        <t t-if="!props.readonly">
+            <t t-if="file.data">
+                <FileUploader
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    file="file"
+                    onUploaded.bind="onFileUploaded"
+                >
+                    <t t-set-slot="toggler">
+                        <span class="mx-2" t-esc="file.name"/>
+                        <button
+                            class="btn btn-secondary fa fa-pencil o_select_file_button"
+                            data-tooltip="Edit"
+                            aria-label="Edit"
+                        />
+                    </t>
+                    <button
+                        class="btn btn-secondary fa fa-trash o_clear_file_button"
+                        data-tooltip="Clear"
+                        aria-label="Clear"
+                        t-on-click="onFileRemove"
+                    />
+                </FileUploader>
+            </t>
+            <t t-else="">
+                <label class="o_select_file_button btn btn-primary">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        onUploaded.bind="onFileUploaded"
+                    >
+                        <t t-set-slot="toggler">
+                            <span t-esc="'Upload your file'"/>
+                        </t>
+                    </FileUploader>
+                </label>
+            </t>
+        </t>
+        <t t-elif="file.data and props.isDownloadable">
+            <FileDownloader file="file" onDownload.bind="onFileDownload"/>
+        </t>
+    </t>
+
+</templates>

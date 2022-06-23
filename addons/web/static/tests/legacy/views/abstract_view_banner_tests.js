@@ -23,7 +23,7 @@ var TestView = AbstractView.extend({
 
 var test_css_url = '/test_assetsbundle/static/src/css/test_cssfile1.css';
 
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
         beforeEach: function () {
             this.data = {
                 test_model: {

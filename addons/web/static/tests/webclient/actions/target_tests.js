@@ -4,14 +4,7 @@ import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registry } from "@web/core/registry";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    patchWithCleanup,
-    makeDeferred,
-    nextTick,
-} from "../../helpers/utils";
+import { click, getFixture, patchWithCleanup, makeDeferred, nextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { registerCleanup } from "../../helpers/cleanup";
 import { errorService } from "@web/core/errors/error_service";
@@ -48,9 +41,9 @@ QUnit.module("ActionManager", (hooks) => {
             "o_act_window",
             "dialog main element should have classname 'o_act_window'"
         );
-        assert.hasClass(
-            $(".o_technical_modal .o_form_view")[0],
-            "o_form_editable",
+        assert.containsOnce(
+            document.body,
+            ".o_technical_modal .o_form_view .o_form_editable",
             "form view should be in edit mode"
         );
         assert.verifySteps([
@@ -80,12 +73,13 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("footer buttons are moved to the dialog footer", async function (assert) {
         assert.expect(3);
         serverData.views["partner,false,form"] = `
-      <form>
-        <field name="display_name"/>
-        <footer>
-          <button string="Create" type="object" class="infooter"/>
-        </footer>
-      </form>`;
+            <form>
+                <field name="display_name"/>
+                <footer>
+                    <button string="Create" type="object" class="infooter"/>
+                </footer>
+            </form>
+        `;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 5);
         assert.containsNone(
@@ -99,29 +93,26 @@ QUnit.module("ActionManager", (hooks) => {
             "the button should be in the footer"
         );
         assert.containsOnce(
-            $(".o_technical_modal .modal-footer")[0],
-            "button",
-            "the modal footer should only contain one button"
+            target,
+            ".modal-footer button:not(.d-none)",
+            "the modal footer should only contain one visible button"
         );
     });
 
     QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
-        assert.expect(19);
         serverData.views = {
             "partner,false,form": `
-        <form>
-          <header>
-            <button string="Open dialog" name="5" type="action"/>
-          </header>
-        </form>
-      `,
+                <form>
+                    <header>
+                        <button string="Open dialog" name="5" type="action"/>
+                    </header>
+                </form>`,
             "partner,view_ref,form": `
-          <form>
-            <footer>
-              <button string="I close the dialog" name="some_method" type="object" close="1"/>
-            </footer>
-          </form>
-      `,
+                <form>
+                    <footer>
+                        <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                    </footer>
+                </form>`,
             "partner,false,search": "<search></search>",
         };
         serverData.actions[4] = {
@@ -164,8 +155,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/onchange",
         ]);
-        await legacyExtraNextTick();
-        assert.strictEqual($(".modal").length, 1, "It should display a modal");
+        assert.containsOnce(document.body, ".modal");
         await testUtils.dom.click(`button[name="some_method"]`);
         assert.verifySteps([
             "/web/dataset/call_kw/partner/create",
@@ -173,8 +163,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_button",
             "/web/dataset/call_kw/partner/read",
         ]);
-        await legacyExtraNextTick();
-        assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
+        assert.containsNone(document.body, ".modal");
     });
 
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
@@ -206,25 +195,26 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test(
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
-            serverData.views["partner,false,form"] =
-                "<form>" +
-                '<field name="display_name"/>' +
-                "<footer>" +
-                '<button string="Create" type="object" class="infooter"/>' +
-                "</footer>" +
-                "</form>";
+            serverData.views["partner,false,form"] = `
+                <form>
+                    <field name="display_name"/>
+                    <footer>
+                        <button string="Create" type="object" class="infooter"/>
+                    </footer>
+                </form>
+            `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 5);
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
             assert.containsNone(target, ".o_technical_modal .modal-body button.infooter");
             assert.containsOnce(target, ".o_technical_modal .modal-footer button.infooter");
-            assert.containsOnce(target, ".o_technical_modal .modal-footer button");
+            assert.containsOnce(target, ".o_technical_modal .modal-footer button:not(.d-none)");
             await doAction(webClient, 25);
             assert.containsNone(target, ".o_technical_modal .modal-body button.infooter");
             assert.containsNone(target, ".o_technical_modal .modal-footer button.infooter");
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
             assert.containsOnce(target, '.o_technical_modal .modal-footer button[special="save"]');
-            assert.containsOnce(target, ".o_technical_modal .modal-footer button");
+            assert.containsOnce(target, ".o_technical_modal .modal-footer button:not(.d-none)");
         }
     );
 
@@ -296,7 +286,10 @@ QUnit.module("ActionManager", (hooks) => {
 
             await testUtils.dom.click($(".modal:last .modal-footer .btn-primary"));
             assert.containsOnce(document.body, ".modal");
-            assert.strictEqual($(".modal:last .modal-body").text().trim(), "Another action");
+            assert.strictEqual(
+                target.querySelector(".modal main .o_content").innerText.trim(),
+                "Another action"
+            );
         }
     );
 
@@ -421,10 +414,7 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "list"]],
         });
-        assert.deepEqual(
-            [...target.querySelectorAll(".modal .breadcrumb-item")].map((i) => i.innerText),
-            ["Create a Partner"]
-        );
+        assert.containsNone(target, ".modal .breadcrumb");
     });
 
     QUnit.test('call switchView in an action in target="new"', async function (assert) {
@@ -453,46 +443,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
     });
 
-    QUnit.module('Actions in target="inline"');
-
-    QUnit.test(
-        'form views for actions in target="inline" open in edit mode',
-        async function (assert) {
-            const mockRPC = async (route, args) => {
-                assert.step(args.method || route);
-            };
-            const webClient = await createWebClient({ serverData, mockRPC });
-            await doAction(webClient, 6);
-            assert.containsOnce(
-                target,
-                ".o_form_view.o_form_editable",
-                "should have rendered a form view in edit mode"
-            );
-            assert.verifySteps([
-                "/web/webclient/load_menus",
-                "/web/action/load",
-                "get_views",
-                "read",
-            ]);
-        }
-    );
-
-    QUnit.test("breadcrumbs and actions with target inline", async function (assert) {
-        serverData.actions[4].views = [[false, "form"]];
-        serverData.actions[4].target = "inline";
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 4);
-        assert.containsNone(target, ".o_control_panel");
-        await doAction(webClient, 1, { clearBreadcrumbs: true });
-        assert.containsOnce(target, ".o_control_panel");
-        assert.isVisible(target.querySelector(".o_control_panel"));
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
-            "Partners Action 1",
-            "should have only one current action visible in breadcrumbs"
-        );
-    });
-
     QUnit.module('Actions in target="fullscreen"');
 
     QUnit.test(
@@ -515,15 +465,12 @@ QUnit.module("ActionManager", (hooks) => {
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find("button[name=1]"));
+        await click(target.querySelector("button[name='1']"));
         await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click(target.querySelector(".breadcrumb li a"));
+        await click(target.querySelector(".breadcrumb li a"));
         await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_main_navbar");
     });
 
@@ -534,15 +481,11 @@ QUnit.module("ActionManager", (hooks) => {
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
-        assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find("button[name=1]"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find(".breadcrumb li a:first"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsNone(target, ".o_main_navbar");
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector("button[name='1']"));
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector(".breadcrumb li a"));
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
     });
 
     QUnit.test(
@@ -557,22 +500,18 @@ QUnit.module("ActionManager", (hooks) => {
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
             await createWebClient({ serverData });
             await nextTick(); // wait for the load state (default app)
-            await legacyExtraNextTick();
             assert.containsOnce(target, "nav .o_menu_brand");
-            assert.strictEqual($(target).find("nav .o_menu_brand").text(), "MAIN APP");
-            await testUtils.dom.click($(target).find('button[name="24"]'));
+            assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
+            await click(target.querySelector("button[name='24']"));
             await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
             assert.containsOnce(target, "nav .o_menu_brand");
-            await testUtils.dom.click($(target).find('button[name="1"]'));
+            await click(target.querySelector("button[name='1']"));
             await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
             assert.containsNone(target, "nav.o_main_navbar");
-            await testUtils.dom.click($(target).find(".breadcrumb li a")[1]);
+            await click(target.querySelectorAll(".breadcrumb li a")[1]);
             await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
             assert.containsOnce(target, "nav .o_menu_brand");
-            assert.strictEqual($(target).find("nav .o_menu_brand").text(), "MAIN APP");
+            assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
         }
     );
 
@@ -627,7 +566,6 @@ QUnit.module("ActionManager", (hooks) => {
 
         // open first record
         await click(target.querySelector(".o_data_row .o_data_cell"));
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_form_view");
         assert.containsN(target, ".breadcrumb-item", 2);
@@ -659,7 +597,6 @@ QUnit.module("ActionManager", (hooks) => {
 
         // open first record
         await click(target.querySelector(".o_data_row .o_data_cell"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
@@ -673,7 +610,6 @@ QUnit.module("ActionManager", (hooks) => {
 
         // go back to form view
         await click(target.querySelectorAll(".breadcrumb-item")[1]);
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SimpleDialog" owl="1">
+        <div class="o_dialog" t-att-class="{ o_inactive_modal: !props.isActive }" t-on-dialog-closed="props.close">
+            <div role="dialog" class="modal d-block"
+                tabindex="-1"
+                t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-ref="modal"
+                >
+                <div class="modal-dialog" t-att-class="props.size">
+                    <div class="modal-content" t-att-class="props.contentClass">
+                        <header t-if="!props.hideHeader" class="modal-header">
+                            <h4 class="modal-title text-break">
+                                <t t-esc="props.title"/>
+                            </h4>
+                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="props.close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <t t-slot="default"/>
+                        </main>
+                        <footer t-if="props.slots.footer" class="modal-footer justify-content-start">
+                            <t t-slot="footer" close="props.close"/>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

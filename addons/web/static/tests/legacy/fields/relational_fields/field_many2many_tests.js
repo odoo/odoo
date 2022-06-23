@@ -7,9 +7,9 @@ var testUtils = require('web.test_utils');
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-    QUnit.module('relational_fields', {
+    QUnit.module('Legacy relational_fields', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -115,7 +115,7 @@ QUnit.module('fields', {}, function () {
             };
         },
     }, function () {
-        QUnit.module('FieldMany2Many');
+        QUnit.module('Legacy FieldMany2Many');
 
         QUnit.test('many2many kanban: edition', async function (assert) {
             assert.expect(33);
@@ -184,7 +184,7 @@ QUnit.module('fields', {}, function () {
                 event.data.callback({ user_context: {} });
             });
 
-            assert.ok(!form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(!form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should not be visible in readonly');
             assert.ok(!form.$('.o_field_many2many .o-kanban-button-new').length,
                 '"Add" button should not be visible in readonly');
@@ -195,7 +195,7 @@ QUnit.module('fields', {}, function () {
                 'should contain 2 records');
             assert.strictEqual(form.$('.o_kanban_record:first() span').text(), 'gold',
                 'display_name of subrecord should be the one in DB');
-            assert.ok(form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should be visible in edit');
             assert.ok(form.$('.o_field_many2many .o-kanban-button-new').length,
                 '"Add" button should be visible in edit');
@@ -342,7 +342,7 @@ QUnit.module('fields', {}, function () {
 
             assert.ok(form.$('.o-kanban-button-new').length,
                 '"Add" button should be available in edit');
-            assert.ok(form.$('.o_kanban_view .delete_icon').length,
+            assert.ok(form.$('.o_legacy_kanban_view .delete_icon').length,
                 'delete icon should be visible in edit');
 
             await testUtils.dom.click(form.$('.o-kanban-button-new'));

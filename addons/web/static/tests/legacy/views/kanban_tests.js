@@ -14,6 +14,8 @@ var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 const { LegacyComponent } = require("@web/legacy/legacy_component");
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
@@ -23,7 +25,7 @@ var createView = testUtils.createView;
 const { Markup } = require("web.utils");
 const { markup, xml } = owl;
 
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     before: function () {
         this._initialKanbanProgressBarAnimate = KanbanColumnProgressBar.prototype.ANIMATE;
         KanbanColumnProgressBar.prototype.ANIMATE = false;
@@ -32,6 +34,9 @@ QUnit.module('Views', {
         KanbanColumnProgressBar.prototype.ANIMATE = this._initialKanbanProgressBarAnimate;
     },
     beforeEach: function () {
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+
         this.data = {
             partner: {
                 fields: {
@@ -106,7 +111,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('KanbanView');
+    QUnit.module('KanbanView (legacy)');
 
     QUnit.test('basic ungrouped rendering', async function (assert) {
         assert.expect(6);
@@ -128,8 +133,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_ungrouped');
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_test');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_ungrouped');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_test');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
         assert.containsN(kanban,'.o_kanban_ghost', 6);
         assert.containsOnce(kanban, '.o_kanban_record:contains(gnap)');
@@ -159,8 +164,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_test');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_test');
         assert.containsN(kanban, '.o_kanban_group', 2);
         assert.containsOnce(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record');
         assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 3);
@@ -547,11 +552,11 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'),'ui-sortable',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'ui-sortable',
             "columns are sortable when grouped by a m2o field");
         assert.hasClass(kanban.$buttons.find('.o-kanban-button-new'),'btn-primary',
             "'create' button should be btn-primary for grouped kanban with at least one column");
-        assert.hasClass(kanban.$('.o_kanban_view > div:last'),'o_column_quick_create',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view > div:last'),'o_column_quick_create',
             "column quick create should be enabled when grouped by a many2one field)");
 
         await testUtils.kanban.clickCreate(kanban); // Click on 'Create'
@@ -578,12 +583,12 @@ QUnit.module('Views', {
             groupBy: ['foo'],
         });
 
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'ui-sortable',
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'ui-sortable',
             "columns aren't sortable when not grouped by a m2o field");
         assert.containsN(kanban, '.o_kanban_group', 3, "should have " + 3 + " columns");
         assert.strictEqual(kanban.$('.o_kanban_group:first() .o_column_title').text(), "yop",
             "'yop' column should be the first column");
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view > div:last'), 'o_column_quick_create',
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view > div:last'), 'o_column_quick_create',
             "column quick create should be disabled when not grouped by a many2one field)");
         kanban.destroy();
     });
@@ -3338,7 +3343,7 @@ QUnit.module('Views', {
                         assert.deepEqual(args.args[1], {date: '2017-02-28'});
                     } else if ("datetime" in args.args[1]) {
                         assert.deepEqual(args.args[1], {datetime: '2017-02-28 23:59:59'});
-                    } 
+                    }
                 }
                 return this._super(route, args);
             },
@@ -3359,7 +3364,7 @@ QUnit.module('Views', {
                         "Should now have 3 records");
 
         await kanban.reload({groupBy: ['datetime:month']});
-        
+
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
                         "1st column should contain 2 records of January month");
@@ -3491,7 +3496,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped');
         assert.containsN(kanban, '.o_kanban_group', 2, "should have " + 2 + " columns");
 
         // simulate an update coming from the searchview, with another groupby given
@@ -3540,7 +3545,7 @@ QUnit.module('Views', {
             context: { search_default_itsName: 1, },
         });
 
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped');
         assert.containsNone(kanban, '.o_control_panel div.o_search_options div.o_group_by_menu');
         assert.deepEqual(cpHelpers.getFacetTexts(kanban.el), []);
 
@@ -4195,7 +4200,7 @@ QUnit.module('Views', {
         // click to see the examples
         await testUtils.dom.click(kanban.$('.o_column_quick_create .o_kanban_examples'));
 
-        assert.strictEqual($('.modal .o_kanban_examples_dialog').length, 1,
+        assert.strictEqual($('.modal .o_legacy_kanban_examples_dialog').length, 1,
             "should have open the examples dialog");
         assert.strictEqual($('.modal .o_kanban_examples_dialog_nav li').length, 2,
             "should have two examples (in the menu)");
@@ -4407,11 +4412,11 @@ QUnit.module('Views', {
                     '</kanban>',
         });
 
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped');
         await kanban.update({groupBy: ['product_id']});
-        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_grouped');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'o_kanban_grouped');
         await kanban.update({groupBy: []});
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped');
 
         kanban.destroy();
     });
@@ -4806,7 +4811,7 @@ QUnit.module('Views', {
         // add a record
         await testUtils.dom.click(kanban.$('.o_kanban_quick_add'));
 
-        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        await testUtils.dom.click(kanban.$('.o_legacy_kanban_view'));
 
         assert.containsOnce(kanban, '.o_view_nocontent',
             "there should be again a nocontent helper");
@@ -4988,7 +4993,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban, '.o_view_nocontent');
         assert.containsOnce(kanban.$('.o_kanban_group:first'), '.o_kanban_quick_create');
 
-        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        await testUtils.dom.click(kanban.$('.o_legacy_kanban_view'));
         assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_quick_create');
         assert.containsNone(kanban, '.o_kanban_record');
@@ -5230,7 +5235,7 @@ QUnit.module('Views', {
                         return {
                             product_id: [r.id, r.display_name],
                             product_id_count: 0,
-                            __domain: ['product_id', '=', r.id],
+                            __domain: ['product_id', '=', r.id], // This domain shouldn't be valid.
                         };
                     });
                     result.length = result.groups.length;
@@ -5424,7 +5429,7 @@ QUnit.module('Views', {
                         return {
                             product_id: [r.id, r.display_name],
                             product_id_count: 0,
-                            __domain: ['product_id', '=', r.id],
+                            __domain: ['product_id', '=', r.id], // This domain shouldn't be valid.
                         };
                     });
                     result.length = result.groups.length;
@@ -5479,12 +5484,12 @@ QUnit.module('Views', {
             },
         });
 
-        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        await testUtils.dom.click(kanban.$('.o_legacy_kanban_view'));
         assert.doesNotHaveClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
 
         await kanban.reload({ domain: [['id', '<', 0]] });
 
-        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        await testUtils.dom.click(kanban.$('.o_legacy_kanban_view'));
         assert.hasClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
 
         kanban.destroy();
@@ -5593,7 +5598,6 @@ QUnit.module('Views', {
             data.partner.records[0].active = false;
             event.data.on_closed();
         });
-
         assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 1, "should display 'yop' record");
         await testUtils.dom.click(kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_active"]'));
         assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 0, "should remove 'yop' record from the view");
@@ -5786,7 +5790,7 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'),'ui-sortable',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'ui-sortable',
             "columns should be sortable");
         assert.containsN(kanban, '.o_kanban_group', 2,
             "should have two columns");
@@ -6056,7 +6060,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_grouped',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'o_kanban_grouped',
                         "should have classname 'o_kanban_grouped'");
         assert.containsN(kanban, '.o_kanban_group', 2, "should have " + 2 + " columns");
 
@@ -6354,7 +6358,7 @@ QUnit.module('Views', {
             groupBy: ['bar'],
         });
 
-        assert.containsN(kanban, '.o_kanban_counter', this.data.product.records.length,
+        assert.containsN(kanban, '.o_legacy_kanban_counter', this.data.product.records.length,
             "kanban counters should have been created");
 
         assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side').last().text()), 36,
@@ -6385,7 +6389,7 @@ QUnit.module('Views', {
         });
 
         assert.containsN(kanban, '.o_kanban_group', 2);
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "4");
+        assert.strictEqual(kanban.$('.o_legacy_kanban_counter:last .o_kanban_counter_side').text(), "4");
         assert.containsN(kanban, '.o_kanban_counter_progress:last .progress-bar', 4);
         assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
             "should have false kanban color");
@@ -6395,7 +6399,7 @@ QUnit.module('Views', {
 
         assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
         assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "1");
+        assert.strictEqual(kanban.$('.o_legacy_kanban_counter:last .o_kanban_counter_side').text(), "1");
 
         kanban.destroy();
     });
@@ -6424,12 +6428,12 @@ QUnit.module('Views', {
         });
 
         assert.containsN(kanban, '.o_kanban_group', 2);
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "51");
+        assert.strictEqual(kanban.$('.o_legacy_kanban_counter:last .o_kanban_counter_side').text(), "51");
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
         assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "15");
+        assert.strictEqual(kanban.$('.o_legacy_kanban_counter:last .o_kanban_counter_side').text(), "15");
 
         kanban.destroy();
     });
@@ -6485,7 +6489,7 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        var nbProgressBars = kanban.$('.o_kanban_counter').length;
+        var nbProgressBars = kanban.$('.o_legacy_kanban_counter').length;
 
         // Create a new column: this should create an empty progressbar
         var $columnQuickCreate = kanban.$('.o_column_quick_create');
@@ -6493,7 +6497,7 @@ QUnit.module('Views', {
         $columnQuickCreate.find('input').val('test');
         await testUtils.dom.click($columnQuickCreate.find('.btn-primary'));
 
-        assert.containsN(kanban, '.o_kanban_counter', nbProgressBars + 1,
+        assert.containsN(kanban, '.o_legacy_kanban_counter', nbProgressBars + 1,
             "a new column with a new column progressbar should have been created");
 
         kanban.destroy();
@@ -7360,9 +7364,9 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_grouped',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'o_kanban_grouped',
             "the kanban view should be grouped");
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_ungrouped',
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_ungrouped',
             "the kanban view should not be ungrouped");
 
         kanban.update({domain: []}); // 1st update on kanban view
@@ -7370,9 +7374,9 @@ QUnit.module('Views', {
         prom.resolve(); // simulate slow 1st update of kanban view
 
         await nextTick();
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped',
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'o_kanban_grouped',
             "the kanban view should not longer be grouped");
-        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_ungrouped',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'),'o_kanban_ungrouped',
             "the kanban view should have become ungrouped");
 
         kanban.destroy();
@@ -7854,12 +7858,12 @@ QUnit.module('Views', {
             },
         });
 
-        assert.hasClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'ui-sortable');
         assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
             'yopblipgnapblip');
 
-        var $record = kanban.$('.o_kanban_view .o_kanban_record:first');
-        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        var $record = kanban.$('.o_legacy_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_legacy_kanban_view .o_kanban_record:nth-child(4)');
         envIDs = [2, 3, 4, 1]; // first record of moved after last one
         await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
 
@@ -7890,12 +7894,12 @@ QUnit.module('Views', {
             },
         });
 
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.doesNotHaveClass(kanban.$('.o_legacy_kanban_view'), 'ui-sortable');
         assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
             'yopblipgnapblip');
 
-        var $draggedRecord = kanban.$('.o_kanban_view .o_kanban_record:first');
-        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        var $draggedRecord = kanban.$('.o_legacy_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_legacy_kanban_view .o_kanban_record:nth-child(4)');
         await testUtils.dom.dragAndDrop($draggedRecord, $to, {position: "bottom"});
 
         assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
@@ -8123,11 +8127,11 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
 
@@ -8144,7 +8148,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "Yes");
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "0 blip", "0 __false"],
         );
 
@@ -8159,11 +8163,11 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
 
@@ -8202,7 +8206,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8210,7 +8214,7 @@ QUnit.module('Views', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8223,7 +8227,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8242,7 +8246,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8250,7 +8254,7 @@ QUnit.module('Views', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8269,7 +8273,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8277,7 +8281,7 @@ QUnit.module('Views', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8320,7 +8324,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8328,7 +8332,7 @@ QUnit.module('Views', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8358,7 +8362,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "0 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8366,7 +8370,7 @@ QUnit.module('Views', {
             [],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "2 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8413,7 +8417,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8421,7 +8425,7 @@ QUnit.module('Views', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8458,7 +8462,7 @@ QUnit.module('Views', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8466,7 +8470,7 @@ QUnit.module('Views', {
             ["4 blip", "1 yop"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["0 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(

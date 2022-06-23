@@ -2,7 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
-import { archParseBoolean } from "@web/views/helpers/utils";
+import { archParseBoolean } from "@web/views/utils";
 
 export class PivotArchParser extends XMLParser {
     parse(arch) {

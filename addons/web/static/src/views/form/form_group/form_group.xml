@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.Form.OuterGroup" owl="1">
+  <div class="o_group" t-attf-class="{{ allClasses }}" t-att-style="props.style">
+    <t t-slot="title" t-if="props.slots.title" />
+    <t t-foreach="getItems()" t-as="item" t-key="item_index" >
+      <br t-if="item.newline" />
+      <t t-slot="{{ item.name }}" className="'o_group_col_' + item.size"/>
+    </t>
+  </div>
+</t>
+
+<t t-name="web.Form.InnerGroup" owl="1">
+  <table t-attf-class="{{ allClasses }}" class="o_inner_group o_group" t-if="props.slots" t-att-style="props.style">
+      <tbody>
+          <td t-if="props.slots.title" t-attf-colspan="{{ props.maxCols }}" style="width: 100%">
+              <t t-slot="title" />
+          </td>
+          <tr t-foreach="getRows()" t-as="row" t-key="row_index">
+            <t t-foreach="row" t-as="cell" t-key="cell_index" >
+
+              <t t-if="cell.subType === 'item_component'" >
+                <td class="o_td_label">
+                  <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props" />
+                </td>
+                <td t-att-colspan="cell.itemSpan -1 > 1 ? cell.itemSpan - 1 : undefined" t-attf-style="{{ cell.width ? 'width: ' + cell.width + '%' : undefined }}">
+                  <t t-if="cell.isVisible" t-slot="{{ cell.name }}" />
+                </td>
+              </t>
+
+              <t t-else="">
+                  <td t-attf-class="{{ cell.subType === 'label' ? 'o_td_label' : null }}" t-attf-colspan="{{ cell.itemSpan > 1 ? cell.itemSpan : undefined }}"
+                  t-attf-style="{{ cell.width ? 'width: ' + cell.width + '%' : undefined }}">
+                    <t t-if="cell.isVisible" t-slot="{{ cell.name }}" />
+                  </td>
+              </t>
+
+            </t>
+          </tr>
+      </tbody>
+  </table>
+</t>
+
+</templates>
