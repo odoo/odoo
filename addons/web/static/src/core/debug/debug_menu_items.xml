@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DebugMenu.SetDefaultDialog" owl="1">
-        <Dialog title="this.constructor.title">
+        <Dialog title="title">
             <table style="width: 100%">
                 <tr>
                     <td>
@@ -62,7 +62,7 @@
     </t>
 
     <t t-name="web.DebugMenu.GetMetadataDialog" owl="1">
-        <Dialog title="this.constructor.title">
+        <Dialog title="title">
             <table class="table table-sm table-striped">
                 <tr>
                     <th>ID:</th>
@@ -92,7 +92,7 @@
                 </tr>
                 <tr>
                     <th>Creation Date:</th>
-                    <td><t t-esc="state.create_date"/></td>
+                    <td><t t-esc="state.createDate"/></td>
                 </tr>
                 <tr>
                     <th>Latest Modification by:</th>
@@ -100,7 +100,7 @@
                 </tr>
                 <tr>
                     <th>Latest Modification Date:</th>
-                    <td><t t-esc="state.write_date"/></td>
+                    <td><t t-esc="state.writeDate"/></td>
                 </tr>
             </table>
         </Dialog>
