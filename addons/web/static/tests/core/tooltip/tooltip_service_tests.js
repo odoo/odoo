@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
+import { makeFakeLocalizationService } from "../../helpers/mock_services";
 
 const { App, Component, useState, xml } = owl;
 
@@ -28,7 +29,7 @@ const mainComponents = registry.category("main_components");
  * @param {{[templateName:string]: string}} [options.templates] additional templates
  * @returns {Promise<Component>}
  */
-async function makeParent(Child, options = {}) {
+export async function makeParent(Child, options = {}) {
     const target = getFixture();
 
     // add the popover service to the registry -> will add the PopoverContainer
@@ -44,6 +45,7 @@ async function makeParent(Child, options = {}) {
 
     registry.category("services").add("popover", popoverService);
     registry.category("services").add("tooltip", tooltipService);
+    registry.category("services").add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
 
     patchWithCleanup(env.services.popover, {
@@ -340,5 +342,37 @@ QUnit.module("Tooltip service", (hooks) => {
             target.querySelector(".o-tooltip").innerHTML,
             "<ul><li>X: 3</li><li>Y: abc</li></ul>"
         );
+    });
+
+    QUnit.test("empty tooltip, no template", async (assert) => {
+        class MyComponent extends Component {
+            get tooltip() {
+                return "";
+            }
+        }
+        MyComponent.template = xml`<button t-att-data-tooltip="tooltip">Action</button>`;
+        let simulateTimeout = () => {};
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        await makeParent(MyComponent, { mockSetTimeout });
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        simulateTimeout();
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+    });
+
+    QUnit.test("tooltip with a delay", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
+        const mockSetTimeout = (fn, delay) => {
+            assert.strictEqual(delay, 2000);
+        };
+        await makeParent(MyComponent, { mockSetTimeout });
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
     });
 });
