@@ -113,6 +113,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_type">milestones</field>
             <field name="service_tracking">task_in_project</field>
+            <field name="project_template_id" ref="so_template_project"/>
         </record>
 
         <record id="product_service_deliver_manual" model="product.product">
@@ -125,6 +126,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_policy">delivered_manual</field>
             <field name="service_tracking">task_in_project</field>
+            <field name="project_template_id" ref="so_template_project"/>
         </record>
 
         <!-- Sales order 'sale_order_1' (AGR) -->
@@ -140,18 +142,18 @@
             <field name="product_id" ref="product_service_order_timesheet"/>
             <field name="product_uom_qty">20</field>
         </record>
-        <record id="sale_line_12" model="sale.order.line">
-            <field name="order_id" ref="sale_order_1"/>
-            <field name="sequence" eval="3"/>
-            <field name="product_id" ref="product_service_deliver_milestones"/>
-            <field name="product_uom_qty">4</field>
-        </record>
         <record id="sale_line_13" model="sale.order.line">
             <field name="order_id" ref="sale_timesheet.sale_order_1"/>
             <field name="product_id" ref="product_service_deliver_timesheet_1"/>
             <field name="sequence" eval="2"/>
             <field name="discount">10</field>
             <field name="product_uom_qty">25</field>
+        </record>
+        <record id="sale_line_12" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="sequence" eval="3"/>
+            <field name="product_id" ref="product_service_deliver_milestones"/>
+            <field name="product_uom_qty">4</field>
         </record>
         <record id="sale_line_14" model="sale.order.line">
             <field name="order_id" ref="sale_timesheet.sale_order_1"/>
