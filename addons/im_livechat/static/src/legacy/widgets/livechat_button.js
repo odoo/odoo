@@ -98,7 +98,7 @@ const LivechatButton = Widget.extend({
      */
     _addMessage(data, options) {
         options = Object.assign({}, this.options, options, {
-            serverURL: this.messaging.livechatButtonView.serverURL,
+            serverURL: this.messaging.livechatButtonView.serverUrl,
         });
         const message = new WebsiteLivechatMessage(this, data, options);
 
