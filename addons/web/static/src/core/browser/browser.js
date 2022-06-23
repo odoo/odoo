@@ -52,11 +52,11 @@ Object.defineProperty(browser, "location", {
     configurable: true,
 });
 
-Object.defineProperty(browser, 'innerHeight', {
+Object.defineProperty(browser, "innerHeight", {
     get: () => window.innerHeight,
     configurable: true,
 });
-Object.defineProperty(browser, 'innerWidth', {
+Object.defineProperty(browser, "innerWidth", {
     get: () => window.innerWidth,
     configurable: true,
 });

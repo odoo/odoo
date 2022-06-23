@@ -9,7 +9,7 @@
                 </t>
             </span>
             <input type="file" name="ufile" class="o_input_file d-none"
-                t-att="{multiple: props.multi_upload, accept: props.accepted_file_extensions}"
+                t-att-multiple="props.multi_upload" t-att-accept="props.accepted_file_extensions"
                 t-ref="file-input"
                 t-on-change="onFileInputChange"
             />

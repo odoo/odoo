@@ -228,13 +228,13 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     }
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
-    <div>
-      <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
-      <input title="Bran Stark" type="text" data-hotkey="b" />
-      <button title="Sansa Stark" data-hotkey="b" style="display: none;" />
-      <TestComponent />
-    </div>
-  `;
+        <div>
+            <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
+            <input title="Bran Stark" type="text" data-hotkey="b" />
+            <button title="Sansa Stark" data-hotkey="c" style="display: none;" />
+            <TestComponent />
+        </div>
+    `;
     await mount(MyComponent, target, { env });
 
     // Open palette
