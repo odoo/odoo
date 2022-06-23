@@ -2,7 +2,8 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'DiscussView',
@@ -40,46 +41,6 @@ registerModel({
                 return;
             }
             this.discuss.threadView.topbar.openInvitePopoverView();
-        },
-        /**
-         * Handles OWL update on the discuss component.
-         */
-        onComponentUpdate() {
-            if (this.discuss.thread) {
-                if (this.lastPushStateActiveThread !== this.discuss.thread) {
-                    this.env.services.router.pushState({
-                        action: this.actionId,
-                        active_id: this.discuss.activeId,
-                    });
-                    this.update({
-                        lastPushStateActiveThread: replace(this.discuss.thread),
-                    });
-                }
-            }
-            if (
-                this.discuss.thread &&
-                this.discuss.thread === this.messaging.inbox &&
-                this.discuss.threadView &&
-                this.lastThreadCache && this.lastThreadCache.localId === this.discuss.threadView.threadCache.localId &&
-                this.lastThreadCounter > 0 && this.discuss.thread.counter === 0
-            ) {
-                this.env.services.effect.add({
-                    message: this.env._t("Congratulations, your inbox is empty!"),
-                    type: 'rainbow_man',
-                });
-            }
-            const lastThreadCache = (
-                this.discuss.threadView &&
-                this.discuss.threadView.threadCache &&
-                this.discuss.threadView.threadCache
-            );
-            this.update({
-                lastThreadCache: lastThreadCache ? replace(lastThreadCache) : clear(),
-                lastThreadCounter: (
-                    this.discuss.thread &&
-                    this.discuss.thread.counter
-                ),
-            });
         },
         onHideMobileAddItemHeader() {
             if (!this.exists()) {
@@ -149,6 +110,15 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         */
+        _onDiscussThreadChanged() {
+            this.env.services.router.pushState({
+                action: this.discuss.discussView.actionId,
+                active_id: this.discuss.activeId,
+            });
+        },
     },
     fields: {
         /**
@@ -171,15 +141,6 @@ registerModel({
             inverse: 'discussViewOwnerAsInbox',
             isCausal: true,
         }),
-        lastPushStateActiveThread: one('Thread'),
-        /**
-         * Useful to display rainbow man on inbox.
-         */
-        lastThreadCache: one('ThreadCache'),
-        /**
-         * Useful to display rainbow man on inbox.
-         */
-        lastThreadCounter: attr(),
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
@@ -196,4 +157,10 @@ registerModel({
             isCausal: true,
         }),
     },
+    onChanges: [
+        new OnChange({
+            dependencies: ['discuss.thread'],
+            methodName: '_onDiscussThreadChanged',
+        }),
+    ],
 });
