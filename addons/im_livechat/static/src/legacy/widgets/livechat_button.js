@@ -11,7 +11,7 @@ import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constant
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
-import PublicLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
+import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
 
 import { clear } from '@mail/model/model_field_command';
 
