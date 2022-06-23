@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { shallowEqual } from "@web/core/utils/arrays";
 import { evaluate, formatAST, parseExpr } from "./py_js/py";
 import { toPyValue } from "./py_js/py_utils";
 
@@ -199,10 +200,13 @@ function matchCondition(record, condition) {
     switch (operator) {
         case "=":
         case "==":
+            if (Array.isArray(fieldValue) && Array.isArray(value)) {
+                return shallowEqual(fieldValue, value);
+            }
             return fieldValue === value;
         case "!=":
         case "<>":
-            return fieldValue !== value;
+            return JSON.stringify(fieldValue) !== JSON.stringify(value);
         case "<":
             return fieldValue < value;
         case "<=":
