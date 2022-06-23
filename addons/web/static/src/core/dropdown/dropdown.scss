@@ -12,7 +12,9 @@
 .dropdown-item:not(.disabled):not(:disabled) {
   // Needed 'cause <DropdownItem> generate <span> html tags that for browsers are
   // normally not clickable.
-  cursor: pointer;
+  &,label {
+    cursor: pointer;
+  }
 }
 
 button.dropdown-toggle {
