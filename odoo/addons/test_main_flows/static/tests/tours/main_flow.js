@@ -706,20 +706,6 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
 },
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 {
-// Run the schedulers
-    trigger: ".o_menu_sections button:contains('Operations')",
-    content: _t("Go to Run Schedulers"),
-    position: "bottom"
-}, {
-    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_procurement_compute']",
-    content: _t("Click on schedulers"),
-    position: "bottom"
-}, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".modal-dialog",
-    content: _t("Run Schedulers"),
-    position: "bottom",
-}, {
 //Go to purchase:
     edition: "enterprise",
     trigger: '.o_menu_toggle',
