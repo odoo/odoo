@@ -5,7 +5,7 @@
             <field name="name">mail.mail.form</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <form string="Email message">
+                <form string="Email message" duplicate="0">
                     <header>
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
