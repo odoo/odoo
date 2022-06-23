@@ -138,3 +138,64 @@ class TestDeliveryCost(common.TransactionCase):
         self.default_delivery_policy = self.SaleConfigSetting.create({})
 
         self.default_delivery_policy.execute()
+
+    def test_01_taxes_on_delivery_cost(self):
+
+        # Creating taxes and fiscal position
+
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% inc',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_exclude = self.env['account.tax'].create({
+            'name': '15% exc',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include.id,
+                    'tax_dest_id': tax_price_exclude.id,
+                }),
+            ],
+        })
+
+        # Setting tax on delivery product
+        self.normal_delivery.product_id.taxes_id = tax_price_include
+
+        # Create sales order
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = self.partner_18
+        order_form.pricelist_id = self.pricelist
+        order_form.fiscal_position_id = fiscal_position
+
+        # Try adding delivery product as a normal product
+        with order_form.order_line.new() as line:
+            line.product_id = self.normal_delivery.product_id
+            line.product_uom_qty = 1.0
+            line.product_uom = self.product_uom_unit
+        sale_order = order_form.save()
+
+        self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+
+        # Now trying to add the delivery line using the delivery wizard, the results should be the same as before
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context(default_order_id=sale_order.id,
+                          default_carrier_id=self.normal_delivery.id))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        line = self.SaleOrderLine.search([
+            ('order_id', '=', sale_order.id),
+            ('product_id', '=', self.normal_delivery.product_id.id),
+            ('is_delivery', '=', True)
+        ])
+
+        self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
