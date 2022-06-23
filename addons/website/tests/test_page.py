@@ -310,5 +310,5 @@ class WithContext(HttpCase):
         self.url_open('/contactus')
         r = self.url_open('/?debug=1')
         self.assertIn('<a class="o_debug_mode" href="?debug="', r.text)
-        r = self.url_open('/contactus?debug=1')
-        self.assertIn('<a class="o_debug_mode" href="?debug="', r.text)
+        r = self.url_open('/contactus?name=MyName')  # don't force debug here, already done on previous step
+        self.assertIn('<a class="o_debug_mode" href="?debug=&amp;name=MyName"', r.text)

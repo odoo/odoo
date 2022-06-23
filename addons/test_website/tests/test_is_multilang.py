@@ -71,3 +71,22 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         self.assertEqual(urlparse(it_href).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
         self.assertEqual(urlparse(fr_href).path, f'/{be.url_code}/test_lang_url/my-super-country-belgium-{country1.id}')
         self.assertEqual(urlparse(en_href).path, f'/test_lang_url/my-super-country-{country1.id}')
+
+    def test_03_head_alternate_href(self):
+        website = self.env['website'].search([], limit=1)
+        be = self.env.ref('base.lang_fr_BE').sudo()
+        en = self.env.ref('base.lang_en').sudo()
+
+        be.active = True
+        be_prefix = "/" + be.iso_code
+
+        website.default_lang_id = en
+        website.language_ids = en + be
+
+        # alternate href should be use the current url.
+        self.url_open(be_prefix)
+        self.url_open(be_prefix + '/contactus')
+        r = self.url_open(be_prefix)
+        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/"/>')
+        r = self.url_open(be_prefix + '/contactus')
+        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/contactus"/>')
