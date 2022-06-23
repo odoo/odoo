@@ -436,20 +436,17 @@ odoo.define('web.OwlCompatibility', function (require) {
     function setToRemount(node, updateAndRender) {
         let toRemount = true;
 
-        node.mounted.push(() => {
-            toRemount = false;
-        });
         if (!node.isPatched) {
             node.isPatched = true;
-            const renderFn = node.renderFn;
-            node.renderFn = () => {
-                const res = renderFn.call(node, ...arguments);
+            node.mounted.push(() => {
+                toRemount = false;
+            });
+            node.willUpdateProps.push(() => {
                 const rootMounted = node.fiber.root.mounted;
                 if (toRemount && !rootMounted.includes(node.fiber)) {
                     rootMounted.push(node.fiber);
                 }
-                return res;
-            }
+            });
         }
         return () => toRemount = true;
     }
