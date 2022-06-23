@@ -234,7 +234,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         return this._rpc({
             route: '/shop/config/website',
             params: {
-                'ppg': ppg,
+                'shop_ppg': ppg,
             },
         });
     },
@@ -246,7 +246,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         this._rpc({
             route: '/shop/config/website',
             params: {
-                'ppr': this.ppr,
+                'shop_ppr': this.ppr,
             },
         });
     },
@@ -258,7 +258,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         this._rpc({
             route: '/shop/config/website',
             params: {
-                'default_sort': this.default_sort,
+                'shop_default_sort': this.default_sort,
             },
         });
     },
@@ -640,6 +640,96 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     },
     _reloadEditable() {
         return this.trigger_up('request_save', {reload: true, optionSelector: `.oe_product:has(span[data-oe-id=${this.productTemplateID}])`});
+    }
+});
+
+options.registry.WebsiteSaleProductPage = options.Class.extend({
+
+    _updateWebsiteConfig(params) {
+        this._rpc({
+            route: '/shop/config/website',
+            params,
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+    },
+
+    /**
+     * @override
+     */
+    setImageWidth(previewMode, widgetValue, params) {
+        this._updateWebsiteConfig({
+            product_page_image_width: widgetValue,
+        });
+    },
+
+    /**
+     * @override
+     */
+    setImageLayout(previewMode, widgetValue, params) {
+        this._updateWebsiteConfig({
+            product_page_image_layout: widgetValue,
+        });
+    },
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'setImageWidth':
+                return this.$target.data('image_width');
+            case 'setImageLayout':
+                return this.$target.data('image_layout');
+        }
+        return this._super(...arguments);
+    }
+});
+
+options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
+    /**
+     * @override
+     */
+    setSpacing(previewMode, widgetValue, params) {
+        const spacing = {
+            0: 'none',
+            1: 'small',
+            2: 'medium',
+            3: 'big',
+        }[widgetValue];
+        this._rpc({
+            route: '/shop/config/website',
+            params: {
+                'product_page_image_spacing': spacing,
+            },
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+        this.$target.data('image_spacing', spacing);
+    },
+
+    setColumns(previewMode, widgetValue, params) {
+        this._rpc({
+            route: '/shop/config/website',
+            params: {
+                'product_page_grid_columns': widgetValue,
+            },
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+        this.$target.data('grid_columns', widgetValue);
+    },
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'setSpacing':
+                return {
+                    'none': 0,
+                    'small': 1,
+                    'medium': 2,
+                    'big': 3,
+                }[this.$target.data('image_spacing')];
+            case 'setColumns':
+                return this.$target.data('grid_columns');
+        }
+        return this._super(methodName, params);
     }
 });
 

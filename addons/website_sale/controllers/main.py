@@ -1207,12 +1207,21 @@ class WebsiteSale(http.Controller):
             raise NotFound()
 
         current_website = request.env['website'].get_current_website()
-        if "ppg" in options:
-            current_website.shop_ppg = options["ppg"] or 1
-        if "ppr" in options:
-            current_website.shop_ppr = options["ppr"]
-        if "default_sort" in options:
-            current_website.shop_default_sort = options["default_sort"]
+        # Restrict options we can write to.
+        writable_fields = {
+            'shop_ppg', 'shop_ppr', 'shop_default_sort',
+            'product_page_image_layout', 'product_page_image_width',
+            'product_page_grid_columns', 'product_page_image_spacing'
+        }
+        # Default ppg to 1.
+        if 'ppg' in options and not options['ppg']:
+            options['ppg'] = 1
+        if 'product_page_grid_columns' in options:
+            options['product_page_grid_columns'] = int(options['product_page_grid_columns'])
+
+        write_vals = {k: v for k, v in options.items() if k in writable_fields}
+        if write_vals:
+            current_website.write(write_vals)
 
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
