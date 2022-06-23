@@ -222,8 +222,11 @@ class BlogPost(models.Model):
 
     def _check_for_publication(self, vals):
         if vals.get('is_published'):
+            # This method should be called only at create / write, so with right access
+            self.env['blog.post'].check_access_rights('write')
             for post in self.filtered(lambda p: p.active):
-                post.blog_id.message_post_with_view(
+                # allow restricted editor to publish a blog post
+                post.blog_id.sudo().message_post_with_view(
                     'website_blog.blog_post_template_new_post',
                     subject=post.name,
                     values={'post': post},
