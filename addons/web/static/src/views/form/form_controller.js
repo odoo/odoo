@@ -153,7 +153,14 @@ export class FormController extends Component {
 
         const beforeExecuteAction = (clickParams) => {
             if (clickParams.special !== "cancel") {
-                return this.model.root.save({ stayInEdition: true });
+                return this.model.root.save({ stayInEdition: true }).then((saved) => {
+                    if (saved && this.props.onSave) {
+                        this.props.onSave(this.model.root);
+                    }
+                    return saved;
+                });
+            } else if (this.props.onDiscard) {
+                this.props.onDiscard(this.model.root);
             }
         };
         const rootRef = useRef("root");
@@ -333,6 +340,7 @@ export class FormController extends Component {
     async save(params = {}) {
         const disabledButtons = this.disableButtons();
         const record = this.model.root;
+        let saved = false;
 
         // Before we save, we gather dirty translate fields data. It needs to be done before the
         // save as nothing will be dirty after. It is why there is a compute part and a show part.
@@ -345,11 +353,14 @@ export class FormController extends Component {
         }
 
         if (this.props.saveRecord) {
-            await this.props.saveRecord(record, params);
+            saved = await this.props.saveRecord(record, params);
         } else {
-            await record.save();
+            saved = await record.save();
         }
         this.enableButtons(disabledButtons);
+        if (saved && this.props.onSave) {
+            this.props.onSave(record);
+        }
 
         // After we saved, we show the previously computed data in the alert (if there is any).
         // It needs to be done after the save because if we were in record creation, the resId
@@ -366,6 +377,9 @@ export class FormController extends Component {
             return;
         }
         await this.model.root.discard();
+        if (this.props.onDiscard) {
+            this.props.onDiscard(this.model.root);
+        }
         if (this.model.root.isVirtual) {
             this.env.config.historyBack();
         }
@@ -417,6 +431,8 @@ FormController.props = {
     buttonTemplate: String,
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
+    onDiscard: { type: Function, optional: true },
+    onSave: { type: Function, optional: true },
 };
 FormController.defaultProps = {
     preventCreate: false,
