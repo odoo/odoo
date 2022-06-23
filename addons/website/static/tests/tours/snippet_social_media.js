@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
 const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
@@ -15,7 +14,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
     },
     {
         content: "Ensure new link is found",
-        trigger: `.s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
+        trigger: `iframe .s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
         run: () => {}, // This is a check.
     },
     {
@@ -25,14 +24,15 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
     },
     {
         content: "Ensure new link is changed",
-        trigger: `.s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
+        trigger: `iframe .s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
         run: () => {}, // This is a check.
     }];
 };
 
-tour.register('snippet_social_media', {
+wTourUtils.registerEditionTour('snippet_social_media', {
     test: true,
-    url: '/?enable_editor=1',
+    url: '/',
+    edition: true,
 }, [
     wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
     wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
@@ -44,7 +44,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Ensure twitter became first",
-        trigger: '.s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
+        trigger: 'iframe .s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
         run: () => {}, // This is a check.
     },
     {
@@ -64,7 +64,7 @@ tour.register('snippet_social_media', {
     ...addNewSocialNetwork(8, 7, 'https://instagr.am/odoo.official/'),
     {
         content: "Check if the result is correct before removing",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -83,7 +83,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Ensure paypal icon is found",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
         run: () => {}, // This is a check.
     },
@@ -94,7 +94,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Ensure custom link was removed",
-        trigger: '.s_social_media:has(a:eq(5)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
+        trigger: 'iframe .s_social_media:has(a:eq(5)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
         run: () => {}, // This is a check.
     },
     {
@@ -104,7 +104,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Check if the result is correct after removing",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -127,7 +127,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Wait until save's calls are finished",
-        trigger: "body:not(.editor_enable)",
+        trigger: "iframe body:not(.editor_enable)",
         run: function () {}, // it's a check
     }
 ]);

@@ -64,7 +64,7 @@ class TestUi(HttpCaseWithUserDemo):
         })
 
     def test_01_admin_shop_tour(self):
-        self.start_tour("/", 'shop', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'shop', login='admin')
 
     def test_02_admin_checkout(self):
         self.start_tour("/", 'shop_buy_product', login="admin")
@@ -97,7 +97,9 @@ class TestUi(HttpCaseWithUserDemo):
             'group_show_line_subtotals_tax_included': False,
         }).execute()
 
-        self.start_tour("/", 'website_sale_tour')
+        self.start_tour("/", 'website_sale_tour_1')
+        self.start_tour(self.env['website'].get_client_action_url('/shop/cart'), 'website_sale_tour_backend', login='admin')
+        self.start_tour("/", 'website_sale_tour_2', login="admin")
 
     def test_05_google_analytics_tracking(self):
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})

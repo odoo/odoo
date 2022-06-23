@@ -1,31 +1,31 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
 import tourUtils from 'website_sale.tour_utils';
+import wTourUtils from 'website.tour_utils';
 
-tour.register('shop_list_view_b2c', {
+wTourUtils.registerEditionTour('shop_list_view_b2c', {
     test: true,
     url: '/shop?search=Test Product',
 },
     [
         {
             content: "check price on /shop",
-            trigger: '.oe_product_cart .oe_currency_value:contains("825.00")',
+            trigger: 'iframe .oe_product_cart .oe_currency_value:contains("825.00")',
             run: () => {}, // It's a check.
         },
         {
             content: "select product",
-            trigger: '.oe_product_cart a:contains("Test Product")',
+            trigger: 'iframe .oe_product_cart a:contains("Test Product")',
         },
         {
             content: "check products list is disabled initially (when on /product page)",
-            trigger: 'body:not(:has(.js_product_change))',
-            extra_trigger: '#product_details',
+            trigger: 'iframe body:not(:has(.js_product_change))',
+            extra_trigger: 'iframe #product_details',
             run: () => {}, // It's a check.
         },
         {
             content: "go to edit mode",
-            trigger: 'a.o_frontend_to_backend_edit_btn',
+            trigger: '.o_edit_website_container > a',
         },
         {
             content: "open customize tab",
@@ -41,20 +41,7 @@ tour.register('shop_list_view_b2c', {
             content: "click on 'Products List' of the 'Variants' selector",
             trigger: 'we-button[data-name="variants_products_list_opt"]',
         },
-        {
-            content: "check that the iframe is reloading",
-            trigger: '.o_loading_dummy',
-            run: () => {}, // It's a check.
-        },
-        {
-            content: "click on save button after the reload",
-            trigger: 'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]',
-            run: 'click',
-        },
-        {
-            content: "wait to exit edit mode",
-            trigger: '.o_website_editor:not(.editor_has_snippets)',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after 'Products List' enabled",
             trigger: 'iframe .js_product_change',

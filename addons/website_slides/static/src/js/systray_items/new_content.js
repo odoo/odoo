@@ -11,6 +11,21 @@ patch(NewContentModal.prototype, 'website_slides_new_content', {
         newSlidesChannelElement.createNewContent = () => this.createNewSlidesChannel();
         newSlidesChannelElement.status = MODULE_STATUS.INSTALLED;
     },
+    /**
+     * @override
+     */
+    async onWillStart() {
+        await this._super(...arguments);
+        this.isSlideManager = await this.user.hasGroup('website_slides.group_website_slides_officer');
+        if (this.isSlideManager) {
+            this.state.newContentElements = this.state.newContentElements.map(element => {
+                if (element.moduleXmlId === 'base.module_website_slides') {
+                    element.isDisplayed = true;
+                }
+                return element;
+            });
+        }
+    },
 
     createNewSlidesChannel() {
         this.action.doAction('website_slides.slide_channel_action_add', {

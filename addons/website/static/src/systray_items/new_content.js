@@ -32,6 +32,7 @@ NewContentElement.props = {
     title: String,
     onClick: Function,
     status: { type: String, optional: true },
+    moduleXmlId: { type: String, optional: true },
     slots: Object,
 };
 NewContentElement.defaultProps = {
@@ -118,20 +119,23 @@ export class NewContentModal extends Component {
         });
 
         this.websiteContext = useState(this.website.context);
-
-        onWillStart(async () => {
-            this.isDesigner = await this.user.hasGroup('website.group_website_designer');
-
-            const xmlIds = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleXmlId}) => moduleXmlId);
-
-            this.modulesInfo = await this.rpc('/website/get_modules_info', {xml_ids: xmlIds});
-        });
-
         useHotkey('escape', () => {
             if (this.websiteContext.showNewContentModal) {
                 this.websiteContext.showNewContentModal = false;
             }
         });
+
+        onWillStart(this.onWillStart.bind(this));
+    }
+
+    async onWillStart() {
+        this.isDesigner = await this.user.hasGroup('website.group_website_designer');
+        this.canInstall = await this.user.isAdmin;
+
+        const xmlIds = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleXmlId}) => moduleXmlId);
+        if (this.canInstall) {
+            this.modulesInfo = await this.rpc('/website/get_modules_info', {xml_ids: xmlIds});
+        }
     }
 
     get sortedNewContentElements() {

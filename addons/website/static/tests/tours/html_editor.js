@@ -2,41 +2,33 @@
 odoo.define('website.test.html_editor', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
 
-tour.register('html_editor_multiple_templates', {
-    test: true,
+wTourUtils.registerEditionTour('html_editor_multiple_templates', {
     url: '/generic',
+    edition: true,
+    test: true,
 },
     [
-        // 1. Edit the page through Edit Mode, it will COW the view
-        {
-            content: "enter edit mode",
-            trigger: 'a[data-action=edit]',
-        },
         {
             content: "drop a snippet",
-            trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
+            trigger: '#oe_snippets.o_loaded .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_ui",
+            run: "drag_and_drop iframe #oe_structure_test_ui",
         },
-        {
-            content: "save the page",
-            extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: "button[data-action=save]",
-        },
+        ...wTourUtils.clickOnSave(),
         // 2. Edit generic view
         {
-            content: "open customize menu",
-            extra_trigger: "body:not(.editor_enable)",
-            trigger: '#customize-menu > a',
+            content: "open site menu",
+            extra_trigger: "iframe body:not(.editor_enable)",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {
             content: "open html editor",
-            trigger: '#html_editor',
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
         },
         {
             content: "add something in the generic view",
@@ -69,27 +61,27 @@ tour.register('html_editor_multiple_templates', {
         },
         {
            content: "check that the page has both modification",
-           extra_trigger: '#wrapwrap:contains("anothernewcontent")',
-           trigger: '#wrapwrap:contains("somenewcontent")',
+           extra_trigger: 'iframe #wrapwrap:contains("anothernewcontent")',
+           trigger: 'iframe #wrapwrap:contains("somenewcontent")',
            run: function () {}, // it's a check
        },
     ]
 );
 
-tour.register('test_html_editor_scss', {
-    test: true,
+wTourUtils.registerEditionTour('test_html_editor_scss', {
     url: '/contactus',
+    test: true,
 },
     [
         // 1. Open Html Editor and select a scss file
         {
-            content: "open customize menu",
-            extra_trigger: '#wrap:visible', // ensure state for later
-            trigger: '#customize-menu > a',
+            content: "open site menu",
+            extra_trigger: 'iframe #wrap:visible', // ensure state for later
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {
             content: "open html editor",
-            trigger: '#html_editor',
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
         },
         {
             content: "open type switcher",
@@ -122,13 +114,13 @@ tour.register('test_html_editor_scss', {
         },
          {
             content: "check that the scss modification got applied",
-            trigger: 'body:has(#wrap:hidden)',
+            trigger: 'iframe body:has(#wrap:hidden)',
             run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
         {
             content: "reset view (after reload, html editor should have been reopened where it was)",
-            trigger: '#ace-view-id button[data-action="reset"]',
+            trigger: '#ace-view-id button[data-action="reset"]:not([disabled])',
         },
         {
             content: "confirm reset warning",
@@ -136,7 +128,7 @@ tour.register('test_html_editor_scss', {
         },
         {
             content: "check that the scss file was reset correctly, wrap content should now be visible again",
-            trigger: '#wrap:visible',
+            trigger: 'iframe #wrap:visible',
             run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
@@ -156,34 +148,28 @@ tour.register('test_html_editor_scss', {
         },
         {
             content: "check that the scss modification got applied",
-            trigger: 'body:has(#wrap:hidden)',
-            run: function () {
-                window.location.href = '/web/session/logout?redirect=/web/login';
-            },
-            timeout: 30000, // SCSS compilation might take some time
+            trigger: 'iframe body:has(#wrap:hidden)',
+            run: function () {}, // it's a check
         },
+    ]
+);
 
+wTourUtils.registerEditionTour('test_html_editor_scss_2', {
+    url: '/',
+    test: true,
+},
+    [
         // This part of the test ensures that a restricted user can still use
         // the HTML Editor if someone else made a customization previously.
 
-        {
-            content: "Submit login",
-            trigger: '.oe_login_form',
-            run: function () {
-                $('.oe_login_form input[name="login"]').val("demo");
-                $('.oe_login_form input[name="password"]').val("demo");
-                $('.oe_login_form input[name="redirect"]').val("/");
-                $('.oe_login_form').submit();
-            },
-        },
         // 4. Open Html Editor and select a scss file
         {
-            content: "open customize menu",
-            trigger: '#customize-menu > a',
+            content: "open site menu",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {
             content: "open html editor",
-            trigger: '#html_editor',
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
         },
         {
             content: "open type switcher",
@@ -215,14 +201,9 @@ tour.register('test_html_editor_scss', {
             trigger: ".o_ace_view_editor button[data-action=save]",
         },
         {
-            content: "wait for reload",
-            trigger: "body:not(:has(div.o_ace_view_editor))",
-            run: function () {}, // it's a check
-            timeout: 30000, // SCSS compilation might take some time
-        },
-        {
             content: "reset view (after reload, html editor should have been reopened where it was)",
-            trigger: '#ace-view-id button[data-action="reset"]',
+            trigger: '#ace-view-id button[data-action="reset"]:not([disabled])',
+            timeout: 30000, // SCSS compilation might take some time
         },
         {
             content: "confirm reset warning",

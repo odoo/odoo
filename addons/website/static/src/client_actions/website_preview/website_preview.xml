@@ -11,9 +11,8 @@
         </div>
     </t>
 </t>
-
 <t t-name="website.WebsitePreview" owl="1">
-    <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }">
+    <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }" t-ref="container">
         <div class="o_iframe_container" t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }">
             <BlockIframe/>
             <iframe t-att-src="iframeFallbackUrl"

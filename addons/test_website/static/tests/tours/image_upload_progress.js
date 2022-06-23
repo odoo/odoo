@@ -1,7 +1,7 @@
 odoo.define('test_website.image_upload_progress', function (require) {
 'use strict';
 
-const tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 const { FileSelectorControlPanel } = require('@web_editor/components/media_dialog/file_selector');
 const { patch, unpatch } = require('web.utils');
@@ -26,7 +26,7 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_w
             getFileFromB64(['image/jpeg', 'image.jpeg', "/9j/4AAQSkZJRgABAQAAAQABAAD//gAfQ29tcHJlc3NlZCBieSBqcGVnLXJlY29tcHJlc3P/2wCEAA0NDQ0ODQ4QEA4UFhMWFB4bGRkbHi0gIiAiIC1EKjIqKjIqRDxJOzc7STxsVUtLVWx9aWNpfZeHh5e+tb75+f8BDQ0NDQ4NDhAQDhQWExYUHhsZGRseLSAiICIgLUQqMioqMipEPEk7NztJPGxVS0tVbH1pY2l9l4eHl761vvn5///CABEIAEsASwMBIgACEQEDEQH/xAAVAAEBAAAAAAAAAAAAAAAAAAAABv/aAAgBAQAAAACHAAAAAAAAAAAAAAAAH//EABUBAQEAAAAAAAAAAAAAAAAAAAAH/9oACAECEAAAAKYAAAB//8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/2gAIAQMQAAAAngAAAf/EABQQAQAAAAAAAAAAAAAAAAAAAGD/2gAIAQEAAT8ASf/EABQRAQAAAAAAAAAAAAAAAAAAAED/2gAIAQIBAT8AT//EABQRAQAAAAAAAAAAAAAAAAAAAED/2gAIAQMBAT8AT//Z"]),
         ];
 
-        if (!this.props.multiImages) {
+        if (!this.props.multiSelect) {
             if (patchWithError) {
                 files = [files[0]];
             } else {
@@ -46,12 +46,8 @@ const setupSteps = [{
         patchMediaDialog();
     },
 }, {
-    content: "enter edit mode",
-    trigger: ".o_edit_website_container a"
-}, {
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    extra_trigger: "body.editor_has_snippets",
     moveTrigger: "iframe .oe_drop_zone",
     run: "drag_and_drop iframe #wrap",
 }, {
@@ -64,9 +60,10 @@ const setupSteps = [{
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg";
 
-tour.register('test_image_upload_progress', {
-    url: `/web#action=website.website_preview&path=${encodeURI('/test_image_progress')}`,
-    test: true
+wTourUtils.registerEditionTour('test_image_upload_progress', {
+    url: '/test_image_progress',
+    test: true,
+    edition: true,
 }, [
     ...setupSteps,
     // 1. Check multi image upload
@@ -200,9 +197,10 @@ tour.register('test_image_upload_progress', {
 ]);
 
 
-tour.register('test_image_upload_progress_unsplash', {
-    url: `/web#action=website.website_preview&path=${encodeURI('/test_image_progress')}`,
-    test: true
+wTourUtils.registerEditionTour('test_image_upload_progress_unsplash', {
+    url: '/test_image_progress',
+    test: true,
+    edition: true,
 }, [
     ...setupSteps,
     // 1. Check multi image upload

@@ -6,7 +6,8 @@
                 t-on-click="onClick"
                 t-att-class="props.status === MODULE_STATUS.NOT_INSTALLED ? 'o_uninstalled_module' : ''"
                 t-att-title="props.title"
-                t-att-aria-label="props.title">
+                t-att-aria-label="props.title"
+                t-att-data-module-xml-id="props.moduleXmlId">
             <t t-slot="default"/>
         </a>
     </div>
@@ -25,7 +26,10 @@
                 </NewContentElement>
 
                 <t t-foreach="sortedNewContentElements" t-as="element" t-key="element.moduleXmlId" t-if="'isDisplayed' in element ? element.isDisplayed : isSystem ">
-                    <NewContentElement onClick="() => this.onClickNewContent(element)" status="element.status" title="element.title">
+                    <NewContentElement onClick="() => this.onClickNewContent(element)"
+                        status="element.status"
+                        title="element.title"
+                        moduleXmlId="element.moduleXmlId">
                         <t t-call="{{ element.icon }}"/>
                         <p><t t-esc="element.title"/></p>
                     </NewContentElement>

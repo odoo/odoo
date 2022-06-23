@@ -1,7 +1,7 @@
 odoo.define('test_website.custom_snippets', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 /**
  * The purpose of this tour is to check the custom snippets flow:
@@ -22,24 +22,21 @@ var tour = require('web_tour.tour');
  * -> ensure it was deleted
  */
 
-tour.register('test_custom_snippet', {
+wTourUtils.registerEditionTour('test_custom_snippet', {
     url: '/',
-    test: true
+    edition: true,
+    test: true,
 }, [
     {
-        content: "enter edit mode",
-        trigger: "a[data-action=edit]"
-    },
-    {
         content: "drop a snippet",
-        trigger: "#oe_snippets .oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        extra_trigger: "body.editor_enable.editor_has_snippets",
+        trigger: "#oe_snippets.o_loaded .oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+        extra_trigger: "iframe body.editor_enable",
         moveTrigger: ".oe_drop_zone",
-        run: "drag_and_drop #wrap",
+        run: "drag_and_drop iframe #wrap",
     },
     {
         content: "customize snippet",
-        trigger: "#wrapwrap .s_banner h1",
+        trigger: "iframe #wrapwrap .s_banner h1",
         run: "text",
         consumeEvent: "input",
     },
@@ -53,7 +50,7 @@ tour.register('test_custom_snippet', {
     },
     {
         content: "ensure custom snippet appeared",
-        trigger: "#oe_snippets .oe_snippet[name='Custom Banner']",
+        trigger: "#oe_snippets.o_loaded .oe_snippet[name='Custom Banner']",
         run: function () {
             $("#oe_snippets .oe_snippet[name='Custom Banner'] .o_rename_btn").attr("style", "display: block;");
             // hover is needed for rename button to appear
@@ -76,18 +73,18 @@ tour.register('test_custom_snippet', {
     {
         content: "drop custom snippet",
         trigger: ".oe_snippet[name='Bruce Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        extra_trigger: "body.editor_enable.editor_has_snippets",
+        extra_trigger: "iframe body.editor_enable",
         moveTrigger: ".oe_drop_zone",
-        run: "drag_and_drop #wrap",
+        run: "drag_and_drop iframe #wrap",
     },
     {
         content: "ensure banner section exists",
-        trigger: "#wrap section[data-name='Banner']",
+        trigger: "iframe #wrap section[data-name='Banner']",
         run: function () {}, // check
     },
     {
         content: "ensure custom banner section exists",
-        trigger: "#wrap section[data-name='Bruce Banner']",
+        trigger: "iframe #wrap section[data-name='Bruce Banner']",
         run: function () {
             $("#oe_snippets .oe_snippet[name='Bruce Banner'] .o_delete_btn").attr("style", "display: block;");
             // hover is needed for delete button to appear

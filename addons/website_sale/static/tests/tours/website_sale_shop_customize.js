@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
 import tourUtils from 'website_sale.tour_utils';
+import wTourUtils from 'website.tour_utils';
 
-tour.register('shop_customize', {
+wTourUtils.registerEditionTour('shop_customize', {
+    url: '/shop',
+    edition: true,
     test: true,
-    url: '/shop?enable_editor=1',
 },
     [
         {
@@ -18,22 +19,10 @@ tour.register('shop_customize', {
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: 'we-button[data-name="attributes_opt"]',
         },
-        {
-            content: "check that the iframe is reloading",
-            trigger: '.o_loading_dummy',
-            run: () => {}, // It's a check.
-        },
-        {
-            content: "click on save button after the reload",
-            trigger: 'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]',
-            run: 'click',
-        },
-        {
-            content: "wait to exit edit mode",
-            trigger: '.o_website_editor:not(.editor_has_snippets)',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",
+            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: 'iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
         },
         {
@@ -47,12 +36,8 @@ tour.register('shop_customize', {
             trigger: 'iframe .oe_product_cart a:contains("Test Product")',
         },
         {
-            content: "wait the product page to be loaded",
-            trigger: 'iframe #product_detail',
-            run: function () {},
-        },
-        {
             content: "check list view of variants is disabled initially",
+            extra_trigger: "iframe #product_detail",
             trigger: 'iframe body:not(:has(.js_product_change))',
             run: function () {},
         },
@@ -74,22 +59,10 @@ tour.register('shop_customize', {
             content: "click on 'Products List' of the 'Variants' selector",
             trigger: 'we-button[data-name="variants_products_list_opt"]',
         },
-        {
-            content: "check that the iframe is reloading",
-            trigger: '.o_loading_dummy',
-            run: () => {}, // It's a check.
-        },
-        {
-            content: "click on save button after the reload",
-            trigger: 'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]',
-            run: 'click',
-        },
-        {
-            content: "wait to exit edit mode",
-            trigger: '.o_website_editor:not(.editor_has_snippets)',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             context: "check variant price",
+            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: 'iframe .custom-radio:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
             run: function () {},
         },
@@ -125,22 +98,10 @@ tour.register('shop_customize', {
             content: "click on 'Options' of the 'Variants' selector",
             trigger: 'we-button[data-name="variants_options_opt"]',
         },
-        {
-            content: "check that the iframe is reloading",
-            trigger: '.o_loading_dummy',
-            run: () => {}, // It's a check.
-        },
-        {
-            content: "click on save button after the reload",
-            trigger: 'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]',
-            run: 'click',
-        },
-        {
-            content: "wait to exit edit mode",
-            trigger: '.o_website_editor:not(.editor_has_snippets)',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after list of variant customization disabled",
+            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: "iframe .js_product:not(:has(.js_product_change))",
             run: function () {}, // it's a check
         },
@@ -196,19 +157,10 @@ tour.register('shop_customize', {
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: 'we-button[data-name="attributes_opt"]',
         },
-        {
-            content: "check that the iframe is reloading",
-            trigger: '.o_loading_dummy',
-            run: () => {}, // It's a check.
-        },
-        {
-            content: "click on save button after the reload",
-            trigger: 'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]',
-            run: 'click',
-        },
+        ...wTourUtils.clickOnSave(),
         {
             content: "wait to exit edit mode",
-            trigger: '.o_website_editor:not(.editor_has_snippets)',
+            trigger: '.o_website_preview:not(.editor_has_snippets)',
         },
         {
             content: "finish",

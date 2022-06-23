@@ -14,15 +14,15 @@ tour.register('newsletter_popup_edition', {
     }),
     {
         content: "Check the modal is opened for edition",
-        trigger: '.o_newsletter_popup .modal:visible',
+        trigger: 'iframe .o_newsletter_popup .modal:visible',
         in_modal: false,
         run: () => null,
     },
     ...wTourUtils.clickOnSave(),
     {
         content: "Check the modal has been saved, closed",
-        trigger: '.o_newsletter_popup',
-        extra_trigger: 'body:not(.editor_enable)',
+        trigger: 'iframe .o_newsletter_popup',
+        extra_trigger: 'iframe body:not(.editor_enable)',
         run: function (actions) {
             const $modal = this.$anchor.find('.modal');
             if ($modal.is(':visible')) {

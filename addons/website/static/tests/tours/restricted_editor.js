@@ -7,7 +7,7 @@ tour.register("restricted_editor", {
     test: true,
     url: "/",
 }, [{
-    trigger: 'a[data-action=edit]',
+    trigger: 'a.o_frontend_to_backend_edit_btn',
     content: "Click \"EDIT\" button of website as Restricted Editor",
     extra_trigger: ".homepage",
 }, {

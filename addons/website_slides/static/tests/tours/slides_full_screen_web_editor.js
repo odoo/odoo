@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import wTourUtils from 'website.tour_utils';
 
 /**
  * Global use case:
@@ -12,25 +12,24 @@ import tour from 'web_tour.tour';
  * See "Fullscreen#_onWebEditorClick" for more information.
  *
  */
-tour.register('full_screen_web_editor', {
+ wTourUtils.registerEditionTour('full_screen_web_editor', {
     url: '/slides',
-    test: true
+    test: true,
 }, [{
     // open to the course
-    trigger: 'a:contains("Basics of Gardening")'
+    trigger: 'iframe a:contains("Basics of Gardening")'
 }, {
     // click on a slide to open the fullscreen view
-    trigger: 'a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")'
+    trigger: 'iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")'
 }, {
-    trigger: '.o_wslides_fs_main',
+    trigger: 'iframe .o_wslides_fs_main',
     run: function () {} // check we land on the fullscreen view
-}, {
-    // click on the main "Edit" button to open the web editor
-    trigger: '#edit-page-menu a[data-action="edit"]',
-}, {
-    trigger: '.o_wslides_lesson_main',
+},
+wTourUtils.clickOnEdit()
+, {
+    trigger: 'iframe .o_wslides_lesson_main',
     run: function () {} // check we are redirected on the detailed view
 }, {
-    trigger: 'body.editor_enable',
+    trigger: 'body.editor_has_snippets',
     run: function () {} // check the editor is automatically opened on the detailed view
 }]);

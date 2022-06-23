@@ -50,8 +50,9 @@ const WebsiteWysiwyg = Wysiwyg.extend({
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
+        const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
         $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
             this.odooEditor.observerUnactive();

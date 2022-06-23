@@ -14,4 +14,4 @@ class TestAutomaticEditor(TestConfiguratorCommon):
             'iso_code': 'pa_GB',
             'url_code': 'pa_GB',
         })
-        self.start_tour('/', 'automatic_editor_on_new_website', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'automatic_editor_on_new_website', login='admin')
