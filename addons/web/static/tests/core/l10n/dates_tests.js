@@ -664,6 +664,33 @@ QUnit.module(
             });
         });
 
+        QUnit.test("parseDate with short notations", async (assert) => {
+            assert.strictEqual(
+                parseDate("20-10-20", { format: "yyyy-MM-dd" }).toISO(),
+                "2020-10-20T00:00:00.000Z"
+            );
+            assert.strictEqual(
+                parseDate("20/10/20", { format: "yyyy/MM/dd" }).toISO(),
+                "2020-10-20T00:00:00.000Z"
+            );
+            assert.strictEqual(
+                parseDate("10-20-20", { format: "MM-dd-yyyy" }).toISO(),
+                "2020-10-20T00:00:00.000Z"
+            );
+            assert.strictEqual(
+                parseDate("10-20-20", { format: "MM-yyyy-dd" }).toISO(),
+                "2020-10-20T00:00:00.000Z"
+            );
+            assert.strictEqual(
+                parseDate("1-20-2", { format: "MM-yyyy-dd" }).toISO(),
+                "2020-01-02T00:00:00.000Z"
+            );
+            assert.strictEqual(
+                parseDate("20/1/2", { format: "yyyy/MM/dd" }).toISO(),
+                "2020-01-02T00:00:00.000Z"
+            );
+        });
+
         QUnit.test("parseDateTime", async (assert) => {
             /**
              * Type of testSet key: string
@@ -754,6 +781,13 @@ QUnit.module(
                 newFn: (input) => parseDateTime(input).toISO(),
                 legacyFn: (input) => legacy.field_utils.parse.datetime(input).toISOString(),
             });
+        });
+
+        QUnit.test("parseDateTime with short notations", async (assert) => {
+            assert.strictEqual(
+                parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO(),
+                "2020-10-20T08:05:03.000Z"
+            );
         });
 
         QUnit.test("parseDateTime (with legacy options.isUTC = true)", async (assert) => {
