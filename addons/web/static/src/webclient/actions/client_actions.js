@@ -6,7 +6,7 @@ import { escape, sprintf } from "@web/core/utils/strings";
 
 const { Component, onMounted, xml } = owl;
 
-export const displayNotificationAction = (env, action) => {
+export function displayNotificationAction(env, action) {
     const params = action.params || {};
     const options = {
         className: params.className || "",
@@ -20,7 +20,7 @@ export const displayNotificationAction = (env, action) => {
     const message = owl.markup(sprintf(escape(params.message), ...links));
     env.services.notification.add(message, options);
     return params.next;
-};
+}
 
 registry.category("actions").add("display_notification", displayNotificationAction);
 

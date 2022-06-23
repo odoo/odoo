@@ -55,7 +55,7 @@ export const MEDIAS_BREAKPOINTS = [
  *
  * @returns {MediaQueryList[]}
  */
- export function getMediaQueryLists() {
+export function getMediaQueryLists() {
     return MEDIAS_BREAKPOINTS.map(({ minWidth, maxWidth }) => {
         if (!maxWidth) {
             return window.matchMedia(`(min-width: ${minWidth}px)`);
@@ -72,11 +72,9 @@ const MEDIAS = getMediaQueryLists();
 
 export const uiService = {
     getSize() {
-        return MEDIAS.findIndex(media => media.matches);
+        return MEDIAS.findIndex((media) => media.matches);
     },
     start(env) {
-        let ui = {};
-
         // block/unblock code
         const bus = new EventBus();
         registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
@@ -101,18 +99,6 @@ export const uiService = {
             }
         }
 
-        Object.assign(ui, {
-            bus,
-            block,
-            unblock,
-        });
-
-        Object.defineProperty(ui, "isBlocked", {
-            get() {
-                return blockCount > 0;
-            },
-        });
-
         // UI active element code
         let activeElems = [document];
 
@@ -132,34 +118,34 @@ export const uiService = {
             }
         }
 
-        Object.assign(ui, {
+        const ui = {
+            bus,
+            size: this.getSize(),
+            get activeElement() {
+                return activeElems[activeElems.length - 1];
+            },
+            get isBlocked() {
+                return blockCount > 0;
+            },
+            get isSmall() {
+                return ui.size <= SIZES.SM;
+            },
+            block,
+            unblock,
             activateElement,
             deactivateElement,
             getActiveElementOf,
-        });
-        Object.defineProperty(ui, "activeElement", {
-            get() {
-                return activeElems[activeElems.length - 1];
-            },
-        });
+        };
 
         // listen to media query status changes
-        function updateSize() {
+        const updateSize = () => {
             ui.size = this.getSize();
-        }
-        browser.addEventListener("resize", debounce(updateSize.bind(this), 100));
+        };
+        browser.addEventListener("resize", debounce(updateSize, 100));
 
-        Object.assign(ui, {
-            size: this.getSize(),
-        });
-        Object.defineProperty(ui, "isSmall", {
-            get() {
-                return ui.size <= SIZES.SM;
-            },
-        });
         Object.defineProperty(env, "isSmall", {
             get() {
-                return ui.size <= SIZES.SM;
+                return ui.isSmall;
             },
         });
 
