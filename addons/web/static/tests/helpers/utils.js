@@ -2,9 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
+import { download } from "@web/core/network/download";
+import { Deferred } from "@web/core/utils/concurrency";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { registerCleanup } from "./cleanup";
-import { download } from "@web/core/network/download";
 
 const { App, onMounted, onPatched, useComponent } = owl;
 
@@ -150,15 +151,7 @@ export async function nextTick() {
 }
 
 export function makeDeferred() {
-    /** @type {(value:any)=>void} */
-    let resolve;
-    /** @type {(reason?:any)=>void} */
-    let reject;
-    const prom = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-    });
-    return Object.assign(prom, { resolve, reject });
+    return new Deferred();
 }
 
 function findElement(el, selector) {
