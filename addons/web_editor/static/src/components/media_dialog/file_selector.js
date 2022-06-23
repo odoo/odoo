@@ -11,7 +11,7 @@ var Widget = require('web.Widget');
 var session = require('web.session');
 const {removeOnImageChangeAttrs} = require('web_editor.image_processing');
 const {getCSSVariableValue, DEFAULT_PALETTE} = require('web_editor.utils');
-const { UploadProgressToast } = require('@web_editor/js/wysiwyg/widgets/upload_progress_toast');
+const { UploadProgressToast } = require('@web_editor/components/upload_progress_toast/upload_progress_toast');
 
 var QWeb = core.qweb;
 var _t = core._t;

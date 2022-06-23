@@ -21,7 +21,7 @@ var WORD_SEPARATORS_REGEX = '([\\u2000-\\u206F\\u2E00-\\u2E7F\'!"#\\$%&\\(\\)\\*
 
 var Suggestion = Widget.extend({
     template: 'website.seo_suggestion',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     events: {
         'click .o_seo_suggestion': 'select',
     },
@@ -37,7 +37,7 @@ var Suggestion = Widget.extend({
 
 var SuggestionList = Widget.extend({
     template: 'website.seo_suggestion_list',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
 
     init: function (parent, options) {
         this.root = options.root;
@@ -93,7 +93,7 @@ var SuggestionList = Widget.extend({
 
 var Keyword = Widget.extend({
     template: 'website.seo_keyword',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     events: {
         'click a[data-action=remove-keyword]': 'destroy',
     },
@@ -149,7 +149,7 @@ var Keyword = Widget.extend({
 
 var KeywordList = Widget.extend({
     template: 'website.seo_list',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     maxKeywords: 10,
 
     init: function (parent, options) {
@@ -206,7 +206,7 @@ var KeywordList = Widget.extend({
 
 var Preview = Widget.extend({
     template: 'website.seo_preview',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
 
     init: function (parent, options) {
         this.title = options.title;
@@ -318,7 +318,7 @@ var MetaTitleDescription = Widget.extend({
     // Basically we don't want the too small alert when the field is empty and
     // we start typing on it.
     template: 'website.seo_meta_title_description',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     events: {
         'input input[name=website_meta_title]': '_titleChanged',
         'input input[name=website_seo_name]': '_seoNameChanged',
@@ -485,7 +485,7 @@ var MetaTitleDescription = Widget.extend({
 var MetaKeywords = Widget.extend({
     // Form and table for SEO meta keywords
     template: 'website.seo_meta_keywords',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     events: {
         'keyup input[name=website_meta_keywords]': '_confirmKeyword',
         'click button[data-action=add]': '_addKeyword',
@@ -569,7 +569,7 @@ var MetaKeywords = Widget.extend({
 
 var MetaImageSelector = Widget.extend({
     template: 'website.seo_meta_image_selector',
-    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    xmlDependencies: ['/website/static/src/components/dialog/seo.xml'],
     events: {
         'click .o_meta_img_upload': '_onClickUploadImg',
         'click .o_meta_img': '_onClickSelectImg',
@@ -670,7 +670,7 @@ var MetaImageSelector = Widget.extend({
 var SeoConfigurator = Dialog.extend({
     template: 'website.seo_configuration',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.seo.xml']
+        ['/website/static/src/components/dialog/seo.xml']
     ),
     canEditTitle: false,
     canEditDescription: false,

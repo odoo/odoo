@@ -100,7 +100,7 @@ Featuring
             'website_slides/static/tests/tours/*.js',
         ],
         'website.assets_editor': [
-            'website_slides/static/src/js/website_slides.editor.js',
+            'website_slides/static/src/js/systray_items/new_content.js',
         ],
         'website_slides.slide_embed_assets': [
             ('include', 'web._assets_helpers'),

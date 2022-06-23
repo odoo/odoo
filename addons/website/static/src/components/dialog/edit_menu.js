@@ -17,7 +17,7 @@ var qweb = core.qweb;
 var PagePropertiesDialog = weWidgets.Dialog.extend({
     template: 'website.pagesMenu.page_info',
     xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.pageProperties.xml']
+        ['/website/static/src/components/dialog/page_properties.xml']
     ),
     events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'keyup input#page_name': '_onNameChanged',
@@ -474,7 +474,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             isNewWindow: data.new_window,
         }, data || {}));
 
-        this.linkWidget.xmlDependencies = this.linkWidget.xmlDependencies.concat(['/website/static/src/xml/website.contentMenu.xml']);
+        this.linkWidget.xmlDependencies = this.linkWidget.xmlDependencies.concat(['/website/static/src/components/dialog/edit_menu.xml']);
 
         const oldSave = this.linkWidget.save;
         /**
@@ -521,7 +521,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
 var SelectEditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
     xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.contentMenu.xml']
+        ['/website/static/src/components/dialog/edit_menu.xml']
     ),
 
     /**
@@ -552,7 +552,7 @@ var SelectEditMenuDialog = weWidgets.Dialog.extend({
 var EditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.edit',
     xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.contentMenu.xml']
+        ['/website/static/src/components/dialog/edit_menu.xml']
     ),
     events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'click a.js_add_menu': '_onAddMenuButtonClick',
