@@ -303,3 +303,12 @@ class WithContext(HttpCase):
         root_html = html.fromstring(r.content)
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertEqual(canonical_url, website.domain + "/")
+
+    def test_t_cache_footer_debug_link(self):
+        # Debug link (flag) should be use the current url.
+        self.url_open('/')
+        self.url_open('/contactus')
+        r = self.url_open('/?debug=1')
+        self.assertIn('<a class="o_debug_mode" href="?debug="', r.text)
+        r = self.url_open('/contactus?debug=1')
+        self.assertIn('<a class="o_debug_mode" href="?debug="', r.text)
