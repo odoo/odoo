@@ -46,7 +46,10 @@
                                 <div class="oe_title">
                                     <h2 style="display: inline-block;"><field name="subject" placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, ${object.name}"'/></h2>
                                 </div>
-                                <field name="body_html" widget="html" class="oe-bordered-editor" options="{'style-inline': true, 'codeview': true }"/>
+                                <field name="can_write" invisible="1"/>
+                                <field name="body_html" widget="html" class="oe-bordered-editor"
+                                    options="{'style-inline': true, 'codeview': true }"
+                                    attrs="{'readonly': [('can_write', '=', False)]}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                             <page string="Email Configuration" name="email_configuration">
