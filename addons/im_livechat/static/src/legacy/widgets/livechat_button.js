@@ -11,7 +11,7 @@ import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constant
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
-import WebsiteLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
+import PublicLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
 
 import { clear } from '@mail/model/model_field_command';
 
@@ -318,7 +318,7 @@ const LivechatButton = Widget.extend({
             titleColor: this.messaging.livechatButtonView.titleColor,
         };
         this.messaging.livechatButtonView.update({
-            chatWindow: new WebsiteLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
+            chatWindow: new PublicLivechatWindow(this, this.messaging.livechatButtonView.livechat, options),
         });
         return this.messaging.livechatButtonView.chatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
