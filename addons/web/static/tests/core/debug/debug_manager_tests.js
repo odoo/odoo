@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
-import { useSetupView } from "@web/views/helpers/view_hook";
+import { useSetupView } from "@web/views/view_hook";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv, utils } from "../../helpers/mock_env";
@@ -27,8 +27,7 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
-import { editSearchView, editView } from "@web/views/debug_items";
-import { setDefaults } from "@web/legacy/debug_manager";
+import { editSearchView, editView, setDefaults } from "@web/views/debug_items";
 
 const { Component, xml } = owl;
 const { prepareRegistriesWithCleanup } = utils;
@@ -332,11 +331,9 @@ QUnit.module("DebugMenu", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_list_view");
 
-        await click(target.querySelector(".modal .o_list_view .o_data_row"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".modal .o_list_view .o_data_row td"));
         assert.containsNone(target, ".modal");
         assert.containsOnce(target, ".some_view");
     });
@@ -376,10 +373,9 @@ QUnit.module("DebugMenu", (hooks) => {
         await doAction(webClient, 1234);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
             "18"
         );
     });
@@ -415,7 +411,7 @@ QUnit.module("DebugMenu", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
             "293"
         );
     });
@@ -478,7 +474,7 @@ QUnit.module("DebugMenu", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
             "293"
         );
     });
