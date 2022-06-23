@@ -57,6 +57,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
             views: {
+                "animal,false,form": `<form><div>Coucou</div></form>`,
                 "animal,false,toy": `<toy>Arch content (id=false)</toy>`,
                 "animal,1,toy": `<toy>Arch content (id=1)</toy>`,
                 "animal,2,toy": `<toy js_class="toy_imp">Arch content (id=2)</toy>`,

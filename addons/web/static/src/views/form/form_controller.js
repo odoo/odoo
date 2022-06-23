@@ -158,8 +158,15 @@ export class FormController extends Component {
         }
 
         const beforeExecuteAction = (clickParams) => {
-            if (clickParams.special !== "cancel") {
-                return this.model.root.save({ stayInEdition: true });
+            if (clickParams.special === "cancel" && this.props.onDiscard) {
+                this.props.onDiscard();
+            } else {
+                return this.model.root.save({ stayInEdition: true }).then((saved) => {
+                    if (saved && this.props.onSave) {
+                        this.props.onSave(this.model.root);
+                    }
+                    return saved;
+                });
             }
         };
         const rootRef = useRef("root");
@@ -339,17 +346,22 @@ export class FormController extends Component {
 
     async save(params = {}) {
         const disabledButtons = this.disableButtons();
+        let saved = false;
 
         this.computeTranslateAlert();
 
         if (this.props.saveRecord) {
-            await this.props.saveRecord(this.model.root, params);
+            saved = await this.props.saveRecord(this.model.root, params);
         } else {
-            await this.model.root.save();
+            saved = await this.model.root.save();
         }
         this.enableButtons(disabledButtons);
 
         this.showTranslateAlert();
+
+        if (saved && this.props.onSave) {
+            await this.props.onSave(this.model.root);
+        }
     }
 
     async discard() {
@@ -360,6 +372,9 @@ export class FormController extends Component {
         await this.model.root.discard();
         if (this.model.root.isVirtual) {
             this.env.config.historyBack();
+        }
+        if (this.props.onDiscard) {
+            await this.props.onDiscard();
         }
     }
 
@@ -461,6 +476,8 @@ FormController.props = {
     buttonTemplate: String,
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
+    onDiscard: { type: Function, optional: true },
+    onSave: { type: Function, optional: true },
 };
 FormController.defaultProps = {
     preventCreate: false,
