@@ -10,7 +10,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 
 
 class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
-    
+
     def setUp(self):
         super(TestUICommon, self).setUp()
         # Load pdf and img contents
@@ -142,7 +142,7 @@ class TestUi(TestUICommon):
         })
 
         self.browser_js(
-            '/slides',
+            self.env['website'].get_client_action_url('/slides'),
             'odoo.__DEBUG__.services["web_tour.tour"].run("full_screen_web_editor")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.full_screen_web_editor.ready',
             login=user_demo.login)
@@ -162,7 +162,7 @@ class TestUiPublisher(HttpCaseWithUserDemo):
         })
 
         self.browser_js(
-            '/slides',
+            self.env['website'].get_client_action_url('/slides'),
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher_standard")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher_standard.ready',
             login=user_demo.login)
@@ -192,7 +192,7 @@ class TestUiPublisherYoutube(HttpCaseWithUserDemo):
         })
 
         self.browser_js(
-            '/slides',
+            self.env['website'].get_client_action_url('/slides'),
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher.ready',
             login=user_demo.login)

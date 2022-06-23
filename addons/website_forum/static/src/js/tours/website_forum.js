@@ -2,12 +2,13 @@ odoo.define("website_forum.tour_forum", function (require) {
     "use strict";
 
     var core = require("web.core");
-    var tour = require("web_tour.tour");
+    const wTourUtils = require('website.tour_utils');
 
     var _t = core._t;
 
-    tour.register("question", {
-        url: "/forum/1",
+    wTourUtils.registerBackendAndFrontend("question", {
+        // url: wTourUtils.getClientActionUrl('/forum/1'),
+        url: '/forum/1',
     }, [{
         trigger: ".o_forum_ask_btn",
         position: "left",

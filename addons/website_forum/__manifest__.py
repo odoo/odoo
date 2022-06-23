@@ -42,11 +42,13 @@ Ask questions, get answers, no distractions
     'application': True,
     'assets': {
         'website.assets_editor': [
-            'website_forum/static/src/js/tours/website_forum.js',
             'website_forum/static/src/js/systray_items/*.js',
         ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',
+        ],
+        'web.assets_common': [
+            'website_forum/static/src/js/tours/website_forum.js',
         ],
         'web.assets_frontend': [
             'website_forum/static/src/scss/website_forum.scss',

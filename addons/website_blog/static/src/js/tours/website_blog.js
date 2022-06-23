@@ -3,22 +3,26 @@ odoo.define("website_blog.tour", function (require) {
 
     const {_t} = require("web.core");
     const {Markup} = require('web.utils');
-    var tour = require("web_tour.tour");
+    const wTourUtils = require('website.tour_utils');
 
-    tour.register("blog", {
+    wTourUtils.registerEditionTour("blog", {
         url: "/",
     }, [{
-        trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
+        trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
         content: _t("Click here to add new content to your website."),
         consumeVisibleOnly: true,
         position: 'bottom',
     }, {
-        trigger: "a[data-action=new_blog_post]",
+        trigger: 'a[data-module-xml-id="base.module_website_blog"]',
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",
     }, {
-        trigger: "button.btn-continue",
-        extra_trigger: "form[id=\"editor_new_blog\"]",
+        trigger: 'input[name="name"]',
+        content: _t("Enter your post's title"),
+        position: "bottom",
+    }, {
+        trigger: "button.o_form_button_save",
+        extra_trigger: 'div.o_field_widget[name="blog_id"]',
         content: _t("Select the blog you want to add the post to."),
         // Without demo data (and probably in most user cases) there is only
         // one blog so this step would not be needed and would block the tour.
@@ -29,9 +33,9 @@ odoo.define("website_blog.tour", function (require) {
         // thus fail as this will be considered.
         auto: true,
     }, {
-        trigger: "h1[data-oe-expression=\"blog_post.name\"]",
+        trigger: "iframe h1[data-oe-expression=\"blog_post.name\"]",
         extra_trigger: "#oe_snippets.o_loaded",
-        content: _t("Write a title, the subtitle is optional."),
+        content: _t("Edit your title, the subtitle is optional."),
         position: "top",
         // FIXME instead of using the default 'click' event that is used to mark
         // DIV elements as consumed, we would like to use the 'input' event for
@@ -47,7 +51,7 @@ odoo.define("website_blog.tour", function (require) {
         run: "text",
     }, {
         trigger: "we-button[data-background]:nth(1)",
-        extra_trigger: "#wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
+        extra_trigger: "iframe #wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: Markup(_t("Set a blog post <b>cover</b>.")),
         position: "top",
     }, {
@@ -61,38 +65,30 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: "#o_wblog_post_content",
+        trigger: "iframe #o_wblog_post_content",
         content: Markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
         position: "top",
         run: function (actions) {
             actions.auto();
             actions.text("Blog content", this.$anchor.find("p"));
         },
-    }, {
-        trigger: "button[data-action=save]",
-        extra_trigger: "#o_wblog_post_content .o_wblog_post_content_field p:first:not(:containsExact(" + _t("Start writing here...") + "))",
-        content: Markup(_t("<b>Click on Save</b> to record your changes.")),
-        position: "bottom",
-    }, {
-        trigger: "a[data-action=show-mobile-preview]",
-        extra_trigger: "body:not(.editor_enable)",
+    },
+    ...wTourUtils.clickOnSave(),
+    {
+        trigger: ".o_menu_systray_item.o_mobile_preview",
+        extra_trigger: "iframe body:not(.editor_enable)",
         content: Markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
         position: "bottom",
     }, {
-        trigger: "button[data-dismiss=modal]",
-        extra_trigger: '.modal:has(#mobile-viewport)',
-        content: _t("Once you have reviewed the content on mobile, close the preview."),
+        trigger: ".o_menu_systray_item.o_mobile_preview",
+        extra_trigger: '.o_website_preview .o_is_mobile',
+        content: _t("Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"),
         position: "right",
     }, {
-        trigger: ".js_publish_management .js_publish_btn",
-        extra_trigger: "body:not(.editor_enable)",
+        trigger: '.o_menu_systray_item a:contains("Unpublished")',
+        extra_trigger: "iframe body:not(.editor_enable)",
         position: "bottom",
         content: Markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
-    }, {
-        trigger: "#customize-menu > a",
-        extra_trigger: ".js_publish_management .js_publish_btn .css_unpublish:visible",
-        content: Markup(_t("<b>That's it, your blog post is published!</b> Discover more features through the <i>Customize</i> menu.")),
-        position: "bottom",
-        width: 500,
-    }]);
+    },
+]);
 });

@@ -19,4 +19,4 @@ class TestUi(odoo.tests.HttpCase):
             'mimetype': 'image/png',
         })
 
-        self.start_tour("/", 'blog', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog', login='admin')

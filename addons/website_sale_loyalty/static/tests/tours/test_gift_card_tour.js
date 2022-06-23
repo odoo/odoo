@@ -20,11 +20,8 @@ tour.register('shop_sale_gift_card', {
         },
         tourUtils.goToCart(),
         {
-            content: "wait the /cart page",
-            trigger: '#cart_products',
-        },
-        {
             content: 'Click on "I have a promo code"',
+            extra_trigger: '#cart_products',
             trigger: '.show_coupon',
         },
         {
@@ -57,7 +54,7 @@ tour.register('shop_sale_gift_card', {
         {
             content: 'check gift card amount',
             trigger: '.oe_currency_value:contains("-45.00")',
-            extra_trigger: '.oe_website_sale .oe_cart',
+            trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
         {
@@ -86,7 +83,7 @@ tour.register('shop_sale_gift_card', {
         {
             content: 'check gift card amount',
             trigger: '.oe_currency_value:contains("-45.00")',
-            extra_trigger: '.oe_website_sale .oe_cart',
+            trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
     ],

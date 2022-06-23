@@ -55,6 +55,7 @@ export class WebsitePreview extends Component {
 
         this.iframe = useRef('iframe');
         this.iframefallback = useRef('iframefallback');
+        this.container = useRef('container');
         this.websiteContext = useState(this.websiteService.context);
 
         onWillStart(async () => {
@@ -194,12 +195,17 @@ export class WebsitePreview extends Component {
             this.websiteService.websiteRootInstance = event.detail.rootInstance;
         });
 
+        // This is needed for the registerThemeHomepageTour tours
+        this.container.el.dataset.viewXmlid = this.iframe.el.contentDocument.documentElement.dataset.viewXmlid;
+
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on
         // Chrome Windows/Linux).
         this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
-            this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
-            $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            if (!this.websiteContext.edition) {
+                this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+                $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            }
         });
 
         // The clicks on the iframe are listened, so that links with external

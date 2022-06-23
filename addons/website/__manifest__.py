@@ -176,6 +176,9 @@
             'website/static/src/js/utils.js',
             'website/static/src/js/website_page_list.js',
         ],
+        'web.assets_common': [
+            'website/static/src/js/tours/tour_utils.js',
+        ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
             'website/static/tests/website_tests.js',
@@ -242,7 +245,6 @@
             'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/new_content_form.js',
             'website/static/src/js/tours/homepage.js',
-            'website/static/src/js/tours/tour_utils.js',
             'website/static/src/systray_items/*.js',
             'website/static/src/systray_items/*.scss',
         ],
