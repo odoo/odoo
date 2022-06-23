@@ -114,6 +114,27 @@ QUnit.test("create method", async (assert) => {
     });
 });
 
+QUnit.test("nameGet method", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    await env.services.orm.nameGet("sale.order", [2, 5], { complete: true });
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/name_get");
+    assert.deepEqual(query.params, {
+        args: [[2, 5]],
+        kwargs: {
+            context: {
+                complete: true,
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+        method: "name_get",
+        model: "sale.order",
+    });
+});
+
 QUnit.test("unlink method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
