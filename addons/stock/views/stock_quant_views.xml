@@ -394,9 +394,9 @@
         </field>
     </record>
 
-    <menuitem id="menu_action_inventory_tree" name="Inventory Adjustments" parent="menu_stock_warehouse_mgmt" sequence="30" action="action_view_inventory_tree" />
+    <menuitem id="menu_action_inventory_tree" name="Inventory Adjustments" parent="menu_stock_warehouse_mgmt" sequence="10" action="action_view_inventory_tree" />
     <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
     <menuitem id="menu_valuation" name="Inventory Report"
-              parent="stock.menu_warehouse_report" sequence="100"
-              action="action_view_quants"/>
+              parent="stock.menu_warehouse_report" sequence="150"
+              action="action_view_quants" groups="stock.group_stock_multi_locations,stock.group_tracking_owner"/>
 </odoo>
