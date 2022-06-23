@@ -19,6 +19,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../helpers/utils";
+import { makeParent } from "./tooltip/tooltip_service_tests";
 
 const { App, Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -177,7 +178,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             close() {
                 assert.step("dropdown will close");
                 this._super();
-            }
+            },
         });
         class Parent extends Component {
             clicked() {
@@ -985,5 +986,21 @@ QUnit.module("Components", ({ beforeEach }) => {
             target.querySelector("button.dropdown-toggle").dataset.tooltip,
             "My tooltip"
         );
+    });
+
+    QUnit.test("Dropdown with a tooltip", async (assert) => {
+        assert.expect(2);
+
+        class MyComponent extends owl.Component {}
+        MyComponent.template = owl.xml`
+            <Dropdown tooltip="'My tooltip'">
+                <DropdownItem/>
+            </Dropdown>`;
+        MyComponent.components = { Dropdown };
+
+        await makeParent(MyComponent);
+        await mouseEnter(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent, "My tooltip");
     });
 });
