@@ -50,7 +50,7 @@ export class Pager extends Component {
         return parts.join("-");
     }
     /**
-     * @returns {boolean} true iff there is only one page
+     * @returns {boolean} true if there is only one page
      */
     get isSinglePage() {
         return this.minimum === 1 && this.maximum === this.props.total;
@@ -68,15 +68,14 @@ export class Pager extends Component {
         } else if (minimum < 0 && this.props.limit > 1) {
             minimum = this.props.total - (this.props.total % this.props.limit || this.props.limit);
         }
-
-        this.update(minimum, this.props.limit);
+        this.update(minimum, this.props.limit, true);
     }
     /**
      * @param {string} value
      * @returns {{ minimum: number, maximum: number }}
      */
     parse(value) {
-        let [minimum, maximum] = value.trim().split(/\s*[\-\s,;]\s*/);
+        let [minimum, maximum] = value.trim().split(/\s*[-\s,;]\s*/);
         const clamp = (value) => Math.min(Math.max(value, 1), this.props.total);
         return {
             minimum: clamp(parseInt(minimum, 10)) - 1,
@@ -96,10 +95,11 @@ export class Pager extends Component {
     /**
      * @param {number} offset
      * @param {number} limit
+     * @param {Boolean} hasNavigated
      */
-    async update(offset, limit) {
+    async update(offset, limit, hasNavigated) {
         this.state.isDisabled = true;
-        await this.props.onUpdate({ offset, limit });
+        await this.props.onUpdate({ offset, limit }, hasNavigated);
         this.state.isDisabled = false;
         this.state.isEditing = false;
     }
