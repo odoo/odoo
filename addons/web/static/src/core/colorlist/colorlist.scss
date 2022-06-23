@@ -1,0 +1,39 @@
+.o_colorlist {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 100%;
+    gap: 10px;
+
+    button {
+        padding: 0;
+        border: 1px solid white;
+        box-shadow: 0 0 0 1px #c9ccd2;
+        width: 22px;
+        height: 17px;
+    }
+}
+
+// Set all the colors but the "no-color" one
+@for $size from 2 through length($o-colors) {
+    .o_colorlist_item_color_#{$size - 1} {
+        background-color: nth($o-colors, $size);
+    }
+}
+
+// Set the "no-color", a red bar on white background
+.o_colorlist_item_color_0 {
+    position: relative;
+    &::before {
+        content: "";
+        @include o-position-absolute(-2px, $left: 10px);
+        display: block;
+        width: 1px;
+        height: 19px;
+        transform: rotate(45deg);
+        background-color: red;
+    }
+    &::after {
+        background-color: white;
+    }
+}
