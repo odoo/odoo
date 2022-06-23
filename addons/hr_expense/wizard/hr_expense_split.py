@@ -41,7 +41,7 @@ class HrExpenseSplit(models.TransientModel):
     @api.depends('total_amount', 'tax_ids')
     def _compute_amount_tax(self):
         for split in self:
-            taxes = split.tax_ids.compute_all(price_unit=split.total_amount, currency=split.currency_id, quantity=1, product=split.product_id)
+            taxes = split.tax_ids.with_context(force_price_include=True).compute_all(price_unit=split.total_amount, currency=split.currency_id, quantity=1, product=split.product_id)
             split.amount_tax = taxes['total_included'] - taxes['total_excluded']
 
     @api.depends('product_id')

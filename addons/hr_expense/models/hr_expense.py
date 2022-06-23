@@ -76,7 +76,7 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase'), ('price_include', '=', True)]", string='Included taxes')
+        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes')
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
@@ -187,7 +187,7 @@ class HrExpense(models.Model):
 
     def _get_taxes(self, price, quantity):
         self.ensure_one()
-        return self.tax_ids.compute_all(price_unit=price, currency=self.currency_id, quantity=quantity, product=self.product_id, partner=self.employee_id.user_id.partner_id)
+        return self.tax_ids.with_context(force_price_include=True).compute_all(price_unit=price, currency=self.currency_id, quantity=quantity, product=self.product_id, partner=self.employee_id.user_id.partner_id)
 
     @api.depends("sheet_id.account_move_id.line_ids")
     def _compute_amount_residual(self):
@@ -621,7 +621,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             unit_amount = expense.total_amount
             quantity = 1
 
-            taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id, quantity, expense.product_id)
+            taxes = expense._get_taxes(price=unit_amount, quantity=quantity)
             total_amount = 0.0
             total_amount_currency = 0.0
             partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
