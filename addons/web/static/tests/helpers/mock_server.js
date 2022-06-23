@@ -16,6 +16,20 @@ const serviceRegistry = registry.category("services");
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 
+const regex_field_agg = /(\w+)(?::(\w+)(?:\((\w+)\))?)?/;
+// valid SQL aggregation functions
+const VALID_AGGREGATE_FUNCTIONS = [
+    "array_agg",
+    "count",
+    "count_distinct",
+    "bool_and",
+    "bool_or",
+    "max",
+    "min",
+    "avg",
+    "sum",
+];
+
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -818,8 +832,11 @@ export class MockServer {
             );
         } else {
             kwargs.fields.forEach((field) => {
-                var split = field.split(":");
-                var fieldName = split[0];
+                const [, name, func, fname] = field.match(regex_field_agg);
+                const fieldName = func ? fname || name : name;
+                if (func && !VALID_AGGREGATE_FUNCTIONS.includes(func)) {
+                    throw new Error(`Invalid aggregation function ${func}.`);
+                }
                 if (!fields[fieldName]) {
                     return;
                 }
@@ -830,7 +847,7 @@ export class MockServer {
                 if (
                     fields[fieldName] &&
                     fields[fieldName].type === "many2one" &&
-                    split[1] !== "count_distinct"
+                    func !== "count_distinct"
                 ) {
                     return;
                 }

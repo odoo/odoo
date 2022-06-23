@@ -2145,11 +2145,12 @@ export class DynamicGroupList extends DynamicList {
 
     async _loadGroups() {
         const orderby = orderByToString(this.orderBy);
+        const firstGroupByName = this.firstGroupBy.split(":")[0];
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
-            unique([...this.fieldNames, this.groupBy[0]]),
-            this.groupBy,
+            unique([...this.fieldNames, firstGroupByName]),
+            [this.firstGroupBy],
             {
                 orderby,
                 lazy: true,

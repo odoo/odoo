@@ -9586,4 +9586,37 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
         assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
     });
+
+    QUnit.test("basic rendering with a date groupby with a granularity", async (assert) => {
+        serverData.models.partner.records[0].date = "2022-06-23";
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["date:day"],
+            async mockRPC(route, args) {
+                if (args.method === "web_read_group") {
+                    assert.deepEqual(args.kwargs.fields, ["foo", "date"]);
+                    assert.deepEqual(args.kwargs.groupby, ["date:day"]);
+                }
+                assert.step(args.method);
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
+    });
 });
