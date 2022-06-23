@@ -152,7 +152,7 @@ class Lead(models.Model):
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                          compute="_compute_recurring_revenue_monthly_prorated")
-    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_action_last = fields.Datetime('Last Action', readonly=True)
@@ -256,6 +256,14 @@ class Lead(models.Model):
                 lead.user_company_ids = all_companies
             else:
                 lead.user_company_ids = lead.company_id
+
+    @api.depends('company_id')
+    def _compute_company_currency(self):
+        for lead in self:
+            if not lead.company_id:
+                lead.company_currency = self.env.company.currency_id
+            else:
+                lead.company_currency = lead.company_id.currency_id
 
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
