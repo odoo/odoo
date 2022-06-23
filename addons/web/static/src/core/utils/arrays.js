@@ -152,6 +152,24 @@ export function cartesian() {
 }
 
 /**
+ * Shallow compares two arrays.
+ * @param {any[]} arrayA
+ * @param {any[]} arrayB
+ * @returns {boolean} true iff arrayA and arrayB are shallow equal
+ */
+export function shallowEqual(arrayA, arrayB) {
+    if (arrayA.length !== arrayB.length) {
+        return false;
+    }
+    for (let i = 0; i < arrayA.length; i++) {
+        if (arrayA[i] !== arrayB[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
  * Returns all initial sections of a given array, e.g. for [1, 2] the array
  * [[], [1], [1, 2]] is returned.
  *
