@@ -213,7 +213,7 @@ class Partner(models.Model):
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
         compute='_compute_company_type', inverse='_write_company_type')
-    company_id = fields.Many2one('res.company', 'Company', index=True)
+    company_id = fields.Many2one('res.company', 'Company', index=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
     color = fields.Integer(string='Color Index', default=0)
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
@@ -374,6 +374,8 @@ class Partner(models.Model):
     def _onchange_company_id(self):
         if self.parent_id:
             self.company_id = self.parent_id.company_id.id
+        if self.user_id and self.company_id and self.company_id not in self.user_id.company_ids:
+            self.user_id = False
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
