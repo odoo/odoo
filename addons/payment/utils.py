@@ -73,7 +73,8 @@ def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=Non
 
     The conversion is done by dividing the amount by 10^k where k is the number of decimals of the
     currency as per the ISO 4217 norm.
-    To force a different number of decimals, set it as the value of the `decimal_number` argument.
+    To force a different number of decimals, set it as the value of the `arbitrary_decimal_number`
+    argument.
 
     :param float minor_amount: The amount in minor units, to convert in major units
     :param recordset currency: The currency of the amount, as a `res.currency` record
@@ -87,7 +88,7 @@ def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=Non
         decimal_number = currency.decimal_places
     else:
         decimal_number = arbitrary_decimal_number
-    return float_round(minor_amount, 0) / (10**decimal_number)
+    return float_round(minor_amount, precision_digits=0) / (10**decimal_number)
 
 
 def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=None):
@@ -95,7 +96,8 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
 
     The conversion is done by multiplying the amount by 10^k where k is the number of decimals of
     the currency as per the ISO 4217 norm.
-    To force a different number of decimals, set it as the value of the `decimal_number` argument.
+    To force a different number of decimals, set it as the value of the `arbitrary_decimal_number`
+    argument.
 
     Note: currency.ensure_one() if arbitrary_decimal_number is not provided
 
@@ -110,7 +112,7 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     else:
         currency.ensure_one()
         decimal_number = currency.decimal_places
-    return int(float_round(major_amount, decimal_number) * (10**decimal_number))
+    return int(float_round(major_amount * (10**decimal_number), precision_digits=0))
 
 
 # Token values formatting
