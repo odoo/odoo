@@ -5,6 +5,29 @@ import { registry } from "../registry";
 import { browser } from "../browser/browser";
 import { getVisibleElements } from "../utils/ui";
 
+/**
+ * @typedef {(context: { area: HTMLElement, target: EventTarget }) => void} HotkeyCallback
+ *
+ * @typedef {Object} HotkeyOptions
+ * @property {boolean} [allowRepeat]
+ *  allow registration to perform multiple times when hotkey is held down
+ * @property {boolean} [bypassEditableProtection]
+ *  if true the hotkey service will call this registration
+ *  even if an editable element is focused
+ * @property {boolean} [global]
+ *  allow registration to perform no matter the UI active element
+ * @property {() => HTMLElement} [area]
+ *  adds a restricted operating area for this hotkey
+ * @property {(target: EventTarget) => boolean} [validate]
+ *  adds a validation before calling the hotkey registration's callback
+ *
+ * @typedef {HotkeyOptions & {
+ *  hotkey: string,
+ *  callback: HotkeyCallback,
+ *  activeElement: HTMLElement,
+ * }} HotkeyRegistration
+ */
+
 const ALPHANUM_KEYS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 const NAV_KEYS = [
     "arrowleft",
@@ -19,9 +42,48 @@ const NAV_KEYS = [
     "enter",
     "tab",
     "delete",
+    "space",
 ];
 const MODIFIERS = ["alt", "control", "shift"];
 const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
+
+/**
+ * Get the actual hotkey being pressed.
+ *
+ * @param {KeyboardEvent} ev
+ * @returns {string} the active hotkey, in lowercase
+ */
+export function getActiveHotkey(ev) {
+    const hotkey = [];
+
+    // ------- Modifiers -------
+    // Modifiers are pushed in ascending order to the hotkey.
+    if (isMacOS() ? ev.ctrlKey : ev.altKey) {
+        hotkey.push("alt");
+    }
+    if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
+        hotkey.push("control");
+    }
+    if (ev.shiftKey) {
+        hotkey.push("shift");
+    }
+
+    // ------- Key -------
+    let key = ev.key.toLowerCase();
+    // Identify if the user has tapped on the number keys above the text keys.
+    if (ev.code && ev.code.indexOf("Digit") === 0) {
+        key = ev.code.slice(-1);
+    }
+    // Prefer physical keys for non-latin keyboard layout.
+    if (!AUTHORIZED_KEYS.includes(key) && ev.code && ev.code.indexOf("Key") === 0) {
+        key = ev.code.slice(-1).toLowerCase();
+    }
+    // Make sure we do not duplicate a modifier key
+    if (!MODIFIERS.includes(key)) {
+        hotkey.push(key);
+    }
+    return hotkey.join("+");
+}
 
 export const hotkeyService = {
     dependencies: ["ui"],
@@ -29,6 +91,7 @@ export const hotkeyService = {
     // so changing the overlay modifier may conflict with some shortcuts.
     overlayModifier: "alt",
     start(env, { ui }) {
+        /** @type {Map<number, HotkeyRegistration>} */
         const registrations = new Map();
         let nextToken = 0;
         let overlaysVisible = false;
@@ -111,6 +174,7 @@ export const hotkeyService = {
                 activeElement,
                 hotkey,
                 isRepeated: event.repeat,
+                target: event.target,
                 shouldProtectEditable,
             };
             const dispatched = dispatch(infos);
@@ -140,33 +204,60 @@ export const hotkeyService = {
          *  activeElement: HTMLElement,
          *  hotkey: string,
          *  isRepeated: boolean,
+         *  target: EventTarget,
          *  shouldProtectEditable: boolean,
          * }} infos
          * @returns {boolean} true if has been dispatched
          */
         function dispatch(infos) {
-            const { activeElement, hotkey, isRepeated, shouldProtectEditable } = infos;
+            const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
 
             // Prepare registrations and the common filter
             const reversedRegistrations = Array.from(registrations.values()).reverse();
             const domRegistrations = getDomRegistrations(hotkey, activeElement);
             const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
-            // Dispatch actual hotkey to first matching registration
-            const match = allRegistrations.find(
+            // Find all candidates
+            const candidates = allRegistrations.filter(
                 (reg) =>
                     reg.hotkey === hotkey &&
                     (reg.allowRepeat || !isRepeated) &&
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
-                    (reg.global || reg.activeElement === activeElement)
+                    (reg.global || reg.activeElement === activeElement) &&
+                    (!reg.validate || reg.validate(target)) &&
+                    (!reg.area ||
+                        (target instanceof Node && reg.area() && reg.area().contains(target)))
             );
-            if (match) {
-                match.callback();
+
+            // First candidate
+            let winner = candidates.shift();
+            if (winner && winner.area) {
+                // If there is an area, find the closest one
+                for (const candidate of candidates) {
+                    if (candidate.area() && winner.area().contains(candidate.area())) {
+                        winner = candidate;
+                    }
+                }
+            }
+
+            // Dispatch actual hotkey to the matching registration
+            if (winner) {
+                winner.callback({
+                    area: winner.area && winner.area(),
+                    target,
+                });
                 return true;
             }
             return false;
         }
 
+        /**
+         * Get a list of registrations from the [data-hotkey] defined in the DOM
+         *
+         * @param {string} hotkey
+         * @param {HTMLElement} activeElement
+         * @returns {HotkeyRegistration[]}
+         */
         function getDomRegistrations(hotkey, activeElement) {
             const overlayModParts = hotkeyService.overlayModifier.split("+");
             if (!overlayModParts.every((el) => hotkey.includes(el))) {
@@ -194,7 +285,7 @@ export const hotkeyService = {
 
         /**
          * Add the hotkey overlays respecting the ui active element.
-         * @param {Element} activeElement
+         * @param {HTMLElement} activeElement
          */
         function addHotkeyOverlays(activeElement) {
             for (const el of getVisibleElements(activeElement, "[data-hotkey]:not(:disabled)")) {
@@ -248,56 +339,11 @@ export const hotkeyService = {
         }
 
         /**
-         * Get the actual hotkey being pressed.
-         *
-         * @param {KeyboardEvent} ev
-         * @returns {string} the active hotkey, in lowercase
-         */
-        function getActiveHotkey(ev) {
-            const hotkey = [];
-
-            // ------- Modifiers -------
-            // Modifiers are pushed in ascending order to the hotkey.
-            if (isMacOS() ? ev.ctrlKey : ev.altKey) {
-                hotkey.push("alt");
-            }
-            if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
-                hotkey.push("control");
-            }
-            if (ev.shiftKey) {
-                hotkey.push("shift");
-            }
-
-            // ------- Key -------
-            let key = ev.key.toLowerCase();
-            // Identify if the user has tapped on the number keys above the text keys.
-            if (ev.code && ev.code.indexOf("Digit") === 0) {
-                key = ev.code.slice(-1);
-            }
-            // Prefer physical keys for non-latin keyboard layout.
-            if (!AUTHORIZED_KEYS.includes(key) && ev.code && ev.code.indexOf("Key") === 0) {
-                key = ev.code.slice(-1).toLowerCase();
-            }
-            // Make sure we do not duplicate a modifier key
-            if (!MODIFIERS.includes(key)) {
-                hotkey.push(key);
-            }
-            return hotkey.join("+");
-        }
-
-        /**
          * Registers a new hotkey.
          *
          * @param {string} hotkey
-         * @param {()=>void} callback
-         * @param {Object} options additional options
-         * @param {boolean} [options.allowRepeat=false]
-         *  allow registration to perform multiple times when hotkey is held down
-         * @param {boolean} [options.bypassEditableProtection=false]
-         *  if true the hotkey service will call this registration
-         *  even if an editable element is focused
-         * @param {boolean} [options.global=false]
-         *  allow registration to perform no matter the UI active element
+         * @param {HotkeyCallback} callback
+         * @param {HotkeyOptions} [options]
          * @returns {number} registration token
          */
         function registerHotkey(hotkey, callback, options = {}) {
@@ -336,6 +382,7 @@ export const hotkeyService = {
 
             // Add registration
             const token = nextToken++;
+            /** @type {HotkeyRegistration} */
             const registration = {
                 hotkey: hotkey.toLowerCase(),
                 callback,
@@ -343,8 +390,9 @@ export const hotkeyService = {
                 allowRepeat: options && options.allowRepeat,
                 bypassEditableProtection: options && options.bypassEditableProtection,
                 global: options && options.global,
+                area: options && options.area,
+                validate: options && options.validate,
             };
-            registrations.set(token, registration);
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
             // we need to wait the next micro task tick to set the context owner of the registration.
@@ -352,6 +400,7 @@ export const hotkeyService = {
                 registration.activeElement = ui.activeElement;
             });
 
+            registrations.set(token, registration);
             return token;
         }
 
@@ -367,11 +416,8 @@ export const hotkeyService = {
         return {
             /**
              * @param {string} hotkey
-             * @param {() => void} callback
-             * @param {Object} options
-             * @param {boolean} [options.allowRepeat=false]
-             * @param {boolean} [options.bypassEditableProtection=false]
-             * @param {boolean} [options.global=false]
+             * @param {HotkeyCallback} callback
+             * @param {HotkeyOptions} [options]
              * @returns {() => void}
              */
             add(hotkey, callback, options = {}) {
@@ -391,3 +437,4 @@ export const hotkeyService = {
 };
 
 registry.category("services").add("hotkey", hotkeyService);
+/** @typedef {ReturnType<hotkeyService["start"]>} HotkeyService */
