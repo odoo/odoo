@@ -5534,7 +5534,8 @@ class BaseModel(metaclass=MetaModel):
 
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
-            cache.set(self, field, field.convert_to_cache(value, self, validate))
+            value = field.convert_to_cache(value, self, validate)
+            cache.set(self, field, value, check_dirty=False)
 
             # set inverse fields on new records in the comodel
             if field.relational:
@@ -5832,17 +5833,8 @@ class BaseModel(metaclass=MetaModel):
         :param fnames: optional iterable of field names to flush
         """
         self._recompute_recordset(fnames)
-        towrite = self.env.all.towrite.get(self._name)
-        if fnames is None:
-            must_flush = towrite and any(id_ in towrite for id_ in self._ids)
-        else:
-            must_flush = towrite and any(
-                fname in vals
-                for id_ in self._ids
-                for vals in towrite.get(id_, ())
-                for fname in fnames
-            )
-        if must_flush:
+        fields_ = None if fnames is None else (self._fields[fname] for fname in fnames)
+        if self.env.cache.has_dirty_fields(self, fields_):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
@@ -5875,13 +5867,32 @@ class BaseModel(metaclass=MetaModel):
                 model_fields[field.related_field.model_name].append(field.related_field)
 
         for model_name, fields_ in model_fields.items():
-            if any(
-                field.name in vals
-                for vals in self.env.all.towrite.get(model_name, {}).values()
-                for field in fields_
-            ):
-                id_vals = self.env.all.towrite.pop(model_name)
-                process(self.env[model_name], id_vals)
+            dirty_fields = self.env.cache.get_dirty_fields()
+            if any(field in dirty_fields for field in fields_):
+                # if any field is context-dependent, the values to flush should
+                # be found with a context where the context keys are all None
+                context_none = dict.fromkeys(
+                    key
+                    for field in fields_
+                    for key in self.pool.field_depends_context[field]
+                )
+                model = self.env(context=context_none)[model_name]
+                id_vals = defaultdict(dict)
+                for field in model._fields.values():
+                    ids = self.env.cache.clear_dirty_field(field)
+                    if not ids:
+                        continue
+                    records = model.browse(ids)
+                    values = list(self.env.cache.get_values(records, field))
+                    assert len(values) == len(records), \
+                        f"Could not find all values of {field} to flush them\n" \
+                        f"    Context: {self.env.context}\n" \
+                        f"    Cache: {self.env.cache!r}"
+                    for record, value in zip(records, values):
+                        value = field.convert_to_write(value, record)
+                        value = field.convert_to_column(value, record)
+                        id_vals[record.id][field.name] = value
+                process(model, id_vals)
 
         # flush the inverse of one2many fields, too
         for field in fields:
@@ -6209,7 +6220,9 @@ class BaseModel(metaclass=MetaModel):
         spec = []
         for field in fields:
             spec.append((field, ids))
+            # TODO VSC: used to remove the inverse of many_to_one from the cache, though we might not need it anymore
             for invf in self.pool.field_inverses[field]:
+                self.env[invf.model_name].flush_model([invf.name])
                 spec.append((invf, None))
         self.env.cache.invalidate(spec)
 
