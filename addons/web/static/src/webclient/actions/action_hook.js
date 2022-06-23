@@ -1,12 +1,7 @@
 /** @odoo-module **/
 
-import { getScrollPosition, setScrollPosition } from "./scrolling";
+const { onMounted, useComponent, useEffect, useExternalListener } = owl;
 
-const { useComponent, useEffect } = owl;
-
-// -----------------------------------------------------------------------------
-// Action hook
-// -----------------------------------------------------------------------------
 const scrollSymbol = Symbol("scroll");
 
 export class CallbackRecorder {
@@ -66,32 +61,93 @@ export function useSetupAction(params = {}) {
         __getContext__,
     } = component.env;
 
-    if (__beforeLeave__ && params.beforeLeave) {
-        useCallbackRecorder(__beforeLeave__, params.beforeLeave);
+    const { beforeUnload, beforeLeave, getGlobalState, getLocalState, rootRef } = params;
+
+    if (beforeUnload) {
+        useExternalListener(window, "beforeunload", beforeUnload);
     }
-    if (__getGlobalState__ && params.getGlobalState) {
-        useCallbackRecorder(__getGlobalState__, params.getGlobalState);
+    if (__beforeLeave__ && beforeLeave) {
+        useCallbackRecorder(__beforeLeave__, beforeLeave);
     }
-    if (__getLocalState__) {
-        useCallbackRecorder(__getLocalState__, () => {
+    if (__getGlobalState__ && (getGlobalState || rootRef)) {
+        useCallbackRecorder(__getGlobalState__, () => {
             const state = {};
-            state[scrollSymbol] = getScrollPosition(component.env);
-            if (params.getLocalState) {
-                Object.assign(state, params.getLocalState());
+            if (getGlobalState) {
+                Object.assign(state, getGlobalState());
+            }
+            if (rootRef) {
+                const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
+                if (searchPanelEl) {
+                    state[scrollSymbol] = {
+                        searchPanel: {
+                            left: searchPanelEl.scrollLeft,
+                            top: searchPanelEl.scrollTop,
+                        },
+                    };
+                }
             }
             return state;
         });
+
+        if (rootRef) {
+            onMounted(() => {
+                const { globalState } = component.props;
+                const scrolling = globalState && globalState[scrollSymbol];
+                if (scrolling) {
+                    const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
+                    if (searchPanelEl) {
+                        searchPanelEl.scrollLeft =
+                            (scrolling.searchPanel && scrolling.searchPanel.left) || 0;
+                        searchPanelEl.scrollTop =
+                            (scrolling.searchPanel && scrolling.searchPanel.top) || 0;
+                    }
+                }
+            });
+        }
+    }
+    if (__getLocalState__ && (getLocalState || rootRef)) {
+        useCallbackRecorder(__getLocalState__, () => {
+            const state = {};
+            if (getLocalState) {
+                Object.assign(state, getLocalState());
+            }
+            if (rootRef) {
+                if (component.env.isSmall) {
+                    state[scrollSymbol] = {
+                        root: { left: rootRef.el.scrollLeft, top: rootRef.el.scrollTop },
+                    };
+                } else {
+                    const contentEl = rootRef.el.querySelector(".o_content");
+                    if (contentEl) {
+                        state[scrollSymbol] = {
+                            content: { left: contentEl.scrollLeft, top: contentEl.scrollTop },
+                        };
+                    }
+                }
+            }
+            return state;
+        });
+
+        if (rootRef) {
+            onMounted(() => {
+                const { state } = component.props;
+                const scrolling = state && state[scrollSymbol];
+                if (scrolling) {
+                    if (component.env.isSmall) {
+                        rootRef.el.scrollTop = (scrolling.root && scrolling.root.top) || 0;
+                        rootRef.el.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
+                    } else if (scrolling.content) {
+                        const contentEl = rootRef.el.querySelector(".o_content");
+                        if (contentEl) {
+                            contentEl.scrollTop = scrolling.content.top || 0;
+                            contentEl.scrollLeft = scrolling.content.left || 0;
+                        }
+                    }
+                }
+            });
+        }
     }
     if (__getContext__ && params.getContext) {
         useCallbackRecorder(__getContext__, params.getContext);
     }
-
-    useEffect(
-        () => {
-            if (component.props.state && component.props.state[scrollSymbol]) {
-                setScrollPosition(component.env, component.props.state[scrollSymbol]);
-            }
-        },
-        () => []
-    );
 }
