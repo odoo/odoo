@@ -404,6 +404,7 @@ class PurchaseOrderLine(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
+            'sequence': self.sequence,
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:

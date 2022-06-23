@@ -271,9 +271,8 @@ class MrpAbstractWorkorder(models.AbstractModel):
                         'location_dest_id': location_dest_id,
                     })
             else:
-                rounding = production_move.product_uom.rounding
                 production_move._set_quantity_done(
-                    float_round(abstract_wo.qty_producing, precision_rounding=rounding)
+                    abstract_wo.product_uom_id._compute_quantity(abstract_wo.qty_producing, production_move.product_uom, rounding_method='HALF-UP')
                 )
         self.env['stock.move.line'].create(move_line_vals)
 

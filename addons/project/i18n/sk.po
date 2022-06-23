@@ -12,6 +12,7 @@
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -495,8 +496,8 @@ msgstr "Všetky úlohy"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "All employees"
-msgstr "Všetci zamestananci"
+msgid "All internal users"
+msgstr "Všetci interní používatelia"
 
 #. module: project
 #. openerp-web
@@ -1003,17 +1004,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Definuje viditeľnosť úloh projektu:\n"
-"- Pozvaní zamestnanci: zamestnanci môžu vidieť iba sledovaný projekt a úlohy.\n"
-"- Všetci zamestnanci: zamestnanci môžu vidieť všetky projekty a úlohy.\n"
-"- Používatelia portálu a všetci zamestnanci: zamestnanci môžu vidieť všetko. Používatelia portálu môžu vidieť projekt a úlohy, ktoré nasledujú.\n"
-"nimi alebo niekým z ich spoločnosti."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1552,8 +1554,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Invited employees"
-msgstr "Pozvaní zamestnanci"
+msgid "Invited internal users"
+msgstr "Pozvaní interní používatelia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2169,8 +2171,8 @@ msgstr "URL portálového prístupu"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Portal users and all employees"
-msgstr "Používatelia portálu a všetci zamestnanci"
+msgid "Invited portal users and all internal users"
+msgstr "Pozvaní používatelia portálu a všetci interní používatelia"
 
 #. module: project
 #. openerp-web
