@@ -22,10 +22,6 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
-        messageView: one('MessageView', {
-            inverse: 'qunitTest',
-            isCausal: true,
-        }),
         notificationListView: one('NotificationListView', {
             inverse: 'qunitTestOwner',
             isCausal: true,
