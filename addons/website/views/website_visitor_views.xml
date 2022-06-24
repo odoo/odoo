@@ -348,17 +348,12 @@
         </field>
     </record>
 
-    <menuitem id="website_visitor_menu"
-        name="Visitors"
-        sequence="80"
-        parent="website.menu_website_configuration"/>
-
-    <menuitem id="menu_visitor_sub_menu" name="Visitors"
-        sequence="1"
-        parent="website_visitor_menu"
+    <menuitem id="website_visitor_menu" name="Visitors"
+        sequence="5"
+        parent="website.menu_reporting"
         action="website.website_visitors_action"/>
     <menuitem id="menu_visitor_view_menu" name="Page Views"
-        sequence="2"
-        parent="website_visitor_menu"
+        sequence="40"
+        parent="website.menu_reporting"
         action="website.website_visitor_view_action"/>
 </data></odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="add_to_wishlist" inherit_id="website_sale.products_item" customize_show="True" name="Wishlist Button" priority="20">
+    <template id="add_to_wishlist" inherit_id="website_sale.products_item" name="Wishlist Button" priority="20">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-nocache="The wishlist depends on the user and must not be shared with other users. As this rendering is in the loop, the product value is set in the template, we must retain the id of the product on which we are."
                t-nocache-product_template_id="product.id">
@@ -13,7 +13,7 @@
         </xpath>
     </template>
 
-    <template id="product_add_to_wishlist" inherit_id="website_sale.product" customize_show="True" name="Wishlist Button" priority="20">
+    <template id="product_add_to_wishlist" inherit_id="website_sale.product" name="Wishlist Button" priority="20">
         <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-nocache="The wishlist depends on the user and must not be shared with other users. The product come from the controller.">
                 <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>

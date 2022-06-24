@@ -2,7 +2,7 @@ odoo.define('website.wysiwyg', function (require) {
 'use strict';
 
 var Wysiwyg = require('web_editor.wysiwyg');
-var snippetsEditor = require('web_editor.snippet.editor');
+var snippetsEditor = require('website.snippet.editor');
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -43,15 +43,16 @@ function toggleDropdown($toggles, show) {
  * class non editable: o_not_editable
  *
  */
-Wysiwyg.include({
+const WebsiteWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
+        const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
         $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
             this.odooEditor.observerUnactive();
@@ -160,6 +161,37 @@ Wysiwyg.include({
     /**
      * @override
      */
+    _rpc(options) {
+        // Historically, every RPC had their website_id in their context.
+        // Now it's something defined by the wysiwyg_adapter.
+        // So in order to have a full context, we request it from the wysiwyg_adapter.
+        let context;
+        this.trigger_up('context_get', {
+            callback: cxt => context = cxt,
+        });
+        context = Object.assign(context, options.context);
+        options.context = context;
+        return this._super(options);
+    },
+    /**
+     *
+     * @override
+     */
+    _createSnippetsMenuInstance(options = {}) {
+        return new snippetsEditor.SnippetsMenu(this, Object.assign({
+            wysiwyg: this,
+            selectorEditableArea: '.o_editable',
+        }, options));
+    },
+    /**
+     * @override
+     */
+    _insertSnippetMenu() {
+        return this.snippetsMenu.appendTo(this.$el);
+    },
+    /**
+     * @override
+     */
     _saveElement: async function ($el, context, withLang) {
         var promises = [];
 
@@ -232,6 +264,35 @@ snippetsEditor.SnippetsMenu.include({
         this._super(...arguments);
         this._notActivableElementsSelector += ', .o_mega_menu_toggle';
     },
+    /**
+     * @override
+     */
+    start() {
+        const _super = this._super(...arguments);
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.on('click.snippets_menu', '*', this._onClick);
+
+            // As there is now one document for the SnippetsMenu and another one
+            // for the snippets, clicking on one should blur and remove the
+            // selection of the other one.
+            this._blurSnippetsSelection = this._blurSnippetsSelection.bind(this);
+            this._blurSnippetsMenuSelection = this._blurSnippetsMenuSelection.bind(this);
+            this.$body[0].ownerDocument.addEventListener('click', this._blurSnippetsMenuSelection);
+            this.$el[0].addEventListener('click', this._blurSnippetsSelection);
+        }
+        return _super;
+    },
+    /**
+    * @override
+    */
+    destroy() {
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.off('.snippets_menu');
+            this.$body[0].ownerDocument.removeEventListener('click', this._blurSnippetsMenuSelection);
+            this.$el[0].removeEventListener('click', this._blurSnippetsSelection);
+        }
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -247,5 +308,39 @@ snippetsEditor.SnippetsMenu.include({
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
     },
+    /**
+     * @private
+     */
+     _blurDocumentSelection(document) {
+        const selection = document.getSelection();
+        selection.removeAllRanges();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _blurSnippetsSelection(ev) {
+        // The selection should be kept for the toolbar buttons, as they are
+        // related to the text's style edition. It should be blurred for the
+        // link tools, as they modify the element itself.
+        const shouldKeepFocus = ev.target.closest('.oe-toolbar') && !ev.target.closest('#create-link');
+        if (shouldKeepFocus) {
+            return;
+        }
+        this._blurDocumentSelection(this.$body[0].ownerDocument);
+    },
+    /**
+     * @private
+     */
+    _blurSnippetsMenuSelection(ev) {
+        this._blurDocumentSelection(this.ownerDocument);
+    },
+
 });
+
+return WebsiteWysiwyg;
 });

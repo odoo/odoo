@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Coupon Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(.oe_website_sale .wizard)" data-no-check="true">
+            <we-checkbox string="Show Discount in Subtotal"
+                         data-customize-website-views="website_sale_loyalty.cart_discount"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

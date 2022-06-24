@@ -26,7 +26,10 @@ const ThemePreviewControllerCommon = {
         this._addLoader();
         switch (action) {
             case 'button_choose_theme':
-                actionCallback = result => this.do_action(result);
+                actionCallback = result => {
+                    this.do_action(result);
+                    this._removeLoader();
+                };
                 break;
             case 'button_refresh_theme':
                 actionCallback = () => this._removeLoader();

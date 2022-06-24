@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
-tour.register('newsletter_block_edition', {
+wTourUtils.registerEditionTour('newsletter_block_edition', {
     test: true,
-    url: '/?enable_editor=1',
+    url: '/',
+    edition: true,
 }, [
     // Put a Newsletter block.
     wTourUtils.dragNDrop({
@@ -14,24 +14,21 @@ tour.register('newsletter_block_edition', {
     }),
     {
         content: 'Wait for the list id to be set.',
-        trigger: '.s_newsletter_subscribe_form[data-list-id]:not([data-list-id="0"])',
+        trigger: 'iframe .s_newsletter_subscribe_form[data-list-id]:not([data-list-id="0"])',
+        run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave(),
     // Subscribe to the newsletter.
     {
         content: 'Wait for the email to be loaded in the newsletter input',
-        trigger: '.s_newsletter_block .js_subscribe_btn',
-        extra_trigger: '.s_newsletter_block input:propValue(admin@yourcompany.example.com)',
+        trigger: 'iframe .s_newsletter_block .js_subscribe_btn',
+        extra_trigger: 'iframe .s_newsletter_block input:propValue(admin@yourcompany.example.com)',
     },
     // Change the link style.
     wTourUtils.clickOnEdit(),
     {
-        content: 'Wait for the editor to be fully started',
-        trigger: '#oe_snippets.o_loaded',
-    },
-    {
         content: 'Click on the Subscribe button',
-        trigger: '.s_newsletter_block .js_subscribe_btn',
+        trigger: 'iframe .s_newsletter_block .js_subscribe_btn',
     },
     {
         content: 'Toggle the option to display the Thanks button',
@@ -39,7 +36,7 @@ tour.register('newsletter_block_edition', {
     },
     {
         content: 'Click on the Thanks button',
-        trigger: '.s_newsletter_block .js_subscribed_btn',
+        trigger: 'iframe .s_newsletter_block .js_subscribed_btn',
     },
     {
         content: 'Click on the link style button',
@@ -63,6 +60,6 @@ tour.register('newsletter_block_edition', {
     // prevent to edit the button).
     {
         content: 'Check that the link style is correct',
-        trigger: '.s_newsletter_block .js_subscribed_btn.btn.btn-primary.flat:not(.btn-success)',
+        trigger: 'iframe .s_newsletter_block .js_subscribed_btn.btn.btn-primary.flat:not(.btn-success)',
     },
 ]);

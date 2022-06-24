@@ -63,9 +63,9 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
             }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
         feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
+        self.env.ref('base.user_admin').write({'lang': self.env.ref('base.lang_fr').code})
         website_fr = self.env['website'].create({
-            'name': "Website Fr",
-            'default_lang_id': self.env.ref('base.lang_fr').id
+            'name': "New website",
         })
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)

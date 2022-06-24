@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Customer Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(#ref_left_column)" data-page-options="true" data-no-check="true" string="References Page">
+            <we-checkbox string="Countries Filter"
+                         data-customize-website-views="website_customer.opt_country_list"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Industry Filter"
+                         data-customize-website-views="website_customer.opt_industry_list"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Tags Filter"
+                         data-customize-website-views="website_customer.opt_tag_list"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Show Map"
+                         data-customize-website-views="website_customer.opt_country"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

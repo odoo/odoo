@@ -84,6 +84,10 @@ export class NavBar extends Component {
         );
     }
 
+    // This dummy setter is only here to prevent conflicts between the
+    // Enterprise NavBar extension and the Website NavBar patch.
+    set currentAppSections(_) {}
+
     get systrayItems() {
         return systrayRegistry
             .getEntries()
@@ -91,6 +95,10 @@ export class NavBar extends Component {
             .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
             .reverse();
     }
+
+    // This dummy setter is only here to prevent conflicts between the
+    // Enterprise NavBar extension and the Website NavBar patch.
+    set systrayItems(_) {}
 
     /**
      * Adapt will check the available width for the app sections to get displayed.

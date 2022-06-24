@@ -1004,7 +1004,12 @@ var ViewEditor = Widget.extend({
      * @private
      */
     _onSaveClick: function (ev) {
-        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        const restoreSave = dom.addButtonLoadingEffect(ev.currentTarget);
+        const restore = () => {
+            restoreSave();
+            this.$resetButton[0].disabled = false;
+        };
+        this.$resetButton[0].disabled = true;
         this._saveResources().then(restore).guardedCatch(restore);
     },
     /**

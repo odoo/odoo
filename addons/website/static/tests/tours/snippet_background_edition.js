@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
 import weUtils from 'web_editor.utils';
 import wTourUtils from 'website.tour_utils';
 
@@ -83,7 +82,7 @@ function checkAndUpdateBackgroundColor({
 
 function updateAndCheckCustomGradient({updateStep, checkGradient}) {
     const steps = [updateStep, {
-        trigger: `#wrapwrap section.${snippets[0].id}.o_cc1`,
+        trigger: `iframe #wrapwrap section.${snippets[0].id}.o_cc1`,
         content: 'Color combination 1 still selected',
         run: () => null,
     }];
@@ -91,9 +90,10 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
     return steps;
 }
 
-tour.register('snippet_background_edition', {
+wTourUtils.registerEditionTour('snippet_background_edition', {
+    url: '/',
+    edition: true,
     test: true,
-    url: '/?enable_editor=1',
 },
 [
 wTourUtils.dragNDrop(snippets[0]),
@@ -103,7 +103,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
 ...checkAndUpdateBackgroundColor({
     changeType: 'cc',
     change: 3,
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc3:not([class*=bg-]):not([style*="background"])`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc3:not([class*=bg-]):not([style*="background"])`,
 }),
 
 // Change the color combination + Check the previous one was marked as selected
@@ -111,7 +111,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkCC: 3,
     changeType: 'cc',
     change: 2,
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc2:not(.o_cc3):not([class*=bg-])`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc2:not(.o_cc3):not([class*=bg-])`,
 }),
 
 // Check the color combination was marked as selected + Edit the bg color
@@ -120,7 +120,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkNoCC: 3,
     changeType: 'bg',
     change: 'black-50',
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc2.bg-black-50`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc2.bg-black-50`,
 }),
 
 // Check the current color palette selection + Change the bg color
@@ -129,7 +129,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkBg: 'black-50',
     changeType: 'bg',
     change: '800',
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc2.bg-800:not(.bg-black-50)`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc2.bg-800:not(.bg-black-50)`,
 }),
 
 // Check the current color palette selection + Change the color combination
@@ -140,7 +140,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkNoBg: 'black-50',
     changeType: 'cc',
     change: 4,
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc4:not(.o_cc2).bg-800`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc4:not(.o_cc2).bg-800`,
 }),
 
 // Check the current color palette status + Replace the bg color by a gradient
@@ -150,7 +150,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkBg: '800',
     changeType: 'gradient',
     change: gradients[0],
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc4:not(.bg-800)[style*="background-image: ${gradients[0]}"]`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc4:not(.bg-800)[style*="background-image: ${gradients[0]}"]`,
 }),
 
 // Check the current color palette status + Replace the gradient
@@ -160,7 +160,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkGradient: gradients[0],
     changeType: 'gradient',
     change: gradients[1],
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc4[style*="background-image: ${gradients[1]}"]:not([style*="background-image: ${gradients[0]}"])`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc4[style*="background-image: ${gradients[1]}"]:not([style*="background-image: ${gradients[0]}"])`,
 }),
 
 // Check the current color palette selection + Change the color combination
@@ -171,7 +171,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
     checkNoGradient: gradients[0],
     changeType: 'cc',
     change: 1,
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc1:not(.o_cc4)[style*="background-image: ${gradients[1]}"]`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1:not(.o_cc4)[style*="background-image: ${gradients[1]}"]`,
 }),
 
 // Final check of the color status in the color palette
@@ -193,7 +193,7 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
     content: "Select an image in the media dialog",
 },
 {
-    trigger: `.${snippets[0].id}.o_cc.o_cc1`,
+    trigger: `iframe .${snippets[0].id}.o_cc.o_cc1`,
     run: function () {
         const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
         if (!parts.url || !parts.url.startsWith('url(')) {
@@ -211,7 +211,7 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
     checkGradient: gradients[1],
     changeType: 'gradient',
     change: gradients[0],
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc1:not([style*="${gradients[1]}"])`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1:not([style*="${gradients[1]}"])`,
     finalRun: function () {
         const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
         if (!parts.url || !parts.url.startsWith('url(')) {
@@ -320,7 +320,7 @@ switchTo('gradient'),
     checkNoGradient: gradients[1],
     changeType: 'bg',
     change: 'black-75',
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc1.bg-black-75[style^="background-image: url("]:not([style*="${gradients[0]}"])`
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1.bg-black-75[style^="background-image: url("]:not([style*="${gradients[0]}"])`
 }),
 
 // Re-add a gradient
@@ -330,7 +330,7 @@ switchTo('gradient'),
     checkNoGradient: gradients[0],
     changeType: 'gradient',
     change: gradients[1],
-    finalSelector: `.${snippets[0].id}.o_cc.o_cc1:not(.bg-black-75)`,
+    finalSelector: `iframe .${snippets[0].id}.o_cc.o_cc1:not(.bg-black-75)`,
     finalRun: function () {
         const parts = weUtils.backgroundImageCssToParts(this.$anchor.css('background-image'));
         if (!parts.url || !parts.url.startsWith('url(')) {
@@ -350,7 +350,7 @@ switchTo('gradient'),
 }),
 wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]', 'image toggle', 'top', true),
 {
-    trigger: `.${snippets[0].id}.o_cc.o_cc1[style*="background-image: ${gradients[1]}"]`,
+    trigger: `iframe .${snippets[0].id}.o_cc.o_cc1[style*="background-image: ${gradients[1]}"]`,
     run: () => null,
 },
 
@@ -360,7 +360,7 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
     content: "Click on the None button of the color palette",
 },
 {
-    trigger: `.${snippets[0].id}:not(.o_cc):not(.o_cc1):not([style*="background-image"])`,
+    trigger: `iframe .${snippets[0].id}:not(.o_cc):not(.o_cc1):not([style*="background-image"])`,
     content: "All color classes and properties should have been removed",
     run: () => null,
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="add_to_compare" inherit_id="website_sale.products_item" customize_show="True" name="Comparison List" priority="22">
+    <template id="add_to_compare" inherit_id="website_sale.products_item" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
@@ -9,7 +9,7 @@
         </xpath>
     </template>
 
-    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" name="Product attributes table">
+    <template id="product_attributes_body" inherit_id="website_sale.product" name="Product attributes table">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
             <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>

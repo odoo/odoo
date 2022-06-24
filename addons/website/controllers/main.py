@@ -255,7 +255,10 @@ class Website(Home):
             return request.redirect('/')
         if request.env.lang != website_id.default_lang_id.code:
             return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
-        return request.render('website.website_configurator')
+        action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
+        if step > 1:
+            action_url += '&step=' + str(step)
+        return request.redirect(action_url)
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
@@ -302,6 +305,16 @@ class Website(Home):
                 dict(title=_('Apps url'), values=suggested_controllers),
             ]
         }
+
+    @http.route('/website/get_modules_info', type='json', auth="user")
+    def get_modules_info(self, xml_ids):
+        def get_module_info(xml_id):
+            module_info = request.env.ref(xml_id)
+            return {'id': module_info.id, 'name': module_info.shortdesc}
+        modules_info = {}
+        for xml_id in xml_ids:
+            modules_info[xml_id] = get_module_info(xml_id)
+        return modules_info
 
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
@@ -527,50 +540,6 @@ class Website(Home):
     # Edit
     # ------------------------------------------------------
 
-    @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
-    def pages_management(self, page=1, sortby='url', search='', **kw):
-        # only website_designer should access the page Management
-        if not request.env.user.has_group('website.group_website_designer'):
-            raise werkzeug.exceptions.NotFound()
-
-        Page = request.env['website.page']
-        searchbar_sortings = {
-            'url': {'label': _('Sort by Url'), 'order': 'url'},
-            'name': {'label': _('Sort by Name'), 'order': 'name'},
-        }
-        # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'url')['order'] + ', website_id desc, id'
-
-        domain = request.website.website_domain()
-        if search:
-            domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
-
-        pages = Page.search(domain, order=sort_order)
-        if sortby != 'url' or not request.session.debug:
-            pages = pages._get_most_specific_pages()
-        pages_count = len(pages)
-
-        step = 50
-        pager = portal_pager(
-            url="/website/pages",
-            url_args={'sortby': sortby},
-            total=pages_count,
-            page=page,
-            step=step
-        )
-
-        pages = pages[(page - 1) * step:page * step]
-
-        values = {
-            'pager': pager,
-            'pages': pages,
-            'search': search,
-            'sortby': sortby,
-            'searchbar_sortings': searchbar_sortings,
-            'search_count': pages_count,
-        }
-        return request.render("website.list_website_pages", values)
-
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
     def pagenew(self, path="", add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template
@@ -588,20 +557,13 @@ class Website(Home):
 
         if ext_special_case:  # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return werkzeug.utils.redirect(url + "?enable_editor=1")
+        return werkzeug.utils.redirect(request.env['website'].get_client_action_url(url, True))
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
-
-    @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
-    def toggle_switchable_view(self, view_key):
-        if request.website.user_has_groups('website.group_website_designer'):
-            request.website.viewref(view_key).toggle_active()
-        else:
-            return werkzeug.exceptions.Forbidden()
 
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
@@ -723,9 +685,8 @@ class Website(Home):
         Reloads asset bundles and returns their unique URLs.
         """
         return {
-            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common'),
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend'),
-            'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor'),
+            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', request.session.debug),
+            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
 
     # ------------------------------------------------------

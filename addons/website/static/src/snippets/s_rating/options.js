@@ -1,7 +1,9 @@
 odoo.define('website.s_rating_options', function (require) {
 'use strict';
 
-const weWidgets = require('wysiwyg.widgets');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+
 const options = require('web_editor.snippets.options');
 
 options.registry.Rating = options.Class.extend({
@@ -37,16 +39,15 @@ options.registry.Rating = options.Class.extend({
      * @see this.selectClass for parameters
      */
     customIcon: async function (previewMode, widgetValue, params) {
-        return new Promise(resolve => {
-            const dialog = new weWidgets.MediaDialog(
-                this,
-                {noImages: true, noDocuments: true, noVideos: true, mediaWidth: 1920},
-                $('<i/>')
-            );
-            this._saving = false;
-            dialog.on('save', this, function (attachments) {
-                this._saving = true;
-                const customClass = 'fa ' + attachments.className;
+        const media = document.createElement('i');
+        media.className = params.customActiveIcon === 'true' ? this.faClassActiveCustomIcons : this.faClassInactiveCustomIcons;
+        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            noImages: true,
+            noDocuments: true,
+            noVideos: true,
+            media,
+            save: icon => {
+                const customClass = icon.className;
                 const $activeIcons = this.$target.find('.s_rating_active_icons > i');
                 const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
                 const $icons = params.customActiveIcon === 'true' ? $activeIcons : $inactiveIcons;
@@ -57,15 +58,9 @@ options.registry.Rating = options.Class.extend({
                 this.$target[0].dataset.inactiveCustomIcon = this.faClassInactiveCustomIcons;
                 this.$target[0].dataset.icon = 'custom';
                 this.iconType = 'custom';
-                resolve();
-            });
-            dialog.on('closed', this, function () {
-                if (!this._saving) {
-                    resolve();
-                }
-            });
-            dialog.open();
+            }
         });
+        dialog.mount(this.el);
     },
     /**
      * Sets the number of active icons.

@@ -37,7 +37,7 @@
 </template>
 
 <!-- Index - OPTION - Sidebar -->
-<template id="opt_index_sidebar" inherit_id="website_event.index" active="False" customize_show="True" name="Show Sidebar">
+<template id="opt_index_sidebar" inherit_id="website_event.index" active="False" name="Show Sidebar">
     <xpath expr="//div[@id='o_wevent_index_main_col']" position="after">
         <t t-call="website_event.index_sidebar"/>
     </xpath>
@@ -89,7 +89,7 @@
 </template>
 
 <!-- Filter - Date -->
-<template id="event_time" inherit_id="website_event.index_topbar" customize_show="True" name="Filter by Date">
+<template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
@@ -112,7 +112,7 @@
 </template>
 
 <!-- Filter - Location -->
-<template id="event_location" inherit_id="website_event.index_topbar" active="False" customize_show="True" name="Filter by Country">
+<template id="event_location" inherit_id="website_event.index_topbar" active="False" name="Filter by Country">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
@@ -244,11 +244,11 @@
     </div>
 </template>
 
-<template id="opt_events_list_columns" inherit_id="website_event.events_list" active="True" customize_show="True" name="Layout • Columns"/>
+<template id="opt_events_list_columns" inherit_id="website_event.events_list" active="True" name="Layout • Columns"/>
 
-<template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" customize_show="True" name="'Cards' Design"/>
+<template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" name="'Cards' Design"/>
 
-<template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" customize_show="True" name="Show Templates">
+<template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
     <xpath expr="//main/*" position="before">
         <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'float-right'}" t-field="event.event_type_id"/>
     </xpath>
@@ -260,7 +260,7 @@
 </template>
 
 <!-- Index - Sidebar - About us -->
-<template id="index_sidebar_about_us" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="About us" priority="20">
+<template id="index_sidebar_about_us" inherit_id="website_event.index_sidebar" active="True" name="About us" priority="20">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block">
             <h6 class="o_wevent_sidebar_title">About us</h6>
@@ -271,7 +271,7 @@
 </template>
 
 <!-- Index - Sidebar - Follow us -->
-<template id="index_sidebar_follow_us" inherit_id="website_event.index_sidebar" active="False" customize_show="True" name="Follow us" priority="30">
+<template id="index_sidebar_follow_us" inherit_id="website_event.index_sidebar" active="False" name="Follow us" priority="30">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block">
             <h6 class="o_wevent_sidebar_title">Follow Us</h6>
@@ -289,7 +289,7 @@
 </template>
 
 <!-- Index - Sidebar - Photos -->
-<template id="index_sidebar_photos" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Photos" priority="40">
+<template id="index_sidebar_photos" inherit_id="website_event.index_sidebar" active="True" name="Photos" priority="40">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <h6 class="o_wevent_sidebar_title">Photos</h6>
         <a href="/event">
@@ -308,7 +308,7 @@
 </template>
 
 <!-- Index - Sidebar - Quotes -->
-<template id="index_sidebar_quotes" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Quotes" priority="60">
+<template id="index_sidebar_quotes" inherit_id="website_event.index_sidebar" active="True" name="Quotes" priority="60">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block card">
             <div class="card-body">

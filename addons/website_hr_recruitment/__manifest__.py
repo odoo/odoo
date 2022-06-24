@@ -16,6 +16,7 @@
         'views/website_hr_recruitment_templates.xml',
         'views/hr_recruitment_views.xml',
         'views/hr_job_views.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/hr_job_demo.xml',
@@ -28,7 +29,8 @@
             'website_hr_recruitment/static/src/scss/**/*',
         ],
         'website.assets_editor': [
-            'website_hr_recruitment/static/src/js/**/*',
+            'website_hr_recruitment/static/src/js/systray_items/new_content.js',
+            'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
         ],
         'web.assets_tests': [
             'website_hr_recruitment/static/tests/**/*',

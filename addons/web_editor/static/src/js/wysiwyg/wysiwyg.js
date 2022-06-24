@@ -1,6 +1,9 @@
 odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
 
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+const { saveVideos, videoSpecificClasses } = require('@web_editor/components/media_dialog/video_selector');
 const dom = require('web.dom');
 const core = require('web.core');
 const session = require('web.session');
@@ -9,9 +12,9 @@ const Dialog = require('web.Dialog');
 const customColors = require('web_editor.custom_colors');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
+const {compatibilityColorNames} = require('web_editor.ColorPalette');
 const concurrency = require('web.concurrency');
 const { device } = require('web.config');
-const weContext = require('web_editor.context');
 const { localization } = require('@web/core/l10n/localization');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const snippetsEditor = require('web_editor.snippet.editor');
@@ -37,7 +40,6 @@ const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 
 var id = 0;
-const faZoomClassRegex = RegExp('fa-[0-9]x');
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
 // (see isImageSupportedForStyle).
 const mediaSelector = basicMediaSelector.split(',').map(s => `${s}:not([data-oe-xpath])`).join(',');
@@ -92,6 +94,7 @@ const Wysiwyg = Widget.extend({
         // more heuristics to bypass the limitation.
         this._isOnline = true;
         this._signalOnline = this._signalOnline.bind(this);
+        this.tooltipTimeouts = [];
     },
     /**
      *
@@ -128,9 +131,13 @@ const Wysiwyg = Widget.extend({
         }
 
         const getYoutubeVideoElement = async (url) => {
-            const videoWidget = new weWidgets.VideoWidget(this, undefined, {});
-            const src = (await videoWidget.createVideoNode(url)).$video.attr('src');
-            return videoWidget.getWrappedIframe(src)[0];
+            const { embed_url: src } = await this._rpc({
+                route: '/web_editor/video_url/data',
+                params: { video_url: url },
+            });
+            const [savedVideo] = saveVideos([{src}]);
+            savedVideo.classList.add(...videoSpecificClasses);
+            return savedVideo;
         };
 
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
@@ -256,15 +263,8 @@ const Wysiwyg = Widget.extend({
         this.$editable.on('dblclick', mediaSelector, function () {
             self.showTooltip = false;
             const $el = $(this);
-            let params = {node: $el};
+            let params = {node: this};
             $el.selectElement();
-
-            if ($el.is('.fa')) {
-                // save layouting classes from icons to not break the page if you edit an icon
-                params.htmlClass = [...$el[0].classList].filter((className) => {
-                    return !className.startsWith('fa') || faZoomClassRegex.test(className);
-                }).join(' ');
-            }
 
             if (!$el.parent().hasClass('o_stars')) {
                 self.openMediaDialog(params);
@@ -343,6 +343,7 @@ const Wysiwyg = Widget.extend({
 
         this._onSelectionChange = this._onSelectionChange.bind(this);
         this.odooEditor.document.addEventListener('selectionchange', this._onSelectionChange);
+        this.setCSSVariables(this.snippetsMenu ? this.snippetsMenu.el : this.toolbar.el);
 
         return _super.apply(this, arguments).then(() => {
             if (this.options.autohideToolbar) {
@@ -680,6 +681,9 @@ const Wysiwyg = Widget.extend({
             window.removeEventListener('offline', this._checkConnectionChange);
         }
         window.removeEventListener('beforeunload', this._onBeforeUnload);
+        for (const timeout of this.tooltipTimeouts) {
+            clearTimeout(timeout);
+        }
         this._super();
     },
     /**
@@ -738,7 +742,11 @@ const Wysiwyg = Widget.extend({
             };
             this.$resizer.on('mousedown', resizerMousedown);
         } else {
-            this._replaceElement(this.$editable);
+            if (this.options.sideAttach) {
+                return this._super(...arguments);
+            } else {
+                this._replaceElement(this.$editable);
+            }
         }
     },
     //--------------------------------------------------------------------------
@@ -1077,9 +1085,11 @@ const Wysiwyg = Widget.extend({
                         this.linkTools && this.linkTools.destroy();
                         this.linkTools = undefined;
                         this.odooEditor.document.removeEventListener('mousedown', _onMousedown, true);
+                        document.removeEventListener('mousedown', _onMousedown, true);
                     }
                 };
                 this.odooEditor.document.addEventListener('mousedown', _onMousedown, true);
+                document.addEventListener('mousedown', _onMousedown, true);
                 if (!this.linkTools.$el) {
                     this.linkTools.appendTo(this.toolbar.$el);
                 }
@@ -1157,18 +1167,10 @@ const Wysiwyg = Widget.extend({
      * @param {object} params
      * @param {Node} [params.node] Optionnal
      * @param {Node} [params.htmlClass] Optionnal
-     * @param {Class} MediaDialog Optionnal
      */
-    openMediaDialog(params = {}, MediaDialog = weWidgets.MediaDialog) {
+    openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
-        const fontawesomeIcon = getInSelection(this.odooEditor.document, '.fa');
-        if (fontawesomeIcon && sel.toString().trim() === "") {
-            params.node = $(fontawesomeIcon);
-            // save layouting classes from icons to not break the page if you edit an icon
-            params.htmlClass = [...fontawesomeIcon.classList].filter((className) => {
-                return !className.startsWith('fa') || faZoomClassRegex.test(className);
-            }).join(' ');
-        }
+
         if (!sel.rangeCount) {
             return;
         }
@@ -1178,36 +1180,51 @@ const Wysiwyg = Widget.extend({
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
-        const $node = $(params.node);
-        // We need to keep track of FA icon because media.js will _clear those classes
-        const wasFontAwesome = $node.hasClass('fa');
         const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable'));
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
 
-        const mediaParams = Object.assign({
-            res_model: model,
-            res_id: $editable.data('oe-id'),
+        this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
+            resModel: model,
+            resId: $editable.data('oe-id'),
             domain: $editable.data('oe-media-domain'),
-            useMediaLibrary: field && (model === 'ir.ui.view' && field === 'arch' || type === 'html'),
-        }, this.options.mediaModalParams, params);
-        const mediaDialog = new MediaDialog(this, mediaParams, $node);
-        mediaDialog.open();
-
-        mediaDialog.on('save', this, this._onMediaDialogSave.bind(this, {
-            $node: $node,
-            wasFontAwesome: wasFontAwesome,
-            htmlClass: params.htmlClass,
-            restoreSelection: restoreSelection,
-        }));
-        mediaDialog.on('closed', this, function () {
-            // if the mediaDialog content has been saved
-            // the previous selection in not relevant anymore
-            if (mediaDialog.destroyAction !== 'save') {
-                restoreSelection();
-            }
+            useMediaLibrary: !!(field && (model === 'ir.ui.view' && field === 'arch' || type === 'html')),
+            media: params.node,
+            save: this._onMediaDialogSave.bind(this, {
+                node: params.node,
+                restoreSelection: restoreSelection,
+            }),
+            close: () => restoreSelection(),
+            ...this.options.mediaModalParams,
+            ...params,
         });
+
+        // The wysiwyg can be instanciated inside an iframe. The dialog
+        // component is mounted on the global document.
+        return this.mediaDialogWrapper.mount(document.body);
+    },
+    /**
+     * Sets custom CSS Variables on the snippet menu element.
+     * Used for color previews and color palette.
+     */
+    setCSSVariables(element) {
+        for (let i = 1; i <= 5; i++) {
+            element.style.setProperty(`--we-cp-o-color-${i}`, weUtils.getCSSVariableValue(`o-color-${i}`));
+            element.style.setProperty(`--we-cp-o-cc${i}-bg`, weUtils.getCSSVariableValue(`o-cc${i}-bg`));
+            element.style.setProperty(`--we-cp-o-cc${i}-h1`, weUtils.getCSSVariableValue(`o-cc${i}-h1`));
+            element.style.setProperty(`--we-cp-o-cc${i}-text`, weUtils.getCSSVariableValue(`o-cc${i}-text`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-primary`, weUtils.getCSSVariableValue(`o-cc${i}-btn-primary`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-primary-border`, weUtils.getCSSVariableValue(`o-cc${i}-btn-primary-border`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-secondary`, weUtils.getCSSVariableValue(`o-cc${i}-btn-secondary`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-secondary-border`, weUtils.getCSSVariableValue(`o-cc${i}-btn-secondary-border`));
+        }
+        for (let i = 100; i <= 900; i += 100) {
+            element.style.setProperty(`--we-cp-${i}`, weUtils.getCSSVariableValue(`${i}`));
+        }
+        for (const name of compatibilityColorNames) {
+            element.style.setProperty(`--we-cp-${name}`, weUtils.getCSSVariableValue(name));
+        }
     },
     /**
      * Detached function to allow overriding.
@@ -1216,22 +1233,27 @@ const Wysiwyg = Widget.extend({
      * @param {Element} element provided by the dialog
      */
     _onMediaDialogSave: function (params, element) {
+        params.restoreSelection();
         if (!element) {
             return;
         }
-        // restore saved html classes
-        if (params.htmlClass) {
-            element.className += " " + params.htmlClass;
-        }
-        params.restoreSelection();
-        if (wysiwygUtils.isImg(params.$node[0]) || params.wasFontAwesome) {
-            params.$node.replaceWith(element);
+
+        if (params.node) {
+            params.node.replaceWith(element);
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
-        } else if (element) {
+        } else {
             const fragment = new DocumentFragment();
             fragment.append(element);
             return this.odooEditor.execCommand('insertFragment', fragment);
+        }
+
+        if (this.snippetsMenu) {
+            this.snippetsMenu.activateSnippet($(element)).then(() => {
+                if (element.tagName === 'IMG') {
+                    $(element).trigger('image_changed');
+                }
+            });
         }
     },
 
@@ -1682,16 +1704,19 @@ const Wysiwyg = Widget.extend({
         if (isInMedia || (link && link.isContentEditable)) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
-            setTimeout(() => {
+            this.tooltipTimeouts.push(setTimeout(() => {
                 // Do not show tooltip on double-click and if there is already one
                 if (!this.showTooltip || $target.attr('title') !== undefined) {
                     return;
                 }
                 this.odooEditor.observerUnactive();
-                $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                // Tooltips need to be cleared before leaving the editor.
+                this.saving_mutex.exec(() => {
+                    $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                });
                 this.odooEditor.observerActive();
-                setTimeout(() => $target.tooltip('dispose'), 800);
-            }, 400);
+                this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
+            }, 400));
         }
         // Update color of already opened colorpickers.
         setTimeout(() => {
@@ -1901,7 +1926,9 @@ const Wysiwyg = Widget.extend({
      * @return {Promise} rejected if the save cannot be done
      */
     _saveViewBlocks: function (context) {
-
+        // TODO should be review to probably not search in the whole body,
+        // iframe or not.
+        const $ = (this.$editable[0].ownerDocument.defaultView.$ || window.$);
         const $allBlocks = $((this.options || {}).savableSelector).filter('.o_dirty');
 
         const $dirty = $('.o_dirty');
@@ -1927,7 +1954,7 @@ const Wysiwyg = Widget.extend({
                 if (this.options.enableTranslation) {
                     saveElement = '_saveTranslationElement';
                 }
-                return this[saveElement]($el, context || weContext.get())
+                return this[saveElement]($el, context || this.options.context)
                 .then(function () {
                     $el.removeClass('o_dirty');
                 }).guardedCatch(function (response) {
@@ -2193,7 +2220,6 @@ odoo.define('web_editor.widget', function (require) {
 'use strict';
     return {
         Dialog: require('wysiwyg.widgets.Dialog'),
-        MediaDialog: require('wysiwyg.widgets.MediaDialog'),
         LinkDialog: require('wysiwyg.widgets.LinkDialog'),
     };
 });

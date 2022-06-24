@@ -128,20 +128,71 @@
             </field>
         </record>
 
+        <record id="website_page_properties_view_form" model="ir.ui.view">
+            <field name="name">website.page.properties.form.view</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <form>
+                    <notebook>
+                        <page string="Name">
+                            <group class="mt-4">
+                                <field name="name" string="Page Name" widget="page_name"/>
+                            </group>
+                            <group>
+                                <field name="website_id" invisible="1"/>
+                                <field name="url" string="Page URL" widget="page_url" required="True"/>
+                            </group>
+                        </page>
+                        <page string="Publish">
+                            <group class="mt-4">
+                                <field name="is_in_menu" string="Show in Top Menu" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="is_homepage" string="Use as Homepage" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="website_indexed" string="Indexed" widget="boolean_toggle" help="Hide this page from search results"/>
+                            </group>
+                            <group>
+                                <field name="is_published" string="Published" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="date_publish" widget="datetime"/>
+                            </group>
+                            <group>
+                                <field name="visibility"/>
+                                <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')], 'required': [('visibility', '=', 'password')]}" password="True" string="Password"/>
+                                <field name="groups_id" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" string="Authorized Groups" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
         <record id="website_pages_tree_view" model="ir.ui.view">
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages" default_order="name" multi_edit="1">
-                    <field name="name"/>
+                <tree js_class="website_page_list" string="Website Pages" default_order="url" create="false">
+                    <field name="is_homepage" invisible="1"/>
+                    <field name="name" string="Page Title" widget="fa_prefix" options="{'icon': 'fa-home fa-lg', 'visibility': 'is_homepage', 'title': 'Home page of the current website'}"/>
                     <field name="url"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="view_id" invisible="1"/>
                     <field name="website_indexed"/>
+                    <field name="is_in_menu" string="Is In Main Menu"/>
+                    <field name="is_seo_optimized" string="Is SEO optimized"/>
                     <field name="is_published" string="Is Published"/>
                     <field name="create_uid" invisible="1"/>
-                    <field name="write_uid"/>
-                    <field name="write_date"/>
-                    <field name="track"/>
+                    <field name="write_uid" widget="many2one_avatar" optional="hidden"/>
+                    <field name="write_date" optional="hidden"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="track" optional="hidden"/>
+                    <button name="action_manage_page" title="Manage this page" icon="fa-cog fa-lg"/>
+                    <button name="action_optimize_seo" title="Optimize SEO of this page" icon="fa-search fa-lg"/>
+                    <button name="action_edit_page" title="Edit code in backend" icon="fa-bug fa-lg" groups="base.group_no_one"/>
+                    <button name="action_clone_page" title="Clone this page" icon="fa-clone fa-lg"/>
+                    <button name="action_delete_page" title="Delete this page" icon="fa-trash fa-lg"/>
                 </tree>
             </field>
         </record>
@@ -161,12 +212,13 @@
             </field>
         </record>
 
-        <record id="action_website_pages_list" model="ir.actions.act_window">
-            <field name="name">Website Pages</field>
-            <field name="res_model">website.page</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="website_pages_tree_view"/>
-            <field name="target">current</field>
+        <record id="action_website_pages_list" model="ir.actions.server">
+            <field name="name">Website: Pages</field>
+            <field name="model_id" ref="website.model_website_page"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_manage_website_pages()
+            </field>
         </record>
 
         <!-- ====== website.menu views =========================================
@@ -276,6 +328,9 @@
                             type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
                     </header>
                 </sheet>
+                <field name="active" position="after">
+                    <field name="track" attrs="{'invisible': [('type', '!=', 'qweb')]}" widget="boolean_toggle"/>
+                </field>
             </field>
         </record>
 
@@ -398,6 +453,11 @@
         <record id="backend_dashboard" model="ir.actions.client">
             <field name="name">Analytics</field>
             <field name="tag">backend_dashboard</field>
+        </record>
+
+        <record id="website_preview" model="ir.actions.client">
+            <field name="name">Website Preview</field>
+            <field name="tag">website_preview</field>
         </record>
 
         <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
@@ -525,35 +585,86 @@
             groups="base.group_user"
             web_icon="website,static/description/icon.svg"/>
 
-        <menuitem id="menu_dashboard"
-            name="Dashboard"
+        <menuitem id="menu_site"
+            name="Site"
             sequence="1"
             parent="website.menu_website_configuration"/>
 
-        <!-- Force empty action, to ease upgrade -->
-        <record id="menu_dashboard" model="ir.ui.menu">
-            <field name="action" eval="False"/>
-        </record>
+        <menuitem id="menu_promote"
+            name="Promote"
+            sequence="5"
+            parent="website.menu_website_configuration"/>
 
-        <menuitem id="menu_website_dashboard" parent="menu_dashboard"
-            sequence="10" name="eCommerce Dashboard"
-            action="website.ir_actions_server_website_dashboard" active="0"/>
+        <menuitem id="menu_reporting"
+            name="Reporting"
+            sequence="99"
+            parent="website.menu_website_configuration"/>
 
-        <menuitem id="menu_website_google_analytics" parent="menu_dashboard"
-            sequence="20" name="Analytics"
+        <menuitem id="menu_website_preview"
+            parent="menu_site"
+            sequence="10"
+            name="Go to Website"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_website_pages_list"
+            parent="menu_site"
+            sequence="20"
+            name="Pages"
+            action="action_website_pages_list"/>
+
+        <menuitem id="menu_edit_menu"
+            parent="menu_site"
+            sequence="30"
+            name="Edit Menu"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_ace_editor"
+            parent="menu_site"
+            sequence="40"
+            name="HTML / CSS Editor"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_page_properties"
+            parent="menu_site"
+            sequence="50"
+            name="Page Properties"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_website_dashboard"
+            name="eCommerce"
+            sequence="1"
+            parent="menu_reporting"
+            action="website.ir_actions_server_website_dashboard"
+            active="0"/>
+
+        <menuitem id="menu_website_google_analytics"
+            name="Analytics"
+            sequence="20"
+            parent="menu_reporting"
             action="website.ir_actions_server_website_google_analytics"/>
 
+        <menuitem id="menu_optimize_seo"
+            name="Optimize SEO"
+            sequence="1"
+            parent="website.menu_promote"
+            action="website.website_preview"/>
+
         <!-- Configurator actions -->
-        <record id="start_configurator_act_url" model="ir.actions.act_url">
+        <record id="website_configurator" model="ir.actions.client">
             <field name="name">Website Configurator</field>
-            <field name="url">/website/configurator</field>
-            <field name="target">self</field>
+            <field name="tag">website_configurator</field>
+            <field name="target">fullscreen</field>
+        </record>
+
+        <record id="action_open_website_configurator" model="ir.actions.client">
+            <field name="name">Open Website Configurator</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'action_id': ref('website_configurator'), 'menu_id': ref('menu_website_configuration')}"/>
         </record>
 
         <record id="website_configurator_todo" model="ir.actions.todo">
             <field name="name">Start Website Configurator</field>
-            <field name="action_id" ref="start_configurator_act_url"/>
-            <field name="sequence">0</field>
+            <field name="action_id" ref="action_open_website_configurator"/>
         </record>
     </data>
 </odoo>

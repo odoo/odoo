@@ -1,82 +1,8 @@
-odoo.define('website_sale.add_product', function (require) {
-'use strict';
-
-var core = require('web.core');
-var wUtils = require('website.utils');
-var WebsiteNewMenu = require('website.newMenu');
-
-var _t = core._t;
-
-WebsiteNewMenu.include({
-    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
-        new_product: '_createNewProduct',
-    }),
-
-    //--------------------------------------------------------------------------
-    // Actions
-    //--------------------------------------------------------------------------
-
-    /**
-     * Asks the user information about a new product to create, then creates it
-     * and redirects the user to this new product.
-     *
-     * @private
-     * @returns {Promise} Unresolved if there is a redirection
-     */
-    _createNewProduct: function () {
-        var self = this;
-        return wUtils.prompt({
-            id: "editor_new_product",
-            window_title: _t("New Product"),
-            input: _t("Product Name"),
-        }).then(function (result) {
-            if (!result.val) {
-                return;
-            }
-            return self._rpc({
-                route: '/shop/add_product',
-                params: {
-                    name: result.val,
-                },
-            }).then(function (url) {
-                window.location.href = url;
-                return new Promise(function () {});
-            });
-        });
-    },
-});
-});
-
-odoo.define('website_sale.editMenu', function (require) {
-    'use strict';
-
-var WebsiteEditMenu = require('website.editMenu');
-
-WebsiteEditMenu.include({
-    /**
-     * @override
-     */
-    _getContentEditableAreas () {
-        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
-            return !$(el).closest('.o_not_editable, .oe_website_sale .products_header').length;
-        }).toArray();
-    },
-    /**
-     * @override
-     */
-    _getReadOnlyAreas () {
-        return $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
-    },
-});
-});
-
-//==============================================================================
-
 odoo.define('website_sale.editor', function (require) {
 'use strict';
 
 var options = require('web_editor.snippets.options');
-const Wysiwyg = require('web_editor.wysiwyg');
+const Wysiwyg = require('website.wysiwyg');
 const {qweb, _t} = require('web.core');
 const {Markup} = require('web.utils');
 const Dialog = require('web.Dialog');
@@ -214,7 +140,7 @@ Wysiwyg.include({
      * @private
      */
     _isProductListPage() {
-        return $('#products_grid').length !== 0;
+        return this.options.editable && this.options.editable.find('#products_grid').length !== 0;
     },
 
     //--------------------------------------------------------------------------
@@ -273,14 +199,6 @@ Wysiwyg.include({
     },
 });
 
-function reload() {
-    if (window.location.href.match(/\?enable_editor/)) {
-        window.location.reload();
-    } else {
-        window.location.href = window.location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
-    }
-}
-
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
 
     /**
@@ -318,7 +236,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             params: {
                 'ppg': ppg,
             },
-        }).then(() => reload());
+        });
     },
     /**
      * @see this.selectClass for params
@@ -330,7 +248,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             params: {
                 'ppr': this.ppr,
             },
-        }).then(reload);
+        });
     },
     /**
      * @see this.selectClass for params
@@ -342,7 +260,20 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             params: {
                 'default_sort': this.default_sort,
             },
-        }).then(reload);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const pprSelector = this.el.querySelector('.o_wsale_ppr_submenu.d-none');
+        this.el.querySelector('.o_wsale_ppr_by').classList.toggle('d-none', pprSelector);
     },
 
     //--------------------------------------------------------------------------
@@ -501,7 +432,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 product_id: this.productTemplateID,
                 sequence: widgetValue,
             },
-        }).then(reload);
+        }).then(() => this._reloadEditable());
     },
 
     //--------------------------------------------------------------------------
@@ -633,7 +564,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             ribbonId: ribbonId || false,
         });
         const ribbon = this.ribbons[ribbonId] || {html: '', bg_color: '', text_color: '', html_class: ''};
-        const $ribbons = $(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
+        // This option also manages other products' ribbon, therefore we need a
+        // way to access all of them at once. With the content being in an iframe,
+        // this is the simplest way.
+        const $editableDocument = $(this.$target[0].ownerDocument.body);
+        const $ribbons = $editableDocument.find(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
         $ribbons.empty().append(ribbon.html);
         let htmlClasses;
         this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
@@ -644,7 +579,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $ribbons.css('background-color', ribbon.bg_color || '');
 
         if (!this.ribbons[ribbonId]) {
-            $(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
+            $editableDocument.find(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
         }
     },
 
@@ -693,7 +628,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     _onTableItemClick: function (ev) {
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
-        var y = $td.parent().index() + 1;
+        var y = $td.parent().index() + 1
         this._rpc({
             route: '/shop/config/product',
             params: {
@@ -701,8 +636,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 x: x,
                 y: y,
             },
-        }).then(reload);
+        }).then(() => this._reloadEditable());
     },
+    _reloadEditable() {
+        return this.trigger_up('request_save', {reload: true, optionSelector: `.oe_product:has(span[data-oe-id=${this.productTemplateID}])`});
+    }
 });
 
 options.registry.WebsiteSaleProductAttribute = options.Class.extend({
@@ -724,7 +662,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
                 attribute_id: this.attributeID,
                 display_type: widgetValue,
             },
-        }).then(reload);
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
     /**

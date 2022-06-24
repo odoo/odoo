@@ -509,6 +509,9 @@ Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
     let link = getInSelection(doc, 'a');
     const $link = $(link);
     const range = getDeepRange(containerNode, {splitText: true, select: true, correctTripleClick: true});
+    if (!range) {
+        return {};
+    }
     const isContained = containerNode.contains(range.startContainer) && containerNode.contains(range.endContainer);
     if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
         // Expand the current link to include the whole selection.

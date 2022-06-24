@@ -18,34 +18,19 @@ tour.register('shop_sale_gift_card', {
             content: 'Add Small Drawer into cart',
             trigger: 'a:contains(ADD TO CART)',
         },
-            tourUtils.goToCart(1),
-        {
-            content: 'open customize menu',
-            extra_trigger: '.oe_website_sale .oe_cart',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: 'enable "Promo Code" if needed',
-            trigger: '#customize-menu label:contains(Promo Code)',
-            run: function () {
-                if (!$('#customize-menu label:contains(Promo Code) input').prop('checked')) {
-                    $('#customize-menu label:contains(Promo Code)').click();
-                }
-            }
-        },
+        tourUtils.goToCart(),
         {
             content: 'Click on "I have a promo code"',
-            extra_trigger: '.show_coupon',
+            extra_trigger: '#cart_products',
             trigger: '.show_coupon',
         },
         {
             content: 'insert gift card code',
-            extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
             run: 'text GIFT_CARD'
         },
         {
-            content: 'validate the git card',
+            content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
         },
         {
@@ -54,7 +39,6 @@ tour.register('shop_sale_gift_card', {
         },
         {
             content: 'Click on "I have a promo code"',
-            extra_trigger: '.show_coupon',
             trigger: '.show_coupon',
         },
         {
@@ -64,7 +48,7 @@ tour.register('shop_sale_gift_card', {
             run: 'text 10PERCENT'
         },
         {
-            content: 'validate the git card',
+            content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
         },
         {
@@ -95,7 +79,7 @@ tour.register('shop_sale_gift_card', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(ADD TO CART)",
         },
-            tourUtils.goToCart(2),
+            tourUtils.goToCart({quantity: 2}),
         {
             content: 'check gift card amount',
             trigger: '.oe_currency_value:contains("-45.00")',

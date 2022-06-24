@@ -119,7 +119,8 @@ class Home(http.Controller):
             values['disable_database_manager'] = True
 
         response = request.render('web.login', values)
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
     @http.route('/web/login_successful', type='http', auth='user', website=True, sitemap=False)

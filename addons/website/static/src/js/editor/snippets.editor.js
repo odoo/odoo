@@ -11,7 +11,7 @@ const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
-weSnippetEditor.SnippetsMenu.include({
+const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
         .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
@@ -22,6 +22,7 @@ weSnippetEditor.SnippetsMenu.include({
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
+        'reload_bundles': '_onReloadBundles',
     }),
     tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
@@ -50,7 +51,7 @@ weSnippetEditor.SnippetsMenu.include({
     destroy() {
         this._super(...arguments);
         this.ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
-        document.body.classList.remove('o_animated_text_highlighted');
+        this.$body[0].classList.remove('o_animated_text_highlighted');
     },
 
     //--------------------------------------------------------------------------
@@ -158,6 +159,7 @@ weSnippetEditor.SnippetsMenu.include({
                 finalOptions.offsetElements.$top = $header;
             }
         }
+        finalOptions.jQueryDraggableOptions.iframeFix = true;
         return finalOptions;
     },
     /**
@@ -202,7 +204,7 @@ weSnippetEditor.SnippetsMenu.include({
         this._super(...arguments);
         this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
             <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
-                ${$('body').hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
+                ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
                 title="${_t('Highlight Animated Text')}"
                 aria-label="Highlight Animated Text"/>
         `));
@@ -216,7 +218,8 @@ weSnippetEditor.SnippetsMenu.include({
      * @private
      */
     _toggleAnimatedTextButton() {
-        if (!this._isValidSelection(window.getSelection())) {
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
+        if (!this._isValidSelection(sel)) {
             return;
         }
         const animatedText = this._getAnimatedTextElement();
@@ -287,7 +290,7 @@ weSnippetEditor.SnippetsMenu.include({
                     el = newEl;
                 }
                 this.bottomFakeOptionEl = el;
-                this.el.appendChild(this.topFakeOptionEl);
+                this.$body[0].appendChild(this.topFakeOptionEl);
             }
 
             // Need all of this in that order so that:
@@ -317,10 +320,44 @@ weSnippetEditor.SnippetsMenu.include({
         }
     },
     /**
+     * @override
+     */
+    _onOptionsTabClick(ev) {
+        if (!ev.currentTarget.classList.contains('active')) {
+            this._activateSnippet(false);
+            this._mutex.exec(async () => {
+                const switchableViews = await new Promise((resolve, reject) => {
+                    this.trigger_up('get_switchable_related_views', {
+                        onSuccess: resolve,
+                        onFailure: reject,
+                    });
+                });
+                if (switchableViews.length) {
+                    // These do not need to be awaited as we're in teh context
+                    // of the mutex.
+                    this._activateSnippet(this.$body.find('#wrapwrap > main'));
+                    return;
+                }
+                let $pageOptionsTarget = $();
+                let i = 0;
+                const pageOptions = this.templateOptions.filter(template => template.data.pageOptions);
+                while (!$pageOptionsTarget.length && i < pageOptions.length) {
+                    $pageOptionsTarget = pageOptions[i].selector.all();
+                    i++;
+                }
+                if ($pageOptionsTarget.length) {
+                    this._activateSnippet($pageOptionsTarget);
+                } else {
+                    this._activateEmptyOptionsTab();
+                }
+            });
+        }
+    },
+    /**
      * @private
      */
     _onAnimateTextClick(ev) {
-        const sel = window.getSelection();
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
         if (!this._isValidSelection(sel)) {
             return;
         }
@@ -371,9 +408,31 @@ weSnippetEditor.SnippetsMenu.include({
      * @private
      */
     _onHighlightAnimatedTextClick(ev) {
-        $('body').toggleClass('o_animated_text_highlighted');
+        this.$body.toggleClass('o_animated_text_highlighted');
         $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
     },
+    /**
+     * On reload bundles, when it's from the theme tab, destroy any
+     * snippetEditor as they might hold outdated style values. (e.g. color palettes).
+     * We do not destroy the Theme tab editors as they should have the correct
+     * values with their compute widget states.
+     * NOTE: This is a bit janky, _computeWidgetState should modify the
+     * option's widget to reflect the style accordingly. But since
+     * color_palette widget is independent of the UserValueWidget, it's hard to
+     * modify its style using the options events.
+     *
+     * @private
+     */
+    _onReloadBundles(ev) {
+        if (this._currentTab === this.tabs.THEME) {
+            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+            for (const editor of this.snippetEditors) {
+                if (!editor.$target[0].matches(excludeSelector)) {
+                    this._mutex.exec(() => editor.destroy());
+                }
+            }
+        }
+    }
 });
 
 weSnippetEditor.SnippetEditor.include({
@@ -393,4 +452,7 @@ weSnippetEditor.SnippetEditor.include({
         return this._super(...arguments);
     },
 });
+return {
+    SnippetsMenu: wSnippetMenu,
+};
 });

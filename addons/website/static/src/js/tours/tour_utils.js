@@ -121,10 +121,11 @@ function changePaddingSize(direction) {
  */
 function clickOnEdit(position = "bottom") {
     return {
-        trigger: "a[data-action=edit]",
+        trigger: ".o_menu_systray .o_edit_website_container a",
         content: Markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        extra_trigger: ".homepage",
+        extra_trigger: "body:not(.editor_has_snippets)",
         position: position,
+        timeout: 30000,
     };
 }
 
@@ -134,9 +135,10 @@ function clickOnEdit(position = "bottom") {
  * @param {*} position
  */
 function clickOnSnippet(snippet, position = "bottom") {
+    const snippetClass = snippet.id || snippet;
     return {
-        trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
-        extra_trigger: "body.editor_enable",
+        trigger: `iframe #wrapwrap .${snippetClass}`,
+        extra_trigger: "iframe body.editor_enable",
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
         run: "click",
@@ -145,12 +147,14 @@ function clickOnSnippet(snippet, position = "bottom") {
 
 function clickOnSave(position = "bottom") {
     return [{
-        trigger: "button[data-action=save]",
+        trigger: "div:not(.o_loading_dummy) > #oe_snippets button[data-action=\"save\"]:not([disabled])",
+        extra_trigger: "body:not(:has(.o_dialog))",
         in_modal: false,
         content: Markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
     }, {
-        trigger: 'body:not(.editor_enable)',
+        trigger: 'iframe body:not(.editor_enable)',
+        noPrepend: true,
         auto: true, // Just making sure save is finished in automatic tests
         run: () => null,
     }];
@@ -164,8 +168,8 @@ function clickOnSave(position = "bottom") {
  */
 function clickOnText(snippet, element, position = "bottom") {
     return {
-        trigger: snippet.id ? `#wrapwrap .${snippet.id} ${element}` : snippet,
-        extra_trigger: "body.editor_enable",
+        trigger: snippet.id ? `iframe #wrapwrap .${snippet.id} ${element}` : snippet,
+        extra_trigger: "iframe body.editor_enable",
         content: Markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
         run: "text",
@@ -181,13 +185,12 @@ function clickOnText(snippet, element, position = "bottom") {
 function dragNDrop(snippet, position = "bottom") {
     return {
         trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        extra_trigger: "body.editor_enable.editor_has_snippets",
-        moveTrigger: '.oe_drop_zone',
+        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
         content: Markup(_.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name)),
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop #wrapwrap > footer",
+        run: "drag_and_drop iframe #wrapwrap > footer",
     };
 }
 
@@ -203,6 +206,7 @@ function goBackToBlocks(position = "bottom") {
 function goToTheme(position = "bottom") {
     return {
         trigger: '.o_we_customize_theme_btn',
+        extra_trigger: '#oe_snippets.o_loaded',
         content: _t("Go to the Theme tab"),
         position: position,
         run: "click",
@@ -211,7 +215,7 @@ function goToTheme(position = "bottom") {
 
 function selectHeader(position = "bottom") {
     return {
-        trigger: `header#top`,
+        trigger: `iframe header#top`,
         content: Markup(_t(`<b>Click</b> on this header to configure it.`)),
         position: position,
         run: "click",
@@ -220,7 +224,7 @@ function selectHeader(position = "bottom") {
 
 function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
-        trigger: `#wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
+        trigger: `iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: Markup(_t("<b>Click</b> on this column to access its options.")),
          position: position,
         run: "click",
@@ -236,21 +240,18 @@ function prepend_trigger(steps, prepend_text='') {
     return steps;
 }
 
-function registerThemeHomepageTour(name, steps) {
-    tour.register(name, {
-        url: "/?enable_editor=1",
-        sequence: 1010,
-        saveAs: "homepage",
-    }, prepend_trigger(
-        steps.concat(clickOnSave()),
-        "html[data-view-xmlid='website.homepage'] "
-    ));
+function getClientActionUrl(path, edition) {
+    let url = `/web#action=website.website_preview&path=${encodeURIComponent(path)}`;
+    if (edition) {
+        url += '&enable_editor=1';
+    }
+    return url;
 }
 
-function clickOnExtraMenuItem(stepOptions) {
+function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: '#top_menu',
+        trigger: `${backend ? "iframe" : ""} #top_menu:not(.o_loading)`,
         run: function () {
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
             if (extraMenuButton) {
@@ -258,6 +259,59 @@ function clickOnExtraMenuItem(stepOptions) {
             }
         },
     }, stepOptions);
+}
+
+/**
+ * Registers a tour that will go in the website client action.
+ *
+ * @param name {string} The tour's name
+ * @param options {Object} The tour options
+ * @param options.url {string} the page to edit
+ * @param options.edition {boolean} If the tour starts in edit mode
+ * @param steps {[*]} The steps of the tour
+ */
+function registerEditionTour(name, options, steps) {
+    let tourSteps = steps;
+    let url = getClientActionUrl(options.url, !!options.edition);
+    if (options.edition) {
+       tourSteps = [{
+            trigger: '.o_website_preview.editor_enable.editor_has_snippets',
+            timeout: 30000,
+            run: () => {}, // It's a check
+        }].concat(tourSteps);
+    }
+    tour.register(name, Object.assign(options, { url }), tourSteps);
+}
+
+function registerThemeHomepageTour(name, steps) {
+    registerEditionTour(name, {
+        url: '/',
+        edition: true,
+        sequence: 1010,
+        saveAs: "homepage",
+    }, prepend_trigger(
+        steps.concat(clickOnSave()),
+        ".o_website_preview[data-view-xmlid='website.homepage'] "
+    ));
+}
+
+function registerBackendAndFrontend(name, options, steps) {
+    let url;
+    let tourSteps = steps;
+    if (window.location.pathname === '/web') {
+        url = getClientActionUrl(options.url);
+        for (const step of tourSteps) {
+            step.trigger = 'iframe ' + step.trigger;
+            if (step.extra_trigger) {
+                step.extra_trigger = 'iframe ' + step.trigger;
+            }
+        }
+    } else {
+        url = options.url;
+    }
+    tour.register(name, {
+        url
+    }, tourSteps);
 }
 
 return {
@@ -280,7 +334,10 @@ return {
     selectHeader,
     selectNested,
     selectSnippetColumn,
+    getClientActionUrl,
     registerThemeHomepageTour,
     clickOnExtraMenuItem,
+    registerEditionTour,
+    registerBackendAndFrontend,
 };
 });

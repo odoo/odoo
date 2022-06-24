@@ -17,6 +17,8 @@ body.editor_enable.editor_has_snippets {
         // just for fake backdrop effect
         background-color: rgba(66, 66, 66, 0.4);
     }
+}
+.editor_has_snippets {
     > .oe_overlay.ui-draggable {
         .o_handles {
             display: none;
@@ -225,8 +227,6 @@ body.editor_enable.editor_has_snippets {
 
 // SNIPPET PANEL
 #oe_snippets {
-    @include o-w-preserve-btn;
-
     @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
     position: fixed;
     z-index: $o-we-zindex;
@@ -243,10 +243,6 @@ body.editor_enable.editor_has_snippets {
 
     transition: transform 400ms ease 0s;
     transform: translateX(100%);
-
-    &.o_loaded {
-        transform: none;
-    }
 
     *::selection {
         background: lighten($o-we-accent, 9);
@@ -2163,6 +2159,7 @@ body.editor_enable.editor_has_snippets {
         &.o_we_background_position_overlay {
             background-color: rgba(0,0,0,.7);
             pointer-events: auto;
+            bottom: 0;
 
             .o_we_overlay_content {
                 @include o-grab-cursor;

@@ -5,7 +5,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     var rpc = require("web.rpc");
     const tourUtils = require('website_sale.tour_utils');
 
-    tour.register('website_sale_tour', {
+    tour.register('website_sale_tour_1', {
         test: true,
         url: '/shop?search=Storage Box Test',
     }, [
@@ -27,7 +27,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
-        tourUtils.goToCart(2),
+        tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -179,7 +179,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Configuration Settings for 'Tax Included' and sign up 'On Invitation'",
-        extra_trigger: '.o_connected_user #wrapwrap',
+        extra_trigger: '.o_frontend_to_backend_nav', // Check if the user is connected
         trigger: '#wrapwrap',
         run: function () {
             var def1 = rpc.query({
@@ -222,7 +222,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
-        tourUtils.goToCart(2),
+        tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -322,15 +322,12 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('.oe_login_form input[name="redirect"]').val("/shop/cart");
             $('.oe_login_form').submit();
         },
-    },
-    {
-        content: "Open Customize menu",
-        trigger: '.o_menu_sections a:contains("Customize")',
-    },
-    {
-        content: "Enable Extra step",
-        trigger: 'label.dropdown-item:contains("Extra Step Option")',
-    },
+    }]);
+
+    tour.register('website_sale_tour_2', {
+        test: true,
+        url: '/shop/cart',
+    }, [
     {
         content: "Open Dropdown for logout",
         extra_trigger: '.progress-wizard-step:contains("Extra Info")',

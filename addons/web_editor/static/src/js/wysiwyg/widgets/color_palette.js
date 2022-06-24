@@ -8,6 +8,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const Widget = require('web.Widget');
 const customColors = require('web_editor.custom_colors');
 const weUtils = require('web_editor.utils');
+const compatibilityColorNames = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
 
 const qweb = core.qweb;
 
@@ -53,7 +54,8 @@ const ColorPaletteWidget = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.style = window.getComputedStyle(document.documentElement);
+        const editableDocument = options.editable ? options.editable.ownerDocument : document;
+        this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
         this.options = _.extend({
             selectedColor: false,
             resetButton: true,
@@ -245,7 +247,7 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         // Compute class colors
-        const compatibilityColorNames = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
+
         this.colorNames = [...compatibilityColorNames];
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]:not(.o_custom_gradient_btn)').forEach(elem => {
@@ -258,7 +260,7 @@ const ColorPaletteWidget = Widget.extend({
             if (isCCName) {
                 $color.find('.o_we_cc_preview_wrapper').addClass(`o_cc o_cc${colorName}`);
             } else {
-                $color.addClass(`bg-${colorName}`);
+                elem.style.backgroundColor = `var(--we-cp-${colorName})`;
             }
             this.colorNames.push(colorName);
             if (!isCCName && !elem.classList.contains('d-none')) {
@@ -299,6 +301,15 @@ const ColorPaletteWidget = Widget.extend({
                 noTransparency: !!this.options.noTransparency,
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
+        }
+        // When the color palette is created outside its editing
+        // element, the theme preview might not reflect the styles
+        // of the editable. The parent widgets will update the styles
+        // accordingly.
+        if (!this.options.excluded.includes('theme')) {
+            this.trigger_up('update_color_previews', {
+                ccPreviewEls: this.el.querySelectorAll('.o_we_cc_preview_wrapper'),
+            });
         }
         return res;
     },
@@ -1017,5 +1028,6 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
 
 return {
     ColorPaletteWidget: ColorPaletteWidget,
+    compatibilityColorNames: compatibilityColorNames,
 };
 });

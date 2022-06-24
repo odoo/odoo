@@ -132,18 +132,9 @@ class Website(main.Website):
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
 
     @http.route()
-    def get_switchable_related_views(self, key):
-        views = super(Website, self).get_switchable_related_views(key)
-        if key == 'website_sale.product':
-            if not request.env.user.has_group('product.group_product_variant'):
-                view_product_variants = request.website.viewref('website_sale.product_variants')
-                views = [v for v in views if v['id'] != view_product_variants.id]
-        return views
-
-    @http.route()
-    def toggle_switchable_view(self, view_key):
-        super(Website, self).toggle_switchable_view(view_key)
-        if view_key in ('website_sale.products_list_view', 'website_sale.add_grid_or_list_option'):
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+        super().theme_customize_data(is_view_data, enable, disable, reset_view_arch)
+        if any(key in enable or key in disable for key in ['website_sale.products_list_view', 'website_sale.add_grid_or_list_option']):
             request.session.pop('website_sale_shop_layout_mode', None)
 
     @http.route()
@@ -1164,7 +1155,7 @@ class WebsiteSale(http.Controller):
             'public_categ_ids': category,
             'website_id': request.website.id,
         })
-        return "%s?enable_editor=1" % product.product_tmpl_id.website_url
+        return self.env["website"].get_client_action_url(product.product_tmpl_id.website_url, True)
 
     @http.route(['/shop/config/product'], type='json', auth='user')
     def change_product_config(self, product_id, **options):

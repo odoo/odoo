@@ -1,0 +1,108 @@
+.oe_seo_configuration {
+    #language-box {
+        padding-right: 25px;
+        background-color: white;
+    }
+
+    select {
+        background-position: bottom 50% right 1em;
+    }
+
+    .o_seo_og_image {
+        .o_meta_img {
+            position: relative;
+            transition: border-color 200ms;
+            display: inline-block;
+            border: 2px solid gray('400');
+
+            > img {
+                width: 70px;
+                height: 70px;
+                object-fit: cover;
+                cursor: pointer;
+            }
+
+            &:hover {
+                border-color: $o-brand-primary;
+            }
+
+            &.o_active_image {
+                border-color: $o-brand-primary;
+
+                &:before {
+                    @include o-position-absolute($right: 0);
+                    content: '';
+                    border: 16px solid rgba($o-brand-primary, 0.8);
+                    border-left-color: transparent;
+                    border-bottom-color: transparent;
+                }
+
+                &:after {
+                    @include o-position-absolute(2px, 3px);
+                    display: inline-block;
+                    content: "\f00c";
+                    font-family: FontAwesome;
+                    color: white;
+                    font-size: 12px;
+                }
+            }
+
+            .o-custom-label {
+                @include o-position-absolute($bottom: 0px);
+                cursor: pointer;
+                background: rgba(gray('800'), 0.6);
+                font-size: 12px;
+            }
+        }
+
+        .o_meta_img_upload {
+            cursor: pointer;
+            transition: 200ms;
+            display: inline-block;
+            padding: 23px 27px;
+            border: 3px dashed lighten(gray('700'), 30%);
+            vertical-align: top;
+            color: lighten(gray('600'), 30%);
+
+            &:hover {
+                border-color: $o-brand-primary;
+                color: $o-brand-primary;
+            }
+        }
+
+        .o_meta_active_img {
+            height: 240px;
+            object-fit: cover;
+        }
+    }
+
+    div.oe_seo_preview_g {
+        list-style: none;
+        font-family: arial, sans-serif;
+
+        .r {
+            cursor: pointer;
+            color:#1a0dab;
+            font-size: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .s {
+            font-size: 13px;
+            line-height: 18px;
+            color: #545454;
+            .kv {
+                color: #006621;
+                font-size: 14px;
+                line-height: 18px;
+            }
+        }
+    }
+
+    td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
+        cursor: pointer;
+    }
+}

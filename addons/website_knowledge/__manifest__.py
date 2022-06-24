@@ -19,6 +19,7 @@
     'assets': {
         'web.assets_backend': [
             'website_knowledge/static/src/js/knowledge_controller.js',
+            'website_knowledge/static/src/client_actions/website_preview/website_preview.js',
         ]
     },
 }

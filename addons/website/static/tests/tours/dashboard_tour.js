@@ -15,7 +15,7 @@ odoo.define("website.tour.backend_dashboard", function (require) {
         trigger: '.o_app[data-menu-xmlid="website.menu_website_configuration"]',
       },
       {
-        trigger: 'button[data-menu-xmlid="website.menu_dashboard"]',
+        trigger: 'button[data-menu-xmlid="website.menu_reporting"]',
       },
       {
         trigger: '.dropdown-item[data-menu-xmlid="website.menu_website_google_analytics"]',

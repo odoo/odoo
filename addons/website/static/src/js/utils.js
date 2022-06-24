@@ -10,12 +10,13 @@ const { qweb, _t } = core;
  * Allows to load anchors from a page.
  *
  * @param {string} url
+ * @param {Node} body the editable for which to recover anchors
  * @returns {Deferred<string[]>}
  */
-function loadAnchors(url) {
+function loadAnchors(url, body) {
     return new Promise(function (resolve, reject) {
         if (url === window.location.pathname || url[0] === '#') {
-            resolve(document.body.outerHTML);
+            resolve(body ? body : document.body.outerHTML);
         } else if (url.length && !url.startsWith("http")) {
             $.get(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
@@ -70,7 +71,7 @@ function autocompleteWithPages(self, $input, options) {
     $input.urlcomplete({
         source: function (request, response) {
             if (request.term[0] === '#') {
-                loadAnchors(request.term).then(function (anchors) {
+                loadAnchors(request.term, options && options.body).then(function (anchors) {
                     response(anchors);
                 });
             } else if (request.term.startsWith('http') || request.term.length === 0) {
@@ -255,6 +256,10 @@ function sendRequest(route, params) {
     let form = document.createElement('form');
     form.setAttribute('action', route);
     form.setAttribute('method', params.method || 'POST');
+    const isInIframe = window.frameElement && window.frameElement.classList.contains('o_iframe');
+    if (isInIframe) {
+        form.setAttribute('target', '_top');
+    }
 
     if (core.csrf_token) {
         _addInput(form, 'csrf_token', core.csrf_token);

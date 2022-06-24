@@ -47,6 +47,7 @@ Featuring
         'views/website_slides_templates_lesson_embed.xml',
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
+        'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',
         'data/mail_data.xml',
@@ -70,6 +71,7 @@ Featuring
             'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/rating_field_backend.js',
             'website_slides/static/src/models/*.js',
+            'website_slides/static/src/js/components/**/*.js',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',
@@ -96,11 +98,11 @@ Featuring
             'website_slides/static/src/js/tours/slides_tour.js',
             'website_slides/static/src/js/portal_chatter.js',
         ],
+        'website.assets_editor': [
+            'website_slides/static/src/js/systray_items/*.js',
+        ],
         'web.assets_tests': [
             'website_slides/static/tests/tours/*.js',
-        ],
-        'website.assets_editor': [
-            'website_slides/static/src/js/website_slides.editor.js',
         ],
         'website_slides.slide_embed_assets': [
             ('include', 'web._assets_helpers'),

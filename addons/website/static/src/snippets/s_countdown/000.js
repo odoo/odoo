@@ -13,7 +13,6 @@ const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
     xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
     disabledInEditableMode: false,
-    defaultColor: 'rgba(0, 0, 0, 255)',
 
     /**
      * @override

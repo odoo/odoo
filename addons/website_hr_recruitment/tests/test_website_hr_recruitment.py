@@ -16,7 +16,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'name': 'Internship',
             'is_published': True,
         })
-        self.start_tour('/', 'website_hr_recruitment_tour_edit_form', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/jobs'), 'website_hr_recruitment_tour_edit_form', login='admin')
 
         with odoo.tests.RecordCapturer(self.env['hr.applicant'], []) as capt:
             self.start_tour("/", 'website_hr_recruitment_tour')

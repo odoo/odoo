@@ -130,6 +130,7 @@ function redirect (url, wait) {
 function Reload(parent, action) {
     var params = action.params || {};
     var menu_id = params.menu_id || false;
+    var action_id = params.action_id || false;
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
@@ -141,6 +142,11 @@ function Reload(parent, action) {
     var hash = l.hash;
     if (menu_id) {
         hash = "#menu_id=" + menu_id;
+        if (action_id) {
+            hash += "&action=" + action_id;
+        }
+    } else if (action_id) {
+        hash = "#action=" + action_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
 

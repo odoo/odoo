@@ -44,7 +44,7 @@ export function clearServicesMetadataWithCleanup() {
     registerCleanup(() => patch(SERVICES_METADATA, servicesMetadata));
 }
 
-export function prepareRegistriesWithCleanup() {
+function prepareRegistriesWithCleanup() {
     // Clone registries
     cloneRegistryWithCleanup(registry.category("actions"));
     cloneRegistryWithCleanup(registry.category("views"));
@@ -71,6 +71,11 @@ export function prepareRegistriesWithCleanup() {
     // fun fact: at least one registry is missing... this shows that we need a
     // better design for the way we clear these registries...
 }
+
+// This is exported in a utils object to allow for patching
+export const utils = {
+    prepareRegistriesWithCleanup,
+};
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv

@@ -728,7 +728,14 @@ var SlideUploadDialog = Dialog.extend({
             this.set('state', oldType);
             this._alertDisplay(data.error);
         } else {
-            window.location = data.url;
+            if (data.url.indexOf('enable_editor') >= 0) {
+                // If we need to enter edit mode, it should be done to the top
+                // window so that we endup refreshing the backend client action
+                // in edit mode.
+                window.top.location = data.url;
+            } else {
+                window.location = data.url;
+            }
         }
     },
 
@@ -752,7 +759,7 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
      * Automatically opens the upload dialog if requested from query string.
      * If openModal is defined ( === '' ), opens the category selection dialog.
      * If openModal is a category name, opens the category's upload dialog.
-     * 
+     *
      * @override
      */
     start: function () {

@@ -3,6 +3,9 @@ odoo.define('web_editor.utils', function (require) {
 
 const {ColorpickerWidget} = require('web.Colorpicker');
 
+let editableWindow = window;
+const _setEditableWindow = (ew) => editableWindow = ew;
+
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border
@@ -58,7 +61,7 @@ const DEFAULT_PALETTE = {
  */
 function _computePxByRem(toRem) {
     if (_computePxByRem.PX_BY_REM === undefined) {
-        const htmlStyle = window.getComputedStyle(document.documentElement);
+        const htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
         _computePxByRem.PX_BY_REM = parseFloat(htmlStyle['font-size']);
     }
     return toRem ? (1 / _computePxByRem.PX_BY_REM) : _computePxByRem.PX_BY_REM;
@@ -249,7 +252,7 @@ function _computeColorClasses(colorNames, prefix = 'bg-') {
  */
 function _getCSSVariableValue(key, htmlStyle) {
     if (htmlStyle === undefined) {
-        htmlStyle = window.getComputedStyle(document.documentElement);
+        htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
     }
     // Get trimmed value from the HTML element
     let value = htmlStyle.getPropertyValue(`--${key}`).trim();
@@ -379,5 +382,6 @@ return {
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
     generateHTMLId: _generateHTMLId,
     getColorClass: _getColorClass,
+    setEditableWindow: _setEditableWindow,
 };
 });

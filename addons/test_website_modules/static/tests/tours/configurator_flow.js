@@ -2,6 +2,7 @@ odoo.define('test_website_modules.tour.configurator_flow', function (require) {
 'use strict';
 
 const tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 tour.register('configurator_flow', {
     test: true,
@@ -74,27 +75,27 @@ tour.register('configurator_flow', {
         run: function () {}, // it's a check
     }, {
         content: "Wait untill the configurator is finished",
-        trigger: 'body.editor_started',
+        trigger: '#oe_snippets.o_loaded',
         timeout: 30000,
-    }, {
-        content: "exit edit mode",
-        trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
-    }, {
+    },
+    ...wTourUtils.clickOnSave(),
+    {
         content: "check menu and footer links are correct",
-        trigger: '#oe_main_menu_navbar', // edit mode left and landed on regular frontend
+        trigger: 'body:not(.editor_enable)', // edit mode left
         run: function () {
+            const $iframe = this.$anchor.find('iframe.o_iframe:not(.o_ignore_in_tour)');
             for (const menu of ['Home', 'Events', 'Courses', 'Pricing', 'News', 'Success Stories', 'Contact us']) {
-                if (!$(`#top_menu a:contains(${menu})`).length) {
+                if (!$iframe.contents().find(`#top_menu a:contains(${menu})`).length) {
                     console.error(`Missing ${menu} menu. It should have been created by the configurator.`);
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!$(`#top_menu a[href^='${url}'`).length) {
+                if (!$iframe.contents().find(`#top_menu a[href^='${url}'`).length) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }
             for (const link of ['Privacy Policy', 'Contact us']) {
-                if (!$(`#footer ul a:contains(${link})`).length) {
+                if (!$iframe.contents().find(`#footer ul a:contains(${link})`).length) {
                     console.error(`Missing ${link} footer link. It should have been created by the configurator.`);
                 }
             }

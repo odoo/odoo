@@ -1,28 +1,25 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import wTourUtils from 'website.tour_utils';
 
-tour.register("carousel_content_removal", {
+wTourUtils.registerEditionTour("carousel_content_removal", {
     test: true,
-    url: "/",
+    url: '/',
+    edition: true,
 }, [{
-    trigger: "a[data-action=edit]",
-    content: "Click the Edit button.",
-    extra_trigger: ".homepage",
-}, {
     trigger: "#snippet_structure .oe_snippet:has(span:contains('Carousel')) .oe_snippet_thumbnail",
     content: "Drag the Carousel block and drop it in your page.",
-    run: "drag_and_drop #wrap",
+    run: "drag_and_drop iframe #wrap",
 },
 {
-    trigger: ".carousel .carousel-item.active .carousel-content",
+    trigger: "iframe .carousel .carousel-item.active .carousel-content",
     content: "Select the active carousel item.",
 }, {
     trigger: ".oe_overlay.oe_active .oe_snippet_remove",
     content: "Remove the active carousel item.",
 },
 {
-    trigger: ".carousel .carousel-item.active .container:not(:has(*))",
+    trigger: "iframe .carousel .carousel-item.active .container:not(:has(*))",
     content: "Check for a carousel slide with an empty container tag",
     run: function () {},
 }]);

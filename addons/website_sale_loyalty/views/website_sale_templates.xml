@@ -108,7 +108,7 @@
         </body>
     </template>
 
-    <template id="cart_discount" name="Show Discount in Subtotal" customize_show="True" active="False" inherit_id="website_sale.total">
+    <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_untaxed']" position="before">
             <tr t-if="website_sale_order and website_sale_order.reward_amount">
             <td class="text-right border-0 text-muted" title="Discounted amount">Discount:</td>

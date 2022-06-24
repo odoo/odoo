@@ -1,53 +1,49 @@
 /** @odoo-module */
 
 import wTourUtils from 'website.tour_utils';
-import tour from 'web_tour.tour';
 
 const clickOnSave = {
    content: "Clicks on the menu edition dialog save button",
-   trigger: '.modal-dialog .btn-primary span:contains("Save")',
+   trigger: '.modal-dialog .btn-primary:contains("Ok"), .modal-dialog .btn-primary:contains("Save")',
 };
 
-tour.register('edit_menus', {
+wTourUtils.registerEditionTour('edit_menus', {
     test: true,
     url: '/',
 }, [
     // Add a megamenu item from the menu.
     {
-        content: "Open Pages menu",
-        trigger: '.o_menu_sections a:contains("Pages")',
+        content: "open site menu",
+        extra_trigger: "iframe #wrapwrap",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
     },
     {
         content: "Click on Edit Menu",
-        trigger: 'a.dropdown-item:contains("Edit Menu")',
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        extra_trigger: '.o_web_editor_dialog:visible',
-        trigger: '.modal-body a.js_add_menu[data-type="mega"]',
+        extra_trigger: '.o_website_dialog:visible',
+        trigger: '.modal-body a:eq(1)',
     },
     {
         content: "Write a label for the new menu item",
-        extra_trigger: '.o_link_dialog',
-        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        trigger: '.modal-dialog .o_website_dialog input',
         run: 'text Megaaaaa!'
     },
     clickOnSave,
-    {
-        content: "Click save and wait for the page to be reloaded",
-        trigger: '.modal-dialog .btn-primary span:contains("Save")',
-    },
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}),
+    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}, true),
     {
         content: "There should be a new megamenu item.",
-        trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
         run: () => {}, // It's a check.
     },
     // Add a menu item in edit mode.
     wTourUtils.clickOnEdit(),
     {
         content: "Click on a menu item",
-        trigger: '#top_menu .nav-item a',
+        trigger: 'iframe #top_menu .nav-item a',
         extra_trigger: '#oe_snippets.o_loaded',
     },
     {
@@ -56,31 +52,29 @@ tour.register('edit_menus', {
     },
     {
         content: "Trigger the link dialog (click 'Add Menu Item')",
-        extra_trigger: '.o_web_editor_dialog:visible',
-        trigger: '.modal-body a.js_add_menu',
+        extra_trigger: '.o_website_dialog:visible',
+        trigger: '.modal-body a:eq(0)',
     },
     clickOnSave,
     {
         content: "It didn't save without a label. Fill label input.",
-        extra_trigger: '.o_link_dialog',
-        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        extra_trigger: '.o_website_dialog:eq(1):visible',
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Random!',
     },
     clickOnSave,
     {
         content: "It didn't save without a url. Fill url input.",
-        extra_trigger: '.o_link_dialog',
-        trigger: '.o_link_dialog #o_link_dialog_url_input',
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         run: 'text #',
     },
     clickOnSave,
-    clickOnSave,
-    wTourUtils.clickOnEdit(),
+    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
     // Edit the new menu item from the "edit link" popover button
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
     {
         content: "Menu should have a new link item",
-        trigger: '#top_menu .nav-item a:contains("Random!")',
+        trigger: 'iframe #top_menu .nav-item a:contains("Random!")',
     },
     {
         content: "Click on Edit Link",
@@ -88,17 +82,24 @@ tour.register('edit_menus', {
     },
     {
         content: "Change the label",
-        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Modnar',
     },
     clickOnSave,
     ...wTourUtils.clickOnSave(),
-    // Edit the menu item from the "edit menu" popover button
-    wTourUtils.clickOnEdit(),
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
     {
         content: "Label should have changed",
-        trigger: '#top_menu .nav-item a:contains("Modnar")',
+        extra_trigger: "iframe body:not(.editor_enable)",
+        trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
+        run: () => {}, // it's a check
+    },
+    // Edit the menu item from the "edit menu" popover button
+    wTourUtils.clickOnEdit(),
+    {
+        content: "Click on the 'Modnar' link",
+        extra_trigger: "#oe_snippets.o_loaded",
+        trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
     },
     {
         content: "Click on the popover Edit Menu button",
@@ -114,25 +115,26 @@ tour.register('edit_menus', {
     },
     {
         content: "Change the label",
-        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Modnar !!',
     },
     clickOnSave,
-    clickOnSave,
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'a[data-action=edit]'}),
+    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
+    ...wTourUtils.clickOnSave(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
     {
         content: "Label should have changed",
-        trigger: '#top_menu .nav-item a:contains("Modnar !!")',
+        trigger: 'iframe #top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
     },
     // Nest menu item from the menu.
     {
-        content: "Open Pages menu",
-        trigger: '.o_menu_sections a:contains("Pages")',
+        content: "open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
     },
     {
         content: "Click on Edit Menu",
-        trigger: 'a.dropdown-item:contains("Edit Menu")',
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
     },
     {
         content: "Drag item into parent",
@@ -148,11 +150,11 @@ tour.register('edit_menus', {
     clickOnSave,
     {
         content: "Menu item should have a child",
-        trigger: '#top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        trigger: 'iframe #top_menu .nav-item a.dropdown-toggle:contains("Home")',
     },
     {
         content: "When menu item is opened, child item must appear in the shown menu",
-        trigger: '#top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
+        trigger: 'iframe #top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
         run: () => {}, // It's a check.
     },
 ]);

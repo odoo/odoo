@@ -21,7 +21,6 @@
         'views/event_track_templates_reminder.xml',
         'views/event_track_templates_page.xml',
         'views/event_track_templates_proposal.xml',
-        'views/website_templates.xml',
         'views/event_track_views.xml',
         'views/event_track_location_views.xml',
         'views/event_track_tag_views.xml',
@@ -32,6 +31,7 @@
         'views/res_config_settings_view.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/event_demo.xml',
