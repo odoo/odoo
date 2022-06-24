@@ -101,7 +101,7 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
-        with self.assertQueryCount(emp=81):  # ent 80
+        with self.assertQueryCount(emp=self._get_query_count()):  # ent 80
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, self._get_init_messaging_result())
@@ -807,3 +807,10 @@ class TestDiscussFullPerformance(TransactionCase):
                 'volume_settings_ids': [('insert', [])],
             },
         }
+
+    def _get_query_count(self):
+        """
+            Returns the expected query count.
+            The point of having a separate getter is to allow it to be overriden.
+        """
+        return 81
