@@ -48,10 +48,8 @@ Help your customers with this chat, and analyse their feedback.
     'assets': {
         'mail.assets_discuss_public': [
             'im_livechat/static/src/components/*/*',
-            'im_livechat/static/src/models/*.js',
         ],
         'web.assets_frontend': [
-            'im_livechat/static/src/models/*.js',
             'im_livechat/static/src/public/main.js',
             'im_livechat/static/src/services/*.js',
             'im_livechat/static/src/legacy/public_livechat_constants.js',
@@ -73,7 +71,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/js/chatbot_script_answers_m2m_tags.js',
             'im_livechat/static/src/js/chatbot_script_step_o2m.js',
             'im_livechat/static/src/components/*/*.js',
-            'im_livechat/static/src/models/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],
@@ -95,6 +92,9 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_qweb': [
             'im_livechat/static/src/components/*/*.xml',
+        ],
+        'mail.assets_messaging': [
+            'im_livechat/static/src/models/*.js',
         ],
         # Bundle of External Librairies of the Livechat (Odoo + required modules)
         'im_livechat.external_lib': [
@@ -210,9 +210,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/utils/*.js',
             'mail/static/src/js/emojis.js',
             'mail/static/src/component_hooks/*.js',
-            'mail/static/src/model/*.js',
-            'mail/static/src/models/*.js',
-            'im_livechat/static/src/models/*.js',
+            ('include', 'mail.assets_messaging'),
             'mail/static/src/services/messaging_service.js',
             # Framework JS
             'bus/static/src/js/*.js',
