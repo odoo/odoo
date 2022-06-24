@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold']:
                 cart_qty = sum(self.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
-                if cart_qty > line.product_id.with_context(warehouse=self.warehouse_id.id).virtual_available and (line_id == line.id):
+                if (line_id == line.id) and cart_qty > line.product_id.with_context(warehouse=self.warehouse_id.id).virtual_available:
                     qty = line.product_id.with_context(warehouse=self.warehouse_id.id).virtual_available - cart_qty
                     new_val = super(SaleOrder, self)._cart_update(line.product_id.id, line.id, qty, 0, **kwargs)
                     values.update(new_val)
