@@ -144,6 +144,15 @@ const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Ord
         this.orderlines.forEach(function(line){
             line.set_dirty(false);
         });
+        // We sync if the caller is not the current order.
+        // Otherwise, cached "changes" fields (mp_dirty, saved_resume)
+        // will be invalidated without reaching the server
+        const isTheCurrentOrder = this.pos.get_order() && this.pos.get_order().uid === this.uid;
+        if (!isTheCurrentOrder && this.server_id) {
+            // Save to cache first so that the saved_resume is up-to-date.
+            this.save_to_db();
+            this.pos.sync_from_server(null, [this], [this.uid]);
+        }
     }
     computeChanges(categories){
         var current_res = this.build_line_resume();
