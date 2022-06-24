@@ -43,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="o.move_id._get_reconciled_invoices_partials()" t-as="rec">
+                        <t t-foreach="o.move_id._get_reconciled_invoices_partials()[0]" t-as="rec">
                             <!-- MOVE -->
                             <t t-set="inv" t-value="rec[2].move_id"/>
                             <t t-if="inv.move_type != 'entry'">
@@ -54,7 +54,7 @@
                                     <td class="text-right"><span t-field="inv.amount_total"/></td>
                                 </tr>
                                 <!-- PAYMENTS/REVERSALS -->
-                                <tr t-foreach="inv._get_reconciled_invoices_partials()" t-as="par">
+                                <tr t-foreach="inv._get_reconciled_invoices_partials()[0]" t-as="par">
                                     <t t-set="amount" t-value="par[1]"/>
                                     <t t-set="payment" t-value="par[2].move_id"/>
                                     <td><span t-field="payment.date"/></td>
