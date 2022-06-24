@@ -40,7 +40,7 @@
                         onImageClick="() => this.onClickAttachment(attachment)"/>
                 </t>
             </t>
-            <t t-if="['all', 'media-library'].includes(state.searchService)">
+            <t id="o_we_media_library_images" t-if="['all', 'media-library'].includes(state.searchService)">
                 <t t-foreach="state.libraryMedia" t-as="media" t-key="media.id">
                     <AutoResizeImage author="media.author"
                         src="media.thumbnail_url"
