@@ -161,6 +161,13 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
+    /**
+     * Send cached orders to server
+     * @param {object | null} table.
+     * @param {array<models.Order>} table_orders.
+     * @param {array<string>} order_ids (uid)
+     * @return {void}
+     * */
     sync_from_server: function(table, table_orders, order_ids) {
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
@@ -219,6 +226,54 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
+    /**
+     * Get table orders from server
+     *
+     * Warning: this replaces the cached orders with data fetched from server
+     * If any cached fields did not make it to the server, their values will be lost.
+     *
+     * To avoid losing values of your new fields, you should do the following:
+     * 1- Make sure your field exists on the related python model
+     *
+     * 2- Add your fields to the correct `pos.order._*_fields()` method returned dict
+     * (item format: {python_name: ui_dict['js_name']})
+     * (used for moving data from client to server)
+     * // (a) `models.Order` => `pos.order._order_fields()`
+     * // (b) `models.Orderline` => simply match the python name with the JS name
+     * // (c) `models.Paymentline` => `pos.order._payment_fields()`
+     *
+     * 3- Add your fields to the correct `pos.order._get_fields_for_*()` method returned list
+     * (used for moving data from server to client):
+     * // (a) `models.Order` => `pos.order._get_fields_for_draft_order()`
+     * // (b) `models.Orderline` => `pos.order._get_fields_for_order_line()`
+     * // (c) `models.Paymentline` => `pos.order._get_fields_for_payment_lines()`
+     *
+     * 4- Add a setter to the model of your field that calls `this.trigger('change', this)`
+     * to trigger a cache update (`export_as_JSON()` returned object will be stored)
+     * // function setX(x) {
+     * //     this.x = x;
+     * //     this.trigger('change', this);
+     * // }
+     *
+     * 5- If your setter could run in a time after `sync_from_server()` and before `sync_to_server()`
+     * (e.g. in an event listener) make sure the setter itself calls
+     * `sync_from_server()` after `this.trigger('change', this)`
+     *
+     * 6- Override `export_as_JSON()` of the model of your field
+     * // function export_as_JSON() {
+     * //     const json = _model_super.export_as_JSON.apply(this, arguments);
+     * //     json.x = this.x;
+     * //     return json;
+     * // }
+     *
+     * 7- Override `init_from_JSON()` of the model of your field
+     * // function init_from_JSON(json) {
+     * //     _model_super.init_from_JSON.apply(this, arguments);
+     * //     this.x = json.x;
+     * // }
+     * @param{object} table
+     * @param{models.Order} order
+     * */
     sync_to_server: function(table, order) {
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
