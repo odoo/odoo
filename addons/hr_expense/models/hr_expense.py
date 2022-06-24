@@ -298,6 +298,10 @@ class HrExpense(models.Model):
         self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
         self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
 
+    @api.constrains('payment_mode')
+    def _check_payment_mode(self):
+        self.sheet_id._check_payment_mode()
+
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
         for expense in self:
@@ -371,7 +375,7 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return super(HrExpense, self).get_empty_list_help(help_message + self._get_empty_list_mail_alias())
+        return super(HrExpense, self).get_empty_list_help(help_message or '' + self._get_empty_list_mail_alias())
 
     @api.model
     def _get_empty_list_mail_alias(self):
