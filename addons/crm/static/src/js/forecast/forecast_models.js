@@ -41,7 +41,9 @@ const ForecastKanbanModel = KanbanModel.extend({
         let lastGroup = this.get(this.handle).data.filter(group => group.value).slice(-1)[0];
         if (lastGroup) {
             lastGroup = this.localData[lastGroup.id];
-            fillTemporalPeriod.setEnd(moment.utc(lastGroup.range[this.forecast_field].to));
+            const groupedBy = this.granularity === 'month' && this.forecast_field in lastGroup.range ?
+                this.forecast_field : `${this.forecast_field}:${this.granularity}`;
+            fillTemporalPeriod.setEnd(moment.utc(lastGroup.range[groupedBy].to));
         }
     },
 

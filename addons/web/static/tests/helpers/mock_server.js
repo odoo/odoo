@@ -927,13 +927,13 @@ export class MockServer {
                             type === "date"
                                 ? endDate.toFormat("yyyy-MM-dd")
                                 : endDate.toFormat("yyyy-MM-dd HH:mm:ss");
-                        group.__range[fieldName] = { from, to };
+                        group.__range[gbField] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],
                             [fieldName, "<", to],
                         ].concat(group.__domain);
                     } else {
-                        group.__range[fieldName] = false;
+                        group.__range[gbField] = false;
                         group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                     }
                 } else {
