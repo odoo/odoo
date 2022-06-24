@@ -23,8 +23,8 @@ Odoo Web Editor widget.
         #----------------------------------------------------------------------
 
         'web.assets_qweb': [
+            ('include', 'web_editor.assets_media_dialog_templates'),
             'web_editor/static/src/xml/*.xml',
-            'web_editor/static/src/components/**/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
             # lib
@@ -84,13 +84,17 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
         ],
+        # TODO: Move those dialog assets in assets_common and make the public
+        # root fetch templates from the common assets
+        'web_editor.assets_media_dialog_templates': [
+            'web_editor/static/src/components/media_dialog/*.xml',
+            'web_editor/static/src/components/upload_progress_toast/*.xml',
+        ],
         'web_editor.assets_media_dialog': [
             'web_editor/static/src/components/media_dialog/*.js',
             'web_editor/static/src/components/media_dialog/*.scss',
-            'web_editor/static/src/components/media_dialog/*.xml',
             'web_editor/static/src/components/upload_progress_toast/*.js',
             'web_editor/static/src/components/upload_progress_toast/*.scss',
-            'web_editor/static/src/components/upload_progress_toast/*.xml',
         ],
         'web.assets_common': [
             'web_editor/static/lib/odoo-editor/src/base_style.css',
@@ -113,6 +117,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/frontend/loader_loading.js',
         ],
         'web.assets_frontend': [
+            ('include', 'web_editor.assets_media_dialog_templates'),
             ('include', 'web_editor.assets_media_dialog'),
 
             'web_editor/static/src/scss/web_editor.common.scss',

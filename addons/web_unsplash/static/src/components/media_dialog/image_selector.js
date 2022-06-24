@@ -98,6 +98,10 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
         return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'unsplashRecord').map(({ id }) => id);
     },
 
+    get isFetching() {
+        return this._super() || this.state.isFetchingUnsplash;
+    },
+
     // It seems that setters are mandatory when patching a component that
     // extends another component.
     set canLoadMore(_) {},
