@@ -214,7 +214,7 @@ var KanbanColumn = Widget.extend({
         this.trigger_up('close_quick_create'); // close other quick create widgets
         var context = this.data.getContext();
         var groupByField = viewUtils.getGroupByField(this.groupedBy);
-        context['default_' + groupByField] = viewUtils.getGroupValue(this.data, groupByField);
+        context['default_' + groupByField] = viewUtils.getGroupValue(this.data, this.groupedBy);
         this.quickCreateWidget = new RecordQuickCreate(this, {
             context: context,
             formViewRef: this.quickCreateView,

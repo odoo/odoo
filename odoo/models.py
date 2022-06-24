@@ -2491,11 +2491,16 @@ class BaseModel(metaclass=MetaModel):
                             locale=locale
                         )
                     data[gb['groupby']] = ('%s/%s' % (range_start, range_end), label)
+                    data.setdefault('__range', {})[gb['groupby']] = {'from': range_start, 'to': range_end}
                     d = [
                         '&',
                         (gb['field'], '>=', range_start),
                         (gb['field'], '<', range_end),
                     ]
+            elif ftype in ('date', 'datetime'):
+                # Set the __range of the group containing records with an unset
+                # date/datetime field value to False.
+                data.setdefault('__range', {})[gb['groupby']] = False
 
             if d is None:
                 d = [(gb['field'], '=', value)]
@@ -2542,7 +2547,7 @@ class BaseModel(metaclass=MetaModel):
                 and 'count_distinct', with the expected meaning.
         :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
-                or a string 'field:groupby_function'.  Right now, the only functions supported
+                or a string 'field:granularity'. Right now, the only supported granularities
                 are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
         :param int offset: optional number of records to skip
@@ -2559,43 +2564,32 @@ class BaseModel(metaclass=MetaModel):
                     * the values of fields grouped by the fields in ``groupby`` argument
                     * __domain: list of tuples specifying the search criteria
                     * __context: dictionary with argument like ``groupby``
-                    * __range: (date/datetime only) dictionary with field names as keys mapping to
-                        a dictionary with keys: "from" (inclusive) and "to" (exclusive)
+                    * __range: (date/datetime only) dictionary with field_name:granularity as keys
+                        mapping to a dictionary with keys: "from" (inclusive) and "to" (exclusive)
                         mapping to a string representation of the temporal bounds of the group
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
-        dt = [
-            f for f in groupby
-            if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
+        groupby = [groupby] if isinstance(groupby, str) else groupby[:1] if lazy else OrderedSet(groupby)
+        groupby_dates = [
+            groupby_description for groupby_description in groupby
+            if self._fields[groupby_description.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
         ]
+        if not groupby_dates:
+            return result
 
         # iterate on all results and replace the "full" date/datetime value (<=> group[df])
         # which is a tuple (range, label) by just the formatted label, in-place.
-        # we store the range under another format, by adding a new __range key for each
-        # group, mapping to a sub-dictionary: {field: {from: #inclusive#, to: #exclusive#}}
         for group in result:
-            if dt:
-                group["__range"] = {}
-            for df in dt:
+            for groupby_date in groupby_dates:
                 # could group on a date(time) field which is empty in some
                 # records, in which case as with m2o the _raw value will be
                 # `False` instead of a (value, label) pair. In that case,
                 # leave the `False` value alone
-                field_name = df.split(':')[0]
-                if group.get(df):
-                    range_from, range_to = group[df][0].split('/')
-                    # /!\ could break if DEFAULT_SERVER_DATE_FORMAT allows '/' characters
-                    group["__range"][field_name] = {
-                        "from": range_from,
-                        "to": range_to
-                    }
-                    group[df] = group[df][1]
-                else:
-                    group["__range"][field_name] = False
+                if group.get(groupby_date):
+                    group[groupby_date] = group[groupby_date][1]
         return result
 
     @api.model

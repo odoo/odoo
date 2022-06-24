@@ -217,7 +217,7 @@ const ProjectTaskKanbanModel = KanbanModel.extend({
         const groupedField = parent.fields[groupedFieldName];
         // for a date/datetime field, we take the last moment of the group as the group value
         if (['date', 'datetime'].includes(groupedField.type)) {
-            changes[groupedFieldName] = viewUtils.getGroupValue(new_group, groupedFieldName);
+            changes[groupedFieldName] = viewUtils.getGroupValue(new_group, parent.groupedBy[0]);
         } else if (groupedField.type === 'many2one') {
             changes[groupedFieldName] = {
                 id: new_group.res_id,
