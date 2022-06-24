@@ -1322,7 +1322,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
 
         _.each(this.$target.find('.o_animate:not(.o_animate_in_dropdown)'), el => {
             const $el = $(el);
-            const elHeight = $el.height();
+            const elHeight = el.offsetHeight;
             const elOffset = direction * Math.max((elHeight * this.offsetRatio), this.offsetMin);
             const state = $el.css("animation-play-state");
 
