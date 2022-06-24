@@ -338,7 +338,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 01:00:00'),
                          ('datetime', '<', '1916-01-01 02:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 01:00:00', 'to': '1916-01-01 02:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 01:00:00', 'to': '1916-01-01 02:00:00'}},
             'datetime:hour': '01:00 01 Jan',
             'datetime_count': 2,
             'value': 10
@@ -346,7 +346,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 02:00:00'),
                          ('datetime', '<', '1916-01-01 03:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 02:00:00', 'to': '1916-01-01 03:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 02:00:00', 'to': '1916-01-01 03:00:00'}},
             'datetime:hour': '02:00 01 Jan',
             'datetime_count': 1,
             'value': 3
@@ -354,7 +354,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 03:00:00'),
                          ('datetime', '<', '1916-01-01 04:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 03:00:00', 'to': '1916-01-01 04:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 03:00:00', 'to': '1916-01-01 04:00:00'}},
             'datetime:hour': '03:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -362,7 +362,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 04:00:00'),
                          ('datetime', '<', '1916-01-01 05:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 04:00:00', 'to': '1916-01-01 05:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 04:00:00', 'to': '1916-01-01 05:00:00'}},
             'datetime:hour': '04:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -370,7 +370,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 05:00:00'),
                          ('datetime', '<', '1916-01-01 06:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 05:00:00', 'to': '1916-01-01 06:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 05:00:00', 'to': '1916-01-01 06:00:00'}},
             'datetime:hour': '05:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -378,7 +378,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 06:00:00'),
                          ('datetime', '<', '1916-01-01 07:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 06:00:00', 'to': '1916-01-01 07:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 06:00:00', 'to': '1916-01-01 07:00:00'}},
             'datetime:hour': '06:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -386,7 +386,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 07:00:00'),
                          ('datetime', '<', '1916-01-01 08:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 07:00:00', 'to': '1916-01-01 08:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 07:00:00', 'to': '1916-01-01 08:00:00'}},
             'datetime:hour': '07:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -394,7 +394,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 08:00:00'),
                          ('datetime', '<', '1916-01-01 09:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 08:00:00', 'to': '1916-01-01 09:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 08:00:00', 'to': '1916-01-01 09:00:00'}},
             'datetime:hour': '08:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -402,7 +402,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 09:00:00'),
                          ('datetime', '<', '1916-01-01 10:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 09:00:00', 'to': '1916-01-01 10:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 09:00:00', 'to': '1916-01-01 10:00:00'}},
             'datetime:hour': '09:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -410,7 +410,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 10:00:00'),
                          ('datetime', '<', '1916-01-01 11:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 10:00:00', 'to': '1916-01-01 11:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 10:00:00', 'to': '1916-01-01 11:00:00'}},
             'datetime:hour': '10:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -418,7 +418,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 11:00:00'),
                          ('datetime', '<', '1916-01-01 12:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 11:00:00', 'to': '1916-01-01 12:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 11:00:00', 'to': '1916-01-01 12:00:00'}},
             'datetime:hour': '11:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -426,7 +426,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 12:00:00'),
                          ('datetime', '<', '1916-01-01 13:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 12:00:00', 'to': '1916-01-01 13:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 12:00:00', 'to': '1916-01-01 13:00:00'}},
             'datetime:hour': '12:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -434,7 +434,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 13:00:00'),
                          ('datetime', '<', '1916-01-01 14:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 13:00:00', 'to': '1916-01-01 14:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 13:00:00', 'to': '1916-01-01 14:00:00'}},
             'datetime:hour': '01:00 01 Jan',
             'datetime_count': 1,
             'value': 5
@@ -442,7 +442,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 14:00:00'),
                          ('datetime', '<', '1916-01-01 15:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 14:00:00', 'to': '1916-01-01 15:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 14:00:00', 'to': '1916-01-01 15:00:00'}},
             'datetime:hour': '02:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -450,7 +450,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 15:00:00'),
                          ('datetime', '<', '1916-01-01 16:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 15:00:00', 'to': '1916-01-01 16:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 15:00:00', 'to': '1916-01-01 16:00:00'}},
             'datetime:hour': '03:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -458,7 +458,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 16:00:00'),
                          ('datetime', '<', '1916-01-01 17:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 16:00:00', 'to': '1916-01-01 17:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 16:00:00', 'to': '1916-01-01 17:00:00'}},
             'datetime:hour': '04:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -466,7 +466,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 17:00:00'),
                          ('datetime', '<', '1916-01-01 18:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 17:00:00', 'to': '1916-01-01 18:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 17:00:00', 'to': '1916-01-01 18:00:00'}},
             'datetime:hour': '05:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -474,7 +474,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 18:00:00'),
                          ('datetime', '<', '1916-01-01 19:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 18:00:00', 'to': '1916-01-01 19:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 18:00:00', 'to': '1916-01-01 19:00:00'}},
             'datetime:hour': '06:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -482,7 +482,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 19:00:00'),
                          ('datetime', '<', '1916-01-01 20:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 19:00:00', 'to': '1916-01-01 20:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 19:00:00', 'to': '1916-01-01 20:00:00'}},
             'datetime:hour': '07:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -490,7 +490,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 20:00:00'),
                          ('datetime', '<', '1916-01-01 21:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 20:00:00', 'to': '1916-01-01 21:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 20:00:00', 'to': '1916-01-01 21:00:00'}},
             'datetime:hour': '08:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -498,7 +498,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 21:00:00'),
                          ('datetime', '<', '1916-01-01 22:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 21:00:00', 'to': '1916-01-01 22:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 21:00:00', 'to': '1916-01-01 22:00:00'}},
             'datetime:hour': '09:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -506,7 +506,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 22:00:00'),
                          ('datetime', '<', '1916-01-01 23:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 22:00:00', 'to': '1916-01-01 23:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 22:00:00', 'to': '1916-01-01 23:00:00'}},
             'datetime:hour': '10:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -514,7 +514,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 23:00:00'),
                          ('datetime', '<', '1916-01-02 00:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 23:00:00', 'to': '1916-01-02 00:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 23:00:00', 'to': '1916-01-02 00:00:00'}},
             'datetime:hour': '11:00 01 Jan',
             'datetime_count': 1,
             'value': 7
@@ -538,7 +538,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1915-12-31 22:00:00'),
                          ('datetime', '<', '1915-12-31 23:00:00')],
-            '__range': {'datetime': {'from': '1915-12-31 22:00:00', 'to': '1915-12-31 23:00:00'}},
+            '__range': {'datetime:hour': {'from': '1915-12-31 22:00:00', 'to': '1915-12-31 23:00:00'}},
             'datetime:hour': '04:00 01 Jan',
             'datetime_count': 1,
             'value': 2
@@ -546,7 +546,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1915-12-31 23:00:00'),
                          ('datetime', '<', '1916-01-01 00:00:00')],
-            '__range': {'datetime': {'from': '1915-12-31 23:00:00', 'to': '1916-01-01 00:00:00'}},
+            '__range': {'datetime:hour': {'from': '1915-12-31 23:00:00', 'to': '1916-01-01 00:00:00'}},
             'datetime:hour': '05:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -554,7 +554,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 00:00:00'),
                          ('datetime', '<', '1916-01-01 01:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 00:00:00', 'to': '1916-01-01 01:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 00:00:00', 'to': '1916-01-01 01:00:00'}},
             'datetime:hour': '06:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -562,7 +562,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 01:00:00'),
                          ('datetime', '<', '1916-01-01 02:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 01:00:00', 'to': '1916-01-01 02:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 01:00:00', 'to': '1916-01-01 02:00:00'}},
             'datetime:hour': '07:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -570,7 +570,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 02:00:00'),
                          ('datetime', '<', '1916-01-01 03:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 02:00:00', 'to': '1916-01-01 03:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 02:00:00', 'to': '1916-01-01 03:00:00'}},
             'datetime:hour': '08:00 01 Jan',
             'datetime_count': 0,
             'value': False
@@ -578,7 +578,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                          ('datetime', '>=', '1916-01-01 03:00:00'),
                          ('datetime', '<', '1916-01-01 04:00:00')],
-            '__range': {'datetime': {'from': '1916-01-01 03:00:00', 'to': '1916-01-01 04:00:00'}},
+            '__range': {'datetime:hour': {'from': '1916-01-01 03:00:00', 'to': '1916-01-01 04:00:00'}},
             'datetime:hour': '09:00 01 Jan',
             'datetime_count': 1,
             'value': 3
@@ -602,7 +602,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                 ('datetime', '>=', '2015-12-31 17:00:00'),
                 ('datetime', '<', '2016-03-31 16:00:00')],
-            '__range': {'datetime': {'from': '2015-12-31 17:00:00', 'to': '2016-03-31 16:00:00'}},
+            '__range': {'datetime:quarter': {'from': '2015-12-31 17:00:00', 'to': '2016-03-31 16:00:00'}},
             'datetime:quarter': 'Q1 2016',
             'datetime_count': 1,
             'value': 2
@@ -610,7 +610,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                        ('datetime', '>=', '2016-03-31 16:00:00'),
                        ('datetime', '<', '2016-06-30 16:00:00')],
-            '__range': {'datetime': {'from': '2016-03-31 16:00:00', 'to': '2016-06-30 16:00:00'}},
+            '__range': {'datetime:quarter': {'from': '2016-03-31 16:00:00', 'to': '2016-06-30 16:00:00'}},
             'datetime:quarter': 'Q2 2016',
             'datetime_count': 0,
             'value': False
@@ -618,7 +618,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                        ('datetime', '>=', '2016-06-30 16:00:00'),
                        ('datetime', '<', '2016-09-30 17:00:00')],
-            '__range': {'datetime': {'from': '2016-06-30 16:00:00', 'to': '2016-09-30 17:00:00'}},
+            '__range': {'datetime:quarter': {'from': '2016-06-30 16:00:00', 'to': '2016-09-30 17:00:00'}},
             'datetime:quarter': 'Q3 2016',
             'datetime_count': 0,
             'value': False
@@ -626,7 +626,7 @@ class TestFillTemporal(common.TransactionCase):
             '__domain': ['&',
                        ('datetime', '>=', '2016-09-30 17:00:00'),
                        ('datetime', '<', '2016-12-31 17:00:00')],
-            '__range': {'datetime': {'from': '2016-09-30 17:00:00', 'to': '2016-12-31 17:00:00'}},
+            '__range': {'datetime:quarter': {'from': '2016-09-30 17:00:00', 'to': '2016-12-31 17:00:00'}},
             'datetime:quarter': 'Q4 2016',
             'datetime_count': 1,
             'value': 3
