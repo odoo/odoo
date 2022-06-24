@@ -619,6 +619,37 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             return this.props.quitCallback();
         }
     }
+    /**
+     * Called when a snippet is about to be cloned in the page. Notifies the
+     * WebsiteRoot that it should stop the public widgets inside that snippet.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetWillBeCloned(ev) {
+        this._websiteRootEvent('widgets_stop_request', {
+            $target: ev.data.$target,
+        });
+    }
+    /**
+     * Called when a snippet is cloned in the page. Notifies the WebsiteRoot
+     * that it should start the public widgets for this snippet and the snippet it
+     * was cloned from.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetCloned(ev) {
+        this._websiteRootEvent('widgets_start_request', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
+
+        this._websiteRootEvent('widgets_start_request', {
+            editableMode: true,
+            $target: ev.data.$origin,
+        });
+    }
     /***
      * Starts the widgets inside the dropped snippet.
      *
@@ -732,6 +763,8 @@ WysiwygAdapterComponent.prototype.events = {
     'context_get': '_onContextGet',
     'action_demand': '_handleAction',
     'request_cancel': '_onCancelRequest',
+    'snippet_will_be_cloned': '_onSnippetWillBeCloned',
+    'snippet_cloned': '_onSnippetCloned',
     'snippet_dropped': '_onSnippetDropped',
     'snippet_removed': '_onSnippetRemoved',
     'reload_bundles': '_reloadBundles',

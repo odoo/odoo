@@ -308,3 +308,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_20_snippet_editor_panel_options(self):
         self.start_tour("/@/?enable_editor=1", "snippet_editor_panel_options", login="admin")
+
+    def test_21_website_start_cloned_snippet(self):
+        self.start_tour('/web', 'website_start_cloned_snippet', login='admin')
