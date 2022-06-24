@@ -1067,7 +1067,7 @@ class IrModelFields(models.Model):
         for (field_model, field_name), field_id in field_ids.items():
             model = self.env[field_model]
             field = model._fields.get(field_name)
-            if field and (
+            if field and not field.manual and (
                 module == model._original_module
                 or module in field._modules
                 or any(
