@@ -19,9 +19,6 @@
             'barcodes/static/tests/barcode_tests.js',
             'barcodes/static/tests/barcode_parser_tests.js',
         ],
-        'web.qunit_mobile_suite_tests': [
-            'barcodes/static/tests/barcode_mobile_tests.js',
-        ],
     },
     'license': 'LGPL-3',
 }
