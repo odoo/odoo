@@ -22,7 +22,10 @@ class PaymentTransaction(models.Model):
 
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
-        if self.acquirer_id.so_reference_type == 'so_name':
+        reference = self.env['account.move'].l10n_ch_hook_get_isr_number(self)
+        if reference:
+            return reference
+        elif self.acquirer_id.so_reference_type == 'so_name':
             return order.name
         else:
             # self.acquirer_id.so_reference_type == 'partner'

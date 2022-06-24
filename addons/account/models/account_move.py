@@ -3530,6 +3530,9 @@ class AccountMove(models.Model):
 
         return groups
 
+    def l10n_ch_hook_get_isr_number(self, pa):
+        pass
+
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
