@@ -122,7 +122,7 @@ class PortalChatter(http.Controller):
         """
         res_id = int(res_id)
 
-        self._portal_post_check_attachments(attachment_ids, attachment_tokens)
+        self._portal_post_check_attachments(attachment_ids or [], attachment_tokens or [])
 
         if message or attachment_ids:
             result = {'default_message': message}
