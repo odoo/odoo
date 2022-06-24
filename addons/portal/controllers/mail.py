@@ -131,7 +131,7 @@ class PortalChatter(http.Controller):
 
         res_id = int(res_id)
 
-        self._portal_post_check_attachments(attachment_ids, attachment_tokens)
+        self._portal_post_check_attachments(attachment_ids or [], attachment_tokens or [])
 
         result = {'default_message': message}
         # message is received in plaintext and saved in html
