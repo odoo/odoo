@@ -196,16 +196,4 @@
     </div>
 </template>
 
-<!-- ============================================================ -->
-<!-- MISC / MENUS -->
-<!-- ============================================================ -->
-
-<!-- User Navbar - Edit Options -->
-<template id="event_sponsor_edit_options" inherit_id="website.user_navbar" name="Edit Event Sponsor Options">
-    <xpath expr="//div[@id='edit-page-menu']" position="after">
-        <t t-if="main_object._name == 'event.sponsor'"
-            t-set="action" t-value="'website_event_exhibitor.event_sponsor_action'"/>
-    </xpath>
-</template>
-
 </odoo>

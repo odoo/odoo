@@ -21,14 +21,17 @@
         'views/event_meeting_room_views.xml',
         'views/event_event_views.xml',
         'views/event_type_views.xml',
+        'views/snippets.xml',
     ],
     'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_event_meet/static/src/scss/event_meet_templates.scss',
-            'website_event_meet/static/src/js/customize_options.js',
             'website_event_meet/static/src/js/website_event_meeting_room.js',
             'website_event_meet/static/src/js/website_event_create_meeting_room_button.js',
+        ],
+        'website.assets_wysiwyg': [
+            'website_event_meet/static/src/js/snippets/options.js',
         ],
     },
     'license': 'LGPL-3',

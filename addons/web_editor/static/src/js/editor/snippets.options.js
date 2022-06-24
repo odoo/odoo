@@ -1,6 +1,8 @@
 odoo.define('web_editor.snippets.options', function (require) {
 'use strict';
 
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
@@ -1480,18 +1482,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._colorPaletteRenderPromise;
 
-        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
-        this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
         this.colorPreviewEl.style.removeProperty('background-image');
+        const prefix = this.options.dataAttributes.colorPrefix || 'bg';
         if (this._ccValue) {
-            this.colorPreviewEl.classList.add('o_cc', `o_cc${this._ccValue}`);
+            this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
         }
         if (this._value) {
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
             } else if (!weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
             } else {
                 this.colorPreviewEl.style.backgroundImage = this._value;
             }
@@ -1534,6 +1535,11 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         }
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
+        }
+        const wysiwyg = this.getParent().options.wysiwyg;
+        if (wysiwyg) {
+            options.ownerDocument = wysiwyg.el.ownerDocument;
+            options.editable = wysiwyg.$editable[0];
         }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
@@ -1646,10 +1652,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      * @param {boolean} [videos] whether videos should be available
      *   default: false
      */
-    _openDialog(el, {images = false, videos = false}) {
+    _openDialog(el, {images = false, videos = false, save}) {
         el.src = this._value;
         const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
+        const mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -1659,8 +1665,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
                 '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
-        }, el).open();
-        return mediaDialog;
+            save,
+            media: el,
+        });
+        return mediaDialogWrapper.mount(this.el);
     },
 
     //--------------------------------------------------------------------------
@@ -1699,13 +1707,15 @@ const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
     _onEditMedia(ev) {
         // Need a dummy element for the media dialog to modify.
         const dummyEl = document.createElement('img');
-        const dialog = this._openDialog(dummyEl, {images: true});
-        dialog.on('save', this, data => {
-            // Accessing the value directly through dummyEl.src converts the url to absolute,
-            // using getAttribute allows us to keep the url as it was inserted in the DOM
-            // which can be useful to compare it to values stored in db.
-            this._value = dummyEl.getAttribute('src');
-            this._onUserValueChange();
+        this._openDialog(dummyEl, {
+            images: true,
+            save: (media) => {
+                // Accessing the value directly through dummyEl.src converts the url to absolute,
+                // using getAttribute allows us to keep the url as it was inserted in the DOM
+                // which can be useful to compare it to values stored in db.
+                this._value = media.getAttribute('src');
+                this._onUserValueChange();
+            }
         });
     },
 });
@@ -1721,11 +1731,12 @@ const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
     _onEditMedia(ev) {
         // Need a dummy element for the media dialog to modify.
         const dummyEl = document.createElement('iframe');
-        const dialog = this._openDialog(dummyEl, {videos: true});
-        dialog.on('save', this, data => {
-            this._value = data.bgVideoSrc;
-            this._onUserValueChange();
-        });
+        this._openDialog(dummyEl, {
+            videos: true,
+            save: (media) => {
+                this._value = media.querySelector('iframe').src;
+                this._onUserValueChange();
+        }});
     },
 });
 
@@ -4025,28 +4036,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
             }
 
-            const reloadMessage = await this._checkIfWidgetsUpdateNeedReload(widgets);
-            requiresReload = !!reloadMessage;
-            if (requiresReload) {
-                const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("To apply this change, we need to save all your previous modifications and reload the page.") + ' '
-                            + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
-                        buttons: [{
-                            text: _t('Save and Reload'),
-                            classes: 'btn-primary',
-                            close: true,
-                            click: () => resolve(true),
-                        }, {
-                            text: _t("Cancel"),
-                            close: true,
-                            click: () => resolve(false)
-                        }],
-                    });
-                });
-                if (!save) {
-                    return;
-                }
-            }
+            requiresReload = !!await this._checkIfWidgetsUpdateNeedReload(widgets);
         }
 
         // Queue action so that we can later skip useless actions.
@@ -4159,6 +4149,8 @@ const SnippetOptionWidget = Widget.extend({
         if (requiresReload) {
             this.trigger_up('request_save', {
                 reloadEditor: true,
+                optionSelector: this.data.selector,
+                url: this.data.reload,
             });
         }
     },
@@ -5295,7 +5287,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
-        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.options.wysiwyg.odooEditor.document.body);
+        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
@@ -5340,7 +5332,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async resetCrop() {
         const img = this._getImg();
         const cropper = new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)});
-        await cropper.appendTo(this.options.wysiwyg.odooEditor.document.body);
+        await cropper.appendTo(this.$el[0].ownerDocument.body);
         await cropper.reset();
         await this._reapplyCurrentShape();
     },
@@ -6464,7 +6456,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             .clone()
             .addClass('d-none')
             // Needs to be in document for bg-image class to take effect
-            .appendTo(document.body);
+            .appendTo(this.$target[0].ownerDocument.body);
         const shapeContainer = $shapeContainer[0];
         $shapeContainer.css('background-image', '');
         const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
@@ -6690,7 +6682,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
         // TODO: change #wrapwrap after web_editor rework.
-        const $wrapwrap = $('#wrapwrap');
+        const $wrapwrap = $(this.ownerDocument.body).find("#wrapwrap");
         const targetOffset = this.$target.offset();
 
         this.$backgroundOverlay.css({
@@ -6809,7 +6801,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     _onDragBackgroundStart: function (ev) {
         ev.preventDefault();
         this.$bgDragger.addClass('o_we_grabbing');
-        const $document = $(this.ownerDocument);
+        const $document = $(document);
         $document.on('mousemove.bgposition', this._onDragBackgroundMove.bind(this));
         $document.one('mouseup', () => {
             this.$bgDragger.removeClass('o_we_grabbing');
@@ -7116,6 +7108,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             });
                             this.trigger_up('request_save', {
                                 reloadEditor: true,
+                                invalidateSnippetCache: true,
                                 onSuccess: async () => {
                                     const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);

@@ -379,7 +379,7 @@
 </template>
 
 <template id="course_card_information_arrow" inherit_id="website_slides.course_card_information"
-    active="True" customize_show="True" name='New Content Ribbon'>
+    active="True" name='New Content Ribbon'>
     <xpath expr="//t[@id='course_card_information_content']" position="inside">
         <span class="o_wslides_arrow">New Content</span>
     </xpath>
@@ -390,7 +390,7 @@
     </t>
 </template>
 
-<template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" customize_show="True" name='Display Achievements'>
+<template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" name='Display Achievements'>
     <xpath expr="//t[hasclass('o_wslides_home_aside')]" position="inside">
         <div t-if="achievements">
             <div class="row o_wslides_home_aside_title">
@@ -426,7 +426,7 @@
     </div>
 </template>
 
-<template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" customize_show="True" name='Display Leaderboard'>
+<template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" name='Display Leaderboard'>
     <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">

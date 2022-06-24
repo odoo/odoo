@@ -321,8 +321,7 @@ const LinkTools = Link.extend({
         const previewClasses = computeColorClasses(colorNames, 'bg-');
         $colorPreview[0].classList.remove(...previewClasses);
         if (isColorClass) {
-            $colorPreview.addClass(`bg-${color.replace(prefix, '')}`);
-            $colorPreview.css('background-color', '');
+            $colorPreview.css('background-color', `var(--we-cp-${color.replace(prefix, '')}`);
             $colorPreview.css('background-image', '');
         } else {
             $colorPreview.css('background-color', isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);

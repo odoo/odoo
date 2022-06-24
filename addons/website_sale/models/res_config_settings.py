@@ -98,7 +98,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/terms?enable_editor=1',
+            'url': self.env["website"].get_client_action_url('/terms', True),
             'target': 'self',
         }
 
@@ -106,7 +106,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/shop/extra_info?enable_editor=1',
+            'url': self.env["website"].get_client_action_url('/shop/extra_info', True),
             'target': 'self',
         }
 

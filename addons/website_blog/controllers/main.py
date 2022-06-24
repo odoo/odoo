@@ -301,20 +301,6 @@ class WebsiteBlog(http.Controller):
                 request.session.modified = True
         return response
 
-    @http.route('/blog/<int:blog_id>/post/new', type='http', auth="user", website=True)
-    def blog_post_create(self, blog_id, **post):
-        # Use sudo so this line prevents both editor and admin to access blog from another website
-        # as browse() will return the record even if forbidden by security rules but editor won't
-        # be able to access it
-        if not request.env['blog.blog'].browse(blog_id).sudo().can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
-        new_blog_post = request.env['blog.post'].create({
-            'blog_id': blog_id,
-            'is_published': False,
-        })
-        return request.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
-
     @http.route('/blog/post_duplicate', type='http', auth="user", website=True, methods=['POST'])
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
@@ -324,4 +310,5 @@ class WebsiteBlog(http.Controller):
         :return redirect to the new blog created
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
-        return request.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        client_action_url = request.env["website"].get_client_action_url(f"/blog/{slug(new_blog_post.blog_id)}/{slug(new_blog_post)}", True)
+        return request.redirect(client_action_url)

@@ -2505,8 +2505,8 @@ class IrQWeb(models.AbstractModel):
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
-    def _get_asset_link_urls(self, bundle):
-        asset_nodes = self._get_asset_nodes(bundle, js=False)
+    def _get_asset_link_urls(self, bundle, debug=False):
+        asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
 def render(template_name, values, load, **options):

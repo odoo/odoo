@@ -13,6 +13,7 @@ from psycopg2 import sql
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, _guess_mimetype, url_for
@@ -319,7 +320,7 @@ class Website(models.Model):
     def configurator_init(self):
         r = dict()
         company = self.get_current_website().company_id
-        configurator_features = self.env['website.configurator.feature'].with_context(lang=self.get_current_website().default_lang_id.code).search([])
+        configurator_features = self.env['website.configurator.feature'].search([])
         r['features'] = [{
             'id': feature.id,
             'name': feature.name,
@@ -333,7 +334,7 @@ class Website(models.Model):
         if company.logo and company.logo != company._get_logo():
             r['logo'] = company.logo.decode('utf-8')
         try:
-            result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.get_current_website().default_lang_id.code})
+            result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.context.get('lang')})
             r['industries'] = result['industries']
         except AccessError as e:
             logger.warning(e.args[0])
@@ -591,7 +592,7 @@ class Website(models.Model):
 
         images = custom_resources.get('images', {})
         set_images(images)
-        return url
+        return {'url': url, 'website_id': website.id}
 
     # ----------------------------------------------------------
     # Page Management
@@ -722,7 +723,8 @@ class Website(models.Model):
         # we only want a unique_path for website specific.
         # we need to be able to have /url for website=False, and /url for website=1
         # in case of duplicate, page manager will allow you to manage this case
-        domain_static = [('website_id', '=', self.get_current_website().id)]  # .website_domain()
+        website_id = self.env.context.get('website_id', False) or self.get_current_website().id
+        domain_static = [('website_id', '=', website_id)]  # .website_domain()
         page_temp = page_url
         while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
             inc += 1
@@ -761,6 +763,9 @@ class Website(models.Model):
         key_copy = string
         inc = 0
         domain_static = self.get_current_website().website_domain()
+        website_id = self.env.context.get('website_id', False)
+        if website_id:
+            domain_static = [('website_id', 'in', (False, website_id))]
         while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
@@ -779,7 +784,7 @@ class Website(models.Model):
             return dependencies
 
         page = self.env['website.page'].browse(int(page_id))
-        website = self.env['website'].browse(self._context.get('website_id'))
+        website = page.website_id or self.get_current_website()
         url = page.url
 
         # search for website_page with link
@@ -792,7 +797,7 @@ class Website(models.Model):
         for page in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> contains a link to this page', page.url),
+                'content': Markup(_("Page <b>%s</b> contains a link to this page")) % page.url,
                 'item': page.name,
                 'link': page.url,
             })
@@ -807,7 +812,7 @@ class Website(models.Model):
         for view in views:
             dependencies.setdefault(view_key, [])
             dependencies[view_key].append({
-                'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (view.key or view.name, view.id),
+                'content': Markup(_('Template <b>%s (id:%s)</b> contains a link to this page')) % (view.key or view.name, view.id),
                 'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
                 'item': _('%s (id:%s)') % (view.key or view.name, view.id),
             })
@@ -820,7 +825,7 @@ class Website(models.Model):
             menu_key = _('Menus')
         for menu in menus:
             dependencies.setdefault(menu_key, []).append({
-                'text': _('This page is in the menu <b>%s</b>', menu.name),
+                'content': Markup(_('This page is in the menu <b>%s</b>')) % menu.name,
                 'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
                 'item': menu.name,
             })
@@ -840,7 +845,7 @@ class Website(models.Model):
             return dependencies
 
         page = self.env['website.page'].browse(int(page_id))
-        website = self.env['website'].browse(self._context.get('website_id'))
+        website = page.website_id or self.get_current_website()
         key = page.key
 
         # search for website_page with link
@@ -856,7 +861,7 @@ class Website(models.Model):
         for p in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> is calling this file', p.url),
+                'content': Markup(_('Page <b>%s</b> is calling this file')) % p.url,
                 'item': p.name,
                 'link': p.url,
             })
@@ -874,7 +879,7 @@ class Website(models.Model):
         for view in views:
             dependencies.setdefault(view_key, [])
             dependencies[view_key].append({
-                'text': _('Template <b>%s (id:%s)</b> is calling this file') % (view.key or view.name, view.id),
+                'content': Markup(_('Template <b>%s (id:%s)</b> is calling this file')) % (view.key or view.name, view.id),
                 'item': _('%s (id:%s)') % (view.key or view.name, view.id),
                 'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
             })
@@ -1083,22 +1088,13 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
-    @tools.ormcache_context(keys=('website_id',))
-    def _cache_customize_show_views(self):
-        views = self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('customize_show', '=', True)])
-        views = views.filter_duplicate()
-        return {v.key: v.active for v in views}
-
     @tools.ormcache_context('key', keys=('website_id',))
-    def is_view_active(self, key, raise_if_not_found=False):
+    def is_view_active(self, key):
         """
-            Return True if active, False if not active, None if not found or not a customize_show view
+            Return True if active, False if not active, None if not found
         """
-        views = self._cache_customize_show_views()
-        view = key in views and views[key]
-        if view is None and raise_if_not_found:
-            raise ValueError('No view of type customize_show found for key %s' % key)
-        return view
+        view = self.viewref(key, raise_if_not_found=False)
+        return view.active if view else None
 
     @api.model
     def get_template(self, template):
@@ -1292,13 +1288,22 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
+    def get_client_action_url(self, url, mode_edit=False):
+        action_params = {
+            "action": "website.website_preview",
+            "path": url,
+        }
+        if mode_edit:
+            action_params["enable_editor"] = 1
+        return "/web#" + urls.url_encode(action_params)
+
     def button_go_website(self, path='/', mode_edit=False):
         self._force()
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
             # never start. Forcing the default language fixes this issue.
             path = url_for(path, self.default_lang_id.url_code)
-            path += '?enable_editor=1'
+            path = self.get_client_action_url(path, True)
         return {
             'type': 'ir.actions.act_url',
             'url': path,

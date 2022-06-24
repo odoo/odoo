@@ -22,7 +22,7 @@ tour.register('autocomplete_tour', {
     content: 'Add to cart',
     trigger: '#add_to_cart'
 },
-    tourUtils.goToCart(1),
+    tourUtils.goToCart(),
 {
     content: 'Go to process checkout',
     trigger: 'a:contains("Process Checkout")'

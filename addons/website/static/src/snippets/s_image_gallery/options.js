@@ -1,8 +1,9 @@
 odoo.define('website.s_image_gallery_options', function (require) {
 'use strict';
 
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+const { ComponentWrapper } = require('web.OwlCompatibility');
 var core = require('web.core');
-var weWidgets = require('wysiwyg.widgets');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
@@ -87,29 +88,36 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
-        var lastImage = _.last(this._getImages());
-        var index = lastImage ? this._getIndex(lastImage) : -1;
-        return new Promise(resolve => {
-            dialog.on('save', this, function (attachments) {
-                for (var i = 0; i < attachments.length; i++) {
-                    $('<img/>', {
+        const lastImage = _.last(this._getImages());
+        let index = lastImage ? this._getIndex(lastImage) : -1;
+        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            multiImages: true,
+            onlyImages: true,
+            save: images => {
+                let $newImageToSelect;
+                for (const image of images) {
+                    const $img = $('<img/>', {
                         class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: attachments[i].image_src,
+                        src: image.src,
                         'data-index': ++index,
-                        alt: attachments[i].description || '',
+                        alt: image.alt || '',
                         'data-name': _t('Image'),
                         style: $images.length > 0 ? $images[0].style.cssText : '',
                     }).appendTo($container);
+                    if (!$newImageToSelect) {
+                        $newImageToSelect = $img;
+                    }
                 }
-                if (attachments.length > 0) {
+                if (images.length > 0) {
                     this.mode('reset', this.getMode());
                     this.trigger_up('cover_update');
+                    // Triggers the re-rendering of the thumbnail
+                    $newImageToSelect.trigger('image_changed');
+
                 }
-            });
-            dialog.on('closed', this, () => resolve());
-            dialog.open();
+            },
         });
+        dialog.mount(this.el);
     },
     /**
      * Allows to change the number of columns when displaying images with a
