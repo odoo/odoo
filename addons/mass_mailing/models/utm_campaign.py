@@ -22,7 +22,7 @@ class UtmCampaign(models.Model):
 
     # A/B Testing
     ab_testing_mailings_count = fields.Integer("A/B Test Mailings #", compute="_compute_mailing_mail_count")
-    ab_testing_completed = fields.Boolean("A/B Testing Campaign Finished")
+    ab_testing_completed = fields.Boolean("A/B Testing Campaign Finished", copy=False)
     ab_testing_schedule_datetime = fields.Datetime('Send Final On',
         default=lambda self: fields.Datetime.now() + relativedelta(days=1),
         help="Date that will be used to know when to determine and send the winner mailing")
