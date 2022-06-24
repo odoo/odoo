@@ -7,7 +7,7 @@ import core from 'web.core';
 import wysiwygLoader from 'web_editor.loader';
 import field_registry from 'web.field_registry';
 import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
-import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../../../lib/odoo-editor/src/utils/utils';
+import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../editor/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 import "@web/views/fields/text/text_field"; // make sure the text field file has first been executed.

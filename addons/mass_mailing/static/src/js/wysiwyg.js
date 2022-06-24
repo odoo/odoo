@@ -3,7 +3,7 @@ odoo.define('mass_mailing.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var MassMailingSnippetsMenu = require('mass_mailing.snippets.editor');
-const {closestElement} = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
+const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 
 const MassMailingWysiwyg = Wysiwyg.extend({
     //--------------------------------------------------------------------------
