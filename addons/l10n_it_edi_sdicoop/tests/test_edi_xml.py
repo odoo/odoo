@@ -285,7 +285,6 @@ class TestItEdi(AccountEdiTestCommon):
             equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
             taxable base = sum(subtotals) + rounding amount)
         """
-
         # In this case, the first two lines use a price_include tax the
         # subtotals should be 800.40 / (100 + 22.0) * 100 = 656.065564..,
         # where 22.0 is the tax rate.
@@ -350,6 +349,9 @@ class TestItEdi(AccountEdiTestCommon):
                 <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
                     2577.29
                 </xpath>
+                <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                    2577.29
+                </xpath>
             ''')
         invoice_etree = etree.fromstring(self.price_included_invoice._export_as_xml())
         # Remove the attachment and its details
@@ -409,6 +411,9 @@ class TestItEdi(AccountEdiTestCommon):
                 <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
                     1464.73
                 </xpath>
+                <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                    1464.73
+                </xpath>
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
@@ -441,6 +446,9 @@ class TestItEdi(AccountEdiTestCommon):
             </DatiBeniServizi>
             </xpath>
             <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+                0.00
+            </xpath>
+            <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
                 0.00
             </xpath>
             ''')
@@ -487,6 +495,9 @@ class TestItEdi(AccountEdiTestCommon):
             </DatiBeniServizi>
             </xpath>
             <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+              2929.47
+            </xpath>
+            <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
               2929.47
             </xpath>
             ''')
