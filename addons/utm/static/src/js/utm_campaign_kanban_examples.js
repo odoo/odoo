@@ -3,10 +3,11 @@ odoo.define('utm.campaing_kanban_examples', function (require) {
 
 var core = require('web.core');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
+const { registry } = require("@web/core/registry");
 
 var _lt = core._lt;
 
-kanbanExamplesRegistry.add('utm_campaign', {
+const exampleData = {
     ghostColumns: [_lt('Ideas'), _lt('Design'), _lt('Review'), _lt('Send'), _lt('Done')],
     applyExamplesText: _lt("Use This For My Campaigns"),
     examples: [{
@@ -30,5 +31,8 @@ kanbanExamplesRegistry.add('utm_campaign', {
         columns: [_lt('To be Approved'), _lt('Approved'), _lt('Deployed')],
         description: _lt("Prepare Campaigns and get them approved before making them go live."),
     }],
-});
+};
+
+kanbanExamplesRegistry.add('utm_campaign', exampleData);
+registry.category("kanban_examples").add("utm_campaign", exampleData);
 });

@@ -148,7 +148,7 @@
                                 <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description">
                                     <em t-out="record.description.value"/>
                                     <div>
-                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner" t-key="owner">
                                             <img class="oe_kanban_avatar o_image_24_cover" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
                                         </t>
                                     </div>

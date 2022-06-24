@@ -48,13 +48,8 @@ up a management by affair.
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/scss/timesheets_task_form.scss',
-            'hr_timesheet/static/src/js/task_with_hours.js',
-            'hr_timesheet/static/src/js/timesheet_uom.js',
-            'hr_timesheet/static/src/js/timesheet_factor.js',
-            'hr_timesheet/static/src/js/timesheet_config_form_view.js',
-            'hr_timesheet/static/src/js/qr_code_action.js',
-            'hr_timesheet/static/src/js/timesheet_graph_view.js',
-            'hr_timesheet/static/src/js/timesheet_graph_model.js',
+            'hr_timesheet/static/src/**/*.js',
+            ('remove', 'hr_timesheet/static/src/js/*_legacy.js')
         ],
         "web.assets_backend_legacy_lazy": [
             'hr_timesheet/static/src/js/*_legacy.js',

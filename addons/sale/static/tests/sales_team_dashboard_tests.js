@@ -55,7 +55,7 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs [REQUIRE FOCUS
         },
     });
 
-    assert.containsOnce(kanban, '.o_kanban_view .o_progressbar:contains(Click to define an invoicing target)')
+    assert.containsOnce(kanban, '.o_legacy_kanban_view .o_progressbar:contains(Click to define an invoicing target)')
     assert.containsN(kanban, '.o_kanban_primary_bottom', 2,
         "should have two divs with classname 'o_kanban_primary_bottom'");
 
