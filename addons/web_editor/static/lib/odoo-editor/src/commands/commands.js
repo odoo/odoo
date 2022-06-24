@@ -90,9 +90,17 @@ function insert(editor, data, {mode = "text"}) {
             break;
     }
 
-    // In case the html inserted is all contained in a single root <P> tag,
-    // we take the all content of the <p> and avoid inserting the <p>.
-    if (container.childElementCount === 1 && container.firstChild.nodeName === 'P') {
+    // In case the html inserted starts with a list and will be inserted within
+    // a list, unwrap the list elements from the list.
+    if (closestElement(selection.anchorNode, 'UL, OL') &&
+        (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
+       container.replaceChildren(...container.firstChild.childNodes);
+    }
+
+    // In case the html inserted is all contained in a single root <p> or <li>
+    // tag, we take the all content of the <p> or <li> and avoid inserting the
+    // <p> or <li>.
+    if (container.childElementCount === 1 && (container.firstChild.nodeName === 'P' || container.firstChild.nodeName === 'LI')) {
         const p = container.firstElementChild;
         container.replaceChildren(...p.childNodes);
     } else if (container.childElementCount > 1) {
@@ -160,10 +168,11 @@ function insert(editor, data, {mode = "text"}) {
     while ((nodeToInsert = container.childNodes[0])) {
         if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(currentNode)) {
             // Split blocks at the edges if inserting new blocks (preventing
-            // <p><p>text</p></p> scenarios).
+            // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
             while (
                 currentNode.parentElement !== editor.editable &&
-                !allowsParagraphRelatedElements(currentNode.parentElement)
+                (!allowsParagraphRelatedElements(currentNode.parentElement) ||
+                currentNode.parentElement.nodeName === 'LI')
             ) {
                 if (isUnbreakable(currentNode.parentElement)) {
                     makeContentsInline(container);
