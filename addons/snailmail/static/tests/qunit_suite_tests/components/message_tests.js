@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import {
     afterNextRender,
     start,
@@ -21,12 +20,11 @@ QUnit.test('Sent', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1,
@@ -34,16 +32,11 @@ QUnit.test('Sent', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start();
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    const { openFormView } = await start();
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -99,12 +92,11 @@ QUnit.test('Canceled', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1,
@@ -112,16 +104,11 @@ QUnit.test('Canceled', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start();
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    const { openFormView } = await start();
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -177,12 +164,11 @@ QUnit.test('Pending', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1,
@@ -190,16 +176,11 @@ QUnit.test('Pending', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start();
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    const { openFormView } = await start();
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -255,12 +236,11 @@ QUnit.test('No Price Available', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         failure_type: 'sn_price',
@@ -269,23 +249,17 @@ QUnit.test('No Price Available', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({
+    const { openFormView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
         },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
-
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -348,12 +322,11 @@ QUnit.test('Credit Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         failure_type: 'sn_credit',
@@ -362,22 +335,17 @@ QUnit.test('Credit Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({
+    const { openFormView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
         },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -446,12 +414,11 @@ QUnit.test('Trial Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         failure_type: 'sn_trial',
@@ -460,22 +427,17 @@ QUnit.test('Trial Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({
+    const { openFormView } = await start({
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
         },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
     });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -544,12 +506,11 @@ QUnit.test('Format Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: mailChannelId1,
+        model: 'res.partner',
+        res_id: resPartnerId1,
     });
     pyEnv['mail.notification'].create({
         failure_type: 'sn_format',
@@ -558,7 +519,11 @@ QUnit.test('Format Error', async function (assert) {
         notification_type: 'snail',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, env, messaging } = await start();
+    const { env, openFormView } = await start();
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');
@@ -574,15 +539,6 @@ QUnit.test('Format Error', async function (assert) {
             );
         },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }),
-    });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -635,7 +591,11 @@ QUnit.test('Missing Required Fields', async function (assert) {
         message_id: mailMessageId1,
     });
 
-    const { createThreadViewComponent, env, messaging } = await start();
+    const { env, openFormView } = await start();
+    await openFormView({
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');
@@ -651,12 +611,6 @@ QUnit.test('Missing Required Fields', async function (assert) {
             );
         },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: insert({ id: resPartnerId1, model: 'res.partner' }),
-    });
-    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,

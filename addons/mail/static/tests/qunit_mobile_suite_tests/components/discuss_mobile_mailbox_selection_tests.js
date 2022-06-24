@@ -74,7 +74,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
             },
         },
     });
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
         'o-active',

@@ -395,7 +395,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
     const { click, openDiscuss, openView } = await start();
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -415,7 +415,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
         "should have 'new message' when discuss is closed"
     );
 
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,

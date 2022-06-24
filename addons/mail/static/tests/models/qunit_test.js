@@ -26,10 +26,6 @@ registerModel({
             inverse: 'qunitTestOwner',
             isCausal: true,
         }),
-        threadViewer: one('ThreadViewer', {
-            inverse: 'qunitTest',
-            isCausal: true,
-        }),
         throttle1: one('Throttle', {
             inverse: 'qunitTestOwner1',
             isCausal: true,
