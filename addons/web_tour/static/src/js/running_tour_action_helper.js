@@ -110,7 +110,7 @@ var RunningTourActionHelper = core.Class.extend({
             values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
-        values.$element.trigger("change");
+        values.$element[0].dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     },
     _text_blur: function (values, text) {
         this._text(values, text);
