@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import warnings
+
 from odoo import fields, models
 
 
@@ -25,6 +27,9 @@ class IrModelField(models.Model):
         elif tracking is False:
             tracking = None
         vals['tracking'] = tracking
+
+        if not field.store and tracking:
+            warnings.warn(f"{field.name} is not stored and cannot be tracked")
         return vals
 
     def _instanciate_attrs(self, field_data):
