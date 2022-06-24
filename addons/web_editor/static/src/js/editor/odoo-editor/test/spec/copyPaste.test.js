@@ -1260,6 +1260,29 @@ describe('Copy and paste', () => {
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttp://www.xyz.com[]c</a>d</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'random');
+                    },
+                    contentAfter: '<p>a<a href="http://existing.com">brandom[]c</a>d</p>',
+                });
+            });
+            it('should paste and transform an URL in a existing link if pasting valid url', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">[]c</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.xyz.xdc');
+                    },
+                    contentAfter: '<p>a<a href="https://www.xyz.xdcc">https://www.xyz.xdc[]c</a>d</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://existing.com">b[].com</a>d</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'oom');
+                    },
+                    contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
+                });
             });
         });
         describe('range not collapsed', async () => {
