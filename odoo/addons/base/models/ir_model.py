@@ -1077,8 +1077,15 @@ class IrModelFields(models.Model):
                 )
             ):
                 xml_id = field_xmlid(module, field_model, field_name)
-                record = self.browse(field_id)
-                data_list.append({'xml_id': xml_id, 'record': record})
+                if field.manual:
+                    # the refactoring of this code introduced a bug that adds
+                    # xmlids to custom fields when upgrading the module;
+                    # pretend the xmlid has been loaded to avoid the field to
+                    # be deleted when upgrading the module
+                    self.env['ir.model.data']._load_xmlid(xml_id)
+                else:
+                    record = self.browse(field_id)
+                    data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
 
     @tools.ormcache()
