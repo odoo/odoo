@@ -14,15 +14,19 @@ class WebsiteHrRecruitment(http.Controller):
 
     @http.route([
         '/jobs',
+        '/jobs/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>',
         '/jobs/department/<model("hr.department"):department>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>',
-        '/jobs/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
         '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
+        '/jobs/country_id/<int:country_id>',
+        '/jobs/country_id/<int:country_id>/department/<model("hr.department"):department>',
+        '/jobs/country_id/<int:country_id>/office/<int:office_id>',
+        '/jobs/country_id/<int:country_id>/department/<model("hr.department"):department>/office/<int:office_id>',
     ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
-    def jobs(self, country=None, department=None, office_id=None, **kwargs):
+    def jobs(self, country=None, department=None, office_id=None, country_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
         Country = env['res.country']
@@ -34,6 +38,8 @@ class WebsiteHrRecruitment(http.Controller):
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
+        if country_id is not None:
+            country = Country.browse(country_id)
         # Default search by user country
         if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.geoip.get('country_code')
@@ -45,21 +51,27 @@ class WebsiteHrRecruitment(http.Controller):
 
         # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
+            if country.id == -1:
+                jobs = [j for j in jobs if not j.address_id]
+            else:
+                jobs = [j for j in jobs if not j.address_id or j.address_id.country_id and j.address_id.country_id.id == country.id]
             offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
         else:
-            offices = set(j.address_id for j in jobs if j.address_id)
+            offices = set(j.address_id for j in jobs)
 
         # Deduce departments and countries offices of those jobs
         departments = set(j.department_id for j in jobs if j.department_id)
-        countries = set(o.country_id for o in offices if o.country_id)
+        countries = set(o.country_id for o in offices if (not o or o and o.country_id))
 
         if department:
             jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]
-        if office_id and office_id in [x.id for x in offices]:
-            jobs = [j for j in jobs if j.address_id and j.address_id.id == office_id]
-        else:
+        if office_id != -1 and office_id in [x.id for x in offices]:
+            jobs = [j for j in jobs if not j.address_id or j.address_id.id == office_id]
+        elif office_id != -1:
             office_id = False
+
+        if country_id == -1:
+            countries = Country.browse(country_id)
 
         # Render page
         return request.render("website_hr_recruitment.index", {
@@ -96,6 +108,20 @@ class WebsiteHrRecruitment(http.Controller):
             default = request.session.pop('website_hr_recruitment_default')
         return request.render("website_hr_recruitment.apply", {
             'job': job,
+            'error': error,
+            'default': default,
+        })
+
+    @http.route('''/jobs/detail_apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    def jobs_detail_apply(self, job, **kwargs):
+        error = {}
+        default = {}
+        if 'website_hr_recruitment_error' in request.session:
+            error = request.session.pop('website_hr_recruitment_error')
+            default = request.session.pop('website_hr_recruitment_default')
+        return request.render("website_hr_recruitment.detail_apply", {
+            'job': job,
+            'main_object': job,
             'error': error,
             'default': default,
         })

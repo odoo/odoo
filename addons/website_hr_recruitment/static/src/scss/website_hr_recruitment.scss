@@ -37,3 +37,96 @@
         overflow: hidden;
     }
 }
+.js_hr_recruitment {
+    .o_sticky_apply_now {
+        align-self: flex-start;
+        @include o-position-sticky($top: 100px);
+    }
+    .o_hr_recruitment_form_container {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        @media (min-width: map-get($grid-breakpoints,"sm")) {
+            max-width: 540px!important;
+        }
+        @media (min-width: map-get($grid-breakpoints,"md")) {
+            max-width: 720px!important;
+        }
+        @media (min-width: map-get($grid-breakpoints,"lg")) {
+            max-width: 960px!important;
+        }
+        @media (min-width: map-get($grid-breakpoints,"xl")) {
+            max-width: 1140px!important;
+        }
+        @media (min-width: map-get($o-extra-grid-breakpoints,"xxl")) {
+            width: 1500px!important;
+            max-width: 1500px!important;
+        }
+
+        .o_detail_apply_container {
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            &>* {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                width: 100%;
+                transition: all 0.6s;
+            }
+            #detail_container {
+                transform: translateX(-120%);
+                &.active {
+                    position: relative;
+                    transform: none;
+                    opacity: 1;
+            }
+            }
+            #apply_container {
+                transform: translateX(120%);
+                &.active {
+                    position: relative;
+                    transform: none;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    .o_detail_apply_button_container {
+        position: relative;
+        width: 250px;
+        .o_detail_apply_text {
+            transition: all 0.6s;
+            width: 100%;
+            height: 100%;
+        }
+        .o_detail_apply_switch {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+    .s_website_form_submit {
+        display: none;
+        &.active {
+            display: block;
+        }
+    }
+}
+.o_recruitment_mobile_only {
+    @media (min-width: map-get($grid-breakpoints,"md")) {
+        display: none!important;
+    }
+}
+.o_recruitment_desktop_only {
+    @media (max-width: map-get($grid-breakpoints,"md")) {
+        display: none!important;
+    }
+}

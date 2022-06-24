@@ -35,4 +35,5 @@
         ],
     },
     'license': 'LGPL-3',
+    'post_init_hook': '_activate_frontend_filters',
 }

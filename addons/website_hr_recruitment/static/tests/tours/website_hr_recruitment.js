@@ -8,7 +8,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
             trigger: `.oe_website_jobs h3 span:contains(${jobName})`,
         }, {
             content: "Apply",
-            trigger: ".js_hr_recruitment a:contains('Apply')",
+            trigger: ".o_detail_apply_switch",
         }, {
             content: "Complete name",
             trigger: "input[name=partner_name]",
