@@ -10,8 +10,6 @@ from odoo.tests.common import HttpCase
 class TestMassMailingControllers(MassMailCommon, HttpCase):
 
     def test_tracking_url_token(self):
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
-
         mail_mail = self.env['mail.mail'].create({})
 
         response = self.url_open(mail_mail._get_tracking_url())
