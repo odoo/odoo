@@ -4,7 +4,7 @@ odoo.define('web_editor.test_utils', function (require) {
 var ajax = require('web.ajax');
 var MockServer = require('web.MockServer');
 var testUtils = require('web.test_utils');
-var OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
+var OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');

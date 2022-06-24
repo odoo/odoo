@@ -3,7 +3,7 @@
 import { qweb as QWeb } from 'web.core';
 import Wysiwyg from 'web_editor.wysiwyg';
 import { KnowledgeArticleLinkModal } from './wysiwyg/knowledge_article_link.js';
-import { preserveCursor, setCursorStart } from '@web_editor/../lib/odoo-editor/src/OdooEditor';
+import { preserveCursor, setCursorStart } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 
 Wysiwyg.include({
     /**

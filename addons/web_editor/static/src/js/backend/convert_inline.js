@@ -2,7 +2,7 @@
 'use strict';
 
 import FieldHtml from 'web_editor.field.html';
-import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
+import { isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 /* global html2canvas */
 
 //--------------------------------------------------------------------------

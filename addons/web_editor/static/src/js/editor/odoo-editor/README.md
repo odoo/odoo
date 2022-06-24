@@ -13,18 +13,18 @@ be merged with another one.
 
 ## Demo
 To open the demo page:
-`http://<host:port>/web_editor/static/lib/odoo-editor/demo/index.html`
+`http://<host:port>/web_editor/static/src/js/editor/odoo-editor/demo/index.html`
 
 ## Tests
 To open the test page, go to
-`http://<host:port>/web_editor/static/lib/odoo-editor/test/editor-test.html`
+`http://<host:port>/web_editor/static/src/js/editor/odoo-editor/test/editor-test.html`
 
 ## Prettify
 ```bash
 # install prettier
 npm install -g prettier
 # prettify
-prettier --config '<odoo-path>/addons/web_editor/static/lib/odoo-editor/_prettierrc.js' --ignore-path='<odoo-path>/odoo/addons/web_editor/static/lib/odoo-editor/_prettierignore' '<odoo-path>/odoo/addons/web_editor/static/lib/odoo-editor/**/*.js'  --write
+prettier --config '<odoo-path>/addons/web_editor/static/src/js/editor/odoo-editor/_prettierrc.js' --ignore-path='<odoo-path>/odoo/addons/web_editor/static/src/js/editor/odoo-editor/_prettierignore' '<odoo-path>/odoo/addons/web_editor/static/src/js/editor/odoo-editor/**/*.js'  --write
 ```
 
 ## Prettify with vscode
@@ -33,7 +33,7 @@ Install vscode extention `esbenp.prettier-vscode`.
 Add the following configuration in your vscode user config or workspace config:
 ```
 "prettier.requireConfig": true,
-"prettier.configPath": "<odoo-path>/odoo/addons/web_editor/static/lib/odoo-editor/.prettierrc.js",
+"prettier.configPath": "<odoo-path>/odoo/addons/web_editor/static/src/js/editor/odoo-editor/.prettierrc.js",
 "[javascript]": {
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
