@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
@@ -77,7 +77,7 @@ registerModel({
          */
         _computeActivityViewOwner() {
             if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
-                return replace(this.popoverViewOwner.activityViewOwnerAsMarkDone);
+                return this.popoverViewOwner.activityViewOwnerAsMarkDone;
             }
             return clear();
         },

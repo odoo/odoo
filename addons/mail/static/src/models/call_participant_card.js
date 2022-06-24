@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
@@ -28,7 +28,7 @@ registerModel({
                 if (this.callView.activeRtcSession === this.rtcSession && this.mainViewTileOwner) {
                     this.callView.update({ activeRtcSession: clear() });
                 } else {
-                    this.callView.update({ activeRtcSession: replace(this.rtcSession) });
+                    this.callView.update({ activeRtcSession: this.rtcSession });
                 }
                 return;
             }
@@ -72,9 +72,9 @@ registerModel({
          */
         _computeCallView() {
             if (this.sidebarViewTileOwner) {
-                return replace(this.sidebarViewTileOwner.callSidebarViewOwner.callView);
+                return this.sidebarViewTileOwner.callSidebarViewOwner.callView;
             }
-            return replace(this.mainViewTileOwner.callMainViewOwner.callView);
+            return this.mainViewTileOwner.callMainViewOwner.callView;
         },
         /**
          * @private
@@ -82,9 +82,9 @@ registerModel({
          */
          _computeChannelMember() {
             if (this.sidebarViewTileOwner) {
-                return replace(this.sidebarViewTileOwner.channelMember);
+                return this.sidebarViewTileOwner.channelMember;
             }
-            return replace(this.mainViewTileOwner.channelMember);
+            return this.mainViewTileOwner.channelMember;
          },
         /**
          * @private

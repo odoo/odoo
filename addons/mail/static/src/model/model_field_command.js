@@ -136,22 +136,6 @@ function link(newValue) {
 }
 
 /**
- * Returns a replace command to give to the model manager at create/update.
- * `replace` command can be used for relation fields.
- * - Unlink the current record and then link `newValue`
- * if the current value differs from `newValue` for a x2one field;
- * - Unlink records in the field value if they are not in `newValue`,
- * link the missing values, and then sort field value by the order they are given in `newValue`
- * for a x2many field.
- *
- * @param {Record|Record[]} newValue - record or records array to be replaced.
- * @returns {FieldCommand}
- */
-function replace(newValue) {
-    return new FieldCommand('replace', newValue);
-}
-
-/**
  * Returns a set command to give to the model manager at create/update.
  * `set` command can be used for attribute fields.
  * - Write the `newValue` on the field value.
@@ -197,7 +181,6 @@ export {
     insert,
     insertAndReplace,
     link,
-    replace,
     set,
     unlink,
     unlinkAll,

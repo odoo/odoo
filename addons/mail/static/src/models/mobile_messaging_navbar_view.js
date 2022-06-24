@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MobileMessagingNavbarView',
@@ -21,7 +21,7 @@ registerModel({
                     this.discuss.activeMobileNavbarTabId === 'mailbox' &&
                     (!this.discuss.thread || !this.discuss.thread.mailbox)
                 ) {
-                    this.discuss.update({ thread: replace(this.messaging.inbox.thread) });
+                    this.discuss.update({ thread: this.messaging.inbox.thread });
                 }
                 if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
                     this.discuss.update({ thread: clear() });

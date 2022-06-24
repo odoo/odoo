@@ -6,7 +6,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { increment, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { increment, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 
@@ -108,11 +108,9 @@ const _t = core._t;
 
         const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
         this.messaging.publicLivechatGlobal.update({
-            messages: replace(
-                this.messaging.publicLivechatGlobal.messages.filter((message) => {
-                    !welcomeMessagesIds.includes(message.id);
-                }),
-            ),
+            messages: this.messaging.publicLivechatGlobal.messages.filter((message) => {
+                !welcomeMessagesIds.includes(message.id);
+            }),
         });
 
         postedWelcomeMessages.reverse();

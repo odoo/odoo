@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Follower',
@@ -153,7 +153,7 @@ registerModel({
                 return clear();
             }
             if (this.partner === this.messaging.currentPartner) {
-                return replace(this.followedThread);
+                return this.followedThread;
             }
             return clear();
         },

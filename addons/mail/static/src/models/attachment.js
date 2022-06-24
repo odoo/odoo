@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, replace } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
@@ -263,7 +263,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeThreadsAsAttachmentsInWebClientView() {
-            return (this.isPdf || this.isImage) && !this.isUploading ? replace(this.allThreads) : clear();
+            return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
         },
         /**
          * @private
