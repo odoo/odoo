@@ -59,6 +59,9 @@ for (const snippet of snippetsNames) {
 
 tour.register("snippets_all_drag_and_drop", {
     test: true,
+    // To run the tour locally, you need to insert the URL sent by the python
+    // tour here. There is currently an issue with tours which don't have an URL
+    // url: '/?enable_editor=1&snippets_names=s_showcase,s_numbers,s_...',
 }, [
     {
         content: "Ensure snippets are actually passed at the test.",
@@ -67,7 +70,7 @@ tour.register("snippets_all_drag_and_drop", {
             // safety check, otherwise the test might "break" one day and
             // receive no steps. The test would then not test anything anymore
             // without us noticing it.
-            if (steps.length < 270) {
+            if (steps.length < 220) {
                 console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
             }
         },
