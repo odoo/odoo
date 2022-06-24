@@ -58,6 +58,10 @@
     'installable': True,
     'application': True,
     'assets': {
+        'mail.assets_messaging': [
+            'mail/static/src/model/*.js',
+            'mail/static/src/models/*.js',
+        ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
             ('include', 'web.assets_common'),
@@ -81,8 +85,7 @@
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
             'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
-            'mail/static/src/model/*.js',
-            'mail/static/src/models/*.js',
+            ('include', 'mail.assets_messaging'),
             'mail/static/src/public/*',
             'mail/static/src/services/*.js',
             'mail/static/src/utils/*.js',
@@ -113,8 +116,7 @@
             'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
             'mail/static/src/component_hooks/*.js',
-            'mail/static/src/model/*.js',
-            'mail/static/src/models/*.js',
+             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/messaging_service.js',
         ],
         'web._assets_primary_variables': [
@@ -131,8 +133,7 @@
             'mail/static/src/component_hooks/*.js',
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
-            'mail/static/src/model/*.js',
-            'mail/static/src/models/*.js',
+            ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',

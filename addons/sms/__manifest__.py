@@ -39,14 +39,15 @@ The service is provided by the In App Purchase Odoo platform.
     'installable': True,
     'auto_install': True,
     'assets': {
+        'mail.assets_messaging': [
+            'sms/static/src/models/*.js',
+        ],
         'mail.assets_discuss_public': [
             'sms/static/src/components/*/*',
-            'sms/static/src/models/*.js',
         ],
         'web.assets_backend': [
             'sms/static/src/js/fields_phone_widget.js',
             'sms/static/src/js/fields_sms_widget.js',
-            'sms/static/src/models/*.js',
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',

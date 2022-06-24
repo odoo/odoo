@@ -25,15 +25,16 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
+        'mail.assets_messaging': [
+            'website_livechat/static/src/models/*.js',
+        ],
         'mail.assets_discuss_public': [
             'website_livechat/static/src/components/*/*',
-            'website_livechat/static/src/models/*.js',
         ],
         'web.assets_frontend': [
             'website_livechat/static/src/legacy/public_livechat.js',
             'website_livechat/static/src/legacy/website_livechat_chatbot_test_script.js',
             'website_livechat/static/src/legacy/public_livechat.scss',
-            'website_livechat/static/src/models/*.js',
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/systray_items/*.js',
@@ -41,7 +42,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.assets_backend': [
             'website_livechat/static/src/components/*/*.js',
             'website_livechat/static/src/components/*/*.scss',
-            'website_livechat/static/src/models/*.js',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
