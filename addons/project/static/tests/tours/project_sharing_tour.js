@@ -48,7 +48,7 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     content: 'Click "Create" button',
     run: 'click',
 }, {
-    trigger: '.o_kanban_quick_create .o_field_widget[name="name"]',
+    trigger: '.o_kanban_quick_create .o_field_widget[name="name"] input',
     content: 'Create Task',
     run: 'text Test Create Task',
 }, {

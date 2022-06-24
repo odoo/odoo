@@ -206,7 +206,7 @@
         <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">view.task.form2.inherit</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>

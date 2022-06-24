@@ -112,7 +112,7 @@ QUnit.module('LunchKanbanView', {
             }),
         });
 
-        assert.containsOnce(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)',
+        assert.containsOnce(kanban, '.o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)',
             "should have 1 records in the renderer");
 
         // check view layout
@@ -122,9 +122,9 @@ QUnit.module('LunchKanbanView', {
             "should have a 'lunch filters' column");
         assert.containsOnce(kanban, '.o_content > .o_lunch_content',
             "should have a 'lunch wrapper' column");
-        assert.containsOnce(kanban, '.o_lunch_content > .o_kanban_view',
+        assert.containsOnce(kanban, '.o_lunch_content > .o_legacy_kanban_view',
             "should have a 'classical kanban view' column");
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
         assert.containsOnce(kanban, '.o_lunch_content > span > .o_lunch_banner',
             "should have a 'lunch' banner");

@@ -26,14 +26,15 @@ QUnit.test("Manage Messages", async function (assert) {
 
     registry.category("debug").category("form").add("manageMessages", manageMessages);
 
-    async function mockRPC(route, args) {
-        if (args.method === "check_access_rights") {
+    async function mockRPC(route, { method, model, kwargs }) {
+        if (method === "check_access_rights") {
             return true;
         }
-        if (route === "/web/dataset/search_read" && args.model === "mail.message") {
-            assert.strictEqual(args.context.default_res_id, 5);
-            assert.strictEqual(args.context.default_res_model, "partner");
-            assert.deepEqual(args.domain, ["&", ["res_id", "=", 5], ["model", "=", "partner"]]);
+        if (method === "web_search_read" && model === "mail.message") {
+            const { context, domain } = kwargs;
+            assert.strictEqual(context.default_res_id, 5);
+            assert.strictEqual(context.default_res_model, "partner");
+            assert.deepEqual(domain, ["&", ["res_id", "=", 5], ["model", "=", "partner"]]);
         }
     }
 

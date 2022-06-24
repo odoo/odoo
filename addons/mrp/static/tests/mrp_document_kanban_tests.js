@@ -58,10 +58,10 @@ QUnit.module('MrpDocumentsKanbanView', {
         assert.ok(kanban, "kanban is created");
         assert.ok(kanban.$buttons.find('.o_mrp_documents_kanban_upload'),
             "should have upload button in kanban buttons");
-        assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3,
+        assert.containsN(kanban, '.o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3,
             "should have 3 records in the renderer");
         // check view layout
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_mrp_documents_kanban_view',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_mrp_documents_kanban_view',
             "should have classname 'o_mrp_documents_kanban_view'");
         // check control panel buttons
         assert.containsN(kanban, '.o_cp_buttons .btn-primary', 1,

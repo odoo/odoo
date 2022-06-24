@@ -10,6 +10,8 @@ import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
 import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../../../lib/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
+import "@web/views/fields/text/text_field"; // make sure the text field file has first been executed.
+import { registry } from '@web/core/registry';
 
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
@@ -604,5 +606,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
 field_registry.add('html', FieldHtml);
 
+// Road to WOWL trick needed not to shadow the legacy html field in web editor.
+registry.category("fields").remove("html");
 
 export default FieldHtml;

@@ -198,8 +198,6 @@ QUnit.module('base_settings_tests', {
     QUnit.test(
         "settings views does not read existing id when coming back in breadcrumbs",
         async function (assert) {
-            assert.expect(8);
-
             serverData.actions = {
                 1: {
                     id: 1,
@@ -249,7 +247,7 @@ QUnit.module('base_settings_tests', {
                 "create", // when we click on action button => save
                 "read", // with save, we have a reload... (not necessary actually)
                 "get_views", // for other action in breadcrumb,
-                // with a searchread (not shown here since it is a route)
+                "web_search_read", // same
                 "onchange", // when we come back, we want to restart from scratch
             ]);
         }

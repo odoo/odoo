@@ -142,6 +142,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/core/utils/components.js',
             'web/static/src/core/utils/functions.js',
             'web/static/src/core/utils/hooks.js',
+            'web/static/src/core/utils/numbers.js',
             'web/static/src/core/utils/strings.js',
             'web/static/src/core/utils/timing.js',
             'web/static/src/core/utils/ui.js',

@@ -12,6 +12,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import { useLegacyViews } from "@web/../tests/legacy/legacy_setup";
 
 import core from 'web.core';
 
@@ -507,6 +508,7 @@ function getOpenFormView(afterEvent, openView) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
+    useLegacyViews();
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
         debounce: func => func,
