@@ -100,7 +100,7 @@ const ThreadWidget = Widget.extend({
         this._super();
     },
     /**
-     * @param {@im_livechat/legacy/models/abstract_thread} thread the thread to render.
+     * @param {@im_livechat/legacy/models/public_livechat} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:

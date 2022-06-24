@@ -37,11 +37,11 @@ const AbstractThreadWindow = Widget.extend({
      *
      * @abstract
      * @param {Widget} parent
-     * @param {@im_livechat/legacy/models/abstract_thread} [thread=null] the thread that this
+     * @param {@im_livechat/legacy/models/public_livechat} [thread=null] the thread that this
      *   thread window is linked to. If not set, it is the "blank" thread
      *   window.
      * @param {Object} [options={}]
-     * @param {@im_livechat/legacy/models/abstract_thread} [options.thread]
+     * @param {@im_livechat/legacy/models/public_livechat} [options.thread]
      */
     init(parent, thread, options) {
         this._super(parent);

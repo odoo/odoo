@@ -14,7 +14,7 @@ const LivechatWindow = AbstractThreadWindow.extend({
     /**
      * @override
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
-     * @param {@im_livechat/legacy/models/website_livechat} thread
+     * @param {@im_livechat/legacy/models/public_livechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
