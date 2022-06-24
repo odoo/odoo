@@ -3,11 +3,6 @@
 import CalendarModel from "web.CalendarModel";
 
 export const TimeOffCalendarModel = CalendarModel.extend({
-    _getFilterDomain: function() {
-        const company_domain = [['user_id.company_id', 'in', this.data.context.allowed_company_ids]];
-        return this._super().concat(company_domain);
-    },
-
     calendarEventToRecord(event) {
         const data = this._super(...arguments);
         if (event.allDay) {
