@@ -1144,6 +1144,51 @@ describe('Copy and paste', () => {
                     contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul>[]<p>34</p>',
                 });
             });
+            it('should paste the text of an li into another li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li, and the text of another li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123</li><li>456[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li, insert a new li, and paste the text of a third li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li><li>789</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123</li><li>456</li><li>789[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li and insert a new li at the end of a list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi123</li><li>456[]</li></ul>',
+                });
+            });
+            it('should insert a new li at the beginning of a list and paste the text of another li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]abc</li><li>def</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>123</li><li>456[]abc</li><li>def</li><li>ghi</li></ul>',
+                });
+            });
         });
     });
 
