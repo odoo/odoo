@@ -215,6 +215,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
     def test_reconcile_cash_basis_bill(self):
         ''' Test the generation of the CABA move after bill payment
         '''
+        self.env.company.tax_exigibility = True
         cash_basis_base_account = self.env['account.account'].create({
             'code': 'cash_basis_base_account',
             'name': 'cash_basis_base_account',
