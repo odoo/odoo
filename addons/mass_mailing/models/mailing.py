@@ -461,13 +461,7 @@ class MassMailing(models.Model):
                 at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
                 ab_testing_cron._trigger(at=at)
         mailings = super().create(vals_list)
-        campaign_vals = [
-            mailing._get_default_ab_testing_campaign_values()
-            for mailing in mailings
-            if mailing.ab_testing_enabled and not mailing.campaign_id
-        ]
-        self.env['utm.campaign'].create(campaign_vals)
-
+        mailings._create_ab_testing_utm_campaigns()
         mailings._fix_attachment_ownership()
 
         return mailings
@@ -475,15 +469,13 @@ class MassMailing(models.Model):
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        # When ab_testing_enabled is checked we create a campaign if there is none set.
-        if values.get('ab_testing_enabled') and not values.get('campaign_id'):
-            # Compute the values of the A/B test campaign based on the first mailing
-            values['campaign_id'] = self.env['utm.campaign'].create(self[0]._get_default_ab_testing_campaign_values(values)).id
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
         if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
         result = super(MassMailing, self).write(values)
+        if values.get('ab_testing_enabled'):
+            self._create_ab_testing_utm_campaigns()
         self._fix_attachment_ownership()
 
         if any(self.mapped('ab_testing_schedule_datetime')):
@@ -492,6 +484,14 @@ class MassMailing(models.Model):
             ab_testing_cron._trigger(at=schedule_date)
 
         return result
+
+    def _create_ab_testing_utm_campaigns(self):
+        """ Creates the A/B test campaigns for the mailings that do not have campaign set already """
+        campaign_vals = [
+            mailing._get_default_ab_testing_campaign_values()
+            for mailing in self.filtered(lambda mailing: mailing.ab_testing_enabled and not mailing.campaign_id)
+        ]
+        return self.env['utm.campaign'].create(campaign_vals)
 
     def _fix_attachment_ownership(self):
         for record in self:
