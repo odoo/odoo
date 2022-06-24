@@ -18,7 +18,9 @@ class IrModelField(models.Model):
         set to 100. """
         vals = super(IrModelField, self)._reflect_field_params(field, model_id)
         tracking = getattr(field, 'tracking', None)
-        if tracking is True:
+        if field.related and not field.store:
+            tracking = None  # disable tracking attribute coming from non-stored related field
+        elif tracking is True:
             tracking = 100
         elif tracking is False:
             tracking = None
