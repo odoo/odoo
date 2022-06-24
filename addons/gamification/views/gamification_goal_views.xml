@@ -166,7 +166,7 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                             <div class="o_kanban_content">
                                 <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                 <div class="float-left">
