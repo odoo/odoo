@@ -455,26 +455,20 @@ QUnit.test('chatter updating', async function (assert) {
                 </div>
             </form>`,
     };
-    const { afterEvent, openView } = await start({
+    const { afterEvent, openFormView } = await start({
         serverData: { views },
     });
-    const openViewAction = {
-        res_model: 'res.partner',
-        res_id: resPartnerId1,
-        views: [[false, 'form']],
-    };
-    await afterEvent({
-        eventName: 'o-thread-view-hint-processed',
-        func: () => openView(openViewAction, { resIds: [resPartnerId1, resPartnerId2] }),
-        message: "should wait until partner 11 thread loaded messages initially",
-        predicate: ({ hint, threadViewer }) => {
-            return (
-                hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'res.partner' &&
-                threadViewer.thread.id === resPartnerId1
-            );
+    await openFormView(
+        {
+            res_model: 'res.partner',
+            res_id: resPartnerId1,
         },
-    });
+        {
+            props: {
+                resIds: [resPartnerId1, resPartnerId2],
+            },
+        }
+    );
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_pager_next').click(),

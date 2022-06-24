@@ -29,7 +29,7 @@ QUnit.test('messaging not created', async function (assert) {
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none'
     });
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.containsOnce(document.body, '.o_DiscussContainer_spinner', "should display messaging not initialized");
     messagingBeforeCreationDeferred.resolve();
 });
@@ -42,7 +42,7 @@ QUnit.test('discuss should be marked as opened if the component is already rende
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
 
     await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
     const { messaging } = env.services.messaging.modelManager;
@@ -76,7 +76,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.strictEqual(
         document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
@@ -97,7 +97,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.strictEqual(
         document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
