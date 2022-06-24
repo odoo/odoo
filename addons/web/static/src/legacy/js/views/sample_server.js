@@ -559,7 +559,7 @@
                     if (['date', 'datetime'].includes(groupByField.type)) {
                         // we arbitrarily take the first date of the group as a default value to populate
                         // date/datetime groups
-                        return g.__range[groupByFieldName] ? g.__range[groupByFieldName].from : false;
+                        return g.__range[groupBy] ? g.__range[groupBy].from : false;
                     } else {
                         return g[groupBy];
                     }
@@ -643,7 +643,7 @@
                 } else if (['date', 'datetime'].includes(groupByField.type)) {
                     // we arbitrarily take the first date of the group as a default value to tweak
                     // date/datetime groups
-                    groupValue = g.__range[groupByFieldName] ? g.__range[groupByFieldName].from : false;
+                    groupValue = g.__range[groupBy] ? g.__range[groupBy].from : false;
                 }
                 const recordsInGroup = records.filter(r => r[groupByFieldName] === groupValue);
                 g[`${groupByFieldName}_count`] = recordsInGroup.length;

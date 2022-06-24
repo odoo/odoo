@@ -35,7 +35,7 @@ class TestEmptyDate(common.TransactionCase):
         self.assertEqual(gb, [{
             '__count': 3,
             '__domain': [('date', '=', False)],
-            '__range': {'date': False},
+            '__range': {'date:quarter': False},
             'date:quarter': False,
             'value': 6
         }])
