@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -33,10 +33,10 @@ registerModel({
          */
         _computeAttachment() {
             if (this.dialogOwner && this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm) {
-                return replace(this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachment);
+                return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachment;
             }
             if (this.dialogOwner && this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm) {
-                return replace(this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachment);
+                return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachment;
             }
             return clear();
         },
@@ -57,14 +57,14 @@ registerModel({
                 this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
                 this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
             ) {
-                return replace(this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter);
+                return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
             }
             if (
                 this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm &&
                 this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
                 this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
             ) {
-                return replace(this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter);
+                return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
             }
             return clear();
         },

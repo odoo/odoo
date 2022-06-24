@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallParticipantVideoView',
@@ -30,7 +30,7 @@ registerModel({
          */
         _computeRtcSession() {
             if (this.callParticipantCardOwner.rtcSession) {
-                return replace(this.callParticipantCardOwner.rtcSession);
+                return this.callParticipantCardOwner.rtcSession;
             }
             return clear();
         },

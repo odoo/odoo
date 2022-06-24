@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestionListView',
@@ -13,7 +13,7 @@ registerModel({
          */
         setFirstSuggestionViewActive() {
             const firstSuggestionView = this.suggestionViews[0];
-            this.update({ activeSuggestionView: replace(firstSuggestionView) });
+            this.update({ activeSuggestionView: firstSuggestionView });
         },
         /**
          * Sets the last suggestion as active. Main and extra records are
@@ -21,7 +21,7 @@ registerModel({
          */
         setLastSuggestionViewActive() {
             const { length, [length - 1]: lastSuggestionView } = this.suggestionViews;
-            this.update({ activeSuggestionView: replace(lastSuggestionView) });
+            this.update({ activeSuggestionView: lastSuggestionView });
         },
         /**
          * Sets the next suggestion as active. Main and extra records are
@@ -37,7 +37,7 @@ registerModel({
                 return;
             }
             const nextSuggestionView = this.suggestionViews[activeElementIndex + 1];
-            this.update({ activeSuggestionView: replace(nextSuggestionView) });
+            this.update({ activeSuggestionView: nextSuggestionView });
         },
         /**
          * Sets the previous suggestion as active. Main and extra records are
@@ -53,7 +53,7 @@ registerModel({
                 return;
             }
             const previousSuggestionView = this.suggestionViews[activeElementIndex - 1];
-            this.update({ activeSuggestionView: replace(previousSuggestionView) });
+            this.update({ activeSuggestionView: previousSuggestionView });
         },
         /**
          * Adapts the active suggestion it if the active suggestion is no longer
@@ -67,7 +67,7 @@ registerModel({
                 return;
             }
             const firstSuggestionView = this.suggestionViews[0];
-            return replace(firstSuggestionView);
+            return firstSuggestionView;
         },
         /**
          * @returns {FieldCommand}
@@ -75,7 +75,7 @@ registerModel({
         _computeComposerSuggestionListViewExtraComposerSuggestionViewItems() {
             return insertAndReplace(this.composerViewOwner.extraSuggestions.map(suggestable => {
                 return {
-                    suggestable: replace(suggestable),
+                    suggestable,
                 };
             }));
         },
@@ -85,7 +85,7 @@ registerModel({
         _computeComposerSuggestionListViewMainComposerSuggestionViewItems() {
             return insertAndReplace(this.composerViewOwner.mainSuggestions.map(suggestable => {
                 return {
-                    suggestable: replace(suggestable),
+                    suggestable,
                 };
             }));
         },
@@ -95,7 +95,7 @@ registerModel({
         _computeSuggestionViews() {
             const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(item => item.composerSuggestionView);
             const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(item => item.composerSuggestionView);
-            return replace(mainSuggestionViews.concat(extraSuggestionViews));
+            return mainSuggestionViews.concat(extraSuggestionViews);
         },
     },
     fields: {

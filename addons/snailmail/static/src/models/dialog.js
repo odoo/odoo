@@ -2,7 +2,7 @@
 
 import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/dialog';
 
@@ -57,7 +57,7 @@ patchRecordMethods('Dialog', {
      */
     _computeRecord() {
         if (this.snailmailErrorView) {
-            return replace(this.snailmailErrorView);
+            return this.snailmailErrorView;
         }
         return this._super();
     },

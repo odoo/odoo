@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageAuthorPrefixView',
@@ -14,10 +14,10 @@ registerModel({
          */
         _computeMessage() {
             if (this.threadNeedactionPreviewViewOwner) {
-                return replace(this.threadNeedactionPreviewViewOwner.thread.lastNeedactionMessageAsOriginThread);
+                return this.threadNeedactionPreviewViewOwner.thread.lastNeedactionMessageAsOriginThread;
             }
             if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread.lastMessage);
+                return this.threadPreviewViewOwner.thread.lastMessage;
             }
             return clear();
         },
@@ -27,10 +27,10 @@ registerModel({
          */
         _computeThread() {
             if (this.threadNeedactionPreviewViewOwner) {
-                return replace(this.threadNeedactionPreviewViewOwner.thread);
+                return this.threadNeedactionPreviewViewOwner.thread;
             }
             if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread);
+                return this.threadPreviewViewOwner.thread;
             }
             return clear();
         },

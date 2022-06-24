@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMemberListView',
@@ -25,10 +25,10 @@ registerModel({
          */
         _computeChannel() {
             if (this.chatWindowOwner) {
-                return replace(this.chatWindowOwner.thread.channel);
+                return this.chatWindowOwner.thread.channel;
             }
             if (this.threadViewOwner) {
-                return replace(this.threadViewOwner.thread.channel);
+                return this.threadViewOwner.thread.channel;
             }
             return clear();
         },

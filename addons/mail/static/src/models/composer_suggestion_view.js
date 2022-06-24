@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 /**
@@ -20,7 +20,7 @@ registerModel({
          */
         onClick(ev) {
             ev.preventDefault();
-            this.composerSuggestionListViewOwner.update({ activeSuggestionView: replace(this) });
+            this.composerSuggestionListViewOwner.update({ activeSuggestionView: this });
             const composerViewOwner = this.composerSuggestionListViewOwner.composerViewOwner;
             composerViewOwner.insertSuggestion();
             composerViewOwner.closeSuggestions();
@@ -32,10 +32,10 @@ registerModel({
          */
         _computeComposerSuggestionListViewOwner() {
             if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
-                return replace(this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.composerSuggestionListViewOwner);
+                return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.composerSuggestionListViewOwner;
             }
             if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
-                return replace(this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.composerSuggestionListViewOwner);
+                return this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.composerSuggestionListViewOwner;
             }
             return clear();
         },
@@ -73,10 +73,10 @@ registerModel({
          */
         _computeSuggestable() {
             if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
-                return replace(this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.suggestable);
+                return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.suggestable;
             }
             if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
-                return replace(this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.suggestable);
+                return this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.suggestable;
             }
             return clear();
         },

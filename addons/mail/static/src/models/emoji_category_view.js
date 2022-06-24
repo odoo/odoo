@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryView',
@@ -11,7 +10,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: replace(this.emojiCategoryBarViewOwner) });
+            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: this.emojiCategoryBarViewOwner });
         },
         /**
          * @param {MouseEvent} ev

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussSidebarMailboxView',
@@ -14,13 +14,13 @@ registerModel({
          */
         _computeMailbox() {
             if (this.discussViewOwnerAsHistory) {
-                return replace(this.messaging.history);
+                return this.messaging.history;
             }
             if (this.discussViewOwnerAsInbox) {
-                return replace(this.messaging.inbox);
+                return this.messaging.inbox;
             }
             if (this.discussViewOwnerAsStarred) {
-                return replace(this.messaging.starred);
+                return this.messaging.starred;
             }
             return clear();
         },

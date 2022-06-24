@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -741,17 +741,17 @@ registerModel({
             if (this.threadView) {
                 // When replying to a message, always use the composer from that message's thread
                 if (this.threadView && this.threadView.replyingToMessageView) {
-                    return replace(this.threadView.replyingToMessageView.message.originThread.composer);
+                    return this.threadView.replyingToMessageView.message.originThread.composer;
                 }
                 if (this.threadView.thread && this.threadView.thread.composer) {
-                    return replace(this.threadView.thread.composer);
+                    return this.threadView.thread.composer;
                 }
             }
             if (this.messageViewInEditing && this.messageViewInEditing.composerForEditing) {
-                return replace(this.messageViewInEditing.composerForEditing);
+                return this.messageViewInEditing.composerForEditing;
             }
             if (this.chatter && this.chatter.thread && this.chatter.thread.composer) {
-                return replace(this.chatter.thread.composer);
+                return this.chatter.thread.composer;
             }
             return clear();
         },
@@ -1341,8 +1341,8 @@ registerModel({
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
             extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
             this.update({
-                extraSuggestions: replace(extraSuggestedRecords.map(record => record.suggestable)),
-                mainSuggestions: replace(mainSuggestedRecords.map(record => record.suggestable)),
+                extraSuggestions: extraSuggestedRecords.map(record => record.suggestable),
+                mainSuggestions: mainSuggestedRecords.map(record => record.suggestable),
             });
             if (this.composerSuggestionListView) {
                 this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });

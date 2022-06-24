@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DeleteMessageConfirmView',
@@ -30,14 +30,14 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessage() {
-            return replace(this.dialogOwner.messageActionListOwnerAsDeleteConfirm.message);
+            return this.dialogOwner.messageActionListOwnerAsDeleteConfirm.message;
         },
         /**
          * @private
          * @returns {MessageView}
          */
         _computeMessageView() {
-            return this.message ? insertAndReplace({ message: replace(this.message) }) : clear();
+            return this.message ? insertAndReplace({ message: this.message }) : clear();
         },
     },
     fields: {

@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, unlink } from '@mail/model/model_field_command';
 import { monitorAudio } from '@mail/utils/media_monitoring';
 import { sprintf } from '@web/core/utils/strings';
 
@@ -493,7 +493,7 @@ registerModel({
             rtcSession.update({ rtcPeerConnection: insertAndReplace({ peerConnection }) });
             this.messaging.models['RtcDataChannel'].insert({
                 dataChannel,
-                rtcSession: replace(rtcSession),
+                rtcSession,
             });
             return rtcSession;
         },

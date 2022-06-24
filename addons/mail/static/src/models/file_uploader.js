@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import core from 'web.core';
 
@@ -68,16 +68,16 @@ registerModel({
          */
         _computeThread() {
             if (this.activityView) {
-                return replace(this.activityView.activity.thread);
+                return this.activityView.activity.thread;
             }
             if (this.attachmentBoxView) {
-                return replace(this.attachmentBoxView.chatter.thread);
+                return this.attachmentBoxView.chatter.thread;
             }
             if (this.chatterOwner) {
-                return replace(this.chatterOwner.thread);
+                return this.chatterOwner.thread;
             }
             if (this.composerView) {
-                return replace(this.composerView.composer.activeThread);
+                return this.composerView.composer.activeThread;
             }
             return clear();
         },
@@ -115,8 +115,8 @@ registerModel({
                 return;
             }
             return (composer || thread).messaging.models['Attachment'].insert({
-                composer: composer && replace(composer),
-                originThread: (!composer && thread) ? replace(thread) : undefined,
+                composer: composer,
+                originThread: (!composer && thread) ? thread : undefined,
                 ...attachmentData,
             });
         },
@@ -138,13 +138,13 @@ registerModel({
             const uploadingAttachments = new Map();
             for (const file of files) {
                 uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
-                    composer: composer && replace(composer),
+                    composer,
                     filename: file.name,
                     id: getAttachmentNextTemporaryId(),
                     isUploading: true,
                     mimetype: file.type,
                     name: file.name,
-                    originThread: (!composer && thread) ? replace(thread) : undefined,
+                    originThread: (!composer && thread) ? thread : undefined,
                 }));
             }
             const attachments = [];

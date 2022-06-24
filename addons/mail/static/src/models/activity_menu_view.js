@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many } from '@mail/model/model_field';
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 import session from 'web.session';
 
@@ -70,7 +70,7 @@ registerModel({
         _computeActivityGroupViews() {
             return insertAndReplace(this.activityGroups.map(activityGroup => {
                 return {
-                    activityGroup: replace(activityGroup),
+                    activityGroup,
                 };
             }));
         },

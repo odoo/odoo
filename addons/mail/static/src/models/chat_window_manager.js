@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
 
 const BASE_VISUAL = {
     /**
@@ -86,7 +86,7 @@ registerModel({
         },
         openNewMessage() {
             if (!this.newMessageChatWindow) {
-                this.update({ newMessageChatWindow: insertAndReplace({ manager: replace(this) }) });
+                this.update({ newMessageChatWindow: insertAndReplace({ manager: this }) });
             }
             this.newMessageChatWindow.makeActive();
         },
@@ -114,8 +114,8 @@ registerModel({
             if (!chatWindow) {
                 chatWindow = this.messaging.models['ChatWindow'].insert({
                     isFolded,
-                    manager: replace(this),
-                    thread: replace(thread),
+                    manager: this,
+                    thread,
                 });
             } else {
                 chatWindow.update({ isFolded });
@@ -149,7 +149,7 @@ registerModel({
             const _newOrdered = [...this.allOrdered];
             _newOrdered[index1] = chatWindow2;
             _newOrdered[index2] = chatWindow1;
-            this.update({ allOrdered: replace(_newOrdered) });
+            this.update({ allOrdered: _newOrdered });
             for (const chatWindow of [chatWindow1, chatWindow2]) {
                 if (chatWindow.threadView) {
                     chatWindow.threadView.addComponentHint('adjust-scroll');
@@ -168,14 +168,14 @@ registerModel({
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedHidden() {
-            return replace(this.visual.hiddenChatWindows);
+            return this.visual.hiddenChatWindows;
         },
         /**
          * @private
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedVisible() {
-            return replace(this.visual.visible.map(({ chatWindow }) => chatWindow));
+            return this.visual.visible.map(({ chatWindow }) => chatWindow);
         },
         /**
          * @private
@@ -207,7 +207,7 @@ registerModel({
          */
         _computeHiddenChatWindowHeaderViews() {
             if (this.allOrderedHidden.length > 0) {
-                return insertAndReplace(this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: replace(chatWindow) })));
+                return insertAndReplace(this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow })));
             }
             return clear();
         },
@@ -220,7 +220,7 @@ registerModel({
             if (!lastVisible) {
                 return clear();
             }
-            return replace(lastVisible);
+            return lastVisible;
         },
         /**
          * @private

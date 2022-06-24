@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -36,7 +36,7 @@ registerModel({
          */
         handleVisibleMessage(message) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: replace(message) });
+                this.update({ lastVisibleMessage: message });
             }
         },
         /**
@@ -150,7 +150,7 @@ registerModel({
                 return clear();
             }
             const { length, [length - 1]: messageListViewMessageViewItem } = this.messageListView.messageListViewMessageViewItems;
-            return messageListViewMessageViewItem ? replace(messageListViewMessageViewItem.messageView) : clear();
+            return messageListViewMessageViewItem ? messageListViewMessageViewItem.messageView : clear();
         },
         /**
          * @private

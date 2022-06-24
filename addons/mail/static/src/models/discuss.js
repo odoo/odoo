@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -154,9 +154,7 @@ registerModel({
          * @param {Boolean} [param1.focus]
          */
         async openThread(thread, { focus } = {}) {
-            this.update({
-                thread: replace(thread),
-            });
+            this.update({ thread });
             if (focus !== undefined ? focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
@@ -310,7 +308,7 @@ registerModel({
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
-                thread: this.thread ? replace(this.thread) : clear(),
+                thread: this.thread ? this.thread : clear(),
             });
         },
     },

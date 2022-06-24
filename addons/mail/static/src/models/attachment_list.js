@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentList',
@@ -14,7 +14,7 @@ registerModel({
         selectNextAttachment() {
             const index = this.attachments.findIndex(attachment => attachment === this.selectedAttachment);
             const nextIndex = index === this.attachments.length - 1 ? 0 : index + 1;
-            this.update({ selectedAttachment: replace(this.attachments[nextIndex]) });
+            this.update({ selectedAttachment: this.attachments[nextIndex] });
         },
         /**
          * Select the previous attachment.
@@ -22,19 +22,19 @@ registerModel({
         selectPreviousAttachment() {
             const index = this.attachments.findIndex(attachment => attachment === this.selectedAttachment);
             const prevIndex = index === 0 ? this.attachments.length - 1 : index - 1;
-            this.update({ selectedAttachment: replace(this.attachments[prevIndex]) });
+            this.update({ selectedAttachment: this.attachments[prevIndex] });
         },
         _computeAttachmentImages() {
             return insertAndReplace(this.imageAttachments.map(attachment => {
                 return {
-                    attachment: replace(attachment),
+                    attachment,
                 };
             }));
         },
         _computeAttachmentCards() {
             return insertAndReplace(this.nonImageAttachments.map(attachment => {
                 return {
-                    attachment: replace(attachment),
+                    attachment,
                 };
             }));
         },
@@ -43,13 +43,13 @@ registerModel({
          */
         _computeAttachments() {
             if (this.messageViewOwner) {
-                return replace(this.messageViewOwner.message.attachments);
+                return this.messageViewOwner.message.attachments;
             }
             if (this.attachmentBoxViewOwner) {
-                return replace(this.attachmentBoxViewOwner.chatter.thread.allAttachments);
+                return this.attachmentBoxViewOwner.chatter.thread.allAttachments;
             }
             if (this.composerViewOwner && this.composerViewOwner.composer) {
-                return replace(this.composerViewOwner.composer.attachments);
+                return this.composerViewOwner.composer.attachments;
             }
             return clear();
         },
@@ -57,19 +57,19 @@ registerModel({
          * @returns {Attachment[]}
          */
         _computeImageAttachments() {
-            return replace(this.attachments.filter(attachment => attachment.isImage));
+            return this.attachments.filter(attachment => attachment.isImage);
         },
         /**
          * @returns {Attachment[]}
          */
         _computeNonImageAttachments() {
-            return replace(this.attachments.filter(attachment => !attachment.isImage));
+            return this.attachments.filter(attachment => !attachment.isImage);
         },
         /**
          * @returns {Attachment[]}
          */
         _computeViewableAttachments() {
-            return replace(this.attachments.filter(attachment => attachment.isViewable));
+            return this.attachments.filter(attachment => attachment.isViewable);
         },
         /**
          * @private

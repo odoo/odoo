@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { insertAndReplace, link } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,7 +13,7 @@ QUnit.test('link: should link a record to an empty x2one field', async function 
 
     const contact = messaging.models['TestContact'].insert({ id: 10 });
     const address = messaging.models['TestAddress'].insert({ id: 10 });
-    contact.update({ address: replace(address) });
+    contact.update({ address });
     assert.strictEqual(
         contact.address,
         address,
@@ -36,7 +36,7 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     const address20 = messaging.models['TestAddress'].insert({ id: 20 });
-    contact.update({ address: replace(address20) });
+    contact.update({ address: address20 });
     assert.strictEqual(
         contact.address,
         address20,

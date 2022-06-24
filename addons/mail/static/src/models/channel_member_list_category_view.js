@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -16,10 +16,10 @@ registerModel({
          */
         _computeChannel() {
             if (this.channelMemberListViewOwnerAsOffline) {
-                return replace(this.channelMemberListViewOwnerAsOffline.channel);
+                return this.channelMemberListViewOwnerAsOffline.channel;
             }
             if (this.channelMemberListViewOwnerAsOnline) {
-                return replace(this.channelMemberListViewOwnerAsOnline.channel);
+                return this.channelMemberListViewOwnerAsOnline.channel;
             }
         },
         /**
@@ -31,7 +31,7 @@ registerModel({
                 return clear();
             }
             return insertAndReplace(
-                this.members.map(member => ({ channelMember: replace(member) })),
+                this.members.map(channelMember => ({ channelMember })),
             );
         },
         /**
@@ -43,10 +43,10 @@ registerModel({
                 return clear();
             }
             if (this.channelMemberListViewOwnerAsOnline) {
-                return replace(this.channel.orderedOnlineMembers);
+                return this.channel.orderedOnlineMembers;
             }
             if (this.channelMemberListViewOwnerAsOffline) {
-                return replace(this.channel.orderedOfflineMembers);
+                return this.channel.orderedOfflineMembers;
             }
             return clear();
         },

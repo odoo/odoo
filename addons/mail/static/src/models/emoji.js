@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Emoji',
@@ -12,7 +11,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeEmojiRegistry() {
-            return replace(this.messaging.emojiRegistry);
+            return this.messaging.emojiRegistry;
         },
     },
     fields: {

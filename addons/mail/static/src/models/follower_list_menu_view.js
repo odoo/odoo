@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowerListMenuView',
@@ -34,7 +34,7 @@ registerModel({
          */
         _computeFollowerViews() {
             return insertAndReplace(this.chatterOwner.thread.followers.map(follower => {
-                return { follower: replace(follower) };
+                return { follower };
             }));
         },
         /**

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageListView',
@@ -75,7 +75,7 @@ registerModel({
             for (const message of orderedMessages) {
                 messageViewsData.push({
                     isSquashed: this.threadViewOwner._shouldMessageBeSquashed(prevMessage, message),
-                    message: replace(message),
+                    message,
                 });
                 prevMessage = message;
             }

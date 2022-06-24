@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { decrement, increment, insert, insertAndReplace, replace, unlink } from '@mail/model/model_field_command';
+import { decrement, increment, insert, insertAndReplace, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
@@ -176,11 +176,11 @@ registerModel({
             this.messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
                 partner: insertAndReplace({ id: partner_id }),
-                thread: replace(channel.thread),
+                thread: channel.thread,
             });
             this.messaging.models['MessageSeenIndicator'].insert({
                 message: insertAndReplace({ id: last_message_id }),
-                thread: replace(channel.thread),
+                thread: channel.thread,
             });
         },
         /**
@@ -317,13 +317,13 @@ registerModel({
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
             if (shouldComputeSeenIndicators) {
                 this.messaging.models['ThreadPartnerSeenInfo'].insert({
-                    lastSeenMessage: replace(lastMessage),
+                    lastSeenMessage: lastMessage,
                     partner: insertAndReplace({ id: partner_id }),
-                    thread: replace(channel.thread),
+                    thread: channel.thread,
                 });
                 this.messaging.models['MessageSeenIndicator'].insert({
-                    message: replace(lastMessage),
-                    thread: replace(channel.thread),
+                    message: lastMessage,
+                    thread: channel.thread,
                 });
             }
             if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
@@ -474,7 +474,7 @@ registerModel({
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: replace(this.messaging.currentPartner) });
+                    message.update({ author: this.messaging.currentPartner });
                 }
             }
         },
@@ -557,7 +557,7 @@ registerModel({
             );
             const partnerRoot = this.messaging.partnerRoot;
             const message = this.messaging.models['Message'].insert(Object.assign(convertedData, {
-                author: replace(partnerRoot),
+                author: partnerRoot,
                 id: lastMessageId + 0.01,
                 isTransient: true,
             }));

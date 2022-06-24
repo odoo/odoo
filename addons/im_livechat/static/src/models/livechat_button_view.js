@@ -4,7 +4,7 @@ import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_me
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 import { get_cookie, set_cookie, unaccent } from 'web.utils';
@@ -45,11 +45,11 @@ registerModel({
 
             if (options && options.prepend) {
                 this.messaging.publicLivechatGlobal.update({
-                    messages: replace([message, ...this.messaging.publicLivechatGlobal.messages]),
+                    messages: [message, ...this.messaging.publicLivechatGlobal.messages],
                 });
             } else {
                 this.messaging.publicLivechatGlobal.update({
-                    messages: replace([...this.messaging.publicLivechatGlobal.messages, message]),
+                    messages: [...this.messaging.publicLivechatGlobal.messages, message],
                 });
             }
         },

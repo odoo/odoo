@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentCard',
@@ -16,7 +16,7 @@ registerModel({
             }
             this.attachmentList.update({
                 attachmentListViewDialog: insertAndReplace(),
-                selectedAttachment: replace(this.attachment),
+                selectedAttachment: this.attachment,
             });
         },
         /**

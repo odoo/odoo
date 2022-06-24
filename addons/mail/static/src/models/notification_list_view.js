@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'NotificationListView',
@@ -33,31 +33,28 @@ registerModel({
         _computeFilteredThreads() {
             switch (this.filter) {
                 case 'channel': {
-                    return replace(this.messaging.models['Thread']
+                    return this.messaging.models['Thread']
                         .all(thread =>
                             thread.channel &&
                             thread.channel.channel_type === 'channel' &&
                             thread.isPinned
                         )
-                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
-                    );
+                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
                 case 'chat': {
-                    return replace(this.messaging.models['Thread']
+                    return this.messaging.models['Thread']
                         .all(thread =>
                             thread.isChatChannel &&
                             thread.isPinned &&
                             thread.model === 'mail.channel'
                         )
-                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
-                    );
+                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
                 case 'all': {
                     // "All" filter is for channels and chats
-                    return replace(this.messaging.models['Thread']
+                    return this.messaging.models['Thread']
                         .all(thread => thread.isPinned && thread.model === 'mail.channel')
-                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
-                    );
+                        .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
             }
             return clear();
@@ -75,7 +72,7 @@ registerModel({
                     .all()
                     .sort((group1, group2) => group1.sequence - group2.sequence)
                     .map(notificationGroup => {
-                        return { notificationGroup: replace(notificationGroup) };
+                        return { notificationGroup };
                     })
             );
         },
@@ -98,7 +95,7 @@ registerModel({
             notifications.push(...this.notificationGroupViews);
             notifications.push(...this.threadNeedactionPreviewViews);
             notifications.push(...this.threadPreviewViews);
-            return replace(notifications);
+            return notifications;
         },
         /**
          * @private
@@ -130,7 +127,7 @@ registerModel({
                         return t1.id < t2.id ? -1 : 1;
                     })
                     .map(thread => {
-                        return { thread: replace(thread) };
+                        return { thread };
                     })
             );
         },
@@ -161,7 +158,7 @@ registerModel({
                     })
                     .map(thread => {
                         return {
-                            thread: replace(thread),
+                            thread,
                         };
                     })
             );

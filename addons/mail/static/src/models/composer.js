@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, replace, unlink } from '@mail/model/model_field_command';
+import { clear, unlink } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -15,10 +15,10 @@ registerModel({
          */
         _computeActiveThread() {
             if (this.messageViewInEditing && this.messageViewInEditing.message && this.messageViewInEditing.message.originThread) {
-                return replace(this.messageViewInEditing.message.originThread);
+                return this.messageViewInEditing.message.originThread;
             }
             if (this.thread) {
-                return replace(this.thread);
+                return this.thread;
             }
             return clear();
         },
@@ -121,7 +121,7 @@ registerModel({
                     }
                 }
             }
-            return replace(recipients);
+            return recipients;
         },
         /**
          * @private

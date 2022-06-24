@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
@@ -173,8 +173,8 @@ registerModel({
                         continue;
                     }
                     this.messaging.models['MessageSeenIndicator'].insert({
-                        thread: replace(thread),
-                        message: replace(message),
+                        thread,
+                        message,
                     });
                 }
             }
@@ -373,7 +373,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeFailureNotifications() {
-            return replace(this.notifications.filter(notifications => notifications.isFailure));
+            return this.notifications.filter(notifications => notifications.isFailure);
         },
         /**
          * @private
@@ -523,7 +523,7 @@ registerModel({
                 [l - 1]: lastTrackingValue,
             } = this.trackingValues;
             if (lastTrackingValue) {
-                return replace(lastTrackingValue);
+                return lastTrackingValue;
             }
             return clear();
         },
@@ -612,7 +612,7 @@ registerModel({
             if (this.originThread) {
                 threads.push(this.originThread);
             }
-            return replace(threads);
+            return threads;
         },
         _sortTrackingValues() {
             return [

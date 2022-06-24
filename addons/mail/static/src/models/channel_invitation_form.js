@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
@@ -201,7 +201,7 @@ registerModel({
             if (this.selectablePartners.length === 0) {
                 return clear();
             }
-            return insertAndReplace(this.selectablePartners.map(partner => ({ partner: replace(partner) })));
+            return insertAndReplace(this.selectablePartners.map(partner => ({ partner })));
         },
         /**
          * @private
@@ -211,7 +211,7 @@ registerModel({
             if (this.selectedPartners.length === 0) {
                 return clear();
             }
-            return insertAndReplace(this.selectedPartners.map(partner => ({ partner: replace(partner) })));
+            return insertAndReplace(this.selectedPartners.map(partner => ({ partner })));
         },
         /**
          * @private
@@ -223,10 +223,10 @@ registerModel({
                 this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
                 this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
             ) {
-                return replace(this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread);
+                return this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread;
             }
             if (this.chatWindow && this.chatWindow.thread) {
-                return replace(this.chatWindow.thread);
+                return this.chatWindow.thread;
             }
             return clear();
         },

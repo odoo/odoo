@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -31,7 +31,7 @@ registerModel({
             if (!this.messaging) {
                 return clear();
             }
-            return replace(this.messaging);
+            return this.messaging;
         },
         /**
          * @returns {string|FieldCommand}

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -65,7 +65,7 @@ registerModel({
                 if (this.messagingAsClickedMessageView) {
                     this.messaging.update({ clickedMessageView: clear() });
                 } else {
-                    this.messaging.update({ clickedMessageView: replace(this) });
+                    this.messaging.update({ clickedMessageView: this });
                 }
             }
         },
@@ -143,7 +143,7 @@ registerModel({
                 }),
             });
             this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.update({
-                replyingToMessageView: replace(this),
+                replyingToMessageView: this,
                 composerView: insertAndReplace({
                     doFocus: true,
                 }),
@@ -158,7 +158,7 @@ registerModel({
             const textInputContent = htmlDoc.body.textContent;
             this.update({
                 composerForEditing: insertAndReplace({
-                    mentionedPartners: replace(this.message.recipients),
+                    mentionedPartners: this.message.recipients,
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,
@@ -370,10 +370,10 @@ registerModel({
          */
         _computeMessage() {
             if (this.messageListViewMessageViewItemOwner) {
-                return replace(this.messageListViewMessageViewItemOwner.message);
+                return this.messageListViewMessageViewItemOwner.message;
             }
             if (this.deleteMessageConfirmViewOwner) {
-                return replace(this.deleteMessageConfirmViewOwner.message);
+                return this.deleteMessageConfirmViewOwner.message;
             }
             return clear();
         },

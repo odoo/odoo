@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -20,8 +19,8 @@ registerModel({
                 return;
             }
             const parentMessageListViewMessageViewItem = this.messaging.models['MessageListViewMessageViewItem'].findFromIdentifyingData({
-                message: replace(parentMessage),
-                messageListViewOwner: replace(messageListViewMessageViewItem.messageListViewOwner),
+                message: parentMessage,
+                messageListViewOwner: messageListViewMessageViewItem.messageListViewOwner,
             });
             if (!parentMessageListViewMessageViewItem) {
                 return;

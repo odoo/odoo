@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
-import { link, insert, replace } from '@mail/model/model_field_command';
+import { link, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingInitializer',
@@ -193,7 +193,7 @@ registerModel({
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: replace(this.messaging.currentPartner) });
+                    message.update({ author: this.messaging.currentPartner });
                 }
             }));
         },

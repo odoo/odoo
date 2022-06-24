@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -57,8 +57,8 @@ registerModel({
             const channel = this.messaging.discuss.thread && this.messaging.discuss.thread.channel;
             if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
                 return insertAndReplace({
-                    thread: replace(channel.thread),
-                    category: replace(this),
+                    thread: channel.thread,
+                    category: this,
                 });
             }
             return clear();
@@ -113,7 +113,7 @@ registerModel({
                     return nameVal.includes(qsVal);
                 });
             }
-            return replace(categoryItems);
+            return categoryItems;
         },
         /**
          * @private
