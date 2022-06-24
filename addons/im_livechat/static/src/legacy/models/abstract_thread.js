@@ -37,7 +37,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     /**
      * Add a message to this thread.
      *
-     * @param {@im_livechat/legacy/models/abstract_message} message
+     * @param {@im_livechat/legacy/models/public_livechat_message} message
      */
     addMessage(message) {
         this._addMessage(...arguments);
@@ -61,7 +61,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     },
     /**
      * @abstract
-     * @returns {@im_livechat/legacy/models/abstract_message[]}
+     * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
     getMessages() {},
     /**
@@ -149,7 +149,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @abstract
      * @private
-     * @param {@im_livechat/legacy/models/abstract_message} message
+     * @param {@im_livechat/legacy/models/public_livechat_message} message
      */
     _addMessage(message) {},
     /**

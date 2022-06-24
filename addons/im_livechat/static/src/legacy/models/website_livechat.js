@@ -61,7 +61,7 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
 
     /**
      * @override
-     * @returns {@im_livechat/legacy/models/website_livechat_message[]}
+     * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
      getMessages() {
         // ignore removed messages
@@ -92,7 +92,7 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     /**
      * AKU: hack for the moment
      *
-     * @param {@im_livechat/legacy/models/website_livechat_message[]} messages
+     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages
      */
     setMessages(messages) {
         this._messages = messages;

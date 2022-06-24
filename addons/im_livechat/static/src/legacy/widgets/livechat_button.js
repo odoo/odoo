@@ -10,7 +10,7 @@ import Widget from 'web.Widget';
 import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
-import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
+import PublicLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
 import WebsiteLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
 
 import { clear } from '@mail/model/model_field_command';
@@ -101,7 +101,7 @@ const LivechatButton = Widget.extend({
         options = Object.assign({}, this.options, options, {
             serverURL: this.messaging.livechatButtonView.serverUrl,
         });
-        const message = new WebsiteLivechatMessage(this, data, options);
+        const message = new PublicLivechatMessage(this, data, options);
 
         const hasAlreadyMessage = _.some(this.messaging.livechatButtonView.messages, function (msg) {
             return message.getID() === msg.getID();

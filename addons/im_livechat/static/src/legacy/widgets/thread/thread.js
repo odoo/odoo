@@ -434,7 +434,7 @@ const ThreadWidget = Widget.extend({
      * There is at most one such popover at any given time.
      *
      * @private
-     * @param {@im_livechat/legacy/models/abstract_message[]} messages list of messages in the
+     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages list of messages in the
      *   rendered thread, for which popover on mouseover interaction is
      *   permitted.
      */
