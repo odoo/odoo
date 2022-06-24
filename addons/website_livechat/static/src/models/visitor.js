@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, replace } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Visitor',
@@ -64,10 +64,10 @@ registerModel({
          */
         _computeCountry() {
             if (this.partner && this.partner.country) {
-                return replace(this.partner.country);
+                return this.partner.country;
             }
             if (this.country) {
-                return replace(this.country);
+                return this.country;
             }
             return clear();
         },

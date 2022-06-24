@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcSession',
@@ -240,7 +240,7 @@ registerModel({
                 return clear();
             }
             if (this.rtcPeerConnection) {
-                return replace(this.messaging.rtc);
+                return this.messaging.rtc;
             }
             return clear();
         },

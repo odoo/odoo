@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -482,7 +482,7 @@ registerModel({
             return insertAndReplace({
                 compact: true,
                 hasThreadView: this.hasThreadView,
-                thread: this.thread ? replace(this.thread) : clear(),
+                thread: this.thread ? this.thread : clear(),
             });
         },
         /**

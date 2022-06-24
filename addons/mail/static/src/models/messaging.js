@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 
 import { browser } from '@web/core/browser/browser';
@@ -291,7 +291,7 @@ registerModel({
             if (this.ringingThreads.length === 0) {
                 return clear();
             }
-            return replace(this.ringingThreads.map(thread => thread.callInviteRequestPopup));
+            return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
         },
         /**
          * @private

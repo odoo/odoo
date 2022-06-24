@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -135,9 +135,9 @@ registerModel({
          */
         _computeMainTiles() {
             if (this.callView.activeRtcSession) {
-                return insertAndReplace([{ channelMember: replace(this.callView.activeRtcSession.channelMember) }]);
+                return insertAndReplace([{ channelMember: this.callView.activeRtcSession.channelMember }]);
             }
-            return insertAndReplace(this.callView.filteredChannelMembers.map(channelMember => ({ channelMember: replace(channelMember) })));
+            return insertAndReplace(this.callView.filteredChannelMembers.map(channelMember => ({ channelMember })));
         },
         /**
          * Shows the overlay (buttons) for a set a mount of time.

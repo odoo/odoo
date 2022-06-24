@@ -3,7 +3,6 @@
 import { useModels } from '@mail/component_hooks/use_models';
 // ensure components are registered beforehand.
 import '@mail/components/web_client_view_attachment_view/web_client_view_attachment_view';
-import { replace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onWillDestroy, onWillUpdateProps } = owl;
@@ -71,7 +70,7 @@ export class WebClientViewAttachmentViewContainer extends Component {
         });
         this.webClientViewAttachmentView = messaging.models['WebClientViewAttachmentView'].insert({
             id: this.webClientViewAttachmentViewId,
-            thread: replace(thread),
+            thread,
         });
         this.render();
     }

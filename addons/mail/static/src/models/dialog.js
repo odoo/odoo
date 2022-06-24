@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Dialog',
@@ -125,7 +125,7 @@ registerModel({
          */
         _computeManager() {
             if (this.messaging.dialogManager) {
-                return replace(this.messaging.dialogManager);
+                return this.messaging.dialogManager;
             }
             return clear();
         },
@@ -135,16 +135,16 @@ registerModel({
          */
         _computeRecord() {
             if (this.attachmentViewer) {
-                return replace(this.attachmentViewer);
+                return this.attachmentViewer;
             }
             if (this.attachmentDeleteConfirmView) {
-                return replace(this.attachmentDeleteConfirmView);
+                return this.attachmentDeleteConfirmView;
             }
             if (this.deleteMessageConfirmView) {
-                return replace(this.deleteMessageConfirmView);
+                return this.deleteMessageConfirmView;
             }
             if (this.followerSubtypeList) {
-                return replace(this.followerSubtypeList);
+                return this.followerSubtypeList;
             }
         },
         /**

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 
@@ -98,7 +98,7 @@ registerModel({
             if (this.messages.length === 0) {
                 return clear();
             }
-            return replace(this.messages[this.messages.length - 1]);
+            return this.messages[this.messages.length - 1];
         },
         /**
          * @private

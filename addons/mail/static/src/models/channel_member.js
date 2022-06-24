@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one, many } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMember',
@@ -26,10 +26,10 @@ registerModel({
          */
         _computeChannelAsOfflineMember() {
             if (this.persona.partner) {
-                return !this.persona.partner.isOnline ? replace(this.channel) : clear();
+                return !this.persona.partner.isOnline ? this.channel : clear();
             }
             if (this.persona.guest) {
-                return !this.persona.guest.isOnline ? replace(this.channel) : clear();
+                return !this.persona.guest.isOnline ? this.channel : clear();
             }
             return clear();
         },
@@ -39,10 +39,10 @@ registerModel({
          */
         _computeChannelAsOnlineMember() {
             if (this.persona.partner) {
-                return this.persona.partner.isOnline ? replace(this.channel) : clear();
+                return this.persona.partner.isOnline ? this.channel : clear();
             }
             if (this.persona.guest) {
-                return this.persona.guest.isOnline ? replace(this.channel) : clear();
+                return this.persona.guest.isOnline ? this.channel : clear();
             }
             return clear();
         },

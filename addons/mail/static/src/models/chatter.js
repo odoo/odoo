@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 const getThreadNextTemporaryId = (function () {
@@ -264,7 +264,7 @@ registerModel({
             return insertAndReplace({
                 hasThreadView: this.hasThreadView,
                 order: 'desc',
-                thread: this.thread ? replace(this.thread) : clear(),
+                thread: this.thread ? this.thread : clear(),
             });
         },
         /**
@@ -288,7 +288,7 @@ registerModel({
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
                 const message = this.messaging.models['Message'].insert({
-                    author: replace(currentPartner),
+                    author: currentPartner,
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),
                     isTemporary: true,

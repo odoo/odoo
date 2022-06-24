@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, insertAndUnlink, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, insertAndUnlink, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
@@ -656,7 +656,7 @@ registerModel({
                 return;
             }
             this.update({
-                rtc: replace(this.messaging.rtc),
+                rtc: this.messaging.rtc,
                 rtcInvitingSession: clear(),
                 rtcSessions,
                 invitedMembers,
@@ -875,8 +875,8 @@ registerModel({
         refreshOtherMemberTypingMember(partner) {
             this.update({
                 otherMembersLongTypingTimers: [
-                    insertAndUnlink({ partner: replace(partner) }),
-                    insert({ partner: replace(partner) }),
+                    insertAndUnlink({ partner }),
+                    insert({ partner }),
                 ],
             });
         },
@@ -899,7 +899,7 @@ registerModel({
             ];
             this.update({
                 isCurrentPartnerTyping: true,
-                orderedTypingMembers: replace(newOrderedTypingMembers),
+                orderedTypingMembers: newOrderedTypingMembers,
                 typingMembers: link(currentPartner),
             });
             // Notify typing status to other members.
@@ -912,13 +912,13 @@ registerModel({
          * @param {Partner} partner
          */
         registerOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insert({ partner: replace(partner) }) });
+            this.update({ otherMembersLongTypingTimers: insert({ partner }) });
             const newOrderedTypingMembers = [
                 ...this.orderedTypingMembers.filter(member => member !== partner),
                 partner,
             ];
             this.update({
-                orderedTypingMembers: replace(newOrderedTypingMembers),
+                orderedTypingMembers: newOrderedTypingMembers,
                 typingMembers: link(partner),
             });
         },
@@ -956,7 +956,7 @@ registerModel({
          * @param {Attachment} attachment
          */
         async setMainAttachment(attachment) {
-            this.update({ mainAttachment: replace(attachment) });
+            this.update({ mainAttachment: attachment });
             if (this.model === 'account.move.line') {
                 // account.move.line is not actually a thread in python
                 return;
@@ -1005,7 +1005,7 @@ registerModel({
             const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== currentPartner);
             this.update({
                 isCurrentPartnerTyping: false,
-                orderedTypingMembers: replace(newOrderedTypingMembers),
+                orderedTypingMembers: newOrderedTypingMembers,
                 typingMembers: unlink(currentPartner),
             });
             // Notify typing status to other members.
@@ -1021,10 +1021,10 @@ registerModel({
          * @param {Partner} partner
          */
         unregisterOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner: replace(partner) }) });
+            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner }) });
             const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== partner);
             this.update({
-                orderedTypingMembers: replace(newOrderedTypingMembers),
+                orderedTypingMembers: newOrderedTypingMembers,
                 typingMembers: unlink(partner),
             });
         },
@@ -1053,7 +1053,7 @@ registerModel({
                     // "most-recent" before "oldest" attachments.
                     return Math.abs(a2.id) - Math.abs(a1.id);
                 });
-            return replace(allAttachments);
+            return allAttachments;
         },
         /**
          * @private
@@ -1081,11 +1081,11 @@ registerModel({
             );
             if (correspondents.length === 1) {
                 // 2 members chat
-                return replace(correspondents[0]);
+                return correspondents[0];
             }
             if (this.members.length === 1) {
                 // chat with oneself
-                return replace(this.members[0]);
+                return this.members[0];
             }
             return clear();
         },
@@ -1100,7 +1100,7 @@ registerModel({
                 this.correspondent &&
                 this.public === 'private'
             ) {
-                return replace(this.correspondent);
+                return this.correspondent;
             }
             return clear();
         },
@@ -1122,7 +1122,7 @@ registerModel({
             if (!discussSidebarCategory) {
                 return clear();
             }
-            return insertAndReplace({ category: replace(discussSidebarCategory) });
+            return insertAndReplace({ category: discussSidebarCategory });
         },
         /**
          * @private
@@ -1176,7 +1176,7 @@ registerModel({
          * @returns {Activity[]}
          */
         _computeFutureActivities() {
-            return replace(this.activities.filter(activity => activity.state === 'planned'));
+            return this.activities.filter(activity => activity.state === 'planned');
         },
         /**
          * @private
@@ -1317,7 +1317,7 @@ registerModel({
             ) {
                 return clear();
             }
-            return replace(currentPartnerOrderedSeenMessages.slice().pop());
+            return currentPartnerOrderedSeenMessages.slice().pop();
         },
         /**
          * @private
@@ -1329,7 +1329,7 @@ registerModel({
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (lastMessage) {
-                return replace(lastMessage);
+                return lastMessage;
             }
             return clear();
         },
@@ -1343,7 +1343,7 @@ registerModel({
                 [l - 1]: lastMessage,
             } = this.orderedNonTransientMessages;
             if (lastMessage) {
-                return replace(lastMessage);
+                return lastMessage;
             }
             return clear();
         },
@@ -1395,7 +1395,7 @@ registerModel({
                 [l - 1]: lastNeedactionMessageAsOriginThread,
             } = orderedNeedactionMessagesAsOriginThread;
             if (lastNeedactionMessageAsOriginThread) {
-                return replace(lastNeedactionMessageAsOriginThread);
+                return lastNeedactionMessageAsOriginThread;
             }
             return clear();
         },
@@ -1440,7 +1440,7 @@ registerModel({
          */
         _computeMessagingAsRingingThread() {
             if (this.rtcInvitingSession) {
-                return replace(this.messaging);
+                return this.messaging;
             }
             return clear();
         },
@@ -1453,7 +1453,7 @@ registerModel({
                 return clear();
             }
             return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
-                ? replace(this.messaging.messagingMenu)
+                ? this.messaging.messagingMenu
                 : clear();
         },
         /**
@@ -1461,7 +1461,7 @@ registerModel({
          * @returns {Message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
-            return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction));
+            return this.messagesAsOriginThread.filter(message => message.isNeedaction);
         },
         /**
          * @private
@@ -1484,37 +1484,37 @@ registerModel({
             if (!message) {
                 return clear();
             }
-            return replace(message);
+            return message;
         },
         /**
          * @private
          * @returns {Message[]}
          */
         _computeOrderedMessages() {
-            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+            return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
         },
         /**
          * @private
          * @returns {Message[]}
          */
         _computeOrderedNonTransientMessages() {
-            return replace(this.orderedMessages.filter(m => !m.isTransient));
+            return this.orderedMessages.filter(m => !m.isTransient);
         },
         /**
          * @private
          * @returns {Partner[]}
          */
         _computeOrderedOtherTypingMembers() {
-            return replace(this.orderedTypingMembers.filter(
+            return this.orderedTypingMembers.filter(
                 member => member !== this.messaging.currentPartner
-            ));
+            );
         },
         /**
          * @private
          * @returns {Activity[]}
          */
         _computeOverdueActivities() {
-            return replace(this.activities.filter(activity => activity.state === 'overdue'));
+            return this.activities.filter(activity => activity.state === 'overdue');
         },
         /**
          * @private
@@ -1540,7 +1540,7 @@ registerModel({
          * @returns {Activity[]}
          */
         _computeTodayActivities() {
-            return replace(this.activities.filter(activity => activity.state === 'today'));
+            return this.activities.filter(activity => activity.state === 'today');
         },
         /**
          * @private

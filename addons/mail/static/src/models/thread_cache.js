@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -89,7 +89,7 @@ registerModel({
             if (!lastFetchedMessage) {
                 return clear();
             }
-            return replace(lastFetchedMessage);
+            return lastFetchedMessage;
         },
         /**
          * @private
@@ -103,7 +103,7 @@ registerModel({
             if (!lastMessage) {
                 return clear();
             }
-            return replace(lastMessage);
+            return lastMessage;
         },
         /**
          * @private
@@ -121,21 +121,21 @@ registerModel({
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            return replace(this.fetchedMessages.concat(newerMessages));
+            return this.fetchedMessages.concat(newerMessages);
         },
         /**
          * @private
          * @returns {Message[]}
          */
         _computeOrderedFetchedMessages() {
-            return replace(this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+            return this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
         },
         /**
          * @private
          * @returns {Message[]}
          */
         _computeOrderedMessages() {
-            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+            return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
         },
         /**
          *
@@ -143,7 +143,7 @@ registerModel({
          * @returns {Message[]}
          */
         _computeOrderedNonEmptyMessages() {
-            return replace(this.orderedMessages.filter(message => !message.isEmpty));
+            return this.orderedMessages.filter(message => !message.isEmpty);
         },
         /**
          * @private

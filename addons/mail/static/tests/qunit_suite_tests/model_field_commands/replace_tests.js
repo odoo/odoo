@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,7 +13,7 @@ QUnit.test('replace: should link a record for an empty x2one field', async funct
 
     const contact = messaging.models['TestContact'].insert({ id: 10 });
     const address = messaging.models['TestAddress'].insert({ id: 10 });
-    contact.update({ address: replace(address) });
+    contact.update({ address });
     assert.strictEqual(
         contact.address,
         address,
@@ -36,7 +36,7 @@ QUnit.test('replace: should replace a record for a non-empty x2one field', async
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     const address20 = messaging.models['TestAddress'].insert({ id: 20 });
-    contact.update({ address: replace(address20) });
+    contact.update({ address: address20 });
     assert.strictEqual(
         contact.address,
         address20,
@@ -60,7 +60,7 @@ QUnit.test('replace: should link a record for an empty x2many field', async func
 
     const contact = messaging.models['TestContact'].insert({ id: 10 });
     const task = messaging.models['TestTask'].insert({ id: 10 });
-    contact.update({ tasks: replace(task) });
+    contact.update({ tasks: task });
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -97,7 +97,7 @@ QUnit.test('replace: should replace all records for a non-empty field', async fu
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     const task20 = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     const task30 = messaging.models['TestTask'].insert({ id: 30 });
-    contact.update({ tasks: replace(task30) });
+    contact.update({ tasks: task30 });
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -139,7 +139,7 @@ QUnit.test('replace: should order the existing records for x2many field', async 
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     const task20 = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({
-        tasks: replace([task20, task10]),
+        tasks: [task20, task10],
     });
     assert.strictEqual(
         contact.tasks.length,

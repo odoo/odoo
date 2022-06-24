@@ -2,7 +2,7 @@
 
 import { addFields, addRecordMethods, patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, insert, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, link, unlink } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread';
 
@@ -25,7 +25,7 @@ addRecordMethods('Thread', {
         if (!this.messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
             return clear();
         }
-        return replace(this.messaging);
+        return this.messaging;
     },
 });
 
@@ -65,7 +65,7 @@ patchModelMethods('Thread', {
                     )
                 );
                 data2.members.push(link(partner));
-                data2.correspondent = replace(partner);
+                data2.correspondent = partner;
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(insert(partnerData));
