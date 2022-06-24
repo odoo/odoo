@@ -113,10 +113,10 @@ class PaymentTransaction(models.Model):
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
-                for trans in self.filtered(lambda t: t.sale_order_ids):
+                for trans in self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))):
                     ctx_company = {'company_id': trans.acquirer_id.company_id.id,
                                    'force_company': trans.acquirer_id.company_id.id,
                                    'mark_invoice_as_sent': True,
@@ -132,9 +132,11 @@ class PaymentTransaction(models.Model):
                 ctx_company = {'company_id': trans.acquirer_id.company_id.id,
                                'force_company': trans.acquirer_id.company_id.id}
                 trans = trans.with_context(**ctx_company)
-                trans.sale_order_ids._force_lines_to_invoice_policy_order()
-                invoices = trans.sale_order_ids._create_invoices()
-                trans.invoice_ids = [(6, 0, invoices.ids)]
+                confirmed_orders = trans.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
+                if confirmed_orders:
+                    confirmed_orders._force_lines_to_invoice_policy_order()
+                    invoices = confirmed_orders._create_invoices()
+                    trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, values):
