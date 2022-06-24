@@ -8,8 +8,13 @@ from odoo.exceptions import AccessError
 class User(models.Model):
     _inherit = ['res.users']
 
+    def _employee_ids_domain(self):
+        # employee_ids is considered a safe field and as such will be fetched as sudo.
+        # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
+        return [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
-    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
+    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 

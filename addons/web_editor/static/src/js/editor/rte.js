@@ -11,6 +11,8 @@ var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
+const { browser } = owl;
+
 // Summernote Lib (neek change to make accessible: method and object)
 var dom = summernote.core.dom;
 var range = summernote.core.range;
