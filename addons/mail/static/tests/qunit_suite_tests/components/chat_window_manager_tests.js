@@ -902,7 +902,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
         "composer should have 2 total attachments after adding 2 attachments"
     );
 
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
     await openView({
@@ -968,7 +968,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
         },
     });
 
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
     await afterEvent({
@@ -976,7 +976,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
         func: () => openView({
             res_id: mailChannelId1,
             res_model: 'mail.channel',
-            views: [[false, 'form']],
+            views: [[false, 'list']],
         }),
         message: "should wait until channel restored its scroll to 142 after closing discuss",
         predicate: ({ scrollTop, thread }) => {
@@ -1649,13 +1649,13 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     });
     // fold chat window
     await click('.o_ChatWindow_header');
-    await openDiscuss();
+    await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
     await openView({
         res_id: mailChannelId1,
         res_model: 'mail.channel',
-        views: [[false, 'form']],
+        views: [[false, 'list']],
     });
     // unfold chat window
     await afterEvent({
