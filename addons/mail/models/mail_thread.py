@@ -296,7 +296,20 @@ class MailThread(models.AbstractModel):
             return super(MailThread, self).write(values)
 
         if not self._context.get('mail_notrack'):
-            self._track_prepare(self._fields)
+            # only prepare tracking of modified fields (directly or through a compute)
+            computed_fields = set()
+            for field in self._fields.values():
+                if field.compute:
+                    field_dependencies = self.env.registry.field_depends[field]
+                    field_dependencies = [
+                        dependency.split('.')[0] if '.' in dependency else dependency
+                        for dependency in field_dependencies
+                    ]
+
+                    if values.keys() & field_dependencies:
+                        computed_fields.add(field.name)
+
+            self._track_prepare(values.keys() | computed_fields)
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -384,8 +397,10 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _compute_field_value(self, field):
-        if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
-            self._track_prepare(f.name for f in self.pool.field_computed[field] if f.store)
+        # print(field)
+        # print([f.name for f in self.pool.field_computed[field]])
+        # if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
+        self._track_prepare(f.name for f in self.pool.field_computed[field])
 
         return super()._compute_field_value(field)
 
