@@ -7,10 +7,11 @@
     "category": "Hidden",
     "description": "Gmail support for incoming / outgoing mail servers",
     "depends": [
+        "fetchmail",
         "mail",
-        "google_account",
     ],
     "data": [
+        "views/fetchmail_server_views.xml",
         "views/ir_mail_server_views.xml",
         "views/res_config_settings_views.xml",
     ],
