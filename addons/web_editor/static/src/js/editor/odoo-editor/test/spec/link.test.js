@@ -7,6 +7,7 @@ import {
     insertLineBreak,
     testEditor,
     createLink,
+    undo
 } from '../utils.js';
 
 const convertToLink = createLink;
@@ -20,7 +21,7 @@ const testUrlRegex = (url) => {
     });
 }
 const testNotUrlRegex = (url) => {
-    it(`should be a link: ${url}`, () => {
+    it(`should NOT be a link: ${url}`, () => {
         window.chai.assert.notExists(url.match(URL_REGEX));
         window.chai.assert.notExists(url.match(URL_REGEX_WITH_INFOS));
     });
@@ -28,14 +29,25 @@ const testNotUrlRegex = (url) => {
 
 describe('Link', () => {
     describe('regex', () => {
+        testUrlRegex('google.com');
+        testUrlRegex('google.co.uk');
         testUrlRegex('http://google.com');
         testUrlRegex('https://google.com');
+        testUrlRegex('https://www.google.com');
+        testNotUrlRegex('google.shop');
+        testUrlRegex('google.com/');
+        testUrlRegex('http://google.com/');
+        testUrlRegex('https://google.com/');
+        testUrlRegex('https://google.co.uk/');
+        testUrlRegex('https://www.google.com/');
+        testNotUrlRegex('google.shop/');
         testUrlRegex('http://google.com/foo#test');
         testUrlRegex('a.bcd.ef');
         testUrlRegex('a.bc.de');
-        testNotUrlRegex('google.com');
         testNotUrlRegex('a.bc.d');
         testNotUrlRegex('a.b.bc');
+        testNotUrlRegex('20.08.2022');
+        testNotUrlRegex('31.12');
     });
     describe('insert Link', () => {
         // This fails, but why would the cursor stay inside the link
@@ -158,6 +170,113 @@ describe('Link', () => {
                         await createLink(editor, '#');
                     },
                     contentAfter: '<p>a<a href="#">#</a>[]d</p>',
+                });
+            });
+        });
+    });
+    describe('edit link label', () => {
+        describe('range collapsed', () => {
+            it('should not change the url when a link is not edited', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.com</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.co">google.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.xx">google.com</a>b<a href="https://google.co">cd[]</a></p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'e');
+                    },
+                    contentAfter: '<p>a<a href="https://google.xx">google.com</a>b<a href="https://google.co">cde[]</a></p>',
+                });
+            });
+            it('should change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://gogle.com">go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">http://go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="http://google.com">http://goo[]gle.com</a>b</p>',
+                });
+            });
+            it('should change the url in one step', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                        await undo(editor);
+                    },
+                    contentAfter: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                });
+            });
+            it('should not change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'u');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.comu[]</a>b</p>',
+                });
+            });
+        });
+        describe('range not collapsed', () => {
+            it('should change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.[com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'be');
+                    },
+                    contentAfter: '<p>a<a href="https://google.be">google.be[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://gogle.com">[yahoo].com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'google');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google[].com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">go[gle.c]om</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '.c');
+                    },
+                    contentAfter: '<p>a<a href="https://go.com">go.c[]om</a>b</p>',
+                });
+            });
+            it('should not change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">googl[e.com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'e');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.[com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'vvv');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.vvv[]</a>b</p>',
                 });
             });
         });
@@ -315,6 +434,15 @@ describe('Link', () => {
                 },
                 // JW cAfter: '<p>a<a href="exist">b</a>c[]d</p>',
                 contentAfter: '<p>a<a href="exist">bc[]</a>d</p>',
+            });
+        });
+        it('should add two character after the link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist">b[]</a>e</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'cd');
+                },
+                contentAfter: '<p>a<a href="exist">bcd[]</a>e</p>',
             });
         });
         it('should add a character after the link if range just after link', async () => {
