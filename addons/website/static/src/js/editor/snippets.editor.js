@@ -5,7 +5,7 @@ const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
-const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/utils/utils');
+const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
