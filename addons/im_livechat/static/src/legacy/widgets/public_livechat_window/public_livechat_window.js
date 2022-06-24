@@ -169,7 +169,7 @@ const PublicLivechatWindow = Widget.extend({
         if (!this.hasThread()) {
             return undefined;
         }
-        return this._thread.getStatus();
+        return this._thread._status;
     },
     /**
      * Get the title of the thread window, which usually contains the name of
@@ -181,7 +181,7 @@ const PublicLivechatWindow = Widget.extend({
         if (!this.hasThread()) {
             return _t("Undefined");
         }
-        return this._thread.getTitle();
+        return this._thread._name;
     },
     /**
      * Get the unread counter of the related thread. If there are no thread
@@ -193,7 +193,7 @@ const PublicLivechatWindow = Widget.extend({
         if (!this.hasThread()) {
             return 0;
         }
-        return this._thread.getUnreadCounter();
+        return this._thread._unreadCounter;
     },
     /**
      * Tells whether the bottom of the thread in the thread window is visible
@@ -215,7 +215,7 @@ const PublicLivechatWindow = Widget.extend({
         if (!this.hasThread()) {
             return this._folded;
         }
-        return this._thread.isFolded();
+        return this._thread._folded;
     },
     /**
      * States whether the thread window is hidden or not.
@@ -360,7 +360,7 @@ const PublicLivechatWindow = Widget.extend({
         if (!this.hasThread()) {
             return '_blank';
         }
-        return this._thread.getID();
+        return this._thread._id;
     },
     /**
      * Tells whether there is focus on this thread. Note that a thread that has
@@ -424,7 +424,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.preventDefault();
         if (
             this.hasThread() &&
-            this._thread.getUnreadCounter() > 0 &&
+            this._thread._unreadCounter > 0 &&
             !this.isFolded()
         ) {
             this._thread.markAsRead();
@@ -467,7 +467,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onInput() {
-        if (this.hasThread() && this._thread.hasTypingNotification()) {
+        if (this.hasThread()) {
             const isTyping = this.$input.val().length > 0;
             this._thread.setMyselfTyping({ typing: isTyping });
         }

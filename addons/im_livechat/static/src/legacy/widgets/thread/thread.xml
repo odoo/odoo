@@ -10,7 +10,7 @@
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread">
-        <t t-if="thread.hasMessages({ 'domain': options.domain || [] })">
+        <t t-if="thread.hasMessages()">
             <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
         </t>
     </t>
@@ -193,7 +193,7 @@
                     <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
                         <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
-                    <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
+                    <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread._id)">
                         (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
                     <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">

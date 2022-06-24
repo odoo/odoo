@@ -15,9 +15,6 @@ import { sprintf } from 'web.utils';
  * is not linked to the mail service.
  */
 const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
-    // Default partner infos
-    _DEFAULT_TYPING_PARTNER_ID: '_default',
-    _DEFAULT_TYPING_PARTNER_NAME: 'Someone',
     /**
      * @override
      * @private
@@ -116,8 +113,13 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.on('message_posted', this, this._onTypingMessagePosted);
 
 
-        this._members = [];
         this._operatorPID = params.data.operator_pid;
+        // Necessary for thread typing mixin to display is typing notification
+        // bar text (at least, for the operator in the members).
+        this._members = [{
+            id: this._operatorPID[0],
+            name: this._operatorPID[1]
+        }];
         this._uuid = params.data.uuid;
 
         if (params.data.message_unread_counter !== undefined) {
@@ -129,13 +131,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         } else {
             this._folded = params.data.state === 'folded';
         }
-
-        // Necessary for thread typing mixin to display is typing notification
-        // bar text (at least, for the operator in the members).
-        this._members.push({
-            id: this._operatorPID[0],
-            name: this._operatorPID[1]
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -159,51 +154,12 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this._folded = folded;
     },
     /**
-     * Get the ID of this thread
-     *
-     * @returns {integer|string}
-     */
-    getID() {
-        return this._id;
-    },
-    /**
      * @override
      * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
      getMessages() {
         // ignore removed messages
         return this._messages.filter(message => !message.isEmpty());
-    },
-    /**
-     * Get the name of this thread. If the name of the thread has been created
-     * by the user from an input, it may be escaped.
-     *
-     * @returns {string}
-     */
-    getName() {
-        return this._name;
-    },
-    /**
-     * @returns {Array}
-     */
-    getOperatorPID() {
-        return this._operatorPID;
-    },
-    /**
-     * Get the status of the thread (e.g. 'online', 'offline', etc.)
-     *
-     * @returns {string}
-     */
-    getStatus() {
-        return this._status;
-    },
-    /**
-     * Returns the title to display in thread window's headers.
-     *
-     * @returns {string} the name of the thread by default (see @getName)
-     */
-    getTitle() {
-        return this.getName();
     },
     /**
      * Get the text to display when some partners are typing something on the
@@ -255,48 +211,10 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         }
     },
     /**
-     * @returns {integer}
-     */
-    getUnreadCounter() {
-        return this._unreadCounter;
-    },
-    /**
-     * @returns {string}
-     */
-    getUUID() {
-        return this._uuid;
-    },
-    /**
      * @returns {boolean}
      */
     hasMessages() {
         return !_.isEmpty(this.getMessages());
-    },
-    /**
-     * Threads with this mixin have the typing notification feature
-     *
-     * @returns {boolean}
-     */
-    hasTypingNotification() {
-        return true;
-    },
-    /**
-     * Increments the unread counter of this livechat by 1 unit.
-     *
-     * Note: this public method makes sense because the management of messages
-     * for website livechat is external. This method should be dropped when
-     * this class handles messages by itself.
-     */
-    incrementUnreadCounter() {
-        this._incrementUnreadCounter();
-    },
-    /**
-     * States whether this thread is folded or not.
-     *
-     * @return {boolean}
-     */
-    isFolded() {
-        return this._folded;
     },
     /**
      * Tells if someone other than current user is typing something on this
@@ -315,7 +233,9 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     markAsRead() {
         if (this._unreadCounter > 0) {
-            return this._markAsRead();
+            this._unreadCounter = 0;
+            this.trigger_up('updated_unread_counter');
+            return Promise.resolve();
         }
         return Promise.resolve();
     },
@@ -325,9 +245,8 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise} resolved with the message object to be sent to the
      *   server
      */
-    postMessage() {
-        return this._postMessage(...arguments)
-                                .then(this.trigger.bind(this, 'message_posted'));
+    async postMessage() {
+        this.trigger('message_posted');
     },
     /**
      * Register someone that is currently typing something in this thread.
@@ -341,7 +260,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      *   currently typing something on the thread.
      */
     registerTyping(params) {
-        if (this._isTypingMyselfInfo(params)) {
+        if (params.isWebsiteUser) {
             return;
         }
         const partnerID = params.partnerID;
@@ -354,21 +273,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         }
         this._typingPartnerIDs.push(partnerID);
         this._warnUpdatedTypingPartners();
-    },
-    /**
-     * Resets the unread counter of this thread to 0.
-     */
-    resetUnreadCounter() {
-        this._unreadCounter = 0;
-        this._warnUpdatedUnreadCounter();
-    },
-    /**
-     * AKU: hack for the moment
-     *
-     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages
-     */
-    setMessages(messages) {
-        this._messages = messages;
     },
     /**
      * This method must be called when the user starts or stops typing something
@@ -396,12 +300,12 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
-            folded: this.isFolded(),
-            id: this.getID(),
-            message_unread_counter: this.getUnreadCounter(),
-            operator_pid: this.getOperatorPID(),
-            name: this.getName(),
-            uuid: this.getUUID(),
+            folded: this._folded,
+            id: this._id,
+            message_unread_counter: this._unreadCounter,
+            operator_pid: this._operatorPID,
+            name: this._name,
+            uuid: this._uuid,
         };
     },
     /**
@@ -428,36 +332,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Increments the unread counter of this thread by 1 unit.
-     *
-     * @private
-     */
-    _incrementUnreadCounter() {
-        this._unreadCounter++;
-    },
-    /**
-     * Tells whether the provided information on a partner is related to the
-     * current user or not.
-     *
-     * @private
-     * @param {Object} params
-     * @param {boolean} params.isWebsiteUser
-     * @returns {boolean}
-     */
-    _isTypingMyselfInfo(params) {
-        return params.isWebsiteUser;
-    },
-    /**
-     * Mark the thread as read
-     *
-     * @private
-     * @returns {Promise}
-     */
-    _markAsRead() {
-        this.resetUnreadCounter();
-        return Promise.resolve();
-    },
-    /**
      * Notify to the server that the current user either starts or stops typing
      * something.
      *
@@ -469,19 +343,9 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _notifyMyselfTyping(params) {
         return session.rpc('/im_livechat/notify_typing', {
-            uuid: this.getUUID(),
+            uuid: this._uuid,
             is_typing: params.typing,
         }, { shadow: true });
-    },
-    /**
-     * Post a message on this thread
-     *
-     * @private
-     * @returns {Promise} resolved with the message object to be sent to the
-     *   server
-     */
-    _postMessage() {
-        return Promise.resolve();
     },
     /**
      * Warn views that the list of users that are currently typing on this
@@ -491,14 +355,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _warnUpdatedTypingPartners() {
         this.trigger_up('updated_typing_partners');
-    },
-    /**
-     * Warn that the unread counter has been updated on this livechat
-     *
-     * @private
-     */
-    _warnUpdatedUnreadCounter() {
-        this.trigger_up('updated_unread_counter');
     },
 
     //--------------------------------------------------------------------------
@@ -575,7 +431,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {mail.model.AbstractMessage} message
      */
     _onTypingMessageAdded(message) {
-        const operatorID = this.getOperatorPID()[0];
+        const operatorID = this._operatorPID[0];
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }
