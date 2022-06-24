@@ -413,45 +413,8 @@ function getCreateNotificationListComponent({ env, target }) {
     };
 }
 
-function getCreateThreadViewComponent({ afterEvent, env, target }) {
-    return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
-        let actualTarget;
-        if (isFixedSize) {
-            // needed to allow scrolling in some tests
-            const div = document.createElement('div');
-            Object.assign(div.style, {
-                display: 'flex',
-                'flex-flow': 'column',
-                height: '300px',
-            });
-            target.appendChild(div);
-            actualTarget = div;
-        } else {
-            actualTarget = target;
-        }
-        async function func() {
-            return createRootMessagingComponent(env, "ThreadView", { props: { record: threadView, ...otherProps }, target: actualTarget });
-        }
-        if (waitUntilMessagesLoaded) {
-            await afterNextRender(() => afterEvent({
-                eventName: 'o-thread-view-hint-processed',
-                func,
-                message: "should wait until thread loaded messages after creating thread view component",
-                predicate: ({ hint, threadViewer }) => {
-                    return (
-                        hint.type === 'messages-loaded' &&
-                        threadViewer.threadView === threadView
-                    );
-                },
-            }));
-        } else {
-            await func();
-        }
-    };
-}
-
-function getOpenDiscuss(webClient, { context, params, ...props } = {}) {
-    return async function openDiscuss() {
+function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
+    return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
             // hardcoded actionId, required for discuss_container props validation.
             id: 104,
@@ -460,8 +423,47 @@ function getOpenDiscuss(webClient, { context, params, ...props } = {}) {
             tag: 'mail.action_discuss',
             type: 'ir.actions.client',
         };
-        await afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
+        if (waitUntilMessagesLoaded) {
+            let threadId = context.active_id;
+            if (typeof threadId === 'string') {
+                threadId = parseInt(threadId.split('_')[1]);
+            }
+            return afterNextRender(() => afterEvent({
+                eventName: 'o-thread-view-hint-processed',
+                func: () => doAction(webClient, actionOpenDiscuss, { props }),
+                message: "should wait until discuss loaded its messages",
+                predicate: ({ hint, threadViewer }) => {
+                    return (
+                        hint.type === 'messages-loaded' &&
+                        (!threadId || threadViewer.thread.id === threadId)
+                    );
+                },
+            }));
+        }
+        return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
+}
+
+function getOpenFormView(afterEvent, openView) {
+    return async function openFormView(action, { props, waitUntilMessagesLoaded = true } = {}) {
+        action['views'] = [[false, 'form']];
+        if (waitUntilMessagesLoaded) {
+            return afterNextRender(() => afterEvent({
+                eventName: 'o-thread-view-hint-processed',
+                func: () => openView(action, props),
+                message: "should wait until chatter loaded its messages",
+                predicate: ({ hint, threadViewer }) => {
+                    return (
+                        hint.type === 'messages-loaded' &&
+                        threadViewer &&
+                        threadViewer.thread.model === action.res_model &&
+                        threadViewer.thread.id === action.res_id
+                    )
+                },
+            }));
+        }
+        return openView(action, props);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -572,12 +574,12 @@ async function start(param0 = {}) {
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
-        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: webClient.env, target }),
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
-        openDiscuss: getOpenDiscuss(webClient, discuss),
+        openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
         openView,
+        openFormView: getOpenFormView(afterEvent, openView),
         pyEnv,
         webClient,
     };
