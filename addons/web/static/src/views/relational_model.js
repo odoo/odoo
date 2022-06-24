@@ -1378,11 +1378,12 @@ class DynamicList extends DataPoint {
         if (!this.firstGroupBy) {
             return false;
         }
-        const [groupByFieldName] = this.firstGroupBy.split(":");
+        const [groupByFieldName, granularity] = this.firstGroupBy.split(":");
         return {
             rawAttrs: {},
             ...this.fields[groupByFieldName],
             ...this.activeFields[groupByFieldName],
+            granularity: granularity,
         };
     }
 
@@ -2183,7 +2184,7 @@ export class DynamicGroupList extends DynamicList {
                 switch (key) {
                     case this.firstGroupBy: {
                         if (value && ["date", "datetime"].includes(groupByField.type)) {
-                            const dateString = data.__range[groupByField.name].to;
+                            const dateString = data.__range[this.firstGroupBy].to;
                             const dateValue = this._parseServerValue(groupByField, dateString);
                             const granularity = groupByField.type === "date" ? "day" : "second";
                             groupParams.value = dateValue.minus({ [granularity]: 1 });
@@ -2397,7 +2398,7 @@ export class Group extends DataPoint {
     }
 
     getServerValue() {
-        const { name, selection, type } = this.groupByField;
+        const { name, selection, type, granularity } = this.groupByField;
         switch (type) {
             case "many2one":
             case "char":
@@ -2411,7 +2412,8 @@ export class Group extends DataPoint {
             // for a date/datetime field, we take the last moment of the group as the group value
             case "date":
             case "datetime": {
-                const range = this.range[name];
+                const groupedBy = granularity ? `${name}:${granularity}` : name;
+                const range = this.range[groupedBy];
                 if (!range) {
                     return false;
                 }

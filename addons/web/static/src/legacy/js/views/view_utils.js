@@ -21,11 +21,12 @@ var viewUtils = {
      * field for the records in that group.
      *
      * @param {Object} group dataPoint of type list, corresponding to a group
-     * @param {string} groupByField the name of the groupBy field
+     * @param {string} groupedBy the value of the groupby, i.e.
+     *                           field_name:granularity for date/datetime
      * @returns {string | integer | false}
      */
-    getGroupValue: function (group, groupByField) {
-        var groupedByField = group.fields[groupByField];
+    getGroupValue: function (group, groupedBy) {
+        var groupedByField = group.fields[this.getGroupByField(groupedBy)];
         switch (groupedByField.type) {
             case 'many2one':
                 return group.res_id || false;
@@ -42,8 +43,8 @@ var viewUtils = {
             case 'datetime':
                 const [format, granularity] = groupedByField.type === 'date' ?
                     ["YYYY-MM-DD", 'day'] : ["YYYY-MM-DD HH:mm:ss", 'second'];
-                return group.range[groupByField] ?
-                    moment.utc(group.range[groupByField].to).subtract(1, granularity).format(format) : false;
+                return group.range[groupedBy] ?
+                    moment.utc(group.range[groupedBy].to).subtract(1, granularity).format(format) : false;
             default:
                 return false; // other field types are not handled
         }

@@ -3631,7 +3631,7 @@ var BasicModel = AbstractModel.extend({
         while (dataPoint.parentID) {
             var parent = this.localData[dataPoint.parentID];
             var groupByField = parent.groupedBy[0].split(':')[0];
-            var value = viewUtils.getGroupValue(dataPoint, groupByField);
+            var value = viewUtils.getGroupValue(dataPoint, parent.groupedBy[0]);
             if (value) {
                 defaultContext['default_' + groupByField] = value;
             }
@@ -4037,9 +4037,11 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [params.static=false]
      * @param {string} [params.type='record'|'list']
      * @param {[type]} [params.value]
-     * @param {Object} [params.range] only for datapoints representing groups coming from a groupBy on a
-     *   date(time) field @see _readGroup format: {[fieldName]: {from: string, to: string}}, where
-     *   'from' (inclusive) and 'to' (exclusive) are the group bounds under the respective date format
+     * @param {Object} [params.range] only for datapoints representing groups
+     *   coming from a groupBy on a date(time) field @see _readGroup format:
+     *   {[fieldName:granularity]: {from: string, to: string}}, where
+     *   'from' (inclusive) and 'to' (exclusive) are the group bounds under the
+     *   respective date format
      * @param {string} [params.viewType] the type of the view, e.g. 'list' or 'form'
      * @returns {Object} the resource created
      */

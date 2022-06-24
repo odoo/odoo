@@ -114,7 +114,7 @@ var KanbanModel = BasicModel.extend({
         var context = this._getContext(group);
         var parent = this.localData[group.parentID];
         var groupByField = viewUtils.getGroupByField(parent.groupedBy[0]);
-        context['default_' + groupByField] = viewUtils.getGroupValue(group, groupByField);
+        context['default_' + groupByField] = viewUtils.getGroupValue(group, parent.groupedBy[0]);
         var def;
         if (Object.keys(values).length === 1 && 'display_name' in values) {
             // only 'display_name is given, perform a 'name_create'
@@ -240,7 +240,7 @@ var KanbanModel = BasicModel.extend({
         var groupedField = parent.fields[groupedFieldName];
         // for a date/datetime field, we take the last moment of the group as the group value
         if (['date', 'datetime'].includes(groupedField.type)) {
-            changes[groupedFieldName] = viewUtils.getGroupValue(new_group, groupedFieldName);
+            changes[groupedFieldName] = viewUtils.getGroupValue(new_group, parent.groupedBy[0]);
         } else if (groupedField.type === 'many2one') {
             changes[groupedFieldName] = {
                 id: new_group.res_id,

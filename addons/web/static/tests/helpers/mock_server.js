@@ -1028,13 +1028,13 @@ export class MockServer {
                             type === "date"
                                 ? endDate.toFormat("yyyy-MM-dd")
                                 : endDate.toFormat("yyyy-MM-dd HH:mm:ss");
-                        group.__range[fieldName] = { from, to };
+                        group.__range[gbField] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],
                             [fieldName, "<", to],
                         ].concat(group.__domain);
                     } else {
-                        group.__range[fieldName] = false;
+                        group.__range[gbField] = false;
                         group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                     }
                 } else {
@@ -1891,6 +1891,31 @@ export class MockServer {
     }
 
     /**
+     * Extract a sorting value for date/datetime fields from read_group __range
+     * The start of the range for the shortest granularity is taken since it is
+     * the most specific for a given group.
+     *
+     * @param {Object} record
+     * @param {string} fieldName
+     * @returns {string|false}
+     */
+    getDateSortingValue(record, fieldName) {
+        // extract every range start related to fieldName
+        const values = [];
+        for (const groupedBy of Object.keys(record.__range)) {
+            if (groupedBy.startsWith(fieldName)) {
+                values.push(record.__range[groupedBy].from);
+            }
+        }
+        // return false or the latest range start (related to the shortest
+        // granularity (i.e. day, week, ...))
+        return !values.length || values.includes(false) ? false :
+            values.reduce((max, value) => {
+                return value > max ? value : max;
+            });
+    }
+
+    /**
      * Get all records from a model matching a domain.  The only difficulty is
      * that if we have an 'active' field, we implicitely add active = true in
      * the domain.
@@ -2009,8 +2034,8 @@ export class MockServer {
                 case "date":
                 case "datetime": {
                     if (r1.__range && r2.__range) {
-                        v1 = r1.__range[field.name] && r1.__range[field.name].from;
-                        v2 = r2.__range[field.name] && r2.__range[field.name].from;
+                        v1 = this.getDateSortingValue(r1, field.name);
+                        v2 = this.getDateSortingValue(r2, field.name);
                     }
                     break;
                 }
