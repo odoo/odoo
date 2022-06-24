@@ -189,7 +189,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         // redirect to its starting point (or /web by default)
         window.location.href = window.location.origin + (tour.url || '/web');
     },
-    run: function (tour_name, step_delay) {
+    run: async function (tour_name, step_delay) {
         console.log(_.str.sprintf("Preparing tour %s", tour_name));
         if (this.running_tour) {
             this._deactivate_tip(this.active_tooltips[this.running_tour]);
@@ -534,7 +534,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
                 var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                action_helper[m[1]](m[2]);
+                try {
+                    action_helper[m[1]](m[2]);
+                } catch (e) {
+                    console.error(`Tour ${tour_name} failed at step ${self._describeTip(tip)}: ${e.message}`);
+                    throw e;
+                }
             } else if (tour.current_step === tour.steps.length - 1) {
                 console.log('Tour %s: ignoring action (auto) of last step', tour_name);
             } else {
