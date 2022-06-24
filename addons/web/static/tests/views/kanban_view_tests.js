@@ -9619,4 +9619,182 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
     });
+
+    QUnit.test("quick create record and click outside (no dirty input)", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban limit="2">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+            createRecord: () => {
+                assert.step("create record");
+            },
+        });
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord();
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+
+        await click(target, ".o_control_panel");
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord();
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+
+        await quickCreateRecord(1);
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
+
+        await click(target, ".o_kanban_load_more button");
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord();
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+
+        assert.verifySteps([]);
+
+        await click(target, ".o-kanban-button-new");
+
+        assert.verifySteps(["create record"]);
+        assert.containsNone(target, ".o_kanban_quick_create");
+    });
+
+    QUnit.test("quick create record and click outside (with dirty input)", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban limit="2">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+            createRecord: () => {
+                assert.step("create record");
+            },
+        });
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord();
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+
+        await editInput(target, ".o_kanban_quick_create [name=display_name] input", "ABC");
+
+        assert.strictEqual(
+            target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+            "ABC"
+        );
+
+        await click(target, ".o_control_panel");
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+            "ABC"
+        );
+
+        await quickCreateRecord(1);
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+            ""
+        );
+
+        await editInput(target, ".o_kanban_quick_create [name=display_name] input", "ABC");
+
+        assert.strictEqual(
+            target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+            "ABC"
+        );
+
+        await click(target, ".o_kanban_load_more button");
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord();
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
+
+        await editInput(target, ".o_kanban_quick_create [name=display_name] input", "ABC");
+
+        assert.strictEqual(
+            target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+            "ABC"
+        );
+        assert.verifySteps([]);
+
+        await click(target, ".o-kanban-button-new");
+
+        assert.verifySteps(["create record"]);
+        assert.containsNone(target, ".o_kanban_quick_create");
+    });
+
+    QUnit.test("quick create record and click on 'Load more'", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban limit="2">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+        });
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+
+        await quickCreateRecord(1);
+
+        assert.containsOnce(target, ".o_kanban_quick_create");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+        await click(target, ".o_kanban_load_more button");
+        await nextTick();
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+    });
 });

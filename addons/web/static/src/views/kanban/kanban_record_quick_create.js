@@ -5,6 +5,12 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 
 const { Component, onMounted, useExternalListener, useState, useRef } = owl;
 
+const ACTION_SELECTORS = [
+    ".o_kanban_quick_add",
+    ".o_kanban_load_more button",
+    ".o-kanban-button-new",
+];
+
 export class KanbanRecordQuickCreate extends Component {
     setup() {
         this.uiService = useService("ui");
@@ -28,9 +34,17 @@ export class KanbanRecordQuickCreate extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                const gotClickedInside = this.rootRef.el.contains(target);
-                if (!gotClickedInside) {
-                    this.cancel(false);
+                const gotClickedOutside = !this.rootRef.el.contains(target);
+                if (gotClickedOutside) {
+                    let force = false;
+                    for (const selector of ACTION_SELECTORS) {
+                        const closestEl = target.closest(selector);
+                        if (closestEl) {
+                            force = true;
+                            break;
+                        }
+                    }
+                    this.cancel(force);
                 }
                 this.mousedownTarget = null;
             },
