@@ -123,17 +123,34 @@ function insert(editor, data, {mode = "text"}) {
     let lastChildNode = false;
     if (containerLastChild.hasChildNodes()) {
         let tempCurrentNode = currentNode;
-        for (const n of [...containerLastChild.childNodes]) {
-            tempCurrentNode.after(n);
-            tempCurrentNode = n;
+        const children = [...containerLastChild.childNodes];
+        if (insertBefore) {
+            children.reverse();
         }
-        lastChildNode = tempCurrentNode;
+        for (const child of children) {
+            tempCurrentNode[insertBefore ? 'before' : 'after'](child);
+            tempCurrentNode = child;
+        }
+        if (insertBefore) {
+            currentNode = tempCurrentNode;
+            lastChildNode = children[0];
+        } else {
+            lastChildNode = tempCurrentNode;
+        }
     }
 
     if (containerFirstChild.hasChildNodes()) {
-        for (const n of [...containerFirstChild.childNodes]) {
-            currentNode.after(n);
+        const children = [...containerFirstChild.childNodes];
+        if (insertBefore) {
+            children.reverse();
+        }
+        for (const n of children) {
+            currentNode[insertBefore ? 'before' : 'after'](n);
             currentNode = n;
+        }
+        if (insertBefore) {
+            currentNode = children[0];
+            insertBefore = false;
         }
     }
 
