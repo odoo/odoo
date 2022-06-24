@@ -66,11 +66,13 @@ Featuring
     'installable': True,
     'application': True,
     'assets': {
+        'mail.assets_messaging': [
+            'website_slides/static/src/models/*.js',
+        ],
         'web.assets_backend': [
             'website_slides/static/src/scss/slide_views.scss',
             'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/rating_field_backend.js',
-            'website_slides/static/src/models/*.js',
             'website_slides/static/src/js/components/**/*.js',
         ],
         'web.assets_frontend': [
