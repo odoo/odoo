@@ -82,14 +82,17 @@ class TestCommonTimesheet(TransactionCase):
         cls.empl_employee = cls.env['hr.employee'].create({
             'name': 'User Empl Employee',
             'user_id': cls.user_employee.id,
+            'employee_type': 'freelance',  # Avoid searching the contract if hr_contract module is installed before this module.
         })
         cls.empl_employee2 = cls.env['hr.employee'].create({
             'name': 'User Empl Employee 2',
             'user_id': cls.user_employee2.id,
+            'employee_type': 'freelance',
         })
         cls.empl_manager = cls.env['hr.employee'].create({
             'name': 'User Empl Officer',
             'user_id': cls.user_manager.id,
+            'employee_type': 'freelance',
         })
 
     def assert_get_view_timesheet_encode_uom(self, expected):
