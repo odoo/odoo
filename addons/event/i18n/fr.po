@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -2985,7 +2985,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "Découverte en ligne de la collection OpenWood"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -3633,13 +3633,9 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Ticket Instructions"
 msgstr "Instructions sur le billet"
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid "Ticket Intructions"
-msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view

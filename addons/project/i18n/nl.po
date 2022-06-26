@@ -1700,6 +1700,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Mensen voor wie dit project en zijn taken zichtbaar zullen zijn.\n"
+"\n"
+"- Uitgenodigde interne gebruikers: bij het volgen van een project krijgen interne gebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+"Een gebruiker met het project > beheerders toegangsrechtniveau heeft nog steeds toegang tot dit project en zijn taken, zelfs als ze niet expliciet deel uitmaken van de volgers.\n"
+"\n"
+"- Alle interne gebruikers: alle interne gebruikers hebben zonder onderscheid toegang tot het project en alle taken.\n"
+"\n"
+"- Uitgenodigde portaalgebruikers en alle interne gebruikers: alle interne gebruikers hebben zonder beperking toegang tot het project en al zijn taken.\n"
+"Bij het volgen van een project krijgen portaalgebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+"\n"
+"Wanneer een project in alleen-lezen wordt gedeeld, wordt de portalgebruiker doorgestuurd naar zijn portal. Ze kunnen de taken bekijken, maar niet bewerken.\n"
+"Wanneer een project in bewerken wordt gedeeld, wordt de portalgebruiker omgeleid naar de kanban- en lijstweergaven van de taken. Ze kunnen een geselecteerd aantal velden op de taken wijzigen.\n"
+"\n"
+"In ieder geval kan een interne gebruiker zonder projecttoegangsrechten nog steeds toegang krijgen tot een taak, op voorwaarde dat ze de bijbehorende URL krijgen (en dat ze deel uitmaken van de volgers als het project privé is)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -4337,7 +4351,7 @@ msgstr "Specificaties"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr "Deel je taken op, om zo je werk op te delen in sub-milestones"
+msgstr "Deel je taken op, om zo je werk op te delen in sub-taken"
 
 #. module: project
 #. openerp-web

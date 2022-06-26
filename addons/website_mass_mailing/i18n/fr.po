@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -29,7 +29,7 @@ msgstr ", .o_newsletter_popup"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Always <b>First</b>."
-msgstr ""
+msgstr "Toujours <b>Premier</b>."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
@@ -48,6 +48,8 @@ msgstr ""
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
+"Soyez le premier à découvrir toutes les dernières nouvelles, <br/>produits "
+"et tendances."
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -70,6 +72,13 @@ msgstr "Contact"
 
 #. module: website_mass_mailing
 #. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Display Thanks Button"
+msgstr "Afficher le bouton de remerciement"
+
+#. module: website_mass_mailing
+#. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
@@ -89,6 +98,8 @@ msgid ""
 "No mailing list found, do you want to create a new one? This will save all "
 "your changes, are you sure you want to proceed?"
 msgstr ""
+"Aucune liste de diffusion trouvée, voulez-vous en créer une nouvelle ? Cela "
+"enregistrera toutes vos modifications, êtes-vous sûr de vouloir continuer ?"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
