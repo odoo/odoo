@@ -25,12 +25,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_questions_count
 msgid "# Quiz Questions"
-msgstr ""
+msgstr "# Questions de quiz"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -169,7 +169,7 @@ msgstr "Événement"
 #. module: website_event_track_quiz
 #: model:ir.actions.act_window,name:website_event_track_quiz.event_quiz_question_action
 msgid "Event Quiz Questions"
-msgstr ""
+msgstr "Questions du quiz de l'événement"
 
 #. module: website_event_track_quiz
 #: model:ir.actions.act_window,name:website_event_track_quiz.event_quiz_action
