@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-02-14 08:09+0000\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,28 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr "Einstellungen ändern"
+
+#. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token
@@ -32,14 +54,8 @@ msgstr "Access Token Expiration Timestamp"
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_authorization_code
-#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
 msgid "Authorization Code"
 msgstr "Autorisierungscode"
-
-#. module: fetchmail_gmail
-#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid "Get an Authorization Code"
-msgstr "Autorisierungscode anfordern"
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields.selection,name:fetchmail_gmail.selection__fetchmail_server__server_type__gmail
@@ -63,10 +79,12 @@ msgstr "Servertyp"
 
 #. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid "Setup your Gmail API credentials to link a Gmail account."
+msgid ""
+"Setup your Gmail API credentials in the general settings to link a Gmail "
+"account."
 msgstr ""
-"Richten Sie Ihre Gmail-API-Anmeldedaten ein, um ein Gmail-Konto zu "
-"verknüpfen."
+"Richten Sie Ihre Gmail-API-Anmeldedaten in den allgemeinen Einstellungen "
+"ein, um ein Gmail-Konto zu verknüpfen."
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields,help:fetchmail_gmail.field_fetchmail_server__google_gmail_uri
