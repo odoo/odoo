@@ -1,4 +1,4 @@
-Saudi Arabia, 2022/06/26
+Saudi Arabia, 2022-06-26
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
