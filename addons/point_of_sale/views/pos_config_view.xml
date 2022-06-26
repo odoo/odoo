@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--Account cashbox line-->
-
-    <record id="account_cashbox_line_view_tree" model="ir.ui.view">
-        <field name="name">account.cashbox.line.tree</field>
-        <field name="model">account.cashbox.line</field>
-        <field name="arch" type="xml">
-            <tree string="Cashbox balance" editable="top">
-                <field name="coin_value"/>
-                <field name="number"/>
-                <field name="subtotal"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="account_cashbox_line_action" model="ir.actions.act_window">
-        <field name="name">Opening/Closing Values</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">account.cashbox.line</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="account_cashbox_line_view_tree"/>
-    </record>
-
     <record id="pos_config_view_form" model="ir.ui.view">
         <field name="name">pos.config.form.view</field>
         <field name="model">pos.config</field>

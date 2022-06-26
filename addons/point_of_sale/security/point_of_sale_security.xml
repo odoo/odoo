@@ -34,17 +34,11 @@
         <field name="name">Point Of Sale Bank Statement Line POS User</field>
         <field name="model_id" ref="account.model_account_bank_statement_line" />
         <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
-        <field name="domain_force">[('statement_id.pos_session_id', '!=', False)]</field>
+        <field name="domain_force">[('pos_session_id', '!=', False)]</field>
     </record>
     <record id="rule_pos_bank_statement_line_account_user" model="ir.rule">
         <field name="name">Point Of Sale Bank Statement Line Accountant</field>
         <field name="model_id" ref="account.model_account_bank_statement_line" />
-        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
-    <record id="rule_pos_cashbox_line_accountant" model="ir.rule">
-        <field name="name">Point Of Sale Cashbox Line Accountant</field>
-        <field name="model_id" ref="account.model_account_cashbox_line" />
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="domain_force">[(1, '=', 1)]</field>
     </record>

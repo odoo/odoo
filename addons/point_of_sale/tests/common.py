@@ -686,7 +686,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         _logger.info("DONE: Check of the session's account move.")
 
         # check expected cash journal entries
-        for statement_line in pos_session.cash_register_id.line_ids:
+        for statement_line in pos_session.statement_line_ids:
             def statement_line_predicate(args):
                 return tools.float_is_zero(statement_line.amount - args[0], precision_rounding=currency_rounding)
             self._find_then_assert_values(statement_line.move_id, expected_values['cash_statement'], statement_line_predicate)

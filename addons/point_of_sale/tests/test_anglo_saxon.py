@@ -105,7 +105,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # I close the current session to generate the journal entries
         current_session_id = self.pos_config.current_session_id
-        current_session_id._check_pos_session_balance()
         current_session_id.post_closing_cash_details(450.0)
         current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
