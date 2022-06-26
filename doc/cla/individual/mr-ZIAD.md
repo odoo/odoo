@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-mr. ziad mrziad.contact@gmail.com https://github.com/mr-ZIAD
+mr-ziad mrziad.contact@gmail.com https://github.com/mr-ZIAD
