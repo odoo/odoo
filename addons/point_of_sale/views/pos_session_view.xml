@@ -15,7 +15,6 @@
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
-                    <field name="cash_register_id" invisible="1"/>
                     <field name="failed_pickings" invisible="1"/>
                     <field name="rescue" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
@@ -46,6 +45,7 @@
                             groups="account.group_account_readonly"
                             >
                         </button>
+<!--todo:poma find a replacement -->
                         <button
                             name="show_cash_register"
                             type="object"

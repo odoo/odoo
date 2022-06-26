@@ -12,13 +12,13 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.manualInputCashCount = null;
             this.state = useState({
                 notes: "",
-                openingCash: this.env.pos.bank_statement.balance_start || 0,
+                openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
                 displayMoneyDetailsPopup: false,
             });
         }
         //@override
         async confirm() {
-            this.env.pos.bank_statement.balance_start = this.state.openingCash;
+            this.env.pos.pos_session.cash_register_balance_start = this.state.openingCash;
             this.env.pos.pos_session.state = 'opened';
             this.rpc({
                    model: 'pos.session',
