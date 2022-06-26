@@ -80,7 +80,7 @@ def set_limit_memory_hard():
     if os.name == 'posix' and config['limit_memory_hard']:
         rlimit = resource.RLIMIT_RSS if platform.system() == 'Darwin' else resource.RLIMIT_AS
         soft, hard = resource.getrlimit(rlimit)
-        resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
+#        resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
 
 def empty_pipe(fd):
     try:
