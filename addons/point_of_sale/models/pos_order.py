@@ -170,7 +170,7 @@ class PosOrder(models.Model):
 
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
-        for payments in pos_order['statement_ids']:
+        for payments in pos_order['statement_ids']:  # this is not related to session.statement_ids it is just a variable with a weird name holding payments
             order.add_payment(self._payment_fields(order, payments[2]))
 
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
@@ -1011,7 +1011,7 @@ class PosOrder(models.Model):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         return {
             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
-            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],  # this is not related to session.statement_ids it is just a variable with a weird name holding payments
             'name': order.pos_reference,
             'uid': re.search('([0-9-]){14}', order.pos_reference).group(0),
             'amount_paid': order.amount_paid,

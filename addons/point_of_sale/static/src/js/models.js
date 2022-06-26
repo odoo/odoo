@@ -198,7 +198,6 @@ class PosGlobalState extends PosModel {
         this.user = loadedData['res.users'];
         this.pricelists = loadedData['product.pricelist'];
         this.default_pricelist = loadedData['default_pricelist'];
-        this.bank_statement = loadedData['account.bank.statement'];
         this.currency = loadedData['res.currency'];
         this.db.add_categories(loadedData['pos.category']);
         this._loadProductProduct(loadedData['product.product']);

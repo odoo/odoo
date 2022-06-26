@@ -822,18 +822,16 @@ class TestPoSBasicConfig(TestPoSCommon):
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
 
-        cash_register = session.cash_register_id
-        self.assertEqual(cash_register.balance_start, 0)
-        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(session.cash_register_balance_start, 0)
+        self.assertEqual(session.cash_register_balance_end_real, amount_paid)
 
         # Open/Close session without any order in cash control
         self.open_new_session(amount_paid)
         session = self.pos_session
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
-        cash_register = session.cash_register_id
-        self.assertEqual(cash_register.balance_start, amount_paid)
-        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(session.cash_register_balance_start, amount_paid)
+        self.assertEqual(session.cash_register_balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
 
     def test_start_balance_with_two_pos(self):
@@ -844,7 +842,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.open_new_session()
             session = self.pos_session
             session.set_cashbox_pos(pos_data['amount_paid'], False)
-            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
+            self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
         pos02_config = pos01_config.copy()
