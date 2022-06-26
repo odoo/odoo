@@ -35,7 +35,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "تم تحديث تكلفة المنتج من %(previous)s إلى %(new_cost)s. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -43,6 +43,7 @@ msgstr ""
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
+"قام %(user)s بتغيير التكلفة من %(previous)s إلى %(new_price)s - %(product)s "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -52,6 +53,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"قام %(user)s بتغيير تقييم المخزون من %(previous)s إلى %(new_value)s - "
+"%(product)s "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -59,11 +62,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">استخدم القيمة المضافة السالبة لتسجيل انخفاض قيمة المنتج</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>قم بتعيين حسابات مدخلات/مخرجات أخرى في </b>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -100,23 +105,23 @@ msgstr "معلومات محاسبية"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "إضافة تقييم يدوي "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr ""
+msgstr "قم بإضافة تكلفة إضافية (المواصلات، الجمارك، ...) إلى قيمة المنتج. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "القيمة المضافة "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "القيمة المضافة "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -206,7 +211,7 @@ msgstr "طريقة حساب التكاليف"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "تغيرت طريقة حساب التكاليف لفئة المنتج %s: من %s إلى %s. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -219,6 +224,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"عناصر دفتر يومية حساب القيد المناظر لكافة حركات المخزون الواردة سيتم ترحيلها في هذا الحساب، إلا إذا كان هناك حساب تقييم محدد\n"
+"                معين في الموقع المصدري. هذه هي القيمة الافتراضية لكافة المنتجات في هذه الفئة. يمكن تعيينه مباشرة أيضاً في كل منتج. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -242,7 +249,7 @@ msgstr "العملة"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "الكمية الحالية "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -311,6 +318,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"بسبب تغير فئة المنتج (من %s إلى %s)، تغيرت طريقة حساب التكاليف"
+"                                  لقالب المنتج %s: من %s إلى %s. "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -378,7 +387,7 @@ msgstr "تقييم المخزون"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "بند أنجلو ساكسون "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -439,7 +448,7 @@ msgstr "آخر تحديث في"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "مرتبط بـ"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -450,13 +459,13 @@ msgstr "يدوي"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "تقييم المخزون يدوياً: %s. "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "تقييم المخزون يدوياً: بلا سبب. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -475,17 +484,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "قيمة جديدة "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "القيمة الجديدة حسب الكمية "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr ""
+msgstr "القيمة في اليد "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -523,7 +532,7 @@ msgstr "تحركات المنتج (بنود حركة المخزون)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "إعادة تقييم المنتج "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -535,7 +544,7 @@ msgstr "قالب المنتج"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "تم تعديل قيمة المنتج يدوياً (من %s إلى %s) "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -561,12 +570,12 @@ msgstr "السبب"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "سبب إعادة التقييم "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "المنتج ذو الصلة "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -592,12 +601,12 @@ msgstr "بند استلام الشحنة المعادة"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "إعادة تقييم %s "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "إعادة تقييم "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -687,12 +696,12 @@ msgstr "حساب تقييم المخزون (الصادر)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "طبقة تقييم المخزون "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
-msgstr ""
+msgstr "حقل تقني يُستخدَم لاستعادة البنود الأنجلو ساكسونية. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -701,6 +710,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"لا يمكن أن تكون حسابات مدخلات و/أو مخرجات المخزون مطابقة لحساب تقييم "
+"المخزون. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -709,13 +720,13 @@ msgstr ""
 msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
-msgstr ""
+msgstr "يؤدي الإجراء إلى إنشاء قيد يومية، ولا تمك حق الوصول إليه. "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "ليس للقيمة المضافة أي تأثير على تقييم المخزون "
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -753,6 +764,8 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"لا توجد طبقات تقييم. يتم إنشاء طبقات التقييم عندما يكون لبعض حركات المنتج "
+"تأثير على تقييم المخزون. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -776,7 +789,7 @@ msgstr "تطبيق تخفيض للكمية المرسلة/المستلمة في 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "قيمة الوحدة "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -788,7 +801,7 @@ msgstr "وحدة القياس"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "تحديث الكميات في أمر البيع/أمر الشراء  "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -829,7 +842,7 @@ msgstr "تقييم"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "تغيرت طريقة تقييم المخزون لفئة المنتج %s: من %s إلى %s. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -853,6 +866,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"عند تمكين تقييم المخزون المؤتمت لمنتج ما، سيحتوي  هذا الحساب على القيمة "
+"الحالية للمنتجات. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -861,6 +876,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"عند إجراء تقييم مؤتمت للمخزون، عناصر دفتر يومية حساب القيد المناظر لكافة حركات المخزون الصادرة سيتم ترحيلها في هذا الحساب،\n"
+"                إلا إذا كان هناك حساب تقييم محدد معين في الموقع الوجهة. هذه هي القيمة الافتراضية لكافة المنتجات في هذه الفئة.\n"
+"                يمكن تعيينها مباشرة أيضاً في كل منتج. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -868,23 +886,25 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"عند إجراء تقييم مؤتمت للمخزون، هذا هو دفتر اليومية المحاسبي الذي سيتم ترحيل "
+"القيود فيه عند معالجة حركات المخزون. "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "نموذج المعالج لإعادة تقييم بضاعة المخزون لمنتج ما "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "لا يمكنك إعادة تحديد قيمة منتج له طريقة تكلفة قياسية. "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "لا يمكنك إعادة تحديد قيمة منتج ذو مخزون فارغ أو كميته سالبة. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -894,6 +914,8 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"لا يمكنك تحديث تكلفة منتج في التقييم المؤتمت، حيث أن ذلك يؤدي إلى إنشاء قيد "
+"يومية، ولا تملك حق الوصول لذلك. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -902,6 +924,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"لا تملك أي حساب تقييم المدخلات في فئة منتجك. عليك تحديد واحد قبل معالجة هذه "
+"العملية. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -930,7 +954,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "عليك تعيين حساب قيد مقابل في فئة منتجك. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -945,4 +969,4 @@ msgstr "من أجل"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "المواقع "
