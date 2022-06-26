@@ -125,6 +125,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Sayın <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"    Sorgunuz için teşekkür ederiz.<br/>\n"
+"    İşte <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> etkinliği için rozetiniz.<br/>\n"
+"    Herhangi bir sorunuz varsa lütfen bize bildirin.\n"
+"    <br/><br/>\n"
+"    Teşekkür ederiz,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban

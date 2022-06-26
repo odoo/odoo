@@ -10,6 +10,7 @@
 # Bàrbara Partegàs <barbararof@gmail.com>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # marcescu, 2022
+# Eugeni Chafer <eugeni@chafer.cat>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,13 +18,35 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-02-14 08:09+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Eugeni Chafer <eugeni@chafer.cat>, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr "Editar configuració"
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token
@@ -38,6 +61,19 @@ msgid "Access Token Expiration Timestamp"
 msgstr "Data de caducitat del token d'accés"
 
 #. module: google_gmail
+#: code:addons/google_gmail/controllers/main.py:0
+#: code:addons/google_gmail/controllers/main.py:0
+#, python-format
+msgid "An error occur during the authentication process: %s."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token."
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
 msgstr "Autenticar amb"
@@ -45,7 +81,6 @@ msgstr "Autenticar amb"
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Authorization Code"
 msgstr "Codi d'autorització "
 
@@ -63,11 +98,6 @@ msgstr "Contrasenya client"
 #: model:ir.model,name:google_gmail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustos de configuració"
-
-#. module: google_gmail
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
-msgid "Get an Authorization Code"
-msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -95,6 +125,18 @@ msgid "Mail Server"
 msgstr "Servidor de correu"
 
 #. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Only the administrator can link a Gmail mail server."
+msgstr ""
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, python-format
+msgid "Please configure your Gmail credentials."
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
 msgid "Refresh Token"
@@ -102,8 +144,12 @@ msgstr "Actualitza Token"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
-msgid "Setup your Gmail API credentials to link a Gmail account."
+msgid ""
+"Setup your Gmail API credentials in the general settings to link a Gmail "
+"account."
 msgstr ""
+"Configureu les vostres credencials de l'API de Gmail a la configuració "
+"general per enllaçar un compte de Gmail."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri

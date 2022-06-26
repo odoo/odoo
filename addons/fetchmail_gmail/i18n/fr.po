@@ -20,6 +20,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Gmail account"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                      Modifiez Paramètres"
+
+#. module: fetchmail_gmail
+#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Gmail Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: fetchmail_gmail
 #: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token
 msgid "Access Token"
 msgstr "Clé d'accès"
@@ -31,14 +55,8 @@ msgstr ""
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_authorization_code
-#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
 msgid "Authorization Code"
 msgstr "Code d'autorisation"
-
-#. module: fetchmail_gmail
-#: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid "Get an Authorization Code"
-msgstr ""
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields.selection,name:fetchmail_gmail.selection__fetchmail_server__server_type__gmail
@@ -62,7 +80,9 @@ msgstr "Type de serveur"
 
 #. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid "Setup your Gmail API credentials to link a Gmail account."
+msgid ""
+"Setup your Gmail API credentials in the general settings to link a Gmail "
+"account."
 msgstr ""
 
 #. module: fetchmail_gmail
