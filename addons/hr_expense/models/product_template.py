@@ -14,8 +14,17 @@ class ProductTemplate(models.Model):
             result['supplier_taxes_id'] = False
         return result
 
+<<<<<<< HEAD
     can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
+=======
+    @api.model
+    def default_get(self, fields):
+        result = super(ProductTemplate, self).default_get(fields)
+        if self.env.context.get('default_can_be_expensed'):
+            result['supplier_taxes_id'] = False
+        return result
+>>>>>>> 75ff5897824... temp
 
     @api.depends('type')
     def _compute_can_be_expensed(self):
