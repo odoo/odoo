@@ -202,13 +202,22 @@ class Article(models.Model):
                 parent = parent.parent_id
             articles.root_article_id = ancestors[-1:]
 
-    @api.depends('parent_id', 'internal_permission')
+    @api.depends('parent_id', 'parent_id.inherited_permission_parent_id', 'internal_permission')
     def _compute_inherited_permission(self):
         """ Computed inherited internal permission. We go up ancestors until
         finding an article with an internal permission set, or a root article
         (without parent) or until finding a desynchronized article which
         serves as permission ancestor. Desynchronized articles break the
-        permission tree finding. """
+        permission tree finding.
+
+        'parent_id.inherited_permission_parent_id' needs to be in the trigger
+        as we will need to update this article's inherited permissions if our parent
+        changes itself from which article it's inheriting.
+        This allows cascading changes "downwards" when we modify the
+        internal_permission of an article in the chain.
+
+        It is however not directly used as we optimize the batching and group all
+        articles by their parent_id."""
         self_inherit = self.filtered(lambda article: article.internal_permission)
         for article in self_inherit:
             article.inherited_permission = article.internal_permission
