@@ -33,6 +33,7 @@ FormRenderer.include({
         if (this.hasChatter) {
             this._chatterContainerTarget = document.createElement("div");
             this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
+            this.initChatter();
         }
         /**
          * This element will be set when rendering the form view, and
@@ -40,6 +41,15 @@ FormRenderer.include({
          * when applying the rendering into the DOM.
          */
         this.chatterContainerTargetPlaceholder = undefined;
+        this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
+    },
+    async initChatter() {
+        this._chatterContainerComponent = new ChatterContainerWrapperComponent(
+            this,
+            ChatterContainer,
+            this._makeChatterContainerProps(),
+        );
+        await this._chatterContainerComponent.mount(this._chatterContainerTarget);
     },
     /**
      * @override
@@ -63,12 +73,7 @@ FormRenderer.include({
     async __renderView() {
         await this._super(...arguments);
         if (this.hasChatter) {
-            if (!this._chatterContainerComponent) {
-                this._makeChatterContainerComponent();
-            } else {
-                return this._updateChatterContainerComponent();
-            }
-            await this._mountChatterContainerComponent();
+            await this._updateChatterContainerComponent();
         }
     },
     /**
@@ -113,20 +118,6 @@ FormRenderer.include({
     },
     /**
      * @private
-     */
-    _makeChatterContainerComponent() {
-        const props = this._makeChatterContainerProps();
-        this._chatterContainerComponent = new ChatterContainerWrapperComponent(
-            this,
-            ChatterContainer,
-            props
-        );
-        // Not in custom_events because other modules may remove this listener
-        // while attempting to extend them.
-        this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
-    },
-    /**
-     * @private
      * @returns {Object}
      */
     _makeChatterContainerProps() {
@@ -144,24 +135,6 @@ FormRenderer.include({
             threadId: this.state.res_id,
             threadModel: this.state.model,
         };
-    },
-    /**
-     * Mount the chatter
-     *
-     * Force re-mounting chatter component in DOM. This is necessary
-     * because each time `_renderView` is called, it puts old content
-     * in a fragment.
-     *
-     * @private
-     */
-    async _mountChatterContainerComponent() {
-        try {
-            await this._chatterContainerComponent.mount(this._chatterContainerTarget);
-        } catch (error) {
-            if (error.message !== "Mounting operation cancelled") {
-                throw error;
-            }
-        }
     },
     /**
      * @private
