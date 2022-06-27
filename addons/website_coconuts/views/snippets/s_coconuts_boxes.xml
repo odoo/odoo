@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- CUSTOM SNIPPET - Layout -->
+<!-- ======================= -->
+
+<template id="s_coconuts_boxes" name="Boxes">
+    <section class="s_coconuts_boxes s_coconuts_boxes_portrait pt40 pb40" data-name="Boxes">
+        <div class="container">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor">
+                <div class="col-md-6 col-lg-4 pt16 pb16">
+                    <div class="card">
+                        <img src="/web/image/website.s_media_list_default_image_1" class="card-img" alt="" data-mimetype="image/jpeg" data-gl-filter="walden"/>
+                        <div class="card-img-overlay s_coconuts_boxes_img_overlay_top">
+                            <h4 class="text-white">Title</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 pt16 pb16">
+                    <div class="card">
+                        <img src="/web/image/website.s_media_list_default_image_2" class="card-img" alt="" data-mimetype="image/jpeg" data-gl-filter="custom" data-filter-options='{"filterColor":"rgba(0, 0, 0, 0.5)"}'/>
+                        <div class="card-img-overlay s_coconuts_boxes_img_overlay_top">
+                            <h4 class="text-white">Title</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 pt16 pb16">
+                    <div class="card">
+                        <img src="/web/image/website.s_media_list_default_image_3" class="card-img" alt="" data-mimetype="image/jpeg" data-gl-filter="custom" data-filter-options='{"filterColor":"rgba(45, 165, 200, 0.5)"}'/>
+                        <div class="card-img-overlay s_coconuts_boxes_img_overlay_top">
+                            <h4 class="text-white">Title</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+
+<!-- CUSTOM SNIPPET - Options -->
+<!-- ======================== -->
+
+<template id="s_coconuts_boxes_options" inherit_id="website.snippet_options" name="Coconuts - Snippets Options">
+    <xpath expr="." position="inside">
+        <!-- Layout -->
+        <div data-selector=".s_coconuts_boxes">
+            <we-select string="Layout">
+                <we-button data-select-class="">Default</we-button>
+                <we-button data-select-class="s_coconuts_boxes_portrait">Portrait</we-button>
+                <we-button data-select-class="s_coconuts_boxes_square">Square</we-button>
+                <we-button data-select-class="s_coconuts_boxes_landscape">Landscape</we-button>
+            </we-select>
+        </div>
+        <!-- Color Filter + Borders + Shadows -->
+        <div data-selector=".s_coconuts_boxes .row > div" data-target=".card">
+            <t t-call="website.snippet_options_border_widgets">
+                <t t-set="so_rounded_no_dependencies" t-value="True"/>
+            </t>
+            <t t-call="website.snippet_options_shadow_widgets"/>
+            <we-colorpicker string="Color Filter"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="bg-"
+                data-with-gradients="1"
+                data-opacity="0.5"
+                data-excluded="theme, common"
+                data-apply-to="> .o_we_bg_filter"/>
+        </div>
+        <!-- Overlay -->
+        <div data-selector=".s_coconuts_boxes .row > div" data-target=".card-img-overlay">
+            <we-select string="Text position">
+                <we-button data-select-class="s_coconuts_boxes_img_overlay_top">Top</we-button>
+                <we-button data-select-class="s_coconuts_boxes_img_overlay_center">Center</we-button>
+                <we-button data-select-class="s_coconuts_boxes_img_overlay_bottom">Bottom</we-button>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
