@@ -86,6 +86,7 @@ export const websiteService = {
             set pageDocument(document) {
                 pageDocument = document;
                 if (!document) {
+                    currentMetadata = {};
                     contentWindow = null;
                     return;
                 }
