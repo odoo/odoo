@@ -15,6 +15,7 @@ class AccountChartTemplate(models.Model):
             return journal_data
 
         for journal in journal_data:
+            journal.update({'restrict_mode_hash_table': True})
             if journal['type'] in ('sale', 'purchase'):
                 journal.update({'refund_sequence': True})
         return journal_data
