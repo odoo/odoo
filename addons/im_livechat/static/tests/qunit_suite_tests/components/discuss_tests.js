@@ -11,15 +11,7 @@ import { datetime_to_str } from 'web.time';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_tests.js');
 
 QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     assert.expect(5);
@@ -34,9 +26,9 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
+
     assert.containsOnce(document.body, '.o_Discuss_sidebar',
         "should have a sidebar section"
     );
@@ -89,9 +81,9 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    await start({
-        autoOpenDiscuss: true,
-    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+
     assert.containsOnce(
         document.body,
         '.o_DiscussSidebar_categoryLivechat',
@@ -117,9 +109,9 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     const imLivechatChannelId1 = pyEnv['im_livechat.channel'].create({
         user_ids: [pyEnv.currentUserId],
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
+
     assert.containsNone(
         document.body,
         '.o_DiscussSidebar_categoryLivechat',
@@ -164,9 +156,9 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
+
     assert.containsNone(
         document.body,
         '.o_DiscussSidebar_categoryLivechat',
@@ -219,9 +211,8 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_DiscussSidebar_categoryLivechat',
@@ -287,9 +278,8 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
             livechat_operator_id: pyEnv.currentPartnerId,
         },
     ]);
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     const livechat11 = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -353,14 +343,14 @@ QUnit.test('invite button should be present on livechat', async function (assert
             livechat_operator_id: pyEnv.currentPartnerId,
         },
     );
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_ThreadViewTopbar_inviteButton',
@@ -383,14 +373,14 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
             livechat_operator_id: pyEnv.currentPartnerId,
         },
     );
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_ThreadViewTopbar_callButton',
@@ -408,13 +398,14 @@ QUnit.test('reaction button should not be present on livechat', async function (
         livechat_operator_id: pyEnv.currentPartnerId,
         channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
-    const { click, insertText } = await this.start({
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "Test");
     await click('.o_Composer_buttonSend');
     await click('.o_Message');
@@ -435,13 +426,14 @@ QUnit.test('reply button should not be present on livechat', async function (ass
         livechat_operator_id: pyEnv.currentPartnerId,
         channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
-    const { click, insertText } = await this.start({
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "Test");
     await click('.o_Composer_buttonSend');
     await click('.o_Message');

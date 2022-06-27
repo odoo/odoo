@@ -15,9 +15,8 @@ QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
     patchUiSize({ height: 360, width: 640 });
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Discuss',
@@ -68,14 +67,14 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     const mailChannelId1 = pyEnv['mail.channel'].create({});
 
     patchUiSize({ height: 360, width: 640 });
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
             },
         },
     });
+    await openDiscuss();
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
         'o-active',

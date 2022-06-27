@@ -576,8 +576,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await start({
-        autoOpenDiscuss: true,
+    const { insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -589,6 +588,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "/");
     assert.verifySteps([], "No rpc done");
@@ -599,8 +599,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, insertText } = await start({
-        autoOpenDiscuss: true,
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -612,6 +611,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "/");
     await click('.o_ComposerSuggestion');
@@ -1054,14 +1054,14 @@ QUnit.test('composer with thread typing notification status', async function (as
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -1082,8 +1082,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await start({
-        autoOpenDiscuss: true,
+    const { insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1095,6 +1094,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', 'a');
     assert.verifySteps(
@@ -1110,8 +1110,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await start({
-        autoOpenDiscuss: true,
+    const { insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1124,6 +1123,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', 'a');
 
@@ -1147,8 +1147,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { advanceTime, insertText } = await start({
-        autoOpenDiscuss: true,
+    const { advanceTime, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1161,6 +1160,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', 'a');
 
@@ -1183,8 +1183,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { advanceTime, insertText } = await start({
-        autoOpenDiscuss: true,
+    const { advanceTime, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1197,6 +1196,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             }
         },
     });
+    await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "a");
     assert.verifySteps(

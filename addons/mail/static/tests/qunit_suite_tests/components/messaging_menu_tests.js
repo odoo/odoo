@@ -394,9 +394,8 @@ QUnit.test('new message', async function (assert) {
 QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
-    const { click, openDiscuss, openView } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { click, openDiscuss, openView } = await start();
+    await openDiscuss();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(

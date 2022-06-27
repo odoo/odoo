@@ -33,14 +33,14 @@ QUnit.test('rendering of visitor banner', async function (assert) {
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
     });
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_VisitorBanner',
@@ -132,14 +132,14 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
     });
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_VisitorBanner',
@@ -175,14 +175,14 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
     });
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_VisitorBanner',
@@ -208,14 +208,14 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageList',
@@ -233,14 +233,14 @@ QUnit.test('non-livechat channel should not show visitor banner', async function
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    await start({
-        autoOpenDiscuss: true,
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageList',

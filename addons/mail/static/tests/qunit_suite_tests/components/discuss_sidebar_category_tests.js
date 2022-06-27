@@ -8,15 +8,7 @@ import {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_sidebar_category_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_sidebar_category_tests.js');
 
 QUnit.test('channel - counter: should not have a counter if the category is unfolded and without needaction messages', async function (assert) {
     assert.expect(1);
@@ -24,7 +16,8 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({});
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
         0,
@@ -61,7 +54,8 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
             res_partner_id: pyEnv.currentPartnerId,
         },
     ]);
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
         0,
@@ -79,7 +73,8 @@ QUnit.test('channel - counter: should not have a counter if category is folded a
         is_discuss_sidebar_category_channel_open: false,
     });
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
@@ -121,7 +116,8 @@ QUnit.test('channel - counter: should have correct value of needaction threads i
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).textContent,
@@ -133,7 +129,8 @@ QUnit.test('channel - counter: should have correct value of needaction threads i
 QUnit.test('channel - command: should have view command when category is unfolded', async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
@@ -150,7 +147,8 @@ QUnit.test('channel - command: should have view command when category is folded'
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const { click } = await this.start();
+    const { click, openDiscuss } = await start();
+    await openDiscuss();
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
@@ -163,7 +161,8 @@ QUnit.test('channel - command: should have view command when category is folded'
 QUnit.test('channel - command: should have add command when category is unfolded', async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
@@ -180,7 +179,8 @@ QUnit.test('channel - command: should not have add command when category is fold
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
@@ -198,7 +198,8 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsNone(
@@ -222,7 +223,8 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
@@ -247,7 +249,8 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         is_discuss_sidebar_category_channel_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -283,7 +286,8 @@ QUnit.test('channel - states: open should update the value on the server', async
         is_discuss_sidebar_category_channel_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -318,7 +322,8 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
@@ -347,7 +352,8 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
@@ -372,7 +378,8 @@ QUnit.test('channel - states: the active category item should be visble even if 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -437,7 +444,8 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
         public: 'private',
     });
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
@@ -459,7 +467,8 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
         channel_type: 'chat',
         public: 'private',
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
@@ -481,7 +490,8 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
         channel_type: 'chat',
         public: 'private',
     });
-    const { click } = await this.start();
+    const { click, openDiscuss } = await start();
+    await openDiscuss();
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
@@ -516,7 +526,8 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
             public: 'private',
         },
     ]);
-    const { click } = await this.start();
+    const { click, openDiscuss } = await start();
+    await openDiscuss();
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).textContent,
@@ -528,7 +539,8 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
 QUnit.test('chat - command: should have add command when category is unfolded', async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
         1,
@@ -544,7 +556,8 @@ QUnit.test('chat - command: should not have add command when category is folded'
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
@@ -565,7 +578,8 @@ QUnit.test('chat - states: close manually by clicking the title', async function
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
@@ -591,7 +605,8 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
@@ -615,7 +630,8 @@ QUnit.test('chat - states: close should call update server data', async function
         is_discuss_sidebar_category_chat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -650,7 +666,8 @@ QUnit.test('chat - states: open should call update server data', async function 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -688,7 +705,8 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
@@ -720,7 +738,8 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
@@ -748,7 +767,8 @@ QUnit.test('chat - states: the active category item should be visble even if the
         channel_type: 'chat',
         public: 'private',
     });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,

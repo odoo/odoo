@@ -1775,7 +1775,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_MessageList_alertLoadingFailedRetryButton').click(),
-        message: "should wait until channel 20 loaded more messages after clicked on load more",
+        message: "should wait until channel loaded more messages after clicked on load more",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'more-messages-loaded' &&

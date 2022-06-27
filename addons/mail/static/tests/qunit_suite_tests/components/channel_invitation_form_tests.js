@@ -26,14 +26,14 @@ QUnit.test('should display the channel invitation form after clicking on the inv
         channel_type: 'chat',
         public: 'private',
     });
-    const { click } = await start({
-        autoOpenDiscuss: true,
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
             },
         },
     });
+    await openDiscuss();
     await click(`.o_ThreadViewTopbar_inviteButton`);
     assert.containsOnce(
         document.body,
@@ -64,14 +64,14 @@ QUnit.test('should be able to search for a new user to invite from an existing c
         channel_type: 'chat',
         public: 'private',
     });
-    const { click, insertText } = await start({
-        autoOpenDiscuss: true,
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
             },
         },
     });
+    await openDiscuss();
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
     assert.strictEqual(
@@ -103,14 +103,14 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
         channel_type: 'chat',
         public: 'private',
     });
-    const { click, insertText } = await start({
-        autoOpenDiscuss: true,
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
             },
         },
     });
+    await openDiscuss();
 
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");

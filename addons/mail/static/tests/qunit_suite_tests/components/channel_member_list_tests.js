@@ -7,15 +7,7 @@ import {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('channel_member_list_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('channel_member_list_tests.js');
 
 QUnit.test('there should be a button to show member list in the thread view topbar initially', async function (assert) {
     assert.expect(1);
@@ -30,13 +22,14 @@ QUnit.test('there should be a button to show member list in the thread view topb
         channel_type: 'group',
         public: 'private',
     });
-    await this.start({
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_ThreadViewTopbar_showMemberListButton',
@@ -57,13 +50,14 @@ QUnit.test('should show member list when clicking on show member list button in 
         channel_type: 'group',
         public: 'private',
     });
-    const { click } = await this.start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsOnce(
         document.body,
@@ -85,13 +79,14 @@ QUnit.test('should have correct members in member list', async function (assert)
         channel_type: 'group',
         public: 'private',
     });
-    const { click, messaging } = await this.start({
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsN(
         document.body,
@@ -128,13 +123,14 @@ QUnit.test('there should be a button to hide member list in the thread view topb
         channel_type: 'group',
         public: 'private',
      });
-    const { click } = await this.start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsOnce(
         document.body,
@@ -157,13 +153,14 @@ QUnit.test('should show a button to load more members if they are not all loaded
         channel_type: 'group',
         public: 'private',
     });
-    const { click } = await this.start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId}`,
             },
         },
     });
+    await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsOnce(
         document.body,
@@ -187,13 +184,14 @@ QUnit.test('Load more button should load more members', async function (assert) 
         channel_type: 'group',
         public: 'private',
     });
-    const { click } = await this.start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId}`,
             },
         },
     });
+    await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
     await click('.o_ChannelMemberList_loadMoreButton');
     assert.containsN(
