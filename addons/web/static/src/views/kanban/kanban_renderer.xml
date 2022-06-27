@@ -184,7 +184,7 @@
 
     <t t-name="web.KanbanGroupTooltip" owl="1">
         <div>
-            <t t-foreach="info" t-as="entry" t-key="entry_index">
+            <t t-foreach="entries" t-as="entry" t-key="entry_index">
                 <t t-esc="entry.title"/>
                 <br/>
                 <t t-esc="entry.value"/>

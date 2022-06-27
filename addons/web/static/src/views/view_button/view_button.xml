@@ -22,50 +22,50 @@
   </t>
 
   <t t-name="views.ViewButtonTooltip" owl="1">
-      <t t-if="info.debug || info.button.help">
-        <div class="o-tooltip--string" t-if="info.debug || info.button.string" role="tooltip">
-            <t t-if="info.debug">
+      <t t-if="debug || button.help">
+        <div class="o-tooltip--string" t-if="debug || button.string" role="tooltip">
+            <t t-if="debug">
                 Button
-                <t t-if="info.button.string">: </t>
-                <t t-if="!info.button.string"> (no string)</t>
+                <t t-if="button.string">: </t>
+                <t t-if="!button.string"> (no string)</t>
             </t>
-            <t t-esc="info.button.string"/>
+            <t t-esc="button.string"/>
         </div>
-        <p t-if="info.button.title" class="o-tooltip--help" role="tooltip">
-            <t t-esc="info.button.title"/>
+        <p t-if="button.title" class="o-tooltip--help" role="tooltip">
+            <t t-esc="button.title"/>
         </p>
-        <p t-if="info.button.help" class="o-tooltip--help" role="tooltip">
-            <t t-esc="info.button.help"/>
+        <p t-if="button.help" class="o-tooltip--help" role="tooltip">
+            <t t-esc="button.help"/>
         </p>
-        <ul t-if="info.debug" class="o-tooltip--technical" role="tooltip">
+        <ul t-if="debug" class="o-tooltip--technical" role="tooltip">
             <li data-item="object">
                 <span class="o-tooltip--technical--title">Object:</span>
-                <t t-esc="info.model"/>
+                <t t-esc="model"/>
             </li>
-            <li t-if="info.button.context" data-item="context">
+            <li t-if="button.context" data-item="context">
                 <span class="o-tooltip--technical--title">Context:</span>
-                <t t-esc="info.button.context || info.context"/>
+                <t t-esc="button.context || context"/>
             </li>
-            <li t-if="info.button.modifiers" data-item="modifiers">
+            <li t-if="button.modifiers" data-item="modifiers">
                 <span class="o-tooltip--technical--title">Modifiers:</span>
-                <t t-esc="info.button.modifiers"/>
+                <t t-esc="button.modifiers"/>
             </li>
-            <li t-if="info.button.special" data-item="special">
+            <li t-if="button.special" data-item="special">
                 <span class="o-tooltip--technical--title">Special:</span>
-                <t t-esc="info.button.special"/>
+                <t t-esc="button.special"/>
             </li>
-            <t t-set="button_type" t-value="info.button.type"/>
+            <t t-set="button_type" t-value="button.type"/>
             <li t-if="button_type" data-item="button_type">
                 <span class="o-tooltip--technical--title">Button Type:</span>
                 <t t-esc="button_type"/>
             </li>
             <li t-if="button_type === 'object'" data-item="button_method">
                 <span class="o-tooltip--technical--title">Method:</span>
-                <t t-esc="info.button.name"/>
+                <t t-esc="button.name"/>
             </li>
             <li t-if="button_type === 'action'" data-item="button_action">
                 <span class="o-tooltip--technical--title">Action ID:</span>
-                <t t-esc="info.button.name"/>
+                <t t-esc="button.name"/>
             </li>
         </ul>
       </t>
