@@ -24,6 +24,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { makeErrorFromResponse } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { nbsp } from "@web/core/utils/strings";
@@ -832,6 +833,74 @@ QUnit.module("Views", (hooks) => {
             "true/hello gnap/hello gnap !/hello gnap }}",
             "true/hello blip/hello blip !/hello blip }}",
         ]);
+    });
+
+    QUnit.test("kanban with kanban-tooltip template", async (assert) => {
+        serviceRegistry.add("tooltip", tooltipService);
+        let simulateTimeout;
+        let simulateInterval;
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => {
+                simulateTimeout = fn;
+            },
+            setInterval: (fn) => {
+                simulateInterval = fn;
+            },
+        });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                            <ul class="oe_kanban_tooltip">
+                                <li><t t-esc="record.foo.value" /></li>
+                            </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")),
+            ["yop", "blip", "gnap", "blip"]
+        );
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        target.querySelector(".o_kanban_record").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        assert.strictEqual(
+            target.querySelector(".o_popover_container .o_popover").innerText,
+            "yop"
+        );
+
+        const recordRect = target.querySelector(".o_kanban_record").getBoundingClientRect();
+        const x = recordRect.right + 10;
+        const y = recordRect.bottom + 10;
+        await triggerEvent(target.querySelector(".o_kanban_record"), null, "mousemove", {
+            pageX: x,
+            layerX: x,
+            screenX: x,
+            pageY: y,
+            layerY: y,
+            screenY: y,
+        });
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        simulateInterval();
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
     });
 
     QUnit.test("pager should be hidden in grouped mode", async (assert) => {
