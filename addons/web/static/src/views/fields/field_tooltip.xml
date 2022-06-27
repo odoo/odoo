@@ -3,63 +3,63 @@
 
     <t t-name="web.FieldTooltip" owl="1">
 
-        <div t-if="info.field.label" class="o-tooltip--string" role="tooltip">
-            <t t-esc="info.field.label"/> <t t-if="info.field.noLabel and info.viewMode === 'form'">(nolabel)</t>
+        <div t-if="field.label" class="o-tooltip--string" role="tooltip">
+            <t t-esc="field.label"/> <t t-if="field.noLabel and viewMode === 'form'">(nolabel)</t>
         </div>
 
-        <p t-if="info.field.help" class="o-tooltip--help" role="tooltip">
-            <t t-esc="info.field.help"/>
+        <p t-if="field.help" class="o-tooltip--help" role="tooltip">
+            <t t-esc="field.help"/>
         </p>
 
-        <ul class="o-tooltip--technical" t-if="info.debug" role="tooltip">
-            <li data-item="field" t-if="info.field and info.field.name">
+        <ul class="o-tooltip--technical" t-if="debug" role="tooltip">
+            <li data-item="field" t-if="field and field.name">
                 <span class="o-tooltip--technical--title">Field:</span>
-                <t t-esc="info.field.name"/>
+                <t t-esc="field.name"/>
             </li>
-            <li data-item="object" t-if="info.resModel">
+            <li data-item="object" t-if="resModel">
                 <span class="o-tooltip--technical--title">Model:</span>
-                <t t-esc="info.resModel"/>
+                <t t-esc="resModel"/>
             </li>
-            <t t-if="info.field">
-                <li t-if="info.field.type" data-item="type" >
+            <t t-if="field">
+                <li t-if="field.type" data-item="type" >
                     <span class="o-tooltip--technical--title">Type:</span>
-                    <t t-esc="info.field.type"/>
+                    <t t-esc="field.type"/>
                 </li>
-                <li t-if="info.field.widget" data-item="widget">
+                <li t-if="field.widget" data-item="widget">
                     <span class="o-tooltip--technical--title">Widget:</span>
-                    <t t-if="info.field.widgetDescription" t-esc="info.field.widgetDescription"/>
-                    <t t-if="info.field.widgetDescription"> (</t>
-                    <t t-esc="info.field.widget"/>
-                    <t t-if="info.field.widgetDescription">)</t>
+                    <t t-if="field.widgetDescription" t-esc="field.widgetDescription"/>
+                    <t t-if="field.widgetDescription"> (</t>
+                    <t t-esc="field.widget"/>
+                    <t t-if="field.widgetDescription">)</t>
                 </li>
-                <li t-if="info.field.context" data-item="context">
+                <li t-if="field.context" data-item="context">
                     <span class="o-tooltip--technical--title">Context:</span>
-                    <t t-esc="info.field.context"/>
+                    <t t-esc="field.context"/>
                 </li>
-                <li t-if="info.field.domain" data-item="domain">
+                <li t-if="field.domain" data-item="domain">
                     <span class="o-tooltip--technical--title">Domain:</span>
-                    <t t-esc="info.field.domain"/>
+                    <t t-esc="field.domain"/>
                 </li>
-                <li t-if="info.field.modifiers" data-item="modifiers">
+                <li t-if="field.modifiers" data-item="modifiers">
                     <span class="o-tooltip--technical--title">Modifiers:</span>
-                    <t t-esc="info.field.modifiers"/>
+                    <t t-esc="field.modifiers"/>
                 </li>
-                <li t-if="info.field.default" data-item="default">
+                <li t-if="field.default" data-item="default">
                     <span class="o-tooltip--technical--title">Default:</span>
-                    <t t-esc="info.field.default"/>
+                    <t t-esc="field.default"/>
                 </li>
-                <li t-if="info.field.changeDefault" data-item="changeDefault">
+                <li t-if="field.changeDefault" data-item="changeDefault">
                     <span class="o-tooltip--technical--title">Change default:</span>
                     Yes
                 </li>
-                <li t-if="info.field.relation" data-item="relation">
+                <li t-if="field.relation" data-item="relation">
                     <span class="o-tooltip--technical--title">Relation:</span>
-                    <t t-esc="info.field.relation"/>
+                    <t t-esc="field.relation"/>
                 </li>
-                <li t-if="info.field.selection" data-item="selection">
+                <li t-if="field.selection" data-item="selection">
                     <span class="o-tooltip--technical--title">Selection:</span>
                     <ul class="o-tooltip--technical">
-                        <li t-foreach="info.field.selection" t-as="option" t-key="option_index">
+                        <li t-foreach="field.selection" t-as="option" t-key="option_index">
                             [<t t-esc="option[0]"/>]
                             <t t-if="option[1]"> - </t>
                             <t t-esc="option[1]"/>

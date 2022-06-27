@@ -543,7 +543,7 @@ export class KanbanRenderer extends Component {
         }
         return {
             "data-tooltip-template": "web.KanbanGroupTooltip",
-            "data-tooltip-info": JSON.stringify(group.tooltip),
+            "data-tooltip-info": JSON.stringify({ entries: group.tooltip }),
         };
     }
 }
