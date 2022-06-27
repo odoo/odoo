@@ -25,8 +25,6 @@ class ResConfigSettings(models.TransientModel):
     module_mail_plugin = fields.Boolean(
         string='Allow integration with the mail plugins'
     )
-    module_google_drive = fields.Boolean("Attach Google documents to any record")
-    module_google_spreadsheet = fields.Boolean("Google Spreadsheet")
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
     module_auth_ldap = fields.Boolean("LDAP Authentication")
     # TODO: remove in master
