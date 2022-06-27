@@ -196,6 +196,10 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
         writable_as1 = self.article_write_contents[2].with_env(self.env)
         writable_as2 = writable_as1.with_user(self.user_employee2)
         self.assertEqual(writable_as2.user_has_access, True)
+        writable_root = self.article_roots[0].with_env(self.env)
+        writable_children = self.article_write_contents_children.with_env(self.env)
+        for child in writable_children:
+            self.assertEqual(child.inherited_permission_parent_id, writable_root)
 
         # downgrade write global perm to read
         writable_as1._set_internal_permission('none')
@@ -214,11 +218,20 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
         with self.assertRaises(exceptions.AccessError):
             writable_as2.body  # trigger ACLs
 
+        # check children inherits downgraded permissions from article
+        for child in writable_children:
+            self.assertEqual(child.inherited_permission, 'none', 'Permission: lowering permission should lower the permission of the children')
+            self.assertEqual(child.inherited_permission_parent_id, writable_as1, 'Permission: lowering permission should make the children inherit the permission from this article')
+
     @users('employee')
     def test_downgrade_internal_permission_read(self):
         writable_as1 = self.article_write_contents[2].with_env(self.env)
         writable_as2 = writable_as1.with_user(self.user_employee2)
         self.assertEqual(writable_as2.user_has_access, True)
+        writable_root = self.article_roots[0].with_env(self.env)
+        writable_children = self.article_write_contents_children.with_env(self.env)
+        for child in writable_children:
+            self.assertEqual(child.inherited_permission_parent_id, writable_root)
 
         # downgrade write global perm to read
         writable_as1._set_internal_permission('read')
@@ -233,6 +246,11 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
         self.assertTrue(writable_as1.user_has_access)
         self.assertFalse(writable_as2.user_has_write_access)
         self.assertTrue(writable_as2.user_has_access)
+
+        # check children inherits downgraded permissions from article
+        for child in writable_children:
+            self.assertEqual(child.inherited_permission, 'read', 'Permission: lowering permission should lower the permission of the children')
+            self.assertEqual(child.inherited_permission_parent_id, writable_as1, 'Permission: lowering permission should make the children inherit the permission from this article')
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
     @users('employee')
