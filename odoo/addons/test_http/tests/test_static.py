@@ -248,6 +248,11 @@ class TestHttpStatic(TestHttpStaticCommon):
         res = self.url_open('/web/image/idontexist?download=True')
         self.assertEqual(res.status_code, 404)
 
+    def test_static15_public_user_image(self):
+        public_user = self.env.ref('base.public_user')
+        res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
+        self.assertEqual(res.status_code, 404)
+
 
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
