@@ -11,15 +11,7 @@ import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_inbox_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_inbox_tests.js');
 
 QUnit.test('reply: discard on pressing escape', async function (assert) {
     assert.expect(9);
@@ -43,17 +35,17 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click, insertText } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, click, insertText, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -142,17 +134,17 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, click, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -200,17 +192,17 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, click, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -252,17 +244,17 @@ QUnit.test('reply: discard on click away', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, click, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -333,7 +325,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click, insertText } = await this.start({
+    const { afterEvent, click, insertText, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -349,16 +341,17 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
                 );
             }
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -399,7 +392,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click, insertText } = await this.start({
+    const { afterEvent, click, insertText, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -415,16 +408,17 @@ QUnit.test('"reply to" composer should send message if message replied to is not
                 );
             }
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -464,7 +458,8 @@ QUnit.test('error notifications should not be shown in Inbox', async function (a
         notification_type: 'email',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -499,17 +494,17 @@ QUnit.test('show subject of message in Inbox', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -546,22 +541,23 @@ QUnit.test('show subject of message in history', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { afterEvent, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until history displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'history'
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until history displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'history'
+            );
         },
     });
     assert.containsOnce(
@@ -599,17 +595,17 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { env } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, env, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     patchWithCleanup(env.services.action, {
@@ -679,17 +675,17 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(
@@ -717,17 +713,17 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(
@@ -755,17 +751,17 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(
@@ -793,17 +789,17 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(
@@ -831,17 +827,17 @@ QUnit.test('subject should be shown when the thread name has an extra prefix com
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsOnce(
@@ -869,17 +865,17 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(
@@ -907,17 +903,17 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.containsNone(

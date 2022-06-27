@@ -19,24 +19,17 @@ const { createFile, inputFiles } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_tests.js');
 
 QUnit.test('messaging not created', async function (assert) {
     assert.expect(1);
 
     const messagingBeforeCreationDeferred = makeTestPromise();
-    await this.start({
+    const { openDiscuss } = await start({
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none'
     });
+    await openDiscuss();
     assert.containsOnce(document.body, '.o_DiscussContainer_spinner', "should display messaging not initialized");
     messagingBeforeCreationDeferred.resolve();
 });
@@ -45,10 +38,11 @@ QUnit.test('discuss should be marked as opened if the component is already rende
     assert.expect(1);
 
     const messagingBeforeCreationDeferred = makeTestPromise();
-    const { env } = await this.start({
+    const { env, openDiscuss } = await start({
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
+    await openDiscuss();
 
     await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
     const { messaging } = env.services.messaging.modelManager;
@@ -61,7 +55,8 @@ QUnit.test('discuss should be marked as opened if the component is already rende
 QUnit.test('discuss should be marked as closed when the component is unmounted', async function (assert) {
     assert.expect(1);
 
-    const { messaging, webClient } = await this.start();
+    const { messaging, openDiscuss, webClient } = await start();
+    await openDiscuss();
 
     await afterNextRender(() => destroy(webClient));
     assert.notOk(
@@ -73,7 +68,7 @@ QUnit.test('discuss should be marked as closed when the component is unmounted',
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(1);
 
-    await this.start({
+    const { openDiscuss } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 await makeTestPromise(); // simulate messaging never initialized
@@ -81,6 +76,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
@@ -93,7 +89,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     const messagingInitializedProm = makeTestPromise();
 
-    await this.start({
+    const { openDiscuss } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 await messagingInitializedProm;
@@ -101,6 +97,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
@@ -118,7 +115,8 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(4);
 
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll('.o_Discuss_sidebar').length,
         1,
@@ -143,7 +141,8 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('basic rendering: sidebar', async function (assert) {
     assert.expect(18);
 
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_category`).length,
         3,
@@ -260,7 +259,8 @@ QUnit.test('basic rendering: sidebar', async function (assert) {
 QUnit.test('sidebar: basic mailbox rendering', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     const inbox = document.querySelector(`
         .o_DiscussSidebar_categoryMailbox
         .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -302,7 +302,8 @@ QUnit.test('sidebar: basic mailbox rendering', async function (assert) {
 QUnit.test('sidebar: default active inbox', async function (assert) {
     assert.expect(1);
 
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     const inbox = document.querySelector(`
         .o_DiscussSidebar_categoryMailbox
         .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -318,7 +319,8 @@ QUnit.test('sidebar: default active inbox', async function (assert) {
 QUnit.test('sidebar: change item', async function (assert) {
     assert.expect(4);
 
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -363,7 +365,8 @@ QUnit.test('sidebar: inbox with counter', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.notification'].create({ notification_type: 'inbox', res_partner_id: pyEnv.currentPartnerId });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -389,7 +392,8 @@ QUnit.test('sidebar: inbox with counter', async function (assert) {
 QUnit.test('sidebar: add channel', async function (assert) {
     assert.expect(3);
 
-    const { click } = await this.start();
+    const { click, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
@@ -418,7 +422,8 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
         1,
@@ -504,7 +509,8 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     const channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
     assert.strictEqual(
         channel.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_counter`).length,
@@ -541,7 +547,8 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
         { name: "channel1", public: 'public' },
         { name: "channel2", public: 'private' },
     ]);
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
         2,
@@ -615,7 +622,8 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
         channel_type: 'chat', // testing a chat is the goal of the test
         public: 'private', // expected value for testing a chat
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`).length,
         1,
@@ -681,7 +689,8 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
         channel_type: 'chat',
         public: 'private',
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`);
     assert.strictEqual(
         chat.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_counter`).length,
@@ -740,7 +749,8 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
             public: 'private',
         }
     ]);
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`).length,
         3,
@@ -845,7 +855,8 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
         channel_type: 'chat',
         public: 'private',
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`);
     assert.strictEqual(
         chat.querySelector(`:scope .o_DiscussSidebarCategoryItem_name`).textContent,
@@ -859,7 +870,8 @@ QUnit.test('default thread rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -1010,7 +1022,7 @@ QUnit.test('default thread rendering', async function (assert) {
 QUnit.test('initially load messages from inbox', async function (assert) {
     assert.expect(3);
 
-    await this.start({
+    const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/inbox/messages') {
                 assert.step('/mail/channel/messages');
@@ -1022,19 +1034,21 @@ QUnit.test('initially load messages from inbox', async function (assert) {
             }
         },
     });
+    await openDiscuss();
     assert.verifySteps(['/mail/channel/messages']);
 });
 
 QUnit.test('default select thread in discuss params', async function (assert) {
     assert.expect(1);
 
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_starred',
             },
         }
     });
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -1048,13 +1062,14 @@ QUnit.test('default select thread in discuss params', async function (assert) {
 QUnit.test('auto-select thread in discuss context', async function (assert) {
     assert.expect(1);
 
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: 'mail.box_starred',
             },
         },
     });
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -1076,7 +1091,7 @@ QUnit.test('load single message from channel initially', async function (assert)
         model: 'mail.channel',
         res_id: mailChannelId1
     });
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1092,6 +1107,7 @@ QUnit.test('load single message from channel initially', async function (assert)
             }
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_ThreadView_messageList`).length,
         1,
@@ -1129,13 +1145,14 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: mailChannelId1,
             },
         }
     });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         `
@@ -1161,13 +1178,14 @@ QUnit.test('basic rendering of message', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId1
     });
-    const { click, messaging } = await this.start({
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     const message = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
@@ -1259,13 +1277,14 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, insertText } = await this.start({
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText('.o_ComposerTextInput_textarea', "/who");
     await click('.o_Composer_buttonSend');
@@ -1306,13 +1325,14 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
             res_id: mailChannelId1, // id of related channel
         }
     ]);
-    const { click, messaging } = await this.start({
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
@@ -1430,17 +1450,17 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
             res_partner_id: pyEnv.currentPartnerId,
         },
     ]);
-    const { messaging } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, messaging, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
 
@@ -1492,7 +1512,7 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
             res_id: mailChannelId1,
         });
     }
-    await this.start({
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1504,6 +1524,7 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
             }
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorDate
@@ -1551,13 +1572,14 @@ QUnit.test('load more messages from channel', async function (assert) {
             res_id: mailChannelId1,
         });
     }
-    const { click } = await this.start({
+    const { click, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorDate
@@ -1617,24 +1639,25 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
             res_id: mailChannelId1,
         });
     }
-    await this.start({
+    const { afterEvent, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-component-message-list-scrolled',
-            message: "should wait until channel scrolled to its last message initially",
-            predicate: ({ scrollTop, thread }) => {
-                const messageList = document.querySelector('.o_ThreadView_messageList');
-                return (
-                    thread &&
-                    thread.model === 'mail.channel' &&
-                    thread.id === mailChannelId1 &&
-                    isScrolledToBottom(messageList)
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: openDiscuss,
+        message: "should wait until channel scrolled to its last message initially",
+        predicate: ({ scrollTop, thread }) => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === mailChannelId1 &&
+                isScrolledToBottom(messageList)
+            );
         },
     });
     assert.strictEqual(
@@ -1664,24 +1687,25 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent } = await this.start({
+    const { afterEvent, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-component-message-list-scrolled',
-            message: "should wait until channel 20 scrolled to its last message initially",
-            predicate: ({ scrollTop, thread }) => {
-                const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-                return (
-                    thread &&
-                    thread.model === 'mail.channel' &&
-                    thread.id === mailChannelId1 &&
-                    isScrolledToBottom(messageList)
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: openDiscuss,
+        message: "should wait until channel scrolled to its last message initially",
+        predicate: ({ scrollTop, thread }) => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === mailChannelId1 &&
+                isScrolledToBottom(messageList)
+            );
         },
     });
     assert.strictEqual(
@@ -1695,7 +1719,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_ThreadView_messageList').scrollTop = 0,
-        message: "should wait until channel 20 loaded more messages after scrolling to top",
+        message: "should wait until channel loaded more messages after scrolling to top",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'more-messages-loaded' &&
@@ -1744,24 +1768,25 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     }
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: lastMessageId });
-    const { afterEvent, messaging } = await this.start({
+    const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-component-message-list-scrolled',
-            message: "should wait until channel 20 scrolled to its last message initially",
-            predicate: ({ scrollTop, thread }) => {
-                const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-                return (
-                    thread &&
-                    thread.model === 'mail.channel' &&
-                    thread.id === mailChannelId1 &&
-                    isScrolledToBottom(messageList)
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: openDiscuss,
+        message: "should wait until channel scrolled to its last message initially",
+        predicate: ({ scrollTop, thread }) => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === mailChannelId1 &&
+                isScrolledToBottom(messageList)
+            );
         },
     });
     assert.containsN(
@@ -1868,18 +1893,19 @@ QUnit.test('restore thread scroll position', async function (assert) {
             res_id: mailChannelId2,
         });
     }
-    const { afterEvent, messaging } = await this.start({
+    const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-component-message-list-scrolled',
-            message: "should wait until channel 1 scrolled to its last message",
-            predicate: ({ thread }) => {
-                return thread && thread.model === 'mail.channel' && thread.id === mailChannelId1;
-            },
+    });
+    await afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: openDiscuss,
+        message: "should wait until channel 1 scrolled to its last message",
+        predicate: ({ thread }) => {
+            return thread && thread.model === 'mail.channel' && thread.id === mailChannelId1;
         },
     });
     assert.strictEqual(
@@ -2036,13 +2062,14 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
             res_id: mailChannelId1,
         }
     );
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_categoryChannel
@@ -2125,7 +2152,8 @@ QUnit.test('sidebar quick search', async function (assert) {
     for (let id = 1; id <= 20; id++) {
         pyEnv['mail.channel'].create({ name: `channel${id}` });
     }
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
         20,
@@ -2189,7 +2217,8 @@ QUnit.test('basic top bar rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { click, messaging } = await this.start();
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelector(`
             .o_ThreadViewTopbar_threadName
@@ -2282,7 +2311,8 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             res_partner_id: pyEnv.currentPartnerId, // must be for current partner
         }
     ]);
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -2361,13 +2391,14 @@ QUnit.test('starred: unstar all', async function (assert) {
         { body: "not empty", starred_partner_ids: [pyEnv.currentPartnerId] },
         { body: "not empty", starred_partner_ids: [pyEnv.currentPartnerId] }
     ]);
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_starred',
             },
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -2422,7 +2453,7 @@ QUnit.test('toggle_star message', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2439,6 +2470,7 @@ QUnit.test('toggle_star message', async function (assert) {
             }
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -2521,13 +2553,14 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         { name: "General" },
         { name: "Special" },
     ]);
-    const { click, insertText } = await this.start({
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     // Write text in composer for #general
     await insertText('.o_ComposerTextInput_textarea', "A message");
     await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`);
@@ -2556,13 +2589,14 @@ QUnit.test('composer state: attachments save and restore', async function (asser
         { name: "General" },
         { name: "Special" },
     ]);
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     const channels = document.querySelectorAll(`
         .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item
     `);
@@ -2648,7 +2682,7 @@ QUnit.test('post a simple message', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, insertText, messaging } = await this.start({
+    const { click, insertText, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2685,6 +2719,7 @@ QUnit.test('post a simple message', async function (assert) {
             }
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessageList_empty`).length,
         1,
@@ -2745,13 +2780,14 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await this.start({
+    const { insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -2779,13 +2815,14 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await this.start({
+    const { insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -2822,17 +2859,17 @@ QUnit.test('rendering of inbox message', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+    const { afterEvent, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until inbox displayed its messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.box' &&
+                threadViewer.thread.id === 'inbox'
+            );
         },
     });
     assert.strictEqual(
@@ -2896,7 +2933,8 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { afterEvent, messaging } = await this.start();
+    const { afterEvent, messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategory_item[data-thread-local-id="${
@@ -2958,7 +2996,8 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
 QUnit.test('receive new needaction messages', async function (assert) {
     assert.expect(12);
 
-    const { messaging, pyEnv } = await this.start();
+    const { messaging, openDiscuss, pyEnv } = await start();
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3093,7 +3132,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    const { click, insertText, messaging } = await this.start({
+    const { click, insertText, messaging, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -3133,6 +3172,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
             }),
         },
     });
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
         1,
@@ -3224,13 +3264,14 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
             res_partner_id: pyEnv.currentPartnerId, // must be for current partner
         }
     ]);
-    const { click, messaging } = await this.start({
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
             },
         },
     });
+    await openDiscuss();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3337,13 +3378,14 @@ QUnit.test('mark a single message as read should only move this message to "Hist
             res_partner_id: pyEnv.currentPartnerId,
         }
     ]);
-    const { click, messaging } = await this.start({
+    const { click, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
             },
         },
     });
+    await openDiscuss();
     assert.hasClass(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3447,20 +3489,20 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         });
 
     }
-    const { afterEvent, click, messaging } = await this.start({
-        waitUntilEvent: {
-            eventName: 'o-component-message-list-scrolled',
-            message: "should wait until inbox scrolled to its last message initially",
-            predicate: ({ orderedMessages, scrollTop, thread }) => {
-                const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-                return (
-                    thread &&
-                    thread.model === 'mail.box' &&
-                    thread.id === 'inbox' &&
-                    orderedMessages.length === 30 &&
-                    isScrolledToBottom(messageList)
-                );
-            },
+    const { afterEvent, click, messaging, openDiscuss } = await start();
+    await afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: openDiscuss,
+        message: "should wait until inbox scrolled to its last message initially",
+        predicate: ({ orderedMessages, scrollTop, thread }) => {
+            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            return (
+                thread &&
+                thread.model === 'mail.box' &&
+                thread.id === 'inbox' &&
+                orderedMessages.length === 30 &&
+                isScrolledToBottom(messageList)
+            );
         },
     });
 
@@ -3519,7 +3561,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const { env } = await this.start({
+    const { env, openDiscuss } = await start({
         legacyServices: {
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
@@ -3530,6 +3572,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
             }),
         },
     });
+    await openDiscuss();
     env.bus.on('set_title_part', null, payload => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
@@ -3556,7 +3599,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: "chat" });
-    const { env } = await this.start({
+    const { env, openDiscuss } = await start({
         legacyServices: {
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
@@ -3567,6 +3610,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
             }),
         },
     });
+    await openDiscuss();
     env.bus.on('set_title_part', null, payload => {
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
@@ -3597,7 +3641,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         { channel_type: 'chat', public: 'private' },
         { channel_type: 'chat', public: 'private' },
     ]);
-    const { env } = await this.start({
+    const { env, openDiscuss } = await start({
         legacyServices: {
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
@@ -3608,6 +3652,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             }),
         },
     });
+    await openDiscuss();
     env.bus.on('set_title_part', null, payload => {
         step++;
         assert.step('set_title_part');
@@ -3681,7 +3726,8 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
             public: 'private',
         }
     ]);
-    const { click } = await this.start();
+    const { click, openDiscuss } = await start();
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-name="Inbox"]
@@ -3803,22 +3849,23 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         model: "mail.channel",
         res_id: mailChannelId2,
     }]);
-    const { afterEvent, messaging } = await this.start({
+    const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId2}`,
             },
         },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until channel 2 loaded its messages initially",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    threadViewer.thread.model === 'mail.channel' &&
-                    threadViewer.thread.id === mailChannelId2 &&
-                    hint.type === 'messages-loaded'
-                );
-            },
+    });
+    await afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: openDiscuss,
+        message: "should wait until channel 2 loaded its messages initially",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === mailChannelId2 &&
+                hint.type === 'messages-loaded'
+            );
         },
     });
     await afterNextRender(() => afterEvent({
@@ -3861,7 +3908,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -3889,6 +3936,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
             }),
         },
     });
+    await openDiscuss();
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -3931,7 +3979,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { insertText } = await this.start({
+    const { insertText, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -3943,6 +3991,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
             }
         },
     });
+    await openDiscuss();
     // Type message
     await insertText('.o_ComposerTextInput_textarea', "test message");
     await afterNextRender(() => {
@@ -3974,13 +4023,14 @@ QUnit.test('message being a replied to another message should show message being
         parent_id: mailMessageId1,
         res_id: mailChannelId1,
     });
-    const { messaging } = await this.start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
     });
+    await openDiscuss();
     assert.containsOnce(
         document.querySelector(`.o_Message[data-message-local-id="${
             messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId

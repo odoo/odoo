@@ -8,15 +8,7 @@ import {
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_sidebar_category_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_sidebar_category_tests.js');
 
 QUnit.test('livechat - counter: should not have a counter if the category is unfolded and without unread messages', async function (assert) {
     assert.expect(1);
@@ -31,7 +23,8 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         `.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`,
@@ -55,7 +48,8 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
     assert.containsNone(
         document.body,
         `.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`,
@@ -80,7 +74,8 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsNone(
         document.body,
@@ -109,7 +104,8 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    await this.start();
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.strictEqual(
         document.querySelector(`.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`).textContent,
@@ -135,7 +131,8 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: true,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -183,7 +180,8 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsNone(
         document.body,
@@ -232,7 +230,8 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         is_discuss_sidebar_category_livechat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -281,7 +280,8 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         is_discuss_sidebar_category_livechat_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
@@ -329,7 +329,8 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: true,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -376,7 +377,8 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsNone(
         document.body,
@@ -420,7 +422,8 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -464,7 +467,8 @@ QUnit.test('livechat - states: the active category item should be visble even if
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,

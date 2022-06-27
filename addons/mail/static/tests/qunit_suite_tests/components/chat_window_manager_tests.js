@@ -940,7 +940,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
-        message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
+        message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
@@ -957,7 +957,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
         func: () => {
             document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
         },
-        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        message: "should wait until channel scrolled to 142 after setting this value manually",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
@@ -978,7 +978,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
             res_model: 'mail.channel',
             views: [[false, 'form']],
         }),
-        message: "should wait until channel 20 restored its scroll to 142 after closing discuss",
+        message: "should wait until channel restored its scroll to 142 after closing discuss",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
@@ -1474,7 +1474,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
-        message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
+        message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
@@ -1491,7 +1491,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         func: () => {
             document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
         },
-        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        message: "should wait until channel scrolled to 142 after setting this value manually",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
@@ -1519,7 +1519,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await afterNextRender(() => afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_ChatWindow_header').click(),
-        message: "should wait until channel 20 restored its scroll position to 142",
+        message: "should wait until channel restored its scroll position to 142",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
@@ -1622,7 +1622,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
-        message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
+        message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
@@ -1637,7 +1637,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142,
-        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        message: "should wait until channel scrolled to 142 after setting this value manually",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
@@ -1661,7 +1661,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_ChatWindow_header').click(),
-        message: "should wait until channel 20 restored its scroll position to the last saved value (142)",
+        message: "should wait until channel restored its scroll position to the last saved value (142)",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
