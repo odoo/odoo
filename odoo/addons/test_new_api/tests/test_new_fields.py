@@ -3247,6 +3247,23 @@ class TestMany2oneReference(common.TransactionCase):
         foo = m.browse(1 if not ids[0] else (ids[0] + 1))
         self.assertTrue(foo.unlink())
 
+    def test_search_inverse_one2many_autojoin(self):
+        record = self.env['test_new_api.inverse_m2o_ref'].create({})
+
+        # the one2many field 'model_ids' should be auto_join=True
+        self.patch(type(record).model_ids, 'auto_join', True)
+
+        # create a reference to record
+        reference = self.env['test_new_api.model_many2one_reference'].create({'res_id': record.id})
+        reference.res_model = record._name
+
+        # the model field 'res_model' is not in database yet
+        self.assertTrue(self.env.cache.has_dirty_fields(reference, [type(reference).res_model]))
+
+        # searching on the one2many should flush the field 'res_model'
+        records = record.search([('model_ids.create_date', '!=', False)])
+        self.assertIn(record, records)
+
 
 @common.tagged('selection_abstract')
 class TestSelectionDeleteUpdate(common.TransactionCase):

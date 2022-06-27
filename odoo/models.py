@@ -4796,43 +4796,47 @@ class BaseModel(metaclass=MetaModel):
         to_flush = defaultdict(set)             # {model_name: field_names}
         if fields:
             to_flush[self._name].update(fields)
-        # also take into account the fields in the record rules
-        domain = list(domain) + (self.env['ir.rule']._compute_domain(self._name, 'read') or [])
-        for arg in domain:
-            if isinstance(arg, str):
-                continue
-            if not isinstance(arg[0], str):
-                continue
-            model_name = self._name
-            for fname in arg[0].split('.'):
-                field = self.env[model_name]._fields.get(fname)
+
+        def collect_from_domain(model, domain):
+            for arg in domain:
+                if isinstance(arg, str):
+                    continue
+                if not isinstance(arg[0], str):
+                    continue
+                comodel = collect_from_path(model, arg[0])
+                if arg[1] in ('child_of', 'parent_of') and comodel._parent_store:
+                    # hierarchy operators need the parent field
+                    collect_from_path(comodel, comodel._parent_name)
+
+        def collect_from_path(model, path):
+            # path is a dot-separated sequence of field names
+            for fname in path.split('.'):
+                field = model._fields.get(fname)
                 if not field:
                     break
-                to_flush[model_name].add(fname)
+                to_flush[model._name].add(fname)
+                if field.type == 'one2many' and field.inverse_name:
+                    to_flush[field.comodel_name].add(field.inverse_name)
+                    field_domain = field.get_domain_list(model)
+                    if field_domain:
+                        collect_from_domain(self.env[field.comodel_name], field_domain)
                 # DLE P111: `test_message_process_email_partner_find`
                 # Search on res.users with email_normalized in domain
                 # must trigger the recompute and flush of res.partner.email_normalized
-                if field.related_field:
-                    model = self
+                if field.related:
                     # DLE P129: `test_transit_multi_companies`
                     # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
                     # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
                     # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                    for f in field.related.split('.'):
-                        rfield = model._fields.get(f)
-                        if rfield:
-                            to_flush[model._name].add(f)
-                            if rfield.type in ('many2one', 'one2many', 'many2many'):
-                                model = self.env[rfield.comodel_name]
-                                if rfield.type == 'one2many' and rfield.inverse_name:
-                                    to_flush[rfield.comodel_name].add(rfield.inverse_name)
-                if field.comodel_name:
-                    model_name = field.comodel_name
-            # hierarchy operators need the parent field
-            if arg[1] in ('child_of', 'parent_of'):
-                model = self.env[model_name]
-                if model._parent_store:
-                    to_flush[model_name].add(model._parent_name)
+                    collect_from_path(model, field.related)
+                if field.relational:
+                    model = self.env[field.comodel_name]
+            # return the model found by traversing all fields (used in collect_from_domain)
+            return model
+
+        # also take into account the fields in the record rules
+        domain = list(domain) + (self.env['ir.rule']._compute_domain(self._name, 'read') or [])
+        collect_from_domain(self, domain)
 
         # flush the order fields
         order_spec = order or self._order
