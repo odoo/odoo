@@ -6,16 +6,6 @@ import { session } from "@web/session";
 
 const { EventBus, whenReady } = owl;
 
-function isSpecialKey(key) {
-    return (key === "ArrowLeft" || key === "ArrowRight" ||
-        key === "ArrowUp" || key === "ArrowDown" ||
-        key === "Escape" ||
-        key === "Backspace" || key === "Delete" ||
-        key === "Home" || key === "End" ||
-        key === "PageUp" || key === "PageDown" ||
-        key === "Shift" || /F\d\d?/.test(key));
-}
-
 function isEditable(element) {
     return element.matches('input,textarea,[contenteditable="true"]');
 }
@@ -40,8 +30,6 @@ export const barcodeService = {
 
     start() {
         const bus = new EventBus();
-        const endRegexp = /[\n\r\t]+/;
-        const barcodeRegexp = /(.{3,})[\n\r\t]*/;
         let timeout = null;
 
         let bufferedBarcode = "";
@@ -60,10 +48,8 @@ export const barcodeService = {
          */
         function checkBarcode() {
             const str = barcodeInput ? barcodeInput.value : bufferedBarcode;
-            const match = str.match(barcodeRegexp);
-            if (match) {
-                const barcode = match[1];
-                handleBarcode(barcode, currentTarget);
+            if (str.length >= 3) {
+                handleBarcode(str, currentTarget);
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
@@ -73,12 +59,14 @@ export const barcodeService = {
         }
 
         function keydownHandler(ev) {
-            // Don't catch non-printable keys for which Firefox triggers a keypress
-            if (isSpecialKey(ev.key)) {
-                return;
-            }
-            // Don't catch keypresses which could have a UX purpose (like shortcuts)
-            if (ev.ctrlKey || ev.metaKey || ev.altKey) {
+            // Ignore 'Shift', 'Escape', 'Backspace', 'Insert', 'Delete', 'Home', 'End', Arrow*, F*, Page*, ...
+            // ctrl, meta and alt are often used for UX purpose (like shortcuts)
+            // Note: shiftKey is not ignored because it can be used by some barcode scanner for digits.
+            const isSpecialKey = ev.key.length > 1 || ev.ctrlKey || ev.metaKey || ev.altKey;
+            const isEndCharacter = ev.key.match(/(Enter|Tab)/);
+
+            // Don't catch non-printable keys except 'enter' and 'tab'
+            if (isSpecialKey && !isEndCharacter) {
                 return;
             }
 
@@ -93,13 +81,11 @@ export const barcodeService = {
                 return;
             }
 
-            if (ev.key !== "Enter" && ev.key !== "Unidentified") {
-                bufferedBarcode += ev.key;
-            }
             clearTimeout(timeout);
-            if (String.fromCharCode(ev.which).match(endRegexp)) {
+            if (isEndCharacter) {
                 checkBarcode();
             } else {
+                bufferedBarcode += ev.key;
                 timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);
             }
         }

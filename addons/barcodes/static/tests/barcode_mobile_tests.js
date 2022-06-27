@@ -23,7 +23,6 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
         triggerEvent(target, 'keydown', {
             key: char,
             keyCode: keycode,
-            which: keycode,
         });
     }
     
