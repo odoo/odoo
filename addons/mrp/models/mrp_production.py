@@ -1067,7 +1067,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
-        mrp_production_ids = self._get_children()
+        mrp_production_ids = self._get_children().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1087,7 +1087,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_sources(self):
         self.ensure_one()
-        mrp_production_ids = self._get_sources()
+        mrp_production_ids = self._get_sources().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
