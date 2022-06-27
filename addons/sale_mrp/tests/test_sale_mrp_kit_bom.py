@@ -185,7 +185,7 @@ class TestSaleMrpKitBom(TransactionCase):
         aluminium_legs = self.env['product.attribute.value'].create(
             {'attribute_id': attributes.id, 'name': 'Aluminium'})
 
-        product = self.env['product.product'].create({
+        product_template = self.env['product.template'].create({
             'name': 'test product',
             'categ_id': product_category.id,
             'attribute_line_ids': [(0, 0, {
@@ -193,9 +193,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 'value_ids': [(6, 0, [steel_legs.id, aluminium_legs.id])]
             })]
         })
-        product_variant_ids = product.product_variant_ids.search([('id', '!=', product.id)])
-        product_variant_ids[0].categ_id.property_cost_method = 'average'
-        product_variant_ids[1].categ_id.property_cost_method = 'average'
+        product_variant_ids = product_template.product_variant_ids
         # BoM 1 with component_1
         self.env['mrp.bom'].create({
             'product_id': product_variant_ids[0].id,
@@ -225,7 +223,7 @@ class TestSaleMrpKitBom(TransactionCase):
             'order_id': so.id,
         })
         so.action_confirm()
-        so.action_cancel()
+        so._action_cancel()
         so.action_draft()
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as order_line_change:
