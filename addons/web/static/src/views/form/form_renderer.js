@@ -5,9 +5,10 @@ import { Field } from "@web/views/fields/field";
 import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { evalDomainFromRecord, useViewCompiler } from "@web/views/view_compiler";
+import { useViewCompiler } from "@web/views/view_compiler";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
+import { evalDomain } from "../utils";
 import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
@@ -25,8 +26,8 @@ export class FormRenderer extends Component {
         });
     }
 
-    evalDomainFromRecord() {
-        return evalDomainFromRecord(...arguments);
+    evalDomainFromRecord(record, expr) {
+        return evalDomain(expr, record.evalContext);
     }
 }
 
