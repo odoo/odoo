@@ -9,7 +9,7 @@ const { EventBus, whenReady } = owl;
 function isSpecialKey(key) {
     return (key === "ArrowLeft" || key === "ArrowRight" ||
         key === "ArrowUp" || key === "ArrowDown" ||
-        key === "Escape" || key === "Tab" ||
+        key === "Escape" ||
         key === "Backspace" || key === "Delete" ||
         key === "Home" || key === "End" ||
         key === "PageUp" || key === "PageDown" ||
