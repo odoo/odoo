@@ -93,6 +93,7 @@ function setupMessagingServiceRegistries({
     const messagingValues = {
         start() {
             return {
+                isInQUnitTest: true,
                 disableAnimation: true,
                 loadingBaseDelayDuration,
                 messagingBus,

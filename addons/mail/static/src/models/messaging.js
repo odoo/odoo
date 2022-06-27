@@ -400,6 +400,9 @@ registerModel({
         isInitialized: attr({
             default: false,
         }),
+        isInQUnitTest: attr({
+            default: false,
+        }),
         isNotificationBlocked: attr({
             compute: '_computeIsNotificationBlocked',
         }),
