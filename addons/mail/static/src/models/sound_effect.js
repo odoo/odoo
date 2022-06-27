@@ -14,6 +14,9 @@ registerModel({
          *   If not provided, uses the default volume of this sound effect.
          */
         play({ loop = false, volume } = {}) {
+            if (this.messaging.isInQUnitTest) {
+                return;
+            }
             if (typeof(Audio) === "undefined") {
                 return;
             }
