@@ -30,8 +30,9 @@ class TaxGroupComponent extends Component {
 
     patched() {
         if (this.state.value === 'edit') {
+            const currency = session.get_currency(this.props.record.data.currency_id.data.id); // The records using this widget must have a currency_id field.
             this.inputTax.el.focus(); // Focus the input
-            this.inputTax.el.value = this.props.taxGroup.tax_group_amount;
+            this.inputTax.el.value = fieldUtils.format.float(this.props.taxGroup.tax_group_amount, null, {digits: currency.digits});
         }
     }
 
