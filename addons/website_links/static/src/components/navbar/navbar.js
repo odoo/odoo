@@ -12,8 +12,7 @@ patch(NavBar.prototype, 'website_links_navbar', {
         onWillStart(() => {
             this.websiteEditingMenus['website_links.menu_link_tracker'] = {
                 openWidget: () => this.websiteService.goToWebsite({ path: `/r?u=${encodeURIComponent(this.websiteService.contentWindow.location.href)}` }),
-                isDisplayed: () => this.websiteService.currentWebsite,
-                options: () => {},
+                isDisplayed: () => this.websiteService.currentWebsite && this.websiteService.contentWindow,
             };
         });
     },
