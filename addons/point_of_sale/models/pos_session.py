@@ -1922,7 +1922,7 @@ class PosSession(models.Model):
     def _loader_params_pos_payment_method(self):
         return {
             'search_params': {
-                'domain': [],
+                'domain': ['|', ('active', '=', False), ('active', '=', True)],
                 'fields': ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type'],
                 'order': 'is_cash_count desc, id',
             },
