@@ -11,9 +11,10 @@ import { url } from "@web/core/utils/urls";
 import { Field } from "@web/views/fields/field";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { evalDomainFromRecord, useViewCompiler } from "@web/views/view_compiler";
+import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
+import { evalDomain } from "../utils";
 import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
@@ -228,8 +229,8 @@ export class KanbanRecord extends Component {
         };
     }
 
-    evalDomainFromRecord() {
-        return evalDomainFromRecord(...arguments);
+    evalDomainFromRecord(record, expr) {
+        return evalDomain(expr, record.evalContext);
     }
 
     getRecordClasses() {

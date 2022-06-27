@@ -3,6 +3,7 @@ import { makeView } from "../helpers";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
+import { click, getFixture } from "../../helpers/utils";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
@@ -141,12 +142,28 @@ QUnit.module("Form Compiler", () => {
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
+
+    QUnit.test("compile invisible containing string as domain", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <field name="display_name" modifiers="{&quot;invisible&quot;: true}" />
+                <div class="visible3" modifiers="{&quot;invisible&quot;: false}"/>
+                <div modifiers="{&quot;invisible&quot;: &quot;[['display_name', '=', 'take']]&quot;}"/>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="visible3" />
+            <div t-if="!evalDomainFromRecord(props.record,&quot;[['display_name','=','take']]&quot;)" />
+        `;
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
 });
 
 QUnit.module("Form Renderer", (hooks) => {
-    let serverData;
+    let target, serverData;
 
     hooks.beforeEach(() => {
+        target = getFixture();
         setupViewRegistries();
         serverData = {
             models: {
@@ -161,6 +178,28 @@ QUnit.module("Form Renderer", (hooks) => {
                 },
             },
         };
+    });
+
+    QUnit.test("compile form with modifiers and attrs - string as domain", async (assert) => {
+        serverData.views = {
+            "partner,1,form": /*xml*/ `
+                <form>
+                    <div modifiers="{&quot;invisible&quot;: &quot;[['display_name', '=', uid]]&quot;}">
+                        <field name="charfield"/>
+                    </div>
+                    <field name="display_name" attrs="{'readonly': &quot;[['display_name', '=', uid]]&quot;}"/>
+                </form>`,
+        };
+
+        await makeView({
+            serverData,
+            resModel: "partner",
+            type: "form",
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.containsN(target, ".o_form_editable input", 2);
     });
 
     QUnit.test("compile notebook with modifiers", async (assert) => {
