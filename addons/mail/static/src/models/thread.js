@@ -634,7 +634,7 @@ registerModel({
             if (this.model !== 'mail.channel') {
                 return;
             }
-            if (!this.messaging.rtc.isClientRtcCompatible) {
+            if (!this.messaging.device.hasRtcSupport) {
                 this.messaging.notify({
                     message: this.env._t("Your browser does not support webRTC."),
                     type: 'warning',

@@ -67,7 +67,7 @@ registerModel({
                 // does handle notifications targeting a different session
                 return;
             }
-            if (!this.isClientRtcCompatible) {
+            if (!this.messaging.device.hasRtcSupport) {
                 return;
             }
             if (!rtcSession.rtcPeerConnection && (!channelId || !this.channel || channelId !== this.channel.id)) {
@@ -407,13 +407,6 @@ registerModel({
                 this._addLogEntry(rtcSession.id, 'init call', { step: 'init call' });
                 this._callPeer(rtcSession);
             }
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsClientRtcCompatible() {
-            return window.RTCPeerConnection && window.MediaStream;
         },
         /**
          * @private
@@ -1143,13 +1136,6 @@ registerModel({
         invalidIceConnectionStates: attr({
             default: new Set(['disconnected', 'failed', 'closed']),
             readonly: true,
-        }),
-        /**
-         * true if the browser supports webRTC
-         */
-        isClientRtcCompatible: attr({
-            compute: '_computeIsClientRtcCompatible',
-            default: true,
         }),
         isNotifyPeersRPCInProgress: attr({
             default: false,
