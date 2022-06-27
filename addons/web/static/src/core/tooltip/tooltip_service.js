@@ -47,6 +47,7 @@ export const tooltipService = {
         let target = null;
         let positionX;
         let positionY;
+        const elementsWithTooltips = new Map();
 
         /**
          * Closes the currently opened tooltip if any, or prevent it from opening.
@@ -64,10 +65,10 @@ export const tooltipService = {
          */
         function shouldCleanup() {
             if (!target) {
-                return;
+                return false;
             }
             if (!document.body.contains(target)) {
-                return cleanup(); // target is no longer in the DOM
+                return true; // target is no longer in the DOM
             }
             const targetRect = target.getBoundingClientRect();
             if (
@@ -82,42 +83,32 @@ export const tooltipService = {
         }
 
         /**
-         * Opens the tooltip after a delay, if the event's target has a data-tooltip
-         * attribute.
+         * Checks whether there is a tooltip registered on the event target, and
+         * if there is, creates a timeout to open the corresponding tooltip
+         * after a delay.
          *
-         * @param {MouseEvent} ev a "mouseenter" event
+         * @param {HTMLElement} el the element on which to add the tooltip
+         * @param {object} param1
+         * @param {string} [param1.tooltip] the string to add as a tooltip, if
+         *  no tooltip template is specified
+         * @param {string} [param1.template] the name of the template to use for
+         *  tooltip, if any
+         * @param {object} [param1.info] info for the tooltip template
+         * @param {'top'|'bottom'|'left'|'right'} param1.position
+         * @param {number} [param1.delay] delay after which the popover should
+         *  open
          */
-        function onMouseenter(ev) {
-            let el = ev.target;
-            if (!el.matches("[data-tooltip], [data-tooltip-template]")) {
-                return;
-            }
+        function openTooltip(el, { tooltip = "", template, info, position, delay = OPEN_DELAY }) {
             target = el;
-            const dataset = el.dataset;
-            const tooltip = dataset.tooltip;
-            let template, info;
-            if ("tooltipTemplate" in dataset) {
-                template = dataset.tooltipTemplate;
-                info = dataset.tooltipInfo ? JSON.parse(dataset.tooltipInfo) : null;
-            }
             cleanup();
-            if (tooltip === "" && !template) {
+            if (!tooltip && !template) {
                 return;
             }
 
-            // register mouse position first in case the target
-            // contains disabled elements which would prevent
-            // to track mousemove. The position is needed to check
-            // whether the element is hovered or not
-            positionX = ev.x;
-            positionY = ev.y;
-
-            const delay = dataset.tooltipDelay ? JSON.parse(dataset.tooltipDelay) : OPEN_DELAY;
             openTooltipTimeout = browser.setTimeout(() => {
                 if (shouldCleanup()) {
                     cleanup();
                 } else {
-                    const position = dataset.tooltipPosition;
                     closeTooltip = popover.add(
                         target,
                         Tooltip,
@@ -126,6 +117,35 @@ export const tooltipService = {
                     );
                 }
             }, delay);
+        }
+
+        /**
+         * Checks whether there is a tooltip registered on the event target, and
+         * if there is, creates a timeout to open the corresponding tooltip
+         * after a delay.
+         *
+         * @param {MouseEvent} ev a "mouseenter" event
+         */
+        function onMouseenter(ev) {
+            // set mouse position in case the target contains disabled elements which won't trigger mousemove
+            positionX = ev.x;
+            positionY = ev.y;
+            /** @type {HTMLElement} */
+            const el = ev.target;
+            if (elementsWithTooltips.has(el)) {
+                openTooltip(el, elementsWithTooltips.get(el));
+            } else if (el.matches("[data-tooltip], [data-tooltip-template]")) {
+                const {
+                    tooltip,
+                    tooltipInfo,
+                    tooltipDelay,
+                    tooltipTemplate: template,
+                    tooltipPosition: position,
+                } = el.dataset;
+                const delay = parseInt(tooltipDelay);
+                const info = tooltipInfo ? JSON.parse(tooltipInfo) : null;
+                openTooltip(el, { tooltip, template, delay, info, position });
+            }
         }
 
         whenReady(() => {
@@ -148,6 +168,18 @@ export const tooltipService = {
             // the "data-tooltip" or "data-tooltip-template" attribute, to open the tooltip.
             document.body.addEventListener("mouseenter", onMouseenter, { capture: true });
         });
+
+        return {
+            add(el, params) {
+                elementsWithTooltips.set(el, params);
+                return () => {
+                    elementsWithTooltips.delete(el);
+                    if (target === el) {
+                        cleanup();
+                    }
+                };
+            },
+        };
     },
 };
 

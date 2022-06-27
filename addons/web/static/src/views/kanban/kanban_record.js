@@ -13,7 +13,8 @@ import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { evalDomainFromRecord, useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { KANBAN_BOX_ATTRIBUTE } from "./kanban_arch_parser";
+import { useTooltip } from "@web/core/tooltip/tooltip_hook";
+import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 
@@ -158,10 +159,12 @@ export class KanbanRecord extends Component {
         const ViewCompiler = Compiler || KanbanCompiler;
 
         const subTemplateKeys = {};
-        let cardTemplate;
+        let cardTemplate, tooltipTemplate;
         for (const tname in templates) {
             if (tname === KANBAN_BOX_ATTRIBUTE) {
                 cardTemplate = templates[tname];
+            } else if (tname === KANBAN_TOOLTIP_ATTRIBUTE) {
+                tooltipTemplate = templates[tname];
             } else {
                 subTemplateKeys[tname] = useViewCompiler(
                     ViewCompiler,
@@ -171,9 +174,23 @@ export class KanbanRecord extends Component {
                 );
             }
         }
-        this.templateId = useViewCompiler(ViewCompiler, arch, cardTemplate, {
+        this.templateId = useViewCompiler(ViewCompiler, arch + KANBAN_BOX_ATTRIBUTE, cardTemplate, {
             subTemplateKeys,
         });
+        if (tooltipTemplate) {
+            const compiled = useViewCompiler(
+                ViewCompiler,
+                arch + KANBAN_TOOLTIP_ATTRIBUTE,
+                tooltipTemplate,
+                {
+                    subTemplateKeys,
+                }
+            );
+            useTooltip("root", {
+                info: this,
+                template: compiled,
+            });
+        }
 
         this.createRecordAndWidget(this.props);
         onWillUpdateProps(this.createRecordAndWidget);
