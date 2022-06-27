@@ -105,7 +105,6 @@ registerModel({
                 { categoryName: "⚽️", allEmojis: insertAndReplace(["🏃", "🚲", "⚽️", "🏈", "🎱", "🎬", "🎤"].map(unicode => ({ unicode }))) },
                 
             ]),
-            inverse: 'emojiRegistry',
         }),
     },
 });

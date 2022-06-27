@@ -4,18 +4,18 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class Emoji extends Component {
+export class EmojiGridView extends Component {
     /**
-     * @returns {EmojiView}
+     * @returns {EmojiGridView}
      */
-    get emojiView() {
+    get emojiGridView() {
         return this.props.record;
     }
 }
 
-Object.assign(Emoji, {
+Object.assign(EmojiGridView, {
     props: { record: Object },
-    template: 'mail.Emoji',
+    template: 'mail.EmojiGridView',
 });
 
-registerMessagingComponent(Emoji);
+registerMessagingComponent(EmojiGridView);

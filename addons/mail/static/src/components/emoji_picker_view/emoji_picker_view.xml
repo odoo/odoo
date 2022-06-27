@@ -2,12 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.EmojiPickerView" owl="1">
-        <div class="o_EmojiPickerView px-1" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="emojiPickerView">
-                <t t-foreach="emojiPickerView.emojiViews" t-as="emojiView" t-key="emojiView.localId">
-                    <Emoji emojiView="emojiView"/>
-                </t>
-            </t>
+        <div class="o_EmojiPickerView d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <EmojiCategoryBarView record="emojiPickerView.emojiCategoryBarView"/>
+            <EmojiGridView record="emojiPickerView.emojiGridView"/>
         </div>
     </t>
 

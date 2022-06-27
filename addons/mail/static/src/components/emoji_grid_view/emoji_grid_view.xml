@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiGridView" owl="1">
+        <div class="o_EmojiGridView overflow-auto py-2 pl-3 pr-4" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="emojiGridView.emojiViews" t-as="emojiView" t-key="emojiView.localId">
+                <Emoji className="'o_EmojiGid_emoji'" record="emojiView"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

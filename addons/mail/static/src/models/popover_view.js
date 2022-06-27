@@ -106,7 +106,7 @@ registerModel({
                 return 'ChannelInvitationForm';
             }
             if (this.emojiPickerView) {
-                return 'EmojiPicker';
+                return 'EmojiPickerView';
             }
             return clear();
         },
