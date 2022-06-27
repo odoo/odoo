@@ -428,8 +428,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(subproduction.mrp_production_source_count, 1)
         child_action = production.action_view_mrp_production_childs()
         source_action = subproduction.action_view_mrp_production_sources()
-        self.assertEqual(child_action.get('res_id'), subproduction)
-        self.assertEqual(source_action.get('res_id'), production)
+        self.assertEqual(child_action.get('res_id'), subproduction.id)
+        self.assertEqual(source_action.get('res_id'), production.id)
 
     def test_3_steps_and_byproduct(self):
         """ Suppose a warehouse with Manufacture option set to '3 setps' and a product P01 with a reordering rule.
