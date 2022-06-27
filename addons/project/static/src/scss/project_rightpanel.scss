@@ -77,9 +77,14 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
 
         .o_rightpanel_data {
             font-size: small;
+            .table-striped{
+                tbody tr:nth-of-type(odd) {
+                    background-color: $gray-100;
+                }
+            }
             .o_rightpanel_data_row, table > tbody > tr {
                 &:not(.o_rightpanel_nohover):hover {
-                    background-color: $gray-100;
+                    background-color: $gray-200;
                     border-radius: 5px;
                 }
             }

@@ -88,7 +88,7 @@ class Project(models.Model):
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "name": "Sales Orders",
+            'name': _("%(name)s's Sales Order", name=self.name),
             "context": {"create": False, "show_sale": True},
         }
         if len(all_sale_orders) == 1:

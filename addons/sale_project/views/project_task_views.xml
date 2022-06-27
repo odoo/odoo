@@ -35,7 +35,7 @@
                 <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': [('has_any_so_to_invoice', '=', False)]}" data-hotkey="w"/>
                 <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-secondary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': ['|', ('has_any_so_with_nothing_to_invoice', '=', False), ('has_any_so_to_invoice', '=', True)]}" data-hotkey="w"/>
             </xpath>
-            <xpath expr="//button[@name='%(project.project_update_all_action)d']" position="after">
+            <xpath expr="//button[@name='project_update_all_action']" position="after">
                 <button class="oe_stat_button"
                         type="object" name="action_view_sos" icon="fa-dollar"
                         attrs="{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}"
