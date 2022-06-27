@@ -263,6 +263,11 @@ class TestHttpStatic(TestHttpStaticCommon):
             assert_content=self.gizeh_data[100:200]
         )
 
+    def test_static16_public_user_image(self):
+        public_user = self.env.ref('base.public_user')
+        res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
+        self.assertEqual(res.status_code, 404)
+
 
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
