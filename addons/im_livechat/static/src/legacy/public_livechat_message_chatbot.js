@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import PublicLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
+import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
 /**
  * Override of the PublicLivechatMessage that includes chatbot capabilities.
