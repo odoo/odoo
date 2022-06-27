@@ -36,7 +36,7 @@
         <field name="name">project.milestone.view.tree</field>
         <field name="model">project.milestone</field>
         <field name="arch" type="xml">
-            <tree decoration-success="can_be_marked_as_done" decoration-danger="is_deadline_exceeded and not can_be_marked_as_done" decoration-muted="is_reached" editable="bottom">
+            <tree decoration-success="can_be_marked_as_done" decoration-danger="is_deadline_exceeded and not can_be_marked_as_done" decoration-muted="is_reached" editable="bottom" sample="1">
                 <field name="name"/>
                 <field name="deadline" optional="show"/>
                 <field name="is_reached" optional="show"/>

@@ -63,22 +63,23 @@
                             <div class="o_kanban_detail_ungrouped row">
                                 <div class="col-lg-4 o_pupdate_name">
                                     <b><field name="name_cropped"/></b>
+                                    <field name="color" invisible="1"/>
+                                    <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="col-lg-2">
                                     <div>
                                         <field name="user_id" widget="many2one_avatar_user"/>
-                                        <t t-esc="record.user_id.value"/>
+                                        <strong><t t-esc="record.user_id.value"/></strong>
+                                        <div>Author</div>
                                     </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <field name="color" invisible="1"/>
-                                    <b><field name="status" widget="status_with_color" options="{'color_field': 'color'}"/></b>
-                                </div>
-                                <div class="col-lg-2">
-                                    <b><field name="progress_percentage" widget="percentage"/></b>
-                                    <div>Progress</div>
                                 </div>
                                 <div class="col-lg-2">
                                     <b><field name="date"/></b>
                                     <div>Date</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <b><field name="progress_percentage" widget="percentage"/></b>
+                                    <div>Progress</div>
                                 </div>
                             </div>
                         </div>
@@ -94,9 +95,9 @@
         <field name="arch" type="xml">
             <tree sample="1" js_class="project_update_list">
                 <field name="name"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
-                <field name="progress_percentage" string="Progress" widget="percentage" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" class="fw-bold" optional="show"/>
                 <field name="date" optional="show"/>
+                <field name="progress_percentage" string="Progress" widget="percentage" optional="show"/>
                 <field name="color" invisible="1"/>
                 <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
             </tree>

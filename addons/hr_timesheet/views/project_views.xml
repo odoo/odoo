@@ -297,7 +297,7 @@
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" t-if="record.allow_timesheets.raw_value and record.timesheet_count and record.timesheet_count.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
-                        <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
+                        <a name="action_project_timesheets" type="object">Timesheets</a>
                     </div>
                 </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">

@@ -53,7 +53,7 @@ const ProjectFormController = FormController.extend({
 
         const alert = allowContinue
             ? _t('It seems that this task is part of a recurrence.')
-            : _t('It seems that this task is part of a recurrence. You must keep it as a model to create the next occurences.');
+            : _t('It seems that this task is recurrent. Would you like to stop its recurrence?');
         const dialog = new Dialog(this, {
             buttons: [
                 {

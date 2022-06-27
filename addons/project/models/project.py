@@ -724,6 +724,21 @@ class Project(models.Model):
     #  Actions
     # ---------------------------------------------------
 
+    def action_project_task_burndown_chart_report(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_task_burndown_chart_report')
+        action['display_name'] = _("%(name)s's Burndown Chart", name=self.name)
+        return action
+
+    def action_project_timesheets(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
+        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        return action
+
+    def project_update_all_action(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
+        action['display_name'] = _("%(name)s's Updates", name=self.name)
+        return action
+
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
         for project in self:
@@ -740,13 +755,13 @@ class Project(models.Model):
         action = self.with_context(active_id=self.id, active_ids=self.ids) \
             .env.ref('project.act_project_project_2_project_task_all') \
             .sudo().read()[0]
-        action['display_name'] = self.name
+        action['display_name'] = _("%(name)s", name=self.name)
         return action
 
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
-        action['name'] = _('Ratings')
+        action['display_name'] = _("%(name)s's Rating", name=self.name),
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_rating_last_30_days'] = 1
@@ -763,6 +778,7 @@ class Project(models.Model):
     def action_view_tasks_analysis(self):
         """ return the action to see the tasks analysis report of the project """
         action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_task_user_tree')
+        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name),
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
@@ -786,7 +802,7 @@ class Project(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Milestones'),
+            'name': _("%(name)s's Milestones", name=self.name),
             'domain': [('project_id', '=', self.id)],
             'res_model': 'project.milestone',
             'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree')],
@@ -920,7 +936,7 @@ class Project(models.Model):
                 'additional_context': json.dumps({
                     'active_id': self.id,
                 }),
-                'show': True,
+                'show': self.privacy_visibility == "portal",
                 'sequence': 66,
             })
         return buttons
