@@ -206,6 +206,7 @@ class KnowledgeArticlePermissionsCase(KnowledgeCommon):
         #   - Readonly            read    (+manager-write)
         #   - Writable            " (w)   (+portal-read)
         #     - Writable child    " (w)
+        #       - Child           "
         #     - Nyarlathotep      DESYNC  read, manager-write
         #       - Child           "
         # READABLE ROOT           read    (+manager-write)
@@ -311,6 +312,11 @@ class KnowledgeArticlePermissionsCase(KnowledgeCommon):
         cls.article_write_contents_children = cls.env['knowledge.article'].create([
             {'name': 'Child of writable through inheritance',
              'parent_id': cls.article_write_contents[2].id,
+            },
+        ])
+        cls.article_write_contents_children += cls.env['knowledge.article'].create([
+            {'name': 'Child of child of writable through inheritance',
+             'parent_id': cls.article_write_contents_children[0].id,
             },
         ])
         cls.article_write_desync = cls.env['knowledge.article'].create([
