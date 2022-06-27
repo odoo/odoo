@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
 import {
     append,
     combineAttributes,
@@ -142,10 +141,6 @@ export function encodeObjectForTemplate(obj) {
     return `"${encodeURI(JSON.stringify(obj))}"`;
 }
 
-export function evalDomainFromRecord(record, expr) {
-    return new Domain(expr).contains(record.evalContext);
-}
-
 /**
  * @param {Element} el
  * @param {string} modifierName
@@ -156,7 +151,7 @@ export function getModifier(el, modifierName) {
     // modifiers' string are evaluated to their boolean or array form
     const modifiers = JSON.parse(el.getAttribute("modifiers") || "{}");
     const mod = modifierName in modifiers ? modifiers[modifierName] : false;
-    return Array.isArray(mod) ? mod : !!mod;
+    return typeof mod !== "boolean" ? mod : !!mod;
 }
 
 /**
@@ -251,13 +246,7 @@ export class ViewCompiler {
                 " and "
             );
         } else {
-            let expr;
-            if (Array.isArray(invisible)) {
-                expr = `evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
-            } else {
-                expr = invisible;
-            }
-            appendAttr(compiled, "class", `o_invisible_modifier:${expr}`);
+            appendAttr(compiled, "class", `o_invisible_modifier:${invisible}`);
         }
         return compiled;
     }

@@ -89,7 +89,7 @@ export const computeReportMeasures = (
  * @returns {boolean}
  */
 export function evalDomain(modifier, evalContext) {
-    if (Array.isArray(modifier)) {
+    if (modifier && typeof modifier !== "boolean") {
         modifier = new Domain(modifier).contains(evalContext);
     }
     return Boolean(modifier);
