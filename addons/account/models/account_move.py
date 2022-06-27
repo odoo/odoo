@@ -5224,6 +5224,7 @@ class AccountMoveLine(models.Model):
                             'account_id': account_to_fix.id,
                         }
                     else:
+<<<<<<< HEAD
                         # Multiple base lines could share the same key, if the same
                         # cash basis tax is used alone on several lines of the invoices
                         account_vals_to_fix[grouping_key]['debit'] += vals['debit']
@@ -5249,6 +5250,129 @@ class AccountMoveLine(models.Model):
                         line,
                         account=line.company_id.account_cash_basis_base_account_id,
                     )
+||||||| parent of 479f9c7aa132... temp
+                        # Base line.
+                        sequence = len(exchange_diff_move_vals['line_ids'])
+                        exchange_diff_move_vals['line_ids'] += [
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': balance if balance > 0.0 else 0.0,
+                                'credit': -balance if balance < 0.0 else 0.0,
+                                'sequence': sequence,
+                            }),
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': -balance if balance < 0.0 else 0.0,
+                                'credit': balance if balance > 0.0 else 0.0,
+                                'tax_ids': [],
+                                'tax_tag_ids': [],
+                                'sequence': sequence + 1,
+                            }),
+                        ]
+
+        if not self:
+            return self.env['account.move']
+
+        company = self[0].company_id
+        journal = company.currency_exchange_journal_id
+
+        exchange_diff_move_vals = {
+            'move_type': 'entry',
+            'date': date.min,
+            'journal_id': journal.id,
+            'line_ids': [],
+        }
+
+        # Fix residual amounts.
+        to_reconcile = _add_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
+
+        # Fix cash basis entries.
+        is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
+        if is_cash_basis_needed:
+            _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
+
+        # ==========================================================================
+        # Create move and reconcile.
+        # ==========================================================================
+
+        if exchange_diff_move_vals['line_ids']:
+            # Check the configuration of the exchange difference journal.
+            if not journal:
+                raise UserError(_("You should configure the 'Exchange Gain or Loss Journal' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+            if not journal.company_id.expense_currency_exchange_account_id:
+                raise UserError(_("You should configure the 'Loss Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+            if not journal.company_id.income_currency_exchange_account_id.id:
+                raise UserError(_("You should configure the 'Gain Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+
+            exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date())
+
+            exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
+        else:
+            return None
+=======
+                        # Base line.
+                        sequence = len(exchange_diff_move_vals['line_ids'])
+                        exchange_diff_move_vals['line_ids'] += [
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': balance if balance > 0.0 else 0.0,
+                                'credit': -balance if balance < 0.0 else 0.0,
+                                'sequence': sequence,
+                            }),
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': -balance if balance < 0.0 else 0.0,
+                                'credit': balance if balance > 0.0 else 0.0,
+                                'tax_ids': [],
+                                'tax_tag_ids': [],
+                                'sequence': sequence + 1,
+                            }),
+                        ]
+
+        if not self:
+            return self.env['account.move']
+
+        company = self[0].company_id
+        journal = company.currency_exchange_journal_id
+
+        exchange_diff_move_vals = {
+            'move_type': 'entry',
+            'date': date.min,
+            'journal_id': journal.id,
+            'line_ids': [],
+        }
+
+        # Fix residual amounts.
+        to_reconcile = _add_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
+
+        # Fix cash basis entries, only if not coming from the move reversal wizard.
+        is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
+            _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
+
+        # ==========================================================================
+        # Create move and reconcile.
+        # ==========================================================================
+
+        if exchange_diff_move_vals['line_ids']:
+            # Check the configuration of the exchange difference journal.
+            if not journal:
+                raise UserError(_("You should configure the 'Exchange Gain or Loss Journal' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+            if not journal.company_id.expense_currency_exchange_account_id:
+                raise UserError(_("You should configure the 'Loss Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+            if not journal.company_id.income_currency_exchange_account_id.id:
+                raise UserError(_("You should configure the 'Gain Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+
+            exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date())
+
+            exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
+        else:
+            return None
+>>>>>>> 479f9c7aa132... temp
 
                 if grouping_key not in account_vals_to_fix:
                     continue
