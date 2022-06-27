@@ -610,10 +610,19 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      */
     _onCancelRequest(event) {
         if (this._isDirty()) {
+            let discarding = false;
             this.dialogs.add(WebsiteDialog, {
                 body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
-                primaryClick: () => this.props.quitCallback(),
-                secondaryClick: event.data.onReject,
+                primaryClick: () => {
+                    discarding = true;
+                },
+            }, {
+                onClose: () => {
+                    if (discarding) {
+                        return this.props.quitCallback();
+                    }
+                    return event.data.onReject();
+                }
             });
         } else {
             return this.props.quitCallback();
