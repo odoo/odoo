@@ -626,6 +626,47 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
 
+    def test_accrual_lost_previous_days(self):
+        # Test that when an allocation with two levels is made and that the first level has it's action
+        # with unused accruals set as lost that the days are effectively lost
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [
+                (0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'monthly',
+                    'maximum_leave': 12,
+                    'action_with_unused_accruals': 'lost',
+                }),
+                (0, 0, {
+                    'start_count': 1,
+                    'start_type': 'year',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'monthly',
+                    'maximum_leave': 12,
+                    'action_with_unused_accruals': 'lost',
+                }),
+            ],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual Allocation - Test',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': datetime.date(2021, 1, 1),
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        with freeze_time('2022-4-4'):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
+
     def test_accrual_maximum_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
