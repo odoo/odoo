@@ -117,7 +117,10 @@ class Company(models.Model):
         return self.env.ref(f'l10n_eu_service.oss_tax_account_company_{self.id}')
 
     def _get_oss_tags(self):
-        [chart_template_xml_id] = self.chart_template_id.get_xml_id().values()
+        try:
+            [chart_template_xml_id] = self.chart_template_id.get_xml_id().values()
+        except ValueError:
+            return {}
         tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
