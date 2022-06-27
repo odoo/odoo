@@ -36,6 +36,7 @@ var PopoverWidgetField = AbstractField.extend({
         }
         this.$el.css('max-width', '17px');
         this.$el.html(QWeb.render(this.buttonTemplape, _.defaults(value, {color: this.color, icon: this.icon})));
+        this.$el.addClass('o_widget');
         this.$el.find('a').prop('special_click', true);
         this.$popover = $(QWeb.render(value.popoverTemplate || this.popoverTemplate, value));
         this.$popover.on('click', '.action_open_forecast', this._openForecast.bind(this));
