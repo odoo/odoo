@@ -90,7 +90,7 @@
         <t t-set="revenues" t-value="profitability_items.revenues"/>
         <t t-set="revenue_items" t-value="revenues.data"/>
         <t t-set="revenue_total" t-value="revenues.total"/>
-        <table class="w-100">
+        <table class="w-100 table-striped">
             <thead>
                 <tr>
                     <th style="width: 40%">Revenues</th>
@@ -136,7 +136,7 @@
         <t t-set="costs" t-value="profitability_items.costs"/>
         <t t-set="cost_items" t-value="costs.data"/>
         <t t-set="cost_total" t-value="costs.total"/>
-        <table class="w-100">
+        <table class="w-100 table-striped">
             <thead>
                 <tr>
                     <th style="width: 40%">Costs</th>
@@ -184,7 +184,7 @@
         <t t-set="margin_invoiced_billed" t-value="revenues_total.invoiced + costs_total.billed"/>
         <t t-set="margin_to_invoice_to_bill" t-value="revenues_total.to_invoice + costs_total.to_bill"/>
         <t t-set="margin_total" t-value="margin_invoiced_billed + margin_to_invoice_to_bill"/>
-        <table class="w-100">
+        <table class="w-100 table-striped">
             <thead>
                 <tr>
                     <th style="width: 40%">Margin</th>

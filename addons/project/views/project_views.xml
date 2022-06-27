@@ -24,6 +24,7 @@
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="parent_id"/>
+                    <field name="description"/>
                     <field name="rating_last_text"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                     <filter string="Followed Tasks" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
@@ -480,7 +481,7 @@
                                 </span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
+                        <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_manager">
                             <div class="ps-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
@@ -497,7 +498,7 @@
                                 Burndown Chart
                             </span>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager">
+                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" attrs="{'invisible':[('privacy_visibility', '!=', 'portal')]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="collaborator_count" nolabel="1"/>
@@ -871,7 +872,7 @@
                                                     <a name="action_view_tasks_analysis" type="object">Tasks Analysis</a>
                                                 </div>
                                                 <div role="menuitem" name="project_burndown_menu" groups="project.group_project_user">
-                                                    <a name="%(action_project_task_burndown_chart_report)d" type="action">Burndown Chart</a>
+                                                    <a name="action_project_task_burndown_chart_report" type="object">Burndown Chart</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -1833,7 +1834,7 @@
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" groups="project.group_project_user">
-                        <a name="%(project.project_update_all_action)d" type="action" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
+                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
                     </div>
                 </xpath>
             </field>
