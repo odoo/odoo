@@ -1,21 +1,51 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
+import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryView',
-    identifyingFields: ['emojiCategory', 'emojiPickerView'],
+    identifyingFields: ['emojiCategoryBarViewOwner', 'emojiCategory'],
+    recordMethods: {
+        /** 
+         * @param {MouseEvent} ev
+         */
+        onClick() {
+            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: replace(this.emojiCategoryBarViewOwner) });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseenter(ev) {
+            this.update({ isHovered: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseleave(ev) {
+            this.update({ isHovered: false });
+        },
+    },
     fields: {
         emojiCategory: one('EmojiCategory', {
             inverse: 'emojiCategoryViews',
             readonly: true,
             required: true,
         }),
-        emojiPickerView: one('EmojiPickerView', {
+        emojiCategoryBarViewOwner: one('EmojiCategoryBarView', {
             inverse: 'emojiCategoryViews',
             readonly: true,
             required: true,
+        }),
+        emojiCategoryBarViewOwnerAsActiveByUser: one('EmojiCategoryBarView', {
+            inverse: 'activeByUserCategoryView',
+        }),
+        emojiCategoryBarViewOwnerAsActive: one('EmojiCategoryBarView', {
+            inverse: 'activeCategoryView',
+        }),
+        isHovered: attr({
+            default: false,
         }),
     }
 });
