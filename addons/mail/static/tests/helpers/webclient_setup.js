@@ -13,7 +13,7 @@ import { systrayService } from '@mail/services/systray_service';
 import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
 
 import { registry } from '@web/core/registry';
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
 import AbstractStorageService from 'web.AbstractStorageService';
@@ -168,17 +168,7 @@ function setupMessagingServiceRegistries({
         serviceRegistry: legacyServiceRegistry,
         ...webClientParameters.legacyParams,
     };
-    const target = getFixture();
-    // FIXME: the o_web_client className is automatically added by createWebClient,
-    // to ensure that the stylesheet is correctly applied. However, it causes issues
-    // with some mail test, so we remove it, except if it has been already added by
-    // the test itself. Ideally, the tests requiring this hack should be fixed and
-    // this logic should be removed.
-    const shouldRemoveClass = !target.classList.contains("o_web_client");
     const webClient = await createWebClient(webClientParameters);
-    if (shouldRemoveClass) {
-        target.classList.remove("o_web_client");
-    }
     return webClient;
 }
 
