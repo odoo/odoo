@@ -15,9 +15,8 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
@@ -40,9 +39,8 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -69,8 +67,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
             partner_id: pyEnv.currentPartnerId,
         }]],
     });
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
+    const { click, messaging, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
@@ -80,6 +77,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
             }
         },
     });
+    await openDiscuss();
 
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -114,9 +112,8 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -181,9 +178,8 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         }]],
         group_based_subscription: true,
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',

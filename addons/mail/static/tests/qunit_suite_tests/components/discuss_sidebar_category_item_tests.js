@@ -18,9 +18,8 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ avatarCacheKey: '100111' });
 
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const channelItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -49,9 +48,8 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ avatarCacheKey: '101010' });
 
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const channelLocalId = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -98,9 +96,8 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
         channel_type: 'chat',
         public: 'private',
     });
-    const { messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const chatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -145,9 +142,8 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
             public: 'private',
         },
     ]);
-    const { click, messaging } = await start({
-        autoOpenDiscuss: true,
-    });
+    const { click, messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const chat1 = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,

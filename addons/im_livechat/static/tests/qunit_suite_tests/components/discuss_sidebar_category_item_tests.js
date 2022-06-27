@@ -7,15 +7,7 @@ import {
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_sidebar_category_item_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign({}, params, {
-                autoOpenDiscuss: true,
-            }));
-        };
-    },
-});
+QUnit.module('discuss_sidebar_category_item_tests.js');
 
 QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous livechat item', async function (assert) {
     assert.expect(2);
@@ -30,7 +22,8 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -67,7 +60,8 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await this.start();
+    const { messaging, openDiscuss } = await start();
+    await openDiscuss();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${

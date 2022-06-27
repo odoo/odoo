@@ -472,8 +472,6 @@ function getOpenDiscuss(webClient, { context, params, ...props } = {}) {
  * Main function used to make a mocked environment with mocked messaging env.
  *
  * @param {Object} [param0={}]
- * @param {boolean} [param0.autoOpenDiscuss=false] determine if discuss should be
- *   open initially. Deprecated, call openDiscuss() instead.
  * @param {Object} [param0.serverData] The data to pass to the webClient
  * @param {Object} [param0.discuss={}] provide data that is passed to the discuss action.
  * @param {Object} [param0.legacyServices]
@@ -513,7 +511,6 @@ async function start(param0 = {}) {
         throttle: func => func,
     });
     const {
-        autoOpenDiscuss,
         discuss = {},
         hasTimeControl,
         waitUntilEvent,
@@ -559,10 +556,6 @@ async function start(param0 = {}) {
         await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
     }
-    const openDiscuss = getOpenDiscuss(webClient, discuss);
-    if (autoOpenDiscuss) {
-        await openDiscuss();
-    }
     // link the pyEnv to the actual mockServer after execution of createWebClient.
     pyEnv.mockServer = MockServer.currentMockServer;
     const openView = async (action, options) => {
@@ -583,7 +576,7 @@ async function start(param0 = {}) {
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
-        openDiscuss,
+        openDiscuss: getOpenDiscuss(webClient, discuss),
         openView,
         pyEnv,
         webClient,

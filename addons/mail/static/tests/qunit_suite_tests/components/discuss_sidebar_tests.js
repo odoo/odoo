@@ -22,14 +22,14 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    const { click } = await start({
-        autoOpenDiscuss: true,
+    const { click, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
         },
     });
+    await openDiscuss();
     await click(`.o_DiscussSidebarCategory_commandAdd`);
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
@@ -73,14 +73,14 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    const { click } = await start({
-        autoOpenDiscuss: true,
+    const { click, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
         },
     });
+    await openDiscuss();
     await click(`.o_DiscussSidebarCategory_commandAdd`);
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
@@ -121,9 +121,8 @@ QUnit.test('sidebar channels should be ordered case insensitive alphabetically',
         { name: "Abc" },
         { name: "Xyz" },
     ]);
-    await start({
-        autoOpenDiscuss: true,
-    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
     const results = document.querySelectorAll('.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem_name');
     assert.deepEqual(
         [results[0].textContent, results[1].textContent, results[2].textContent, results[3].textContent],
