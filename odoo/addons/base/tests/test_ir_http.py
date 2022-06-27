@@ -150,3 +150,8 @@ class test_ir_http_mimetype(common.TransactionCase):
             attachment,
         )
         self.assertEqual(filename, 'image.gif')
+
+    def test_ir_http_public_user_image(self):
+        public_user = self.env.ref('base.public_user')
+        code, *_ = self.env['ir.http']._binary_record_content(public_user.with_user(public_user), 'image_128')
+        self.assertEqual(code, 404)
