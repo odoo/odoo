@@ -27,6 +27,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasRtcSupport() {
+            return Boolean(window.RTCPeerConnection && window.MediaStream);
+        },
+        /**
+         * @private
          */
         _refresh() {
             this.update({
@@ -41,6 +48,9 @@ registerModel({
     fields: {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
+        hasRtcSupport: attr({
+            compute: '_computeHasRtcSupport',
+        }),
         /**
          * States whether this device is an actual mobile device.
          */
