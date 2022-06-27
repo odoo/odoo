@@ -32,7 +32,6 @@ function simulateBarCode(chars, target = document.body) {
         triggerEvent(target, 'keydown', {
             key: char,
             keyCode: keycode,
-            which: keycode,
         });
     }
 }
