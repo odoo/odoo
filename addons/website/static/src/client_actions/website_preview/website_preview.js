@@ -83,7 +83,6 @@ export class WebsitePreview extends Component {
                 this.websiteService.currentWebsiteId = null;
                 this.websiteService.websiteRootInstance = undefined;
                 this.websiteService.pageDocument = null;
-                this.websiteService.contentWindow = null;
             };
         }, () => [this.props.action.context.params]);
 
@@ -191,7 +190,6 @@ export class WebsitePreview extends Component {
         this.title.setParts({ action: this.currentTitle });
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
-        this.websiteService.contentWindow = this.iframe.el.contentWindow;
 
         // This is needed for the registerThemeHomepageTour tours
         const { editable, viewXmlid } = this.websiteService.currentWebsite.metadata;
