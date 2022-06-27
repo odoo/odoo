@@ -10,14 +10,12 @@ class ProductTemplate(models.Model):
     can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            # When creating an expense product on the fly, you don't expect to
-            # have taxes on it
-            if vals.get('can_be_expensed', False) and not self.env.context.get('import_file'):
-                vals.update({'supplier_taxes_id': False})
-        return super(ProductTemplate, self).create(vals_list)
+    @api.model
+    def default_get(self, fields):
+        result = super(ProductTemplate, self).default_get(fields)
+        if self.env.context.get('default_can_be_expensed'):
+            result['supplier_taxes_id'] = False
+        return result
 
     @api.depends('type')
     def _compute_can_be_expensed(self):
