@@ -1,15 +1,39 @@
 /** @odoo-module **/
 
+import '@mail/widgets/form_renderer/form_renderer'; // ensure mail overrides are applied first
+
 import FormRenderer from 'web.FormRenderer';
 import Chatter from '@project/project_sharing/components/chatter';
 import { session } from '@web/session';
 
 export default FormRenderer.extend({
-    _makeChatterContainerComponent() {
-        const props = this._makeChatterContainerProps();
-        this._chatterContainerComponent = new Chatter(this, props);
+    /**
+     * Creates the portal chatter instead of the standard chatter.
+     *
+     * This overridden method is expected to be called from proper lifecycle
+     * method of mail form renderer, when `this._chatterContainerTarget` is set.
+     *
+     * @override
+     */
+    initChatter() {
+        const options = this.makePortalChatterOptions();
+        this.portalChatter = new Chatter(this, options);
+        this.portalChatter.appendTo(this._chatterContainerTarget);
     },
-    _makeChatterContainerProps() {
+    /**
+     * Updates the options of the portal chatter instead of the props of the
+     * standard chatter.
+     *
+     * This overridden method is expected to be called from proper lifecycle
+     * method of mail form renderer.
+     *
+     * @override
+     */
+    _updateChatterContainerComponent() {
+        const options = this.makePortalChatterOptions();
+        this.portalChatter.update(options);
+    },
+    makePortalChatterOptions() {
         // FIXME: perhaps check if we have a parent in the window ?
         // Call the parent window to get the url displayed in the browser since we are in an iframe
         const query = new URLSearchParams(window.parent.location.search);
@@ -24,8 +48,5 @@ export default FormRenderer.extend({
             two_columns: false,
             project_sharing_id: session.project_id,
         };
-    },
-    _mountChatterContainerComponent() {
-        this._chatterContainerComponent.appendTo(this._chatterContainerTarget);
     },
 });
