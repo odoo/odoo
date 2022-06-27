@@ -909,6 +909,7 @@ class HolidaysRequest(models.Model):
                 meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
             meeting_values = {
                 'name': meeting_name,
+                'res_id': holiday.id,
                 'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
                 'user_id': user.id,
