@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Coconuts Theme',
     'summary': '',
     'description': '',
-    'category': 'Website/Theme',
+    'category': 'Theme/Coconuts',
     'version': '15.0.0',
     'depends': ['website'],
     'license': 'OEEL-1',
@@ -10,8 +13,6 @@
         # Images
         'data/images.xml',
         'data/shapes.xml',
-        # Pages
-        'data/pages/home.xml',
         # Snippets
         'views/snippets/options.xml',
         'views/snippets/s_coconuts_boxes.xml',
