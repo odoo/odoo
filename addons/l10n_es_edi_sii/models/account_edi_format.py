@@ -6,6 +6,7 @@ from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
 import math
@@ -351,6 +352,11 @@ class AccountEdiFormat(models.Model):
                         invoice_node.setdefault('TipoDesglose', {})
                         invoice_node['TipoDesglose'].setdefault('DesgloseTipoOperacion', {})
                         invoice_node['TipoDesglose']['DesgloseTipoOperacion']['Entrega'] = tax_details_info_consu_vals['tax_details_info']
+                    if not invoice_node.get('TipoDesglose'):
+                        raise UserError(_(
+                            "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                            "\n".join(invoice.line_ids.tax_ids.mapped('name'))
+                        ))
 
                     invoice_node['ImporteTotal'] = round(sign * (
                         tax_details_info_service_vals['tax_details']['base_amount']
