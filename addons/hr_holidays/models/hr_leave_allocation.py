@@ -328,12 +328,13 @@ class HolidaysAllocation(models.Model):
 
     def _end_of_year_accrual(self):
         # to override in payroll
-        today = fields.Date.today()
+        first_day_this_year = fields.Date.today() + relativedelta(month=1, day=1)
         for allocation in self:
-            current_level = allocation._get_current_accrual_plan_level_id(today)[0]
+            current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+            nextcall = current_level._get_next_date(first_day_this_year)
             if current_level and current_level.action_with_unused_accruals == 'lost':
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
-                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': today, 'nextcall': False})
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': first_day_this_year, 'nextcall': nextcall})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
