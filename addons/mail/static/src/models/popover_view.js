@@ -76,8 +76,8 @@ registerModel({
             if (this.channelInvitationForm) {
                 return replace(this.channelInvitationForm);
             }
-            if (this.emojiListView) {
-                return replace(this.emojiListView);
+            if (this.emojiPickerView) {
+                return replace(this.emojiPickerView);
             }
             return clear();
         },
@@ -89,8 +89,8 @@ registerModel({
             if (this.channelInvitationForm) {
                 return 'o_PopoverView_channelInvitationForm';
             }
-            if (this.emojiListView) {
-                return 'o_PopoverView_emojiList';
+            if (this.emojiPickerView) {
+                return 'o_PopoverView_emojiPicker';
             }
             return clear();
         },
@@ -105,8 +105,8 @@ registerModel({
             if (this.channelInvitationForm) {
                 return 'ChannelInvitationForm';
             }
-            if (this.emojiListView) {
-                return 'EmojiList';
+            if (this.emojiPickerView) {
+                return 'EmojiPicker';
             }
             return clear();
         },
@@ -114,7 +114,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeEmojiListView() {
+        _computeEmojiPickerView() {
             if (this.composerViewOwnerAsEmoji) {
                 return insertAndReplace();
             }
@@ -235,8 +235,8 @@ registerModel({
         /**
          * If set, the content of this popover view is a list of emojis.
          */
-        emojiListView: one('EmojiListView', {
-            compute: '_computeEmojiListView',
+        emojiPickerView: one('EmojiPickerView', {
+            compute: '_computeEmojiPickerView',
             inverse: 'popoverViewOwner',
             isCausal: true,
             readonly: true,

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiPicker" owl="1">
+        <div class="o_EmojiPicker px-1" t-attf-class="{{ className }}" t-ref="root">
+            <EmojiCategoryBar emojiCategoryBar="props.record.emojiCategoryBar"/>
+            <EmojiList emojiList="props.record.emojiList"/>
+        </div>
+    </t>
+
+</templates>

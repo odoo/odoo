@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { many, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -107,5 +107,9 @@ registerModel({
             ]),
             inverse: 'emojiRegistry',
         }),
+        currentCategory: one('EmojiCategory', {
+             default: insertAndReplace({ categoryName: "all" }),
+             required: true,
+         }),
     },
 });

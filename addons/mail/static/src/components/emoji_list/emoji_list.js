@@ -1,56 +1,15 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { LegacyComponent } from '@web/legacy/legacy_component';
 
-export class EmojiList extends LegacyComponent {
+const { Component } = owl;
 
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();        
-        useUpdate({ func: () => this._update() });
-    }
-
-    get emojiListView() {
-        return this.props.record;
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _update() {
-        this.trigger('o-popover-compute');
-    }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    close() {
-        this.trigger('o-popover-close');
-    }
-
-    /**
-     * Returns whether the given node is self or a children of self.
-     *
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    contains(node) {
-        return Boolean(this.root.el && this.root.el.contains(node));
-    }
-
-}
+export class EmojiList extends Component {}
 
 Object.assign(EmojiList, {
-    props: { record: Object },
+    props: {
+        emojiList: Object,
+    },
     template: 'mail.EmojiList',
 });
 

@@ -1,9 +1,9 @@
 // ------------------------------------------------------------------
-// Layout
-// ------------------------------------------------------------------
 
 .o_EmojiList {
-    // Could be replaced by "d-grid" class after migration to BS5
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    align-content: flex-start; //To prevent big white space between two lines
+    height: Min(calc(100vh - 140px), 100px);
 }
