@@ -1080,7 +1080,7 @@ class MrpProduction(models.Model):
         else:
             action.update({
                 'name': _("%s Child MO's") % self.name,
-                'domain': [('id', 'in', mrp_production_ids)],
+                'domain': [('id', 'in', mrp_production_ids.ids)],
                 'view_mode': 'tree,form',
             })
         return action
