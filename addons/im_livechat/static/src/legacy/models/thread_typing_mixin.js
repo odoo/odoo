@@ -140,14 +140,6 @@ const ThreadTypingMixin = {
         }
     },
     /**
-     * Threads with this mixin have the typing notification feature
-     *
-     * @returns {boolean}
-     */
-    hasTypingNotification() {
-        return true;
-    },
-    /**
      * Tells if someone other than current user is typing something on this
      * thread.
      *
