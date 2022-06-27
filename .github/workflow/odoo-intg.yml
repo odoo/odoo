@@ -2,7 +2,7 @@ name: "[INTG]odoo"
 
 on:
   push:
-    branches: [15.0]
+    branches: [master]
 
 jobs:
   build:
@@ -17,4 +17,4 @@ jobs:
         key: ${{ secrets.PRIVATE_KEYS }}
         port: ${{ secrets.PORT }}
         script: sh script.sh
-  
+
