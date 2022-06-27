@@ -1473,6 +1473,8 @@ class AccountMove(models.Model):
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
+            if self.journal_id.payment_sequence:
+                domain += [('payment_id', '!=' if self.payment_id else '=', False)]
             reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.search(domain, order='date asc', limit=1).name
@@ -1495,6 +1497,11 @@ class AccountMove(models.Model):
                 where_string += " AND move_type IN ('out_refund', 'in_refund') "
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
+        elif self.journal_id.payment_sequence:
+            if self.payment_id:
+                where_string += " AND payment_id IS NOT NULL "
+            else:
+                where_string += " AND payment_id IS NULL "
 
         return where_string, param
 
@@ -1506,6 +1513,8 @@ class AccountMove(models.Model):
             starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
+        if self.journal_id.payment_sequence and self.payment_id:
+            starting_sequence = "P" + starting_sequence
         return starting_sequence
 
     @api.depends('move_type')

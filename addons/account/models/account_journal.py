@@ -110,6 +110,7 @@ class AccountJournal(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    payment_sequence = fields.Boolean(string='Dedicated Payment Sequence', help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal", default='_get_default_payment_sequence')
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
@@ -502,6 +503,10 @@ class AccountJournal(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         self.refund_sequence = self.type in ('sale', 'purchase')
+        self.payment_sequence = self._get_default_payment_sequence()
+
+    def _get_default_payment_sequence(self):
+        return self.type in ('bank', 'cash')
 
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
@@ -654,9 +659,11 @@ class AccountJournal(models.Model):
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
-        # === Fill missing refund_sequence ===
+        # === Fill missing sequences ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
+        if 'payment_sequence' not in vals:
+            vals['payment_sequence'] = vals['type'] in ('bank', 'cash')
 
     @api.model_create_multi
     def create(self, vals_list):
