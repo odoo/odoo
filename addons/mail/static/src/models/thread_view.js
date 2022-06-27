@@ -77,7 +77,7 @@ registerModel({
          * Starts editing the last message of this thread from the current user.
          */
         startEditingLastMessageFromCurrentUser() {
-            const messageViews = this.messageViews;
+            const messageViews = this.messageListView.messageViews;
             messageViews.reverse();
             const messageView = messageViews.find(messageViews => messageViews.message.isCurrentUserOrGuestAuthor && messageViews.message.canBeDeleted);
             if (messageView) {
@@ -147,7 +147,10 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeLastMessageView() {
-            const { length, [length - 1]: lastMessageView } = this.messageViews;
+            if (!this.messageListView) {
+                return clear();
+            }
+            const { length, [length - 1]: lastMessageView } = this.messageListView.messageViews;
             return lastMessageView ? replace(lastMessageView) : clear();
         },
         /**
@@ -159,29 +162,6 @@ registerModel({
                 (this.thread && this.thread.isTemporary) ||
                 (this.threadCache && this.threadCache.isLoaded)
             ) ? insertAndReplace() : clear();
-        },
-        /**
-         * @private
-         * @returns {MessageView[]}
-         */
-        _computeMessageViews() {
-            if (!this.threadCache) {
-                return clear();
-            }
-            const orderedMessages = this.threadCache.orderedNonEmptyMessages;
-            if (this.order === 'desc') {
-                orderedMessages.reverse();
-            }
-            const messageViewsData = [];
-            let prevMessage;
-            for (const message of orderedMessages) {
-                messageViewsData.push({
-                    isSquashed: this._shouldMessageBeSquashed(prevMessage, message),
-                    message: replace(message),
-                });
-                prevMessage = message;
-            }
-            return insertAndReplace(messageViewsData);
         },
         /**
          * @private
@@ -486,14 +466,6 @@ registerModel({
         }),
         messages: many('Message', {
             related: 'threadCache.messages',
-        }),
-        /**
-         * States the message views used to display this messages.
-         */
-        messageViews: many('MessageView', {
-            compute: '_computeMessageViews',
-            inverse: 'threadView',
-            isCausal: true,
         }),
         /**
          * States the order mode of the messages on this thread view.
