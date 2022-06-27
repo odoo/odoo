@@ -390,7 +390,11 @@ class IrHttp(models.AbstractModel):
                 filehash = record['checksum']
 
         if not content:
-            content = record[field] or ''
+            try:
+                content = record[field] or ''
+            except AccessError:
+                # `record[field]` may not be readable for current user -> 404
+                content = ''
 
         # filename
         if not filename:
