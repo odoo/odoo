@@ -339,9 +339,13 @@ class IrHttp(models.AbstractModel):
             ):
                 content = record[field] or b''
             else:
-                data = record[field] or b''
-                content = base64.b64decode(data)
-                filehash = '"%s"' % hashlib.md5(str(content).encode('utf-8')).hexdigest()
+                try:
+                    data = record[field] or b''
+                    content = base64.b64decode(data)
+                    filehash = '"%s"' % hashlib.md5(str(content).encode('utf-8')).hexdigest()
+                except AccessError:
+                    # `record[field]` may not be readable for current user -> 404
+                    content = b''
 
         # filename
         if not filename:
