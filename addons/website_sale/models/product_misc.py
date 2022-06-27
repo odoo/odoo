@@ -198,7 +198,7 @@ class ProductPublicCategory(models.Model):
             mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True, 'html': True}
         return {
             'model': 'product.public.category',
-            'base_domain': [], # categories are not website-specific
+            'base_domain': [website.website_domain()],
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
