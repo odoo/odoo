@@ -48,7 +48,7 @@
                 <div t-if="messageListView.threadViewOwner.order === 'asc' and messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length !== 0 and !(messageListView.threadViewOwner.thread and messageListView.threadViewOwner.thread.model === 'mail.box')" class="flex-grow-1"/>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
-                <t t-foreach="messageListView.threadViewOwner.messageViews" t-as="messageView" t-key="messageView.localId">
+                <t t-foreach="messageListView.messageViews" t-as="messageView" t-key="messageView.localId">
                     <Transition visible="messageView.message === messageListView.threadViewOwner.thread.messageAfterNewMessageSeparator" name="'o-fade'" t-slot-scope="transition">
                         <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item d-flex flex-shrink-0 align-items-center mr-4 p-0 font-weight-bolder" t-att-class="{ 'o-disable-animation': messaging.disableAnimation, 'opacity-0': transition.className.includes('o-fade-leave') }" t-attf-class="{{transition.className}}">
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages flex-grow-1 w-auto"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages px-3">New messages</span>
