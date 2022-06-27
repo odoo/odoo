@@ -151,7 +151,7 @@ QUnit.module("Tooltip service", (hooks) => {
         await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
 
         assert.containsNone(target, ".o_popover_container .o_popover");
-        let [outerSpan, innerSpan] = target.querySelectorAll("span.our_span");
+        const [outerSpan, innerSpan] = target.querySelectorAll("span.our_span");
         outerSpan.dispatchEvent(new Event("mouseenter"));
         innerSpan.dispatchEvent(new Event("mouseenter"));
         await nextTick();
@@ -327,8 +327,8 @@ QUnit.module("Tooltip service", (hooks) => {
         const templates = {
             my_tooltip_template: `
                 <ul>
-                    <li>X: <t t-esc="info.x"/></li>
-                    <li>Y: <t t-esc="info.y"/></li>
+                    <li>X: <t t-esc="x"/></li>
+                    <li>Y: <t t-esc="y"/></li>
                 </ul>
             `,
         };

@@ -7042,7 +7042,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
                 .tooltipInfo,
-            `[{"title":"Kikou","value":"hello"}]`,
+            `{"entries":[{"title":"Kikou","value":"hello"}]}`,
             "second column should have a tooltip with the group_by_tooltip title and many2one field value"
         );
         assert.strictEqual(
