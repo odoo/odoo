@@ -95,7 +95,7 @@ class Meeting(models.Model):
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
-    access_token = fields.Char('Invitation Token', store=True, copy=False)
+    access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
     videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
     videocall_channel_id = fields.Many2one('mail.channel', 'Discuss Channel')
     # visibility
