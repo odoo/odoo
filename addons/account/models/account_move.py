@@ -4808,9 +4808,9 @@ class AccountMoveLine(models.Model):
         # Fix residual amounts.
         to_reconcile = _add_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
 
-        # Fix cash basis entries.
+        # Fix cash basis entries, only if not coming from the move reversal wizard.
         is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
-        if is_cash_basis_needed:
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
             _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
 
         # ==========================================================================
