@@ -8,7 +8,7 @@
                     'o_Message_active': messageView.isActive,
                     'o-clicked': messageView.messagingAsClickedMessageView,
                     'o-discussion': messageView.message.isDiscussionOrNotification,
-                    'o-has-message-selection': messageView.threadView and messageView.threadView.replyingToMessageView,
+                    'o-has-message-selection': messageView.messageListViewOwner and messageView.messageListViewOwner.threadViewOwner.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
                     'o-isDeviceSmall': messaging.device.isSmall,
                     'o-not-discussion': !messageView.message.isDiscussionOrNotification,
@@ -16,12 +16,12 @@
                     'o-selected': messageView.isSelected,
                     'o-squashed': messageView.isSquashed,
                     'o-starred': messageView.message.isStarred,
-                    'mt-3': !messageView.isSquashed and messageView.threadView,
+                    'mt-3': !messageView.isSquashed and messageView.messageListViewOwner,
                     'bg-white': messageView.message.isDiscussionOrNotification and !messageView.isSelected and !(messageView.message.isHighlighted or messageView.isHighlighted) and !messageView.isActive,
                     'bg-100': (!messageView.message.isDiscussionOrNotification and !messageView.isActive and !messageView.isSelected) or (messageView.isActive and !messageView.isSelected and messageView.message.isDiscussionOrNotification and !(messageView.message.isHighlighted or messageView.isHighlighted)),
                     'bg-200': !messageView.message.isDiscussionOrNotification and messageView.isActive and !messageView.isSelected,
                     'bg-400': messageView.isSelected and !(messageView.message.isHighlighted or messageView.isHighlighted),
-                    'opacity-50': (messageView.threadView and messageView.threadView.replyingToMessageView) and !messageView.isSelected,
+                    'opacity-50': (messageView.messageListViewOwner and messageView.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
@@ -100,7 +100,7 @@
                                 <t t-if="messageView.messageSeenIndicatorView">
                                     <MessageSeenIndicator className="'o_Message_seenIndicator'" record="messageView.messageSeenIndicatorView"/>
                                 </t>
-                                <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread !== messageView.threadView.thread">
+                                <t t-if="messageView.messageListViewOwner and messageView.message.originThread and messageView.message.originThread !== messageView.messageListViewOwner.threadViewOwner.thread">
                                     <small class="o_Message_originThread" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
                                         <t t-if="messageView.message.originThread.model === 'mail.channel'">
                                             (from <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
@@ -110,7 +110,7 @@
                                         </t>
                                     </small>
                                 </t>
-                                <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread === messageView.threadView.thread and messageView.message.notifications.length > 0">
+                                <t t-if="messageView.messageListViewOwner and messageView.message.originThread and messageView.message.originThread === messageView.messageListViewOwner.threadViewOwner.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
                                         <span class="o_Message_notificationIconClickable o-error o_cursor_pointer text-danger" role="button" tabindex="0" t-on-click="messageView.onClickFailure">
                                             <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>

@@ -86,8 +86,8 @@ registerModel({
         _computeHasMarkAsReadIcon() {
             return Boolean(
                 this.messaging && this.messaging.inbox &&
-                this.messageView && this.messageView.threadView && this.messageView.threadView.thread &&
-                this.messageView.threadView.thread === this.messaging.inbox
+                this.messageView && this.messageView.messageListViewOwner && this.messageView.messageListViewOwner.threadViewOwner.thread &&
+                this.messageView.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox
             );
         },
         /**
@@ -98,9 +98,9 @@ registerModel({
             return Boolean(
                 this.messaging && this.messaging.inbox &&
                 this.message && !this.message.isTemporary && !this.message.isTransient &&
-                this.messageView && this.messageView.threadView && this.messageView.threadView.thread && (
-                    this.messageView.threadView.thread === this.messaging.inbox ||
-                    this.messageView.threadView.thread.model === 'mail.channel'
+                this.messageView && this.messageView.messageListViewOwner && this.messageView.messageListViewOwner.threadViewOwner.thread && (
+                    this.messageView.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox ||
+                    this.messageView.messageListViewOwner.threadViewOwner.thread.model === 'mail.channel'
                 )
             );
         },
