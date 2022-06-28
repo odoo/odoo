@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallActionListView',
-    identifyingFields: ['callView'],
+    identifyingFields: ['callMainView'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -43,10 +43,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickRejectCall(ev) {
-            if (this.callView.threadView.thread.hasPendingRtcRequest) {
+            if (this.channel.hasPendingRtcRequest) {
                 return;
             }
-            await this.callView.threadView.thread.leaveCall();
+            await this.channel.leaveCall();
         },
         /**
          * @param {MouseEvent} ev
@@ -58,19 +58,19 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickToggleAudioCall(ev) {
-            if (this.callView.threadView.thread.hasPendingRtcRequest) {
+            if (this.channel.hasPendingRtcRequest) {
                 return;
             }
-            await this.callView.threadView.thread.toggleCall();
+            await this.channel.toggleCall();
         },
         /**
          * @param {MouseEvent} ev
          */
         async onClickToggleVideoCall(ev) {
-            if (this.callView.threadView.thread.hasPendingRtcRequest) {
+            if (this.channel.hasPendingRtcRequest) {
                 return;
             }
-            await this.callView.threadView.thread.toggleCall({
+            await this.channel.toggleCall({
                 startWithVideo: true,
             });
         },
@@ -79,10 +79,10 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeCallButtonTitle() {
-            if (!this.callView.threadView.thread) {
+            if (!this.channel) {
                 return clear();
             }
-            if (this.callView.threadView.thread.rtc) {
+            if (this.channel.rtc) {
                 return this.env._t("Disconnect");
             } else {
                 return this.env._t("Join Call");
@@ -149,14 +149,22 @@ registerModel({
             compute: '_computeCallButtonTitle',
             default: '',
         }),
-        callView: one('CallView', {
+        callMainView: one('CallMainView', {
             inverse: 'callActionListView',
             readonly: true,
+            required: true,
+        }),
+        callView: one('CallView', {
+            related: 'callMainView.callView',
             required: true,
         }),
         cameraButtonTitle: attr({
             compute: '_computeCameraButtonTitle',
             default: '',
+        }),
+        channel: one('Thread', {
+            related: 'callMainView.channel',
+            required: true,
         }),
         headphoneButtonTitle: attr({
             compute: '_computeHeadphoneButtonTitle',
