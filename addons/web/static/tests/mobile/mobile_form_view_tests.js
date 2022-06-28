@@ -8,6 +8,7 @@ import {
     getFixture,
     makeDeferred,
     nextTick,
+    patchWithCleanup,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
@@ -389,6 +390,81 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 "show",
                 "dropdown should still be opened"
             );
+        }
+    );
+
+    QUnit.test(
+        `preserve current scroll position on form view while closing dialog`,
+        async function (assert) {
+            serverData.views = {
+                "partner,false,kanban": `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div class="oe_kanban_global_click">
+                                    <field name="display_name" />
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                "partner,false,search": `
+                    <search />
+                `,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <p style="height:500px" />
+                            <field name="trululu" />
+                            <p style="height:500px" />
+                        </sheet>
+                    </form>
+                `,
+            });
+
+            let position = { top: 0, left: 0 };
+            patchWithCleanup(window, {
+                scrollTo(newPosition) {
+                    position = newPosition;
+                },
+                get scrollX() {
+                    return position.left;
+                },
+                get scrollY() {
+                    return position.top;
+                },
+            });
+
+            await clickEdit(fixture);
+
+            window.scrollTo({ top: 265, left: 0 });
+            assert.strictEqual(window.scrollY, 265, "Should have scrolled 265 px vertically");
+            assert.strictEqual(window.screenLeft, 0, "Should be 0 px from left as it is");
+
+            // click on m2o field
+            await click(fixture, ".o_field_many2one input");
+            // assert.strictEqual(window.scrollY, 0, "Should have scrolled to top (0) px");
+            assert.containsOnce(
+                fixture,
+                ".modal.o_modal_full",
+                "there should be a many2one modal opened in full screen"
+            );
+
+            // click on back button
+            await click(fixture, ".modal .modal-header .fa-arrow-left");
+            assert.strictEqual(
+                window.scrollY,
+                265,
+                "Should have scrolled back to 265 px vertically"
+            );
+            assert.strictEqual(window.screenLeft, 0, "Should be 0 px from left as it is");
         }
     );
 });

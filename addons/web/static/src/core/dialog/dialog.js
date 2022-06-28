@@ -15,6 +15,16 @@ export class Dialog extends Component {
         });
         this.id = `dialog_${this.data.id}`;
         useChildSubEnv({ inDialog: true, dialogId: this.id });
+
+        owl.onWillDestroy(() => {
+            if (this.env.isSmall) {
+                this.data.scrollToOrigin();
+            }
+        });
+    }
+
+    get isFullscreen() {
+        return this.props.fullscreen || this.env.isSmall;
     }
 }
 Dialog.template = "web.Dialog";

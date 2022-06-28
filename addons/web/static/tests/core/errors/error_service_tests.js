@@ -11,6 +11,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
@@ -36,6 +37,7 @@ QUnit.module("Error Service", {
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("rpc", makeFakeRPCService());
         serviceRegistry.add("localization", makeFakeLocalizationService());
+        serviceRegistry.add("ui", uiService);
         const windowAddEventListener = browser.addEventListener;
         browser.addEventListener = (type, cb) => {
             if (type === "unhandledrejection") {
