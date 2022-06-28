@@ -105,7 +105,7 @@ class HrEmployeePrivate(models.Model):
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id', groups="hr.group_hr_user",
+        'emp_id', 'category_id', groups="hr.group_hr_coach",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
@@ -117,7 +117,7 @@ class HrEmployeePrivate(models.Model):
                                           copy=False, tracking=True, ondelete='restrict')
     departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
-    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_coach")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
 
@@ -169,6 +169,10 @@ class HrEmployeePrivate(models.Model):
             'target': 'new',
             'context': {
                 'default_create_employee_id': self.id,
+                'default_name': self.name,
+                'default_login': self.work_email,
+                'default_phone': self.work_phone,
+                'default_mobile': self.mobile_phone,
             }
         }
 

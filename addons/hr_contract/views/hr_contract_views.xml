@@ -4,7 +4,7 @@
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="inherit_id" ref="hr.view_employee_form_officer"/>
             <field name="priority" eval="70" />
             <field name="arch" type="xml">
                 <data>
@@ -38,7 +38,7 @@
                             </div>
                         </button>
                     </div>
-                    <xpath expr="//field[@name='user_id']" position="before">
+                    <xpath expr="//group[@name='active_group']/field[@name='user_id']" position="before">
                         <field name="first_contract_date"
                                attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
                                readonly="1"/>

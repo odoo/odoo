@@ -11,6 +11,7 @@ class HrEmployeeSkillReport(models.BaseModel):
     id = fields.Id()
     display_name = fields.Char(related='employee_id.name')
     employee_id = fields.Many2one('hr.employee', readonly=True)
+    parent_id = fields.Many2one(related='employee_id.parent_id')
     company_id = fields.Many2one('res.company', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
 

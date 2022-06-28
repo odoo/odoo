@@ -37,6 +37,14 @@
             sequence="4"/>
 
         <menuitem
+            id="menu_hr_employee_my_team"
+            name="My Team"
+            parent="menu_hr_root"
+            action="open_view_employee_list_my"
+            groups="group_hr_coach"
+            sequence="5"/>
+
+        <menuitem
             id="hr_menu_hr_reports"
             name="Reporting"
             parent="menu_hr_root"
@@ -46,21 +54,21 @@
            id="menu_hr_reporting_timesheet"
            name="Reporting"
            parent="menu_hr_root"
-           groups="group_hr_manager,group_hr_user"
+           groups="group_hr_coach"
            sequence="99"/>
 
         <menuitem
             id="menu_human_resources_configuration"
             name="Configuration"
             parent="menu_hr_root"
-            groups="hr.group_hr_user"
+            groups="hr.group_hr_manager"
             sequence="100"/>
 
             <menuitem
                 id="menu_config_employee"
                 name="Employee"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
+                groups="group_hr_manager"
                 sequence="10"/>
 
             <menuitem
@@ -81,14 +89,14 @@
                 action="hr_work_location_action"
                 parent="menu_config_employee"
                 sequence="5"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_hr_departure_reason_tree"
                 action="hr_departure_reason_action"
                 parent="menu_config_employee"
                 sequence="5"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_view_employee_category_form"
@@ -102,7 +110,7 @@
                 id="menu_config_recruitment"
                 name="Recruitment"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
+                groups="group_hr_manager"
                 sequence="20"/>
 
                 <menuitem

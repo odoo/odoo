@@ -34,6 +34,8 @@
                 <field name="skill_id"/>
                 <field name="skill_type_id"/>
                 <separator/>
+                <filter name="my_team" string="My Team" domain="['|', ('employee_id.user_id', '=', uid), ('parent_id.user_id', '=', uid)]"/>
+                <separator/>
                 <filter string="Employees with Skills" name="employees_with_skills" domain="[('skill_id', '!=', False)]"/>
                 <filter string="Employees without Skills" name="employees_without_skills" domain="[('skill_id', '=', False)]"/>
                 <separator/>
@@ -54,6 +56,7 @@
         <field name="context">{
             'search_default_employee': 1,
             'search_default_employees_with_skills': 1,
+            'search_default_my_team': 1,
         }</field>
     </record>
 

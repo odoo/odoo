@@ -40,7 +40,7 @@ class HrPlanWizard(models.TransientModel):
         warnings = set()
         for employee in self.employee_ids:
             for activity_type in self.plan_id.plan_activity_type_ids:
-                warning = activity_type.get_responsible_id(employee)['warning']
+                warning = activity_type._get_responsible_id(employee)['warning']
                 if warning:
                     warnings.add(warning)
         return warnings
@@ -68,7 +68,7 @@ class HrPlanWizard(models.TransientModel):
             body = _('The plan %s has been started', self.plan_id.name)
             activities = set()
             for activity_type in self._get_activities_to_schedule():
-                responsible = activity_type.get_responsible_id(employee)['responsible']
+                responsible = activity_type._get_responsible_id(employee)['responsible']
                 if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
                     date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
                     employee.activity_schedule(

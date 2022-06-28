@@ -38,20 +38,26 @@ class HrPlanActivityType(models.Model):
             if not plan_type.summary and plan_type.activity_type_id and plan_type.activity_type_id.summary:
                 plan_type.summary = plan_type.activity_type_id.summary
 
-    def get_responsible_id(self, employee):
+    def _get_responsible_id(self, employee):
         warning = False
+        employee = employee.sudo() # Allows coaches to read the manager
+        hr_coaches = self.env.ref('hr.group_hr_coach').users
         if self.responsible == 'coach':
             if not employee.coach_id:
                 warning = _('Coach of employee %s is not set.', employee.name)
             responsible = employee.coach_id.user_id
             if not responsible:
                 warning = _('User of coach of employee %s is not set.', employee.name)
+            elif responsible not in hr_coaches:
+                warning = _("The coach of %s should have at least Coach access rights.", employee.name)
         elif self.responsible == 'manager':
             if not employee.parent_id:
                 warning = _('Manager of employee %s is not set.', employee.name)
             responsible = employee.parent_id.user_id
             if not responsible:
                 warning = _("The manager of %s should be linked to a user.", employee.name)
+            elif responsible not in hr_coaches:
+                warning = _("The coach of %s should have at least Coach access rights.", employee.name)
         elif self.responsible == 'employee':
             responsible = employee.user_id
             if not responsible:
@@ -61,6 +67,6 @@ class HrPlanActivityType(models.Model):
             if not responsible:
                 warning = _('No specific user given on activity %s.', self.activity_type_id.name)
         return {
-            'responsible': responsible,
+            'responsible': responsible.sudo(False),
             'warning': warning,
         }
