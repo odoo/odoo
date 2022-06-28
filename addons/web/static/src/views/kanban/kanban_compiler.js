@@ -99,11 +99,11 @@ export class KanbanCompiler extends ViewCompiler {
 
         const nodeParams = extractAttributes(el, ["type"]);
         if (type === "set_cover") {
-            const { "data-field": fieldName, "auto-open": autoOpen } = extractAttributes(el, [
-                "data-field",
+            const { "auto-open": autoOpen, "data-field": fieldName } = extractAttributes(el, [
                 "auto-open",
+                "data-field",
             ]);
-            Object.assign(nodeParams, { fieldName, autoOpen });
+            Object.assign(nodeParams, { autoOpen, fieldName });
         }
         const strParams = Object.entries(nodeParams)
             .map(([k, v]) => [k, toStringExpression(v)].join(":"))

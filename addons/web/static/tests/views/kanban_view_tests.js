@@ -8723,9 +8723,12 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("set cover image", async (assert) => {
-        assert.expect(7);
+        assert.expect(10);
 
         serviceRegistry.add("dialog", dialogService, { force: true });
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -8778,8 +8781,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(getCard(0), "img", "Initially there is no image.");
 
-        await click(document.body, ".modal img[data-id='1']", true);
-        await click(document.body.querySelector(".modal .btn-primary"));
+        await click(document.body, ".modal .o_kanban_cover_image img", true);
+        await click(document.body, ".modal .btn-primary:first-child");
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
@@ -8787,11 +8790,16 @@ QUnit.module("Views", (hooks) => {
         const coverButton = getCard(1).querySelector("a");
         assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
         await click(coverButton);
+
+        assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
+        assert.containsOnce(document.body, ".modal .btn:contains(Select)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+
         await triggerEvent(
             document.body,
-            ".modal img[data-id='2']",
+            ".modal .o_kanban_cover_image img",
             "dblclick",
-            {},
+            { bubbles: true },
             { skipVisibilityCheck: true }
         );
 
