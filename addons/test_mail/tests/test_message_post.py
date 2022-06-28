@@ -3,6 +3,7 @@
 
 import base64
 
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import tools
@@ -539,6 +540,50 @@ class TestMessagePost(TestMessagePostCommon):
 
         # notifications emails should not have been deleted: one for customers, one for user
         self.assertEqual(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', msg.id)]), 2)
+
+    @users('admin')
+    def test_message_post_schedule(self):
+        now = datetime.utcnow()
+        scheduled_datetime = (now + timedelta(days=5)).replace(second=0, microsecond=0)
+
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        # test_record.message_subscribe(partner_ids=self.partner_employee_2.ids)
+        test_record.message_subscribe((self.partner_1 | self.partner_employee).ids)
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            msg = self.test_record.message_post(
+                body='<p>Test</p>',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+                scheduled_datetime=scheduled_datetime,
+            )
+        self.assertFalse(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', msg.id)]))
+
+        messages_scheduled = self.env['mail.message.scheduled'].sudo().search([('message_id', '=', msg.id)])
+        self.assertEqual(len(messages_scheduled), 1, msg='Should have scheduled the message')
+
+        self.assertEqual(
+            messages_scheduled.scheduled_datetime.replace(second=0, microsecond=0),
+            scheduled_datetime,
+        )
+
+        self.env['mail.message.scheduled'].sudo()._send_notifications_cron()
+        messages_scheduled = self.env['mail.message.scheduled'].sudo().search([('message_id', '=', msg.id)])
+        self.assertEqual(len(messages_scheduled), 1, msg='Should not have sent the message')
+
+        # Send the scheduled message from the CRON
+        messages_scheduled.scheduled_datetime = now - timedelta(days=5)
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            self.env['mail.message.scheduled'].sudo()._send_notifications_cron()
+
+        notifications = [
+            {'partner': self.partner_employee, 'type': 'inbox'},
+            {'partner': self.partner_1, 'type': 'email'},
+        ]
+        recipients_info = [{'content': '<p>Test</p>', 'notif': notifications}]
+
+        self.assertMailNotifications(msg, recipients_info)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')

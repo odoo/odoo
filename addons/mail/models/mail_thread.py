@@ -9,6 +9,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import json
 import lxml
 import logging
 import pytz
@@ -2310,8 +2311,20 @@ class MailThread(models.AbstractModel):
         if not recipients_data:
             return recipients_data
 
-        self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
-        self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        scheduled_datetime = kwargs.pop('scheduled_datetime', None)
+        if not scheduled_datetime:
+            # generate immediately the <mail.notification>
+            # and send the <mail.mail> and the <bus.bus> notifications
+            self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        else:
+            # send the message notifications at the scheduled date
+            self.env['mail.message.scheduled'].sudo().create({
+                'message_id': message.id,
+                'scheduled_datetime': scheduled_datetime,
+                'additionnal_parameters': json.dumps(kwargs),
+            })
+            self.env.ref('mail.ir_cron_send_scheduled_message')._trigger(scheduled_datetime)
 
         return recipients_data
 
