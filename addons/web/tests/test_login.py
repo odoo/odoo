@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import get_db_name, HttpCase, Opener, new_test_user
+from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener
 
 
 class TestWebLoginCommon(HttpCase):
@@ -13,11 +13,10 @@ class TestWebLoginCommon(HttpCase):
         """Log in with provided credentials and return response to POST request or raises for status."""
         self.session = http.root.session_store.new()
         self.session.update(http.DEFAULT_SESSION, db=get_db_name())
+        self.opener = Opener(self.env.cr)
+        self.opener.cookies.set('session_id', self.session.sid, domain=HOST, path='/')
 
-        opener = Opener(self.cr)
-        opener.cookies['session_id'] = self.session.sid
-
-        res_post = opener.post(self.base_url() + '/web/login', data={
+        res_post = self.url_open('/web/login', data={
             'login': username,
             'password': password,
             'csrf_token': http.Request.csrf_token(self),
