@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { SimpleDialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialog/dialog";
+import { FileInput } from "@web/core/file_input/file_input";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useState, useRef, onWillStart, onMounted } = owl;
+const { Component, useState, onWillStart } = owl;
 
 let nextDialogId = 1;
 
@@ -11,12 +12,13 @@ export class KanbanCoverImageDialog extends Component {
     setup() {
         this.id = `o_cover_image_upload_${nextDialogId++}`;
         this.orm = useService("orm");
+        this.http = useService("http");
         const { record, fieldName } = this.props;
-        this.coverId = record && record.data[fieldName];
+        const attachment = (record && record.data[fieldName]) || [];
         this.state = useState({
-            selectedAttachmentId: this.coverId,
+            selectFile: false,
+            selectedAttachmentId: attachment[0],
         });
-        this.fileInput = useRef("fileInput");
         onWillStart(async () => {
             this.attachments = await this.orm.searchRead(
                 "ir.attachment",
@@ -25,21 +27,28 @@ export class KanbanCoverImageDialog extends Component {
                     ["res_id", "=", record.resId],
                     ["mimetype", "ilike", "image"],
                 ],
-                ["id", "name"]
+                ["id"]
             );
-        });
-        onMounted(() => {
-            if (!this.props.autoOpen && this.attachments.length === 0) {
-                this.fileInput.el.click();
-            }
+            this.state.selectFile = this.props.autoOpen && this.attachments.length;
         });
     }
 
-    selectAttachment(attachment) {
+    onUpload([attachment]) {
+        if (!attachment) {
+            return;
+        }
+        this.state.selectFile = false;
+        this.selectAttachment(attachment, true);
+    }
+
+    selectAttachment(attachment, setSelected) {
         if (this.state.selectedAttachmentId !== attachment.id) {
             this.state.selectedAttachmentId = attachment.id;
         } else {
             this.state.selectedAttachmentId = null;
+        }
+        if (setSelected) {
+            this.setCover();
         }
     }
 
@@ -54,7 +63,11 @@ export class KanbanCoverImageDialog extends Component {
         await this.props.record.save();
         this.props.close();
     }
+
+    uploadImage() {
+        this.state.selectFile = true;
+    }
 }
 
 KanbanCoverImageDialog.template = "web.KanbanCoverImageDialog";
-KanbanCoverImageDialog.components = { SimpleDialog };
+KanbanCoverImageDialog.components = { Dialog, FileInput };
