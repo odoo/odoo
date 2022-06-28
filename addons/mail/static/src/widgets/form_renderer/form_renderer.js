@@ -57,7 +57,7 @@ FormRenderer.include({
     _renderNode(node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
             if (!this.hasChatter) {
-                return $('<div/>');
+                return document.createElement("div");
             }
             this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
             return this.chatterContainerTargetPlaceholder;
@@ -165,9 +165,9 @@ FormRenderer.include({
      */
     _updateChatterContainerTarget() {
         if (this._isChatterAside()) {
-            $(this._chatterContainerTarget).addClass('o-aside');
+            this._chatterContainerTarget.classList.add('o-aside');
         } else {
-            $(this._chatterContainerTarget).removeClass('o-aside');
+            this._chatterContainerTarget.classList.remove('o-aside');
         }
         if (this.hasAttachmentViewer()) {
             this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
