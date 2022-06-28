@@ -99,7 +99,7 @@ class SMSResend(models.TransientModel):
                 record._notify_thread_by_sms(
                     self.mail_message_id, recipients_data,
                     sms_numbers=numbers, sms_pid_to_number=sms_pid_to_number,
-                    check_existing=True, put_in_queue=False
+                    resend_existing=True, put_in_queue=False
                 )
 
         self.mail_message_id._notify_message_notification_update()

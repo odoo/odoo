@@ -243,7 +243,7 @@ class MailThread(models.AbstractModel):
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
                               sms_numbers=None, sms_pid_to_number=None,
-                              check_existing=False, put_in_queue=False, **kwargs):
+                              resend_existing=False, put_in_queue=False, **kwargs):
         """ Notification method: by SMS.
 
         :param message: ``mail.message`` record to notify;
@@ -266,7 +266,7 @@ class MailThread(models.AbstractModel):
           and classic recipients;
         :param pid_to_number: force a number to notify for a given partner ID
               instead of taking its mobile / phone number;
-        :param check_existing: check for existing notifications to update based on
+        :param resend_existing: check for existing notifications to update based on
           mailed recipient, otherwise create new notifications;
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;
@@ -318,7 +318,7 @@ class MailThread(models.AbstractModel):
         if sms_create_vals:
             sms_all |= self.env['sms.sms'].sudo().create(sms_create_vals)
 
-            if check_existing:
+            if resend_existing:
                 existing = self.env['mail.notification'].sudo().search([
                     '|', ('res_partner_id', 'in', partner_ids),
                     '&', ('res_partner_id', '=', False), ('sms_number', 'in', sms_numbers),
