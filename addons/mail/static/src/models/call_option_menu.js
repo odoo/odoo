@@ -13,11 +13,11 @@ registerModel({
          */
         onChangeVideoFilterCheckbox(ev) {
             const filterVideoGrid = ev.target.checked;
-            const activeRtcSession = this.callActionListView.callView.activeRtcSession;
+            const activeRtcSession = this.callView.activeRtcSession;
             if (filterVideoGrid && activeRtcSession && !activeRtcSession.videoStream) {
-                this.callActionListView.callView.update({ activeRtcSession: clear() });
+                this.callView.update({ activeRtcSession: clear() });
             }
-            this.callActionListView.callView.update({ filterVideoGrid });
+            this.callView.update({ filterVideoGrid });
         },
         /**
          * Creates and download a file that contains the logs of the current RTC call.
@@ -25,7 +25,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickDownloadLogs(ev) {
-            const channel = this.callActionListView.callView.threadView.thread;
+            const channel = this.callActionListView.channel;
             if (!channel.rtc) {
                 return;
             }
@@ -43,14 +43,14 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickActivateFullScreen(ev) {
-            this.callActionListView.callView.activateFullScreen();
+            this.callView.activateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickDeactivateFullScreen(ev) {
-            this.callActionListView.callView.deactivateFullScreen();
+            this.callView.deactivateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
@@ -69,6 +69,10 @@ registerModel({
         callActionListView: one('CallActionListView', {
             inverse: 'callOptionMenu',
             readonly: true,
+            required: true,
+        }),
+        callView: one('CallView', {
+            related: 'callActionListView.callView',
             required: true,
         }),
     },
