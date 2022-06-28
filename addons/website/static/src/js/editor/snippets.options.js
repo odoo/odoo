@@ -2175,7 +2175,8 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
         // TODO this is hacky but changing the header visibility may have an
         // effect on features like FullScreenHeight which depend on viewport
         // size so we simulate a resize.
-        $(window).trigger('resize');
+        const targetWindow = this.$target[0].ownerDocument.defaultView;
+        targetWindow.dispatchEvent(new targetWindow.Event('resize'));
     },
 
     //--------------------------------------------------------------------------

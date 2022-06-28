@@ -1492,7 +1492,11 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
             } else if (!weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
+                if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this._value)) {
+                    this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
+                } else {
+                    this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                }
             } else {
                 this.colorPreviewEl.style.backgroundImage = this._value;
             }

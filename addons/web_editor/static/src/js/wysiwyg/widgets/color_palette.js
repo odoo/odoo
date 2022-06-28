@@ -8,7 +8,6 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const Widget = require('web.Widget');
 const customColors = require('web_editor.custom_colors');
 const weUtils = require('web_editor.utils');
-const compatibilityColorNames = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
 
 const qweb = core.qweb;
 
@@ -248,7 +247,7 @@ const ColorPaletteWidget = Widget.extend({
 
         // Compute class colors
 
-        this.colorNames = [...compatibilityColorNames];
+        this.colorNames = [...weUtils.COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]:not(.o_custom_gradient_btn)').forEach(elem => {
             const colorName = elem.dataset.color;
@@ -259,8 +258,10 @@ const ColorPaletteWidget = Widget.extend({
             const isCCName = weUtils.isColorCombinationName(colorName);
             if (isCCName) {
                 $color.find('.o_we_cc_preview_wrapper').addClass(`o_cc o_cc${colorName}`);
-            } else {
+            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(colorName)) {
                 elem.style.backgroundColor = `var(--we-cp-${colorName})`;
+            } else {
+                elem.classList.add(`bg-${colorName}`);
             }
             this.colorNames.push(colorName);
             if (!isCCName && !elem.classList.contains('d-none')) {
@@ -276,7 +277,7 @@ const ColorPaletteWidget = Widget.extend({
         }
         if (this.options.selectedColor) {
             let selectedColor = this.options.selectedColor;
-            if (compatibilityColorNames.includes(selectedColor)) {
+            if (weUtils.COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES.includes(selectedColor)) {
                 selectedColor = weUtils.getCSSVariableValue(selectedColor, this.style) || selectedColor;
             }
             selectedColor = ColorpickerWidget.normalizeCSSColor(selectedColor);
@@ -1028,6 +1029,5 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
 
 return {
     ColorPaletteWidget: ColorPaletteWidget,
-    compatibilityColorNames: compatibilityColorNames,
 };
 });
