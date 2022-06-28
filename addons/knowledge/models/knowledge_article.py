@@ -1342,23 +1342,26 @@ class Article(models.Model):
         sql = f'''
     WITH article_permission as (
         WITH RECURSIVE article_perms as (
-            SELECT a.id, a.parent_id, m.id as member_id, m.partner_id,
-                   m.permission
+            SELECT a.id, a.parent_id, a.is_desynchronized, m.id as member_id,
+                   m.partner_id, m.permission
               FROM knowledge_article a
          LEFT JOIN knowledge_article_member m
                 ON a.id = m.article_id
         ), article_rec as (
             SELECT perms1.id, perms1.id as article_id, perms1.parent_id,
                    perms1.member_id, perms1.partner_id, perms1.permission,
-                   perms1.id as origin_id, 0 as level
+                   perms1.id as origin_id, 0 as level,
+                   perms1.is_desynchronized
               FROM article_perms as perms1
              UNION
             SELECT perms2.id, perms_rec.article_id, perms2.parent_id,
                    perms2.member_id, perms2.partner_id, perms2.permission,
-                   perms2.id as origin_id, perms_rec.level + 1
+                   perms2.id as origin_id, perms_rec.level + 1,
+                   perms2.is_desynchronized
               FROM article_perms as perms2
         INNER JOIN article_rec perms_rec
                 ON perms_rec.parent_id=perms2.id
+                   AND perms_rec.is_desynchronized is not true
         )
         SELECT article_id, origin_id, member_id, partner_id,
                permission, min(level) as min_level
