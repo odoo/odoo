@@ -1490,6 +1490,7 @@
             fiber.render = throwOnRender;
             if (node.status === 0 /* NEW */) {
                 node.destroy();
+                delete node.parent.children[node.parentKey];
             }
             node.fiber = null;
             if (fiber.bdom) {
@@ -2894,9 +2895,9 @@
     /*
      * Safely outputs `value` as a block depending on the nature of `value`
      */
-    function safeOutput(value) {
-        if (!value) {
-            return value;
+    function safeOutput(value, defaultValue) {
+        if (value === undefined) {
+            return defaultValue ? toggler("default", defaultValue) : toggler("undefined", text(""));
         }
         let safeKey;
         let block;
@@ -3182,7 +3183,7 @@
     });
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof. Currently we don't support delete and void
-    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ,new ".split(",");
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ,new ,|,&,^,~".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
@@ -4069,16 +4070,24 @@
                 this.insertAnchor(block);
             }
             block = this.createBlock(block, "html", ctx);
-            this.helpers.add(ast.expr === "0" ? "zero" : "safeOutput");
-            let expr = ast.expr === "0" ? "ctx[zero]" : `safeOutput(${compileExpr(ast.expr)})`;
-            if (ast.body) {
-                const nextId = BlockDescription.nextBlockId;
+            let blockStr;
+            if (ast.expr === "0") {
+                this.helpers.add("zero");
+                blockStr = `ctx[zero]`;
+            }
+            else if (ast.body) {
+                let bodyValue = null;
+                bodyValue = BlockDescription.nextBlockId;
                 const subCtx = createContext(ctx);
                 this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
-                this.helpers.add("withDefault");
-                expr = `withDefault(${expr}, b${nextId})`;
+                this.helpers.add("safeOutput");
+                blockStr = `safeOutput(${compileExpr(ast.expr)}, b${bodyValue})`;
             }
-            this.insertBlock(`${expr}`, block, ctx);
+            else {
+                this.helpers.add("safeOutput");
+                blockStr = `safeOutput(${compileExpr(ast.expr)})`;
+            }
+            this.insertBlock(blockStr, block, ctx);
         }
         compileTIf(ast, ctx, nextNode) {
             let { block, forceNewBlock, index } = ctx;
@@ -5538,8 +5547,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             return (props, key, ctx, parent, C) => {
                 let children = ctx.children;
                 let node = children[key];
-                if (node &&
-                    (node.status === 2 /* DESTROYED */ || (isDynamic && node.component.constructor !== C))) {
+                if (isDynamic && node && node.component.constructor !== C) {
                     node = undefined;
                 }
                 const parentFiber = ctx.fiber;
@@ -5750,9 +5758,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-10';
-    __info__.date = '2022-06-23T06:55:56.650Z';
-    __info__.hash = 'c7459ef';
+    __info__.version = '2.0.0-beta-11';
+    __info__.date = '2022-06-28T13:35:43.224Z';
+    __info__.hash = '76c389a';
     __info__.url = 'https://github.com/odoo/owl';
 
 
