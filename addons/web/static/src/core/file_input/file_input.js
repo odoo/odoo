@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useRef } = owl;
+const { Component, onMounted, useRef } = owl;
 
 /**
  * Custom file input
@@ -13,19 +13,25 @@ const { Component, useRef } = owl;
  * @extends Component
  *
  * Props:
- * @param {string} [props.accepted_file_extensions='*'] Comma-separated
+ * @param {string} [props.acceptedFileExtensions='*'] Comma-separated
  *      list of authorized file extensions (default to all).
- * @param {string} [props.action='/web/binary/upload'] Route called when
+ * @param {string} [props.route='/web/binary/upload'] Route called when
  *      a file is uploaded in the input.
- * @param {string} [props.id]
- * @param {string} [props.model]
- * @param {string} [props.multi_upload=false] Whether the input should allow
+ * @param {string} [props.resId]
+ * @param {string} [props.resModel]
+ * @param {string} [props.multiUpload=false] Whether the input should allow
  *      to upload multiple files at once.
  */
 export class FileInput extends Component {
     setup() {
         this.http = useService("http");
         this.fileInputRef = useRef("file-input");
+
+        onMounted(() => {
+            if (this.props.autoOpen) {
+                this.onTriggerClicked();
+            }
+        });
     }
 
     //--------------------------------------------------------------------------
@@ -33,26 +39,25 @@ export class FileInput extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Upload an attachment to the given action with the given parameters:
+     * Upload an attachment to the given route with the given parameters:
      * - ufile: list of files contained in the file input
      * - csrf_token: CSRF token provided by the odoo global object
-     * - model: a specific model which will be given when creating the attachment
-     * - id: the id of the model target instance
-     * @private
+     * - resModel: a specific model which will be given when creating the attachment
+     * - resId: the id of the resModel target instance
      */
     async onFileInputChange() {
-        const { action, model, id } = this.props;
+        const { resId, resModel, route } = this.props;
         const params = {
             csrf_token: odoo.csrf_token,
             ufile: [...this.fileInputRef.el.files],
         };
-        if (model) {
-            params.model = model;
+        if (resModel) {
+            params.model = resModel;
         }
-        if (id) {
-            params.id = id;
+        if (resId) {
+            params.id = resId;
         }
-        const fileData = await this.http.post(action, params, "text");
+        const fileData = await this.http.post(route, params, "text");
         const parsedFileData = JSON.parse(fileData);
         if (parsedFileData.error) {
             throw new Error(parsedFileData.error);
@@ -62,7 +67,6 @@ export class FileInput extends Component {
 
     /**
      * Redirect clicks from the trigger element to the input.
-     * @private
      */
     onTriggerClicked() {
         this.fileInputRef.el.click();
@@ -70,18 +74,21 @@ export class FileInput extends Component {
 }
 
 FileInput.defaultProps = {
-    accepted_file_extensions: "*",
-    action: "/web/binary/upload",
-    multi_upload: false,
+    acceptedFileExtensions: "*",
+    hidden: false,
+    multiUpload: false,
     onUpload: () => {},
+    route: "/web/binary/upload_attachment",
 };
 FileInput.props = {
-    accepted_file_extensions: { type: String, optional: 1 },
-    action: { type: String, optional: 1 },
-    id: { type: Number, optional: 1 },
-    model: { type: String, optional: 1 },
-    multi_upload: { type: Boolean, optional: 1 },
-    onUpload: { type: Function, optional: 1 },
-    slots: { type: Object, optional: 1 },
+    acceptedFileExtensions: { type: String, optional: true },
+    autoOpen: { type: Boolean, optional: true },
+    hidden: { type: Boolean, optional: true },
+    multiUpload: { type: Boolean, optional: true },
+    onUpload: { type: Function, optional: true },
+    resId: { type: Number, optional: true },
+    resModel: { type: String, optional: true },
+    route: { type: String, optional: true },
+    "*": true,
 };
 FileInput.template = "web.FileInput";
