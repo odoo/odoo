@@ -18,7 +18,9 @@ export const pageOptionsCallbacks = {
         headerEl.classList.toggle('o_snippet_invisible', !value);
     },
     footer_visible: function (value) {
-        this.document.querySelector('#wrapwrap > footer').toggleClass('d-none o_snippet_invisible', !value);
+        const footerEl = this.document.querySelector('#wrapwrap > footer');
+        footerEl.classList.toggle('d-none', !value);
+        footerEl.classList.toggle('o_snippet_invisible', !value);
     },
 };
 export class PageOption {

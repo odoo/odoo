@@ -6,6 +6,33 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
 
+const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
+
+/**
+ * These constants are colors that can be edited by the user when using
+ * web_editor in a website context. We keep track of them so that color
+ * palettes and their preview elements can always have the right colors
+ * displayed even if website has redefined the colors during an editing
+ * session.
+ *
+ * @type {string[]}
+ */
+const EDITOR_COLOR_CSS_VARIABLES = [...COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
+// o-cc and o-colors
+for (let i = 1; i <= 5; i++) {
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-color-${i}`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-h1`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-text`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-border`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-border`);
+}
+// Grays
+for (let i = 100; i <= 900; i += 100) {
+    EDITOR_COLOR_CSS_VARIABLES.push(`${i}`);
+}
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border
@@ -364,9 +391,11 @@ function _getColorClass(el, colorNames, prefix) {
 }
 
 return {
+    COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
     DEFAULT_PALETTE: DEFAULT_PALETTE,
+    EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
