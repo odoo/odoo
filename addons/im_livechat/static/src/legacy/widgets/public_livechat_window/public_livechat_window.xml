@@ -4,13 +4,13 @@
         @param {im_livechat.legacy.PublicLivechatWindow} widget
     -->
     <t t-name="im_livechat.legacy.PublicLivechatWindow">
-        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
+        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget._thread._id">
             <div class="o_thread_window_header">
                 <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
-                    <t t-set="status" t-value="widget.getThreadStatus()"/>
+                    <t t-set="status" t-value="widget._thread._status"/>
                     <t t-set="title" t-value="widget.getTitle()"/>
                     <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
-                    <t t-set="thread" t-value="widget.getThread()"/>
+                    <t t-set="thread" t-value="widget._thread"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
@@ -39,7 +39,7 @@
         <span class="o_thread_window_title">
             <t t-esc="title"/>
             <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
-            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+            <t t-if="thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>

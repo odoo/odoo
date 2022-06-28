@@ -52,11 +52,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_frontend': [
             'im_livechat/static/src/public/main.js',
             'im_livechat/static/src/services/*.js',
-            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
-            'im_livechat/static/src/legacy/models/*',
-            'im_livechat/static/src/legacy/widgets/*',
-            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
@@ -79,11 +75,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
-            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
-            'im_livechat/static/src/legacy/models/*',
-            'im_livechat/static/src/legacy/widgets/*',
-            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
         ],
@@ -94,6 +86,10 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/*/*.xml',
         ],
         'mail.assets_messaging': [
+            'im_livechat/static/src/legacy/models/*',
+            'im_livechat/static/src/legacy/public_livechat_constants.js',
+            'im_livechat/static/src/legacy/widgets/*',
+            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/models/*.js',
         ],
         # Bundle of External Librairies of the Livechat (Odoo + required modules)
@@ -190,11 +186,7 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/js/crosstab_bus.js',
             'bus/static/src/js/services/bus_service.js',
             'mail/static/src/js/utils.js',
-            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
-            'im_livechat/static/src/legacy/models/*',
-            'im_livechat/static/src/legacy/widgets/*',
-            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
 
