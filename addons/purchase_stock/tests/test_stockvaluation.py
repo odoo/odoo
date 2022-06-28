@@ -13,6 +13,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuation(TransactionCase):
     @classmethod
     def setUpClass(cls):

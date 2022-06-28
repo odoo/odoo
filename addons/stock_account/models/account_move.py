@@ -249,30 +249,21 @@ class AccountMoveLine(models.Model):
             line = line.with_company(line.company_id)
             move = line.move_id.with_company(line.move_id.company_id)
             po_line = line.purchase_line_id
-
-            valued_moves = line._get_valued_in_moves()
-            if move.move_type == 'in_refund':
-                valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
-            else:
-                valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
-            layers = valued_moves.stock_valuation_layer_ids
+            layers = line._get_stock_valuation_layers(move)
             # Retrieves SVL linked to a return.
             uom = line.product_uom_id or line.product_id.uom_id
             if not layers:
                 continue
             # Computes price difference between invoice line and SVL.
             previous_invoices = (po_line.invoice_lines - self).filtered(lambda aml: aml.move_id.move_type == move.move_type)
-            previous_price = 0
+            previous_invoices_price = 0
+            previous_invoices_quantity = 0
             for inv_line in previous_invoices:
-                previous_price += inv_line.currency_id._convert(
+                previous_invoices_quantity += inv_line.quantity
+                previous_invoices_price += inv_line.currency_id._convert(
                     inv_line.price_subtotal, inv_line.company_id.currency_id, inv_line.company_id, inv_line.date, round=False)
-            if move.move_type == 'in_refund':
-                total_prices = sum(layers.mapped('value')) - previous_price
-            else:
-                total_prices = sum(layers.mapped('remaining_value')) - previous_price
-            total_quantity = abs(sum(layers.mapped('quantity'))) - sum(previous_invoices.mapped('quantity'))
-            if float_is_zero(total_quantity, precision_rounding=uom.rounding):
-                continue
+            # if float_is_zero(total_quantity, precision_rounding=uom.rounding):
+            #     continue
 
             price_unit = -line.price_unit if move.move_type == 'in_refund' else line.price_unit
             price_unit = price_unit * (1 - (line.discount or 0.0) / 100.0)
@@ -291,13 +282,13 @@ class AccountMoveLine(models.Model):
                     price_unit = line.tax_ids.compute_all(
                         price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
 
-            layers_price_unit = total_prices / total_quantity
+            layers_price_unit = self._get_stock_valuation_layers_price_unit(move, layers, previous_invoices_price, previous_invoices_quantity)
             layers_price_unit = line.company_id.currency_id._convert(
                 layers_price_unit, po_line.currency_id, line.company_id, line.date, round=False)
             price_difference = price_unit - layers_price_unit
             price_difference = po_line.currency_id._convert(
                 price_difference, line.company_id.currency_id, line.company_id, line.date, round=False)
-            if float_is_zero(price_difference * total_quantity, precision_rounding=line.currency_id.rounding):
+            if float_is_zero(price_difference * line.quantity, precision_rounding=line.currency_id.rounding):
                 continue
             # Don't create value for more quantity than received
             quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
@@ -341,6 +332,25 @@ class AccountMoveLine(models.Model):
 
     def _get_valued_in_moves(self):
         return self.env['stock.move']
+
+    def _get_stock_valuation_layers(self, move):
+        valued_moves = self._get_valued_in_moves()
+        if move.move_type == 'in_refund':
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
+        else:
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
+        layers = valued_moves.stock_valuation_layer_ids
+        return layers
+
+    def _get_stock_valuation_layers_price_unit(self, move, layers, previous_invoices_price, previous_invoices_quantity):
+        if move.move_type == 'in_refund':
+            total_prices = sum(layers.mapped('value')) - previous_invoices_price
+        else:
+            total_prices = sum(layers.mapped('remaining_value')) - previous_invoices_price
+        total_quantity = abs(sum(layers.mapped('quantity'))) - previous_invoices_quantity
+        if not total_quantity:
+            return 0
+        return total_prices / total_quantity
 
     def _eligible_for_cogs(self):
         self.ensure_one()
