@@ -10,6 +10,7 @@ import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
+import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
 const { Component, useSubEnv, useRef, useState, xml } = owl;
 
@@ -39,4 +40,5 @@ FormRenderer.components = {
     Notebook,
     OuterGroup,
     InnerGroup,
+    StatusBarButtons,
 };
