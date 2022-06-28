@@ -498,13 +498,14 @@ class Channel(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _notify_get_recipients(self, message, msg_vals):
+    def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """ Override recipients computation as channel is not a standard
         mail.thread document. Indeed there are no followers on a channel.
         Instead of followers it has members that should be notified.
 
         :param message: see ``MailThread._notify_get_recipients()``;
         :param msg_vals: see ``MailThread._notify_get_recipients()``;
+        :param kwargs: see ``MailThread._notify_get_recipients()``;
 
         :return recipients: structured data holding recipients data. See
           ``MailThread._notify_thread()`` for more details about its content

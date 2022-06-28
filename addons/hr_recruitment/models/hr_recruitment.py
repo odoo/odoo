@@ -445,12 +445,12 @@ class Applicant(models.Model):
             view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
         return super().get_view(view_id, view_type, **options)
 
-    def _notify_get_recipients(self, message, msg_vals):
+    def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """
             Do not notify members of the Recruitment Interviewer group, as this
             might leak some data they shouldn't have access to.
         """
-        recipients = super()._notify_get_recipients(message, msg_vals)
+        recipients = super()._notify_get_recipients(message, msg_vals, **kwargs)
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
         return [recipient for recipient in recipients if interviewer_group not in recipient['groups']]
 

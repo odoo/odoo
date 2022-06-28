@@ -9,6 +9,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import json
 import lxml
 import logging
 import pytz
@@ -18,7 +19,7 @@ import threading
 
 from collections import namedtuple
 from email.message import EmailMessage
-from email import message_from_string, policy
+from email import message_from_string
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
@@ -1423,7 +1424,7 @@ class MailThread(models.AbstractModel):
         if email_part:
             if email_part.get_content_type() == 'text/rfc822-headers':
                 # Convert the message body into a message itself
-                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+                email_payload = message_from_string(email_part.get_payload(), policy=email.policy.SMTP)
             else:
                 email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
@@ -2304,7 +2305,11 @@ class MailThread(models.AbstractModel):
           access message content in db;
 
         Kwargs allow to pass various parameters that are given to sub notification
-        methods. See those methods for more details about the additional parameters.
+        methods. See those methods for more details about supported parameters.
+        Specific kwargs used in this method:
+
+          * ``scheduled_date``: delay notification sending if set in the future.
+            This is done using the ``mail.message.schedule`` intermediate model;
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
@@ -2312,12 +2317,27 @@ class MailThread(models.AbstractModel):
         self = self._fallback_lang()
 
         msg_vals = msg_vals if msg_vals else {}
-        recipients_data = self._notify_get_recipients(message, msg_vals)
+        recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
             return recipients_data
 
-        self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
-        self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        # if scheduled for later: add in queue instead of generating notifications
+        scheduled_date = kwargs.pop('scheduled_date', None)
+        if scheduled_date:
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+            scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        if scheduled_date and scheduled_date > datetime.datetime.utcnow():
+            # send the message notifications at the scheduled date
+            self.env['mail.message.schedule'].sudo().create({
+                'scheduled_datetime': scheduled_date,
+                'mail_message_id': message.id,
+                'notification_parameters': json.dumps(kwargs),
+            })
+        else:
+            # generate immediately the <mail.notification>
+            # and send the <mail.mail> and the <bus.bus> notifications
+            self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
         return recipients_data
 
@@ -2363,7 +2383,7 @@ class MailThread(models.AbstractModel):
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True, # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
-                                check_existing=False, force_send=True, send_after_commit=True,  # email send
+                                resend_existing=False, force_send=True, send_after_commit=True,  # email send
                                 **kwargs):
         """ Method to send email linked to notified messages.
 
@@ -2390,7 +2410,7 @@ class MailThread(models.AbstractModel):
         :param force_email_company: see ``_notify_by_email_prepare_rendering_context``;
         :param force_email_lang: see ``_notify_by_email_prepare_rendering_context``;
 
-        :param check_existing: check for existing notifications to update based on
+        :param resend_existing: check for existing notifications to update based on
           mailed recipient, otherwise create new notifications;
         :param force_send: send emails directly instead of using queue;
         :param send_after_commit: if force_send, tells whether to send emails after
@@ -2455,7 +2475,7 @@ class MailThread(models.AbstractModel):
 
                 if new_email and recipients_ids_chunk:
                     tocreate_recipient_ids = list(recipients_ids_chunk)
-                    if check_existing:
+                    if resend_existing:
                         existing_notifications = self.env['mail.notification'].sudo().search([
                             ('mail_message_id', '=', message.id),
                             ('notification_type', '=', 'email'),
@@ -2660,12 +2680,20 @@ class MailThread(models.AbstractModel):
             final_mail_values.update(additional_values)
         return final_mail_values
 
-    def _notify_get_recipients(self, message, msg_vals):
+    def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """ Compute recipients to notify based on subtype and followers. This
         method returns data structured as expected for ``_notify_recipients``.
 
         TDE/XDO TODO: flag rdata directly, with for example r['notif'] = 'ocn_client' and r['needaction']=False
         and correctly override _notify_get_recipients
+
+        Kwargs allow to pass various parameters that are used by sub notification
+        methods. See those methods for more details about supported parameters.
+        Specific kwargs used in this method:
+
+          * ``skip_existing``: check existing notifications and skip them in order
+            to avoid having several notifications / partner as it would make
+            constraints crash. This is disabled by default to optimize speed;
 
         :return list recipients_data: this is a list of recipients information (see
           ``MailFollowers._get_recipient_data()`` for more details) formatted like
@@ -2696,6 +2724,20 @@ class MailThread(models.AbstractModel):
             if pdata['active'] is False:
                 continue
             recipients_data.append(pdata)
+
+        # avoid double notification (on demand due to additional queries)
+        if kwargs.pop('skip_existing', False):
+            pids = [r['id'] for r in recipients_data]
+            if pids:
+                existing_notifications = self.env['mail.notification'].sudo().search([
+                    ('res_partner_id', 'in', pids),
+                    ('mail_message_id', 'in', message.ids)
+                ])
+                recipients_data = [
+                    r for r in recipients_data
+                    if r['id'] not in existing_notifications.res_partner_id.ids
+                ]
+
         return recipients_data
 
     def _notify_get_recipients_groups(self, msg_vals=None):
