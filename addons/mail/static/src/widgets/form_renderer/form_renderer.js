@@ -65,8 +65,9 @@ FormRenderer.include({
         return this._super(...arguments);
     },
     /**
-     * Overrides the function to render the chatter once the form view is
-     * rendered.
+     * Overrides to re-render the chatter container with potentially new props.
+     * This is done in `__renderView` specifically to wait for this render to
+     * be complete before updating the form view, which prevents flickering.
      *
      * @override
      */
