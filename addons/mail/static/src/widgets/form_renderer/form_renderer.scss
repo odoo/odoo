@@ -3,6 +3,39 @@
 // ------------------------------------------------------------------
 
 .o_FormRenderer_chatterContainer {
+
+    &.o-aside {
+        border-left: $border-width solid;
+        padding: map-get($spacers, 0);
+        width: $o-chatter-min-width;
+
+        .o_Message.o-not-discussion {
+            border-width: $border-width 0;
+        }
+    }
+
+    &.o-isInFormSheetBg:not(.o-aside) {
+        max-width: none;
+        background-color: $white;
+        @include o-form-sheet-negative-margin;
+
+        &:not(.o-aside) {
+            width: auto;
+            border-top: 1px solid $border-color;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer.o-aside {
+    border-left-color: $border-color;
+}
+
+
+.o_FormRenderer_chatterContainer {
     display: flex;
     flex: 1 1 auto;
     margin: 0 auto;

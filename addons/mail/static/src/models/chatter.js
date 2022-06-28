@@ -439,6 +439,9 @@ registerModel({
             compute: '_computeIsDisabled',
             default: false,
         }),
+        isInFormSheetBg: attr({
+            default: false,
+        }),
         isPreparingAttachmentsLoading: attr({
             compute: '_computeIsPreparingAttachmentsLoading',
             default: false,
