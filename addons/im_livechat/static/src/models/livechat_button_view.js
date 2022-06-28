@@ -216,9 +216,9 @@ registerModel({
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),
-        // livechat window
-        chatWindow: attr({
-            default: null,
+        chatWindow: one('PublicLivechatWindow', {
+            inverse: 'livechatButtonViewOwner',
+            isCausal: true,
         }),
         currentPartnerId: attr({
             compute: '_computeCurrentPartnerId',
@@ -256,16 +256,16 @@ registerModel({
         isWebsiteLivechatChatbotFlow: attr({
             default: false,
         }),
-        // livechat model
-        livechat: attr({
-            default: null,
-        }),
         livechatInit: attr(),
         localStorageChatbotState: attr({
             compute: '_computeLocalStorageChatbotState',
         }),
         messages: attr({
             default: [],
+        }),
+        publicLivechat: one('PublicLivechat', {
+            inverse: 'livechatButtonOwner',
+            isCausal: true,
         }),
         rule: attr(),
         serverUrl: attr({

@@ -47,15 +47,9 @@ const PublicLivechatWindow = Widget.extend({
         });
 
         this._hidden = false;
-        this._thread = thread || null;
+        this._thread = thread;
 
         this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
-
-        if (!this.hasThread()) {
-            // internal fold state of thread window without any thread
-            this._folded = false;
-        }
-        this._thread = thread;
     },
     /**
      * @override
@@ -129,59 +123,13 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * States whether this thread window is related to a thread or not.
-     *
-     * This is useful in order to provide specific behaviour for thread windows
-     * without any thread, e.g. let them open a thread from this "blank" thread
-     * window.
-     *
-     * @returns {boolean}
-     */
-    hasThread() {
-        return !! this._thread;
-    },
-    /**
-     * Get the ID of the thread window, which is equivalent to the ID of the
-     * thread related to this window
-     *
-     * @returns {integer|string}
-     */
-    getID() {
-        return this._getThreadID();
-    },
-    /**
-     * @returns {mail.model.Thread|undefined}
-     */
-    getThread() {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread;
-    },
-    /**
-     * Get the status of the thread, such as the im status of a DM chat
-     * ('online', 'offline', etc.). If this window has no thread, returns
-     * `undefined`.
-     *
-     * @returns {string|undefined}
-     */
-    getThreadStatus() {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getStatus();
-    },
-    /**
      * Get the title of the thread window, which usually contains the name of
      * the thread.
      *
      * @returns {string}
      */
     getTitle() {
-        if (!this.hasThread()) {
-            return _t("Undefined");
-        }
-        return this._thread.getTitle();
+        return this._thread._name;
     },
     /**
      * Get the unread counter of the related thread. If there are no thread
@@ -190,10 +138,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {integer}
      */
     getUnreadCounter() {
-        if (!this.hasThread()) {
-            return 0;
-        }
-        return this._thread.getUnreadCounter();
+        return this._thread._unreadCounter;
     },
     /**
      * Tells whether the bottom of the thread in the thread window is visible
@@ -212,10 +157,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {boolean}
      */
     isFolded() {
-        if (!this.hasThread()) {
-            return this._folded;
-        }
-        return this._thread.isFolded();
+        return this._thread._folded;
     },
     /**
      * States whether the thread window is hidden or not.
@@ -241,16 +183,14 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {boolean}
      */
     needsComposer() {
-        return this.hasThread();
+        return true;
     },
     /**
      * Render the thread window
      */
     render() {
         this.renderHeader();
-        if (this.hasThread()) {
-            this._threadWidget.render(this._thread, { displayLoadMore: false });
-        }
+        this._threadWidget.render(this._thread, { displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
@@ -340,27 +280,12 @@ const PublicLivechatWindow = Widget.extend({
      */
     _getHeaderRenderingOptions() {
         return {
-            status: this.getThreadStatus(),
-            thread: this.getThread(),
+            status: this._thread._status,
+            thread: this._thread,
             title: this.getTitle(),
             unreadCounter: this.getUnreadCounter(),
             widget: this,
         };
-    },
-    /**
-     * Get the ID of the related thread.
-     * If this window is not related to a thread, it means this is the "blank"
-     * thread window, therefore it returns "_blank" as its ID.
-     *
-     * @private
-     * @returns {integer|string} the threadID, or '_blank' for the window that
-     *   is not related to any thread.
-     */
-    _getThreadID() {
-        if (!this.hasThread()) {
-            return '_blank';
-        }
-        return this._thread.getID();
     },
     /**
      * Tells whether there is focus on this thread. Note that a thread that has
@@ -381,9 +306,6 @@ const PublicLivechatWindow = Widget.extend({
      */
     _postMessage(messageData) {
         this.trigger_up('post_message_chat_window', { messageData });
-        if (!this.hasThread()) {
-            return;
-        }
         this._thread.postMessage(messageData)
             .then(() => {
                 this._threadWidget.scrollToBottom();
@@ -400,12 +322,7 @@ const PublicLivechatWindow = Widget.extend({
      * @param {boolean} folded
      */
     _updateThreadFoldState(folded) {
-        if (this.hasThread()) {
-            this._thread.fold(folded);
-        } else {
-            this._folded = folded;
-            this.updateVisualFoldState();
-        }
+        this._thread.fold(folded);
     },
 
     //--------------------------------------------------------------------------
@@ -423,8 +340,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this.hasThread() &&
-            this._thread.getUnreadCounter() > 0 &&
+            this._thread._unreadCounter > 0 &&
             !this.isFolded()
         ) {
             this._thread.markAsRead();
@@ -467,10 +383,8 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onInput() {
-        if (this.hasThread() && this._thread.hasTypingNotification()) {
-            const isTyping = this.$input.val().length > 0;
-            this._thread.setMyselfTyping({ typing: isTyping });
-        }
+        const isTyping = this.$input.val().length > 0;
+        this._thread.setMyselfTyping({ typing: isTyping });
     },
     /**
      * Called when typing something on the composer of this thread window.
@@ -505,7 +419,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onScroll() {
-        if (this.hasThread() && this.isAtBottom()) {
+        if (this.isAtBottom()) {
             this._thread.markAsRead();
         }
     },
