@@ -85,7 +85,7 @@ class MailMail(models.Model):
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
-    scheduled_date = fields.Char('Scheduled Send Date',
+    scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
     fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True)
 
@@ -132,10 +132,9 @@ class MailMail(models.Model):
                 values['is_notification'] = True
             if values.get('scheduled_date'):
                 parsed_datetime = self._parse_scheduled_datetime(values['scheduled_date'])
-                if parsed_datetime:
-                    values['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                else:
-                    values['scheduled_date'] = False
+                values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+            else:
+                values['scheduled_date'] = False  # void string crashes
         new_mails = super(MailMail, self).create(values_list)
 
         new_mails_w_attach = self
@@ -150,10 +149,7 @@ class MailMail(models.Model):
     def write(self, vals):
         if vals.get('scheduled_date'):
             parsed_datetime = self._parse_scheduled_datetime(vals['scheduled_date'])
-            if parsed_datetime:
-                vals['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            else:
-                vals['scheduled_date'] = False
+            vals['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):
             for mail in self:

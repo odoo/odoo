@@ -4,7 +4,6 @@
 import base64
 import logging
 
-
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools import is_html_empty
