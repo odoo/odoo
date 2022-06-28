@@ -391,6 +391,7 @@ class ResourceCalendar(models.Model):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         combine = datetime.combine
+        required_tz = tz
 
         if not resources:
             resources = self.env['resource.resource']
@@ -430,8 +431,34 @@ class ResourceCalendar(models.Model):
                 if attendance.resource_id else resources_per_tz.keys()
             for resource_tz in attendance_timezones:
                 # express all dates and times in specified tz or in the resource's timezone
+<<<<<<< HEAD
                 start = date_from_cache(resource_tz, start_dt)
                 end = date_from_cache(resource_tz, end_dt)
+||||||| parent of 41db639be003... temp
+                tz = tz if tz else timezone((resource or self).tz)
+                if (tz, start_dt) in cache_dates:
+                    start = cache_dates[(tz, start_dt)]
+                else:
+                    start = start_dt.astimezone(tz)
+                    cache_dates[(tz, start_dt)] = start
+                if (tz, end_dt) in cache_dates:
+                    end = cache_dates[(tz, end_dt)]
+                else:
+                    end = end_dt.astimezone(tz)
+                    cache_dates[(tz, end_dt)] = end
+=======
+                tz = required_tz if required_tz else timezone((resource or self).tz)
+                if (tz, start_dt) in cache_dates:
+                    start = cache_dates[(tz, start_dt)]
+                else:
+                    start = start_dt.astimezone(tz)
+                    cache_dates[(tz, start_dt)] = start
+                if (tz, end_dt) in cache_dates:
+                    end = cache_dates[(tz, end_dt)]
+                else:
+                    end = end_dt.astimezone(tz)
+                    cache_dates[(tz, end_dt)] = end
+>>>>>>> 41db639be003... temp
 
                 start = start.date()
                 if attendance.date_from:
