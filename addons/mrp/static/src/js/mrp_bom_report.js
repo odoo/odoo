@@ -53,7 +53,7 @@ var MrpBomReport = stock_report_generic.extend({
             }
         }
         $el.after(result);
-        $(event.currentTarget).toggleClass('o_mrp_bom_foldable o_mrp_bom_unfoldable fa-caret-right fa-caret-down');
+        $(event.currentTarget).toggleClass('o_mrp_bom_foldable o_mrp_bom_unfoldable').find('i').toggleClass('fa-caret-right fa-caret-down');
         this._reload_report_type();
     },
     get_bom: function(event) {
@@ -194,7 +194,7 @@ var MrpBomReport = stock_report_generic.extend({
     },
     _onClickFold: function (ev) {
         this._removeLines($(ev.currentTarget).closest('tr'));
-        $(ev.currentTarget).toggleClass('o_mrp_bom_foldable o_mrp_bom_unfoldable fa-caret-right fa-caret-down');
+        $(ev.currentTarget).toggleClass('o_mrp_bom_foldable o_mrp_bom_unfoldable').find('i').toggleClass('fa-caret-right fa-caret-down');
     },
     _onClickUnfoldAll: function (ev) {
         this._unfold();

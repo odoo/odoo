@@ -32,7 +32,7 @@ const MrpShouldConsume = FieldFloat.extend({
      * @param {bool} [edit] whether the field will be editable or readonly
      */
     _addShouldConsume: function (value, edit=false) {
-        const $to_consume_container = $('<span class="o_should_consume"/>');
+        const $to_consume_container = $('<span class="o_should_consume ps-1"/>');
         if (edit) {
             $to_consume_container.addClass('o_row');
         }
