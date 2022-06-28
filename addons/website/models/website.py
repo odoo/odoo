@@ -1651,6 +1651,7 @@ class Website(models.Model):
         """
         match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
+        lang = self.env.lang or 'en_US'
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]
@@ -1658,7 +1659,6 @@ class Website(models.Model):
                 model = model.sudo()
             domain = search_detail['base_domain'].copy()
             fields = set(fields).intersection(model._fields)
-
             unaccent = get_unaccent_wrapper(self.env.cr)
             similarities = [sql.SQL("word_similarity({search}, {field})").format(
                 search=unaccent(sql.Placeholder('search')),
@@ -1667,6 +1667,11 @@ class Website(models.Model):
                 field=unaccent(sql.SQL("{table}.{field}").format(
                     table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
                     field=sql.Identifier(field)
+                )) if not (self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._fields[field].translate else
+                unaccent(sql.SQL("COALESCE(NULLIF({table}.{field}->>'{lang}', ''), {table}.{field}->>'en_US')").format(
+                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
+                    field=sql.Identifier(field),
+                    lang=sql.SQL(lang)
                 ))
             ) for field in fields]
             best_similarity = sql.SQL('GREATEST({similarities})').format(
@@ -1697,55 +1702,6 @@ class Website(models.Model):
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
-            if self.env.lang:
-                # Specific handling for website.page that inherits its arch_db and name fields
-                # TODO make more generic
-                if 'arch_db' in fields:
-                    # Look for partial translations
-                    similarity = sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL('t.value'))
-                    )
-                    names = ['%s,%s' % (self.env['ir.ui.view']._name, field) for field in fields]
-                    query = sql.SQL("""
-                        SELECT {table}.id, {similarity} AS _similarity
-                        FROM {table}
-                        LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
-                        LEFT JOIN ir_translation t ON v.id = t.res_id
-                        WHERE t.lang = {lang}
-                        AND t.name = ANY({names})
-                        AND t.type = 'model_terms'
-                        AND t.value IS NOT NULL
-                        ORDER BY _similarity desc
-                        LIMIT 1000
-                    """).format(
-                        table=sql.Identifier(model._table),
-                        similarity=similarity,
-                        lang=sql.Placeholder('lang'),
-                        names=sql.Placeholder('names'),
-                    )
-                else:
-                    similarity = sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL('value'))
-                    )
-                    names = ['%s,%s' % (model._name, field) for field in fields]
-                    query = sql.SQL("""
-                        SELECT res_id, {similarity} AS _similarity
-                        FROM ir_translation
-                        WHERE lang = {lang}
-                        AND name = ANY({names})
-                        AND type = 'model'
-                        AND value IS NOT NULL
-                        ORDER BY _similarity desc
-                        LIMIT 1000
-                    """).format(
-                        similarity=similarity,
-                        lang=sql.Placeholder('lang'),
-                        names=sql.Placeholder('names'),
-                    )
-                self.env.cr.execute(query, {'lang': self.env.lang, 'names': names, 'search': search})
-                ids.update(row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold)
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, fields, limit=limit)
