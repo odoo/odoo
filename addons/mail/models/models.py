@@ -54,8 +54,12 @@ class BaseModel(models.AbstractModel):
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
                     if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = getattr(self, col_info.get('currency_field', ''), self.company_id.currency_id).id
-                    tracking_value_ids.append([0, 0, tracking])
+                        currency_field = col_info['currency_field'] if col_info.get('currency_field') and col_info.get('currency_field') in self else None
+                        if currency_field:
+                            currency_id = self[currency_field].id
+                        else:
+                            currency_id = self.company_id.currency_id if 'company_id' in self else self.env.company.currency_id
+                        tracking['currency_id'] = currency_id
                 changes.add(col_name)
 
         return changes, tracking_value_ids
