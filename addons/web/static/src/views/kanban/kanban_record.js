@@ -317,7 +317,7 @@ export class KanbanRecord extends Component {
                 return;
             }
             case "set_cover": {
-                const { fieldName, autoOpen } = params;
+                const { autoOpen, fieldName } = params;
                 const { widget } = archInfo.fieldNodes[fieldName];
                 const field = record.fields[fieldName];
                 if (
@@ -325,7 +325,7 @@ export class KanbanRecord extends Component {
                     field.relation === "ir.attachment" &&
                     widget === "attachment_image"
                 ) {
-                    this.dialog.add(KanbanCoverImageDialog, { record, fieldName, autoOpen });
+                    this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
                 } else {
                     const warning = sprintf(
                         env._t(
