@@ -50,6 +50,9 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
+            <field name="pos_reference" position="after">
+                <field name="pos_si_trans_reference" invisible="0"/>
+            </field>
             <xpath expr="//field[@name='price_subtotal_incl']" position='after'>
                 <field name="is_non_zero_vat"/>
             </xpath>
