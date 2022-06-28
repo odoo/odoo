@@ -44,6 +44,9 @@ var SingletonListController = InventoryReportListController.extend({
      */
     renderButtons: function ($node) {
         this._super(...arguments);
+        if (this.context.inventory_report_mode) {
+            this.$buttons.find('button.o_button_apply_all').hide();
+        }
         this.$buttons.on('click', '.o_button_apply_all', this._onApplyAll.bind(this));
     },
 
