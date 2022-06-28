@@ -7,7 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Timer',
     identifyingFields: [[
-        'callViewAsShowOverlay',
+        'callMainViewAsShowOverlay',
         'chatterOwnerAsAttachmentsLoader',
         'messagingOwnerAsFetchImStatusTimer',
         'messageViewOwnerAsHighlight',
@@ -28,7 +28,7 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
-            if (this.callViewAsShowOverlay) {
+            if (this.callMainViewAsShowOverlay) {
                 return 3 * 1000;
             }
             if (this.chatterOwnerAsAttachmentsLoader) {
@@ -83,8 +83,8 @@ registerModel({
          * @private
          */
         _onTimeoutOwner() {
-            if (this.callViewAsShowOverlay) {
-                this.callViewAsShowOverlay.onShowOverlayTimeout();
+            if (this.callMainViewAsShowOverlay) {
+                this.callMainViewAsShowOverlay.onShowOverlayTimeout();
                 return;
             }
             if (this.chatterOwnerAsAttachmentsLoader) {
@@ -122,7 +122,7 @@ registerModel({
         },
     },
     fields: {
-        callViewAsShowOverlay: one('CallView', {
+        callMainViewAsShowOverlay: one('CallMainView', {
             inverse: 'showOverlayTimer',
             readonly: true,
         }),
