@@ -70,7 +70,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/wysiwyg_iframe.scss',
             'web_editor/static/src/scss/wysiwyg_snippets.scss',
 
-            'web_editor/static/src/js/base.js',
             'web_editor/static/src/js/editor/perspective_utils.js',
             'web_editor/static/src/js/editor/image_processing.js',
             'web_editor/static/src/js/editor/custom_colors.js',
