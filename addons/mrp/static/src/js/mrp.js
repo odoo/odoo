@@ -146,7 +146,7 @@ var FieldEmbedURLViewer = fields.FieldChar.extend({
     _renderEdit: function () {
         if (!this.$('iframe.o_embed_iframe').length) {
             this.$input = this.$el;
-            this.setElement(this.$el.wrap('<div class="o_embed_url_viewer o_field_widget"/>').parent());
+            this.setElement(this.$el.wrap('<div class="o_embed_url_viewer o_field_widget w-100"/>').parent());
             this.$el.append(this._prepareIframe());
         }
         this._prepareInput(this.$input);
@@ -164,7 +164,7 @@ var FieldEmbedURLViewer = fields.FieldChar.extend({
      */
     _renderReadonly: function () {
         if (!this.$('iframe.o_embed_iframe').length) {
-            this.$el.addClass('o_embed_url_viewer');
+            this.$el.addClass('o_embed_url_viewer w-100');
             this.$el.append(this._prepareIframe());
         }
         this._updateIframePreview();
@@ -195,7 +195,7 @@ var FieldEmbedURLViewer = fields.FieldChar.extend({
     _updateIframePreview: function () {
         var $iframe = this.$('iframe.o_embed_iframe');
         var src = this._getEmbedSrc();
-        $iframe.toggleClass('d-none', !src);
+        $iframe.addClass('w-100 border-0').toggleClass('d-none', !src);
         if (src) {
             $iframe.attr('src', src);
         } else {
