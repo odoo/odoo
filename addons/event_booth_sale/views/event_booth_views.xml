@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo><data>
 
-    <record id="event_booth_view_form_from_event" model="ir.ui.view">
+    <record id="event_booth_view_form" model="ir.ui.view">
         <field name="name">event.booth.view.form.inherit.sale</field>
         <field name="model">event.booth</field>
-        <field name="inherit_id" ref="event_booth.event_booth_view_form_from_event"/>
+        <field name="inherit_id" ref="event_booth.event_booth_view_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
@@ -40,10 +40,10 @@
         </field>
     </record>
 
-    <record id="event_booth_view_tree_from_event" model="ir.ui.view">
-        <field name="name">event.booth.view.tree.from.event.inherit.sale</field>
+    <record id="event_booth_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.view.tree.inherit.sale</field>
         <field name="model">event.booth</field>
-        <field name="inherit_id" ref="event_booth.event_booth_view_tree_from_event"/>
+        <field name="inherit_id" ref="event_booth.event_booth_view_tree"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="currency_id" invisible="1"/>

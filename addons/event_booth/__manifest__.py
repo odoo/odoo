@@ -4,7 +4,7 @@
 {
     'name': "Events Booths",
     'category': 'Marketing/Events',
-    'version': '1.0',
+    'version': '1.1',
     'summary': "Manage event booths",
     'description': """
 Create booths for your favorite event.
