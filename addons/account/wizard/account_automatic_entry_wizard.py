@@ -225,7 +225,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
                 'move_type': 'entry',
                 'line_ids': [],
-                'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
+                'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
             }
