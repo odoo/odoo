@@ -269,12 +269,23 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
                            {self.partner_employee_manager: 'write'})
 
         # remove partner employee manager that has rights based on inheritance
+        writable_children = self.article_write_contents_children.with_env(self.env)
+        for child in writable_children:
+            self.assertIn(
+                self.partner_employee_manager.id,
+                child._get_article_member_permissions()[child.id],
+                'Share Panel: if an article inherits a permission, its children should inherit that permission too')
         manager_member = writable_root.article_member_ids.filtered(lambda m: m.partner_id == self.partner_employee_manager)
         writable._remove_member(manager_member)
         self.assertTrue(writable.is_desynchronized,
                         'Permission: when removing a member having inherited rights it has be be desynchronized')
         self.assertMembers(writable, 'write',
                            {self.partner_portal: 'read'})
+        for child in writable_children:
+            self.assertNotIn(
+                self.partner_employee_manager.id,
+                child._get_article_member_permissions()[child.id],
+                'Share Panel: when removing a member having inherited rights, the member should be removed from the children that inherited that right')
 
         # resync
         writable.restore_article_access()
@@ -326,12 +337,36 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
                            {self.partner_portal: 'none'})
 
         # downgrade a permission, should desynchronize from parent
+        writable_children = self.article_write_contents_children.with_env(self.env)
+        for child in writable_children:
+            self.assertEqual(
+                child._get_article_member_permissions()[child.id][self.partner_employee_manager.id]['permission'],
+                'write',
+                'Share Panel: if an article inherits a permission, its children should inherit that permission too')
+        writable_root._set_member_permission(manager_member_root, 'write')
         writable._set_member_permission(manager_member_root, 'read', is_based_on=True)
         self.assertTrue(writable.is_desynchronized,
                         'Permission: when removing a member having inherited rights it has be be desynchronized')
         self.assertMembers(writable, 'write',
                            {self.partner_portal: 'none',
                             self.partner_employee_manager: 'read'})
+        for child in writable_children:
+            self.assertEqual(
+                child._get_article_member_permissions()[child.id][self.partner_employee_manager.id]['permission'],
+                'read',
+                'Share Panel: when downgrading a member having inherited rights, the member should be downgraded from the children that inherited that right')
+
+        # adding a member to parent, should not be inherited by children
+        writable_root._add_members(self.partner_employee2, 'read')
+        self.assertNotIn(
+            self.partner_employee2.id,
+            writable._get_article_member_permissions()[writable.id],
+            'Share Panel: when adding a member on a parent of a desynced article, the member should not be added on the desynced article')
+        for child in writable_children:
+            self.assertNotIn(
+                self.partner_employee2.id,
+                child._get_article_member_permissions()[child.id],
+                'Share Panel: when adding a member on a parent of a desynced article, the member should not be added on the children of the desynced article')
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')
