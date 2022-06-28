@@ -26,6 +26,22 @@ class PosOrderInherit(models.Model):
     x_receipt_printed_date = fields.Date("OR Printed Date")
     website_order_id = fields.Char("Website Order ID")
 
+    pos_si_trans_reference = fields.Char(string='Si/Trans Receipt Number', readonly=True, copy=False)
+
+    def create(self, vals):
+        res = super(PosOrderInherit, self).create(vals)
+        for i in res:
+            i.pos_si_trans_reference = self.env.ref('fg_custom.seq_pos_si_trans').next_by_id()
+        return res
+
+    def get_si_trans_sequence_number(self, name):
+        if name:
+            order = self.search([('pos_reference', '=', name)], limit=1)
+            if order:
+                return order.pos_si_trans_reference
+        else:
+            return False
+
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
     

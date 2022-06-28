@@ -7,7 +7,6 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
-
             <xpath expr="//field[@name='payment_method_id']" position="after" >
                <field name="x_check_number"/>
                <field name="x_issuing_bank"/>
@@ -16,7 +15,6 @@
                <field name="x_card_name"/>
                <field name="x_card_number"/>
             </xpath>
-
         </field>
     </record>
 
@@ -39,6 +37,10 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
         <field name="arch" type="xml">
+            <field name="pos_reference" position="after">
+                <field name="pos_si_trans_reference" invisible="0"/>
+            </field>
+
             <xpath expr="//field[@name='session_id']" position="after">
                 <field name="x_ext_source"/>
                 <field name="x_ext_order_ref"/>

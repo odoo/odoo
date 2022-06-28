@@ -199,10 +199,10 @@
                 </div>
 
                 <div t-if="receipt.name" class="transaction" style="margin-top: 8%;font-size: 75%;">
-                    <span class="pos-receipt-left-align"><b>Trans# </b> <t t-esc="receipt.name.split(' ')[1].replaceAll('-', '')"/></span>
+                    <span class="pos-receipt-left-align"><b>Trans# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
                 </div>
                 <div t-if="receipt.name" class="sale_invoice" style="font-size: 75%;">
-                    <span class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.name.split(' ')[1].replaceAll('-', '')"/></span>
+                    <span class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
                 </div>
 
                 <div class="total_discount" style="margin-top: 8%;font-size: 75%;">
