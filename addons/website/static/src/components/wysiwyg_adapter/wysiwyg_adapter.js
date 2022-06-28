@@ -321,7 +321,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             case 'get_page_option':
                  return event.data.onSuccess(this.pageOptions[params[0]].value);
             case 'toggle_page_option':
-                return this._togglePageOption(...params);
+                this._togglePageOption(...params);
+                return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
                     save: () => {
