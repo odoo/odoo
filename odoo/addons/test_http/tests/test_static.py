@@ -21,6 +21,9 @@ class TestHttpStaticCommon(TestHttpBase):
         with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
             cls.gizeh_data = file.read()
 
+        with file_open('web/static/img/placeholder.png', 'rb') as file:
+            cls.placeholder_data = file.read()
+
     def assertDownload(
         self, url, assert_status_code, assert_headers, assert_content=None
     ):
@@ -47,6 +50,14 @@ class TestHttpStaticCommon(TestHttpBase):
             headers['Content-Length'] = '0'
 
         return self.assertDownload(url, 200, headers, b'' if x_sendfile else self.gizeh_data)
+
+    def assertDownloadPlaceholder(self, url):
+        headers = {
+            'Content-Length': '6078',
+            'Content-Type': 'image/png',
+            'Content-Disposition': 'inline; filename=placeholder.png'
+        }
+        return self.assertDownload(url, 200, headers, self.placeholder_data)
 
 
 @tagged('post_install', '-at_install')
@@ -206,6 +217,36 @@ class TestHttpStatic(TestHttpStaticCommon):
                 '/web/content/test_http.gizeh_png?filename=pyramid.of.gizeh',
                 assert_filename='pyramid.of.gizeh.png',
             )
+
+    def test_static12_not_found_to_placeholder(self):
+        with self.subTest(x_sendfile=False):
+            self.assertDownloadPlaceholder('/web/image/idontexist')
+
+        with self.subTest(x_sendfile=True), \
+             patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
+            # The file is outside of the filestore, X-Sendfile disabled
+            self.assertDownloadPlaceholder('/web/image/idontexist')
+
+    def test_static13_empty_to_placeholder(self):
+        att = self.env['ir.attachment'].create([{
+            'name': 'empty.png',
+            'type': 'binary',
+            'raw': b'',  # this is not a valid png file, whatever
+            'public': True
+        }])
+
+        with self.subTest(x_sendfile=False):
+            self.assertDownloadPlaceholder(f'/web/image/{att.id}')
+
+        with self.subTest(x_sendfile=True), \
+             patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
+            # The file is outside of the filestore, X-Sendfile disabled
+            self.assertDownloadPlaceholder(f'/web/image/{att.id}')
+
+
+    def test_static14_download_not_found(self):
+        res = self.url_open('/web/image/idontexist?download=True')
+        self.assertEqual(res.status_code, 404)
 
 
 class TestHttpStaticCache(TestHttpStaticCommon):

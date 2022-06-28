@@ -192,6 +192,7 @@ class IrBinary(models.AbstractModel):
             image.
 
         """
+        stream = None
         try:
             stream = self._get_stream_from(
                 record, field_name, filename, filename_field, mimetype,
@@ -200,6 +201,8 @@ class IrBinary(models.AbstractModel):
         except UserError:
             if request.params.get('download'):
                 raise
+
+        if not stream or stream.size == 0:
             if not placeholder:
                 placeholder = record._get_placeholder_filename(field_name)
             stream = self._get_placeholder_stream(placeholder)
