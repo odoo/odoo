@@ -97,10 +97,6 @@ export function assignOwlDirectives(target, ...sources) {
  * @param {Element} compiled
  */
 export function copyAttributes(el, compiled) {
-    if (getTag(el, true) === "button") {
-        return;
-    }
-
     const isComponent = isComponentNode(compiled);
     const classes = el.className;
     if (classes) {
@@ -215,7 +211,8 @@ export class ViewCompiler {
         this.id = 1;
         /** @type {Compiler[]} */
         this.compilers = [
-            { selector: "a[type],a[data-type],button", fn: this.compileButton },
+            { selector: "a[type],a[data-type]", fn: this.compileButton },
+            { selector: "button", fn: this.compileButton, doNotCopyAttributes: true },
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
@@ -287,7 +284,7 @@ export class ViewCompiler {
         let compiledNode;
         if (compiler) {
             compiledNode = compiler.fn.call(this, node, params);
-            if (compiledNode) {
+            if (!compiler.doNotCopyAttributes && compiledNode) {
                 copyAttributes(node, compiledNode);
             }
         } else {

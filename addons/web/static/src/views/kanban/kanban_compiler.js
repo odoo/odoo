@@ -30,12 +30,21 @@ export class KanbanCompiler extends ViewCompiler {
         this.compilers.push(
             { selector: `[t-name='${KANBAN_BOX_ATTRIBUTE}']`, fn: this.compileCard },
             { selector: ".oe_kanban_colorpicker", fn: this.compileColorPicker },
-            { selector: ".dropdown,.o_kanban_manage_button_section", fn: this.compileDropdown },
+            {
+                selector: ".dropdown,.o_kanban_manage_button_section",
+                fn: this.compileDropdown,
+                doNotCopyAttributes: true,
+            },
             {
                 selector: ".dropdown-toggle,.o_kanban_manage_toggle_button",
                 fn: this.compileDropdownButton,
+                doNotCopyAttributes: true,
             },
-            { selector: ".dropdown-menu", fn: this.compileDropdownMenu },
+            {
+                selector: ".dropdown-menu",
+                fn: this.compileDropdownMenu,
+                doNotCopyAttributes: true,
+            },
             { selector: "t[t-call]", fn: this.compileTCall }
         );
         this.dropdown = null;
@@ -55,6 +64,7 @@ export class KanbanCompiler extends ViewCompiler {
         this.dropdown = createElement("Dropdown", {
             position: toStringExpression("bottom-end"),
         });
+        this.dropdown.setAttribute("class", "'o_dropdown_kanban'");
         return this.dropdown;
     }
 
