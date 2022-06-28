@@ -9874,4 +9874,97 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_quick_create");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
     });
+
+    QUnit.test("classes on dropdown menu do not end on dropdown main div", async (assert) => {
+        serverData.models.partner.records.splice(1, 3); // keep one record only
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo"/>
+                                    <ul class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <li>Hello</li>
+                                    </ul>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+        });
+
+        const dropdown = target.querySelector(".o_kanban_record .o-dropdown");
+        assert.isVisible(dropdown);
+        assert.hasClass(dropdown, "o_dropdown_kanban");
+        assert.doesNotHaveClass(dropdown, "dropdown-menu");
+        assert.doesNotHaveClass(dropdown, "o_kanban_card_manage_pane");
+        await click(dropdown, "button.dropdown-toggle");
+        assert.containsOnce(dropdown, ".o_kanban_card_manage_pane.dropdown-menu");
+    });
+
+    QUnit.test("classes on toggler do not end on dropdown main div", async (assert) => {
+        serverData.models.partner.records.splice(1, 3); // keep one record only
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo"/>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                    </a>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+        });
+
+        const dropdown = target.querySelector(".o_kanban_record .o-dropdown");
+        assert.isVisible(dropdown);
+        assert.hasClass(dropdown, "o_dropdown_kanban");
+        assert.doesNotHaveClass(dropdown, "o_kanban_manage_toggle_button");
+        assert.doesNotHaveClass(dropdown, "o_left");
+        assert.containsOnce(dropdown, ".o_kanban_manage_toggle_button.o_left");
+    });
+
+    QUnit.test(
+        "classes on dropdown are on dropdown main div but not the other attributes",
+        async (assert) => {
+            serverData.models.partner.records.splice(1, 3); // keep one record only
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo"/>
+                                    <div class="o_kanban_manage_button_section my_class" placeholder="Bouh"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+            });
+
+            const dropdown = target.querySelector(".o_kanban_record .o-dropdown");
+            assert.isVisible(dropdown);
+            assert.strictEqual(
+                dropdown.className,
+                "o-dropdown dropdown o_dropdown_kanban o_kanban_manage_button_section my_class o-dropdown--no-caret"
+            );
+            assert.notOk(dropdown.hasAttribute("placeholder"));
+        }
+    );
 });
