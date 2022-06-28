@@ -331,7 +331,7 @@
                                     />
                                     <field name="group_id" invisible="1"/>
                                     <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
                                 </tree>
                             </field>
                         </page>
@@ -376,7 +376,7 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
-                                    <button class="o_optional_button" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
                                 </tree>
                             </field>
                         </page>

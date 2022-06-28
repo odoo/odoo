@@ -57,9 +57,6 @@
     'post_init_hook': '_create_warehouse_data',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
-        'web.report_assets_common': [
-            'mrp/static/src/scss/mrp_bom_report.scss',
-        ],
         'web.assets_backend': [
             'mrp/static/src/scss/mrp_workorder_kanban.scss',
             'mrp/static/src/scss/mrp_fields.scss',
