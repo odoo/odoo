@@ -4,6 +4,7 @@
 import base64
 import logging
 
+from dateutil.parser import parse
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
@@ -205,6 +206,15 @@ class MailTemplate(models.Model):
                 values = results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                if 'scheduled_date' in values:
+                    if values['scheduled_date']:
+                        try:
+                            values['scheduled_datetime'] = parse(values['scheduled_date'])
+                        except ValueError:
+                            pass
+
+                    del values['scheduled_date']
+
                 # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,

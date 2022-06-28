@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import datetime
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
@@ -60,6 +61,25 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         cls.user_admin.write({'notification_type': 'email'})
         # Force the attachments of the template to be in the natural order.
         cls.test_template.invalidate_recordset(['attachment_ids'])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_schedule_email(self):
+        scheduled_datetime = datetime.datetime.now() + datetime.timedelta(days=3)
+
+        # schedule the mail in 3 days
+        self.test_template.scheduled_date = '{{datetime.datetime.now() + datetime.timedelta(days=3)}}'
+        mail_id = self.test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(
+            mail.scheduled_datetime.replace(second=0, microsecond=0),
+            scheduled_datetime.replace(second=0, microsecond=0),
+        )
+        self.assertEqual(mail.state, 'outgoing')
+
+        # check a wrong format
+        self.test_template.scheduled_date = '{{"test " * 5}}'
+        mail_id = self.test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email(self):

@@ -83,8 +83,8 @@ class MailMail(models.Model):
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
-    scheduled_date = fields.Char('Scheduled Send Date',
-        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
+    scheduled_datetime = fields.Datetime('Scheduled Send Date',
+        help='If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.')
 
     def _compute_mail_message_id_int(self):
         for mail in self:
@@ -207,8 +207,8 @@ class MailMail(models.Model):
         filters = ['&',
                    ('state', '=', 'outgoing'),
                    '|',
-                   ('scheduled_date', '<', datetime.datetime.now()),
-                   ('scheduled_date', '=', False)]
+                   ('scheduled_datetime', '<', datetime.datetime.now()),
+                   ('scheduled_datetime', '=', False)]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
         # TODO: make limit configurable

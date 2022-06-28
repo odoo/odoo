@@ -189,7 +189,7 @@ class ResUsers(models.Model):
             'auto_delete': True,
             'recipient_ids': [],
             'partner_ids': [],
-            'scheduled_date': False,
+            'scheduled_datetime': False,
         }
 
         for user in self:
