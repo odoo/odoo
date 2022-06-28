@@ -1385,7 +1385,7 @@ class ChromeBrowser:
         self._logger.info('Deleting cookies and clearing local storage')
         self._websocket_request('Network.clearBrowserCache')
         self._websocket_request('Network.clearBrowserCookies')
-        self._websocket_request('Runtime.evaluate', params={'expression': 'try {localStorage.clear();} catch(e) {}'})
+        self._websocket_request('Runtime.evaluate', params={'expression': 'try {localStorage.clear(); sessionStorage.clear();} catch(e) {}'})
         self.navigate_to('about:blank', wait_stop=True)
         # hopefully after navigating to about:blank there's no event left
         self._frames.clear()
