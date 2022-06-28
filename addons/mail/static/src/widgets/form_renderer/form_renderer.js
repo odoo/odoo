@@ -111,6 +111,12 @@ FormRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @returns {boolean}
+     */
+    hasAttachmentViewer() {
+        return false;
+    },
+    /**
      * @private
      * @returns {boolean}
      */
@@ -133,6 +139,7 @@ FormRenderer.include({
             hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
             hasParentReloadOnMessagePosted: this.chatterFields.hasRecordReloadOnMessagePosted,
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
+            isInFormSheetBg: this.hasAttachmentViewer(),
             threadId: this.state.res_id,
             threadModel: this.state.model,
         };
@@ -161,6 +168,11 @@ FormRenderer.include({
             $(this._chatterContainerTarget).addClass('o-aside');
         } else {
             $(this._chatterContainerTarget).removeClass('o-aside');
+        }
+        if (this.hasAttachmentViewer()) {
+            this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
+        } else {
+            this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
         }
     },
     /**

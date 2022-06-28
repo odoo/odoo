@@ -133,6 +133,10 @@ Object.assign(ChatterContainer, {
             type: Boolean,
             optional: true,
         },
+        isInFormSheetBg: {
+            type: Boolean,
+            optional: true,
+        },
         threadId: {
             type: Number,
             optional: true,
