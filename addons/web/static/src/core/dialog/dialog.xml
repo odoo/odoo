@@ -5,16 +5,21 @@
         <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
             <div role="dialog" class="modal d-block"
                 tabindex="-1"
-                t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen }"
                 t-ref="modalRef"
                 >
                 <div class="modal-dialog" t-attf-class="modal-{{props.size}}">
                     <div class="modal-content" t-att-class="props.contentClass">
                         <header t-if="props.header" class="modal-header">
+                            <t t-if="isFullscreen">
+                                <button class="btn fa fa-arrow-left" data-dismiss="modal" aria-label="Close" t-on-click="data.close" />
+                            </t>
                             <h4 class="modal-title text-break">
                                 <t t-esc="props.title"/>
                             </h4>
-                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="data.close">×</button>
+                            <t t-if="!isFullscreen">
+                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="data.close">×</button>
+                            </t>
                         </header>
                         <!-- FIXME: WOWL there is a bug on t-portal on owl, in which t-portal don't work on multinode.
                         To avoid this we place the footer before the body -->
