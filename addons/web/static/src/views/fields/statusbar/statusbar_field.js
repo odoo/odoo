@@ -19,9 +19,18 @@ export class StatusBarField extends Component {
         }
     }
 
-    get dropdownClassNames() {
-        const classNames = ["btn", "btn-secondary", "o_arrow_button"];
-        if (this.props.isDisabled) {
+    get currentName() {
+        const item = this.props.options.find((item) => item.isSelected);
+        return item ? item.name : "";
+    }
+
+    getDropdownItemClassNames(item) {
+        const classNames = [
+            "btn",
+            item.isSelected ? "btn-primary" : "btn-secondary",
+            "o_arrow_button",
+        ];
+        if (item.isSelected || this.props.isDisabled) {
             classNames.push("disabled");
         }
         return classNames.join(" ");
@@ -67,11 +76,18 @@ export class StatusBarField extends Component {
             items = this.getVisibleSelection();
         }
 
-        const groups = groupBy(items, (item) => item.isSelected || !item.isFolded);
-        return {
-            folded: groups.false || [],
-            unfolded: groups.true || [],
-        };
+        if (this.env.isSmall) {
+            return {
+                folded: items,
+                unfolded: [],
+            };
+        } else {
+            const groups = groupBy(items, (item) => item.isSelected || !item.isFolded);
+            return {
+                folded: groups.false || [],
+                unfolded: groups.true || [],
+            };
+        }
     }
 
     selectItem(item) {
@@ -140,7 +156,9 @@ StatusBarField.components = {
 StatusBarField.displayName = _lt("Status");
 StatusBarField.supportedTypes = ["many2one", "selection"];
 
-StatusBarField.isEmpty = () => false;
+StatusBarField.isEmpty = (record, fieldName) => {
+    return record.model.env.isSmall ? !record.data[fieldName] : false;
+};
 StatusBarField.extractProps = (fieldName, record, attrs) => {
     const getOptions = () => {
         switch (record.fields[fieldName].type) {
