@@ -99,7 +99,7 @@ class Sanitize {
 
     parse(node) {
         node = closestBlock(node);
-        if (['UL', 'OL'].includes(node.tagName)) {
+        if (node && ['UL', 'OL'].includes(node.tagName)) {
             node = node.parentElement;
         }
         this._parse(node);
