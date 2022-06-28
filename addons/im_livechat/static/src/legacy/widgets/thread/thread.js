@@ -115,10 +115,10 @@ const ThreadWidget = Widget.extend({
      */
      render(thread, options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === thread.getID() && this.isAtBottom()) {
+        if (this._currentThreadID === thread._id && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
-        this._currentThreadID = thread.getID();
+        this._currentThreadID = thread._id;
 
         // copy so that reverse do not alter order in the thread object
         const messages = _.clone(thread.getMessages());
@@ -245,12 +245,12 @@ const ThreadWidget = Widget.extend({
      * @param {Object} [options] options for the thread rendering
      */
      removeMessageAndRender(messageID, thread, options) {
-        this._currentThreadID = thread.getID();
+        this._currentThreadID = thread._id;
         return new Promise((resolve, reject) => {
             this.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
                 done: () => {
-                    if (this._currentThreadID === thread.getID()) {
+                    if (this._currentThreadID === thread._id) {
                         this.render(thread, options);
                     }
                     resolve();
