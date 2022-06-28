@@ -1571,9 +1571,9 @@ class MrpProduction(models.Model):
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
             (production.move_raw_ids | production.move_finished_ids).name = production.name
             (production.move_raw_ids | production.move_finished_ids).origin = production._get_origin()
-            production.product_qty = amounts[production][0]
             backorder_vals = production.copy_data(default=production._get_backorder_mo_vals())[0]
             backorder_qtys = amounts[production][1:]
+            production.product_qty = amounts[production][0]
 
             next_seq = max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
 
@@ -1725,7 +1725,7 @@ class MrpProduction(models.Model):
             bo = production_to_backorders[production]
 
             # Adapt duration
-            for workorder in (production | bo).workorder_ids:
+            for workorder in bo.workorder_ids:
                 workorder.duration_expected = workorder.duration_expected * workorder.production_id.product_qty / initial_qty
 
             # Adapt quantities produced
