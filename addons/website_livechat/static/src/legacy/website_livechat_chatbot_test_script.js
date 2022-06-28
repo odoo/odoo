@@ -4,7 +4,6 @@ import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 
 import { insertAndReplace } from '@mail/model/model_field_command';
 
@@ -60,18 +59,15 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      */
     _openChat: function () {
         this.messaging.livechatButtonView.update({
-            livechat: new PublicLivechat({
-                parent: this,
-                data: this._channelData,
-            }),
+            publicLivechat: insertAndReplace({ data: this._channelData }),
         });
 
         return this._openChatWindow().then(() => {
             this._sendWelcomeMessage();
             this._renderMessages();
-            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.livechat.getUUID());
+            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid);
             this.call('bus_service', 'startPolling');
-            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.livechat.toData()), true), 60 * 60);
+            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
             this.messaging.livechatButtonView.update({ isOpeningChat: false });
         });
     },
