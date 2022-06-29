@@ -21,10 +21,11 @@ class TestWKnowledgeSecurity(KnowledgeCommonWData):
 
         article_shared.sudo().website_published = True
         article_shared.body  # access body should not trigger acls
+        self.assertFalse(article_shared.is_user_favorite)
 
         # FAVOURITE
         with self.assertRaises(exceptions.AccessError, msg='ACLs: No favorite access to public'):
-            article_shared.is_user_favorite
+            self.env['knowledge.article.favorite'].search([])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     @users('portal_test')
