@@ -8852,7 +8852,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("coming to a form view from a grouped and sorted list", async function (assert) {
-        assert.expect(21);
+        assert.expect(22);
         serverData.actions = {
             1: {
                 id: 1,
@@ -8918,15 +8918,18 @@ QUnit.module("Views", (hooks) => {
             "blip",
             "yop",
         ]);
+
         await toggleGroupByMenu(target);
         await toggleMenuItem(target, "bar");
         assert.containsN(target, ".o_group_header", 2);
+        assert.containsNone(target, ".o_data_row");
 
         await click(target.querySelectorAll(".o_group_header")[1]);
         assert.containsN(target, ".o_group_header", 2);
         assert.containsN(target, ".o_data_row", 2);
 
-        await click(target.querySelector(".o_data_cell"));
+        const secondDataRow = target.querySelectorAll(".o_data_row")[1];
+        await click(secondDataRow.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
             "gold",

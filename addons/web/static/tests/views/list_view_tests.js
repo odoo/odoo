@@ -13919,4 +13919,50 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_group_open");
         assert.containsN(target, ".o_data_row", 3);
     });
+
+    QUnit.test("keep order after grouping", async (assert) => {
+        serverData.models.foo.fields.foo.sortable = true;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                </tree>`,
+            searchViewArch: `
+                <search>
+                    <filter name="group_by_foo" string="Foo" context="{'group_by':'foo'}"/>
+                </search>`,
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row td[name=foo]")].map((r) => r.innerText),
+            ["yop", "blip", "gnap", "blip"]
+        );
+
+        // Descending order on Bar
+        await click(target, "th.o_column_sortable[data-name=foo]");
+        await click(target, "th.o_column_sortable[data-name=foo]");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row td[name=foo]")].map((r) => r.innerText),
+            ["yop", "gnap", "blip", "blip"]
+        );
+
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Foo");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_group_name")].map((r) => r.innerText),
+            ["yop (1)", "gnap (1)", "blip (2)"]
+        );
+
+        await toggleMenuItem(target, "Foo");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row td[name=foo]")].map((r) => r.innerText),
+            ["yop", "gnap", "blip", "blip"]
+        );
+    });
 });
