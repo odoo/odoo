@@ -985,12 +985,13 @@ options.registry.OptionsTab = options.Class.extend({
         const hues = [];
         const saturationDiffs = [];
         let oneHasNoSaturation = false;
+        const baseStyle = getComputedStyle(document.documentElement);
         for (let id = 100; id <= 900; id += 100) {
             const gray = weUtils.getCSSVariableValue(`${id}`, style);
             const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
             const grayHSL = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
 
-            const baseGray = weUtils.getCSSVariableValue(`base-${id}`, style);
+            const baseGray = weUtils.getCSSVariableValue(`base-${id}`, baseStyle);
             const baseGrayRGB = ColorpickerWidget.convertCSSColorToRgba(baseGray);
             const baseGrayHSL = ColorpickerWidget.convertRgbToHsl(baseGrayRGB.red, baseGrayRGB.green, baseGrayRGB.blue);
 
@@ -1201,8 +1202,8 @@ options.registry.OptionsTab = options.Class.extend({
      * @returns {String} the adjusted color of gray
      */
     _buildGray(id) {
-        const ownerDocument = this.$target[0].ownerDocument;
-        const gray = weUtils.getCSSVariableValue(`base-${id}`, ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement));
+        // Getting base grays defined in color_palette.scss
+        const gray = weUtils.getCSSVariableValue(`base-${id}`, getComputedStyle(document.documentElement));
         const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
         const hsl = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
         const adjustedGrayRGB = ColorpickerWidget.convertHslToRgb(this.grayParams[this.GRAY_PARAMS.HUE],
