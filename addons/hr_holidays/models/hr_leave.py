@@ -116,9 +116,9 @@ class HolidaysRequest(models.Model):
     def _default_get_request_parameters(self, values):
         new_values = dict(values)
         if values.get('date_from'):
-            new_values['request_date_from'] = values['date_from'].date()
+            new_values['request_date_from'] = self._adjust_date_based_on_tz(values['date_from'].date(), values['date_from'].time())
         if values.get('date_to'):
-            new_values['request_date_to'] = values['date_to'].date()
+            new_values['request_date_to'] = self._adjust_date_based_on_tz(values['date_to'].date(), values['date_to'].time())
         return new_values
 
     active = fields.Boolean(default=True, readonly=True)
@@ -752,12 +752,7 @@ class HolidaysRequest(models.Model):
         """
         user_tz = timezone(self.env.user.tz if self.env.user.tz else 'UTC')
         request_date_to_utc = UTC.localize(datetime.combine(leave_date, hour)).astimezone(user_tz).replace(tzinfo=None)
-        if request_date_to_utc.date() < leave_date:
-            return leave_date + timedelta(days=1)
-        elif request_date_to_utc.date() > leave_date:
-            return leave_date - timedelta(days=1)
-        else:
-            return leave_date
+        return request_date_to_utc.date()
 
     ####################################################
     # ORM Overrides methods
@@ -900,8 +895,8 @@ class HolidaysRequest(models.Model):
                     date_to = values.get('date_to')
                     employee = employees.filtered(lambda emp: emp.id == employee_id)
                     attendance_from, attendance_to = self._get_attendances(employee, date_from.date(), date_to.date())
-                    hour_from = max(values['date_from'].replace(tzinfo=UTC).astimezone(timezone(self.env.user.tz)).time(), float_to_time(attendance_from.hour_from))
-                    hour_to = min(values['date_to'].replace(tzinfo=UTC).astimezone(timezone(self.env.user.tz)).time(), float_to_time(attendance_to.hour_to))
+                    hour_from = float_to_time(attendance_from.hour_from)
+                    hour_to = float_to_time(attendance_to.hour_to)
                     hour_from = hour_from.hour + hour_from.minute / 60
                     hour_to = hour_to.hour + hour_to.minute / 60
 
@@ -1587,9 +1582,8 @@ class HolidaysRequest(models.Model):
 
     def _get_start_or_end_from_attendance(self, hour, date, employee):
         hour = float_to_time(float(hour))
-        compensated_request_date = self._adjust_date_based_on_tz(date, hour)
         holiday_tz = timezone(employee.tz or self.env.user.tz)
-        return holiday_tz.localize(datetime.combine(compensated_request_date, hour)).astimezone(UTC).replace(tzinfo=None)
+        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
     def _get_attendances(self, employee, request_date_from, request_date_to):
         resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
