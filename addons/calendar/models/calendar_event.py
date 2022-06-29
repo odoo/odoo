@@ -40,7 +40,6 @@ SORT_ALIASES = {
     'start_date': 'sort_start',
 }
 
-DISCUSS_ROUTE = 'calendar/join_videocall'
 
 def get_weekday_occurence(date):
     """
@@ -63,6 +62,8 @@ class Meeting(models.Model):
     _description = "Calendar Event"
     _order = "start desc"
     _inherit = ["mail.thread"]
+
+    DISCUSS_ROUTE = 'calendar/join_videocall'
 
     @api.model
     def default_get(self, fields):
@@ -377,7 +378,7 @@ class Meeting(models.Model):
     @api.depends('videocall_location')
     def _compute_videocall_source(self):
         for event in self:
-            if event.videocall_location and DISCUSS_ROUTE in event.videocall_location:
+            if event.videocall_location and self.DISCUSS_ROUTE in event.videocall_location:
                 event.videocall_source = 'discuss'
             else:
                 event.videocall_source = 'custom'
@@ -391,12 +392,12 @@ class Meeting(models.Model):
         """
         if not self.access_token:
             self.access_token = uuid.uuid4().hex
-        self.videocall_location = f"{self.get_base_url()}/{DISCUSS_ROUTE}/{self.access_token}"
+        self.videocall_location = f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{self.access_token}"
 
     @api.model
     def get_discuss_videocall_location(self):
         access_token = uuid.uuid4().hex
-        return f"{self.get_base_url()}/{DISCUSS_ROUTE}/{access_token}"
+        return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
 
     # ------------------------------------------------------------
     # CRUD
