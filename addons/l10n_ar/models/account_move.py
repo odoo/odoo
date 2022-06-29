@@ -240,9 +240,9 @@ class AccountMove(models.Model):
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
         """ If use share sequences we need to recompute the sequence to add the proper document code prefix """
-        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix)
+        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
         if res and self.journal_id.l10n_ar_share_sequences and self.l10n_latam_document_type_id.doc_code_prefix not in res:
             res = self._get_formatted_sequence(number=self._l10n_ar_get_document_number_parts(
                 res.split()[-1], self.l10n_latam_document_type_id.code)['invoice_number'])
