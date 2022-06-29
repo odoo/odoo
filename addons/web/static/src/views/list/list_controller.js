@@ -104,6 +104,9 @@ export class ListController extends Component {
                     rootState: this.model.root.exportState(),
                 };
             },
+            getOrderBy: () => {
+                return this.model.root.orderBy;
+            },
         });
 
         usePager(() => {
