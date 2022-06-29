@@ -311,3 +311,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_21_website_start_cloned_snippet(self):
         self.start_tour('/web', 'website_start_cloned_snippet', login='admin')
+
+    def test_22_website_gray_color_palette(self):
+        self.start_tour('/web', 'website_gray_color_palette', login='admin')
