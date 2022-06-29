@@ -3,6 +3,7 @@
 
 from . import test_knowledge_article_business
 from . import test_knowledge_article_constraints
+from . import test_knowledge_article_internals
 from . import test_knowledge_article_permissions
 from . import test_knowledge_article_sequence
 from . import test_knowledge_form_ui
