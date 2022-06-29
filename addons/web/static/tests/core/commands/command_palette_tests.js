@@ -1509,3 +1509,41 @@ QUnit.test("remove namespace with backspace", async (assert) => {
     await nextTick();
     assert.strictEqual(target.querySelector(".o_command_palette .o_namespace").innerText, "@");
 });
+
+QUnit.test("generate new session id when opened", async (assert) => {
+    assert.expect(4);
+
+    let lastSessionId;
+    CommandPalette.lastSessionId = 0;
+    mount(TestComponent, target, { env });
+    const providers = [
+        {
+            provide: (env, {sessionId}) => {
+                lastSessionId = sessionId;
+                return [];
+            },
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    await editSearchBar("a");
+    assert.equal(lastSessionId, 0);
+
+    document.body.dispatchEvent(new MouseEvent("mousedown"));
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+    await nextTick();
+    assert.equal(lastSessionId, 1);
+});
