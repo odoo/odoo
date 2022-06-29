@@ -736,7 +736,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     await click(`.o_Composer_buttonEmojis`);
     assert.containsOnce(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be opened after click on emojis button"
     );
 
@@ -746,7 +746,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be closed after pressing escape on emojis button"
     );
     assert.containsOnce(
