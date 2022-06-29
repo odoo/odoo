@@ -1322,7 +1322,8 @@ class DynamicList extends DataPoint {
     setup(params, state) {
         this.groupBy = params.groupBy || [];
         this.domain = markRaw(params.domain || []);
-        this.orderBy = params.orderBy || []; // rename orderBy + get back from state
+        this.orderBy =
+            params.orderBy && params.orderBy.length ? params.orderBy : state.orderBy || []; // rename orderBy
         this.offset = state.offset || 0;
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
@@ -1425,6 +1426,7 @@ class DynamicList extends DataPoint {
         return {
             limit: this.limit,
             loadedCount: this.records.length,
+            orderBy: this.orderBy,
             previousParams: this.currentParams,
         };
     }
