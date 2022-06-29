@@ -9967,4 +9967,28 @@ QUnit.module("Views", (hooks) => {
             assert.notOk(dropdown.hasAttribute("placeholder"));
         }
     );
+
+    QUnit.test("can use JSON in kanban template", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, foo: '["g", "e", "d"]' }];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-esc="v"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.containsN(target, ".o_kanban_record span", 3);
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "ged");
+    });
 });
