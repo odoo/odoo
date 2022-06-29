@@ -4287,7 +4287,8 @@ class AccountMoveLine(models.Model):
             analytic tags with analytic distribution.
         """
         self.ensure_one()
-        amount = -self.balance * distribution.percentage / 100.0
+        currency = self.currency_id or self.move_id.company_id.currency_id
+        amount = currency.round(-self.balance * distribution.percentage / 100.0)
         default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
             'name': default_name,
