@@ -6,7 +6,7 @@
         -->
         <record id="tax_vat_411" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES (EXCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 12%</field>
+            <field name="name">IVA 12%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">9</field>
@@ -43,7 +43,7 @@
         </record>
         <record id="tax_vat_412" model="account.tax.template">
             <!-- IVA EN VENTAS DE ACTIVOS FIJOS -->
-            <field name="name">Iva 12% (activos)</field>
+            <field name="name">IVA 12% (Activos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -69,18 +69,18 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_104_411')],
+                    'minus_report_line_ids': [ref('tax_report_line_104_412')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_421')],
+                    'minus_report_line_ids': [ref('tax_report_line_104_422')],
                 })]"/>
         </record>
         <record id="tax_vat_415" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0%</field>
+            <field name="name">IVA 0%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">19</field>
@@ -114,7 +114,7 @@
         </record>
         <record id="tax_vat_416" model="account.tax.template">
             <!-- IVA VENTAS DE ACTIVOS FIJOS GRAVADAS TARIFA 0% CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (activos)</field>
+            <field name="name">IVA 0% (Activos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -127,7 +127,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_104_414')],
+                    'plus_report_line_ids': [ref('tax_report_line_104_416')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -138,7 +138,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_104_414')],
+                    'minus_report_line_ids': [ref('tax_report_line_104_416')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -148,7 +148,7 @@
         </record>
         <record id="tax_vat_413" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (sin crédito tributario)</field>
+            <field name="name">IVA 0% (Sin Crédito Tributario)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -182,7 +182,7 @@
         </record>
         <record id="tax_vat_414" model="account.tax.template">
             <!-- IVA EN VENTAS DE ACTIVOS FIJOS GRAVADAS 0% SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (activos sin crédito tributario)</field>
+            <field name="name">IVA 0% (Activos Sin Crédito Tributario)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -216,7 +216,7 @@
         </record>
         <record id="tax_vat_417" model="account.tax.template">
             <!-- IVA 0% POR EXPORTACIONES DE BIENES -->
-            <field name="name">Iva 0% (exportación bienes)</field>
+            <field name="name">IVA 0% (Exportación Bienes)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">21</field>
@@ -250,7 +250,7 @@
         </record>
         <record id="tax_vat_418" model="account.tax.template">
             <!-- IVA POR EXPORTACIONES DE SERVICIOS -->
-            <field name="name">Iva 0% (exportación servicios)</field>
+            <field name="name">IVA 0% (Exportación Servicios)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">21</field>
@@ -284,7 +284,7 @@
         </record>
         <record id="tax_vat_419" model="account.tax.template">
             <!-- TRANSFERENCIAS EN VENTAS NO OBJETO O EXENTAS DE IVA -->
-            <field name="name">Iva 0% (no objeto/exentas)</field>
+            <field name="name">IVA 0% (No Objeto/Exentas)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">40</field>
@@ -319,7 +319,7 @@
         </record>
         <record id="tax_vat_444" model="account.tax.template">
             <!-- IVA EN VENTAS POR REEMBOLSO COMO INTERMEDIARIO -->
-            <field name="name">Iva 12% (reembolso)</field>
+            <field name="name">IVA 12% (Reembolso)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -333,13 +333,50 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_104_412')],
+                    'plus_report_line_ids': [ref('tax_report_line_104_444')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_other_downpayments'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_422')],
+                    'plus_report_line_ids': [ref('tax_report_line_104_454')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_104_444')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'minus_report_line_ids': [ref('tax_report_line_104_454')],
+                })]"/>
+        </record>        
+        <record id="tax_vat_411_08" model="account.tax.template">
+            <!-- IVA EN VENTAS LOCALES (EXCLUYE ACTIVOS FIJOS) -->
+            <field name="name">IVA 8%</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">50</field>
+            <field name="amount">8.0</field>
+            <field name="description">IVA 8%</field>
+            <field name="l10n_ec_code_base">411</field>
+            <field name="l10n_ec_code_applied">421</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_08"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_104_411')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_sale_vat'),
+                    'plus_report_line_ids': [ref('tax_report_line_104_421')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
@@ -350,13 +387,13 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('l10n_ec.ec_other_downpayments'),
+                    'account_id': ref('l10n_ec.ec_sale_vat'),
                     'minus_report_line_ids': [ref('tax_report_line_104_421')],
                 })]"/>
-        </record>
+        </record>        
         <record id="tax_vat_510" model="account.tax.template">
             <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12%</field>
+            <field name="name">IVA 12%</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">9</field>
@@ -393,7 +430,7 @@
         </record>
         <record id="tax_vat_511" model="account.tax.template">
             <!-- IVA EN COMPRAS LOCALES DE ACTIVOS FIJOS CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12% (activos)</field>
+            <field name="name">IVA 12% (Activos)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -430,7 +467,7 @@
         </record>
         <record id="tax_vat_512" model="account.tax.template">
             <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12% (sin crédito tributario)</field>
+            <field name="name">IVA 12% (Sin Crédito Tributario)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -465,7 +502,7 @@
         </record>
         <record id="tax_vat_513" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE SERVICIOS -->
-            <field name="name">Iva 12% (importación servicios)</field>
+            <field name="name">IVA 12% (Importación Servicios)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -502,7 +539,7 @@
         </record>
         <record id="tax_vat_514" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE BIENES (EXCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 12% (importación bienes)</field>
+            <field name="name">IVA 12% (Importación Bienes)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -539,7 +576,7 @@
         </record>
         <record id="tax_vat_515" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE ACTIVOS FIJOS -->
-            <field name="name">Iva 12% (importación activos)</field>
+            <field name="name">IVA 12% (Importación Activos)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -576,7 +613,7 @@
         </record>
         <record id="tax_vat_517" model="account.tax.template">
             <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 0%</field>
+            <field name="name">IVA 0%</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -611,7 +648,7 @@
         </record>
         <record id="tax_vat_516" model="account.tax.template">
             <!-- IVA 0% EN IMPORTACIONES DE BIENES (INCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 0% (importación bienes)</field>
+            <field name="name">IVA 0% (Importación Bienes)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -645,7 +682,7 @@
         </record>
         <record id="tax_vat_518" model="account.tax.template">
             <!-- ADQUISICIONES REALIZADAS A CONTRIBUYENTES RISE -->
-            <field name="name">Iva 0% (rise)</field>
+            <field name="name">IVA 0% (Rise)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
@@ -679,7 +716,7 @@
         </record>
         <record id="tax_vat_541" model="account.tax.template">
             <!-- ADQUISICIONES NO OBJETO DE IVA -->
-            <field name="name">Iva 0% (no objeto de iva)</field>
+            <field name="name">IVA 0% (No Objeto de IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">30</field>
@@ -713,7 +750,7 @@
         </record>
         <record id="tax_vat_542" model="account.tax.template">
             <!-- ADQUISICIONES EXENTAS DEL PAGO DE IVA -->
-            <field name="name">Iva 0% (excento de iva)</field>
+            <field name="name">IVA 0% (Excento de IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">40</field>
@@ -747,7 +784,7 @@
         </record>
         <record id="tax_vat_545" model="account.tax.template">
             <!-- IVA EN COMPRAS POR REEMBOLSO COMO INTERMEDIARIO -->
-            <field name="name">Iva 12% (reembolso intermediario)</field>
+            <field name="name">IVA 12% (Reembolso Intermediario)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -780,6 +817,42 @@
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_other_downpayments'),
                     'minus_report_line_ids': [ref('tax_report_line_104_555')],
+                })]"/>
+        </record>
+        <record id="tax_vat_510_08" model="account.tax.template">
+        	<field name="name">IVA 8%</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">50</field>
+            <field name="amount">8.0</field>
+            <field name="description">IVA 8%</field>
+            <field name="l10n_ec_code_base">510</field>
+            <field name="l10n_ec_code_applied">520</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_08"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_104_510')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_purchase_vat'),
+                    'plus_report_line_ids': [ref('tax_report_line_104_520')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_104_510')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_purchase_vat'),
+                    'minus_report_line_ids': [ref('tax_report_line_104_520')],
                 })]"/>
         </record>
     </data>
