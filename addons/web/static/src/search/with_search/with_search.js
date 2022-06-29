@@ -13,6 +13,9 @@ export class WithSearch extends Component {
         if (!this.env.__getContext__) {
             useSubEnv({ __getContext__: new CallbackRecorder() });
         }
+        if (!this.env.__getOrderBy__) {
+            useSubEnv({ __getOrderBy__: new CallbackRecorder() });
+        }
 
         const SearchModelClass = this.props.SearchModel || SearchModel;
         this.searchModel = new SearchModelClass(this.env, {
