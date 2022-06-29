@@ -80,6 +80,8 @@ class StockMove(models.Model):
         auto_join=True, index=True, required=True,
         check_company=True,
         help="Location where the system will stock the finished products.")
+    location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
+    location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         states={'done': [('readonly', True)]},
