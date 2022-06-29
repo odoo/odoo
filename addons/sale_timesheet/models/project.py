@@ -197,19 +197,20 @@ class Project(models.Model):
             if result.get('project_id'):
                 sol_qty_dict[result['project_id'][0]].append((uom_id, result['product_uom_qty']))
 
-        uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
+        uom_per_id = {}
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        for uom in self.env['uom.uom'].browse(uom_ids):
+            if uom == uom_unit:
+                uom = uom_hour
+            if uom.category_id == self.timesheet_encode_uom_id.category_id:
+                uom_per_id[uom.id] = uom
 
         for project in self:
             project_id = project.id or project._origin.id
-            # sale order line may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the sol has no product_uom_id then we take the one of the project
-            allocated_hours = sum([
-                product_uom_qty * uoms_dict.get(product_uom, project.timesheet_encode_uom_id.id).factor_inv
-                for product_uom, product_uom_qty in sol_qty_dict[project_id]
-            ], 0.0)
-            # Now convert to the unit of measure to hours
-            allocated_hours *= uom_hour.factor
+            allocated_hours = 0.0
+            for product_uom_id, product_uom_qty in sol_qty_dict[project_id]:
+                if uom_per_id.get(product_uom_id) or product_uom_id == uom_unit.id:
+                    allocated_hours += product_uom_qty * uom_per_id.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv * uom_hour.factor
             project.allocated_hours = allocated_hours
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
