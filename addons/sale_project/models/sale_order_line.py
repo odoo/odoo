@@ -197,6 +197,8 @@ class SaleOrderLine(models.Model):
         description = '<br/>'.join(sale_line_name_parts[1:])
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
+            'analytic_account_id': project.analytic_account_id.id,
+            'analytic_tag_ids': [Command.set(project.analytic_tag_ids.ids)],
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
