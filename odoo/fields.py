@@ -1079,13 +1079,15 @@ class Field(MetaField('DummyField', (object,), {})):
         # discard recomputation of self on records
         records.env.remove_to_compute(self, records)
 
-        # update the cache, and discard the records that are not modified
+        # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
-        cache.update(records, self, [cache_value] * len(records))
+
+        # update the cache
+        cache.update(records, self, itertools.repeat(cache_value))
 
         # update towrite
         if self.store:
@@ -1666,90 +1668,71 @@ class _String(Field):
         return translate
 
     def write(self, records, value):
+        if not (self.translate and self.store and any(records._ids)):
+            return super().write(records, value)
+
         # discard recomputation of self on records
         records.env.remove_to_compute(self, records)
 
-        # update the cache, and discard the records that are not modified
+        # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
-        cache.update(records, self, [cache_value] * len(records))
 
-        if not self.store:
-            return records
+        lang = records.env.lang or None  # used in _update_translations below
+        installed = records.env['res.lang'].get_installed()
+        single_lang = installed[0][0] if len(installed) <= 1 else None
 
-        real_recs = records.filtered('id')
-        if not real_recs._ids:
-            return records
-
-        update_column = True
-        update_trans = False
-        single_lang = len(records.env['res.lang'].get_installed()) <= 1
-        if self.translate:
-            lang = records.env.lang or None  # used in _update_translations below
-            if single_lang:
-                # a single language is installed
-                update_trans = True
-            elif callable(self.translate) or lang == 'en_US':
-                # update the source and synchronize translations
-                update_column = True
-                update_trans = True
-            elif lang != 'en_US' and lang is not None:
-                # update the translations only except if emptying
-                update_column = not cache_value
-                update_trans = True
-            # else: lang = None
-
-        # update towrite if modifying the source
-        if update_column:
+        # modify the column (source)
+        if single_lang or lang in (None, 'en_US') or callable(self.translate) or not cache_value:
             towrite = records.env.all.towrite[self.model_name]
-            for rid in real_recs._ids:
+            for rid in records._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
             if self.translate is True and cache_value:
-                tname = "%s,%s" % (records._name, self.name)
-                records.env['ir.translation']._set_source(tname, real_recs._ids, value)
-            if self.translate:
-                # invalidate the field in the other languages
-                cache.invalidate([(self, records.ids)])
-                cache.update(records, self, [cache_value] * len(records))
+                tname = f"{self.model_name},{self.name}"
+                records.env['ir.translation']._set_source(tname, records._ids, value)
+            # invalidate the field in all languages because the fallback value
+            # for translations is modified
+            cache.invalidate([(self, records.ids)])
 
-        if update_trans:
-            if callable(self.translate):
-                # the source value of self has been updated, synchronize
-                # translated terms when possible
-                records.env['ir.translation']._sync_terms_translations(self, real_recs)
+        cache.update(records, self, itertools.repeat(cache_value))
 
+        if callable(self.translate):
+            # the source value of self has been updated, synchronize translated
+            # terms when possible
+            records.env['ir.translation']._sync_terms_translations(self, records)
+
+        elif lang:
+            # update translations
+            value = self.convert_to_column(value, records)
+            source_recs = records.with_context(lang=None)
+            source_value = first(source_recs)[self.name]
+            if not source_value:
+                source_recs[self.name] = value
+                source_value = value
+            tname = "%s,%s" % (self.model_name, self.name)
+            if not value:
+                records.env['ir.translation'].search([
+                    ('name', '=', tname),
+                    ('type', '=', 'model'),
+                    ('res_id', 'in', records._ids)
+                ]).unlink()
+            elif single_lang:
+                records.env['ir.translation']._update_translations([dict(
+                    src=source_value,
+                    value=value,
+                    name=tname,
+                    lang=lang,
+                    type='model',
+                    state='translated',
+                    res_id=res_id) for res_id in records._ids])
             else:
-                # update translations
-                value = self.convert_to_column(value, records)
-                source_recs = real_recs.with_context(lang=None)
-                source_value = first(source_recs)[self.name]
-                if not source_value:
-                    source_recs[self.name] = value
-                    source_value = value
-                tname = "%s,%s" % (self.model_name, self.name)
-                if not value:
-                    records.env['ir.translation'].search([
-                        ('name', '=', tname),
-                        ('type', '=', 'model'),
-                        ('res_id', 'in', real_recs._ids)
-                    ]).unlink()
-                elif single_lang:
-                    records.env['ir.translation']._update_translations([dict(
-                        src=source_value,
-                        value=value,
-                        name=tname,
-                        lang=lang,
-                        type='model',
-                        state='translated',
-                        res_id=res_id) for res_id in real_recs._ids])
-                else:
-                    records.env['ir.translation']._set_ids(
-                        tname, 'model', lang, real_recs._ids, value, source_value,
-                    )
+                records.env['ir.translation']._set_ids(
+                    tname, 'model', lang, records._ids, value, source_value,
+                )
 
         return records
 
@@ -2295,7 +2278,7 @@ class Binary(Field):
             # determine records that are known to be not null
             not_null = cache.get_records_different_from(records, self, None)
 
-        cache.update(records, self, [cache_value] * len(records))
+        cache.update(records, self, itertools.repeat(cache_value))
 
         # retrieve the attachments that store the values, and adapt them
         if self.store and any(records._ids):
@@ -2359,7 +2342,7 @@ class Image(Binary):
             new_value = self._image_process(value)
             new_record_values.append((record, new_value))
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
-            record.env.cache.update(record, self, [cache_value] * len(record))
+            record.env.cache.update(record, self, itertools.repeat(cache_value))
         super(Image, self).create(new_record_values)
 
     def write(self, records, value):
@@ -2377,7 +2360,7 @@ class Image(Binary):
 
         super(Image, self).write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
-        records.env.cache.update(records, self, [cache_value] * len(records))
+        records.env.cache.update(records, self, itertools.repeat(cache_value))
 
     def _image_process(self, value):
         if self.readonly and not self.max_width and not self.max_height:
@@ -2942,7 +2925,7 @@ class Many2one(_Relational):
         self._remove_inverses(records, cache_value)
 
         # update the cache of self
-        cache.update(records, self, [cache_value] * len(records))
+        cache.update(records, self, itertools.repeat(cache_value))
 
         # update towrite
         if self.store:
@@ -3597,7 +3580,7 @@ class One2many(_RelationalMulti):
                         link(recs[-1], comodel.browse(command[1]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, [()] * len(recs))
+                        cache.update(recs, self, itertools.repeat(()))
                         lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
@@ -3675,7 +3658,7 @@ class One2many(_RelationalMulti):
                         link(recs[-1], browse([command[1]]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, [()] * len(recs))
+                        cache.update(recs, self, itertools.repeat(()))
                         lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
