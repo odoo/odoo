@@ -114,6 +114,8 @@ class TestRecruitmentInterviewer(MailCommon):
             'interviewer_id': self.interviewer_user.id,
         })
 
+        applicant.message_subscribe(partner_ids=[self.interviewer_user.partner_id.id])
+
         with self.mock_mail_gateway():
             message = applicant.message_post(body='A super secret message', message_type='comment', subtype_xmlid='mail.mt_comment')
 
@@ -121,7 +123,7 @@ class TestRecruitmentInterviewer(MailCommon):
             message.with_user(self.interviewer_user).read()
 
         try:
-            self._find_mail_mail_wpartners(self.interviewer_user.partner_id, False)
+            self._find_mail_mail_wpartners(self.interviewer_user.partner_id, None)
         except AssertionError:
             pass
         else:
