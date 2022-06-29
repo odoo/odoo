@@ -14,7 +14,11 @@ class ReportProjectTaskUser(models.Model):
 
     def _select(self):
         return super(ReportProjectTaskUser, self)._select() + """,
+<<<<<<< HEAD
             (t.effective_hours * 100) / NULLIF(planned_hours, 0) as progress,
+=======
+            t.progress as progress,
+>>>>>>> f7e31e115c3... temp
             t.effective_hours as hours_effective,
             t.planned_hours - t.effective_hours - t.subtask_effective_hours as remaining_hours,
             NULLIF(planned_hours, 0) as hours_planned"""
@@ -23,6 +27,10 @@ class ReportProjectTaskUser(models.Model):
         return super(ReportProjectTaskUser, self)._group_by() + """,
             remaining_hours,
             t.effective_hours,
+<<<<<<< HEAD
+=======
+            t.progress,
+>>>>>>> f7e31e115c3... temp
             planned_hours
             """
 
