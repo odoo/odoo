@@ -10,6 +10,7 @@ import {
     mockDownload,
     nextTick,
     triggerEvent,
+    mockTimeout,
 } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -125,7 +126,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                     field_type: "char",
                     id: "foo",
                     relation_field: null,
-                    required: false,
+                    required: true,
                     string: "Foo",
                     value: "foo",
                 },
@@ -234,6 +235,11 @@ QUnit.module("ViewDialogs", (hooks) => {
             "Activities",
             "string of second field in export list should be 'Activities'"
         );
+        assert.hasClass(
+            target.querySelector(".modal .o_export_tree_item:nth-child(2) .o_tree_column"),
+            "font-weight-bolder",
+            "required fields have the right style class"
+        );
         // Remove field
         await click(target, ".modal .o_export_field:first-child .o_remove_field");
         assert.containsOnce(
@@ -244,7 +250,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with export templates", async function (assert) {
-        assert.expect(22);
+        assert.expect(25);
 
         await makeView({
             serverData,
@@ -377,6 +383,25 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Activities", "Foo", "Bar"]
+        );
+
+        await editSelect(target, ".o_exported_lists_select", "");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Activities", "Foo", "Bar"],
+            "unselecting an export template has not changed the export list"
+        );
+        assert.containsNone(
+            target,
+            ".o_delete_exported_list",
+            "trash icon is not visible when no template has been selected"
+        );
+
+        await editSelect(target, ".o_exported_lists_select", "2");
+        assert.strictEqual(
+            target.querySelector(".o_exported_lists_select").selectedOptions[0].textContent,
+            "Export template",
+            "template name is displayed correctly"
         );
 
         await click(target, ".o_delete_exported_list");
@@ -566,6 +591,81 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target.querySelectorAll("input[name='o_export_format_name']")[2]);
         await click(target, ".o_import_compat input");
         await click(target, ".o_select_button");
+    });
+
+    QUnit.test("Export dialog: display on small screen after resize", async function (assert) {
+        const { execRegisteredTimeouts } = mockTimeout();
+        let ui = {
+            activateElement: () => {},
+            deactivateElement: () => {},
+            size: 4,
+        };
+        const fakeUIService = {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    get() {
+                        return ui.size === 2;
+                    },
+                });
+                return ui;
+            },
+        };
+
+        serviceRegistry.add("ui", fakeUIService);
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([
+                        { tag: "csv", label: "CSV" },
+                        { tag: "xls", label: "Excel" },
+                        { tag: "wow", label: "WOW" },
+                    ]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    if (args.prefix === "partner_ids") {
+                        assert.step("fetch fields for 'partner_ids'");
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        await click(target.querySelector(".modal .o_export_tree_item .o_add_field"));
+
+        ui.size = 2;
+        window.dispatchEvent(new Event("resize"));
+        execRegisteredTimeouts();
+
+        await nextTick();
+        assert.containsNone(
+            target,
+            ".o_export_field_sortable",
+            "exported fields can't be sorted by drag and drop"
+        );
+
+        ui.size = 4;
+        window.dispatchEvent(new Event("resize"));
+        execRegisteredTimeouts();
+
+        await nextTick();
+        assert.containsN(
+            target,
+            ".o_export_field_sortable",
+            2,
+            "exported fields can't be sorted by drag and drop"
+        );
     });
 
     QUnit.test("Direct export list", async function (assert) {
