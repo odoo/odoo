@@ -36,7 +36,6 @@ var PaymentAdyen = PaymentInterface.extend({
     // private methods
     _reset_state: function () {
         this.was_cancelled = false;
-        this.last_diagnosis_service_id = false;
         this.remaining_polls = 4;
         clearTimeout(this.polling);
     },
@@ -212,17 +211,8 @@ var PaymentAdyen = PaymentInterface.extend({
             return Promise.reject(data);
         }).then(function (status) {
             var notification = status.latest_response;
-            var last_diagnosis_service_id = status.last_received_diagnosis_id;
             var order = self.pos.get_order();
             var line = self.pending_adyen_line();
-
-
-            if (self.last_diagnosis_service_id != last_diagnosis_service_id) {
-                self.last_diagnosis_service_id = last_diagnosis_service_id;
-                self.remaining_polls = 2;
-            } else {
-                self.remaining_polls--;
-            }
 
             if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == self.most_recent_service_id) {
                 var response = notification.SaleToPOIResponse.PaymentResponse.Response;
@@ -271,10 +261,6 @@ var PaymentAdyen = PaymentInterface.extend({
                         reject();
                     }
                 }
-            } else if (self.remaining_polls <= 0) {
-                self._show_error(_t('The connection to your payment terminal failed. Please check if it is still connected to the internet.'));
-                self._adyen_cancel();
-                resolve(false);
             } else {
                 line.set_payment_status('waitingCard')
             }
