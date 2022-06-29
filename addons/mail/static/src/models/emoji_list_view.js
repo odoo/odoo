@@ -5,7 +5,7 @@ import { many, one } from '@mail/model/model_field';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'EmojiListView',
+    name: 'EmojiPickerView',
     identifyingFields: ['popoverViewOwner'],
     recordMethods: {
         /**
@@ -46,18 +46,18 @@ registerModel({
     fields: {
         emojiCategoryViews: many('EmojiCategoryView', {
             compute: '_computeEmojiCategoryViews',
-            inverse: 'emojiListView',
+            inverse: 'emojiPickerView',
             readonly: true,
             isCausal: true,
         }),
         emojiViews: many('EmojiView', {
             compute: '_computeEmojiViews',
-            inverse: 'emojiListView',
+            inverse: 'emojiPickerView',
             readonly: true,
             isCausal: true,
         }),
         popoverViewOwner: one('PopoverView', {
-            inverse: 'emojiListView',
+            inverse: 'emojiPickerView',
             readonly: true,
             required: true,
         }),
