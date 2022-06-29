@@ -11,7 +11,7 @@ import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constant
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, increment, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -31,7 +31,7 @@ const LivechatButton = Widget.extend({
     init(parent, messaging) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = _.defaults(this.messaging.publicLivechatOptions || {});
+        this.options = _.defaults(this.messaging.publicLivechatGlobal.options || {});
     },
     async willStart() {
         this.messaging.livechatButtonView.update({ widget: this });
@@ -106,6 +106,14 @@ const LivechatButton = Widget.extend({
         });
         if (hasAlreadyMessage) {
             return;
+        }
+        if (this.messaging.livechatButtonView.publicLivechat) {
+            this.messaging.livechatButtonView.publicLivechat.update({
+                messages: insert({
+                    id: data.id,
+                    legacyPublicLivechatMessage: message,
+                }),
+            });
         }
 
         if (this.messaging.livechatButtonView.publicLivechat && this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat) {
@@ -189,8 +197,8 @@ const LivechatButton = Widget.extend({
                 }
                 notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
-                if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom()) {
-                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._unreadCounter++;
+                if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow._thread._folded || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
+                    this.messaging.livechatButtonView.publicLivechat.update({ unreadCounter: increment() });
                 }
                 this._renderMessages();
                 return;
@@ -329,11 +337,11 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom();
+        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.legacyChatWindow._thread._folded && this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
         this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._messages = this.messaging.livechatButtonView.messages;
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+            this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
         }
     },
     /**
@@ -365,7 +373,7 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             });
     },
     /**

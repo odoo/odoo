@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadWidget from '@im_livechat/legacy/widgets/thread/thread';
+import PublicLivechatView from '@im_livechat/legacy/widgets/thread/thread';
 
 import config from 'web.config';
 import { _t, qweb } from 'web.core';
@@ -30,23 +30,19 @@ const PublicLivechatWindow = Widget.extend({
     },
     /**
      * @param {Widget} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
      */
-    init(parent, thread, options) {
+    init(parent, messaging, thread, options) {
         this._super(parent);
-
+        this.messaging = messaging;
         this.options = _.defaults(options || {}, {
-            autofocus: true,
-            displayStars: true,
-            displayReplyIcons: false,
-            displayNotificationIcons: false,
             placeholder: _t("Say something"),
         });
 
-        this._hidden = false;
         this._thread = thread;
 
         this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
@@ -60,26 +56,25 @@ const PublicLivechatWindow = Widget.extend({
         this.$header = this.$('.o_thread_window_header');
         const options = {
             displayMarkAsRead: false,
-            displayStars: this.options.displayStars,
         };
         if (this._thread && this._thread._type === 'document_thread') {
             options.displayDocumentLinks = false;
         }
-        this._threadWidget = new ThreadWidget(this, options);
+        this._publicLivechatView = new PublicLivechatView(this, this.messaging, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
-        if (this.isFolded()) {
+        if (this._thread._folded) {
             this.$el.css('height', this.HEIGHT_FOLDED);
-        } else if (this.options.autofocus) {
+        } else {
             this._focusInput();
         }
         if (!config.device.isMobile) {
             const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
             this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        const def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(() => {
-            this._threadWidget.$el.on('scroll', this, this._debouncedOnScroll);
+        const def = this._publicLivechatView.replace(this.$('.o_thread_window_content')).then(() => {
+            this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
         if (this.options.headerBackgroundColor) {
@@ -88,27 +83,6 @@ const PublicLivechatWindow = Widget.extend({
         if (this.options.titleColor) {
             this.$('.o_thread_window_header').css('color', this.options.titleColor);
         }
-    },
-    /**
-     * @override
-     */
-    do_hide() {
-        this._hidden = true;
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    do_show() {
-        this._hidden = false;
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    do_toggle(display) {
-        this._hidden = _.isBoolean(display) ? !display : !this._hidden;
-        this._super(...arguments);
     },
 
 
@@ -123,51 +97,6 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * Get the title of the thread window, which usually contains the name of
-     * the thread.
-     *
-     * @returns {string}
-     */
-    getTitle() {
-        return this._thread._name;
-    },
-    /**
-     * Get the unread counter of the related thread. If there are no thread
-     * linked to this window, returns 0.
-     *
-     * @returns {integer}
-     */
-    getUnreadCounter() {
-        return this._thread._unreadCounter;
-    },
-    /**
-     * Tells whether the bottom of the thread in the thread window is visible
-     * or not.
-     *
-     * @returns {boolean}
-     */
-    isAtBottom() {
-        return this._threadWidget.isAtBottom();
-    },
-    /**
-     * State whether the related thread is folded or not. If there are no
-     * thread related to this window, it means this is the "blank" thread
-     * window, therefore we use the internal folded state.
-     *
-     * @returns {boolean}
-     */
-    isFolded() {
-        return this._thread._folded;
-    },
-    /**
-     * States whether the thread window is hidden or not.
-     *
-     * @returns {boolean}
-     */
-    isHidden() {
-        return this._hidden;
-    },
-    /**
      * States whether the current environment is in mobile or not. This is
      * useful in order to customize the template rendering for mobile view.
      *
@@ -177,20 +106,11 @@ const PublicLivechatWindow = Widget.extend({
         return config.device.isMobile;
     },
     /**
-     * States whether the input of the thread window should be displayed or not.
-     * By default, any thread window with a thread needs a composer.
-     *
-     * @returns {boolean}
-     */
-    needsComposer() {
-        return true;
-    },
-    /**
      * Render the thread window
      */
     render() {
         this.renderHeader();
-        this._threadWidget.render(this._thread, { displayLoadMore: false });
+        this._publicLivechatView.render(this._thread, { displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
@@ -200,9 +120,15 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     renderHeader() {
-        const options = this._getHeaderRenderingOptions();
         this.$header.html(
-            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', options));
+            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
+                status: this._thread._status,
+                thread: this._thread,
+                title: this._thread._name,
+                unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
+                widget: this,
+            })
+        );
     },
     /**
      * Replace the thread content with provided new content
@@ -210,13 +136,7 @@ const PublicLivechatWindow = Widget.extend({
      * @param {$.Element} $element
      */
     replaceContentWith($element) {
-        $element.replace(this._threadWidget.$el);
-    },
-    /**
-     * Scroll to the bottom of the thread in the thread window
-     */
-    scrollToBottom() {
-        this._threadWidget.scrollToBottom();
+        $element.replace(this._publicLivechatView.$el);
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -230,7 +150,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this.isFolded();
+            folded = !this._thread._folded;
         }
         this._updateThreadFoldState(folded);
         this.trigger_up('save_chat_window');
@@ -242,13 +162,11 @@ const PublicLivechatWindow = Widget.extend({
      * that has been changed.
      */
     updateVisualFoldState() {
-        if (!this.isFolded()) {
-            this._threadWidget.scrollToBottom();
-            if (this.options.autofocus) {
-                this._focusInput();
-            }
+        if (!this._thread._folded) {
+            this._publicLivechatView.scrollToBottom();
+            this._focusInput();
         }
-        const height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        const height = this._thread._folded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
         this.$el.css({ height });
     },
 
@@ -273,21 +191,6 @@ const PublicLivechatWindow = Widget.extend({
         this.$input.focus();
     },
     /**
-     * Returns the options used by the rendering of the window's header
-     *
-     * @private
-     * @returns {Object}
-     */
-    _getHeaderRenderingOptions() {
-        return {
-            status: this._thread._status,
-            thread: this._thread,
-            title: this.getTitle(),
-            unreadCounter: this.getUnreadCounter(),
-            widget: this,
-        };
-    },
-    /**
      * Tells whether there is focus on this thread. Note that a thread that has
      * the focus means the input has focus.
      *
@@ -308,7 +211,7 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('post_message_chat_window', { messageData });
         this._thread.postMessage(messageData)
             .then(() => {
-                this._threadWidget.scrollToBottom();
+                this._publicLivechatView.scrollToBottom();
             });
     },
     /**
@@ -340,8 +243,8 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this._thread._unreadCounter > 0 &&
-            !this.isFolded()
+            this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
+            !this._thread._folded
         ) {
             this._thread.markAsRead();
         }
@@ -419,7 +322,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onScroll() {
-        if (this.isAtBottom()) {
+        if (this._publicLivechatView.isAtBottom()) {
             this._thread.markAsRead();
         }
     },

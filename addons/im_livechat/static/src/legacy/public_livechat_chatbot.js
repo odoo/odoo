@@ -7,7 +7,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, increment, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -59,8 +59,7 @@ const QWeb = core.qweb;
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
                 this.messaging.livechatButtonView.update({ sessionCookie });
-                if (localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey)) {
-                    this.messaging.livechatButtonView.update({ isChatbot: true });
+                if (localStorage.getItem(this.messaging.livechatButtonView.chatbotSessionCookieKey)) {
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
             }
@@ -108,8 +107,8 @@ const QWeb = core.qweb;
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this._addMessage(message, options);
-        if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom()) {
-            this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._unreadCounter++;
+        if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow._thread._folded || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
+            this.messaging.livechatButtonView.publicLivechat.update({ unreadCounter: increment() });
         }
 
         if (!options || !options.skipRenderMessages) {
@@ -357,13 +356,13 @@ const QWeb = core.qweb;
         if (browserLocalStorage && browserLocalStorage.length) {
             for (let i = 0; i < browserLocalStorage.length; i++) {
                 const key = browserLocalStorage.key(i);
-                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.sessionCookieKey) {
+                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.chatbotSessionCookieKey) {
                     browserLocalStorage.removeItem(key);
                 }
             }
         }
 
-        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey);
+        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.chatbotSessionCookieKey);
 
         if (chatbotState) {
             this.messaging.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.livechatButtonView.localStorageChatbotState._chatbotCurrentStep }) });
@@ -408,7 +407,7 @@ const QWeb = core.qweb;
                     }))
                 );
 
-                this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             }, this.messaging.livechatButtonView.chatbot.messageDelay / 3),
         });
     },
@@ -599,7 +598,7 @@ const QWeb = core.qweb;
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
                 if (this.messaging.livechatButtonView.chatWindow) {
-                    this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                    this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
                 }
             });
 
