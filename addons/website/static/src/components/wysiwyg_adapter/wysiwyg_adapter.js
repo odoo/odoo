@@ -206,6 +206,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             sideAttach: true,
             isWebsite: true, // If set to true, it will trigger isolated behaviours in website patches. (.include)
             powerboxCommands: this._getSnippetsCommands(),
+            bindLinkTool: true,
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
             ...this.props.wysiwygOptions,
