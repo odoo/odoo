@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
+import { useDebounced } from "@web/core/utils/timing";
 
-const { Component, useRef, useState, onWillStart } = owl;
+const { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } = owl;
 
 class DeleteExportListDialog extends Component {
     async onDelete() {
@@ -71,6 +73,7 @@ export class ExportDataDialog extends Component {
             search: [],
             selectedFormat: 0,
             templateId: null,
+            isSmall: this.env.isSmall,
         });
 
         this.title = this.env._t("Export Data");
@@ -78,10 +81,13 @@ export class ExportDataDialog extends Component {
         this.removeFieldText = this.env._t("Remove field");
         this.expandText = this.env._t("Show sub-fields");
 
+        this.debouncedOnResize = useDebounced(this.updateSize, 300);
+
         useSortable({
             // Params
             ref: this.draggableRef,
             elements: ".o_export_field",
+            enable: !this.state.isSmall,
             cursor: "grabbing",
             // Hooks
             onDrop: async ({ element, previous, next }) => {
@@ -114,6 +120,13 @@ export class ExportDataDialog extends Component {
             });
             await this.fetchFields();
         });
+
+        onMounted(() => {
+            browser.addEventListener("resize", this.debouncedOnResize);
+            this.updateSize();
+        });
+
+        onWillUnmount(() => browser.removeEventListener("resize", this.debouncedOnResize));
     }
 
     get fieldsAvailable() {
@@ -129,6 +142,10 @@ export class ExportDataDialog extends Component {
 
     get rootFields() {
         return this.fieldsAvailable.filter(({ parent }) => !parent);
+    }
+
+    updateSize() {
+        this.state.isSmall = this.env.isSmall;
     }
 
     /**
@@ -167,11 +184,10 @@ export class ExportDataDialog extends Component {
 
     async loadExportList(value) {
         this.state.templateId = value;
-        if (value === "new_template") {
-            this.state.isEditingTemplate = true;
+        this.state.isEditingTemplate = value === "new_template";
+        if (!value || value === "new_template") {
             return;
         }
-        this.state.isEditingTemplate = false;
         const fields = await this.rpc("/web/export/namelist", {
             model: this.props.root.resModel,
             export_id: Number(value),
