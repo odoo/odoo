@@ -240,7 +240,6 @@ class AccountMove(models.Model):
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
 
-
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.company_id.account_fiscal_country_id.code == "AR" and self.l10n_latam_use_documents:
