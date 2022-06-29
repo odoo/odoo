@@ -56,6 +56,9 @@ export async function startWebClient(Webclient) {
     if (env.services.user.userId === 1) {
         classList.add("o_is_superuser");
     }
+    if (env.debug) {
+        classList.add("o_debug");
+    }
     // delete odoo.debug; // FIXME: some legacy code rely on this
     odoo.__WOWL_DEBUG__ = { root };
     odoo.isReady = true;
