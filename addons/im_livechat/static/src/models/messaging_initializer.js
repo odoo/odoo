@@ -10,7 +10,7 @@ patchRecordMethods('MessagingInitializer', {
      * @override
      */
     async performInitRpc() {
-        if (this.messaging.isInPublicLivechat) {
+        if (this.messaging.publicLivechatGlobal) {
             return {};
         } else {
             return this._super();

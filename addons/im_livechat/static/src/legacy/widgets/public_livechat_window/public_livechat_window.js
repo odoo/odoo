@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadWidget from '@im_livechat/legacy/widgets/thread/thread';
+import PublicLivechatView from '@im_livechat/legacy/widgets/thread/thread';
 
 import config from 'web.config';
 import { _t, qweb } from 'web.core';
@@ -30,14 +30,15 @@ const PublicLivechatWindow = Widget.extend({
     },
     /**
      * @param {Widget} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
      */
-    init(parent, thread, options) {
+    init(parent, messaging, thread, options) {
         this._super(parent);
-
+        this.messaging = messaging;
         this.options = _.defaults(options || {}, {
             autofocus: true,
             displayStars: true,
@@ -65,7 +66,7 @@ const PublicLivechatWindow = Widget.extend({
         if (this._thread && this._thread._type === 'document_thread') {
             options.displayDocumentLinks = false;
         }
-        this._threadWidget = new ThreadWidget(this, options);
+        this._publicLivechatView = new PublicLivechatView(this, this.messaging, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
@@ -78,8 +79,8 @@ const PublicLivechatWindow = Widget.extend({
             const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
             this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        const def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(() => {
-            this._threadWidget.$el.on('scroll', this, this._debouncedOnScroll);
+        const def = this._publicLivechatView.replace(this.$('.o_thread_window_content')).then(() => {
+            this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
         if (this.options.headerBackgroundColor) {
@@ -138,7 +139,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {integer}
      */
     getUnreadCounter() {
-        return this._thread._unreadCounter;
+        return this.messaging.livechatButtonView.publicLivechat.unreadCounter;
     },
     /**
      * Tells whether the bottom of the thread in the thread window is visible
@@ -147,7 +148,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {boolean}
      */
     isAtBottom() {
-        return this._threadWidget.isAtBottom();
+        return this._publicLivechatView.isAtBottom();
     },
     /**
      * State whether the related thread is folded or not. If there are no
@@ -190,7 +191,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     render() {
         this.renderHeader();
-        this._threadWidget.render(this._thread, { displayLoadMore: false });
+        this._publicLivechatView.render(this._thread, { displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
@@ -210,13 +211,13 @@ const PublicLivechatWindow = Widget.extend({
      * @param {$.Element} $element
      */
     replaceContentWith($element) {
-        $element.replace(this._threadWidget.$el);
+        $element.replace(this._publicLivechatView.$el);
     },
     /**
      * Scroll to the bottom of the thread in the thread window
      */
     scrollToBottom() {
-        this._threadWidget.scrollToBottom();
+        this._publicLivechatView.scrollToBottom();
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -243,7 +244,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     updateVisualFoldState() {
         if (!this.isFolded()) {
-            this._threadWidget.scrollToBottom();
+            this._publicLivechatView.scrollToBottom();
             if (this.options.autofocus) {
                 this._focusInput();
             }
@@ -308,7 +309,7 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('post_message_chat_window', { messageData });
         this._thread.postMessage(messageData)
             .then(() => {
-                this._threadWidget.scrollToBottom();
+                this._publicLivechatView.scrollToBottom();
             });
     },
     /**
@@ -340,7 +341,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this._thread._unreadCounter > 0 &&
+            this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
             !this.isFolded()
         ) {
             this._thread.markAsRead();
