@@ -360,6 +360,10 @@ export class KanbanRecord extends Component {
         return luxon;
     }
 
+    get JSON() {
+        return JSON;
+    }
+
     get read_only_mode() {
         return this.props.readonly;
     }
