@@ -98,7 +98,7 @@ QUnit.module("Board", (hooks) => {
     QUnit.module("Add to dashboard");
 
     QUnit.test("save actions to dashboard", async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         serverData.models.partner.fields.foo.sortable = true;
 
@@ -115,19 +115,16 @@ QUnit.module("Board", (hooks) => {
                     ["foo"],
                     "The group_by should have been saved"
                 );
-                // FIXME WOWL
-                // skip this assertion for now, because the list view does not
-                // keep the order after grouping (not yet, this is a bug)
-                // assert.deepEqual(
-                //     args.context_to_save.orderedBy,
-                //     [
-                //         {
-                //             name: "foo",
-                //             asc: true,
-                //         },
-                //     ],
-                //     "The orderedBy should have been saved"
-                // );
+                assert.deepEqual(
+                    args.context_to_save.orderedBy,
+                    [
+                        {
+                            name: "foo",
+                            asc: true,
+                        },
+                    ],
+                    "The orderedBy should have been saved"
+                );
                 assert.strictEqual(
                     args.context_to_save.fire,
                     "on the bayou",
