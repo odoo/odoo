@@ -49,10 +49,10 @@ class ProductTemplate(models.Model):
             if not product.service_policy and product.type == 'service':
                 product.service_policy = 'ordered_prepaid'
 
-    @api.depends('service_tracking', 'service_policy', 'type')
+    @api.depends('service_tracking', 'service_policy', 'type', 'sale_ok')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
-        for record in self.filtered(lambda record: record.type == 'service'):
+        for record in self.filtered(lambda record: record.type == 'service' and record.sale_ok):
             if record.service_policy == 'ordered_prepaid':
                 if record.service_tracking == 'no':
                     record.product_tooltip = _(

@@ -64,7 +64,7 @@
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
                                     <field name="detailed_type"/>
-                                    <field name="product_tooltip" string="" class="fst-italic text-muted"/>
+                                    <field name="product_tooltip" string="" class="fst-italic text-muted" attrs="{'invisible': [('type', '=', 'service'), ('sale_ok', '=', False)]}"/>
                                     <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
