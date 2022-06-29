@@ -11,6 +11,14 @@ import { toStringExpression } from "@web/views/utils";
 import { isTextNode, ViewCompiler } from "@web/views/view_compiler";
 import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
 
+/**
+ * @typedef {Object} DropdownDef
+ * @property {Element} el
+ * @property {boolean} inserted
+ * @property {boolean} shouldInsert
+ * @property {("dropdown" | "toggler" | "menu")[]} parts
+ */
+
 const INTERP_REGEXP = /\{\{.*?\}\}|#\{.*?\}/g;
 
 const ACTION_TYPES = ["action", "object"];
@@ -24,6 +32,7 @@ function isValidCard(el) {
     return getTag(el, true) !== "t" || el.hasAttribute("t-component");
 }
 
+let currentDropdownId = 1;
 export class KanbanCompiler extends ViewCompiler {
     setup() {
         this.ctx.readonly = "read_only_mode";
@@ -36,36 +45,65 @@ export class KanbanCompiler extends ViewCompiler {
                 doNotCopyAttributes: true,
             },
             {
-                selector: ".dropdown-toggle,.o_kanban_manage_toggle_button",
-                fn: this.compileDropdownButton,
-                doNotCopyAttributes: true,
-            },
-            {
                 selector: ".dropdown-menu",
                 fn: this.compileDropdownMenu,
                 doNotCopyAttributes: true,
             },
+            {
+                selector: ".dropdown-toggle,.o_kanban_manage_toggle_button",
+                fn: this.compileDropdownToggler,
+                doNotCopyAttributes: true,
+            },
             { selector: "t[t-call]", fn: this.compileTCall }
         );
-        this.dropdown = null;
+        /** @type {Record<number, DropdownDef>} */
+        this.dropdowns = {};
     }
 
     /**
-     * Renders a Dropdown component node, or nothing if one has already been rendered.
-     * This means that the first method to define a dropdown, dropdown toggler or
-     * dropdown menu will be the place the dropdown component will be inserted.
+     * Renders a Dropdown component node definition object. It works as follows:
      *
-     * @returns {Element | null}
+     * The first time a node defining a dropdown component or component slot (dropdown
+     * root, toggler or default=menu), a new dropdown object will be generated,
+     * taking note of what parts have already been defined.
+     *
+     * It also creates the Dropdown component node that will be inserted in the
+     * template, at the position of the first node defining either the root dropdown
+     * or the dropdown toggler.
+     *
+     * Each next component or slot still not defined on the current dropdown object
+     * will be added to it.
+     *
+     * If a duplicate part or component is found, a new dropdown object is created
+     * and set as the new current dropdown.
+     *
+     * @param {"dropdown" | "toggler" | "menu"} part
+     * @returns {DropdownDef}
      */
-    renderDropdown() {
-        if (this.dropdown) {
-            return null;
+    renderDropdown(part) {
+        if (!this.dropdowns[currentDropdownId]) {
+            this.dropdowns[currentDropdownId] = {
+                parts: [],
+                inserted: false,
+                shouldInsert: false,
+                el: createElement("Dropdown", {
+                    class: toStringExpression("o_dropdown_kanban"),
+                    position: toStringExpression("bottom-end"),
+                }),
+            };
         }
-        this.dropdown = createElement("Dropdown", {
-            position: toStringExpression("bottom-end"),
-        });
-        this.dropdown.setAttribute("class", "'o_dropdown_kanban'");
-        return this.dropdown;
+        const dropdown = this.dropdowns[currentDropdownId];
+        if (dropdown.parts.includes(part)) {
+            // Duplicate part: generate new dropdown
+            currentDropdownId++;
+            return this.renderDropdown(part);
+        }
+        dropdown.parts.push(part);
+        if (part !== "menu") {
+            dropdown.shouldInsert = !dropdown.inserted;
+            dropdown.inserted = true;
+        }
+        return dropdown;
     }
 
     //-----------------------------------------------------------------------------
@@ -181,36 +219,16 @@ export class KanbanCompiler extends ViewCompiler {
      * @returns {Element | null}
      */
     compileDropdown(el, params) {
-        const dropdownEl = this.renderDropdown();
+        const { shouldInsert, el: dropdownEl } = this.renderDropdown("dropdown");
         const classes = [...el.classList].filter((cls) => cls && cls !== "dropdown").join(" ");
 
-        combineAttributes(this.dropdown, "class", toStringExpression(classes), "+' '+");
+        combineAttributes(dropdownEl, "class", toStringExpression(classes), "+' '+");
 
         for (const child of el.childNodes) {
-            append(this.dropdown, this.compileNode(child, params));
+            append(dropdownEl, this.compileNode(child, params));
         }
 
-        return dropdownEl;
-    }
-
-    /**
-     * @param {Element} el
-     * @param {Object} params
-     * @returns {Element | null}
-     */
-    compileDropdownButton(el, params) {
-        const dropdownEl = this.renderDropdown();
-        const classes = ["btn", ...el.classList].filter(Boolean).join(" ");
-        const togglerSlot = createElement("t", { "t-set-slot": "toggler" });
-
-        combineAttributes(this.dropdown, "togglerClass", toStringExpression(classes), "+' '+");
-
-        for (const child of el.childNodes) {
-            append(togglerSlot, this.compileNode(child, params));
-        }
-        append(this.dropdown, togglerSlot);
-
-        return dropdownEl;
+        return shouldInsert && dropdownEl;
     }
 
     /**
@@ -219,16 +237,36 @@ export class KanbanCompiler extends ViewCompiler {
      * @returns {Element | null}
      */
     compileDropdownMenu(el, params) {
-        const dropdownEl = this.renderDropdown();
+        const { shouldInsert, el: dropdownEl } = this.renderDropdown("menu");
         const cls = el.getAttribute("class") || "";
 
-        combineAttributes(this.dropdown, "menuClass", toStringExpression(cls), "+' '+");
+        combineAttributes(dropdownEl, "menuClass", toStringExpression(cls), "+' '+");
 
         for (const child of el.childNodes) {
-            append(this.dropdown, this.compileNode(child, params));
+            append(dropdownEl, this.compileNode(child, params));
         }
 
-        return dropdownEl;
+        return shouldInsert && dropdownEl;
+    }
+
+    /**
+     * @param {Element} el
+     * @param {Object} params
+     * @returns {Element | null}
+     */
+    compileDropdownToggler(el, params) {
+        const { shouldInsert, el: dropdownEl } = this.renderDropdown("toggler");
+        const classes = ["btn", ...el.classList].filter(Boolean).join(" ");
+        const togglerSlot = createElement("t", { "t-set-slot": "toggler" });
+
+        combineAttributes(dropdownEl, "togglerClass", toStringExpression(classes), "+' '+");
+
+        for (const child of el.childNodes) {
+            append(togglerSlot, this.compileNode(child, params));
+        }
+        append(dropdownEl, togglerSlot);
+
+        return shouldInsert && dropdownEl;
     }
 
     /**
