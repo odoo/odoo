@@ -4,7 +4,7 @@ import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from '@web/legacy/legacy_component';
 
-export class EmojiList extends LegacyComponent {
+export class EmojiPickerView extends LegacyComponent {
 
     /**
      * @override
@@ -14,7 +14,7 @@ export class EmojiList extends LegacyComponent {
         useUpdate({ func: () => this._update() });
     }
 
-    get emojiListView() {
+    get emojiPickerView() {
         return this.props.record;
     }
 
@@ -49,9 +49,9 @@ export class EmojiList extends LegacyComponent {
 
 }
 
-Object.assign(EmojiList, {
+Object.assign(EmojiPickerView, {
     props: { record: Object },
-    template: 'mail.EmojiList',
+    template: 'mail.EmojiPickerView',
 });
 
-registerMessagingComponent(EmojiList);
+registerMessagingComponent(EmojiPickerView);

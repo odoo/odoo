@@ -64,7 +64,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     await click(`.o_Composer_buttonEmojis`);
     assert.containsOnce(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be opened after click on emojis button"
     );
 
@@ -74,7 +74,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be closed after pressing escape on emojis button"
     );
     assert.containsOnce(
@@ -282,14 +282,14 @@ QUnit.test('reply: discard on click away', async function (assert) {
     await click(`.o_Composer_buttonEmojis`);
     assert.containsOnce(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be opened after clicking on emojis button"
     );
 
     await click(`.o_Emoji`);
     assert.containsNone(
         document.body,
-        '.o_EmojiList',
+        '.o_EmojiPickerView',
         "emoji list should be closed after selecting an emoji"
     );
     assert.containsOnce(
