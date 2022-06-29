@@ -1692,8 +1692,9 @@ class Task(models.Model):
                 )
                 if partner_id:
                     vals['partner_id'] = partner_id
-        if vals.get('project_id'):
-            project = self.env['project.project'].browse(vals.get('project_id'))
+        project_id = vals.get('project_id', self.env.context.get('default_project_id'))
+        if project_id:
+            project = self.env['project.project'].browse(project_id)
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
             if project.analytic_tag_ids:
