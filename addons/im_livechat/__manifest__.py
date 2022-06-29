@@ -54,7 +54,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/services/*.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
-            'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
         ],
@@ -77,7 +76,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
-            'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
@@ -189,7 +187,6 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
-            'im_livechat/static/src/legacy/public_livechat_message_chatbot.js',
 
             ('include', 'web._assets_helpers'),
 

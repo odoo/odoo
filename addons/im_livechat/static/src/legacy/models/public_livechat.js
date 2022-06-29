@@ -16,8 +16,8 @@ import { sprintf } from 'web.utils';
  */
 const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     /**
-     * @override
      * @private
+     * @param {Messaging} messaging
      * @param {Object} params
      * @param {Object} params.data
      * @param {boolean} [params.data.folded] states whether the livechat is
@@ -34,15 +34,15 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {string} params.data.uuid the UUID of this livechat.
      * @param {@im_livechat/legacy/widgets/livechat_button} params.parent
      */
-    init(params) {
+    init(messaging, params) {
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(params.parent);
+        this.messaging = messaging;
 
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
         this._name = params.data.name;
         this._status = params.data.status || '';
-        this._unreadCounter = 0; // amount of messages not yet been read
 
         /**
          * Initialize the internal data for typing feature on threads.
@@ -123,7 +123,9 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this._uuid = params.data.uuid;
 
         if (params.data.message_unread_counter !== undefined) {
-            this._unreadCounter = params.data.message_unread_counter;
+            this.messaging.livechatButtonView.publicLivechat.update({
+                unreadCounter: params.data.message_unread_counter
+            });
         }
 
         if (_.isBoolean(params.data.folded)) {
@@ -232,8 +234,8 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise}
      */
     markAsRead() {
-        if (this._unreadCounter > 0) {
-            this._unreadCounter = 0;
+        if (this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0) {
+            this.messaging.livechatButtonView.publicLivechat.update({ unreadCounter: 0 });
             this.trigger_up('updated_unread_counter');
             return Promise.resolve();
         }
@@ -302,7 +304,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         return {
             folded: this._folded,
             id: this._id,
-            message_unread_counter: this._unreadCounter,
+            message_unread_counter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
             operator_pid: this._operatorPID,
             name: this._name,
             uuid: this._uuid,
