@@ -41,10 +41,10 @@ class ProductTemplate(models.Model):
                 product_template.visible_expense_policy = visibility
         return super(ProductTemplate, self)._compute_visible_expense_policy()
 
-    @api.depends('service_tracking', 'service_policy', 'type')
+    @api.depends('service_tracking', 'service_policy', 'type', 'sale_ok')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
-        for record in self.filtered(lambda record: record.type == 'service'):
+        for record in self.filtered(lambda record: record.type == 'service' and record.sale_ok):
             if record.service_policy == 'delivered_timesheet':
                 if record.service_tracking == 'no':
                     record.product_tooltip = _(
