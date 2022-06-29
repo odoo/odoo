@@ -576,8 +576,8 @@ class TestReorderingRule(TransactionCase):
             ])],
         })
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env['ir.translation']._set_ids('product.template,name', 'model', 'fr_FR', product.product_tmpl_id.ids, 'produit en français')
-        self.env['ir.translation']._set_ids('product.product,name', 'model', 'fr_FR', product.ids, 'produit en français')
+        product.product_tmpl_id.with_context(lang='fr_FR').name = 'produit en français'
+        product.with_context(lang='fr_FR').name = 'produit en français'
         default_vendor = self.env["res.partner"].create({
             "name": "Supplier A",
         })
