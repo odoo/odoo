@@ -412,6 +412,9 @@ class Article(models.Model):
     @api.depends_context('uid')
     @api.depends('favorite_ids.user_id')
     def _compute_is_user_favorite(self):
+        if self.env.user._is_public():
+            self.is_user_favorite = False
+            return
         for article in self:
             favorite = article.favorite_ids.filtered(lambda f: f.user_id == self.env.user)
             article.is_user_favorite = bool(favorite)
