@@ -297,7 +297,7 @@
         <field name="inherit_id" ref="stock.view_move_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="after">
-                <field name="batch_id" optional="show"/>
+                <field name="batch_id" optional="hide"/>
             </xpath>
         </field>
     </record>
