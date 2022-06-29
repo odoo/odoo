@@ -5,14 +5,14 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiView',
-    identifyingFields: ['emoji', 'emojiListView'],
+    identifyingFields: ['emoji', 'emojiPickerView'],
     fields: {
         emoji: one('Emoji', {
             inverse: 'emojiViews',
             readonly: true,
             required: true,
         }),
-        emojiListView: one('EmojiListView', {
+        emojiPickerView: one('EmojiPickerView', {
             inverse: 'emojiViews',
             readonly: true,
             required: true,
