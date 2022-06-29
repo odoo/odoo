@@ -13,14 +13,14 @@ registerModel({
          * @returns {string}
          */
         _computeButtonBackgroundColor() {
-            return this.messaging.publicLivechatOptions.button_background_color;
+            return this.messaging.publicLivechatGlobal.options.button_background_color;
         },
         /**
          * @returns {string}
          */
         _computeButtonText() {
-            if (this.messaging.publicLivechatOptions.button_text) {
-                return this.messaging.publicLivechatOptions.button_text;
+            if (this.messaging.publicLivechatGlobal.options.button_text) {
+                return this.messaging.publicLivechatGlobal.options.button_text;
             }
             return this.env._t("Chat with one of our collaborators");
         },
@@ -28,14 +28,14 @@ registerModel({
          * @returns {string}
          */
         _computeButtonTextColor() {
-            return this.messaging.publicLivechatOptions.button_text_color;
+            return this.messaging.publicLivechatGlobal.options.button_text_color;
         },
         /**
          * @private
          * @returns {integer}
          */
         _computeChannelId() {
-            return this.messaging.publicLivechatOptions.channel_id;
+            return this.messaging.publicLivechatGlobal.options.channel_id;
         },
         /**
          * @private
@@ -84,18 +84,18 @@ registerModel({
          * @returns {integer}
          */
         _computeCurrentPartnerId() {
-            if (!this.messaging.isPublicLivechatAvailable) {
+            if (!this.messaging.publicLivechatGlobal.isAvailable) {
                 return clear();
             }
-            return this.messaging.publicLivechatOptions.current_partner_id;
+            return this.messaging.publicLivechatGlobal.options.current_partner_id;
         },
         /**
         * @private
         * @returns {string}
         */
         _computeDefaultMessage() {
-            if (this.messaging.publicLivechatOptions.default_message) {
-                return this.messaging.publicLivechatOptions.default_message;
+            if (this.messaging.publicLivechatGlobal.options.default_message) {
+                return this.messaging.publicLivechatGlobal.options.default_message;
             }
             return this.env._t("How may I help you?");
         },
@@ -104,8 +104,8 @@ registerModel({
          * @returns {string}
          */
         _computeDefaultUsername() {
-            if (this.messaging.publicLivechatOptions.default_username) {
-                return this.messaging.publicLivechatOptions.default_username;
+            if (this.messaging.publicLivechatGlobal.options.default_username) {
+                return this.messaging.publicLivechatGlobal.options.default_username;
             }
             return this.env._t("Visitor");
         },
@@ -114,7 +114,7 @@ registerModel({
          * @returns {string}
          */
         _computeHeaderBackgroundColor() {
-            return this.messaging.publicLivechatOptions.header_background_color;
+            return this.messaging.publicLivechatGlobal.options.header_background_color;
         },
         /**
          * @private
@@ -126,8 +126,8 @@ registerModel({
                 // as we use it for specific things (e.g: showing "please select an option above")
                 return clear();
             }
-            if (this.messaging.publicLivechatOptions.input_placeholder) {
-                return this.messaging.publicLivechatOptions.input_placeholder;
+            if (this.messaging.publicLivechatGlobal.options.input_placeholder) {
+                return this.messaging.publicLivechatGlobal.options.input_placeholder;
             }
             return this.env._t("Ask something ...");
         },
@@ -161,7 +161,7 @@ registerModel({
             if (!this.sessionCookie) {
                 return clear();
             }
-            const data = localStorage.getItem(this.sessionCookieKey);
+            const data = localStorage.getItem(this.chatbotSessionCookieKey);
             if (!data) {
                 return clear();
             }
@@ -173,14 +173,14 @@ registerModel({
          */
         _computeServerUrl() {
             if (this.isChatbot) {
-                return this.messaging.publicLivechatServerUrlChatbot;
+                return this.messaging.publicLivechatGlobal.chatbotServerUrl;
             }
-            return this.messaging.publicLivechatServerUrl;
+            return this.messaging.publicLivechatGlobal.serverUrl;
         },
         /**
          * @returns {string|FieldCommand}
          */
-        _computeSessionCookieKey() {
+        _computeChatbotSessionCookieKey() {
             if (!this.sessionCookie) {
                 return clear();
             }
@@ -191,7 +191,7 @@ registerModel({
          * @returns {string}
          */
         _computeTitleColor() {
-            return this.messaging.publicLivechatOptions.title_color;
+            return this.messaging.publicLivechatGlobal.options.title_color;
         },
     },
     fields: {
@@ -212,6 +212,9 @@ registerModel({
             compute: '_computeChatbot',
             inverse: 'livechatButtonViewOwner',
             isCausal: true,
+        }),
+        chatbotSessionCookieKey: attr({
+            compute: '_computeChatbotSessionCookieKey',
         }),
         chatbotState: attr({
             compute: '_computeChatbotState',
@@ -272,9 +275,6 @@ registerModel({
             compute: '_computeServerUrl',
         }),
         sessionCookie: attr(),
-        sessionCookieKey: attr({
-            compute: '_computeSessionCookieKey',
-        }),
         testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',

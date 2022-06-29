@@ -127,12 +127,9 @@
         @param {Object} options
         @param {boolean} [options.displayAvatars]
         @param {boolean} [options.displayDocumentLinks]
-        @param {boolean} [options.displayNotificationIcons]
         @param {boolean} [options.displayMarkAsRead]
         @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
           the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
-        @param {boolean} [options.displayReplyIcons]
-        @param {boolean} [options.displayStars]
         @param {boolean} [options.displaySubjectsOnMessages]
         @param {boolean} options.hasMessageAttachmentDeletable
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
@@ -165,9 +162,6 @@
                 <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
                     <t t-esc="message.getDate().format('hh:mm')"/>
                 </span>
-                <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
-                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
-                    t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
             </div>
             <div class="o_thread_message_core">
                 <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
@@ -196,16 +190,7 @@
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread._id)">
                         (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">
-                        <span name="notification_icon" t-attf-class="d-inline-flex align-items-center o_thread_tooltip o_thread_message_notification {{ message.hasNotificationsError() ? 'o_thread_message_notification_error' : '' }}" t-att-data-message-id="message.getID()" t-att-data-message-type="message.getType()">
-                            <i t-att-class="message.getNotificationIcon()"/>
-                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="fw-bold ms-1"/>
-                        </span>
-                    </span>
                     <span t-attf-class="o_thread_icons">
-                       <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
-                           class="fa fa-reply o_thread_icon o_thread_message_reply"
-                           t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>

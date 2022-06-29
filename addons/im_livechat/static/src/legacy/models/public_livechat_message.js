@@ -52,6 +52,12 @@ const PublicLivechatMessage = Class.extend({
         });
         this._defaultUsername = options.default_username;
         this._serverURL = options.serverURL;
+
+        if (parent.messaging.livechatButtonView.isChatbot) {
+            this._chatbotStepId = data.chatbot_script_step_id;
+            this._chatbotStepAnswers = data.chatbot_step_answers;
+            this._chatbotStepAnswerId = data.chatbot_selected_answer_id;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -108,6 +114,24 @@ const PublicLivechatMessage = Class.extend({
      */
     getBody() {
         return this._body;
+    },
+    /**
+     * @return {string}
+     */
+    getChatbotStepId() {
+        return this._chatbotStepId;
+    },
+    /**
+     * @return {string}
+     */
+    getChatbotStepAnswers() {
+        return this._chatbotStepAnswers;
+    },
+    /**
+     * @return {string}
+     */
+    getChatbotStepAnswerId() {
+        return this._chatbotStepAnswerId;
     },
     /**
      * @return {moment}
@@ -407,6 +431,9 @@ const PublicLivechatMessage = Class.extend({
         this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
             return _.contains(attachmentIDs, attachment.id);
         });
+    },
+    setChatbotStepAnswerId(chatbotStepAnswerId) {
+        this._chatbotStepAnswerId = chatbotStepAnswerId;
     },
     /**
      * State whether this message should redirect to the author

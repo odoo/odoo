@@ -23,7 +23,7 @@ const READ_LESS = _lt("read less");
  * Any thread that extends mail.model.AbstractThread can be used with this
  * widget.
  */
-const ThreadWidget = Widget.extend({
+const PublicLivechatView = Widget.extend({
     className: 'o_mail_thread',
 
     events: {
@@ -48,10 +48,12 @@ const ThreadWidget = Widget.extend({
     /**
      * @override
      * @param {widget} parent
+     * @param {Messaging} messaging
      * @param {Object} options
      */
-    init(parent, options) {
+    init(parent, messaging, options) {
         this._super(...arguments);
+        this.messaging = messaging;
         this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
@@ -59,12 +61,9 @@ const ThreadWidget = Widget.extend({
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
             displayModerationCommands: false,
-            displayStars: true,
             displayDocumentLinks: true,
             displayAvatars: true,
             squashCloseMessages: true,
-            displayNotificationIcons: true,
-            displayReplyIcons: false,
             loadMoreOnScroll: false,
             hasMessageAttachmentDeletable: false,
         });
@@ -73,12 +72,9 @@ const ThreadWidget = Widget.extend({
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
             displayModerationCommands: false,
-            displayStars: false,
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
-            displayNotificationIcons: false,
-            displayReplyIcons: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
             hasMessageAttachmentDeletable: false,
         };
@@ -613,6 +609,6 @@ const ThreadWidget = Widget.extend({
     },
 });
 
-ThreadWidget.ORDER = ORDER;
+PublicLivechatView.ORDER = ORDER;
 
-export default ThreadWidget;
+export default PublicLivechatView;

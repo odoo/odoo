@@ -8,14 +8,14 @@
             <div class="o_thread_window_header">
                 <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
                     <t t-set="status" t-value="widget._thread._status"/>
-                    <t t-set="title" t-value="widget.getTitle()"/>
-                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                    <t t-set="title" t-value="widget._thread._name"/>
+                    <t t-set="unreadCounter" t-value="widget.messaging.livechatButtonView.publicLivechat.unreadCounter"/>
                     <t t-set="thread" t-value="widget._thread"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
             </div>
-            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
+            <div class="o_thread_composer o_chat_mini_composer">
                 <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>
