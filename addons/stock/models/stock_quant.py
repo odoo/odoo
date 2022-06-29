@@ -331,7 +331,6 @@ class StockQuant(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
-            ('product_id', '=', self.product_id.id),
             '|',
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
@@ -340,6 +339,8 @@ class StockQuant(models.Model):
                 ('package_id', '=', self.package_id.id),
                 ('result_package_id', '=', self.package_id.id),
         ]
+        action['context'] = literal_eval(action.get('context'))
+        action['context']['search_default_product_id'] = self.product_id.id
         return action
 
     def action_view_orderpoints(self):
@@ -433,9 +434,9 @@ class StockQuant(models.Model):
             'context': {
                 'search_default_inventory': 1,
                 'search_default_done': 1,
+                'search_default_product_id': self.product_id.id,
             },
             'domain': [
-                ('product_id', '=', self.product_id.id),
                 ('company_id', '=', self.company_id.id),
                 '|',
                     ('location_id', '=', self.location_id.id),
