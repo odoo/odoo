@@ -1819,8 +1819,9 @@ class Task(models.Model):
                 )
                 if partner_id:
                     vals['partner_id'] = partner_id
-        if vals.get('project_id'):
-            project = self.env['project.project'].browse(vals.get('project_id'))
+        project_id = vals.get('project_id', self.env.context.get('default_project_id'))
+        if project_id:
+            project = self.env['project.project'].browse(project_id)
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
             if project.analytic_tag_ids:
@@ -1902,6 +1903,9 @@ class Task(models.Model):
                 else:
                     for field_name in self._get_recurrence_fields() + ['recurring_task']:
                         vals.pop(field_name, None)
+            project_id = vals.get('project_id')
+            if project_id:
+                self = self.with_context(default_project_id=project_id)
         return super()._load_records_create(vals_list)
 
     @api.model_create_multi
