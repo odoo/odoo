@@ -424,8 +424,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # Mimic what is done by the calendar widget when clicking on a day. It
         # will take the local datetime from 0:00 to 23:59
         values = {
-            'date_from': local_date_from,
-            'date_to': local_date_to,  # note that this can be the next day in UTC
+            'date_from': tz.localize(local_date_from).astimezone(UTC).replace(tzinfo=None),
+            'date_to': tz.localize(local_date_to).astimezone(UTC).replace(tzinfo=None),  # note that this can be the next day in UTC
         }
         values.update(self.env['hr.leave'].with_user(self.user_employee_id)._default_get_request_parameters(values))
 
