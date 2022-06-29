@@ -3677,8 +3677,8 @@
         define(varName, expr) {
             this.addLine(`const ${varName} = ${expr};`);
         }
-        insertAnchor(block) {
-            const tag = `block-child-${block.children.length}`;
+        insertAnchor(block, index = block.children.length) {
+            const tag = `block-child-${index}`;
             const anchor = xmlDoc.createElement(tag);
             block.insert(anchor);
         }
@@ -4089,9 +4089,18 @@
             }
             this.insertBlock(blockStr, block, ctx);
         }
+        compileTIfBranch(content, block, ctx) {
+            this.target.indentLevel++;
+            let childN = block.children.length;
+            this.compileAST(content, createContext(ctx, { block, index: ctx.index }));
+            if (block.children.length > childN) {
+                // we have some content => need to insert an anchor at correct index
+                this.insertAnchor(block, childN);
+            }
+            this.target.indentLevel--;
+        }
         compileTIf(ast, ctx, nextNode) {
-            let { block, forceNewBlock, index } = ctx;
-            let currentIndex = index;
+            let { block, forceNewBlock } = ctx;
             const codeIdx = this.target.code.length;
             const isNewBlock = !block || (block.type !== "multi" && forceNewBlock);
             if (block) {
@@ -4101,28 +4110,16 @@
                 block = this.createBlock(block, "multi", ctx);
             }
             this.addLine(`if (${compileExpr(ast.condition)}) {`);
-            this.target.indentLevel++;
-            this.insertAnchor(block);
-            const subCtx = createContext(ctx, { block, index: currentIndex });
-            this.compileAST(ast.content, subCtx);
-            this.target.indentLevel--;
+            this.compileTIfBranch(ast.content, block, ctx);
             if (ast.tElif) {
                 for (let clause of ast.tElif) {
                     this.addLine(`} else if (${compileExpr(clause.condition)}) {`);
-                    this.target.indentLevel++;
-                    this.insertAnchor(block);
-                    const subCtx = createContext(ctx, { block, index: currentIndex });
-                    this.compileAST(clause.content, subCtx);
-                    this.target.indentLevel--;
+                    this.compileTIfBranch(clause.content, block, ctx);
                 }
             }
             if (ast.tElse) {
                 this.addLine(`} else {`);
-                this.target.indentLevel++;
-                this.insertAnchor(block);
-                const subCtx = createContext(ctx, { block, index: currentIndex });
-                this.compileAST(ast.tElse, subCtx);
-                this.target.indentLevel--;
+                this.compileTIfBranch(ast.tElse, block, ctx);
             }
             this.addLine("}");
             if (isNewBlock) {
@@ -5758,9 +5755,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-11';
-    __info__.date = '2022-06-28T13:35:43.224Z';
-    __info__.hash = '76c389a';
+    __info__.version = '2.0.0-beta-12';
+    __info__.date = '2022-06-29T09:13:44.802Z';
+    __info__.hash = '6c72e0a';
     __info__.url = 'https://github.com/odoo/owl';
 
 
