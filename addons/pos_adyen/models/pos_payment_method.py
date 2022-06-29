@@ -70,18 +70,11 @@ class PosPaymentMethod(models.Model):
     def get_latest_adyen_status(self, pos_config_name):
         self.ensure_one()
 
-        # Poll the status of the terminal if there's no new
-        # notification we received. This is done so we can quickly
-        # notify the user if the terminal is no longer reachable due
-        # to connectivity issues.
-        self.proxy_adyen_request(self._adyen_diagnosis_request_data(pos_config_name))
-
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
 
         return {
             'latest_response': latest_response,
-            'last_received_diagnosis_id': self.sudo().adyen_latest_diagnosis,
         }
 
     def proxy_adyen_request(self, data, operation=False):
