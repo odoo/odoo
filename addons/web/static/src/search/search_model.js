@@ -1738,6 +1738,11 @@ export class SearchModel extends EventBus {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
+        const gs = this.env.__getOrderBy__.callbacks;
+        let localOrderBy;
+        if (gs.length) {
+            localOrderBy = gs.flatMap((g) => g());
+        }
         const context = makeContext([this._getContext(), localContext]);
         const userContext = this.userService.context;
         for (const key in context) {
@@ -1749,7 +1754,7 @@ export class SearchModel extends EventBus {
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
         const comparison = this.getFullComparison();
-        const orderBy = this._getOrderBy();
+        const orderBy = localOrderBy || this._getOrderBy();
         const userId = isShared ? false : this.userService.userId;
 
         const preFavorite = {

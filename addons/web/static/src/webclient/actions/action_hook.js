@@ -59,6 +59,7 @@ export function useSetupAction(params = {}) {
         __getGlobalState__,
         __getLocalState__,
         __getContext__,
+        __getOrderBy__,
     } = component.env;
 
     const { beforeUnload, beforeLeave, getGlobalState, getLocalState, rootRef } = params;
@@ -149,5 +150,8 @@ export function useSetupAction(params = {}) {
     }
     if (__getContext__ && params.getContext) {
         useCallbackRecorder(__getContext__, params.getContext);
+    }
+    if (__getOrderBy__ && params.getOrderBy) {
+        useCallbackRecorder(__getOrderBy__, params.getOrderBy);
     }
 }

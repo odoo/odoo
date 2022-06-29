@@ -36,6 +36,7 @@ import {
     triggerHotkey,
 } from "../helpers/utils";
 import {
+    editFavoriteName,
     getButtons,
     getFacetTexts,
     getPagerLimit,
@@ -43,11 +44,13 @@ import {
     groupByMenu,
     pagerNext,
     pagerPrevious,
+    saveFavorite,
     toggleActionMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
+    toggleSaveFavorite,
     validateSearch,
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
@@ -1520,40 +1523,36 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("ordered target, sort attribute in context", async function (assert) {
-        // Equivalent to saving a custom filter
-        // FIXME WOWL: no it isn't
-
         serverData.models.foo.fields.foo.sortable = true;
         serverData.models.foo.fields.date.sortable = true;
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/><field name="date"/></tree>',
+            mockRPC: (route, args) => {
+                if (args.method === "create_or_replace") {
+                    const favorite = args.args[0];
+                    assert.step(favorite.sort);
+                    return 7;
+                }
+            },
         });
 
         // Descending order on Foo
-        await click($(target).find('th.o_column_sortable:contains("Foo")')[0]);
-        await click($(target).find('th.o_column_sortable:contains("Foo")')[0]);
+        await click(target, "th.o_column_sortable[data-name=foo]");
+        await click(target, "th.o_column_sortable[data-name=foo]");
 
         // Ascending order on Date
-        await click($(target).find('th.o_column_sortable:contains("Date")')[0]);
+        await click(target, "th.o_column_sortable[data-name=date]");
 
-        assert.deepEqual(
-            list.model.root.orderBy,
-            [
-                {
-                    name: "date",
-                    asc: true,
-                },
-                {
-                    name: "foo",
-                    asc: false,
-                },
-            ],
-            "the list should have the right orderedBy"
-        );
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite");
+        await saveFavorite(target);
+
+        assert.verifySteps(['["date","foo desc"]']);
     });
 
     QUnit.test("Loading a filter with a sort attribute", async function (assert) {
