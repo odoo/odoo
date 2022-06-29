@@ -2,7 +2,7 @@
 <odoo noupdate="1">
     <!-- ARTICLE -->
     <record id="rule_knowledge_article_users_read" model="ir.rule">
-        <field name="name">Articles: users/portal: published gives access</field>
+        <field name="name">Articles: users/portal: published gives read access</field>
         <field name="model_id" ref="knowledge.model_knowledge_article"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -12,7 +12,7 @@
     </record>
 
     <record id="rule_knowledge_article_public_users_read" model="ir.rule">
-        <field name="name">Articles: public: published gives access</field>
+        <field name="name">Articles: public: published gives read access</field>
         <field name="model_id" ref="knowledge.model_knowledge_article"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
