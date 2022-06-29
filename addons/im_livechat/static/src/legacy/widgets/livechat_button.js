@@ -11,7 +11,7 @@ import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constant
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -106,6 +106,14 @@ const LivechatButton = Widget.extend({
         });
         if (hasAlreadyMessage) {
             return;
+        }
+        if (this.messaging.livechatButtonView.publicLivechat) {
+            this.messaging.livechatButtonView.publicLivechat.update({
+                messages: insert({
+                    id: data.id,
+                    legacyPublicLivechatMessage: message,
+                }),
+            });
         }
 
         if (this.messaging.livechatButtonView.publicLivechat && this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat) {
