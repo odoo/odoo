@@ -9881,20 +9881,21 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: `
-                    <kanban>
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="foo"/>
-                                    <ul class="o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                        <li>Hello</li>
-                                    </ul>
-                                </div>
-                            </t>
-                        </templates>
-                    </kanban>
-                `,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                                <div class="dropdown" />
+                                <ul class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <li>Hello</li>
+                                </ul>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
         });
 
         const dropdown = target.querySelector(".o_kanban_record .o-dropdown");
@@ -9912,20 +9913,20 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: `
-                    <kanban>
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="foo"/>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#">
-                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
-                                    </a>
-                                </div>
-                            </t>
-                        </templates>
-                    </kanban>
-                `,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                                <a class="o_kanban_manage_toggle_button o_left" href="#">
+                                    <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                </a>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
         });
 
         const dropdown = target.querySelector(".o_kanban_record .o-dropdown");
@@ -9944,7 +9945,7 @@ QUnit.module("Views", (hooks) => {
                 type: "kanban",
                 resModel: "partner",
                 serverData,
-                arch: `
+                arch: /* xml */ `
                     <kanban>
                         <templates>
                             <t t-name="kanban-box">
@@ -9967,6 +9968,79 @@ QUnit.module("Views", (hooks) => {
             assert.notOk(dropdown.hasAttribute("placeholder"));
         }
     );
+
+    QUnit.test("declaring only the menu does not insert a dropdown", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                                <ul class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <li>Hello</li>
+                                </ul>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsNone(target, ".o_kanban_record .o-dropdown");
+    });
+
+    QUnit.test("support multiple dropdowns", async (assert) => {
+        assert.expect(4);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <field name="bar" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo" />
+                            <t t-if="record.bar.raw_value">
+                                <div class="dropdown dropdown-true">
+                                    <div class="dropdown-toggle">
+                                        <span class="toggler-true">TOGGLER TRUE</span>
+                                    </div>
+                                    <div class="dropdown-menu">
+                                        <span class="menu-true">MENU TRUE</span>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="dropdown-toggle">
+                                    <span class="toggler-false">TOGGLER FALSE</span>
+                                </div>
+                                <div class="dropdown-menu">
+                                    <span class="menu-false">MENU FALSE</span>
+                                </div>
+                            </t>
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsN(target, ".o_kanban_renderer .dropdown-true", 3);
+        assert.containsN(target, ".o_kanban_renderer .dropdown", 4);
+
+        await toggleRecordDropdown(2);
+
+        assert.strictEqual(getCardTexts()[2], "gnap\nTOGGLER TRUE\nMENU TRUE");
+
+        await toggleRecordDropdown(3);
+
+        assert.strictEqual(getCardTexts()[3], "blip\nTOGGLER FALSE\nMENU FALSE");
+    });
 
     QUnit.test("can use JSON in kanban template", async (assert) => {
         serverData.models.partner.records = [{ id: 1, foo: '["g", "e", "d"]' }];
