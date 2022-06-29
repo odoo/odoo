@@ -747,6 +747,11 @@ export class SearchModel extends EventBus {
         return irFilter;
     }
 
+    getPreFavoriteValues(params) {
+        const { preFavorite } = this._getIrFilterDescription(params);
+        return preFavorite;
+    }
+
     /**
      * Return an array containing enriched copies of all searchElements or of those
      * satifying the given predicate if any
