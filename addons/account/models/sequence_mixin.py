@@ -133,7 +133,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -165,20 +165,22 @@ class SequenceMixin(models.AbstractModel):
             where_string += " AND sequence_prefix = %(with_prefix)s "
             param['with_prefix'] = with_prefix
 
-        query = """
-            UPDATE {table} SET write_date = write_date WHERE id = (
-                SELECT id FROM {table}
+        query = f"""
+                SELECT {{field}} FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
+        """
+        if lock:
+            query = f"""
+            UPDATE {self._table} SET write_date = write_date WHERE id = (
+                {query.format(field='id')}
             )
-            RETURNING {field};
-        """.format(
-            table=self._table,
-            where_string=where_string,
-            field=self._sequence_field,
-        )
+            RETURNING {self._sequence_field};
+            """
+        else:
+            query = query.format(field=self._sequence_field)
 
         self.flush([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
