@@ -323,8 +323,14 @@ class TestTrackingMonetary(TestMailMultiCompanyCommon):
         record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
             'company_id': self.user_employee.company_id.id,
         })
+        currency = self.env.ref('base.USD').id
+        record_no_company = self.env['mail.test.track.monetary.no_company'].with_user(self.user_employee).with_context(self._test_context).create({
+            'currency_id': currency,
+            'amount': 200
+        })
         self.flush_tracking()
         self.record = record.with_context(mail_notrack=False)
+        self.record_no_company = record_no_company
 
     def test_message_track_monetary(self):
         """ Update a record with a tracked monetary field """
@@ -352,6 +358,12 @@ class TestTrackingMonetary(TestMailMultiCompanyCommon):
             ('revenue', 'monetary', 100, 200),
             ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
         ])
+
+    def test_message_track_monetary_no_company(self):
+        try:
+            self.record_no_company.write({'amount': 300})
+        except AttributeError:
+            self.fail('AttributeError should not be raised when modifying tracked monetary fields')
 
 @tagged('mail_track')
 class TestTrackingInternals(TestMailCommon):

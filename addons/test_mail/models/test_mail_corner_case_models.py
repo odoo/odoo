@@ -86,6 +86,14 @@ class MailTestTrackMonetary(models.Model):
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
+class MailTestTrackMonetaryNoCompany(models.Model):
+    _name = 'mail.test.track.monetary.no_company'
+    _description = "Test Email Track Monetary No Company"
+    _inherit = ['mail.thread']
+
+    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
+                                  help="Used to display the currency when tracking monetary values")
+    amount = fields.Monetary('Monetary Value', tracking=True)
 
 class MailTestSelectionTracking(models.Model):
     """ Test tracking for selection fields """

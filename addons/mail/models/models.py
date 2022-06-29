@@ -60,6 +60,7 @@ class BaseModel(models.AbstractModel):
                         else:
                             currency_id = self.company_id.currency_id if 'company_id' in self else self.env.company.currency_id
                         tracking['currency_id'] = currency_id
+                    tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
         return changes, tracking_value_ids
