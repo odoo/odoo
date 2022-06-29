@@ -985,8 +985,6 @@ class Article(models.Model):
             share_partner_ids = partners.filtered(lambda partner: partner.partner_share)
             self._add_members(share_partner_ids, 'read')
             self._add_members(partners - share_partner_ids, permission)
-
-        if permission != 'none':
             self._send_invite_mail(partners)
 
         return True
@@ -1061,18 +1059,8 @@ class Article(models.Model):
 
         # belongs to current article members
         current_membership = self.article_member_ids.filtered(lambda m: m == member)
-
-        current_user_partner = self.env.user.partner_id
-        remove_self = member.partner_id == current_user_partner
-        # If remove self member, set member permission to 'none' (= leave article) to hide the article for the user.
-        if remove_self:
-            if current_membership:
-                members_command = [(1, current_membership.id, {'permission': 'none'})]
-            else:
-                members_command = [(0, 0, {'partner_id': current_user_partner.id, 'permission': 'none'})]
-            self.sudo().write({'article_member_ids': members_command})
         # member to remove is on the article itself. Simply remove the member.
-        elif current_membership:
+        if current_membership:
             if not self.env.su and not self.user_has_write_access:
                 raise AccessError(
                     _("You cannot remove the member %(member_name)s from article %(article_name)s",

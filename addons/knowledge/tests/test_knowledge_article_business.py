@@ -404,6 +404,58 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertTrue(grandchild_write_access.with_user(self.user_employee_manager).user_has_access)
 
     @users('employee')
+    def test_article_remove_member(self):
+        """ Testing member removal :
+        - A user cannot remove a member if :
+            - the user does not have write access (except if admin).
+            - the user is not the only user with write (via members or internal permission)
+        - Removing a member based on a parent actually creates a member with permission 'none'
+        on the article (and desync the article from it parent).
+        - Removing self member does not set the permission member to 'none' but really removes
+        the member, except for previous case.
+        """
+        shared_children = self.shared_children.with_env(self.env)
+
+        # Can remove self as employee as write access and is not the only member with write access.
+        employee_member = shared_children.article_member_ids.filtered(
+            lambda m: m.partner_id == self.partner_employee)
+        shared_children._remove_member(employee_member)
+        self.assertTrue(shared_children.user_has_access)
+        self.assertFalse(shared_children.user_has_write_access)
+
+        # Cannot remove self as employee has not write access.
+        with self.mock_mail_gateway():
+            shared_children.sudo().invite_members(self.partner_employee, 'read')
+        employee_member = shared_children.article_member_ids.filtered(
+            lambda m: m.partner_id == self.partner_employee)
+
+        self.assertTrue(employee_member.permission == 'read')
+        self.assertTrue(shared_children.user_has_access)
+        self.assertFalse(shared_children.user_has_write_access)
+        with self.assertRaises(exceptions.AccessError):
+            shared_children._remove_member(employee_member)
+
+        # Removing a member based on a parent desync the article from it parent.
+        with self.mock_mail_gateway():
+            shared_children.sudo().invite_members(self.partner_employee, 'write')
+        self.assertTrue(shared_children.user_has_access)
+        self.assertTrue(shared_children.user_has_write_access)
+        self.article_shared._set_internal_permission("write")
+        admin_member_parent = self.article_shared.article_member_ids.filtered(
+            lambda m: m.partner_id == self.partner_admin)
+        shared_children._remove_member(admin_member_parent)
+
+        self.assertTrue(shared_children.is_desynchronized)
+
+        shared_children._set_internal_permission('read')
+        self.assertTrue(shared_children.user_has_access)
+        self.assertTrue(shared_children.user_has_write_access)
+
+        # Cannot remove self as employee has write access but is the only member with write access.
+        with self.assertRaises(exceptions.ValidationError):
+            shared_children._remove_member(employee_member)
+
+    @users('employee')
     def test_article_toggle_favorite(self):
         """ Testing the API for toggling favorites. """
         playground_articles = (self.article_workspace + self.workspace_children).with_env(self.env)

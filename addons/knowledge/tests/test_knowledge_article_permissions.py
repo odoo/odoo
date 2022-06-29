@@ -417,10 +417,23 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
 
         # cannot gain privilege: setting none if I remove myself to ensure no gain is performed
         my_member = readonly.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
+        with self.assertRaises(exceptions.AccessError,
+                               msg='Permission: do not allow to remove self members when having only read access'):
+            readonly._remove_member(my_member)
+        self.assertMembers(readonly, 'write',
+                           {self.env.user.partner_id: 'read',
+                            self.partner_portal: 'read'})
+
+        # can remove self member if write access
+        my_member.sudo().permission = 'write'
+        self.assertMembers(readonly, 'write',
+                           {self.env.user.partner_id: 'write',
+                            self.partner_portal: 'read'})
         readonly._remove_member(my_member)
         self.assertMembers(readonly, 'write',
-                           {self.env.user.partner_id: 'none',
-                            self.partner_portal: 'read'})
+                           {self.partner_portal: 'read'})
+
+        # more tests on _remove_member: see test_article_remove_member in test_knowledge_article_business.py
 
 
 @tagged('knowledge_acl')

@@ -55,7 +55,7 @@
                     <div class="flex-shrink-0">
                         <div class="input-group">
                             <div t-if="!(member.based_on &amp;&amp; member.permission === 'none') &amp;&amp; !member.is_unique_writer
-                                        &amp;&amp; (state.user_is_admin || props.user_permission === 'write' || state.partner_id === member.partner_id)"
+                                        &amp;&amp; (state.user_is_admin || props.user_permission === 'write')"
                                  class="d-flex align-items-center mr-2">
                                 <i class="fa fa-w fa-times o_delete text-danger" title="Remove Member"
                                    t-on-click="event => this._onRemoveMember(event, member)" type="button">
