@@ -3,6 +3,7 @@
 
 from odoo import _, api, exceptions, fields, models, modules, tools
 from odoo.addons.base.models.res_users import is_selection_groups
+from odoo.tools import email_normalize
 
 
 class Users(models.Model):
@@ -117,6 +118,14 @@ class Users(models.Model):
             for user in self
         } if log_portal_access else {}
 
+        previous_email_by_user = {}
+        if vals.get('email'):
+            previous_email_by_user = {
+                user: user.email
+                for user in self.filtered(lambda user: bool(email_normalize(user.email)))
+                if email_normalize(user.email) != email_normalize(vals['email'])
+            }
+
         write_res = super(Users, self).write(vals)
 
         # log a portal status change (manual tracking)
@@ -131,6 +140,30 @@ class Users(models.Model):
                         message_type='notification',
                         subtype_xmlid='mail.mt_note'
                     )
+
+        if 'login' in vals:
+            self._notify_security_setting_update(
+                _("Security Update: Login Changed"),
+                _("Your account login has been updated"),
+            )
+        if 'password' in vals:
+            self._notify_security_setting_update(
+                _("Security Update: Password Changed"),
+                _("Your account password has been updated"),
+            )
+        if 'email' in vals:
+            # when the email is modified, we want notify the previous address (and not the new one)
+            for user, previous_email in previous_email_by_user.items():
+                self._notify_security_setting_update(
+                    _("Security Update: Email Changed"),
+                    _(
+                        "Your account email has been changed from %(old_email)s to %(new_email)s.",
+                        old_email=previous_email,
+                        new_email=user.email,
+                    ),
+                    mail_values={'email_to': previous_email},
+                    suggest_password_reset=False,
+                )
 
         if 'active' in vals and not vals['active']:
             self._unsubscribe_from_non_public_channels()
@@ -147,6 +180,69 @@ class Users(models.Model):
     def unlink(self):
         self._unsubscribe_from_non_public_channels()
         return super().unlink()
+
+    def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
+        """ This method is meant to be called whenever a sensitive update is done on the user's account.
+        It will send an email to the concerned user warning him about this change and making some security suggestions.
+
+        :param str subject: The subject of the sent email (e.g: 'Security Update: Password Changed')
+        :param str content: The text to embed within the email template (e.g: 'Your password has been changed')
+        :param kwargs: 'suggest_password_reset' key:
+            Whether or not to suggest the end-user to reset
+            his password in the email sent.
+            Defaults to True. """
+
+        mail_create_values = []
+        for user in self:
+            body_html = self.env['ir.qweb']._render(
+                'mail.account_security_setting_update',
+                user._notify_security_setting_update_prepare_values(content, **kwargs),
+                minimal_qcontext=True,
+            )
+
+            body_html = self.env['mail.render.mixin']._render_encapsulate(
+                'mail.mail_notification_light',
+                body_html,
+                add_context={
+                    # the 'mail_notification_light' expects a mail.message 'message' context, let's give it one
+                    'message': self.env['mail.message'].sudo().new(dict(body=body_html, record_name=user.name)),
+                    'model_description': _('Account'),
+                    'company': user.company_id,
+                },
+            )
+
+            vals = {
+                'auto_delete': True,
+                'body_html': body_html,
+                'author_id': self.env.user.partner_id.id,
+                'email_from': (
+                    user.company_id.partner_id.email_formatted or
+                    self.env.user.email_formatted or
+                    self.env.ref('base.user_root').email_formatted
+                ),
+                'email_to': kwargs.get('force_email') or user.email_formatted,
+                'subject': subject,
+            }
+
+            if mail_values:
+                vals.update(mail_values)
+
+            mail_create_values.append(vals)
+
+        self.env['mail.mail'].sudo().create(mail_create_values)
+
+    def _notify_security_setting_update_prepare_values(self, content, **kwargs):
+        """" Prepare rendering values for the 'mail.account_security_setting_update' qweb template """
+
+        reset_password_enabled = self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True)
+        return {
+            'company': self.company_id,
+            'password_reset_url': f"{self.get_base_url()}/web/reset_password",
+            'security_update_text': content,
+            'suggest_password_reset': kwargs.get('suggest_password_reset', True) and reset_password_enabled,
+            'user': self,
+            'update_datetime': fields.Datetime.now(),
+        }
 
     def _unsubscribe_from_non_public_channels(self):
         """ This method un-subscribes users from group restricted channels. Main purpose
