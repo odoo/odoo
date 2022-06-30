@@ -124,8 +124,11 @@ export class KanbanRenderer extends Component {
             if (model.useSampleModel || !model.hasData()) {
                 return;
             }
-            // Focus first kanban card
-            rootRef.el.querySelector(".o_kanban_record").focus();
+            const firstCard = rootRef.el.querySelector(".o_kanban_record");
+            if (firstCard) {
+                // Focus first kanban card
+                firstCard.focus();
+            }
         });
 
         useHotkey(
