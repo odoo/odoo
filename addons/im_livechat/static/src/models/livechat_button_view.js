@@ -161,7 +161,7 @@ registerModel({
             if (!this.sessionCookie) {
                 return clear();
             }
-            const data = localStorage.getItem(this.sessionCookieKey);
+            const data = localStorage.getItem(this.chatbotSessionCookieKey);
             if (!data) {
                 return clear();
             }
@@ -180,7 +180,7 @@ registerModel({
         /**
          * @returns {string|FieldCommand}
          */
-        _computeSessionCookieKey() {
+        _computeChatbotSessionCookieKey() {
             if (!this.sessionCookie) {
                 return clear();
             }
@@ -212,6 +212,9 @@ registerModel({
             compute: '_computeChatbot',
             inverse: 'livechatButtonViewOwner',
             isCausal: true,
+        }),
+        chatbotSessionCookieKey: attr({
+            compute: '_computeChatbotSessionCookieKey',
         }),
         chatbotState: attr({
             compute: '_computeChatbotState',
@@ -272,9 +275,6 @@ registerModel({
             compute: '_computeServerUrl',
         }),
         sessionCookie: attr(),
-        sessionCookieKey: attr({
-            compute: '_computeSessionCookieKey',
-        }),
         testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',

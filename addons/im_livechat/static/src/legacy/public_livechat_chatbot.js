@@ -59,7 +59,7 @@ const QWeb = core.qweb;
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
                 this.messaging.livechatButtonView.update({ sessionCookie });
-                if (localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey)) {
+                if (localStorage.getItem(this.messaging.livechatButtonView.chatbotSessionCookieKey)) {
                     this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
@@ -357,13 +357,13 @@ const QWeb = core.qweb;
         if (browserLocalStorage && browserLocalStorage.length) {
             for (let i = 0; i < browserLocalStorage.length; i++) {
                 const key = browserLocalStorage.key(i);
-                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.sessionCookieKey) {
+                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.livechatButtonView.chatbotSessionCookieKey) {
                     browserLocalStorage.removeItem(key);
                 }
             }
         }
 
-        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey);
+        let chatbotState = localStorage.getItem(this.messaging.livechatButtonView.chatbotSessionCookieKey);
 
         if (chatbotState) {
             this.messaging.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.livechatButtonView.localStorageChatbotState._chatbotCurrentStep }) });
