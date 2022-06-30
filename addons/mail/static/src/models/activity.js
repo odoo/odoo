@@ -119,6 +119,8 @@ registerModel({
         /**
          * Opens (legacy) form view dialog to edit current activity and updates
          * the activity when dialog is closed.
+         *
+         * @return {Promise} promise that is fulfilled when the form has been closed
          */
         edit() {
             const action = {
@@ -134,10 +136,14 @@ registerModel({
                 },
                 res_id: this.id,
             };
-            this.env.services.action.doAction(
-                action,
-                { onClose: () => this.fetchAndUpdate() },
-            );
+            return new Promise(resolve => {
+                this.env.services.action.doAction(action, {
+                    onClose: () => {
+                        resolve();
+                        this.fetchAndUpdate();
+                    },
+                })
+            });
         },
         async fetchAndUpdate() {
             const [data] = await this.messaging.rpc({

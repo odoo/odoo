@@ -48,7 +48,7 @@ patchRecordMethods('Activity', {
      */
     async edit() {
         if (!this.calendar_event_id){
-            this._super();
+            await this._super();
         } else {
             const action = await this.messaging.rpc({
                 model: 'mail.activity',

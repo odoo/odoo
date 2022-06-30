@@ -36,7 +36,9 @@ registerModel({
         async onClickCancel() {
             const { chatter } = this.activityBoxView; // save value before deleting activity
             await this.activity.deleteServerRecord();
-            chatter.reloadParentView();
+            if (chatter.exists() && chatter.component) {
+                chatter.reloadParentView();
+            }
         },
         /**
          * Handles the click on the detail button
@@ -48,8 +50,12 @@ registerModel({
         /**
          * Handles the click on the edit button
          */
-        onClickEdit() {
-            this.activity.edit();
+        async onClickEdit() {
+            const { chatter } = this.activityBoxView;
+            await this.activity.edit();
+            if (chatter.exists() && chatter.component) {
+                chatter.reloadParentView();
+            }
         },
         onClickMarkDoneButton() {
             this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : insertAndReplace() });
