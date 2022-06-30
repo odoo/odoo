@@ -30,6 +30,7 @@ class AccountMove(models.Model):
             ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
             ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
             ('04', '04 DPP Nilai Lain (PPN 1%)'),
+            ('05', '05 Besaran Tertentu'),
             ('06', '06 Penyerahan Lainnya (Turis Asing)'),
             ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
