@@ -131,7 +131,6 @@
         @param {boolean} [options.displayMarkAsRead]
         @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
           the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
-        @param {boolean} [options.displayReplyIcons]
         @param {boolean} [options.displaySubjectsOnMessages]
         @param {boolean} options.hasMessageAttachmentDeletable
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
@@ -199,9 +198,6 @@
                         </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
-                       <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
-                           class="fa fa-reply o_thread_icon o_thread_message_reply"
-                           t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>

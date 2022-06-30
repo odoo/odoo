@@ -65,7 +65,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: true,
             squashCloseMessages: true,
             displayNotificationIcons: true,
-            displayReplyIcons: false,
             loadMoreOnScroll: false,
             hasMessageAttachmentDeletable: false,
         });
@@ -78,7 +77,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
             displayNotificationIcons: false,
-            displayReplyIcons: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
             hasMessageAttachmentDeletable: false,
         };

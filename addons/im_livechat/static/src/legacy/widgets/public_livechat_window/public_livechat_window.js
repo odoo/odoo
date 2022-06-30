@@ -40,7 +40,6 @@ const PublicLivechatWindow = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
         this.options = _.defaults(options || {}, {
-            displayReplyIcons: false,
             displayNotificationIcons: false,
             placeholder: _t("Say something"),
         });
