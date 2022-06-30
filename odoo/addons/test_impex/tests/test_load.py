@@ -77,19 +77,6 @@ class ImporterCase(common.TransactionCase):
         })
         return '__test__.' + name
 
-    def add_translations(self, name, type, code, *tnx):
-        self.env['res.lang']._activate_lang(code)
-        Translations = self.env['ir.translation']
-        for source, value in tnx:
-            Translations.create({
-                'name': name,
-                'lang': code,
-                'type': type,
-                'src': source,
-                'value': value,
-                'state': 'translated',
-            })
-
 
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
@@ -153,18 +140,14 @@ class test_boolean_field(ImporterCase):
         ], values(records))
 
     def test_falses(self):
-        for lang, source, value in [('fr_FR', 'no', u'non'),
-                                    ('de_DE', 'no', u'nein'),
-                                    ('ru_RU', 'no', u'нет'),
-                                    ('nl_BE', 'false', u'vals'),
-                                    ('lt_LT', 'false', u'klaidingas')]:
-            self.add_translations('test_import.py', 'code', lang, (source, value))
+        for lang in ['fr_FR', 'de_DE', 'ru_RU', 'nl_BE', 'lt_LT']:
+            self.env['res.lang']._activate_lang(lang)
         falses = [[u'0'], [u'no'], [u'false'], [u'FALSE'], [u''],
-                  [u'non'], # no, fr
-                  [u'nein'], # no, de
-                  [u'нет'], # no, ru
-                  [u'vals'], # false, nl
-                  [u'klaidingas'], # false, lt,
+                  [u'faux'], # no, fr
+                  [u'falsch'], # no, de
+                  [u'ложь'], # no, ru
+                  [u'onwaar'], # false, nl
+                  [u'ne'], # false, lt,
         ]
 
         result = self.import_(['value'], falses)
@@ -466,8 +449,15 @@ class test_selection(ImporterCase):
         self.assertEqual(['3', '2', '1', '2'], values(self.read()))
 
     def test_imported_translated(self):
-        self.add_translations(
-            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
+        selections = self.env['ir.model.fields.selection'].search([('name', 'in', ['Foo', 'Bar', 'Qux'])])
+        self.env['res.lang']._activate_lang('fr_FR')
+        for selection in selections:
+            if selection.name == 'Foo':
+                selection.with_context(lang='fr_FR').name = 'tete'
+            elif selection.name == 'Bar':
+                selection.with_context(lang='fr_FR').name = 'titi'
+            elif selection.name == 'Qux':
+                selection.with_context(lang='fr_FR').name = 'toto'
 
         result = self.import_(['value'], [
             ['toto'],
@@ -526,12 +516,6 @@ class test_selection_with_default(ImporterCase):
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
-    translations_fr = [
-        ("Corge", "toto"),
-        ("Grault", "titi"),
-        ("Wheee", "tete"),
-        ("Moog", "tutu"),
-    ]
 
     def test_imported(self):
         """ import uses fields_get, so translates import label (may or may not
@@ -541,7 +525,7 @@ class test_selection_function(ImporterCase):
         # NOTE: conflict between a value and a label => pick first
         result = self.import_(['value'], [
             ['3'],
-            ["Grault"],
+            ["Bar"],
         ])
         self.assertEqual(len(result['ids']), 2)
         self.assertFalse(result['messages'])
@@ -550,8 +534,17 @@ class test_selection_function(ImporterCase):
     def test_translated(self):
         """ Expects output of selection function returns translated labels
         """
-        self.add_translations(
-            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
+        selections = self.env['ir.model.fields.selection'].search([('name', 'in', ['Foo', 'Bar', 'Qux', 'Baz'])])
+        self.env['res.lang']._activate_lang('fr_FR')
+        for selection in selections:
+            if selection.name == 'Foo':
+                selection.with_context(lang='fr_FR').name = 'toto'
+            elif selection.name == 'Bar':
+                selection.with_context(lang='fr_FR').name = 'titi'
+            elif selection.name == 'Qux':
+                selection.with_context(lang='fr_FR').name = 'tete'
+            elif selection.name == 'Baz':
+                selection.with_context(lang='fr_FR').name = 'tutu'
 
         result = self.import_(['value'], [
             ['titi'],
@@ -561,7 +554,7 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 2)
         self.assertEqual(values(self.read()), ['1', '2'])
 
-        result = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
+        result = self.import_(['value'], [['Qux']], context={'lang': 'fr_FR'})
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 

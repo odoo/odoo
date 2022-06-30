@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 def selection_fn(model):
-    return [(str(key), val) for key, val in enumerate(["Corge", "Grault", "Wheee", "Moog"])]
+    return [(str(key), val) for key, val in enumerate(["Foo", "Bar", "Qux", "Baz"])]
 
 def compute_fn(records):
     for record in records:
