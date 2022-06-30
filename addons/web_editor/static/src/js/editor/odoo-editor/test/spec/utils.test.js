@@ -797,7 +797,6 @@ describe('Utils', () => {
                         <p><br></p>
                     </div></div>`),
                 stepFunction: async editor => {
-                    const sel = document.getSelection();
                     const element = editor.editable.querySelector('#target');
                     ensureFocus(element);
                     await nextTickFrame();
