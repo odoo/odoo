@@ -7,9 +7,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import '@mail/models/messaging';
 
 addFields('Messaging', {
-    isInPublicLivechat: attr({
-        default: false,
-    }),
     isPublicLivechatAvailable: attr({
         default: false,
     }),
@@ -23,6 +20,9 @@ addFields('Messaging', {
     pinnedLivechats: many('Thread', {
         inverse: 'messagingAsPinnedLivechat',
         readonly: true,
+    }),
+    publicLivechatGlobal: one('PublicLivechatGlobal', {
+        isCausal: true,
     }),
     publicLivechatOptions: attr({
         default: {},
@@ -38,7 +38,7 @@ addRecordMethods('Messaging', {
      * @returns {FieldCommand}
      */
     _computeLivechatButtonView() {
-        if (this.isInPublicLivechat && this.isPublicLivechatAvailable) {
+        if (this.publicLivechatGlobal && this.isPublicLivechatAvailable) {
             return insertAndReplace();
         }
         return clear();
@@ -50,7 +50,7 @@ patchRecordMethods('Messaging', {
      * @override
      */
     _computeNotificationHandler() {
-        if (this.isInPublicLivechat) {
+        if (this.publicLivechatGlobal) {
             return clear();
         }
         return this._super();
