@@ -120,9 +120,15 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     renderHeader() {
-        const options = this._getHeaderRenderingOptions();
         this.$header.html(
-            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', options));
+            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
+                status: this._thread._status,
+                thread: this._thread,
+                title: this._thread._name,
+                unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
+                widget: this,
+            })
+        );
     },
     /**
      * Replace the thread content with provided new content
@@ -183,21 +189,6 @@ const PublicLivechatWindow = Widget.extend({
             return;
         }
         this.$input.focus();
-    },
-    /**
-     * Returns the options used by the rendering of the window's header
-     *
-     * @private
-     * @returns {Object}
-     */
-    _getHeaderRenderingOptions() {
-        return {
-            status: this._thread._status,
-            thread: this._thread,
-            title: this._thread._name,
-            unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
-            widget: this,
-        };
     },
     /**
      * Tells whether there is focus on this thread. Note that a thread that has
