@@ -1035,7 +1035,7 @@
                     <group>
                         <field name="name" string = "Task Title" placeholder="e.g. New Design"/>
                         <field name="user_ids" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
-                            widget="many2many_tags"/>
+                            widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
                     </group>
