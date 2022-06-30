@@ -717,7 +717,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
         sel.addRange(range);
         try {
             sel.extend(end, endOffset);
-        } catch (e) {
+        } catch {
             // Firefox yells not happy when setting selection on elem with contentEditable=false.
         }
         range = sel.getRangeAt(0);

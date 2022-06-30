@@ -1086,13 +1086,11 @@ export class OdooEditor extends EventTarget {
             return;
         }
 
-        let currentIndex;
         let concurentSteps = [];
         index++;
         while (index < this._historySteps.length) {
             if (this._historySteps[index].previousStepId === newStep.previousStepId) {
                 if (this._historySteps[index].id.localeCompare(newStep.id) === 1) {
-                    currentIndex = index;
                     break;
                 } else {
                     concurentSteps = [this._historySteps[index].id];
@@ -1101,13 +1099,11 @@ export class OdooEditor extends EventTarget {
                 if (concurentSteps.includes(this._historySteps[index].previousStepId)) {
                     concurentSteps.push(this._historySteps[index].id);
                 } else {
-                    currentIndex = index;
                     break;
                 }
             }
             index++;
         }
-        currentIndex = typeof currentIndex !== 'undefined' ? currentIndex : index;
 
         const stepsAfterNewStep = this._historySteps.slice(index);
 
@@ -1184,7 +1180,7 @@ export class OdooEditor extends EventTarget {
             }
 
             clientRects = Array.from(range.getClientRects());
-        } catch (e) {
+        } catch {
             // Changes in the dom might prevent the range to be instantiated
             // (because of a removed node for example), in which case we ignore
             // the range.

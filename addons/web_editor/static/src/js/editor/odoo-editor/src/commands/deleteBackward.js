@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE } from '../utils/constants.js';
+import { UNREMOVABLE_ROLLBACK_CODE } from '../utils/constants.js';
 import {
     boundariesOut,
     childNodeIndex,
