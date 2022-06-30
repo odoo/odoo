@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.Form.ButtonBox" owl="1" >
+    <t t-set="allButtons" t-value="getButtons()" />
+    <t t-set="visibleButtons" t-value="allButtons['visible']" />
+    <t t-set="additionalButtons" t-value="allButtons['additional']" />
+    <div class="o-form-buttonbox oe_button_box" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full' }}">
+        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value" />
+
+        <t t-if="additionalButtons.length" >
+            <Dropdown togglerClass="'btn o_button_more'" class="'btn oe_stat_button o_dropdown_more'">
+                <t t-set-slot="toggler">More</t>
+                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value">
+                    <t t-slot="{{ button_value }}" />
+                </DropdownItem>
+            </Dropdown>
+        </t>
+    </div>
+</t>
+
+</templates>

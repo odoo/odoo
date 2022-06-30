@@ -396,7 +396,7 @@
     </div>
 </t>
 
-<t t-name="web.ActionMenus" owl="1">
+<t t-name="web.Legacy.ActionMenus" owl="1">
     <div class="o_cp_action_menus" t-on-item-selected.stop="_onItemSelected">
         <DropdownMenu t-if="printItems.length"
             title="printButtonStrings.title"
@@ -574,7 +574,7 @@
 </div>
 
 <t t-name="ListView.buttons">
-    <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
+    <div class="o_legacy_list_buttons d-flex" role="toolbar" aria-label="Main actions">
         <button type="button" class="btn btn-primary o_list_button_save" title="Save record" accesskey="s">
             Save
         </button>
@@ -996,7 +996,7 @@
         <span class="o_datepicker_button"/>
     </div>
 </t>
-<t t-name="FieldSelection">
+<t t-name="web.Legacy.FieldSelection">
     <span t-if="widget.mode === 'readonly'"/>
 
     <select t-if="widget.mode !== 'readonly'"

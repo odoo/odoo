@@ -1,7 +1,7 @@
 /** @odoo-module  */
 
 import { patch } from 'web.utils';
-import { formatFloatTime, formatFloat } from "@web/fields/formatters";
+import { formatFloatTime, formatFloat } from "@web/views/fields/formatters";
 import ProjectRightPanel from '@project/js/right_panel/project_right_panel';
 
 patch(ProjectRightPanel.prototype, '@sale_project/right_panel/project_right_panel', {

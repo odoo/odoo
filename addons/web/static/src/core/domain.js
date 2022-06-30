@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { shallowEqual } from "@web/core/utils/arrays";
 import { evaluate, formatAST, parseExpr } from "./py_js/py";
 import { toPyValue } from "./py_js/py_utils";
 
@@ -187,14 +188,25 @@ function matchCondition(record, condition) {
         return condition;
     }
     const [field, operator, value] = condition;
+
+    if (typeof field === "string") {
+        const names = field.split(".");
+        if (names.length >= 2) {
+            return matchCondition(record[names[0]], [names.slice(1).join("."), operator, value]);
+        }
+    }
+
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
         case "=":
         case "==":
+            if (Array.isArray(fieldValue) && Array.isArray(value)) {
+                return shallowEqual(fieldValue, value);
+            }
             return fieldValue === value;
         case "!=":
         case "<>":
-            return fieldValue !== value;
+            return JSON.stringify(fieldValue) !== JSON.stringify(value);
         case "<":
             return fieldValue < value;
         case "<=":

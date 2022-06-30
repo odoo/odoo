@@ -1,5 +1,5 @@
 
-.o_kanban_view.o_kanban_dashboard {
+.o_legacy_kanban_view.o_kanban_dashboard {
     &:not(.o_kanban_grouped) {
         // correctly display the no_content_helper in dashboards
         flex-flow: row wrap;
@@ -31,8 +31,6 @@
         }
 
         .o_kanban_card_manage_pane {
-            @include o-kanban-dropdown-menu;
-
             // Arbitrary value to place the dropdown-menu exactly below the
             // dropdown-toggle (height is forced so that it works on Firefox)
             top: $o-kanban-manage-toggle-height;

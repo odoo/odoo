@@ -4,7 +4,9 @@ import { browser } from "@web/core/browser/browser";
 
 // rough approximation of a visible element. not perfect (does not take into
 // account opacity = 0 for example), but good enough for our purpose
-const isVisible = (e) => e.offsetWidth > 0 || e.offsetHeight > 0;
+function isVisible(e) {
+    return e.offsetWidth > 0 || e.offsetHeight > 0;
+}
 
 export const ACTION_HELPERS = {
     click(el, _step) {

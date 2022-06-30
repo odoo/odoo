@@ -14,7 +14,7 @@ let browser;
 let baseConfig;
 let BlockUI, props;
 
-QUnit.module("UI", {
+QUnit.module("UI service", {
     async beforeEach() {
         target = getFixture();
         serviceRegistry.add("ui", uiService);

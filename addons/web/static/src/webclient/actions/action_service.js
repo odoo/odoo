@@ -10,7 +10,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
-import { View } from "@web/views/view";
+import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
@@ -59,7 +59,6 @@ function parseActiveIds(ids) {
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
-export class ViewNotFoundError extends Error {}
 
 export class ControllerNotFoundError extends Error {}
 
@@ -381,7 +380,9 @@ function makeActionManager(env) {
                 currentController.action.type === "ir.actions.act_window" &&
                 currentActionId === state.action
             ) {
-                const props = { resId: state.id || false };
+                const props = {
+                    resId: state.id || false,
+                };
                 const viewType = state.view_type || currentController.view.type;
                 return { viewType, props };
             }
@@ -426,7 +427,25 @@ function makeActionManager(env) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
+            selectRecord: async (resId, { activeIds, mode }) => {
+                if (_getView("form")) {
+                    await switchView("form", { mode, resId, resIds: activeIds });
+                }
+            },
+            createRecord: async () => {
+                if (_getView("form")) {
+                    await switchView("form", { resId: false });
+                }
+            },
         });
+
+        if (view.type === "form" && action.target === "new") {
+            viewProps.mode = "edit";
+        }
+
+        if (action.flags && "mode" in action.flags && view.type === "form") {
+            viewProps.mode = action.flags.mode;
+        }
 
         if (target === "inline") {
             viewProps.searchMenuTypes = [];
@@ -463,6 +482,8 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
+        viewProps.noBreadcrumbs = action.context.no_breadcrumbs;
+        delete action.context.no_breadcrumbs;
         return {
             props: viewProps,
             config: {
@@ -544,11 +565,7 @@ function makeActionManager(env) {
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
         // Compute breadcrumbs
-        if (action.target === "new") {
-            controller.config.breadcrumbs = _getBreadcrumbs([nextStack[nextStack.length - 1]]);
-        } else {
-            controller.config.breadcrumbs = _getBreadcrumbs(nextStack);
-        }
+        controller.config.breadcrumbs = action.target === "new" ? [] : _getBreadcrumbs(nextStack);
         controller.config.getDisplayName = () => controller.displayName;
         controller.config.setDisplayName = (displayName) => {
             controller.displayName = displayName;
@@ -655,7 +672,7 @@ function makeActionManager(env) {
                             if (c.action.type === "ir.actions.act_window") {
                                 for (const viewType in c.action.controllers) {
                                     const controller = c.action.controllers[viewType];
-                                    if (controller.Component.isLegacy) {
+                                    if (controller.view.isLegacy) {
                                         toDestroy.add(controller);
                                     }
                                 }
@@ -698,12 +715,13 @@ function makeActionManager(env) {
                 // TODO add size
                 ActionComponent: ControllerComponent,
                 actionProps: controller.props,
+                actionType: action.type,
             };
             if (action.name) {
                 actionDialogProps.title = action.name;
             }
 
-            let onClose = _removeDialog();
+            const onClose = _removeDialog();
             const removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
                 onClose: () => {
                     const onClose = _removeDialog();
@@ -800,13 +818,41 @@ function makeActionManager(env) {
      * @param {ActWindowAction} action
      * @param {ActionOptions} options
      */
-    function _executeActWindowAction(action, options) {
+    async function _executeActWindowAction(action, options) {
+        // LEGACY CODE COMPATIBILITY: load views to determine js_class if any, s.t.
+        // we know if the view to use is legacy or not
+        // When all views will be converted, this will be done exclusively by View
+        // #action-serv-leg-compat-js-class
+        const loadViewParams = {
+            context: action.context || {},
+            views: action.views,
+            resModel: action.res_model,
+        };
+        const loadViewOptions = {
+            actionId: action.id,
+            loadActionMenus: action.target !== "new" && action.target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
+        };
+        const prom = env.services.view.loadViews(loadViewParams, loadViewOptions);
+        const { views: viewDescriptions } = await keepLast.add(prom);
+        const domParser = new DOMParser();
         const views = [];
         for (const [, type] of action.views) {
-            if (viewRegistry.contains(type)) {
-                views.push(viewRegistry.get(type));
+            if (type !== "search") {
+                const arch = viewDescriptions[type].arch;
+                const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;
+                const jsClass = archDoc.getAttribute("js_class");
+                const key = viewRegistry.contains(jsClass) ? jsClass : type;
+                views.push(viewRegistry.get(key));
             }
         }
+        // END LEGACY CODE COMPATIBILITY
+        // const views = [];
+        // for (const [, type] of action.views) {
+        //     if (type !== "search" && viewRegistry.contains(type)) {
+        //         views.push(viewRegistry.get(key));
+        //     }
+        // }
         if (!views.length) {
             throw new Error(`No view found for act_window action ${action.id}`);
         }
@@ -831,7 +877,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view : View,
+            Component: view.isLegacy ? view.Controller : View,
             action,
             view,
             views,
@@ -848,7 +894,7 @@ function makeActionManager(env) {
         if (lazyView) {
             updateUIOptions.lazyController = {
                 jsId: `controller_${++id}`,
-                Component: lazyView.isLegacy ? lazyView : View,
+                Component: lazyView.isLegacy ? lazyView.Controller : View,
                 action,
                 view: lazyView,
                 views,
@@ -1146,7 +1192,7 @@ function makeActionManager(env) {
             case "ir.actions.server":
                 return _executeServerAction(action, options);
             default: {
-                let handler = actionHandlersRegistry.get(action.type, null);
+                const handler = actionHandlersRegistry.get(action.type, null);
                 if (handler !== null) {
                     return handler({ env, action, options });
                 }
@@ -1213,7 +1259,7 @@ function makeActionManager(env) {
         // filter out context keys that are specific to the current action, because:
         //  - wrong default_* and search_default_* values won't give the expected result
         //  - wrong group_by values will fail and forbid rendering of the destination view
-        let currentCtx = {};
+        const currentCtx = {};
         for (const key in params.context) {
             if (key.match(CTX_KEY_REGEX) === null) {
                 currentCtx[key] = params.context[key];
@@ -1266,7 +1312,7 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view : View,
+            Component: view.isLegacy ? view.Controller : View,
             action: controller.action,
             views: controller.views,
             view,
@@ -1389,7 +1435,7 @@ function makeActionManager(env) {
             const props = controller.props;
             newState.model = props.resModel;
             newState.view_type = props.type;
-            newState.id = props.resId || (props.state && props.state.currentId) || undefined;
+            newState.id = props.resId || (props.state && props.state.resId) || undefined;
         }
         env.services.router.pushState(newState, { replace: true });
     }
@@ -1400,7 +1446,7 @@ function makeActionManager(env) {
         restore,
         loadState,
         async loadAction(actionRequest, context) {
-            let action = await _loadAction(actionRequest, context);
+            const action = await _loadAction(actionRequest, context);
             return _preprocessAction(action, context);
         },
         get currentController() {
@@ -1420,6 +1466,7 @@ export const actionService = {
         "router",
         "rpc",
         "title",
+        "view", // for legacy view compatibility #action-serv-leg-compat-js-class
         "ui",
         "user",
     ],

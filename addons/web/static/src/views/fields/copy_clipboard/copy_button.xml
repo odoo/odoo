@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CopyButton" owl="1">
+        <button
+            t-attf-class="btn btn-sm btn-primary o_clipboard_button {{ props.className || '' }} {{state.isCopied ? 'bg-success' : ''}}"
+            t-on-click.stop="onClick"
+        >
+            <t t-if="!state.isCopied">
+                <span class="fa fa-clipboard mx-1"/>
+                <span t-esc="props.copyText"/>
+            </t>
+            <t t-else="">
+                <span class="fa fa-check mx-1"/>
+                <span t-esc="props.successText"/>
+            </t>
+        </button>
+    </t>
+
+</templates>

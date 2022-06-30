@@ -4,7 +4,7 @@ odoo.define('web.abstract_model_tests', function (require) {
     const AbstractModel = require('web.AbstractModel');
     const Domain = require('web.Domain');
 
-    QUnit.module('Views', {}, function () {
+    QUnit.module('LegacyViews', {}, function () {
         QUnit.module('AbstractModel');
 
         QUnit.test('leave sample mode when unknown route is called on sample server', async function (assert) {

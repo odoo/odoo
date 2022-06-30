@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyCheckboxesField" owl="1">
+        <div aria-atomic="true">
+            <t t-foreach="props.items" t-as="item" t-key="item[0]">
+                <div>
+                    <CheckBox
+                        value="isSelected(item)"
+                        disabled="props.readonly"
+                        onChange="(ev) => this.onChange(item[0], ev)"
+                    >
+                        <t t-esc="item[1]" />
+                    </CheckBox>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -11,7 +11,7 @@ odoo.define('web.basic_view_tests', function (require) {
 
     const createView = testUtils.createView;
 
-    QUnit.module('Views', {
+    QUnit.module('LegacyViews', {
         beforeEach: function () {
             this.data = {
                 fake_model: {

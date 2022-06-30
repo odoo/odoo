@@ -2,7 +2,7 @@
 
 import { SERVICES_METADATA } from "@web/env";
 
-const { status, useComponent, useEffect, useRef } = owl;
+const { status, useComponent, useEffect, useRef, onWillUnmount } = owl;
 
 /**
  * This file contains various custom hooks.
@@ -31,7 +31,7 @@ const { status, useComponent, useEffect, useRef } = owl;
  */
 export function useAutofocus() {
     const comp = useComponent();
-    let ref = useRef("autofocus");
+    const ref = useRef("autofocus");
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return ref;
@@ -110,7 +110,7 @@ export function useBus(bus, eventName, callback) {
  *
  * @param {string} eventName the name of the event
  * @param {string} [querySelector] a JS native selector for event delegation
- * @param {function} handler the event handler (will be bound to the component)
+ * @param {function} [handler] the event handler (will be bound to the component)
  * @param {Object} [options] to be passed to addEventListener as options.
  *   Useful for listening in the capture phase
  */
@@ -190,11 +190,70 @@ export function useService(serviceName) {
         } else {
             const methods = SERVICES_METADATA[serviceName];
             const result = Object.create(service);
-            for (let method of methods) {
+            for (const method of methods) {
                 result[method] = _protectMethod(component, service, service[method]);
             }
             return result;
         }
     }
     return service;
+}
+
+/**
+ * @typedef {Function} ForwardRef
+ * @property {HTMLElement | undefined} el
+ */
+
+/**
+ * Use a ref that was forwarded by a child @see useForwardRefToParent
+ *
+ * @returns {ForwardRef} a ref that can be called to set its value to that of a
+ *  child ref, but can otherwise be used as a normal ref object
+ */
+export function useChildRef() {
+    let defined = false;
+    return function ref(value) {
+        if (defined) {
+            return;
+        }
+        Object.defineProperty(ref, "el", {
+            get() {
+                return value.el;
+            },
+        });
+        defined = true;
+    };
+}
+/**
+ * Forwards the given refName to the parent by calling the corresponding
+ * ForwardRef received as prop. @see useChildRef
+ *
+ * @param {string} refName name of the ref to forward
+ * @returns {{el: HTMLelement | null}} the same ref that is forwarded to the
+ *  parent
+ */
+export function useForwardRefToParent(refName) {
+    const component = useComponent();
+    const ref = useRef(refName);
+    if (component.props[refName]) {
+        component.props[refName](ref);
+    }
+    return ref;
+}
+/**
+ * Use the dialog service while also automatically closing the dialogs opened
+ * by the current component when it is unmounted.
+ */
+export function useOwnedDialogs() {
+    const dialogService = useService("dialog");
+    const cbs = [];
+    onWillUnmount(() => {
+        cbs.forEach((cb) => cb());
+    });
+    const addDialog = (...args) => {
+        const close = dialogService.add(...args);
+        cbs.push(close);
+        return close;
+    };
+    return addDialog;
 }

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_utils';
-import { formatFloat, formatMonetary } from "@web/fields/formatters";
+import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 import { session } from "@web/session";
 

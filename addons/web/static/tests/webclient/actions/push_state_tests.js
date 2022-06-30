@@ -8,6 +8,7 @@ import {
     click,
     getFixture,
     legacyExtraNextTick,
+    makeDeferred,
     nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
@@ -190,8 +191,8 @@ QUnit.module("ActionManager", (hooks) => {
             model: "pony",
             view_type: "list",
         });
-        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
-        await legacyExtraNextTick();
+        await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,
             model: "pony",
@@ -202,20 +203,20 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("push state after action is loaded, not before", async function (assert) {
         assert.expect(2);
-        const def = testUtils.makeTestPromise();
-        const mockRPC = async function (route) {
-            if (route === "/web/dataset/search_read") {
+        const def = makeDeferred();
+        const mockRPC = async function (route, args) {
+            if (args.method === "web_search_read") {
                 await def;
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         doAction(webClient, 4);
-        await testUtils.nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {});
         def.resolve();
-        await testUtils.nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 4,
             model: "partner",

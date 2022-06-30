@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-const { blockDom } = owl;
+const { blockDom, markup } = owl;
 
 /**
- * loads a template using getTemplate, and render the template immediately;
+ * renders a template with an (optional) context and returns a Markup string,
+ * suitable to be inserted in a template with a t-out directive
  *
  * @param {string} template
  * @param {Object} context
  * @returns string: the html of the template
  */
-
 export function renderToString(template, context = {}) {
     const app = renderToString.app;
     if (!app) {
@@ -20,4 +20,16 @@ export function renderToString(template, context = {}) {
     const div = document.createElement("div");
     blockDom.mount(bdom, div);
     return div.innerHTML;
+}
+
+/**
+ * renders a template with an (optional) context and returns a Markup string,
+ * suitable to be inserted in a template with a t-out directive
+ *
+ * @param {string} template
+ * @param {Object} context
+ * @returns string: the html of the template, as a markup string
+ */
+export function renderToMarkup(template, context = {}) {
+    return markup(renderToString(template, context));
 }

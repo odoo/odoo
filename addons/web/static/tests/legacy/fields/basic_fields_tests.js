@@ -13,6 +13,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 var field_registry = require('web.field_registry');
+const legacyViewRegistry = require('web.view_registry');
 const  makeTestEnvironment = require("web.test_env");
 const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
@@ -34,10 +35,17 @@ const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
 
 let target;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-QUnit.module('basic_fields', {
+QUnit.module('Legacy basic_fields', {
     beforeEach: function () {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
         this.data = {
             partner: {
                 fields: {

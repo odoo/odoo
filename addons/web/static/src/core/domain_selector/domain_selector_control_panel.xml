@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorControlPanel" owl="1">
+        <div class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
+            <button
+                class="btn btn-link text-danger o_domain_delete_node_button"
+                title="Delete node"
+                aria-label="Delete node"
+                t-on-click="deleteNode"
+                t-on-mouseenter="onEnterDeleteNodeBtn"
+                t-on-mouseleave="onLeaveDeleteNodeBtn"
+            >
+                <i class="fa fa-times"/>
+            </button>
+            <button
+                class="btn o_domain_add_node_button"
+                title="Add node"
+                aria-label="Add node"
+                t-on-click="() => this.insertNode('leaf')"
+                t-on-mouseenter="onEnterInsertLeafNodeBtn"
+                t-on-mouseleave="onLeaveInsertLeafNodeBtn"
+            >
+                <i class="fa fa-plus-circle"/>
+            </button>
+            <button
+                class="btn o_domain_add_node_button"
+                title="Add branch"
+                aria-label="Add branch"
+                data-branch="1"
+                t-on-click="() => this.insertNode('branch')"
+                t-on-mouseenter="onEnterInsertBranchNodeBtn"
+                t-on-mouseleave="onLeaveInsertBranchNodeBtn"
+            >
+                <i class="fa fa-ellipsis-h"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

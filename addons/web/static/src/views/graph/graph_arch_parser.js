@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { evaluateExpr } from "@web/core/py_js/py";
-import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { XMLParser } from "@web/core/utils/xml";
-import { archParseBoolean } from "../helpers/utils";
+import { GROUPABLE_TYPES } from "@web/search/utils/misc";
+import { archParseBoolean } from "@web/views/utils";
 
 const MODES = ["bar", "line", "pie"];
 const ORDERS = ["ASC", "DESC", null];

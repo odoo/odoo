@@ -15,12 +15,17 @@ const ListView = require('web.ListView');
 const mixins = require('web.mixins');
 const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
+var KanbanView = require('web.KanbanView');
 const { patch, unpatch } = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
-const Widget = require('web.Widget');
+var Widget = require('web.Widget');
 const ControlPanel = require('web.ControlPanel');
 const ListController = require('web.ListController');
+
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
+
 const cpHelpers = require('@web/../tests/search/helpers');
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 var createView = testUtils.createView;
@@ -33,8 +38,15 @@ const { markup, onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
 let target;
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     beforeEach: function () {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
         this.data = {
             foo: {
                 fields: {
@@ -140,7 +152,7 @@ QUnit.module('Views', {
     }
 }, function () {
 
-    QUnit.module('ListView');
+    QUnit.module('ListView (legacy)');
 
     QUnit.test('simple readonly list', async function (assert) {
         assert.expect(10);
@@ -2262,7 +2274,7 @@ QUnit.module('Views', {
         // select a record
         await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
         assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
-        const lastElement = list.$('.o_cp_buttons .o_list_buttons').children(":last")[0];
+        const lastElement = list.$('.o_cp_buttons .o_legacy_list_buttons').children(":last")[0];
         assert.strictEqual(lastElement, list.$('.o_cp_buttons .o_list_selection_box')[0],
             "last element should selection box");
         assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
@@ -4394,7 +4406,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.containsNone(list, '.o_list_buttons', "should not have any buttons");
+        assert.containsNone(list, '.o_legacy_list_buttons', "should not have any buttons");
         list.destroy();
     });
 
@@ -10948,6 +10960,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
+            debug: 1,
             arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
             groupBy: ['bar'],
         });
@@ -11768,7 +11781,7 @@ QUnit.module('Views', {
 
         assert.containsNone(target, '.o_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(target, '.o_kanban_view',
+        assert.containsOnce(target, '.o_legacy_kanban_view',
             "should have switched to the kanban view");
 
         // switch back to list view
@@ -11777,7 +11790,7 @@ QUnit.module('Views', {
             view_type: 'list',
         });
 
-        assert.containsNone(target, '.o_kanban_view',
+        assert.containsNone(target, '.o_legacy_kanban_view',
             "should not display the kanban view anymoe");
         assert.containsOnce(target, '.o_list_view',
             "should display the list view");
@@ -11803,12 +11816,12 @@ QUnit.module('Views', {
 
         assert.containsNone(target, '.o_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(target, '.o_kanban_view',
+        assert.containsOnce(target, '.o_legacy_kanban_view',
             "should have switched to the kanban view");
 
         await doAction(webClient, 2);
 
-        assert.containsNone(target, '.o_kanban_view',
+        assert.containsNone(target, '.o_legacy_kanban_view',
             "should not havethe kanban view anymoe");
         assert.containsOnce(target, '.o_list_view',
             "should display the list view");

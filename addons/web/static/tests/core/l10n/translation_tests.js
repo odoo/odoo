@@ -24,7 +24,7 @@ class TestComponent extends Component {}
  * @param {string} lang
  * @returns {Promise<void>}
  */
-const patchLang = async (lang) => {
+async function patchLang(lang) {
     const { defaultLocale, defaultNumberingSystem } = Settings;
     registerCleanup(() => {
         Settings.defaultLocale = defaultLocale;
@@ -50,7 +50,7 @@ const patchLang = async (lang) => {
     });
     serviceRegistry.add("localization", localizationService);
     await makeTestEnv();
-};
+}
 
 QUnit.module("Translations");
 
