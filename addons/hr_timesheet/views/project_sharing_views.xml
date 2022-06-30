@@ -21,15 +21,14 @@
                     <group>
                         <group>
                             <div class="o_td_label">
-                                <label for="planned_hours" string="Initially Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                <label for="planned_hours" string="Allocated Hours" class="me-2" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                <label for="planned_hours" string="Allocated Days" class="me-2" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                <field name="planned_hours" class="oe_inline" widget="timesheet_uom_no_toggle"/>
+                                <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                                    (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle"/> on
+                                    <span class="fw-bold text-dark"> Sub-tasks</span>)
+                                </span>
                             </div>
-                            <field name="planned_hours" widget="timesheet_uom_no_toggle" nolabel="1"/>
-                            <div class="o_td_label" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                                <label for="subtask_planned_hours" string="Sub-tasks Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <label for="subtask_planned_hours" string="Sub-tasks Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                            </div>
-                            <field name="subtask_planned_hours" widget="timesheet_uom_no_toggle" nolabel="1" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
                         </group>
                         <group>
                             <field name="progress" widget="progressbar"/>
@@ -82,9 +81,9 @@
                                 <label class="fw-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
-                            <button name="action_view_subtask_timesheet" type="object" class="o_td_label o_form_label o_form_subtask_button oe_inline oe_link me-0" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Sub-tasks Hours Spent</span>
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Sub-tasks Days Spent</span>
+                            <button name="action_view_subtask_timesheet" type="object" class="o_form_subtask_button oe_inline oe_link mb-2" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
                                   attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>

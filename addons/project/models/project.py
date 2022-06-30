@@ -2005,8 +2005,7 @@ class Task(models.Model):
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
-            # TODO: show a dialog to stop the recurrence
-            raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
+            vals['recurring_task'] = False
         if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
             raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
