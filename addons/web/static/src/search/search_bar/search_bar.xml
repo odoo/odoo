@@ -76,21 +76,21 @@
     </t>
 
     <t t-name="web.SearchBar" owl="1">
-        <div class="o_cp_searchview" role="search" t-ref="root">
-            <div class="o_searchview" role="search" aria-autocomplete="list">
-                <i class="o_searchview_icon oi oi-search"
-                    role="img"
-                    aria-label="Search..."
-                    title="Search..."
-                />
-                <div class="o_searchview_input_container">
-                    <t t-call="web.SearchBar.Facets"/>
-                    <t t-call="web.SearchBar.Input"/>
-                    <t t-if="items.length">
-                        <t t-call="web.SearchBar.Items"/>
-                    </t>
-                </div>
+        <div class="o_searchview" role="search" aria-autocomplete="list" t-ref="root">
+            <i t-if="!env.isSmall"
+                class="o_searchview_icon oi oi-search"
+                role="img"
+                aria-label="Search..."
+                title="Search..."
+            />
+            <div class="o_searchview_input_container">
+                <t t-call="web.SearchBar.Facets"/>
+                <t t-call="web.SearchBar.Input"/>
+                <t t-if="items.length">
+                    <t t-call="web.SearchBar.Items"/>
+                </t>
             </div>
+            <t t-slot="default" />
         </div>
     </t>
 
