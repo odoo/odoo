@@ -341,9 +341,8 @@ export class KanbanCompiler extends ViewCompiler {
     compileTCall(el, params) {
         const compiled = this.compileGenericNode(el, params);
         const tname = el.getAttribute("t-call");
-        const templateKey = params.subTemplateKeys[tname];
-        if (templateKey) {
-            compiled.setAttribute("t-call", templateKey);
+        if (tname in this.templates) {
+            compiled.setAttribute("t-call", `{{templates[${toStringExpression(tname)}]}}`);
         }
         return compiled;
     }
