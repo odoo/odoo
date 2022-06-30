@@ -28,8 +28,8 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
             'holiday_status_id': cls.leave_type.id,
             'department_id': cls.employee_emp.department_id.id,
             'employee_id': cls.employee_emp.id,
-            'date_from': datetime.now(),
-            'date_to': datetime.now() + relativedelta(days=1),
+            'date_from': datetime.now() + relativedelta(days=30),
+            'date_to': datetime.now() + relativedelta(days=31),
             'number_of_days': 1,
         })
 
