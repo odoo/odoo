@@ -29,5 +29,17 @@
 <div><t t-out="body"/></div>
 <blockquote><t t-out="message['body']"/></blockquote>
         </template>
+
+        <template id="mail_attachment_links" name="Attachment links">
+<div style="max-width: 900px; width: 100%;">
+    <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 10px 0px;"/>
+    <div t-foreach="attachments" t-as="attachment">
+        <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
+           style="font-size: 12px; color: #875A7B; text-decoration:none !important; text-decoration:none; font-weight: 400;">
+            📥 <t t-out="attachment.name"/>
+        </a>
+    </div>
+</div>
+        </template>
     </data>
 </odoo>
