@@ -2330,6 +2330,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
+"Der von diesem Abgleich betroffene positive Betrag wird immer in der "
+"Kreditlinie in Fremdwährung ausgedrückt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
@@ -4675,6 +4677,8 @@ msgstr "Kumulierter Saldo"
 msgid ""
 "Cumulated balance depending on the domain and the order chosen in the view."
 msgstr ""
+"Kumulierter Saldo je nach Bereich und der in der Ansicht gewählten "
+"Reihenfolge."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6002,6 +6006,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
 msgstr ""
+"Faktor, der auf die von dieser Verteilungslinie erzeugten "
+"Kontobewegungslinien anzuwenden ist"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -7849,7 +7855,7 @@ msgstr "Datum der Journalbuchung"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal Entry Info"
-msgstr ""
+msgstr "Journaleintragsinformation"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7919,7 +7925,7 @@ msgstr "Journal Konto für ausstehende Zahlungen"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts Account"
-msgstr ""
+msgstr "Journal Konto für ausstehende Eingänge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
@@ -7981,7 +7987,7 @@ msgstr "Journal, indem der Eintrag erstellt werden soll."
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal:"
-msgstr ""
+msgstr "Journal:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -9655,7 +9661,7 @@ msgstr "Oder senden Sie eine Rechnung an %s@%s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
-msgstr ""
+msgstr "Bestellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_origin
@@ -10422,6 +10428,8 @@ msgstr "Bitte geben Sie einen rein positiven Rundungswert an."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
+"Faktor, der auf die von dieser Verteilungslinie erzeugten "
+"Kontobewegungslinien anzuwenden ist"
 
 #. module: account
 #: code:addons/account/models/ir_module_module.py:0
@@ -10989,6 +10997,12 @@ msgstr "Ausgleichsmodelle"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "Einzelne Teilausgleiche"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13764,7 +13778,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "Das Unternehmen, zu dem diese Vertriebslinie gehört."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -13856,7 +13870,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr ""
+msgstr "Das ausgewählte Datum ist durch ein Sperrdatum geschützt"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -16833,7 +16847,7 @@ msgstr "Rechnung(en), die nicht versandt wird (werden)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids
 msgid "l10n-used countries"
-msgstr ""
+msgstr "l10n-used countries"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16898,6 +16912,8 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
+"behält sich das Recht vor, die Dienste eines Inkassounternehmens in Anspruch"
+" zu nehmen. Alle Gerichtskosten gehen zu Lasten des Kunden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

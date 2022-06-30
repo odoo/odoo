@@ -391,6 +391,7 @@ function classToStyle($editable, cssRules) {
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
 function toInline($editable, cssRules, $iframe) {
+    $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
     const doc = editable.ownerDocument;
@@ -448,6 +449,7 @@ function toInline($editable, cssRules, $iframe) {
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
     }
+    $editable.addClass('odoo-editor-editable');
 }
 /**
  * Convert font icons to images.

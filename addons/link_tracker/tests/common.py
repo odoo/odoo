@@ -14,9 +14,6 @@ class MockLinkTracker(common.BaseCase):
     def setUp(self):
         super(MockLinkTracker, self).setUp()
 
-        self._web_base_url = self.env['mail.mail'].get_base_url()
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://test.odoo.com')
-
         def _get_title_from_url(url):
             return "Test_TITLE"
 

@@ -11,8 +11,8 @@
 # qndi <andreas.brueckl@datenpol.at>, 2021
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2022
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1844,6 +1844,18 @@ msgid ""
 "    the SII.  \n"
 "    "
 msgstr ""
+"\n"
+"    The delivery guide (guia de despacho) is needed as a proof\n"
+"    that you are sending goods between A and B.  \n"
+"    \n"
+"    It is configurable on the partner if prices are needed on the \n"
+"    delivery guide and if they need to come from the sale order \n"
+"    or the product itself.  \n"
+"    \n"
+"    It is only when a delivery order is validated that you can create the delivery \n"
+"    guide.  Then it will follow the same flow as for the invoices, sending it to \n"
+"    the SII.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1890,6 +1902,23 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Add VAT Book report which is a legal requirement in Argentina and that holds the VAT detail info of sales or purchases made in a period of time.\n"
+"* Add a VAT summary report that is used to analyze invoicing\n"
+"* Add Digital VAT Book functionality that let us generate TXT files to import in AFIP. The ones we implement are:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Official Documentation AFIP\n"
+"\n"
+"* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - record design (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -8624,6 +8653,11 @@ msgid ""
 "Set shipping address on purchase orders created from purchase agreements\n"
 "and link with originating sale order.\n"
 msgstr ""
+"\n"
+"Dieses Modul stellt die Verbindung zwischen der Bestellanforderung und den Dropshipping-Anwendungen her.\n"
+"\n"
+"Bestimmen Sie die Lieferadresse für Bestellungen aus Kaufverträgen heraus\n"
+"und verknüpfen Sie sie mit dem ursprünglichen Verkaufsauftrag.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -12972,7 +13006,7 @@ msgstr "Bridge zwischen Vertrieb und Buchhaltung"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
-msgstr ""
+msgstr "Brücke zwischen Beständen und Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -19474,7 +19508,7 @@ msgstr "Importiere Wechselkurse aus dem Internet.\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr ""
+msgstr "Importieren/Exportieren von Rechnungen aus XML/PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx

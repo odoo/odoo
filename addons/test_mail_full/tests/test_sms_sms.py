@@ -14,6 +14,11 @@ from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 
 class TestSMSPost(TestMailFullCommon, MockLinkTracker):
 
+    def setUp(self):
+        super(TestSMSPost, self).setUp()
+        self._web_base_url = 'https://test.odoo.com'
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
+
     @classmethod
     def setUpClass(cls):
         super(TestSMSPost, cls).setUpClass()
@@ -43,7 +48,7 @@ class TestSMSPost(TestMailFullCommon, MockLinkTracker):
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
 
-        link = 'https://test.odoo.com/my/super_page?test[0]=42&toto=áâà#title3'
+        link = f'{self._web_base_url}/my/super_page?test[0]=42&toto=áâà#title3'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
@@ -60,14 +65,14 @@ class TestSMSPost(TestMailFullCommon, MockLinkTracker):
         self.assertFalse(new_body)
 
     def test_body_link_shorten_wshort(self):
-        link = 'https://test.odoo.com/r/RAOUL'
+        link = f'{self._web_base_url}/r/RAOUL'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertIn(link, new_body)
         self.assertFalse(self.env['link.tracker'].search([('url', '=', link)]))
 
     def test_body_link_shorten_wunsubscribe(self):
-        link = 'https://test.odoo.com/sms/3/'
+        link = f'{self._web_base_url}/sms/3/'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertIn(link, new_body)
@@ -81,39 +86,39 @@ class TestSMSPost(TestMailFullCommon, MockLinkTracker):
         })
 
         sms_0 = self.env['sms.sms'].create({
-            'body': 'Welcome to https://test.odoo.com',
+            'body': f'Welcome to {self._web_base_url}',
             'number': '10',
             'mailing_id': mailing.id,
         })
         sms_1 = self.env['sms.sms'].create({
-            'body': 'Welcome to https://test.odoo.com/r/RAOUL',
+            'body': f'Welcome to {self._web_base_url}/r/RAOUL',
             'number': '11',
         })
         sms_2 = self.env['sms.sms'].create({
-            'body': 'Welcome to https://test.odoo.com/r/RAOUL',
+            'body': f'Welcome to {self._web_base_url}/r/RAOUL',
             'number': '12',
             'mailing_id': mailing.id,
         })
         sms_3 = self.env['sms.sms'].create({
-            'body': 'Welcome to https://test.odoo.com/leodagan/r/RAOUL',
+            'body': f'Welcome to {self._web_base_url}/leodagan/r/RAOUL',
             'number': '13',
             'mailing_id': mailing.id,
         })
         sms_4 = self.env['sms.sms'].create({
-            'body': 'Welcome to https://test.odoo.com/r/RAOUL\nAnd again,\n'
-                    'https://test.odoo.com/r/RAOUL',
+            'body': f'Welcome to {self._web_base_url}/r/RAOUL\nAnd again,\n'
+                    f'{self._web_base_url}/r/RAOUL',
             'number': '14',
             'mailing_id': mailing.id,
         })
 
         res = (sms_0 | sms_1 | sms_2 | sms_3 | sms_4)._update_body_short_links()
-        self.assertEqual(res[sms_0.id], 'Welcome to https://test.odoo.com')
-        self.assertEqual(res[sms_1.id], 'Welcome to https://test.odoo.com/r/RAOUL')
-        self.assertEqual(res[sms_2.id], 'Welcome to https://test.odoo.com/r/RAOUL/s/%s' % sms_2.id)
-        self.assertEqual(res[sms_3.id], 'Welcome to https://test.odoo.com/leodagan/r/RAOUL')
+        self.assertEqual(res[sms_0.id], f'Welcome to {self._web_base_url}')
+        self.assertEqual(res[sms_1.id], f'Welcome to {self._web_base_url}/r/RAOUL')
+        self.assertEqual(res[sms_2.id], f'Welcome to {self._web_base_url}/r/RAOUL/s/%s' % sms_2.id)
+        self.assertEqual(res[sms_3.id], f'Welcome to {self._web_base_url}/leodagan/r/RAOUL')
         self.assertEqual(
             res[sms_4.id],
-            f'Welcome to https://test.odoo.com/r/RAOUL/s/{sms_4.id}\nAnd again,\nhttps://test.odoo.com/r/RAOUL/s/{sms_4.id}')
+            f'Welcome to {self._web_base_url}/r/RAOUL/s/{sms_4.id}\nAnd again,\n{self._web_base_url}/r/RAOUL/s/{sms_4.id}')
 
     def test_sms_send_batch_size(self):
         self.count = 0

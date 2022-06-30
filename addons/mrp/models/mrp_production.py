@@ -727,6 +727,9 @@ class MrpProduction(models.Model):
                     raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
 
     def write(self, vals):
+        if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
+            vals['move_finished_ids'] = vals['move_byproduct_ids']
+            del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
         res = super(MrpProduction, self).write(vals)
@@ -1935,9 +1938,10 @@ class MrpProduction(models.Model):
                 order_exception, visited = exception
                 order_exceptions.update(order_exception)
                 visited_objects += visited
-            visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
+            visited_objects = [sm for sm in visited_objects if sm._name == 'stock.move']
             impacted_object = []
-            if visited_objects and visited_objects._name == 'stock.move':
+            if visited_objects:
+                visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
                 visited_objects |= visited_objects.mapped('move_orig_ids')
                 impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {
@@ -1982,7 +1986,7 @@ class MrpProduction(models.Model):
         if multiple_lot_components:
             if message:
                 message += "\n"
-            message += _("Component Lots must be unique for mass production. Please review consumption for:\n")
+            message += _("Component Lots must be unique for mass production. Please review reservation for:\n")
             message += "\n".join(component.name for component in multiple_lot_components)
         if message:
             raise UserError(message)

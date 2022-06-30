@@ -60,11 +60,11 @@ msgstr ""
 "    - Vergi Grubu: Vergi bir dizi alt vergidir.\n"
 "    - Sabit: Vergi tutarı, fiyat ne olursa olsun aynı kalır.\n"
 "    - Fiyatın Yüzdesi: Vergi tutarı fiyatın yüzdesidir:\n"
-"        Örneğin 100 * (1+10%) = 110 (fiyata dahil değil)\n"
-"        Örneğin 110 / (1 + 10%) = 100 (fiyata dahil)\n"
+"        örn. 100 * (1+10%) = 110 (fiyata dahil değil)\n"
+"        örn. 110 / (1 + 10%) = 100 (fiyata dahil)\n"
 "    - Vergi Dahil Fiyat Yüzdesi: Vergi tutarı fiyatın bir bölümüdür:\n"
-"        ör. 180 / (1 - 10%) = 200 (fiyata dahil değil)\n"
-"        ör. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
+"        örn. 180 / (1 - 10%) = 200 (fiyata dahil değil)\n"
+"        örn. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
 "        "
 
 #. module: account
@@ -10942,6 +10942,12 @@ msgstr "Denkleştirme Modelleri"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "Denkleştirme Parçaları"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0

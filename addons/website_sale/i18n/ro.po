@@ -10,7 +10,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -491,6 +491,94 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tbody><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"<!-- HEADER -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<tbody><tr><td valign=\"middle\">\n"
+"<t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\" data-oe-t-inline=\"true\"></t>\n"
+"<span style=\"font-size: 10px;\">Coșul Tău</span><br>\n"
+"<span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\" contenteditable=\"false\" oe-keep-contenteditable=\"\">S00060</span>\n"
+"</td><td valign=\"middle\" align=\"right\">\n"
+"<img t-attf-src=\"/logo.png?company={{ company.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"company.name\">\n"
+"</td></tr>\n"
+"<tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"<hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\" contenteditable=\"false\" oe-keep-contenteditable=\"\">\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"</td>\n"
+"</tr>\n"
+"<!-- CONTENT -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<tbody><tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"<h1 style=\"color:#A9A9A9;\">ESTE CEVA ÎN COȘUL TĂU.</h1>\n"
+"Doriți să finalizați achiziția?<br><br>\n"
+"<t t-if=\"object.order_line\" data-oe-t-group=\"0\" data-oe-t-group-active=\"true\">\n"
+"<t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"<hr contenteditable=\"false\" oe-keep-contenteditable=\"\">\n"
+"<table width=\"100%\">\n"
+"<tbody><tr>\n"
+"<td style=\"padding: 10px; width:150px;\">\n"
+"<img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
+"</td>\n"
+"<td>\n"
+"<strong t-out=\"line.product_id.display_name or ''\" contenteditable=\"false\" oe-keep-contenteditable=\"\">[FURN_7800] Desk Combination</strong><br><t t-out=\"line.name or ''\" contenteditable=\"false\" data-oe-t-inline=\"true\" oe-keep-contenteditable=\"\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"</td>\n"
+"<td width=\"100px\" align=\"right\">\n"
+"<t t-out=\"int(line.product_uom_qty) or ''\" contenteditable=\"false\" data-oe-t-inline=\"true\" oe-keep-contenteditable=\"\">10000</t> <t t-out=\"line.product_uom.name or ''\" contenteditable=\"false\" data-oe-t-inline=\"true\" oe-keep-contenteditable=\"\">Units</t>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</t>\n"
+"<hr contenteditable=\"false\" oe-keep-contenteditable=\"\">\n"
+"</t>\n"
+"<div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"<a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"Reluați comanda\n"
+"</a>\n"
+"</div>\n"
+"<div style=\"text-align: center;\"><strong>Vă mulțumim pentru cumpărături cu <t t-out=\"company.name or ''\" contenteditable=\"false\" data-oe-t-inline=\"true\" oe-keep-contenteditable=\"\">My Company (San Francisco)</t>!</strong></div>\n"
+"</td></tr>\n"
+"<tr><td style=\"text-align:center;\">\n"
+"<hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\" contenteditable=\"false\" oe-keep-contenteditable=\"\">\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"</td>\n"
+"</tr>\n"
+"<!-- FOOTER -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<tbody><tr><td valign=\"middle\" align=\"left\" t-out=\"company.name or ''\" contenteditable=\"false\" oe-keep-contenteditable=\"\">My Company (San Francisco)</td></tr>\n"
+"<tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"<t t-out=\"company.phone or ''\" contenteditable=\"false\" data-oe-t-inline=\"true\" oe-keep-contenteditable=\"\">+1 650-123-4567</t>\n"
+"<t t-if=\"company.email\" data-oe-t-group=\"1\" data-oe-t-group-active=\"true\" data-oe-t-inline=\"true\">\n"
+"| <a t-attf-href=\"'mailto:%s' % {{ company.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.email or ''\" contenteditable=\"false\" oe-keep-contenteditable=\"\">info@yourcompany.com</a>\n"
+"</t>\n"
+"<t t-if=\"company.website\" data-oe-t-group=\"2\" data-oe-t-group-active=\"true\" data-oe-t-inline=\"true\">\n"
+"| <a t-attf-href=\"'%s' % {{ company.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.website or ''\" contenteditable=\"false\" oe-keep-contenteditable=\"\">http://www.example.com</a>\n"
+"</t>\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"<tbody><tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"</td></tr>\n"
+"</tbody></table>"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -570,6 +658,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Acceptable file size"
 msgstr "Dimensiunea acceptabilă a fișierului"
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -1817,6 +1910,8 @@ msgstr "Coșul meu"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+#, python-format
 msgid "Name"
 msgstr "Nume"
 
@@ -1840,6 +1935,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr ""
 
@@ -2427,6 +2523,11 @@ msgid "Products Recently Sold With"
 msgstr ""
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Vizualizări produse"
@@ -2536,11 +2637,13 @@ msgstr "Motivul evaluării"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr ""
 
