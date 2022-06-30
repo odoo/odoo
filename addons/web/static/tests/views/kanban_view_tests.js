@@ -10275,4 +10275,60 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
     });
+
+    QUnit.test(
+        "keep focus inside control panel when pressing arrowdown and no kanban card",
+        async (assert) => {
+            serverData.models.partner.records = [];
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                groupBy: ["product_id"],
+                arch: /* xml */ `
+                    <kanban on_create="quick_create">
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="display_name"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+            });
+
+            // Check that there is a column quick create
+            assert.containsOnce(target, ".o_column_quick_create");
+            await editColumnName("new col");
+            await validateColumn();
+
+            // Check that there is only one group and no kanban card
+            assert.containsOnce(target, ".o_kanban_group");
+            assert.containsOnce(target, ".o_kanban_group.o_kanban_no_records");
+            assert.containsNone(target, ".o_kanban_record");
+
+            // Check that the focus is on the searchview input
+            await quickCreateRecord();
+            assert.containsOnce(target, ".o_kanban_group.o_kanban_no_records");
+            assert.containsOnce(target, ".o_kanban_quick_create");
+            assert.containsNone(target, ".o_kanban_record");
+
+            // Somehow give the focus in the control panel, i.e. in the search view
+            // Note that a simple click in the control panel should normally close the quick
+            // create, so in order to give the focus in the search input, the user would
+            // normally have to right-click on it then press escape. These are behaviors
+            // handled through the browser, so we simply call focus directly here.
+            target.querySelector(".o_searchview_input").focus();
+
+            // Make sure no async code will have a side effect on the focused element
+            await nextTick();
+            assert.hasClass(document.activeElement, "o_searchview_input");
+
+            // Trigger the ArrowDown hotkey
+            triggerHotkey("ArrowDown");
+            await nextTick();
+            assert.hasClass(document.activeElement, "o_searchview_input");
+        }
+    );
 });
