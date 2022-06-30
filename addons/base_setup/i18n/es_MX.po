@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_setup
 #. openerp-web
@@ -365,8 +365,8 @@ msgid ""
 "Enable the profiling tool. Profiling may impact performance while being "
 "active."
 msgstr ""
-"Habilite la herramienta de creación de perfiles. La creación de perfiles "
-"puede afectar el rendimiento mientras esté activa."
+"Habilite la herramienta de análisis de rendimiento. Este análisis puede "
+"afectar el rendimiento mientras se encuentre activo."
 
 #. module: base_setup
 #. openerp-web
@@ -621,7 +621,7 @@ msgstr "Visualizar documento"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr "La creación de perfiles estará habilitada hasta"
+msgstr "El análisis de rendimiento estará habilitado hasta"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form

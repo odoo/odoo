@@ -13,6 +13,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
@@ -123,7 +124,7 @@ msgstr ""
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
 msgid ""
 "<div>\n"
-"    <strong>Reminder <t t-out=\"object.name or ''\"/></strong><br/>\n"
+"    <strong>Reminder</strong><br/>\n"
 "    You have not updated your progress for the goal <t t-out=\"object.definition_id.name or ''\"/> (currently reached at <t t-out=\"object.completeness or ''\"/>%) for at least <t t-out=\"object.remind_update_delay or ''\"/> days. Do not forget to do it.\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
@@ -640,7 +641,7 @@ msgstr "アーカイブ済"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge to"
-msgstr ""
+msgstr "チャレンジ割当対象"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
@@ -1364,7 +1365,7 @@ msgstr "HRのチャレンジ"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__has_message
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "メッセージあり"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden

@@ -18,6 +18,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -564,6 +565,11 @@ msgid "Acceptable file size"
 msgstr "ファイル容量上限"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
@@ -708,7 +714,7 @@ msgstr "銀行名"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "基本単位"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
@@ -1803,6 +1809,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr ""
 
@@ -2383,6 +2390,11 @@ msgid "Products Recently Sold With"
 msgstr ""
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr ""
@@ -2486,11 +2498,13 @@ msgstr "評価の理由"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr ""
 
@@ -3506,7 +3520,7 @@ msgstr "eコマースカテゴリ"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "eコマースのフィルタ表示"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3521,7 +3535,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "eコマースサイト"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box

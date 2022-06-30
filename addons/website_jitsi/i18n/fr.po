@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_jitsi
 #: model:ir.model.fields.selection,name:website_jitsi.selection__chat_room__max_capacity__12
@@ -43,7 +43,7 @@ msgstr "20"
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_view_search
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_view_tree
 msgid "Chat Room"
-msgstr ""
+msgstr "Salle de discussion"
 
 #. module: website_jitsi
 #: model:ir.model,name:website_jitsi.model_chat_room_mixin
@@ -54,7 +54,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_jitsi.chat_room_action
 #: model:ir.ui.menu,name:website_jitsi.chat_room_menu
 msgid "Chat Rooms"
-msgstr ""
+msgstr "Salles de discussion"
 
 #. module: website_jitsi
 #. openerp-web
@@ -97,12 +97,12 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__jitsi_server_domain
 #: model:ir.model.fields,field_description:website_jitsi.field_res_config_settings__jitsi_server_domain
 msgid "Jitsi Server Domain"
-msgstr ""
+msgstr "Domaine du serveur Jitsi"
 
 #. module: website_jitsi
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_join_button
 msgid "Join the room"
-msgstr ""
+msgstr "Rejoindre une salle"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__lang_id
@@ -140,7 +140,7 @@ msgstr "Dernière activité"
 #: code:addons/website_jitsi/static/src/xml/chat_room_modal.xml:0
 #, python-format
 msgid "Loading your room..."
-msgstr ""
+msgstr "Chargement de votre salles..."
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__max_capacity
@@ -151,7 +151,7 @@ msgstr "Capacité maximale"
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__max_participant_reached
 msgid "Max participant reached"
-msgstr ""
+msgstr "Nombre maximum de participants atteinta"
 
 #. module: website_jitsi
 #: model:ir.model.fields,help:website_jitsi.field_chat_room__max_participant_reached
@@ -173,7 +173,7 @@ msgstr "Le nombre de participants"
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room_mixin__room_max_participant_reached
 msgid "Peak participants"
-msgstr ""
+msgstr "Pic de participants"
 
 #. module: website_jitsi
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_view_form
@@ -198,8 +198,10 @@ msgid ""
 "The Jitsi server domain can be customized through the settings to use a "
 "different server than the default \"meet.jit.si\""
 msgstr ""
+"Le domaine du serveur Jitsi peut être personnalisé via les paramètres pour "
+"utiliser un serveur différent de celui par défaut \"meet.jit.si\""
 
 #. module: website_jitsi
 #: model_terms:ir.ui.view,arch_db:website_jitsi.res_config_settings_view_form
 msgid "meet.jit.si"
-msgstr ""
+msgstr "meet.jit.si"

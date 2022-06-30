@@ -196,9 +196,9 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         check_company=True,
-        string='Partner', change_default=True)
+        string='Partner', change_default=True, ondelete='restrict')
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
-        compute='_compute_commercial_partner_id')
+        compute='_compute_commercial_partner_id', ondelete='restrict')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     user_id = fields.Many2one(string='User', related='invoice_user_id',
         help='Technical field used to fit the generic behavior in mail templates.')

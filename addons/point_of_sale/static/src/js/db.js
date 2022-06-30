@@ -509,7 +509,7 @@ var PosDB = core.Class.extend({
     },
     /**
      * Return the orders with requested ids if they are unpaid.
-     * @param {array<number>} ids order_ids.
+     * @param {array<string>} ids order_ids (uid).
      * @return {array<object>} list of orders.
      */
     get_unpaid_orders_to_sync: function(ids){

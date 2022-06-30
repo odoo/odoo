@@ -399,7 +399,9 @@ class ProductTemplate(models.Model):
         with_category = 'extra_link' in mapping
         with_price = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        current_website = self.env['website'].get_current_website()
         for product, data in zip(self, results_data):
+            categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
                 monetary_options = {'display_currency': mapping['detail']['display_currency']}
@@ -408,10 +410,10 @@ class ProductTemplate(models.Model):
                     data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
-            if with_category and product.public_categ_ids:
-                data['category'] = {'extra_link_title': _('Categories:') if len(product.public_categ_ids) > 1 else _('Category:')}
+            if with_category and categ_ids:
+                data['category'] = {'extra_link_title': _('Categories:') if len(categ_ids) > 1 else _('Category:')}
                 data['category_url'] = dict()
-                for categ in product.public_categ_ids:
+                for categ in categ_ids:
                     slug_categ = slug(categ)
                     data['category'][slug_categ] = categ.name
                     data['category_url'][slug_categ] = '/shop/category/%s' % slug_categ

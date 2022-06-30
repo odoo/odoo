@@ -29,7 +29,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>رقم اللوط/الرقم المسلسل:</strong>"
+msgstr "<strong>رقم الدفعة/الرقم التسلسلي:</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -425,7 +425,7 @@ msgstr "نهاية الوقت المعين للنشاط"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch transfer"
-msgstr ""
+msgstr "اسم شحنة الدفعة "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -581,12 +581,12 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Set quantities"
-msgstr ""
+msgstr "تعيين الكميات "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
 msgid "Show Allocation"
-msgstr ""
+msgstr "إظهار المخصصات "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -650,7 +650,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "وجهة طرد المخزون "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
@@ -672,7 +672,7 @@ msgstr "الملخص:"
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
-msgstr ""
+msgstr "حقل تقني يٌستخدم لتحديد ما إذا كان زر \"المخصصات\" يجب إظهاره. "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -704,6 +704,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"الهدف من تحويل الدفعة هو تجميع العمليات التي\n"
+"            قد تحتاج إلى إجرائها معاً لزيادة الكفاءة.\n"
+"            قد تكون مفيدة أيضاً لتعيين الوظائف (شخص واحد = دفعة واحدة) أو\n"
+"            المساعدة في إدارة أوقات العمليات (المهام التي يجب إنجازها الساعة 1 مساءً). "
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave

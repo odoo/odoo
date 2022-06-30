@@ -16,6 +16,7 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
+# Luiz Fernando <lfpsgs@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,13 +24,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2021\n"
+"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:0
@@ -889,7 +890,7 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__has_message
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Há Mensagem"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1095,6 +1096,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
 msgstr ""
 
@@ -1235,6 +1237,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+#: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
 msgstr ""
 
@@ -1309,7 +1312,7 @@ msgstr "Número de Ações"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Número de erros"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
@@ -1350,7 +1353,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "Others"
-msgstr ""
+msgstr "Outros"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_blogs_display
@@ -1494,7 +1497,7 @@ msgstr "Erro de Envio de SMS"
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_horizontal
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_list
 msgid "Sample"
-msgstr ""
+msgstr "Amostra"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_snippet_filter.py:0

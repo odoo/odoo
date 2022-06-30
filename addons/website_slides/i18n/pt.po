@@ -16,6 +16,7 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2021
+# Luiz Fernando <lfpsgs@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,13 +24,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Marcelo Pereira <marcelo.pereira@arxi.pt>, 2021\n"
+"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
@@ -2536,7 +2537,7 @@ msgstr "Seguidores (Parceiros)"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "ícone do Font awesome ex. fa-tasks"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
@@ -2694,7 +2695,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Há Mensagem"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_3
@@ -2794,7 +2795,7 @@ msgstr "Ícone"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ícone para indicar uma exceção na atividade."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
@@ -3416,7 +3417,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Prazo das Minhas Atividades"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3490,7 +3491,7 @@ msgstr "Seguinte"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Nova Atividade de Calendário"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_date_deadline
@@ -3553,7 +3554,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr ""
+msgstr "Sem dados!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -3645,7 +3646,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Número de erros"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
@@ -4311,6 +4312,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Código de Segurança"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

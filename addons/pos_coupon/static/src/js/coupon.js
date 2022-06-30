@@ -934,9 +934,9 @@ odoo.define('pos_coupon.pos', function (require) {
                 if (program.discount_specific_product_ids.has(line.get_product().id)) {
                     const key = this._getGroupKey(line);
                     if (!(key in amountsToDiscount)) {
-                        amountsToDiscount[key] = line.get_quantity() * line.price;
+                        amountsToDiscount[key] = line.get_base_price();
                     } else {
-                        amountsToDiscount[key] += line.get_quantity() * line.price;
+                        amountsToDiscount[key] += line.get_base_price();
                     }
                     productIdsToAccount.add(line.get_product().id);
                 }
@@ -986,9 +986,9 @@ odoo.define('pos_coupon.pos', function (require) {
             for (let line of this._getRegularOrderlines()) {
                 const key = this._getGroupKey(line);
                 if (!(key in amountsToDiscount)) {
-                    amountsToDiscount[key] = line.get_quantity() * line.price;
+                    amountsToDiscount[key] = line.get_base_price();
                 } else {
-                    amountsToDiscount[key] += line.get_quantity() * line.price;
+                    amountsToDiscount[key] += line.get_base_price();
                 }
                 productIdsToAccount.add(line.get_product().id);
             }
