@@ -564,7 +564,7 @@ async function start(param0 = {}) {
     pyEnv.mockServer = MockServer.currentMockServer;
     const openView = async (action, options) => {
         action['type'] = action['type'] || 'ir.actions.act_window';
-        return doAction(webClient, action, { props: options });
+        await afterNextRender(() => doAction(webClient, action, { props: options }));
     };
     await waitUntilEventPromise;
     return {
