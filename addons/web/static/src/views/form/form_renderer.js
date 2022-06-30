@@ -17,12 +17,14 @@ const { Component, useSubEnv, useRef, useState, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {
-        const { arch, xmlDoc } = this.props.archInfo;
+        const { archInfo, Compiler, record } = this.props;
+        const { arch, xmlDoc } = archInfo;
+        const templates = { FormRenderer: xmlDoc };
         this.state = useState({}); // Used by Form Compiler
-        this.templateId = useViewCompiler(this.props.Compiler || FormCompiler, arch, xmlDoc);
-        useSubEnv({ model: this.props.record.model });
+        this.templates = useViewCompiler(Compiler || FormCompiler, arch, templates, "FormRenderer");
+        useSubEnv({ model: record.model });
         useBounceButton(useRef("compiled_view_root"), () => {
-            return !this.props.record.isInEdition;
+            return !record.isInEdition;
         });
     }
 
@@ -31,7 +33,7 @@ export class FormRenderer extends Component {
     }
 }
 
-FormRenderer.template = xml`<t t-call="{{ templateId }}" />`;
+FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" />`;
 FormRenderer.components = {
     Field,
     FormLabel,
