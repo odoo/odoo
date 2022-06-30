@@ -10088,4 +10088,35 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record span", 3);
         assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "ged");
     });
+
+    QUnit.test("Dropdowns in subtemplates", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <div class="dropdown-menu">
+                                MENU
+                            </div>
+                            <field name="foo" />
+                            <t t-call="another-template"/>
+                        </div>
+                        <span t-name="another-template">
+                            <div class="dropdown-toggle">
+                                TOGGLER
+                            </div>
+                        </span>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.containsN(target, ".o_kanban_record .dropdown", 4);
+
+        await toggleRecordDropdown(0);
+
+        assert.strictEqual(getCardTexts()[0], "yop\nTOGGLER\nMENU");
+    });
 });

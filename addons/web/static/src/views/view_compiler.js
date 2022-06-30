@@ -206,7 +206,7 @@ export function makeSeparator(title) {
 }
 
 export class ViewCompiler {
-    constructor() {
+    constructor(templates) {
         /** @type {number} */
         this.id = 1;
         /** @type {Compiler[]} */
@@ -216,6 +216,7 @@ export class ViewCompiler {
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
+        this.templates = templates;
         this.ctx = { readonly: "props.readonly" };
         this.setup();
     }
@@ -249,14 +250,14 @@ export class ViewCompiler {
     }
 
     /**
-     * @param {Element} xmlElement
+     * @param {string} key
      * @param {Record<string, any>} params
-     * @returns {Element}
+     * @returns {string}
      */
-    compile(xmlElement, params = {}) {
-        const newRoot = createElement("t");
-        const child = this.compileNode(xmlElement, params);
-        return append(newRoot, child);
+    compile(key, params = {}) {
+        const child = this.compileNode(this.templates[key], params);
+        const newRoot = createElement("t", [child]);
+        return newRoot;
     }
 
     /**
@@ -428,20 +429,22 @@ export class ViewCompiler {
 
 /**
  * @param {typeof ViewCompiler} ViewCompiler
- * @param {string} templateKey
- * @param {Element} xmlDoc
+ * @param {string} rawArch
+ * @param {Record<string, Element>} templates
  * @param {Record<string, any>} [params]
- * @returns {string}
+ * @returns {Record<string, string>}
  */
-export function useViewCompiler(ViewCompiler, templateKey, xmlDoc, params) {
-    // Creates a new compiled template if the given template key hasn't been
-    // compiled already.
-    if (templateKey === undefined) {
-        throw new Error("templateKey can not be Undefined!");
+export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
+    if (!templateIds[rawArch]) {
+        templateIds[rawArch] = {};
     }
-    if (!templateIds[templateKey]) {
-        const compiledDoc = new ViewCompiler().compile(xmlDoc, params);
-        templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
+    const compiledTemplates = templateIds[rawArch];
+    const compiler = new ViewCompiler(templates);
+    for (const key in templates) {
+        if (!compiledTemplates[key]) {
+            const compiledDoc = compiler.compile(key, params);
+            compiledTemplates[key] = xml`${compiledDoc.outerHTML}`;
+        }
     }
-    return templateIds[templateKey];
+    return { ...compiledTemplates };
 }

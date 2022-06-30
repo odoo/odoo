@@ -5,6 +5,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
+import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
@@ -13,7 +14,6 @@ import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { evalDomain } from "../utils";
 import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
@@ -159,37 +159,12 @@ export class KanbanRecord extends Component {
         const { arch } = archInfo;
         const ViewCompiler = Compiler || KanbanCompiler;
 
-        const subTemplateKeys = {};
-        let cardTemplate, tooltipTemplate;
-        for (const tname in templates) {
-            if (tname === KANBAN_BOX_ATTRIBUTE) {
-                cardTemplate = templates[tname];
-            } else if (tname === KANBAN_TOOLTIP_ATTRIBUTE) {
-                tooltipTemplate = templates[tname];
-            } else {
-                subTemplateKeys[tname] = useViewCompiler(
-                    ViewCompiler,
-                    `${tname}_${arch}`,
-                    templates[tname],
-                    { subTemplateKeys }
-                );
-            }
-        }
-        this.templateId = useViewCompiler(ViewCompiler, arch + KANBAN_BOX_ATTRIBUTE, cardTemplate, {
-            subTemplateKeys,
-        });
-        if (tooltipTemplate) {
-            const compiled = useViewCompiler(
-                ViewCompiler,
-                arch + KANBAN_TOOLTIP_ATTRIBUTE,
-                tooltipTemplate,
-                {
-                    subTemplateKeys,
-                }
-            );
+        this.templates = useViewCompiler(ViewCompiler, arch, templates, KANBAN_BOX_ATTRIBUTE);
+
+        if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
                 info: this,
-                template: compiled,
+                template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
             });
         }
 
@@ -418,4 +393,4 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
-KanbanRecord.template = xml`<t t-call="{{ templateId }}" />`;
+KanbanRecord.template = xml`<t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}" />`;
