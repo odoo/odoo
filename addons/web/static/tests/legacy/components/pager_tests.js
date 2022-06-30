@@ -23,7 +23,7 @@ odoo.define('web.pager_tests', function (require) {
 
     QUnit.module('Components', {}, function () {
 
-        QUnit.module('Pager');
+        QUnit.module('Legacy Pager');
 
         QUnit.test('basic interactions', async function (assert) {
             assert.expect(2);

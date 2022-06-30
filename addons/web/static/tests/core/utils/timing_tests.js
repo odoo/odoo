@@ -74,7 +74,7 @@ QUnit.module("utils", () => {
             assert.step("myFunc");
             return 42;
         };
-        const myDebouncedFunc = debounce(myFunc, 3000, true);
+        const myDebouncedFunc = debounce(myFunc, 3000, { immediate: true });
         myDebouncedFunc().then((x) => {
             assert.step("resolved " + x);
         });
@@ -96,6 +96,22 @@ QUnit.module("utils", () => {
         await Promise.resolve(); // wait for promise returned by debounce
         await Promise.resolve(); // wait for promise returned chained onto it (step resolved x)
         assert.verifySteps(["resolved 42"]);
+    });
+
+    QUnit.test("debounce with 'animationFrame' delay", async function (assert) {
+        const { execRegisteredTimeouts } = mockTimeout();
+        const execRegisteredAnimationFrames = mockAnimationFrame();
+        const myFunc = () => {
+            assert.step("myFunc");
+        };
+        debounce(myFunc, "animationFrame")();
+        assert.verifySteps([]);
+
+        execRegisteredTimeouts(); // should have no effect as we wait for the animation frame
+        assert.verifySteps([]);
+
+        execRegisteredAnimationFrames(); // should call the function
+        assert.verifySteps(["myFunc"]);
     });
 
     QUnit.test("debounced call can be cancelled", async function (assert) {

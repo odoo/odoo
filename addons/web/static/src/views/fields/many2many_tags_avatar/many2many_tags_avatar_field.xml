@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyTagsAvatarField" owl="1">
+        <TagsList tags="tags" itemsVisible="props.itemsVisible"  t-on-keydown="onTagsKeydown"/>
+        <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-block mw-100" t-on-keydown="onAutoCompleteKeydown" t-ref="autoComplete">
+            <Many2XAutocomplete
+                id="props.id"
+                placeholder="props.placeholder"
+                resModel="props.relation"
+                autoSelect="true"
+                fieldString="props.string"
+                activeActions="activeActions"
+                update="update"
+                quickCreate="activeActions.canCreate ? quickCreate : null"
+                context="props.context"
+                getDomain.bind="getDomain"
+                isToMany="true"
+            />
+        </div>
+    </t>
+
+</templates>

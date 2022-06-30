@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { Domain } from "@web/core/domain";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -86,23 +86,23 @@ const FIELD_OPERATORS = {
     ],
 };
 
-const parseField = (field, value, opts = {}) => {
+function parseField(field, value, opts = {}) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
     return parse(value, { field, ...opts });
-};
+}
 
-const formatField = (field, value, opts = {}) => {
+function formatField(field, value, opts = {}) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { field, ...opts });
-};
+    return format(value, { digits: field.digits, ...opts });
+}
 
 export class CustomFilterItem extends Component {
     setup() {
@@ -176,7 +176,11 @@ export class CustomFilterItem extends Component {
                 if (genericType === "datetime") {
                     condition.value[0] = condition.value[0].set({ hour: 0, minute: 0, second: 0 });
                     if (operator.symbol === "between") {
-                        condition.value[1] = condition.value[1].set({ hour: 23, minute: 59, second: 59 });
+                        condition.value[1] = condition.value[1].set({
+                            hour: 23,
+                            minute: 59,
+                            second: 59,
+                        });
                     }
                 }
                 break;

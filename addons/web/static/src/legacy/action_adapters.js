@@ -7,10 +7,9 @@ import { objectToQuery } from "../core/browser/router_service";
 import { useDebugCategory } from "../core/debug/debug_context";
 import { Dialog } from "../core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ViewNotFoundError } from "../webclient/actions/action_service";
+import { ViewNotFoundError } from "@web/views/view";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, useLegacyRefs } from "./utils";
 import { mapDoActionOptionAPI } from "./backend_utils";
-import { setScrollPosition } from "@web/webclient/actions/scrolling";
 
 const {
     Component,
@@ -94,7 +93,11 @@ class ActionAdapter extends ComponentAdapter {
         });
 
         this.onScrollTo = (payload) => {
-            setScrollPosition(this.wowlEnv, { left: payload.left, top: payload.top });
+            const contentEl = this.el.querySelector(".o_content");
+            if (contentEl) {
+                contentEl.scrollLeft = payload.left || 0;
+                contentEl.scrollTop = payload.top || 0;
+            }
         };
     }
 
@@ -301,7 +304,7 @@ export class ViewAdapter extends ActionAdapter {
         useDebugCategory("action", debugContext);
         useDebugCategory("view", debugContext);
         if (this.props.viewInfo.type === "form") {
-            useDebugCategory("form", debugContext);
+            useDebugCategory("form_legacy", debugContext);
         }
         this.env = Component.env;
     }
@@ -376,21 +379,21 @@ export class ViewAdapter extends ActionAdapter {
     async _trigger_up(ev) {
         const payload = ev.data;
         if (ev.name === "switch_view") {
-            try {
-                const props = {};
-                if (payload.mode) {
-                    props.mode = payload.mode;
+            if (payload.view_type === "form") {
+                if (payload.res_id) {
+                    return this.props.selectRecord(payload.res_id, { mode: payload.mode });
+                } else {
+                    return this.props.createRecord();
                 }
-                // if (payload.res_id) {
-                // if make 'open a record, come back, and create a new record' crash
-                props.resId = payload.res_id;
-                // }
-                await this.actionService.switchView(payload.view_type, props);
-            } catch (e) {
-                if (e instanceof ViewNotFoundError) {
-                    return;
+            } else {
+                try {
+                    await this.actionService.switchView(payload.view_type);
+                } catch (e) {
+                    if (typeof e === "object" && e instanceof ViewNotFoundError) {
+                        return;
+                    }
+                    throw e;
                 }
-                throw e;
             }
         } else if (ev.name === "execute_action") {
             const buttonContext = new Context(payload.action_data.context).eval();

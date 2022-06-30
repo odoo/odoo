@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SelectCreateDialog" owl="1">
+        <Dialog title="props.title">
+            <View t-props="viewProps" />
+            <t t-set-slot="footer">
+                <t t-if="props.multiSelect">
+                    <button class="btn btn-primary o_select_button"
+                        t-att-disabled="state.resIds.length === 0"
+                        data-hotkey="v"
+                        t-on-click="() => this.select(state.resIds)"
+                    >
+                        Select
+                    </button>
+                </t>
+                <t t-if="!props.noCreate">
+                    <button class="btn btn-primary" data-hotkey="c" t-on-click="createEditRecord">Create</button>
+                </t>
+                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="() => this.props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

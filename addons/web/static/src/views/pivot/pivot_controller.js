@@ -5,11 +5,11 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { download } from "@web/core/network/download";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
-import { useModel } from "@web/views/helpers/model";
-import { standardViewProps } from "@web/views/helpers/standard_view_props";
-import { useSetupView } from "@web/views/helpers/view_hook";
+import { useModel } from "@web/views/model";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { useSetupView } from "@web/views/view_hook";
 
-const { Component } = owl;
+const { Component, useRef } = owl;
 
 export class PivotController extends Component {
     setup() {
@@ -17,6 +17,7 @@ export class PivotController extends Component {
         this.model = useModel(this.props.Model, this.props.modelParams);
 
         useSetupView({
+            rootRef: useRef("root"),
             getLocalState: () => {
                 const { data, metaData } = this.model;
                 return { data, metaData };

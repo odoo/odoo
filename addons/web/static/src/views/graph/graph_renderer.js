@@ -2,7 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { BORDER_WHITE, DEFAULT_BG, getColor, hexToRGBA } from "./colors";
-import { formatFloat } from "@web/fields/formatters";
+import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { loadJS } from "@web/core/assets";

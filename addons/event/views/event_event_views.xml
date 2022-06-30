@@ -185,34 +185,33 @@
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                 <div class="col-3 bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                                    <div t-out="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
+                                    <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
                                     <div>
-                                        <t t-out="moment(record.date_begin.raw_value).format('MMM')"/>
-                                        <t t-out="record.date_begin.raw_value.getFullYear()"/>
+                                        <t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
                                     </div>
-                                    <div><t t-out="moment(record.date_begin.raw_value).format('LT')"/></div>
-                                    <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
-                                        <i class="fa fa-arrow-right o_event_fontsize_09" title="End date"/>
-                                        <t t-out="moment(record.date_end.raw_value).format('D MMM')"/>
-                                     </div>
+                                    <div><t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('t')"/></div>
+                                        <div t-if="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('DDMMYYYY') !== luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('DDMMYYYY')">
+                                            <i class="fa fa-arrow-right mr-2 o_event_fontsize_09" title="End date"/>
+                                            <t t-esc="luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('d MMM')"/>
+                                        </div>
                                 </div>
                                 <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                     <div>
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-out="record.address_id.value"/></div>
+                                        <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                     </div>
                                     <h5 class="o_event_fontsize_11 p-0">
                                         <a name="%(event_registration_action_stats_from_event)d"
                                            type="action"
                                            context="{'search_default_expected': True}">
-                                            <t t-out="record.seats_expected.raw_value"/> Expected attendees
+                                            <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                         </a>
                                         <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
                                         <div  class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value"><br/>
                                             <a class="pl-2" name="%(event_registration_action_stats_from_event)d" type="action" context="{'search_default_confirmed': True}">
-                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-out="total_seats"/> Confirmed</span>
+                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-esc="total_seats"/> Confirmed</span>
                                             </a>
                                         </div>
                                     </h5>

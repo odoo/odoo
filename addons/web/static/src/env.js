@@ -118,7 +118,7 @@ async function _startServices(env, toStart) {
             }
             if (value instanceof Promise) {
                 proms.push(
-                    new Promise(async (resolve) => {
+                    new Promise((resolve) => {
                         value
                             .then((val) => {
                                 services[name] = val || null;

@@ -152,7 +152,7 @@
                                 <div class="d-flex flex-row">
                                     <div class="o_rating_kanban_left mr-3">
                                         <h1 class="o_rating_value text-center text-primary" t-esc="val_stars"/>
-                                        <i t-foreach="_.range(0, val_integer)" t-as="num"
+                                        <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
                                            class="fa fa-star"
                                            aria-label="A star"
                                            role="img"/>
@@ -160,7 +160,7 @@
                                            class="fa fa-star-half-o"
                                            aria-label="Half a star"
                                            role="img"/>
-                                        <i t-foreach="_.range(0, empty_star)" t-as="num"
+                                        <i t-foreach="[...Array(empty_star).keys()]" t-as="num" t-key="num"
                                            class="fa fa-star text-black-25"
                                            aria-label="A star"
                                            role="img"/>

@@ -43,7 +43,7 @@ function getHtmlView(html, viewType) {
     });
 }
 
-QUnit.module("Views", {
+QUnit.module("LegacyViews", {
     beforeEach: function () {
         this.data = {
             test_model: {

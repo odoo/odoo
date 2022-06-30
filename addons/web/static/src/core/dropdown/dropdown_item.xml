@@ -7,7 +7,7 @@
       t-att-href="props.href"
       class="dropdown-item"
       t-att-class="props.class"
-      t-on-click="onClick"
+      t-on-click.stop="onClick"
       t-att-title="props.title"
       t-att-data-hotkey="props.hotkey"
       t-att="dataAttributes"

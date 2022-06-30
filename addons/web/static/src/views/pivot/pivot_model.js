@@ -5,8 +5,8 @@ import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/ut
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { computeVariation } from "@web/core/utils/numbers";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
-import { Model } from "@web/views/helpers/model";
-import { computeReportMeasures, processMeasure } from "@web/views/helpers/utils";
+import { Model } from "@web/views/model";
+import { computeReportMeasures, processMeasure } from "@web/views/utils";
 
 /**
  * Pivot Model
@@ -1521,9 +1521,11 @@ export class PivotModel extends Model {
             metaData.fields[fieldName] &&
             metaData.fields[fieldName].type === "boolean"
         ) {
-            return value === undefined ?
-                this.env._t('None')
-                : (value ? this.env._t('Yes') : this.env._t('No'));
+            return value === undefined
+                ? this.env._t("None")
+                : value
+                ? this.env._t("Yes")
+                : this.env._t("No");
         }
         if (value === false) {
             return this.env._t("None");

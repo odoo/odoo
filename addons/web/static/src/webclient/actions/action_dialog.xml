@@ -7,7 +7,7 @@
     </xpath>
     <xpath expr="//main[hasclass('modal-body')]" position="attributes">
       <attribute name="t-att-class">
-        {"o_act_window": actionType === "ir.actions.act_window"}
+        {"o_act_window": props.actionType === "ir.actions.act_window"}
       </attribute>
     </xpath>
     <xpath expr="//t[@t-slot='default']" position="replace">
@@ -19,7 +19,7 @@
     <xpath expr="//t[@t-slot='footer']" position="replace">
       <t t-if="!isLegacy">
         <t t-slot="buttons">
-          <button class="btn btn-primary" t-on-click="data.close">Ok</button>
+          <button class="btn btn-primary o-default-button" t-on-click="data.close">Ok</button>
         </t>
       </t>
     </xpath>

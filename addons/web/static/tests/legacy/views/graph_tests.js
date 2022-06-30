@@ -82,7 +82,7 @@ function checkLegend(assert, graph, expectedLegendLabels) {
 }
 
 let serverData;
-QUnit.module('Views', {
+QUnit.module('LegacyViews', {
     beforeEach: function () {
         this.data = {
             foo: {

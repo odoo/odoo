@@ -3,11 +3,12 @@
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
+import { formatPercentage } from "@web/views/fields/formatters";
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
 import fieldUtils from "web.field_utils";
 
 const { Component, onWillUpdateProps, useRef } = owl;
-const formatterRegistry = registry.category("formatters");
+const formatters = registry.category("formatters");
 
 export class PivotRenderer extends Component {
     setup() {
@@ -37,7 +38,7 @@ export class PivotRenderer extends Component {
         }
         //If the formatter is not found on the registry, search on the legacy fieldUtils.format.
         //This must be removed when all the formatters will be on the registry
-        const formatter = formatterRegistry.get(formatType, null) || fieldUtils.format[formatType];
+        const formatter = formatters.get(formatType, null) || fieldUtils.format[formatType];
         if (!formatter) {
             throw new Error(`${formatType} is not a defined formatter!`);
         }
@@ -54,7 +55,6 @@ export class PivotRenderer extends Component {
         if (isNaN(cell.value)) {
             return "-";
         }
-        const formatPercentage = formatterRegistry.get("percentage");
         return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
     /**

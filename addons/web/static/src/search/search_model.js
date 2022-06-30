@@ -266,8 +266,10 @@ export class SearchModel extends EventBus {
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.domainParts = {};
             this.display = this._getDisplay(config.display);
-
-            return this._reloadSections();
+            if (!this.searchPanelInfo.loaded) {
+                return this._reloadSections();
+            }
+            return;
         }
 
         this.blockNotification = true;
@@ -310,7 +312,7 @@ export class SearchModel extends EventBus {
         );
         const { labels, preSearchItems, searchPanelInfo, sections } = parser.parse();
 
-        this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };
+        this.searchPanelInfo = { ...searchPanelInfo, loaded: false, shouldReload: false };
 
         await Promise.all(labels.map((cb) => cb(this.orm)));
 
@@ -743,6 +745,11 @@ export class SearchModel extends EventBus {
     getIrFilterValues(params) {
         const { irFilter } = this._getIrFilterDescription(params);
         return irFilter;
+    }
+
+    getPreFavoriteValues(params) {
+        const { preFavorite } = this._getIrFilterDescription(params);
+        return preFavorite;
     }
 
     /**
@@ -1284,6 +1291,7 @@ export class SearchModel extends EventBus {
     async _fetchSections(categoriesToLoad, filtersToLoad) {
         await this._fetchCategories(categoriesToLoad);
         await this._fetchFilters(filtersToLoad);
+        this.searchPanelInfo.loaded = true;
     }
 
     _getActiveComparison() {
@@ -1423,9 +1431,9 @@ export class SearchModel extends EventBus {
         let domain;
         try {
             domain = Domain.and(domains);
-            return params.raw ? domain : domain.toList(
-                Object.assign({}, this.globalContext, this.userService.context)
-            );
+            return params.raw
+                ? domain
+                : domain.toList(Object.assign({}, this.globalContext, this.userService.context));
         } catch (error) {
             throw new Error(
                 `${this.env._t("Failed to evaluate the domain")} ${domain.toString()}.\n${
@@ -1735,6 +1743,11 @@ export class SearchModel extends EventBus {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
+        const gs = this.env.__getOrderBy__.callbacks;
+        let localOrderBy;
+        if (gs.length) {
+            localOrderBy = gs.flatMap((g) => g());
+        }
         const context = makeContext([this._getContext(), localContext]);
         const userContext = this.userService.context;
         for (const key in context) {
@@ -1746,7 +1759,7 @@ export class SearchModel extends EventBus {
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
         const comparison = this.getFullComparison();
-        const orderBy = this._getOrderBy();
+        const orderBy = localOrderBy || this._getOrderBy();
         const userId = isShared ? false : this.userService.userId;
 
         const preFavorite = {
@@ -2094,6 +2107,6 @@ export class SearchModel extends EventBus {
         const parser = new SearchArchParser(searchViewDescription, searchViewFields);
         const { searchPanelInfo } = parser.parse();
 
-        this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };
+        this.searchPanelInfo = { ...searchPanelInfo, loaded: false, shouldReload: false };
     }
 }

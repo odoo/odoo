@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { getFixture, mount, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
-import testUtils from "web.test_utils";
-import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture, mount } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -14,23 +13,14 @@ let target;
 // Helpers
 // -----------------------------------------------------------------------------
 
-async function createFileInput(config) {
-    const fakeHTTPService = {
-        start() {
-            return {
-                post: config.mockPost || (() => {}),
-            };
-        },
-    };
-    serviceRegistry.add("http", fakeHTTPService);
-
-    const env = await makeTestEnv();
-
-    const fileInput = await mount(FileInput, target, {
-        env,
-        props: config.props,
+async function createFileInput({ mockPost, props }) {
+    serviceRegistry.add("http", {
+        start: () => ({
+            post: mockPost || (() => {}),
+        }),
     });
-    return fileInput;
+    const env = await makeTestEnv();
+    await mount(FileInput, target, { env, props });
 }
 
 // -----------------------------------------------------------------------------
@@ -39,6 +29,8 @@ async function createFileInput(config) {
 
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(() => {
+        patchWithCleanup(odoo, { csrf_token: "dummy" });
+
         target = getFixture();
     });
 
@@ -53,7 +45,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await createFileInput({
             mockPost: (route, params) => {
                 assert.deepEqual(params, {
-                    csrf_token: odoo.csrf_token,
+                    csrf_token: "dummy",
                     ufile: [],
                 });
                 assert.step(route);
@@ -61,7 +53,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             },
             props: {},
         });
-        const input = target.querySelector("input");
+        const input = target.querySelector(".o_file_input input");
 
         assert.strictEqual(
             target.querySelector(".o_file_input").innerText.trim().toUpperCase(),
@@ -70,10 +62,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         );
         assert.strictEqual(input.accept, "*", "Input should accept all files by default");
 
-        await testUtils.dom.triggerEvent(input, "change");
+        await triggerEvent(input, null, "change", {}, { skipVisibilityCheck: true });
 
         assert.notOk(input.multiple, "'multiple' attribute should not be set");
-        assert.verifySteps(["/web/binary/upload"]);
+        assert.verifySteps(["/web/binary/upload_attachment"]);
     });
 
     QUnit.test("Upload a file: custom attachment", async function (assert) {
@@ -81,11 +73,11 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await createFileInput({
             props: {
-                accepted_file_extensions: ".png",
-                action: "/web/binary/upload_attachment",
-                id: 5,
-                model: "res.model",
-                multi_upload: true,
+                acceptedFileExtensions: ".png",
+                multiUpload: true,
+                resId: 5,
+                resModel: "res.model",
+                route: "/web/binary/upload",
                 onUpload(files) {
                     assert.strictEqual(
                         files.length,
@@ -98,20 +90,30 @@ QUnit.module("Components", ({ beforeEach }) => {
                 assert.deepEqual(params, {
                     id: 5,
                     model: "res.model",
-                    csrf_token: odoo.csrf_token,
+                    csrf_token: "dummy",
                     ufile: [],
                 });
                 assert.step(route);
                 return "[]";
             },
         });
-        const input = target.querySelector("input");
+        const input = target.querySelector(".o_file_input input");
 
         assert.strictEqual(input.accept, ".png", "Input should now only accept pngs");
 
-        await testUtils.dom.triggerEvent(input, "change");
+        await triggerEvent(input, null, "change", {}, { skipVisibilityCheck: true });
 
         assert.ok(input.multiple, "'multiple' attribute should be set");
-        assert.verifySteps(["/web/binary/upload_attachment"]);
+        assert.verifySteps(["/web/binary/upload"]);
+    });
+
+    QUnit.test("Hidden file input", async (assert) => {
+        assert.expect(1);
+
+        await createFileInput({
+            props: { hidden: true },
+        });
+
+        assert.isNotVisible(target.querySelector(".o_file_input"));
     });
 });

@@ -57,6 +57,9 @@ export class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
+        if (!this.followerListMenuView.exists()) {
+            return;
+        }
         // since dropdown is conditionally shown based on state, dropdownRef can be null
         if (this._dropdownRef.el && !this._dropdownRef.el.contains(ev.target)) {
             this.followerListMenuView.hide();

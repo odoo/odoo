@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListView" owl="1">
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
+                <t t-set-slot="layout-buttons">
+                    <t t-if="env.isSmall and nbSelected">
+                        <t t-call="web.ListView.Selection" />
+                    </t>
+                    <t t-else="">
+                        <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-set-slot="control-panel-bottom-left">
+                    <t t-if="props.info.actionMenus and model.root.selection.length">
+                        <ActionMenus
+                            activeIds="model.root.selection.map((r) => r.resId)"
+                            context="props.context"
+                            domain="props.domain"
+                            items="getActionMenuItems()"
+                            isDomainSelected="model.root.isDomainSelected"
+                            resModel="model.root.resModel"/>
+                    </t>
+                </t>
+                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.ListView.Buttons" owl="1">
+        <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
+            <t t-if="props.showButtons">
+                <t t-if="model.root.editedRecord">
+                    <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click.stop="onClickSave">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard changes" aria-label="Discard changes" data-hotkey="j" t-on-click="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
+                        Discard
+                    </button>
+                </t>
+                <t t-elif="activeActions['create'] and (!model.root.isGrouped or !editable)">
+                    <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+                        Create
+                    </button>
+                </t>
+                <t t-if="nbTotal and !nbSelected and activeActions['exportXlsx'] and isExportEnable and !env.isSmall">
+                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
+                </t>
+            </t>
+            <t t-if="nbSelected">
+                <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
+                    <ListViewHeaderButton
+                        clickParams="button.clickParams"
+                        defaultRank="button.defaultRank"
+                        domain="props.domain"
+                        icon="button.icon"
+                        getSelectedResIds.bind="getSelectedResIds"
+                        resModel="model.root.resModel"
+                        string="button.string"
+                        title="button.title"
+                    />
+                </t>
+                <t t-if="!env.isSmall">
+                    <t t-call="web.ListView.Selection"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.ListView.Selection" owl="1">
+        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
+            <t t-if="env.isSmall">
+                <button class="btn btn-link py-0 o_discard_selection" t-on-click="discardSelection">
+                    <span class="fa-2x">&#215;</span>
+                </button>
+            </t>
+            <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+            <t t-else="">
+                <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
+                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal" t-on-click="onSelectDomain">
+                    <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+                </a>
+            </t>
+        </div>
+    </t>
+
+</templates>

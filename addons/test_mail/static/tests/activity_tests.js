@@ -117,7 +117,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
         'should have a table');
     var $th1 = $activity.find('table thead tr:first th:nth-child(2)');
     assert.containsOnce($th1, 'span:first:contains(Email)', 'should contain "Email" in header of first column');
-    assert.containsOnce($th1, '.o_kanban_counter', 'should contain a progressbar in header of first column');
+    assert.containsOnce($th1, '.o_legacy_kanban_counter', 'should contain a progressbar in header of first column');
     assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-original-title', '1 Planned',
         'the counter progressbars should be correctly displayed');
     assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-original-title', '1 Today',

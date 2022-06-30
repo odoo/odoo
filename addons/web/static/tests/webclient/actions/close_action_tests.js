@@ -9,13 +9,9 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
-import FormController from "web.FormController";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
-import ListController from "web.ListController";
-import { pivotView } from "@web/views/pivot/pivot_view";
-import { registry } from "@web/core/registry";
 
-const serviceRegistry = registry.category("services");
+import { formView } from "@web/views/form/form_view";
+import { listView } from "../../../src/views/list/list_view";
 
 let serverData;
 let target;
@@ -106,11 +102,11 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("history back calls on_close handler of dialog action", async function (assert) {
         assert.expect(4);
-        let controller;
-        patchWithCleanup(FormController.prototype, {
-            init() {
+        let form;
+        patchWithCleanup(formView.Controller.prototype, {
+            setup() {
                 this._super(...arguments);
-                controller = this;
+                form = this;
             },
         });
         const webClient = await createWebClient({ serverData });
@@ -120,7 +116,7 @@ QUnit.module("ActionManager", (hooks) => {
         // open a new dialog form
         await doAction(webClient, 5, { onClose });
         assert.containsOnce(target, ".modal");
-        controller.trigger_up("history_back");
+        form.env.config.historyBack();
         assert.verifySteps(["on_close"], "should have called the on_close handler");
         await nextTick();
         assert.containsNone(target, ".modal");
@@ -128,11 +124,11 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("history back called within on_close", async function (assert) {
         assert.expect(7);
-        let controller;
-        patchWithCleanup(ListController.prototype, {
-            init() {
+        let list;
+        patchWithCleanup(listView.Controller.prototype, {
+            setup() {
                 this._super(...arguments);
-                controller = this;
+                list = this;
             },
         });
         const webClient = await createWebClient({ serverData });
@@ -143,7 +139,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
 
         function onClose() {
-            controller.trigger_up("history_back");
+            list.env.config.historyBack();
             assert.step("on_close");
         }
         // open a new dialog form
@@ -162,11 +158,11 @@ QUnit.module("ActionManager", (hooks) => {
         "history back calls on_close handler of dialog action with 2 breadcrumbs",
         async function (assert) {
             assert.expect(7);
-            let controller;
-            patchWithCleanup(ListController.prototype, {
-                init() {
+            let list;
+            patchWithCleanup(listView.Controller.prototype, {
+                setup() {
                     this._super(...arguments);
-                    controller = this;
+                    list = this;
                 },
             });
             const webClient = await createWebClient({ serverData });
@@ -180,51 +176,11 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 5, { onClose });
             assert.containsOnce(target, ".modal");
             assert.containsOnce(target, ".o_list_view");
-            controller.trigger_up("history_back");
+            list.env.config.historyBack();
             assert.verifySteps(["on_close"], "should have called the on_close handler");
             await nextTick();
             await legacyExtraNextTick();
             assert.containsOnce(target, ".o_list_view");
-            assert.containsNone(target, ".modal");
-        }
-    );
-
-    QUnit.test(
-        "history back calls on_close handler of dialog action with 2 breadcrumbs (2)",
-        async function (assert) {
-            assert.expect(7);
-            let pivot;
-            patchWithCleanup(pivotView.Controller.prototype, {
-                setup() {
-                    this._super(...arguments);
-                    pivot = this;
-                },
-            });
-            serverData.views["partner,false,pivot"] = "<pivot/>";
-            serviceRegistry.add("user", makeFakeUserService());
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, 1); // kanban
-            await doAction(webClient, {
-                id: 3,
-                xml_id: "action_3",
-                name: "Partners",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "pivot"]],
-            }); // pivot
-            assert.containsOnce(target, ".o_pivot_view");
-            function onClose() {
-                assert.step("on_close");
-            }
-            // open a new dialog form
-            await doAction(webClient, 5, { onClose });
-            assert.containsOnce(target, ".modal");
-            assert.containsOnce(target, ".o_pivot_view");
-            pivot.env.config.historyBack();
-            assert.verifySteps(["on_close"], "should have called the on_close handler");
-            await nextTick();
-            await legacyExtraNextTick();
-            assert.containsOnce(target, ".o_pivot_view");
             assert.containsNone(target, ".modal");
         }
     );
@@ -241,13 +197,15 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open first record in form view. this will crash and will not
         // display a form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
         await legacyExtraNextTick();
         readOnFirstRecordDef.reject("not working as intended");
         await nextTick();
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         // open another record, the read will not crash
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:eq(2)"));
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:eq(2) .o_data_cell:first")
+        );
         await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "there should not be a list view in dom");
         assert.containsOnce(target, ".o_form_view", "there should be a form view in dom");

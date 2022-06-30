@@ -300,7 +300,7 @@ QUnit.module("MockServer", (hooks) => {
     });
 
     QUnit.test("performRPC: search_count with domain", async function (assert) {
-        data.models.partner.records.push({ id: 4, name: "José" })
+        data.models.partner.records.push({ id: 4, name: "José" });
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
             model: "partner",
@@ -769,6 +769,42 @@ QUnit.module("MockServer", (hooks) => {
             },
         ]);
     });
+
+    QUnit.test(
+        "performRPC: read_group with special measure specifications",
+        async function (assert) {
+            data.models.bar.fields.float = { string: "Float", type: "float" };
+            data.models.bar.records[0].float = 2;
+            const server = new MockServer(data, {});
+            const result = await server.performRPC("", {
+                model: "bar",
+                method: "read_group",
+                args: [[]],
+                kwargs: {
+                    fields: ["float:sum", "foo_sum:sum(foo)"],
+                    domain: [],
+                    groupby: ["bool"],
+                    lazy: false,
+                },
+            });
+            assert.deepEqual(result, [
+                {
+                    __count: 2,
+                    __domain: [["bool", "=", false]],
+                    bool: false,
+                    float: 0,
+                    foo: 17,
+                },
+                {
+                    __count: 4,
+                    __domain: [["bool", "=", true]],
+                    bool: true,
+                    float: 2,
+                    foo: 57,
+                },
+            ]);
+        }
+    );
 
     QUnit.test("many2one_ref should auto fill inverse field", async function (assert) {
         data.models.bar.records = [{ id: 1 }];

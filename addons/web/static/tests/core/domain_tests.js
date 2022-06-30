@@ -161,16 +161,37 @@ QUnit.module("domain", {}, () => {
             '[("name", "=", "true")]'
         );
         assert.strictEqual(new Domain().toString(), "[]");
-        assert.strictEqual(new Domain([['name', 'in', [true, false]]]).toString(), '[("name", "in", [True, False])]');
-        assert.strictEqual(new Domain([['name', 'in', [null]]]).toString(), '[("name", "in", [None])]');
-        assert.strictEqual(new Domain([['name', 'in', ["foo", "bar"]]]).toString(), '[("name", "in", ["foo", "bar"])]');
-        assert.strictEqual(new Domain([['name', 'in', [1, 2]]]).toString(), '[("name", "in", [1, 2])]');
-        assert.strictEqual(new Domain(['&', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["&", ("name", "=", "foo"), ("type", "=", "bar")]');
-        assert.strictEqual(new Domain(['|', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["|", ("name", "=", "foo"), ("type", "=", "bar")]');
+        assert.strictEqual(
+            new Domain([["name", "in", [true, false]]]).toString(),
+            '[("name", "in", [True, False])]'
+        );
+        assert.strictEqual(
+            new Domain([["name", "in", [null]]]).toString(),
+            '[("name", "in", [None])]'
+        );
+        assert.strictEqual(
+            new Domain([["name", "in", ["foo", "bar"]]]).toString(),
+            '[("name", "in", ["foo", "bar"])]'
+        );
+        assert.strictEqual(
+            new Domain([["name", "in", [1, 2]]]).toString(),
+            '[("name", "in", [1, 2])]'
+        );
+        assert.strictEqual(
+            new Domain(["&", ["name", "=", "foo"], ["type", "=", "bar"]]).toString(),
+            '["&", ("name", "=", "foo"), ("type", "=", "bar")]'
+        );
+        assert.strictEqual(
+            new Domain(["|", ["name", "=", "foo"], ["type", "=", "bar"]]).toString(),
+            '["|", ("name", "=", "foo"), ("type", "=", "bar")]'
+        );
         assert.strictEqual(new Domain().toString(), "[]");
 
         // string domains are only reformatted
-        assert.strictEqual(new Domain('[("name","ilike","foo")]').toString(), '[("name", "ilike", "foo")]');
+        assert.strictEqual(
+            new Domain('[("name","ilike","foo")]').toString(),
+            '[("name", "ilike", "foo")]'
+        );
     });
 
     QUnit.test("implicit &", function (assert) {
@@ -308,6 +329,36 @@ QUnit.module("domain", {}, () => {
             /invalid domain .* \(missing 1 segment/
         );
         assert.throws(() => new Domain(["!"]), /invalid domain .* \(missing 1 segment/);
+    });
+
+    QUnit.test("follow relations", function (assert) {
+        assert.ok(
+            new Domain([["partner.city", "ilike", "Bru"]]).contains({
+                name: "Lucas",
+                partner: {
+                    city: "Bruxelles",
+                },
+            })
+        );
+        assert.ok(
+            new Domain([["partner.city.name", "ilike", "Bru"]]).contains({
+                name: "Lucas",
+                partner: {
+                    city: {
+                        name: "Bruxelles",
+                    },
+                },
+            })
+        );
+    });
+
+    QUnit.test("Arrays comparison", (assert) => {
+        const domain = new Domain(["&", ["a", "==", []], ["b", "!=", []]]);
+
+        assert.ok(domain.contains({ a: [] }));
+        assert.ok(domain.contains({ a: [], b: [4] }));
+        assert.notOk(domain.contains({ a: [1] }));
+        assert.notOk(domain.contains({ b: [] }));
     });
 
     // ---------------------------------------------------------------------------

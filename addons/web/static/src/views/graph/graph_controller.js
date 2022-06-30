@@ -5,11 +5,11 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
-import { standardViewProps } from "@web/views/helpers/standard_view_props";
-import { useSetupView } from "@web/views/helpers/view_hook";
-import { useModel } from "../helpers/model";
+import { useModel } from "@web/views/model";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { useSetupView } from "@web/views/view_hook";
 
-const { Component } = owl;
+const { Component, useRef } = owl;
 
 export class GraphController extends Component {
     setup() {
@@ -17,6 +17,7 @@ export class GraphController extends Component {
         this.model = useModel(this.props.Model, this.props.modelParams);
 
         useSetupView({
+            rootRef: useRef("root"),
             getLocalState: () => {
                 return { metaData: this.model.metaData };
             },

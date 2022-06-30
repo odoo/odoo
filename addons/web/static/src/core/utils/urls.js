@@ -3,7 +3,7 @@
 import { browser } from "../browser/browser";
 
 /**
- * Trasnforms a key value mapping to a string formatted as url hash, e.g.
+ * Transforms a key value mapping to a string formatted as url hash, e.g.
  * {a: "x", b: 2} -> "a=x&b=2"
  *
  * @param {Object} obj
@@ -11,7 +11,7 @@ import { browser } from "../browser/browser";
  */
 export function objectToUrlEncodedString(obj) {
     return Object.entries(obj)
-        .map(([k, v]) => (v ? `${k}=${encodeURIComponent(v)}` : k))
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v || "")}`)
         .join("&");
 }
 

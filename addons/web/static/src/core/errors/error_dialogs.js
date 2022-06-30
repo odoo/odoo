@@ -111,7 +111,7 @@ export class WarningDialog extends Component {
         if (this.props.exceptionName && odooExceptionTitleMap.has(this.props.exceptionName)) {
             return odooExceptionTitleMap.get(this.props.exceptionName).toString();
         }
-        return this.env._t("Odoo Warning");
+        return this.props.title || this.env._t("Odoo Warning");
     }
 }
 WarningDialog.template = "web.WarningDialog";

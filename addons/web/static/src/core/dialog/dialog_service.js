@@ -3,7 +3,7 @@
 import { registry } from "../registry";
 import { DialogContainer } from "./dialog_container";
 
-const { reactive } = owl;
+const { markRaw, reactive } = owl;
 
 /**
  *  @typedef {{
@@ -22,7 +22,7 @@ const { reactive } = owl;
 
 export const dialogService = {
     /** @returns {DialogServiceInterface} */
-    start() {
+    start(env) {
         const dialogs = reactive({});
         let dialogId = 0;
 
@@ -51,9 +51,21 @@ export const dialogService = {
             const dialog = {
                 id,
                 class: dialogClass,
-                props: { ...props, close },
-                dialogData: { isActive: true, close },
+                props: markRaw({ ...props, close }),
+                dialogData: {
+                    isActive: true,
+                    close,
+                    id,
+                },
             };
+            if (env.isSmall) {
+                const scrollOrigin = { top: window.scrollY, left: window.scrollX };
+                dialog.dialogData.scrollToOrigin = () => {
+                    if (!Object.keys(dialogs).length) {
+                        window.scrollTo(scrollOrigin);
+                    }
+                };
+            }
             dialogs[id] = dialog;
 
             return close;

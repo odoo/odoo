@@ -17,13 +17,13 @@ const DEFAULT_VIEWS_WITH_SEARCH_PANEL = ["kanban", "list"];
  * @param {string} context
  * @returns {string[]}
  */
-const getContextGroubBy = (context) => {
+function getContextGroubBy(context) {
     try {
         return makeContext([context]).group_by.split(":");
     } catch (_err) {
         return [];
     }
-};
+}
 
 function reduceType(type) {
     if (type === "dateFilter") {

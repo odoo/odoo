@@ -7,14 +7,14 @@ import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_
 const { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
-const OTHER_SEARCH_KEYS = ["irFilters", "searchViewArch", "searchViewFields", "searchViewId"];
 
 export class WithSearch extends Component {
     setup() {
-        this.Component = this.props.Component;
-
         if (!this.env.__getContext__) {
             useSubEnv({ __getContext__: new CallbackRecorder() });
+        }
+        if (!this.env.__getOrderBy__) {
+            useSubEnv({ __getOrderBy__: new CallbackRecorder() });
         }
 
         const SearchModelClass = this.props.SearchModel || SearchModel;
@@ -54,31 +54,12 @@ export class WithSearch extends Component {
             await this.searchModel.reload(config);
         });
     }
-
-    //-------------------------------------------------------------------------
-    // Getters
-    //-------------------------------------------------------------------------
-
-    get componentProps() {
-        const componentProps = { ...this.props.componentProps };
-        for (const key of SEARCH_KEYS) {
-            componentProps[key] = this.searchModel[key];
-        }
-        componentProps.info = componentProps.info || {};
-        for (const key of OTHER_SEARCH_KEYS) {
-            componentProps.info[key] = this.searchModel[key];
-        }
-        return componentProps;
-    }
 }
 
-WithSearch.defaultProps = {
-    componentProps: {},
-};
+WithSearch.template = "web.WithSearch";
 WithSearch.props = {
-    Component: Function,
+    slots: Object,
     SearchModel: { type: Function, optional: true },
-    componentProps: { type: Object, optional: true },
 
     resModel: String,
 
@@ -107,4 +88,3 @@ WithSearch.props = {
     dynamicFilters: { type: Array, element: Object, optional: true },
     searchMenuTypes: { type: Array, element: String, optional: true },
 };
-WithSearch.template = "web.WithSearch";

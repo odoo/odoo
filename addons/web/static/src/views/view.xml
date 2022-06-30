@@ -2,7 +2,16 @@
 <templates xml:space="preserve">
 
   <t t-name="web.View" owl="1">
-      <WithSearch t-props="withSearchProps" t-on-click="handleActionLinks"/>
+      <WithSearch t-props="withSearchProps" t-slot-scope="search">
+        <t t-component="Controller"
+          t-on-click="handleActionLinks"
+          t-props="componentProps"
+          context="search.context"
+          domain="search.domain"
+          groupBy="search.groupBy"
+          orderBy="search.orderBy"
+          comparison="search.comparison"/>
+      </WithSearch>
   </t>
 
   <t t-name="web.ReportViewMeasures" owl="1">
