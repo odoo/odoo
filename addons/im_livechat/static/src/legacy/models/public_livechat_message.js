@@ -18,6 +18,7 @@ const PublicLivechatMessage = Class.extend({
 
     /**
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
+     * @param {Messaging} messaging
      * @param {Object} data
      * @param {Array} [data.attachment_ids=[]]
      * @param {Array} [data.author_id]
@@ -28,11 +29,9 @@ const PublicLivechatMessage = Class.extend({
      * @param {boolean} [data.is_discussion = false]
      * @param {boolean} [data.is_notification = false]
      * @param {string} [data.message_type = undefined]
-     * @param {Object} options
-     * @param {string} options.default_username
-     * @param {string} options.serverURL
      */
-    init(parent, data, options) {
+    init(parent, messaging, data) {
+        this.messaging = messaging;
         // Attachments are not supported in (public) livechat.
         // We ignore data from server, otherwise field commands
         // will be wrongly considered as unamed attachments.
@@ -50,8 +49,8 @@ const PublicLivechatMessage = Class.extend({
         this._attachmentIDs.forEach(function (attachment) {
             attachment.filename = attachment.filename || attachment.name || _t("unnamed");
         });
-        this._defaultUsername = options.default_username;
-        this._serverURL = options.serverURL;
+        this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
+        this._serverURL = this.messaging.livechatButtonView.serverUrl;
 
         if (parent.messaging.livechatButtonView.isChatbot) {
             this._chatbotStepId = data.chatbot_script_step_id;

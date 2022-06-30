@@ -15,11 +15,7 @@ registerModel({
                     this.livechatButtonViewOwner.widget,
                     this.messaging,
                     this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
-                    {
-                        headerBackgroundColor: this.livechatButtonViewOwner.headerBackgroundColor,
-                        placeholder: this.livechatButtonViewOwner.inputPlaceholder,
-                        titleColor: this.livechatButtonViewOwner.titleColor,
-                    },
+                    { titleColor: this.livechatButtonViewOwner.titleColor },
                 ),
             });
         },
@@ -27,7 +23,22 @@ registerModel({
             this.legacyChatWindow.destroy();
         },
     },
+    recordMethods: {
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeInputPlaceholder() {
+            if (this.messaging.livechatButtonView.inputPlaceholder) {
+                return this.messaging.livechatButtonView.inputPlaceholder;
+            }
+            return this.env._t("Say something");
+        },
+    },
     fields: {
+        inputPlaceholder: attr({
+            compute: '_computeInputPlaceholder',
+        }),
         legacyChatWindow: attr({
             default: null,
         }),
