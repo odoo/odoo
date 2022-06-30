@@ -304,9 +304,30 @@ class IrFieldsConverter(models.AbstractModel):
         if tnx_cache.setdefault(types, {}) and src in tnx_cache[types]:
             return tnx_cache[types][src]
 
-        Translations = self.env['ir.translation']
-        tnx = Translations.search([('type', 'in', types), ('src', '=', src)])
-        result = tnx_cache[types][src] = [t.value for t in tnx if t.value is not False]
+        # only return translation for current language
+        values = []
+        if 'code' in types:
+            for lang, dummy in self.env['res.lang'].get_installed():
+                if lang == 'en_US':
+                    continue
+                context = {'lang': lang}  # specify lang for _
+                if src == u'yes':
+                    value = _('yes')
+                elif src == u'no':
+                    value = _('no')
+                elif src == u'true':
+                    value = _('true')
+                elif src == u'false':
+                    value = _('false')
+                else:
+                    continue
+                if value != src:
+                    values.extend([value])
+        if 'selection' in types:
+            selections = self.with_context(lang='en_US').env['ir.model.fields.selection'].search([('name', '=', src)])
+            if selections:
+                values.extend(selections.with_context(lang=self.env.lang).mapped('name'))
+        result = tnx_cache[types][src] = list(set(values))
         return result
 
     @api.model
@@ -317,7 +338,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         for item, label in selection:
             label = ustr(label)
-            labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
+            labels = [label] + self._get_translations(('selection', 'code'), label)
             # case insensitive comparaison of string to allow to set the value even if the given 'value' param is not
             # exactly (case sensitive) the same as one of the selection item.
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
