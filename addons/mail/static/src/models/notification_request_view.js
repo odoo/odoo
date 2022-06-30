@@ -28,7 +28,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.messaging.partnerRoot.isImStatusSet ? insertAndReplace() : clear();
+            return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? insertAndReplace() : clear();
         },
     },
     fields: {
