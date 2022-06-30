@@ -35,6 +35,7 @@ Odoo Web Editor widget.
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
             'web_editor/static/lib/html2canvas.js', # needed for convert_inline.js
+            'web_editor/static/lib/DOMPurify.js',
 
             # odoo-editor
             'web_editor/static/src/js/editor/odoo-editor/src/style.css',
@@ -42,7 +43,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/utils/constants.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/serialize.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/utils/DOMPurify.js',
             'web_editor/static/src/js/editor/odoo-editor/src/tablepicker/TablePicker.js',
             'web_editor/static/src/js/editor/odoo-editor/src/powerbox/patienceDiff.js',
             'web_editor/static/src/js/editor/odoo-editor/src/powerbox/Powerbox.js',
