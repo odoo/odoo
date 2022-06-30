@@ -16,13 +16,15 @@ export class ProgressBarField extends Component {
         this.state = useState({
             currentValue: this.props.currentValue.value,
             maxValue: this.props.maxValue.value,
+            isEditing: false,
         });
         onWillUpdateProps((nextProps) => {
+            Object.assign(this.state, {
+                currentValue: nextProps.currentValue.value,
+                maxValue: nextProps.maxValue.value,
+            });
             if (nextProps.readonly) {
-                Object.assign(this.state, {
-                    currentValue: nextProps.currentValue.value,
-                    maxValue: nextProps.maxValue.value,
-                });
+                this.state.isEditing = false;
             }
         });
     }
@@ -44,9 +46,25 @@ export class ProgressBarField extends Component {
             }
             this.state[part] = parsedValue;
             this.props.updatePart(part, parsedValue);
+            if (this.props.readonly) {
+                this.state.isEditing = false;
+                this.props.record.save();
+            }
         } catch {
             this.props.invalidate();
             return;
+        }
+    }
+
+    onClick() {
+        if (this.props.isEditable && (!this.props.readonly || this.props.isEditableInReadonly)) {
+            this.state.isEditing = true;
+        }
+    }
+
+    onBlur() {
+        if (this.props.readonly) {
+            this.state.isEditing = false;
         }
     }
 
@@ -66,6 +84,8 @@ ProgressBarField.props = {
     currentValue: { type: Object, optional: true },
     isPercentage: { type: Boolean, optional: true },
     maxValue: { type: Object, optional: true },
+    isEditable: { type: Boolean, optional: true },
+    isEditableInReadonly: { type: Boolean, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
     isMaxValueEditable: { type: Boolean, optional: true },
     invalidate: { type: Function, optional: true },
@@ -111,10 +131,12 @@ ProgressBarField.extractProps = (fieldName, record, attrs) => {
     return {
         ...parts,
         isPercentage: !attrs.options.max_value,
+        isEditable: attrs.options.editable,
+        isEditableInReadonly: attrs.options.editable_readonly,
         isCurrentValueEditable:
-            (attrs.options.editable && !attrs.options.edit_max_value) ||
-            attrs.options.edit_current_value,
-        isMaxValueEditable: attrs.options.edit_max_value,
+            attrs.options.editable &&
+            (!attrs.options.edit_max_value || attrs.options.edit_current_value),
+        isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
         invalidate: () => record.setInvalidField(fieldName),
         updatePart: (part, value) => record.update({ [parts[part].fieldName]: value }),
     };
