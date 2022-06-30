@@ -5,7 +5,7 @@
     <t t-call="web.basic_layout">
         <!-- quantity patterns are always 3 digit codes + 1 digit for number of digits (excluding units) -->
         <t t-set="uom_unit_id" t-value="env.ref('uom.product_uom_unit').id"/>
-        <t t-set="gs1_uom_patterns" t-value="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str(rule.associated_uom_id.rounding).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}"/>
+        <t t-set="gs1_uom_patterns" t-value="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str('{:.10f}'.format(rule.associated_uom_id.rounding).rstrip('0')).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}"/>
         <t t-foreach="docs" t-as="o">
             <t>
                 <div class="page">
