@@ -70,7 +70,7 @@ const PublicLivechatWindow = Widget.extend({
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
-        if (this.isFolded()) {
+        if (this._thread._folded) {
             this.$el.css('height', this.HEIGHT_FOLDED);
         } else if (this.options.autofocus) {
             this._focusInput();
@@ -122,16 +122,6 @@ const PublicLivechatWindow = Widget.extend({
      */
     close() {
         this.trigger_up('close_chat_window');
-    },
-    /**
-     * State whether the related thread is folded or not. If there are no
-     * thread related to this window, it means this is the "blank" thread
-     * window, therefore we use the internal folded state.
-     *
-     * @returns {boolean}
-     */
-    isFolded() {
-        return this._thread._folded;
     },
     /**
      * States whether the thread window is hidden or not.
@@ -204,7 +194,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this.isFolded();
+            folded = !this._thread._folded;
         }
         this._updateThreadFoldState(folded);
         this.trigger_up('save_chat_window');
@@ -216,13 +206,13 @@ const PublicLivechatWindow = Widget.extend({
      * that has been changed.
      */
     updateVisualFoldState() {
-        if (!this.isFolded()) {
+        if (!this._thread._folded) {
             this._publicLivechatView.scrollToBottom();
             if (this.options.autofocus) {
                 this._focusInput();
             }
         }
-        const height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        const height = this._thread._folded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
         this.$el.css({ height });
     },
 
@@ -315,7 +305,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.preventDefault();
         if (
             this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
-            !this.isFolded()
+            !this._thread._folded
         ) {
             this._thread.markAsRead();
         }
