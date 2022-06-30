@@ -1108,16 +1108,18 @@ class GroupsImplied(models.Model):
         """ Add the given group to the groups implied by the current group
         :param implied_group: the implied group to add
         """
-        if implied_group not in self.implied_ids:
-            self.write({'implied_ids': [Command.link(implied_group.id)]})
+        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
+        groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group
         :param implied_group: the implied group to remove
         """
-        if implied_group in self.implied_ids:
-            self.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            implied_group.write({'users': [Command.unlink(user.id) for user in self.users]})
+        groups = self.filtered(lambda g: implied_group in g.implied_ids)
+        if groups:
+            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+            if groups.users:
+                implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'
