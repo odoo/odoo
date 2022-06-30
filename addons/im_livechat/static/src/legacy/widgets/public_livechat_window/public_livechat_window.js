@@ -32,16 +32,13 @@ const PublicLivechatWindow = Widget.extend({
      * @param {Widget} parent
      * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
-     * @param {Object} [options={}]
-     * @param {string} [options.headerBackgroundColor]
-     * @param {string} [options.titleColor]
+     * @param {Object} options
+     * @param {string} options.titleColor
      */
     init(parent, messaging, thread, options) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = _.defaults(options || {}, {
-            placeholder: _t("Say something"),
-        });
+        this.options = options;
 
         this._thread = thread;
 
@@ -77,8 +74,8 @@ const PublicLivechatWindow = Widget.extend({
             this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
-        if (this.options.headerBackgroundColor) {
-            this.$('.o_thread_window_header').css('background-color', this.options.headerBackgroundColor);
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor) {
+            this.$('.o_thread_window_header').css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor);
         }
         if (this.options.titleColor) {
             this.$('.o_thread_window_header').css('color', this.options.titleColor);
@@ -122,10 +119,10 @@ const PublicLivechatWindow = Widget.extend({
     renderHeader() {
         this.$header.html(
             qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this._thread._status,
+                status: this.messaging.publicLivechatGlobal.publicLivechat.status,
                 thread: this._thread,
-                title: this._thread._name,
-                unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
+                title: this.messaging.publicLivechatGlobal.publicLivechat.name,
+                unreadCounter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
                 widget: this,
             })
         );
@@ -150,9 +147,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this._thread._folded;
+            folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
-        this._updateThreadFoldState(folded);
+        this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -214,19 +211,6 @@ const PublicLivechatWindow = Widget.extend({
                 this._publicLivechatView.scrollToBottom();
             });
     },
-    /**
-     * Update the fold state of the thread.
-     *
-     * This function is called when toggling the fold state of this window.
-     * If there is no thread linked to this window, it means this is the
-     * "blank" thread window, therefore we use the internal state 'folded'
-     *
-     * @private
-     * @param {boolean} folded
-     */
-    _updateThreadFoldState(folded) {
-        this._thread.fold(folded);
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -243,7 +227,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
+            this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0 &&
             !this._thread._folded
         ) {
             this._thread.markAsRead();
