@@ -94,3 +94,11 @@ class Product(models.Model):
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
         return self.user_has_groups('base.group_system') or (self.sale_ok and self.website_published)
+
+    def _get_contextual_price_tax_selection(self):
+        self.ensure_one()
+        price = self._get_contextual_price()
+        line_tax_type = self.env['ir.config_parameter'].sudo().get_param('account.show_line_subtotals_tax_selection')
+        if line_tax_type == "tax_included" and self.taxes_id:
+            price = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])['total_included']
+        return price
