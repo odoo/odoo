@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillDestroy, onWillUpdateProps, useComponent } = owl;
+const { onWillDestroy, onWillRender, onWillUpdateProps, useComponent } = owl;
 
 /**
  * This hook provides support for saving the reference of the component directly
@@ -28,6 +28,16 @@ export function useComponentToModel({ fieldName, modelName }) {
         }
         if (nextRecord) {
             nextRecord.update({ [fieldName]: component });
+        }
+    });
+    onWillRender(() => {
+        const record = modelManager.models[modelName].get(component.props.localId);
+        if (record && !record[fieldName]) {
+            // When the record is deleted then created again, its
+            // localId can be the same. In this scenario, the Component
+            // would not call setup neither willUpdateprops. Therefore,
+            // we need to set the component for this new record.
+            record.update({ [fieldName]: component });
         }
     });
     onWillDestroy(() => {
