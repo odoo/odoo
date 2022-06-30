@@ -11,7 +11,9 @@
                 </div>
                 <div class="o_cp_top_right">
                     <t t-slot="control-panel-top-right" t-if="display['top-right']">
-                        <SearchBar/>
+                        <div class="o_cp_searchview" role="search">
+                            <SearchBar />
+                        </div>
                     </t>
                 </div>
             </div>
@@ -31,7 +33,7 @@
                         </t>
 
                         <div class="o_cp_pager" role="search">
-                                <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
+                            <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
                         </div>
 
                         <t t-if="env.config.viewSwitcherEntries.length > 1">
@@ -52,7 +54,7 @@
     </t>
 
     <t t-name="web.Breadcrumbs" owl="1">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb" role="navigation">
             <t t-foreach="env.config.breadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
                 <t t-set="isPenultimate" t-value="breadcrumb_index === env.config.breadcrumbs.length - 2"/>
                 <li t-if="!breadcrumb_last" class="breadcrumb-item" t-att-data-hotkey="isPenultimate and 'b'" t-att-class="{ o_back_button: isPenultimate}" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
