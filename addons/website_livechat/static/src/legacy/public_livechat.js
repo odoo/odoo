@@ -17,8 +17,8 @@ LivechatButton.include({
      * from backend to a website visitor.
      */
     willStart: function () {
-        if (this.options.chat_request_session) {
-            utils.set_cookie('im_livechat_session', JSON.stringify(this.options.chat_request_session), 60*60);
+        if (this.messaging.publicLivechatGlobal.options.chat_request_session) {
+            utils.set_cookie('im_livechat_session', JSON.stringify(this.messaging.publicLivechatGlobal.options.chat_request_session), 60*60);
         }
         return this._super();
     },
@@ -31,8 +31,8 @@ LivechatButton.include({
         $(window).trigger('resize');
         await this._super(...arguments);
         this.el.innerHTML = "";
-        if (this.messaging.livechatButtonView.buttonText && !config.device.touch) {
-            this.el.dataset.content = this.messaging.livechatButtonView.buttonText;
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonText && !config.device.touch) {
+            this.el.dataset.content = this.messaging.publicLivechatGlobal.livechatButtonView.buttonText;
             this.el.dataset.toggle = "popover";
             this.el.dataset.trigger = "hover";
             this.$el.popover({

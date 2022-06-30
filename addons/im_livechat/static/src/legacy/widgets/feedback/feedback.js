@@ -6,8 +6,6 @@ import session from 'web.session';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
 
-import { RATING_TO_EMOJI } from 'im_livechat.legacy.im_livechat.Constants';
-
 const _t = core._t;
 /*
  * Rating for Livechat
@@ -28,11 +26,12 @@ const Feedback = Widget.extend({
 
     /**
      * @param {?} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} livechat
      */
-    init(parent, livechat) {
+    init(parent, messaging, livechat) {
         this._super(parent);
-        this._livechat = livechat;
+        this.messaging = messaging;
         this.server_origin = session.origin;
         this.rating = undefined;
         this.dp = new concurrency.DropPrevious();
@@ -48,12 +47,12 @@ const Feedback = Widget.extend({
      */
      _sendFeedback(reason) {
         const args = {
-            uuid: this._livechat._uuid,
+            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
             rate: this.rating,
             reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then((response) => {
-            const emoji = RATING_TO_EMOJI[this.rating] || "??";
+            const emoji = this.messaging.publicLivechatGlobal.RATING_TO_EMOJI[this.rating] || "??";
             let content;
             if (!reason) {
                 content = utils.sprintf(_t("Rating: %s"), emoji);
@@ -125,7 +124,7 @@ const Feedback = Widget.extend({
             this._rpc({
                 route: '/im_livechat/email_livechat_transcript',
                 params: {
-                    uuid: this._livechat._uuid,
+                    uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
                     email: $email.val(),
                 }
             }).then(() => {

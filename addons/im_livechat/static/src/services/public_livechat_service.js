@@ -8,7 +8,7 @@ export const publicLivechatService = {
     dependencies: ['messaging'],
     async start(env, { messaging: messagingService }) {
         const messaging = await messagingService.get();
-        if (messaging.livechatButtonView) {
+        if (messaging.publicLivechatGlobal.livechatButtonView) {
             const livechatButton = new LivechatButton(rootWidget, messaging);
             livechatButton.appendTo(document.body);
         }

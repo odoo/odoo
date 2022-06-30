@@ -11,7 +11,7 @@ LivechatButton.include({
      * Let us also debounce waiting for more user inputs for only 500ms.
      */
     start: function () {
-        this.messaging.livechatButtonView.update({ isWebsiteLivechatChatbotFlow: true });
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isWebsiteLivechatChatbotFlow: true });
 
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),
@@ -25,7 +25,7 @@ LivechatButton.include({
      * the thread and making it hard to write proper jQuery selectors in the tour.
      */
     _onChatbotRestartScript: function () {
-        this.messaging.livechatButtonView.update({ messages: clear() });
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({ messages: clear() });
         this._renderMessages();
 
         this._super(...arguments);
