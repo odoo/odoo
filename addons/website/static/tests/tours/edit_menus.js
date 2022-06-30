@@ -2,11 +2,6 @@
 
 import wTourUtils from 'website.tour_utils';
 
-const clickOnSave = {
-   content: "Clicks on the menu edition dialog save button",
-   trigger: '.modal-dialog .btn-primary:contains("Ok"), .modal-dialog .btn-primary:contains("Save")',
-};
-
 wTourUtils.registerEditionTour('edit_menus', {
     test: true,
     url: '/',
@@ -31,8 +26,15 @@ wTourUtils.registerEditionTour('edit_menus', {
         trigger: '.modal-dialog .o_website_dialog input',
         run: 'text Megaaaaa!'
     },
-    clickOnSave,
-    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
+    {
+        content: "Confirm the mega menu label",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Save the new menu",
+        trigger: '.modal-footer .btn-primary',
+        extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+    },
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}, true),
     {
         content: "There should be a new megamenu item.",
@@ -55,21 +57,34 @@ wTourUtils.registerEditionTour('edit_menus', {
         extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(0)',
     },
-    clickOnSave,
+    {
+        content: "Confirm the new menu entry without a label",
+        trigger: '.modal-footer .btn-primary',
+    },
     {
         content: "It didn't save without a label. Fill label input.",
         extra_trigger: '.o_website_dialog:eq(1):visible',
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Random!',
     },
-    clickOnSave,
+    {
+        content: "Confirm the new menu entry without a url",
+        trigger: '.modal-footer .btn-primary',
+    },
     {
         content: "It didn't save without a url. Fill url input.",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         run: 'text #',
     },
-    clickOnSave,
-    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Save the website menu with the new entry",
+        trigger: '.modal-footer .btn-primary',
+        extra_trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
+    },
     // Edit the new menu item from the "edit link" popover button
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
     {
@@ -85,7 +100,10 @@ wTourUtils.registerEditionTour('edit_menus', {
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Modnar',
     },
-    clickOnSave,
+    {
+        content: "Confirm the new label",
+        trigger: '.modal-footer .btn-primary',
+    },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
     {
@@ -118,8 +136,15 @@ wTourUtils.registerEditionTour('edit_menus', {
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         run: 'text Modnar !!',
     },
-    clickOnSave,
-    Object.assign({}, clickOnSave, {extra_trigger: '.o_dialog_container:not(:has(.o_inactive_modal))'}),
+    {
+        content: "Confirm the new menu label",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Save the website menu with the new menu label",
+        trigger: '.modal-footer .btn-primary',
+        extra_trigger: '.oe_menu_editor .js_menu_label:contains("Modnar !!")',
+    },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
     {
@@ -147,7 +172,10 @@ wTourUtils.registerEditionTour('edit_menus', {
         trigger: '.oe_menu_editor li:contains("Home") ul li:contains("Contact us")',
         run: () => {}, // It's a check.
     },
-    clickOnSave,
+    {
+        content: "Save the website menu with new nested menus",
+        trigger: '.modal-footer .btn-primary',
+    },
     {
         content: "Menu item should have a child",
         trigger: 'iframe #top_menu .nav-item a.dropdown-toggle:contains("Home")',
