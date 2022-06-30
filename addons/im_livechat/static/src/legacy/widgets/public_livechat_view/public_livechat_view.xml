@@ -127,7 +127,6 @@
         @param {Object} options
         @param {boolean} [options.displayAvatars]
         @param {boolean} [options.displayDocumentLinks]
-        @param {boolean} [options.displayNotificationIcons]
         @param {boolean} [options.displayMarkAsRead]
         @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
           the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
@@ -191,12 +190,6 @@
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread._id)">
                         (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">
-                        <span name="notification_icon" t-attf-class="d-inline-flex align-items-center o_thread_tooltip o_thread_message_notification {{ message.hasNotificationsError() ? 'o_thread_message_notification_error' : '' }}" t-att-data-message-id="message.getID()" t-att-data-message-type="message.getType()">
-                            <i t-att-class="message.getNotificationIcon()"/>
-                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="fw-bold ms-1"/>
-                        </span>
-                    </span>
                     <span t-attf-class="o_thread_icons">
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
