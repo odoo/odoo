@@ -197,7 +197,7 @@ const LivechatButton = Widget.extend({
                 }
                 notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
-                if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom()) {
+                if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
                     this.messaging.livechatButtonView.publicLivechat.update({ unreadCounter: increment() });
                 }
                 this._renderMessages();
@@ -337,7 +337,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom();
+        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
         this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._messages = this.messaging.livechatButtonView.messages;
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {

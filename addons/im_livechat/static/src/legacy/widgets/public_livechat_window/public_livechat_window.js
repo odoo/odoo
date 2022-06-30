@@ -124,15 +124,6 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * Tells whether the bottom of the thread in the thread window is visible
-     * or not.
-     *
-     * @returns {boolean}
-     */
-    isAtBottom() {
-        return this._publicLivechatView.isAtBottom();
-    },
-    /**
      * State whether the related thread is folded or not. If there are no
      * thread related to this window, it means this is the "blank" thread
      * window, therefore we use the internal folded state.
@@ -402,7 +393,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onScroll() {
-        if (this.isAtBottom()) {
+        if (this._publicLivechatView.isAtBottom()) {
             this._thread.markAsRead();
         }
     },
