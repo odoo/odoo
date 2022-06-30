@@ -52,7 +52,6 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_frontend': [
             'im_livechat/static/src/public/main.js',
             'im_livechat/static/src/services/*.js',
-            'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
@@ -74,7 +73,6 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
-            'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
         ],
         'web.assets_tests': [
@@ -85,7 +83,6 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'mail.assets_messaging': [
             'im_livechat/static/src/legacy/models/*',
-            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/models/*.js',
@@ -185,7 +182,6 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/services/bus_service.js',
             'bus/static/src/services/multi_tab_service.js',
             'mail/static/src/js/utils.js',
-            'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
 
             ('include', 'web._assets_helpers'),

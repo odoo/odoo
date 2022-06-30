@@ -6,8 +6,6 @@ import session from 'web.session';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
 
-import { RATING_TO_EMOJI } from 'im_livechat.legacy.im_livechat.Constants';
-
 const _t = core._t;
 /*
  * Rating for Livechat
@@ -28,10 +26,12 @@ const Feedback = Widget.extend({
 
     /**
      * @param {?} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} livechat
      */
-    init(parent, livechat) {
+    init(parent, messaging, livechat) {
         this._super(parent);
+        this.messaging = messaging;
         this._livechat = livechat;
         this.server_origin = session.origin;
         this.rating = undefined;
@@ -53,7 +53,7 @@ const Feedback = Widget.extend({
             reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then((response) => {
-            const emoji = RATING_TO_EMOJI[this.rating] || "??";
+            const emoji = this.messaging.publicLivechatGlobal.RATING_TO_EMOJI[this.rating] || "??";
             let content;
             if (!reason) {
                 content = utils.sprintf(_t("Rating: %s"), emoji);

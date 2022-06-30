@@ -7,7 +7,6 @@ import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
 
-import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
 import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
@@ -136,7 +135,7 @@ const LivechatButton = Widget.extend({
     _askFeedback() {
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
 
-        const feedback = new Feedback(this, this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat);
+        const feedback = new Feedback(this, this.messaging, this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat);
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
@@ -161,7 +160,7 @@ const LivechatButton = Widget.extend({
                 if (payload.id !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id) {
                     return;
                 }
-                const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
+                const cookie = utils.get_cookie(this.messaging.publicLivechatGlobal.LIVECHAT_COOKIE_HISTORY);
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
                     pid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0],
