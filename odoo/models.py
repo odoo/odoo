@@ -2049,19 +2049,26 @@ class BaseModel(metaclass=MetaModel):
             if not avoid(field)
         }
 
-        if not missing_defaults:
-            return values
+        if missing_defaults:
+            # override defaults with the provided values, never allow the other way around
+            defaults = self.default_get(list(missing_defaults))
+            for name, value in defaults.items():
+                if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
+                    # convert a list of ids into a list of commands
+                    defaults[name] = [Command.set(value)]
+                elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
+                    # convert a list of dicts into a list of commands
+                    defaults[name] = [Command.create(x) for x in value]
+            defaults.update(values)
 
-        # override defaults with the provided values, never allow the other way around
-        defaults = self.default_get(list(missing_defaults))
-        for name, value in defaults.items():
-            if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
-                # convert a list of ids into a list of commands
-                defaults[name] = [Command.set(value)]
-            elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
-                # convert a list of dicts into a list of commands
-                defaults[name] = [Command.create(x) for x in value]
-        defaults.update(values)
+        else:
+            defaults = values
+
+        # delegate the default properties to the properties field
+        for field in self._fields.values():
+            if field.type == 'properties':
+                defaults[field.name] = field._add_default_values(self.env, defaults)
+
         return defaults
 
     @classmethod
@@ -4346,6 +4353,11 @@ class BaseModel(metaclass=MetaModel):
                         else:
                             row.append(SQL_DEFAULT)
                 else:
+                    other_fields.add(field)
+
+                if field.type == 'properties':
+                    # force calling fields.create for properties field because
+                    # we might want to update the parent definition
                     other_fields.add(field)
 
             if not columns:

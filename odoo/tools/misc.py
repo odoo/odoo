@@ -1677,3 +1677,25 @@ def street_split(street):
         'street_number': results[1].strip(),
         'street_number2': results[2],
     }
+
+
+def is_list_of(values, type_):
+    """Return True if the given values is a list / tuple of the given type.
+
+    :param values: The values to check
+    :param type_: The type of the elements in the list / tuple
+    """
+    return isinstance(values, (list, tuple)) and all(isinstance(item, type_) for item in values)
+
+
+def has_list_types(values, types):
+    """Return True if the given values have the same types as
+    the one given in argument, in the same order.
+
+    :param values: The values to check
+    :param types: The types of the elements in the list / tuple
+    """
+    return (
+        isinstance(values, (list, tuple)) and len(values) == len(types)
+        and all(isinstance(item, type_) for item, type_ in zip(values, types))
+    )
