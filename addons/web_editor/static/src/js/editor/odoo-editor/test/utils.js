@@ -1,9 +1,6 @@
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
-import {
-    closestElement,
-    insertText as insertTextSel,
-} from '../src/utils/utils.js';
+import { closestElement } from '../src/utils/utils.js';
 
 export const Direction = {
     BACKWARD: 'BACKWARD',
@@ -156,7 +153,7 @@ export function setTestSelection(selection, doc = document) {
     domSelection.addRange(domRange);
     try {
         domSelection.extend(selection.focusNode, selection.focusOffset);
-    } catch (e) {
+    } catch {
         // Firefox yells not happy when setting selection on elem with contentEditable=false.
     }
 }

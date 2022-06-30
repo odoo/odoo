@@ -13,7 +13,6 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
-    isUnremovable
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
