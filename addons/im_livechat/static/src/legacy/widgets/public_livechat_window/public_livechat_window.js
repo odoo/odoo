@@ -111,15 +111,6 @@ const PublicLivechatWindow = Widget.extend({
         return config.device.isMobile;
     },
     /**
-     * States whether the input of the thread window should be displayed or not.
-     * By default, any thread window with a thread needs a composer.
-     *
-     * @returns {boolean}
-     */
-    needsComposer() {
-        return true;
-    },
-    /**
      * Render the thread window
      */
     render() {
