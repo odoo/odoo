@@ -27,7 +27,8 @@ class TestMailingRetry(MassMailCommon, CronMixinCase):
         mailing.action_launch()
 
         # force email sending to fail to test our retry mechanism
-        def patched_mail_mail_send(mail_records, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
+        def patched_mail_mail_send(mail_records, auto_commit=False, raise_exception=False, smtp_session=None,
+                                   alias_domain_id=False, mail_server=False):
             mail_records.write({'state': 'exception', 'failure_reason': 'forced_failure'})
 
         with patch('odoo.addons.mail.models.mail_mail.MailMail._send', patched_mail_mail_send):

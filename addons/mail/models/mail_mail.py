@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import base64
 import datetime
+import json
 import logging
 import psycopg2
 import smtplib
@@ -336,6 +336,21 @@ class MailMail(models.Model):
     # mail_mail formatting, tools and send mechanism
     # ------------------------------------------------------
 
+    @api.model
+    def _estimate_email_size(self, headers, body, attachments_size):
+        """ Estimate the email size, incorporating a small added security margin.
+
+        :param dict headers: email headers
+        :param str body: email body
+        :param list attachments_size: list of attachment size in bytes
+        """
+        return (
+                len(json.dumps(headers or {}, ensure_ascii=False).encode(errors='ignore')) +
+                len((body or '').encode(errors='ignore')) +
+                sum(attachments_size) * 8 / 6 +  # 8 / 6 factor because base 64 are 6 bits coded in 8 bits
+                10 * 1024  # adding 10Ko as security
+        )
+
     def _prepare_outgoing_body(self):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
@@ -367,11 +382,13 @@ class MailMail(models.Model):
             body = re.sub(_UNFOLLOW_REGEX, '', body)
         return body
 
-    def _prepare_outgoing_list(self, recipients_follower_status=None):
+    def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Return a list of emails to send based on current mail.mail. Each
         is a dictionary for specific email values, depending on a partner, or
         generic to the whole recipients given by mail.email_to.
 
+        :param mail_server: <ir.mail_server> mail server that will be used to send the mails,
+          False if it is the default one
         :param set recipients_follower_status: see ``Followers._get_mail_recipients_follower_status()``
         :return list: list of dicts used in IrMailServer.build_email()
         """
@@ -442,23 +459,36 @@ class MailMail(models.Model):
                 'partner_id': partner,
             })
 
-        # prepare attachments: remove attachments if user send the link with the
-        # access_token.
         attachments = self.attachment_ids
-        if attachments:
-            if body:
-                link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
-                if link_ids:
-                    attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
-            # load attachment binary data with a separate read(), as prefetching all
-            # `datas` (binary field) could bloat the browse cache, triggering
-            # soft/hard mem limits with temporary data.
-            email_attachments = [
-                (a['name'], base64.b64decode(a['datas']), a['mimetype'])
-                for a in attachments.sudo().read(['name', 'datas', 'mimetype']) if a['datas'] is not False
-            ]
-        else:
-            email_attachments = []
+        # Prepare attachments:
+        # Remove attachments if user send the link with the access_token.
+        if body and attachments:
+            link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
+            if link_ids:
+                attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+        # Turn remaining attachments into links if they are too heavy and
+        # their ownership are business models (i.e. something != mail.message,
+        # otherwise they will be deleted along with the mail message leading to a 404)
+        if record_owned_attachments := attachments.sudo().filtered(
+                lambda a: a.res_model and a.res_id and a.res_model != 'mail.message'):
+            estimated_email_size_bytes = self._estimate_email_size(
+                headers, body, [a.file_size for a in attachments.sudo()])
+            max_email_size_bytes = (mail_server or self.env['ir.mail_server']
+                                    ).sudo()._get_max_email_size() * 1024 * 1024
+            if estimated_email_size_bytes > max_email_size_bytes:
+                # Remove attachments and prepare downloadable links to be added in the body
+                record_owned_attachments.sudo().generate_access_token()
+                attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
+                                                                {'attachments': record_owned_attachments})
+                body = tools.append_content_to_html(body, attachments_links, plaintext=False)
+                attachments -= record_owned_attachments
+        # Prepare the remaining attachment (those not embedded as link)
+        # load attachment binary data with a separate read(), as prefetching all
+        # `datas` (binary field) could bloat the browse cache, triggering
+        # soft/hard mem limits with temporary data.
+        email_attachments = [(a['name'], a['raw'], a['mimetype'])
+                             for a in attachments.sudo().read(['name', 'raw', 'mimetype'])
+                             if a['raw'] is not False]
 
         # Build final list of email values with personalized body for recipient
         results = []
@@ -565,11 +595,13 @@ class MailMail(models.Model):
                     batch.write({'state': 'exception', 'failure_reason': exc})
                     batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
             else:
+                mail_server = self.env['ir.mail_server'].browse(mail_server_id)
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
                     smtp_session=smtp_session,
                     alias_domain_id=alias_domain_id,
+                    mail_server=mail_server,
                 )
                 _logger.info(
                     'Sent batch %s emails via mail server ID #%s',
@@ -578,7 +610,7 @@ class MailMail(models.Model):
                 if smtp_session:
                     smtp_session.quit()
 
-    def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
+    def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False, mail_server=False):
         IrMailServer = self.env['ir.mail_server']
         # Only retrieve recipient followers of the mails if needed
         mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
@@ -632,7 +664,10 @@ class MailMail(models.Model):
                 res = None
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
-                email_list = mail._prepare_outgoing_list(recipients_follower_status)
+                email_list = mail._prepare_outgoing_list(
+                    mail_server=mail_server or mail.mail_server_id,
+                    recipients_follower_status=recipients_follower_status,
+                )
 
                 # send each sub-email
                 for email in email_list:
