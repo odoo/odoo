@@ -158,7 +158,7 @@ class TestFlows(PaymentHttpCommon):
     @freeze_time("2011-11-02 12:00:21")
     def _test_validation(self, flow):
         # Fixed with freezegun
-        expected_reference = 'validation-20111102120021'
+        expected_reference = 'V-20111102120021'
 
         validation_amount = self.acquirer._get_validation_amount()
         validation_currency = self.acquirer._get_validation_currency()
