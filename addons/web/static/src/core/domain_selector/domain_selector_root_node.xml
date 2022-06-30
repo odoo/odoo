@@ -8,7 +8,7 @@
             t-attf-class="{{ props.className }} {{ props.readonly ? 'o_read_mode' : 'o_edit_mode'}}"
         >
             <t t-if="!hasNode">
-                <span>Match <strong>All records</strong></span>
+                <span>Match <strong>all records</strong></span>
                 <t t-if="!props.readonly">
                     <button
                         class="btn btn-sm btn-primary o_domain_add_first_node_button"
