@@ -815,19 +815,7 @@ class Message(models.Model):
     def _update_content(self, body, attachment_ids):
         self.ensure_one()
         thread = self.env[self.model].browse(self.res_id)
-        thread._check_can_update_message_content(self)
-        self.body = body
-        if not attachment_ids:
-            self.attachment_ids._delete_and_notify()
-        else:
-            message_values = {
-                'model': self.model,
-                'body': body,
-                'res_id': self.res_id,
-            }
-            attachement_values = thread._message_post_process_attachments([], attachment_ids, message_values)
-            self.update(attachement_values)
-        thread._message_update_content_after_hook(self)
+        thread._message_update_message(self, body, attachment_ids)
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API

@@ -3135,6 +3135,23 @@ class MailThread(models.AbstractModel):
         msg_not_comment.write(msg_vals)
         return True
 
+    def _message_update_message(self, message, body, attachment_ids=None):
+        self._check_can_update_message_content(message)
+
+        self.body = body
+        if attachment_ids:
+            message_values = {
+                'model': self.model,
+                'body': body,
+                'res_id': self.res_id,
+            }
+            attachement_values = self._message_post_process_attachments([], attachment_ids, message_values)
+            self.update(attachement_values)
+        elif attachment_ids is not None:
+            self.attachment_ids._delete_and_notify()
+
+        self._message_update_content_after_hook(message)
+
     def _message_update_content_after_hook(self, message):
         """ Hook to add custom behavior after having updated the message content. """
 
