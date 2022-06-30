@@ -206,7 +206,7 @@ class PaymentPortal(portal.CustomerPortal):
         rendering_context = {
             'acquirers': acquirers_sudo,
             'tokens': tokens_sudo,
-            'reference_prefix': payment_utils.singularize_reference_prefix(prefix='validation'),
+            'reference_prefix': payment_utils.singularize_reference_prefix(prefix='V'),
             'partner_id': partner_sudo.id,
             'access_token': access_token,
             'transaction_route': '/payment/transaction',
