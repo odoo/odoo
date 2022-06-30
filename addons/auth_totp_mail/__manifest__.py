@@ -14,6 +14,7 @@ by sending an email to the target user. This email redirect them to :
     'data': [
         'data/ir_action_data.xml',
         'data/mail_template_data.xml',
+        'data/security_notifications_template.xml',
         'views/res_users_views.xml',
     ],
     'assets': {
