@@ -114,7 +114,6 @@ QUnit.module("Fields", (hooks) => {
             const integerInput = target.querySelector(".o_field_integer input");
             const monetaryInput = target.querySelector(".o_field_monetary input");
             const percentageInput = target.querySelector(".o_field_percentage input");
-            const progressbarInputs = target.querySelectorAll(".o_field_progressbar input");
 
             // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
             // Numpad "comma" is specific to some countries (Brazil...)
@@ -163,6 +162,8 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
             assert.strictEqual(percentageInput.value, "99🇧🇪🇧🇪");
 
+            await click(target.querySelector(".o_progress"));
+            const progressbarInputs = target.querySelectorAll(".o_field_progressbar input");
             progressbarInputs[0].dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
             );

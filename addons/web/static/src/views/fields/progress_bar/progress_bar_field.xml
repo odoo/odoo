@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ProgressBarField" owl="1">
-        <t t-if="props.readonly">
-            <div class="o_progressbar">
+        <t t-if="!state.isEditing">
+            <div class="o_progressbar" t-on-click="onClick">
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
@@ -16,7 +16,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o_progressbar d-flex" t-ref="numpadDecimal">
+            <div class="o_progressbar d-flex" t-ref="numpadDecimal" t-on-click="onClick">
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
@@ -30,38 +30,33 @@
                             t-att-required="props.required"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
                             t-on-input="(ev) => this.onInput(ev, 'currentValue')"
+                            t-on-blur="(ev) => this.onBlur(ev.target.value, 'currentValue')"
                         />
                         <span>%</span>
                     </div>
                 </t>
                 <t t-else="">
-                <t t-if="props.isCurrentValueEditable">
-                        <input
-                            class="o_progressbar_value o_input"
-                            type="text"
-                            inputmode="numeric"
-                            t-att-value="getFormattedValue('currentValue')"
-                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-input="(ev) => this.onInput(ev, 'currentValue')"
-                        />
-                    </t>
-                    <t t-else="">
-                        <span class="o_progressbar_value" t-esc="state.currentValue"/>
-                    </t>
-                    <span>/</span>
-                    <t t-if="props.isMaxValueEditable">
-                        <input
-                            class="o_progressbar_value o_input"
-                            type="text"
-                            inputmode="numeric"
-                            t-att-value="getFormattedValue('maxValue')"
-                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
-                            t-on-input="(ev) => this.onInput(ev, 'maxValue')"
-                        />
-                    </t>
-                    <t t-else="">
-                        <span class="o_progressbar_value" t-esc="state.maxValue"/>
-                    </t>
+                    <input
+                        t-if="props.isCurrentValueEditable"
+                        class="o_progressbar_value o_input"
+                        type="text"
+                        inputmode="numeric"
+                        t-att-value="getFormattedValue('currentValue')"
+                        t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
+                        t-on-input="(ev) => this.onInput(ev, 'currentValue')"
+                        t-on-blur="(ev) => this.onBlur(ev.target.value, 'currentValue')"
+                    />
+                    <span t-if="props.isCurrentValueEditable and props.isMaxValueEditable" t-esc="'/'" />
+                    <input
+                        t-if="props.isMaxValueEditable"
+                        class="o_progressbar_value o_input"
+                        type="text"
+                        inputmode="numeric"
+                        t-att-value="getFormattedValue('maxValue')"
+                        t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
+                        t-on-input="(ev) => this.onInput(ev, 'maxValue')"
+                        t-on-blur="onBlur"
+                    />
                 </t>
             </div>
         </t>
