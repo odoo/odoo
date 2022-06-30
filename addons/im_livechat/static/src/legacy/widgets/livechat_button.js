@@ -31,7 +31,7 @@ const LivechatButton = Widget.extend({
     init(parent, messaging) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = _.defaults(this.messaging.publicLivechatOptions || {});
+        this.options = _.defaults(this.messaging.publicLivechatGlobal.options || {});
     },
     async willStart() {
         this.messaging.livechatButtonView.update({ widget: this });

@@ -24,9 +24,6 @@ addFields('Messaging', {
     publicLivechatGlobal: one('PublicLivechatGlobal', {
         isCausal: true,
     }),
-    publicLivechatOptions: attr({
-        default: {},
-    }),
     publicLivechatServerUrl: attr({
         default: '',
     }),
