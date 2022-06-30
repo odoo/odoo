@@ -175,7 +175,7 @@ registerModel({
             if (this.isChatbot) {
                 return this.messaging.publicLivechatServerUrlChatbot;
             }
-            return this.messaging.publicLivechatServerUrl;
+            return this.messaging.publicLivechatGlobal.serverUrl;
         },
         /**
          * @returns {string|FieldCommand}

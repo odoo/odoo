@@ -27,9 +27,6 @@ addFields('Messaging', {
     publicLivechatOptions: attr({
         default: {},
     }),
-    publicLivechatServerUrl: attr({
-        default: '',
-    }),
 });
 
 addRecordMethods('Messaging', {

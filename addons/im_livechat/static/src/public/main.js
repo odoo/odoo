@@ -12,10 +12,9 @@ import { registry } from '@web/core/registry';
 const messagingValuesService = {
     start() {
         return {
-            publicLivechatGlobal: insertAndReplace(),
+            publicLivechatGlobal: insertAndReplace({ serverUrl }),
             isPublicLivechatAvailable: isAvailable,
             publicLivechatOptions: options,
-            publicLivechatServerUrl: serverUrl,
         };
     }
 };
