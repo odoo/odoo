@@ -30,7 +30,7 @@
                                 </button>
                             </t>
                         </footer>
-                        <main class="modal-body" t-att-class="{'p-0': !props.withBodyPadding}">
+                        <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}">
                             <t t-slot="default" close="data.close" />
                         </main>
                     </div>
