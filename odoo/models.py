@@ -6028,9 +6028,7 @@ class BaseModel(metaclass=MetaModel):
             return self._name == other._name and set(self._ids) == set(other._ids)
         except AttributeError:
             if other:
-                filename, lineno = frame_codeinfo(currentframe(), 1)
-                _logger.warning("unsupported operand type(s) for \"==\": '%s()' == '%r' (%s:%s)",
-                                self._name, other, filename, lineno)
+                warnings.warn(f"unsupported operand type(s) for \"==\": '{self._name}()' == '{other!r}'", stacklevel=2)
         return NotImplemented
 
     def __lt__(self, other):
