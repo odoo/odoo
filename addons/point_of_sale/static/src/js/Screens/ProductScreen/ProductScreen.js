@@ -279,23 +279,23 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== "" ? parse.float(inputNumber) : null;
-            if (confirmed && newQuantity !== null) {
-                let order = this.env.pos.get_order();
-                let selectedLine = this.env.pos.get_order().get_selected_orderline();
-                let currentQuantity = selectedLine.get_quantity()
-                if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
-                    selectedLine.set_quantity(newQuantity);
-                else if(newQuantity >= currentQuantity)
-                    selectedLine.set_quantity(newQuantity);
-                else {
-                    let newLine = selectedLine.clone();
-                    let decreasedQuantity = currentQuantity - newQuantity
-                    newLine.order = order;
+            if(!confirmed)
+                return;
+            let newQuantity = parse.float(inputNumber);
+            let order = this.env.pos.get_order();
+            let selectedLine = this.env.pos.get_order().get_selected_orderline();
+            let currentQuantity = selectedLine.get_quantity()
+            if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else if(newQuantity >= currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else {
+                let newLine = selectedLine.clone();
+                let decreasedQuantity = currentQuantity - newQuantity
+                newLine.order = order;
 
-                    newLine.set_quantity( - decreasedQuantity, true);
-                    order.add_orderline(newLine);
-                }
+                newLine.set_quantity( - decreasedQuantity, true);
+                order.add_orderline(newLine);
             }
         }
         async _onClickCustomer() {
