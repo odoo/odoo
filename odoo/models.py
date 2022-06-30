@@ -1302,7 +1302,7 @@ class BaseModel(metaclass=MetaModel):
         """
         field_names = {name: field.string for name, field in self._fields.items()}
         if self.env.lang:
-            field_names.update(self.env['ir.translation'].get_field_string(self._name))
+            field_names.update(self.env['ir.model.fields'].get_field_string(self._name))
 
         convert = self.env['ir.fields.converter'].for_model(self)
 

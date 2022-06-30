@@ -133,43 +133,6 @@ class IrTranslation(models.TransientModel):
                 res_id = tuple(res_id)
         return self.__get_source(name, types, lang, source, res_id)
 
-    @api.model
-    @tools.ormcache_context('model_name', keys=('lang',))
-    def get_field_string(self, model_name):
-        """ Return the translation of fields strings in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of a model
-        :return: the model's fields' strings as a dictionary `{field_name: field_string}`
-        """
-        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
-        return {field.name: field.field_description for field in fields}
-
-    @api.model
-    @tools.ormcache_context('model_name', keys=('lang',))
-    def get_field_help(self, model_name):
-        """ Return the translation of fields help in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of a model
-        :return: the model's fields' help as a dictionary `{field_name: field_help}`
-        """
-        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
-        return {field.name: field.help for field in fields}
-
-    @api.model
-    @tools.ormcache_context('model_name', 'field_name', keys=('lang',))
-    def get_field_selection(self, model_name, field_name):
-        """ Return the translation of a field's selection in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of the field's model
-        :param field_name: the name of the field
-        :return: the fields' selection as a list
-        """
-        field = self.env['ir.model.fields']._get(model_name, field_name)
-        return [(sel.value, sel.name) for sel in field.selection_ids]
-
     def write(self, vals):
         # try not using this api
         if 'value' in vals:

@@ -1176,6 +1176,42 @@ class IrModelFields(models.Model):
                 except Exception:
                     _logger.exception("Failed to load field %s.%s: skipped", model._name, field_data['name'])
 
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_string(self, model_name):
+        """ Return the translation of fields strings in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' strings as a dictionary `{field_name: field_string}`
+        """
+        fields = self.sudo().search([('model', '=', model_name)])
+        return {field.name: field.field_description for field in fields}
+
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_help(self, model_name):
+        """ Return the translation of fields help in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' help as a dictionary `{field_name: field_help}`
+        """
+        fields = self.sudo().search([('model', '=', model_name)])
+        return {field.name: field.help for field in fields}
+
+    @api.model
+    @tools.ormcache_context('model_name', 'field_name', keys=('lang',))
+    def get_field_selection(self, model_name, field_name):
+        """ Return the translation of a field's selection in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of the field's model
+        :param field_name: the name of the field
+        :return: the fields' selection as a list
+        """
+        field = self._get(model_name, field_name)
+        return [(sel.value, sel.name) for sel in field.selection_ids]
 
 class IrModelSelection(models.Model):
     _name = 'ir.model.fields.selection'
