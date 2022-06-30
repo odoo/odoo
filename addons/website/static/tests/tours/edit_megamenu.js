@@ -41,14 +41,13 @@ wTourUtils.registerEditionTour('edit_megamenu', {
         run: 'text Megaaaaa!'
     },
     {
-        content: "Save the new menu item",
-        trigger: '.o_website_dialog .btn-primary',
-        run: 'click',
+        content: "Confirm the mega menu label",
+        trigger: '.modal-footer .btn-primary',
     },
     {
-        content: "Save the changes to the menu",
+        content: "Save the website menu with a new mega menu",
         trigger: '.modal-footer .btn-primary',
-        run: 'click',
+        extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
     },
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),

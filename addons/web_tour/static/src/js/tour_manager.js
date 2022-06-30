@@ -238,8 +238,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     update: function (tour_name) {
         if (this.paused) return;
 
-        this.$modal_displayed = $('.modal:visible').last();
-
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
             var tour = this.tours[tour_name];
@@ -280,6 +278,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             this._log.push("blockUI is preventing the tip to be consumed");
             return false;
         }
+        this.$modal_displayed = $('.modal:visible').last();
 
         var $trigger;
         if (tip.in_modal !== false && this.$modal_displayed.length) {
