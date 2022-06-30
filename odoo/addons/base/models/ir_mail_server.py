@@ -22,7 +22,7 @@ from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize
+from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
 
 
 _logger = logging.getLogger(__name__)
@@ -131,6 +131,7 @@ class IrMailServer(models.Model):
     smtp_debug = fields.Boolean(string='Debugging', help="If enabled, the full output of SMTP sessions will "
                                                          "be written to the server log at DEBUG level "
                                                          "(this is very verbose and may include confidential info!)")
+    max_email_size = fields.Float(string="Max Email Size")
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
@@ -206,6 +207,11 @@ class IrMailServer(models.Model):
         """
         return dict()
 
+    def _get_max_email_size(self):
+        if self.max_email_size:
+            return self.max_email_size
+        return float(self.env['ir.config_parameter'].sudo().get_param('base.default_max_email_size', '10'))
+
     def _get_test_email_from(self):
         self.ensure_one()
         email_from = False
@@ -226,7 +232,16 @@ class IrMailServer(models.Model):
     def _get_test_email_to(self):
         return "noreply@odoo.com"
 
-    def test_smtp_connection(self):
+    def test_smtp_connection(self, autodetect_max_email_size=False):
+        """Test the connection and if autodetect_max_email_size, set auto-detected max email size.
+
+        :param bool autodetect_max_email_size: whether to autodetect the max email size
+        :return (dict): client action to notify the user of the result of the operation (connection test or
+        auto-detection successful depending on the autodetect_max_email_size parameter)
+
+        :raises UserError: if the connection fails and if autodetect_max_email_size and
+            the server doesn't support the auto-detection of email max size
+        """
         for server in self:
             smtp = False
             try:
@@ -248,6 +263,12 @@ class IrMailServer(models.Model):
                 (code, repl) = smtp.getreply()
                 if code != 354:
                     raise UserError(_('The server refused the test connection with error %(repl)s', repl=repl))  # noqa: TRY301
+                if autodetect_max_email_size:
+                    max_size = smtp.esmtp_features.get('size')
+                    if not max_size:
+                        raise UserError(_('The server "%(server_name)s" doesn\'t return the maximum email size.',
+                                          server_name=server.name))
+                    server.max_email_size = float(max_size) / (1024 ** 2)
             except (UnicodeError, idna.core.InvalidCodepoint) as e:
                 raise UserError(_("Invalid server name!\n %s", e)) from e
             except (gaierror, timeout) as e:
@@ -275,7 +296,12 @@ class IrMailServer(models.Model):
                     # ignored, just a consequence of the previous exception
                     pass
 
-        message = _("Connection Test Successful!")
+        if autodetect_max_email_size:
+            message = _(
+                'Email maximum size updated (%(details)s).',
+                details=', '.join(f'{server.name}: {human_size(server.max_email_size * 1024 ** 2)}' for server in self))
+        else:
+            message = _('Connection Test Successful!')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -283,8 +309,13 @@ class IrMailServer(models.Model):
                 'message': message,
                 'type': 'success',
                 'sticky': False,
-            }
+                'next': {'type': 'ir.actions.act_window_close'},  # force a form reload
+            },
         }
+
+    def action_retrieve_max_email_size(self):
+        self.ensure_one()
+        return self.test_smtp_connection(autodetect_max_email_size=True)
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,

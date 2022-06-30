@@ -19,6 +19,17 @@
                             </group>
                             <group>
                                 <field name="sequence"/>
+                                <div colspan="2" class="d-flex justify-content-between">
+                                    <div>
+                                        <label for="max_email_size"
+                                               string="Convert attachments to links for emails over"/>
+                                        <field name="max_email_size" class="oe_inline mx-1"/>
+                                        <span class="o_form_label">MB</span>
+                                    </div>
+                                    <button class="btn btn-link pt-0" type="object" name="action_retrieve_max_email_size">
+                                        <i class="fa fa-gear"/> Detect Max Limit
+                                    </button>
+                                </div>
                             </group>
                         </group>
                         <group>
