@@ -40,7 +40,6 @@ const PublicLivechatWindow = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
         this.options = _.defaults(options || {}, {
-            autofocus: true,
             displayReplyIcons: false,
             displayNotificationIcons: false,
             placeholder: _t("Say something"),
@@ -69,7 +68,7 @@ const PublicLivechatWindow = Widget.extend({
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
         if (this._thread._folded) {
             this.$el.css('height', this.HEIGHT_FOLDED);
-        } else if (this.options.autofocus) {
+        } else {
             this._focusInput();
         }
         if (!config.device.isMobile) {
@@ -161,9 +160,7 @@ const PublicLivechatWindow = Widget.extend({
     updateVisualFoldState() {
         if (!this._thread._folded) {
             this._publicLivechatView.scrollToBottom();
-            if (this.options.autofocus) {
-                this._focusInput();
-            }
+            this._focusInput();
         }
         const height = this._thread._folded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
         this.$el.css({ height });
