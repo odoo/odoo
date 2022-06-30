@@ -47,7 +47,6 @@ const PublicLivechatWindow = Widget.extend({
             placeholder: _t("Say something"),
         });
 
-        this._hidden = false;
         this._thread = thread;
 
         this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
@@ -89,27 +88,6 @@ const PublicLivechatWindow = Widget.extend({
         if (this.options.titleColor) {
             this.$('.o_thread_window_header').css('color', this.options.titleColor);
         }
-    },
-    /**
-     * @override
-     */
-    do_hide() {
-        this._hidden = true;
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    do_show() {
-        this._hidden = false;
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    do_toggle(display) {
-        this._hidden = _.isBoolean(display) ? !display : !this._hidden;
-        this._super(...arguments);
     },
 
 
