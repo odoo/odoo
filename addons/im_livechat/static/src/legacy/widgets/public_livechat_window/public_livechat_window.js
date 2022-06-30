@@ -41,7 +41,6 @@ const PublicLivechatWindow = Widget.extend({
         this.messaging = messaging;
         this.options = _.defaults(options || {}, {
             autofocus: true,
-            displayStars: true,
             displayReplyIcons: false,
             displayNotificationIcons: false,
             placeholder: _t("Say something"),
@@ -60,7 +59,6 @@ const PublicLivechatWindow = Widget.extend({
         this.$header = this.$('.o_thread_window_header');
         const options = {
             displayMarkAsRead: false,
-            displayStars: this.options.displayStars,
         };
         if (this._thread && this._thread._type === 'document_thread') {
             options.displayDocumentLinks = false;
