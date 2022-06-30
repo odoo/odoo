@@ -3004,17 +3004,100 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
 });
 
 /**
+ * Base class for all cover updaters.
+ */
+const CoverUpdaterMixin = {
+    /**
+     * @constructor
+     */
+    init() {
+        this._super.apply(this, arguments);
+
+        this.$image = this.$target.closest('.o_record_cover_container').find('.o_record_cover_image');
+    },
+    /**
+     * Mark cover-specific dirty for options that are not cover-only.
+     *
+     * @override
+     */
+    onOptionUsed(previewMode, widget) {
+        if (!previewMode) {
+            this._updateSavingDataset();
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
+        this.$target[0].dataset.bgColorStyle = bgColorStyle;
+        this.$target[0].dataset.bgColorClass = bgColorClass;
+    },
+    /**
+     * Updates the cover properties dataset used for saving.
+     *
+     * @private
+     */
+    _updateSavingDataset(colorValue) {
+        const target = this.$target[0].closest('.o_record_cover_container');
+        const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
+        // TODO: `o_record_has_cover` should be handled using model field, not
+        // resize_class to avoid all of this.
+        // Get values from DOM (selected values in options are only available
+        // after updateUI)
+        const sizeOptValues = sizeWidget.getMethodsParams('selectClass').possibleValues;
+        let coverClass = [...target.classList].filter(
+            value => sizeOptValues.includes(value)
+        ).join(' ');
+        const bg = this.$image.css('background-image');
+        if (bg && bg !== 'none') {
+            coverClass += " o_record_has_cover";
+        }
+        const textAlignOptValues = textAlignWidget.getMethodsParams('selectClass').possibleValues;
+        const textAlignClass = [...target.classList].filter(
+            value => textAlignOptValues.includes(value)
+        ).join(' ');
+        const filterEl = target.querySelector('.o_record_cover_filter');
+        const filterValue = filterEl && filterEl.style.opacity;
+        // Update saving dataset
+        target.dataset.coverClass = coverClass;
+        target.dataset.textAlignClass = textAlignClass;
+        target.dataset.filterValue = filterValue || 0.0;
+        // TODO there is probably a better way and this should be refactored to
+        // use more standard colorpicker+imagepicker structure
+        const ccValue = colorPickerWidget._ccValue;
+        const colorOrGradient = colorPickerWidget._value;
+        const isGradient = weUtils.isColorGradient(colorOrGradient);
+        const valueIsCSSColor = !isGradient && isCSSColor(colorOrGradient);
+        const colorNames = [];
+        if (ccValue) {
+            colorNames.push(ccValue);
+        }
+        if (colorOrGradient && !isGradient && !valueIsCSSColor) {
+            colorNames.push(colorOrGradient);
+        }
+        const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
+        const bgColorStyle = valueIsCSSColor ? `background-color: ${colorOrGradient};` :
+            isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
+        this._updateColorDataset(bgColorStyle, bgColorClass);
+    },
+};
+
+/**
  * Allows edition of 'cover_properties' in website models which have such
  * fields (blogs, posts, events, ...).
  */
-options.registry.CoverProperties = options.Class.extend({
+options.registry.CoverProperties = options.Class.extend(CoverUpdaterMixin).extend({
     /**
      * @constructor
      */
     init: function () {
         this._super.apply(this, arguments);
-
-        this.$image = this.$target.find('.o_record_cover_image');
         this.$filter = this.$target.find('.o_record_cover_filter');
     },
     /**
@@ -3042,10 +3125,6 @@ options.registry.CoverProperties = options.Class.extend({
             this.$image.css('background-image', '');
             this.$target.removeClass('o_record_has_cover');
         }
-
-        if (!previewMode) {
-            this._updateSavingDataset();
-        }
     },
     /**
      * @see this.selectClass for parameters
@@ -3053,30 +3132,6 @@ options.registry.CoverProperties = options.Class.extend({
     filterValue: function (previewMode, widgetValue, params) {
         this.$filter.css('opacity', widgetValue || 0);
         this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
-
-        if (!previewMode) {
-            this._updateSavingDataset();
-        }
-    },
-    /**
-     * @override
-     */
-    selectStyle: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-
-        if (!previewMode) {
-            this._updateSavingDataset(widgetValue);
-        }
-    },
-    /**
-     * @override
-     */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-
-        if (!previewMode) {
-            this._updateSavingDataset();
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -3107,61 +3162,17 @@ options.registry.CoverProperties = options.Class.extend({
         }
         return this._super(...arguments);
     },
-    /**
-     * @private
-     */
-    _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
-        this.$target[0].dataset.bgColorStyle = bgColorStyle;
-        this.$target[0].dataset.bgColorClass = bgColorClass;
-    },
-    /**
-     * Updates the cover properties dataset used for saving.
-     *
-     * @private
-     */
-    _updateSavingDataset(colorValue) {
-        const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
-        // TODO: `o_record_has_cover` should be handled using model field, not
-        // resize_class to avoid all of this.
-        // Get values from DOM (selected values in options are only available
-        // after updateUI)
-        const sizeOptValues = sizeWidget.getMethodsParams('selectClass').possibleValues;
-        let coverClass = [...this.$target[0].classList].filter(
-            value => sizeOptValues.includes(value)
-        ).join(' ');
-        const bg = this.$image.css('background-image');
-        if (bg && bg !== 'none') {
-            coverClass += " o_record_has_cover";
-        }
-        const textAlignOptValues = textAlignWidget.getMethodsParams('selectClass').possibleValues;
-        const textAlignClass = [...this.$target[0].classList].filter(
-            value => textAlignOptValues.includes(value)
-        ).join(' ');
-        const filterEl = this.$target[0].querySelector('.o_record_cover_filter');
-        const filterValue = filterEl && filterEl.style.opacity;
-        // Update saving dataset
-        this.$target[0].dataset.coverClass = coverClass;
-        this.$target[0].dataset.textAlignClass = textAlignClass;
-        this.$target[0].dataset.filterValue = filterValue || 0.0;
-        // TODO there is probably a better way and this should be refactored to
-        // use more standard colorpicker+imagepicker structure
-        const ccValue = colorPickerWidget._ccValue;
-        const colorOrGradient = colorPickerWidget._value;
-        const isGradient = weUtils.isColorGradient(colorOrGradient);
-        const valueIsCSSColor = !isGradient && isCSSColor(colorOrGradient);
-        const colorNames = [];
-        if (ccValue) {
-            colorNames.push(ccValue);
-        }
-        if (colorOrGradient && !isGradient && !valueIsCSSColor) {
-            colorNames.push(colorOrGradient);
-        }
-        const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
-        const bgColorStyle = valueIsCSSColor ? `background-color: ${colorOrGradient};` :
-            isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
-        this._updateColorDataset(bgColorStyle, bgColorClass);
-    },
 });
+
+/**
+ * Cover version of BackgroundImage.
+ */
+options.registry.CoverBackgroundImage = options.registry.BackgroundImage.extend(CoverUpdaterMixin);
+
+/**
+ * Cover version of BackgroundPosition.
+ */
+options.registry.CoverBackgroundPosition = options.registry.BackgroundPosition.extend(CoverUpdaterMixin);
 
 options.registry.ScrollButton = options.Class.extend({
     /**

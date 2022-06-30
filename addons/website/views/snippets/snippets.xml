@@ -1332,11 +1332,11 @@
                     data-toggle-bg-image="true" data-no-preview="true"/>
         </we-row>
     </div>
-    <div data-js="BackgroundImage" data-selector=".o_record_cover_container"
+    <div data-js="CoverBackgroundImage" data-selector=".o_record_cover_container"
             data-target=".o_record_cover_image" data-no-check="true">
         <t t-call="web_editor.snippet_options_image_selection_widgets"/>
     </div>
-    <div data-js="BackgroundPosition" data-selector=".o_record_cover_container"
+    <div data-js="CoverBackgroundPosition" data-selector=".o_record_cover_container"
             data-target=".o_record_cover_image" data-no-check="true">
         <t t-call="web_editor.snippet_options_image_position_widgets">
             <t t-set="bg_image_dependencies" t-valuef="bg_image_toggle_opt"/>
