@@ -701,6 +701,7 @@ WysiwygAdapterComponent.prototype.events = {
     'widgets_start_request': '_onRootEventRequest',
     'widgets_stop_request': '_onRootEventRequest',
     'ready_to_clean_for_save': '_onRootEventRequest',
+    'will_remove_snippet': '_onRootEventRequest',
     'gmap_api_request': '_onRootEventRequest',
     'gmap_api_key_request': '_onRootEventRequest',
     'request_save': '_onSaveRequest',
