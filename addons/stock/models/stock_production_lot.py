@@ -220,9 +220,10 @@ class ProductionLot(models.Model):
                     lot_path.add(lot.id)
                     next_lots = producing_move_lines.produce_line_ids.lot_id.filtered(lambda l: l.id not in lot_path)
                     next_lots_ids = set(next_lots.ids)
-                    # If some producing lots are in lot_path, it means that they have been previously processed.
-                    # Their results are therefore already in delivery_by_lot and we add them to delivery_ids directly.
-                    delivery_ids.update(*[set(delivery_by_lot.get(lot_id)) for lot_id in (producing_move_lines.produce_line_ids.lot_id - next_lots).ids])
+                    # If some producing lots are in lot_path, it can mean one of two things:
+                    #   - We encountered a cycle. In that case we simply return an empty list since the correct values will be computed later on.
+                    #   - We encountered an already processed lot. The lot picking_ids are already in delivery_by_lot so we add them directly to delivery_ids.
+                    delivery_ids.update(*[set(delivery_by_lot.get(lot_id, [])) for lot_id in (producing_move_lines.produce_line_ids.lot_id - next_lots).ids])
 
                     for lot_id, delivery_ids_set in next_lots._find_delivery_ids_by_lot(lot_path=lot_path, delivery_by_lot=delivery_by_lot).items():
                         if lot_id in next_lots_ids:
