@@ -124,15 +124,6 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * Get the unread counter of the related thread. If there are no thread
-     * linked to this window, returns 0.
-     *
-     * @returns {integer}
-     */
-    getUnreadCounter() {
-        return this.messaging.livechatButtonView.publicLivechat.unreadCounter;
-    },
-    /**
      * Tells whether the bottom of the thread in the thread window is visible
      * or not.
      *
@@ -275,7 +266,7 @@ const PublicLivechatWindow = Widget.extend({
             status: this._thread._status,
             thread: this._thread,
             title: this._thread._name,
-            unreadCounter: this.getUnreadCounter(),
+            unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
             widget: this,
         };
     },
