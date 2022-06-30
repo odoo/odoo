@@ -287,7 +287,7 @@
         </template>
 
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-set="record_price" t-value="record._get_contextual_price()"/>
+            <t t-set="record_price" t-value="record._get_contextual_price_tax_selection()"/>
             <t t-if="not website.prevent_zero_price_sale or record_price">
                 <span t-esc="record_price" class="fw-bold"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
