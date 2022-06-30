@@ -8,8 +8,8 @@ import { click, getFixture } from "../../helpers/utils";
 function compileTemplate(arch) {
     const parser = new DOMParser();
     const xml = parser.parseFromString(arch, "text/xml");
-    const compiler = new FormCompiler();
-    return compiler.compile(xml.documentElement).outerHTML;
+    const compiler = new FormCompiler({ form: xml.documentElement });
+    return compiler.compile("form").outerHTML;
 }
 
 QUnit.assert.areEquivalent = function (template1, template2) {
