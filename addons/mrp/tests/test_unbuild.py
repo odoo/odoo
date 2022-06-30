@@ -738,3 +738,83 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': p2.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
             {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
         ])
+
+    def test_use_unbuilt_sn_in_mo(self):
+        """
+            use an unbuilt serial number in manufacturing order:
+            produce a tracked product, unbuild it and then use it as a component with the same SN in a mo.
+        """
+        product_1 = self.env['product.product'].create({
+            'name': 'Product tracked by sn',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_1_sn = self.env['stock.lot'].create({
+            'name': 'sn1',
+            'product_id': product_1.id,
+            'company_id': self.env.company.id
+        })
+        component = self.env['product.product'].create({
+            'name': 'Product component',
+            'type': 'product',
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'finished Product',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
+            ],
+        })
+        # mo1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_1
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo_form.lot_producing_id = product_1_sn
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = product_1_sn
+        unbuild_form.save().action_unbuild()
+
+        #mo2
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_2
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = product_1_sn
+            ml.qty_done = 1
+        details_operation_form.save()
+        mo_form = Form(mo2)
+        mo_form.qty_producing = 1
+        mo2 = mo_form.save()
+        mo2.button_mark_done()
+        self.assertEqual(mo2.state, 'done', "Production order should be in done state.")
