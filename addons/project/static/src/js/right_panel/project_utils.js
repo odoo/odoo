@@ -10,7 +10,9 @@ const { Component, onWillUpdateProps, useState } = owl;
 export class ProjectRightSidePanelComponent extends Component {
     setup() {
         super.setup();
-        this.contextValue = {};
+        this.contextValue = Object.assign({}, {
+            'default_project_id': this.props.context.active_id,
+        }, this.props.context);
     }
 
     async openLegacyFormDialog(params) {
@@ -27,13 +29,6 @@ export class ProjectRightSidePanelComponent extends Component {
 ProjectRightSidePanelComponent.components = { ComponentAdapter };
 
 class MilestoneComponent extends ProjectRightSidePanelComponent {
-    setup() {
-        super.setup();
-        this.contextValue = Object.assign({}, {
-            'default_project_id': this.props.context.active_id,
-        }, this.props.context);
-    }
-
     async openLegacyFormDialog(params) {
         return super.openLegacyFormDialog({
             res_model: "project.milestone",
@@ -48,10 +43,7 @@ export class AddMilestone extends MilestoneComponent {
         event.stopPropagation();
         this.openLegacyFormDialog({
             _createContext: () => {
-                return {
-                    default_project_id: this.contextValue.active_id,
-                    ...this.contextValue
-                };
+                return this.contextValue;
             },
             title: this.env._t("New Milestone"),
             multi_select: true
