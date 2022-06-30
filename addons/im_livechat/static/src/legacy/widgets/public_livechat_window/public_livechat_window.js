@@ -124,14 +124,6 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * States whether the thread window is hidden or not.
-     *
-     * @returns {boolean}
-     */
-    isHidden() {
-        return this._hidden;
-    },
-    /**
      * States whether the current environment is in mobile or not. This is
      * useful in order to customize the template rendering for mobile view.
      *
