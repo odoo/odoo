@@ -407,7 +407,7 @@ const QWeb = core.qweb;
                     }))
                 );
 
-                this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             }, this.messaging.livechatButtonView.chatbot.messageDelay / 3),
         });
     },
@@ -598,7 +598,7 @@ const QWeb = core.qweb;
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
                 if (this.messaging.livechatButtonView.chatWindow) {
-                    this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                    this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
                 }
             });
 

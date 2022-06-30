@@ -138,12 +138,6 @@ const PublicLivechatWindow = Widget.extend({
         $element.replace(this._publicLivechatView.$el);
     },
     /**
-     * Scroll to the bottom of the thread in the thread window
-     */
-    scrollToBottom() {
-        this._publicLivechatView.scrollToBottom();
-    },
-    /**
      * Toggle the fold state of this thread window. Also update the fold state
      * of the thread model. If the boolean parameter `folded` is provided, it
      * folds/unfolds the window when it is set/unset.

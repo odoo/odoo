@@ -341,7 +341,7 @@ const LivechatButton = Widget.extend({
         this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._messages = this.messaging.livechatButtonView.messages;
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+            this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
         }
     },
     /**
@@ -373,7 +373,7 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this.messaging.livechatButtonView.chatWindow.legacyChatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             });
     },
     /**
