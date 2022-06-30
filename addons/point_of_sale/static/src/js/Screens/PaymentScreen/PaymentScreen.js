@@ -202,7 +202,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     syncedOrderBackendIds = await this.env.pos.push_single_order(this.currentOrder);
                 }
             } catch (error) {
-                if (error.code == 700)
+                if (error.code == 700 || error.code == 701)
                     this.error = true;
 
                 if ('code' in error) {
