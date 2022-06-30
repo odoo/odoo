@@ -124,15 +124,6 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('close_chat_window');
     },
     /**
-     * Get the title of the thread window, which usually contains the name of
-     * the thread.
-     *
-     * @returns {string}
-     */
-    getTitle() {
-        return this._thread._name;
-    },
-    /**
      * Get the unread counter of the related thread. If there are no thread
      * linked to this window, returns 0.
      *
@@ -283,7 +274,7 @@ const PublicLivechatWindow = Widget.extend({
         return {
             status: this._thread._status,
             thread: this._thread,
-            title: this.getTitle(),
+            title: this._thread._name,
             unreadCounter: this.getUnreadCounter(),
             widget: this,
         };
