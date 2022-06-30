@@ -241,7 +241,13 @@ class DiscussController(http.Controller):
         message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
-        message_sudo._update_content(body=body, attachment_ids=attachment_ids)
+        if not message_sudo.model or not message_sudo.res_id:
+            raise NotFound()
+        request.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
+            message_sudo,
+            body,
+            attachment_ids=attachment_ids
+        )
         return {
             'id': message_sudo.id,
             'body': message_sudo.body,
