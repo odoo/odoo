@@ -245,7 +245,7 @@ class DiscussController(http.Controller):
     def mail_message_update_content(self, message_id, body, attachment_ids):
         guest = request.env['mail.guest']._get_guest_from_request(request)
         message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
-        if not message_sudo.is_current_user_or_guest_author and not guest.env.user.has_group('base.group_system'):
+        if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
         message_sudo._update_content(body=body, attachment_ids=attachment_ids)
         return {
