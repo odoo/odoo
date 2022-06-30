@@ -433,14 +433,20 @@ class MailThread(models.AbstractModel):
             return self.with_context(lang=self.env.user.lang)
         return self
 
-    def _check_can_update_message_content(self, message):
-        """" Checks that the current user can update the content of the message. """
+    def _check_can_update_message_content(self, messages):
+        """" Checks that the current user can update the content of the message.
+        Current heuristic is
+
+          * limited to note;
+          * if no tracking;
+          * only for user generated content;
+        """
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if not message.subtype_id.id == note_id:
+        if any(message.subtype_id.id != note_id for message in messages):
             raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
-        if message.tracking_value_ids:
+        if messages.tracking_value_ids:
             raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
-        if not message.message_type == 'comment':
+        if any(message.message_type != 'comment' for message in messages):
             raise exceptions.UserError(_("Only messages type comment can have their content updated"))
 
     # ------------------------------------------------------
@@ -3122,8 +3128,52 @@ class MailThread(models.AbstractModel):
         msg_not_comment.write(msg_vals)
         return True
 
+    def _message_update_content(self, message, body, attachment_ids=None,
+                                strict=True):
+        """ Update message content. Currently does not support attachments
+        specific code (see ``_message_post_process_attachments``), to be added
+        when necessary.
+
+        Private method to use for tooling, do not expose to interface as editing
+        messages should be avoided at all costs (think of: notifications already
+        sent, ...).
+
+        :param <mail.message> message: message to update, should be linked to self through
+          model and res_id;
+        :param str body: new body (None to skip its update);
+        :param list attachment_ids: list of new attachments IDs, replacing old one (None
+          to skip its update);
+        :param bool strict: whether to check for allowance before updating
+          content. This should be skipped only when really necessary as it
+          creates issues with already-sent notifications, lack of content
+          tracking, ...
+        """
+        self.ensure_one()
+        if strict:
+            self._check_can_update_message_content(message.sudo())
+
+        msg_values = {'body': body} if body is not None else {}
+        if attachment_ids:
+            msg_values.update(
+                self._message_post_process_attachments([], attachment_ids, {
+                    'body': body,
+                    'model': self._name,
+                    'res_id': self.id,
+                })
+            )
+        elif attachment_ids is not None:  # None means "no update"
+            message.attachment_ids._delete_and_notify()
+        if msg_values:
+            message.write(msg_values)
+
+        # cleanup related message data if the message is empty
+        message.sudo()._filter_empty()._cleanup_side_records()
+
+        return self._message_update_content_after_hook(message)
+
     def _message_update_content_after_hook(self, message):
         """ Hook to add custom behavior after having updated the message content. """
+        return True
 
     # ------------------------------------------------------
     # CONTROLLERS
