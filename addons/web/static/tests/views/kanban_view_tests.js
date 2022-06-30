@@ -1166,7 +1166,7 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
+        assert.containsOnce(quickCreate, ".o_wowl_form_view.o_xxs_form_view");
         assert.containsOnce(quickCreate, "input");
         assert.containsOnce(
             quickCreate,
@@ -1239,7 +1239,7 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
+        assert.containsOnce(quickCreate, ".o_wowl_form_view.o_xxs_form_view");
         assert.containsOnce(
             target,
             ".o_control_panel",
@@ -1656,13 +1656,13 @@ QUnit.module("Views", (hooks) => {
 
         await quickCreateRecord();
         assert.hasClass(
-            target.querySelector(".o_kanban_quick_create .o_form_view"),
+            target.querySelector(".o_kanban_quick_create .o_wowl_form_view"),
             "o_xxs_form_view"
         );
 
         await triggerEvent(window, "", "resize");
         assert.hasClass(
-            target.querySelector(".o_kanban_quick_create .o_form_view"),
+            target.querySelector(".o_kanban_quick_create .o_wowl_form_view"),
             "o_xxs_form_view"
         );
     });
@@ -3339,7 +3339,7 @@ QUnit.module("Views", (hooks) => {
         blockGetViews = true;
         await quickCreateRecord();
 
-        assert.containsNone(target, ".o_form_view");
+        assert.containsNone(target, ".o_wowl_form_view");
 
         // click to fold the first column
         const clickColumnAction = await toggleColumnActions(0);
@@ -3350,7 +3350,7 @@ QUnit.module("Views", (hooks) => {
         prom.resolve();
         await nextTick();
 
-        assert.containsNone(target, ".o_form_view");
+        assert.containsNone(target, ".o_wowl_form_view");
         assert.containsOnce(target, ".o_column_folded");
     });
 
