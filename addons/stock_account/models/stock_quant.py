@@ -16,6 +16,7 @@ class StockQuant(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+    cost_method = fields.Selection(related="product_categ_id.property_cost_method")
 
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):

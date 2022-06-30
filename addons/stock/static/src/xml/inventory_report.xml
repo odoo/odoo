@@ -4,7 +4,9 @@
 <t t-extend="ListView.buttons" t-name="StockInventoryReport.Buttons">
     <t t-jquery="button.o_list_button_discard" t-operation="after">
         <button class="btn btn-primary o_button_at_date me-2" type="button">
-            Inventory at Date
+            <t t-if="widget.modelName == 'stock.quant'">
+                Inventory at Date
+            </t>
         </button>
     </t>
 </t>
