@@ -31,10 +31,8 @@ wTourUtils.registerEditionTour("snippet_version", {
             console.error("error Dropped a s_test_snip snippet but missing s_share template name in it");
         }
     },
-}, {
-    content: "Click on save button",
-    trigger: 'button[data-action="save"]',
 },
+    ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnEdit(),
 {
     content: "Modify the version of snippets",
