@@ -18,6 +18,7 @@ from odoo.addons.bus.models.bus import ImBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
+from odoo.addons.mail.models.res_users import Users
 from odoo.tests import common, new_test_user
 from odoo.tools import formataddr, mute_logger, pycompat
 from odoo.tools.translate import code_translations
@@ -1028,11 +1029,13 @@ class MailCommon(common.TransactionCase, MailCase):
         cls._init_outgoing_gateway()
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
-        cls.user_admin.write({
-            'country_id': cls.env.ref('base.be').id,
-            'email': 'test.admin@test.example.com',
-            'notification_type': 'inbox',
-        })
+
+        with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
+            cls.user_admin.write({
+                'country_id': cls.env.ref('base.be').id,
+                'email': 'test.admin@test.example.com',
+                'notification_type': 'inbox',
+            })
         cls.partner_admin = cls.env.ref('base.partner_admin')
         cls.company_admin = cls.user_admin.company_id
         cls.company_admin.write({'email': 'company@example.com'})

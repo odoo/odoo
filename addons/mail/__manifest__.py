@@ -91,6 +91,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_templates_mailgateway.xml',
         'data/mail_channel_data.xml',
         'data/mail_activity_data.xml',
+        'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
