@@ -84,7 +84,7 @@ registerModel({
          * @returns {integer}
          */
         _computeCurrentPartnerId() {
-            if (!this.messaging.isPublicLivechatAvailable) {
+            if (!this.messaging.publicLivechatGlobal.isAvailable) {
                 return clear();
             }
             return this.messaging.publicLivechatOptions.current_partner_id;

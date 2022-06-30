@@ -7,9 +7,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import '@mail/models/messaging';
 
 addFields('Messaging', {
-    isPublicLivechatAvailable: attr({
-        default: false,
-    }),
     livechatButtonView: one('LivechatButtonView', {
         compute: '_computeLivechatButtonView',
         isCausal: true,
@@ -38,7 +35,7 @@ addRecordMethods('Messaging', {
      * @returns {FieldCommand}
      */
     _computeLivechatButtonView() {
-        if (this.publicLivechatGlobal && this.isPublicLivechatAvailable) {
+        if (this.publicLivechatGlobal && this.publicLivechatGlobal.isAvailable) {
             return insertAndReplace();
         }
         return clear();

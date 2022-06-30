@@ -90,8 +90,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         const messaging = this.env.services.messaging.get();
         return this._super(...arguments).then(() => {
             messaging.update({
-                publicLivechatGlobal: insertAndReplace(),
-                isPublicLivechatAvailable: true,
+                publicLivechatGlobal: insertAndReplace({ isAvailable: true }),
                 publicLivechatServerUrlChatbot: this.$el.data().serverUrl,
             });
             this.livechatButton = new LivechatButtonTestChatbot(this, messaging, this.$el.data());
