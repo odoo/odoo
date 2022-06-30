@@ -3143,7 +3143,7 @@ class MailThread(models.AbstractModel):
         msg_not_comment.write(msg_vals)
         return True
 
-    def _message_update_message(self, message, body, attachment_ids=None):
+    def _message_update_content(self, message, body, attachment_ids=None):
         self._check_can_update_message_content(message)
 
         self.body = body

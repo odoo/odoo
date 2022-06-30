@@ -59,3 +59,11 @@ class MailMessageScheduled(models.Model):
             record._notify_thread(message, **kwargs)
 
         self.unlink()
+
+    def _update_scheduled_datetime(self, message, new_datetime):
+        messages_scheduled = self.env['mail.message.scheduled'].search(
+            [('message_id', '=', message.id)])
+        if new_datetime and new_datetime > datetime.utcnow():
+            messages_scheduled.scheduled_datetime = new_datetime
+        else:
+            messages_scheduled._send_notifications()

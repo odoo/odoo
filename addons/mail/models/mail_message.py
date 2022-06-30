@@ -815,7 +815,7 @@ class Message(models.Model):
     def _update_content(self, body, attachment_ids):
         self.ensure_one()
         thread = self.env[self.model].browse(self.res_id)
-        thread._message_update_message(self, body, attachment_ids)
+        thread._message_update_content(self, body, attachment_ids)
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API

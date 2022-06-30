@@ -232,7 +232,7 @@ class RatingMixin(models.AbstractModel):
             raise ValueError('Invalid token or rating.')
 
         rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
-        if hasattr(self, 'message_post'):
+        if issubclass(type(self), self.env.registry['mail.thread']):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
@@ -254,14 +254,9 @@ class RatingMixin(models.AbstractModel):
                 if any(mail.state != 'outgoing' for mail in rating.message_id.mail_ids):
                     raise UserError(_('The rating is already sent, you can not change it'))
 
-                rating.message_id.body = rating_body
-                rating.message_id.mail_ids.write({
-                    'body': rating_body,
-                    'body_html': rating_body,
-                    'scheduled_datetime': scheduled_datetime,
-                })
-                if not scheduled_datetime:
-                    rating.message_id.mail_ids.send()
+                self._message_update_content(rating.message_id, rating_body)
+                self.env['mail.message.scheduled']._update_scheduled_datetime(
+                    rating.message_id, scheduled_datetime)
 
             else:
                 self.message_post(
