@@ -791,7 +791,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.strictEqual(target.querySelector(".o_read_mode").textContent, "Match All records");
+        assert.strictEqual(target.querySelector(".o_read_mode").textContent, "Match all records");
 
         await click(target.querySelector(".o_domain_show_selection_button"));
         assert.containsOnce(
