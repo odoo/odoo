@@ -479,7 +479,7 @@
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
                 <t t-esc="errors"/>
             </div>
-            <section>
+            <section name="portal_change_password">
                 <h3>Change Password</h3>
                 <t t-set="path">password</t>
                 <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
@@ -518,7 +518,7 @@
                             <t t-esc="get_error(errors, 'password.new2')"/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-danger">Change Password</button>
+                    <button type="submit" class="btn btn-secondary">Change Password</button>
                 </form>
             </section>
             <section t-if="debug and allow_api_keys">
@@ -553,7 +553,74 @@
                     </table>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-primary o_portal_new_api_key">New API Key</button>
+                    <button type="submit" class="btn btn-secondary o_portal_new_api_key">New API Key</button>
+                </div>
+            </section>
+            <section name="portal_deactivate_account" groups="base.group_portal">
+                <h3>Delete Account</h3>
+                <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
+                <button class="btn btn-secondary" data-toggle="modal"
+                    data-target="#portal_deactivate_account_modal">
+                    Delete Account
+                </button>
+                <div t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"
+                    id="portal_deactivate_account_modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger">
+                                <h5 class="modal-title">Are you sure you want to do this?</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    ×
+                                </button>
+                            </div>
+                            <form action="/my/deactivate_account" method="post" class="modal-body"
+                                id="portal_deactivate_account_form">
+                                <div>
+                                    <div class="alert alert-danger"
+                                        t-esc="get_error(errors, 'deactivate.other')"/>
+                                    <p class="text-muted">
+                                        Disable your account, preventing any further login.<br/>
+                                        <b>
+                                            <i class="fa fa-exclamation-triangle text-danger"></i>
+                                            This action cannot be undone.
+                                        </b>
+                                    </p>
+                                    <hr/>
+                                    <p>1. Enter your password to confirm you own this account</p>
+                                    <input name="password" type="password" required="1"
+                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"
+                                        placeholder="Password"/>
+                                    <div t-if="deactivate_error == 'password'" class="invalid-feedback">
+                                        Wrong password.
+                                    </div>
+                                    <hr/>
+                                    <p>
+                                        2. Confirm you want to delete your account by
+                                        copying down your login (<t t-esc="env.user.login"/>).
+                                    </p>
+                                    <input name="validation" type="text" required="1"
+                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'validation' else ''}"/>
+                                    <div t-if="deactivate_error == 'validation'" class="invalid-feedback">
+                                        You should enter "<t t-esc="env.user.login"/>" to validate your action.
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center">
+                                        <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>
+                                        <label for="request_blacklist" class="ml-2 mw-100 font-weight-normal mt-3">
+                                            Put my email and phone in a block list to make sure I'm never contacted again
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            </form>
+                            <div class="modal-footer justify-content-start">
+                                <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"
+                                    value="Delete Account"/>
+                                <button type="button" class="btn" data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div></t>

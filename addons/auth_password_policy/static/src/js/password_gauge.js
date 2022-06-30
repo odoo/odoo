@@ -111,6 +111,7 @@ var PasswordPolicyMeter = Widget.extend({
         low: 0.5,
         high: 0.99,
         max: 1,
+        length: 0,
         value: 0,
         optimum: 1,
     },
@@ -133,6 +134,7 @@ var PasswordPolicyMeter = Widget.extend({
      * @param {String} password
      */
     update: function (password) {
+        this.el.setAttribute('length', password.length);
         this.el.value = policy.computeScore(password, this._required, this._recommended);
     }
 });
