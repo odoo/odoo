@@ -1,5 +1,5 @@
 import {
-    BasicEditor, customErrorMessage,
+    BasicEditor,
     testEditor
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";

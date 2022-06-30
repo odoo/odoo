@@ -533,16 +533,6 @@ function deleteTable(editor, table) {
     setSelection(p, 0);
 }
 
-function getTextNodes(editor) {
-    const selection = editor.document.getSelection();
-    if (!selection.rangeCount || selection.getRangeAt(0).collapsed) {
-        return null;
-    }
-    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-    return getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
-}
-
 // This is a whitelist of the commands that are implemented by the
 // editor itself rather than the node prototypes. It might be
 // possible to switch the conditions and test if the method exist on
