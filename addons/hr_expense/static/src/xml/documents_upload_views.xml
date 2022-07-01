@@ -32,18 +32,4 @@
             </button>
         </t>
     </t>
-
-    <t t-extend="KanbanView.buttons" t-name="ExpensesKanbanView.buttons">
-        <t t-jquery="button:last" t-operation="after">
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1">
-                Upload
-            </button>
-        </t>
-
-        <t t-jquery="button:first" t-operation="before">
-            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary mx-1">
-                Scan
-            </button>
-        </t>
-    </t>
 </templates>
