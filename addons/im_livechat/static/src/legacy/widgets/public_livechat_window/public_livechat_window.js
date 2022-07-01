@@ -66,7 +66,7 @@ const PublicLivechatWindow = Widget.extend({
         if (this._thread && this._thread._type === 'document_thread') {
             options.displayDocumentLinks = false;
         }
-        this._publicLivechatView = new PublicLivechatView(this, options);
+        this._publicLivechatView = new PublicLivechatView(this, this.messaging, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });

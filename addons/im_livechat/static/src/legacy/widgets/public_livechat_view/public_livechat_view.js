@@ -48,10 +48,12 @@ const PublicLivechatView = Widget.extend({
     /**
      * @override
      * @param {widget} parent
+     * @param {Messaging} messaging
      * @param {Object} options
      */
-    init(parent, options) {
+    init(parent, messaging, options) {
         this._super(...arguments);
+        this.messaging = messaging;
         this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
