@@ -8,9 +8,11 @@ const chatterFields = ["message_ids", "message_follower_ids", "activity_ids"];
 
 BasicView.include({
     init: function () {
+        this.hasAttachmentViewerFeature = false;
         this.hasChatter = false;
         this._super.apply(this, arguments);
         this.rendererParams.hasChatter = this.hasChatter;
+        this.rendererParams.hasAttachmentViewerFeature = this.hasAttachmentViewerFeature;
         const post_refresh = this._getFieldOption('message_ids', 'post_refresh', false);
         const followers_post_refresh = this._getFieldOption('message_follower_ids', 'post_refresh', false);
         this.chatterFields = {
@@ -89,6 +91,9 @@ BasicView.include({
                 }
             }
             return false;
+        }
+        if (node.tag === 'div' && node.attrs.class === 'o_attachment_preview') {
+            this.hasAttachmentViewerFeature = true;
         }
         return this._super(...arguments);
     },
