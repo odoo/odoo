@@ -9921,10 +9921,10 @@ QUnit.module("Views", (hooks) => {
         "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
-            if (registry.category("fields").contains("html")) {
-                throw new Error("Time to remove this hack!");
-            }
-            registry.category("fields").add("html", TextField);
+            // if (registry.category("fields").contains("html")) {
+            //     throw new Error("Time to remove this hack!");
+            // }
+            registry.category("fields").add("html", TextField, { force: true });
             registerCleanup(() => registry.category("fields").remove("html"));
 
             await makeView({

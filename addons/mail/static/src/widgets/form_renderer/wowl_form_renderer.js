@@ -15,7 +15,7 @@ function compileChatter(node, params) {
 
     const chatter = createElement("ChatterContainer");
     chatter.setAttribute("threadModel", "props.record.resModel");
-    chatter.setAttribute("threadId", "props.record.resId");
+    chatter.setAttribute("threadId", "props.record.resId || undefined");
     // TODO: pass chatterFields equivalent in props
 
     // chatter.setAttribute("record", "props.record"); // props.record.model.load() to reload the form

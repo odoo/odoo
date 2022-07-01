@@ -29,7 +29,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         setupViewRegistries();
 
         // Explicitly removed by web_editor, we need to add it back
-        registry.category("fields").add("html", HtmlField);
+        registry.category("fields").add("html", HtmlField, { force: true });
     });
 
     QUnit.module("HtmlField");
