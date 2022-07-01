@@ -578,6 +578,9 @@ class AccountEdiFormat(models.Model):
         :param barcode:         The barcode of the product.
         :returns:               A product or an empty recordset if not found.
         '''
+        if name and '\n' in name:
+            # cut Sales Description from the name
+            name = name.split('\n')[0]
         domains = []
         for value, domain in (
             (name, ('name', 'ilike', name)),
