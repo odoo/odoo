@@ -34,6 +34,18 @@ export function useRefToModel({ fieldName, modelName, propNameAsRecordLocalId, r
             nextRecord.update({ [fieldName]: ref });
         }
     });
+    const __render = component.__render;
+    component.__render = fiber => {
+        const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
+        if (record && !record[fieldName]) {
+            // When the record is deleted then created again, its
+            // localId can be the same. In this scenario, the Component
+            // would not call setup neither willUpdateprops. Therefore,
+            // we need to set the ref for this new record.
+            record.update({ [fieldName]: ref });
+        }
+        __render.call(component, fiber);
+    };
     const __destroy = component.__destroy;
     component.__destroy = parent => {
         const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
