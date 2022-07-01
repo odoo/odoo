@@ -324,13 +324,14 @@ class AccountEdiFormat(models.Model):
 
                         # Product.
                         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
-                        if name:
-                            invoice_line_form.name = name
                         invoice_line_form.product_id = self_ctx._retrieve_product(
                             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
                             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
                             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
                         )
+                        # force original line description instead of the one copied from product's Sales Description
+                        if name:
+                            invoice_line_form.name = name
 
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)

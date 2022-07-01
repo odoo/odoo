@@ -310,13 +310,14 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # Product.
         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree)
-        if name:
-            invoice_line_form.name = name
         invoice_line_form.product_id = self.env['account.edi.format']._retrieve_product(
             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', tree),
             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree),
             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', tree)
         )
+        # force original line description instead of the one copied from product's Sales Description
+        if name:
+            invoice_line_form.name = name
 
         xpath_dict = {
             'basis_qty': [
