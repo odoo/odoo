@@ -104,6 +104,16 @@ class MailRenderMixin(models.AbstractModel):
             self._check_access_right_dynamic_template()
         return True
 
+    def _update_field_translations(self, fname, translations, digest=None):
+        res = super()._update_field_translations(fname, translations, digest)
+        # TBD the below check is only for model_term translations.
+        # Because for model translations, super().update_field_translations will call write to check
+        if self._unrestricted_rendering:
+            # If the rendering is unrestricted (e.g. mail.template),
+            # check the user is part of the mail editor group to modify a template if the template is dynamic
+            self._check_access_right_dynamic_template()
+        return res
+
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------

@@ -19,6 +19,7 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
+from odoo.tools.translate import code_translations
 
 
 class TestMessagePostCommon(TestMailCommon, TestRecipients):
@@ -1240,6 +1241,12 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_context(self):
+        # hack into code translations:
+        code_translations.python_translations[('test_mail', 'es_ES')] = {'TestStuff': 'TestSpanishStuff'}
+        self.addCleanup(code_translations.python_translations.pop, ('test_mail', 'es_ES'))
+        code_translations.python_translations[('mail', 'es_ES')] = {'View %s': 'SpanishView %s'}
+        self.addCleanup(code_translations.python_translations.pop, ('mail', 'es_ES'))
+
         test_records = self.test_records.with_user(self.env.user).with_context(lang='es_ES')
         test_records[1].message_subscribe(self.partner_2.ids)
 

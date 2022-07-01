@@ -56,11 +56,10 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
     def test_01_configurator_translation(self):
-        with mute_logger('odoo.addons.base.models.ir_translation'):
-            self.env["base.language.install"].create({
-                'overwrite': True,
-                'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
-            }).lang_install()
+        self.env["base.language.install"].create({
+            'overwrite': True,
+            'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
+        }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
         feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
         self.env.ref('base.user_admin').write({'lang': self.env.ref('base.lang_fr').code})

@@ -112,22 +112,9 @@ class TestMailRender(common.MailCommon):
         })
 
         # some translations
-        cls.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'mail.template,subject',
-            'lang': 'fr_FR',
-            'res_id': cls.test_template.id,
-            'src': cls.test_template.subject,
-            'value': cls.base_qweb_bits_fr[0],
-        })
-        cls.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'mail.template,body_html',
-            'lang': 'fr_FR',
-            'res_id': cls.test_template.id,
-            'src': cls.test_template.body_html,
-            'value': cls.base_qweb_bits_fr[1],
-        })
+        cls.test_template.with_context(lang='fr_FR').subject = cls.base_qweb_bits_fr[0]
+        cls.test_template.with_context(lang='fr_FR').body_html = cls.base_qweb_bits_fr[1]
+
         cls.env['ir.model.data'].create({
             'name': 'test_template_xmlid',
             'module': 'mail',

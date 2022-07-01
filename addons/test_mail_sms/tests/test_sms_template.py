@@ -29,13 +29,8 @@ class TestSmsTemplate(TestSMSCommon, TestSMSRecipients):
     def test_sms_template_lang(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.user_admin.write({'lang': 'en_US'})
-        self.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'sms.template,body',
-            'lang': 'fr_FR',
-            'res_id': self.sms_template.id,
-            'src': self.sms_template.body,
-            'value': self.body_fr,
+        self.sms_template.update_field_translations('body', {
+            'fr_FR': self.body_fr
         })
         # set template to try to use customer lang
         self.sms_template.write({
