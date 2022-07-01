@@ -128,7 +128,8 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="avatar_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+                            <field name="image_1024" class="o_kanban_image_fill_left" preview_image="image_128"
+                                widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
 
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
@@ -178,7 +179,7 @@
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">
-                                            <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                            <a title="Chat" icon="fa-comments" href="#" t-on-click.prevent="() => props.record.openChat(props.record.resId)" class="ml8" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                         </div>
                                     </div>
                                 </div>

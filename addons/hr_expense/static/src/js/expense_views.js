@@ -1,14 +1,11 @@
 odoo.define('hr_expense.expenses.tree', function (require) {
 "use strict";
     var DocumentUploadMixin = require('hr_expense.documents.upload.mixin');
-    var KanbanController = require('web.KanbanController');
-    var KanbanView = require('web.KanbanView');
     var ListController = require('web.ListController');
     var ListView = require('web.ListView');
     var viewRegistry = require('web.view_registry');
     var core = require('web.core');
     var ListRenderer = require('web.ListRenderer');
-    var KanbanRenderer = require('web.KanbanRenderer');
     var session = require('web.session');
     const config = require('web.config');
 
@@ -129,34 +126,6 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         })
     });
 
-    var ExpensesKanbanController = KanbanController.extend(DocumentUploadMixin, {
-        buttons_template: 'ExpensesKanbanView.buttons',
-        events: _.extend({}, KanbanController.prototype.events, {
-            'click .o_button_upload_expense': '_onUpload',
-            'change .o_expense_documents_upload .o_form_binary_form': '_onAddAttachment',
-        }),
-    });
-
-    var ExpenseKanbanRenderer = KanbanRenderer.extend(ExpenseQRCodeMixin);
-
-    var ExpenseKanbanRendererHeader = ExpenseKanbanRenderer.extend(ExpenseDashboardMixin);
-
-    // The kanban view
-    var ExpensesKanbanView = KanbanView.extend({
-        config: _.extend({}, KanbanView.prototype.config, {
-            Controller: ExpensesKanbanController,
-            Renderer: ExpenseKanbanRenderer,
-        }),
-    });
-
-    // The kanban view with the Header
-    // Used in "My Expenses to Report", "All My Expenses" & "My Repo
-    var ExpensesKanbanViewHeader = ExpensesKanbanView.extend({
-        config: _.extend({}, ExpensesKanbanView.prototype.config, {
-            Renderer: ExpenseKanbanRendererHeader,
-        })
-    });
-
     viewRegistry.add('hr_expense_tree_dashboard_upload', ExpensesListViewDashboardUpload);
     // Tree view with the header.
     // Used in "My Expenses to Report" & "All My Expenses"
@@ -165,8 +134,4 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     // Tree view with the header.
     // Used in "My Reports"
     viewRegistry.add('hr_expense_tree_dashboard_header', ExpensesListViewDashboardHeader);
-    viewRegistry.add('hr_expense_kanban', ExpensesKanbanView);
-    // Kanban view with the header.
-    // Used in "My Expenses to Report", "All My Expenses" & "My Reports"
-    viewRegistry.add('hr_expense_kanban_header', ExpensesKanbanViewHeader);
 });
