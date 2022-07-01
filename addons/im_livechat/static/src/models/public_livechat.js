@@ -11,7 +11,7 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.update({
-                legacyPublicLivechat: new PublicLivechat({
+                legacyPublicLivechat: new PublicLivechat(this.messaging, {
                     parent: this.livechatButtonOwner.widget,
                     data: this.data,
                 }),
