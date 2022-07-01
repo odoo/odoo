@@ -29,7 +29,7 @@ class LivechatController(http.Controller):
         templates = [
             'im_livechat/static/src/legacy/widgets/feedback/feedback.xml',
             'im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml',
-            'im_livechat/static/src/legacy/widgets/thread/thread.xml',
+            'im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml',
             'im_livechat/static/src/legacy/widgets/document_viewer/document_viewer.xml',
             'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
         ]

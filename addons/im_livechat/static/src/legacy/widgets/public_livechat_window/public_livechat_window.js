@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import PublicLivechatView from '@im_livechat/legacy/widgets/thread/thread';
+import PublicLivechatView from '@im_livechat/legacy/widgets/public_livechat_view/public_livechat_view';
 
 import config from 'web.config';
 import { _t, qweb } from 'web.core';
