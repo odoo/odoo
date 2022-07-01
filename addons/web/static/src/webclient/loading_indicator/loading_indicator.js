@@ -19,27 +19,35 @@ const { Component, onWillDestroy, useState } = owl;
  */
 export class LoadingIndicator extends Component {
     setup() {
+        this.uiService = useService("ui");
         this.state = useState({
             count: 0,
             show: false,
         });
         this.rpcIds = new Set();
+        this.shouldUnblock = false;
+        this.startShowTimer = null;
+        this.blockUITimer = null;
         this.env.bus.addEventListener("RPC:REQUEST", this.requestCall.bind(this));
         this.env.bus.addEventListener("RPC:RESPONSE", this.responseCall.bind(this));
         onWillDestroy(() => {
             this.env.bus.removeEventListener("RPC:REQUEST", this.requestCall.bind(this));
             this.env.bus.removeEventListener("RPC:RESPONSE", this.responseCall.bind(this));
         });
-        this.uiService = useService("ui");
     }
 
     requestCall({ detail: rpcId }) {
         if (this.state.count === 0) {
-            this.state.show = true;
-            this.blockUITimer = browser.setTimeout(() => {
-                this.shouldUnblock = true;
-                this.uiService.block();
-            }, 3000);
+            browser.clearTimeout(this.startShowTimer);
+            this.startShowTimer = browser.setTimeout(() => {
+                if (this.state.count) {
+                    this.state.show = true;
+                    this.blockUITimer = browser.setTimeout(() => {
+                        this.shouldUnblock = true;
+                        this.uiService.block();
+                    }, 3000);
+                }
+            }, 250);
         }
         this.rpcIds.add(rpcId);
         this.state.count++;
@@ -49,13 +57,13 @@ export class LoadingIndicator extends Component {
         this.rpcIds.delete(rpcId);
         this.state.count = this.rpcIds.size;
         if (this.state.count === 0) {
+            browser.clearTimeout(this.startShowTimer);
+            browser.clearTimeout(this.blockUITimer);
+            this.state.show = false;
             if (this.shouldUnblock) {
                 this.uiService.unblock();
                 this.shouldUnblock = false;
-            } else {
-                browser.clearTimeout(this.blockUITimer);
             }
-            this.state.show = false;
         }
     }
 }
