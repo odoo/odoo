@@ -11,14 +11,13 @@
     'data': [
         'views/payment_adyen_templates.xml',
         'views/payment_views.xml',
+        'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
         'data/payment_acquirer_data.xml',  # Depends on views/payment_adyen_templates.xml
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.7.3/adyen.css',
-            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.7.3/adyen.js',
             'payment_adyen/static/src/js/payment_form.js',
             'payment_adyen/static/src/scss/dropin.scss',
         ],
