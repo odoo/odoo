@@ -335,7 +335,7 @@ class HrExpense(models.Model):
                     expense=expense.name, product=expense.product_id.name,
                 ))
 
-    def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
+    def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         ''' Create the expenses from files.
          :return: An action redirecting to hr.expense tree view.
         '''
