@@ -30,14 +30,15 @@ const PublicLivechatWindow = Widget.extend({
     },
     /**
      * @param {Widget} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
      */
-    init(parent, thread, options) {
+    init(parent, messaging, thread, options) {
         this._super(parent);
-
+        this.messaging = messaging;
         this.options = _.defaults(options || {}, {
             autofocus: true,
             displayStars: true,
