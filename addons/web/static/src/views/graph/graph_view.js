@@ -13,6 +13,7 @@ import { useModel } from "../helpers/model";
 import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphRenderer } from "./graph_renderer";
+import { SearchModel } from "@web/search/search_model";
 
 const viewRegistry = registry.category("views");
 const { Component } = owl;
@@ -143,6 +144,24 @@ export class GraphView extends Component {
     }
 }
 
+class GraphSearchModel extends SearchModel {
+    _getIrFilterDescription() {
+        this.preparingIrFilterDescription = true;
+        const result = super._getIrFilterDescription(...arguments);
+        this.preparingIrFilterDescription = false;
+        return result;
+    }
+
+    _getSearchItemGroupBys(activeItem) {
+        const { searchItemId } = activeItem;
+        const { context, type } = this.searchItems[searchItemId];
+        if (!this.preparingIrFilterDescription && type === "favorite" && context.graph_groupbys) {
+            return context.graph_groupbys;
+        }
+        return super._getSearchItemGroupBys(...arguments);
+    }
+}
+
 GraphView.template = "web.GraphView";
 GraphView.buttonTemplate = "web.GraphView.Buttons";
 
@@ -168,6 +187,7 @@ GraphView.icon = "fa fa-area-chart";
 GraphView.multiRecord = true;
 
 GraphView.Model = GraphModel;
+GraphView.SearchModel = GraphSearchModel;
 
 GraphView.ArchParser = GraphArchParser;
 

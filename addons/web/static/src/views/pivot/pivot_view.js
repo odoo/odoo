@@ -13,6 +13,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
+import { SearchModel } from "@web/search/search_model";
 
 const viewRegistry = registry.category("views");
 const { Component } = owl;
@@ -165,6 +166,28 @@ export class PivotView extends Component {
     }
 }
 
+class PivotSearchModel extends SearchModel {
+    _getIrFilterDescription() {
+        this.preparingIrFilterDescription = true;
+        const result = super._getIrFilterDescription(...arguments);
+        this.preparingIrFilterDescription = false;
+        return result;
+    }
+
+    _getSearchItemGroupBys(activeItem) {
+        const { searchItemId } = activeItem;
+        const { context, type } = this.searchItems[searchItemId];
+        if (
+            !this.preparingIrFilterDescription &&
+            type === "favorite" &&
+            context.pivot_row_groupby
+        ) {
+            return context.pivot_row_groupby;
+        }
+        return super._getSearchItemGroupBys(...arguments);
+    }
+}
+
 PivotView.template = "web.PivotView";
 PivotView.buttonTemplate = "web.PivotView.Buttons";
 PivotView.components = { Dropdown, DropdownItem, Renderer: PivotRenderer, Layout };
@@ -178,6 +201,7 @@ PivotView.defaultProps = {
 };
 
 PivotView.Model = PivotModel;
+PivotView.SearchModel = PivotSearchModel;
 
 PivotView.ArchParser = PivotArchParser;
 
