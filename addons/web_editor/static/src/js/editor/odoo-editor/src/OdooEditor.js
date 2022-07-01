@@ -62,6 +62,7 @@ import { TablePicker } from './tablepicker/TablePicker.js';
 
 export * from './utils/utils.js';
 import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE } from './utils/constants.js';
+/* global DOMPurify */
 
 const BACKSPACE_ONLY_COMMANDS = ['oDeleteBackward', 'oDeleteForward'];
 const BACKSPACE_FIRST_COMMANDS = BACKSPACE_ONLY_COMMANDS.concat(['oEnter', 'oShiftEnter']);
