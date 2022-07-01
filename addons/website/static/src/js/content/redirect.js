@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const editInBackendUserDropdownLinkEl = document.getElementById('o_edit_in_backend_user_dropdown_link');
-
     if (!window.frameElement) {
         const websiteId = document.documentElement.dataset.websiteId;
         const {pathname, search} = window.location;
@@ -43,40 +41,35 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // FIXME this UI does not respect access rights yet but we will
             // probably end up doing it in XML instead of JS anyway.
+            const frontendToBackendBtnClasses = ['position-relative', 'd-flex', 'align-items-center', 'justify-content-center', 'text-decoration-none'];
             const frontendToBackendNavEl = document.createElement('div');
-            frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav');
-            frontendToBackendNavEl.addEventListener('click', ev => {
-                frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav_opened');
-                setTimeout(() => {
-                    // TODO find a better way? Useful so that hover effects work
-                    // after the opening.
-                    frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav_fully_opened');
-                }, 600);
-            }, { once: true });
+            frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav', 'position-fixed', 'd-flex');
 
-            const loadingIconEl = document.createElement('i');
-            loadingIconEl.classList.add('o_frontend_to_backend_icon', 'fa', 'fa-arrow-right');
+            const loadingIconEl = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+            loadingIconEl.classList.add('o_frontend_to_backend_icon', 'position-absolute');
+            loadingIconEl.setAttribute('width', "24px");
+            loadingIconEl.setAttribute('height', "24px");
+            loadingIconEl.setAttribute('viewBox', "-7 -7 24 24");
+            loadingIconEl.setAttribute('xmlns', "http://www.w3.org/2000/svg");
+            loadingIconEl.setAttribute('preserveAspectRatio', "xMinYMin");
+            loadingIconEl.innerHTML = "<path fill='#FFF' d='M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z'/>";
             frontendToBackendNavEl.appendChild(loadingIconEl);
 
             const backendAppsButtonEl = document.createElement('a');
             backendAppsButtonEl.href = '/web';
             backendAppsButtonEl.title = _t("Go to your Odoo Apps");
-            backendAppsButtonEl.classList.add('o_frontend_to_backend_apps_btn', 'fa', 'fa-th');
+            backendAppsButtonEl.classList.add('o_frontend_to_backend_apps_btn', 'fa', 'fa-th', ...frontendToBackendBtnClasses);
             frontendToBackendNavEl.appendChild(backendAppsButtonEl);
 
             const backendEditButtonEl = document.createElement('a');
-            backendEditButtonEl.href = `${backendPath}&enable_editor=1`;
+            backendEditButtonEl.href = backendPath;
             backendEditButtonEl.textContent = _t("Edit");
-            backendEditButtonEl.title = _t("Edit your page content");
-            backendEditButtonEl.classList.add('o_frontend_to_backend_edit_btn');
+            backendEditButtonEl.title = _t("Edit this content");
+            backendEditButtonEl.classList.add('o_frontend_to_backend_edit_btn', 'px-3', ...frontendToBackendBtnClasses);
             const backendEditButtonIconEl = document.createElement('i');
-            backendEditButtonIconEl.classList.add('fa', 'fa-pencil');
+            backendEditButtonIconEl.classList.add('fa', 'fa-pencil', 'mr-1');
             backendEditButtonEl.prepend(backendEditButtonIconEl);
             frontendToBackendNavEl.appendChild(backendEditButtonEl);
-
-            if (editInBackendUserDropdownLinkEl) {
-                editInBackendUserDropdownLinkEl.href = backendPath;
-            }
 
             document.body.appendChild(frontendToBackendNavEl);
         }
@@ -85,10 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (backendUserDropdownLinkEl) {
             backendUserDropdownLinkEl.classList.add('d-none');
             backendUserDropdownLinkEl.classList.remove('d-flex');
-        }
-        if (editInBackendUserDropdownLinkEl) {
-            editInBackendUserDropdownLinkEl.classList.add('d-none');
-            editInBackendUserDropdownLinkEl.classList.remove('d-flex');
         }
 
         // Multiple reasons to do this:
