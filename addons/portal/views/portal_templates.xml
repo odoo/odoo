@@ -93,11 +93,13 @@
                     <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                 </a>
                 <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
-                    <a groups="base.group_user" href="/web" role="menuitem" class="dropdown-item d-flex align-items-center" id="o_backend_user_dropdown_link">
-                        Apps <i class="fa fa-th ml-auto pl-4"/>
+                    <a groups="base.group_user" href="/web" role="menuitem" class="dropdown-item pl-3" id="o_backend_user_dropdown_link">
+                        <i class="fa fa-fw fa-th mr-1 small text-muted"/> Apps
                     </a>
                     <div id="o_logout_divider" class="dropdown-divider"/>
-                    <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item">Logout</a>
+                    <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item pl-3">
+                        <i class="fa fa-fw fa-sign-out mr-1 small text-muted"/> Logout
+                    </a>
                 </div>
             </li>
         </t>
@@ -651,7 +653,9 @@
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
-            <a href="/my/home" role="menuitem" class="dropdown-item">My Account</a>
+            <a href="/my/home" role="menuitem" class="dropdown-item pl-3">
+                <i class="fa fa-fw fa-id-card-o mr-1 small text-muted"/> My Account
+            </a>
         </xpath>
     </template>
 
