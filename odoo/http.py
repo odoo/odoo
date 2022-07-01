@@ -1337,7 +1337,7 @@ class Request:
         :param int status: http status code
         :param headers: HTTP headers to set on the response
         :type headers: ``[(name, value)]``
-        :param collections.Mapping cookies: cookies to set on the client
+        :param collections.abc.Mapping cookies: cookies to set on the client
         :returns: a response object.
         :rtype: :class:`~odoo.http.Response`
         """
@@ -1354,7 +1354,7 @@ class Request:
         :param data: the data that will be json-serialized into the response body
         :param int status: http status code
         :param List[(str, str)] headers: HTTP headers to set on the response
-        :param collections.Mapping cookies: cookies to set on the client
+        :param collections.abc.Mapping cookies: cookies to set on the client
         :rtype: :class:`~odoo.http.Response`
         """
         data = json.dumps(data, ensure_ascii=False, default=date_utils.json_default)
