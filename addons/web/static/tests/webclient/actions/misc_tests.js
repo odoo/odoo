@@ -546,4 +546,37 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(document.body, ".modal .o_form_view", 2);
         }
     );
+
+    QUnit.test(
+        "action is removed while waiting for another action with selectMenu",
+        async (assert) => {
+            let def;
+            const mockRPC = async function (route) {
+                if (route === "/web/action/load") {
+                    await Promise.resolve(def);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 4);
+            const root = document.querySelector(".o_web_client");
+            assert.containsOnce(root, ".o_kanban_view");
+
+            // now, delay next action
+            def = testUtils.makeTestPromise();
+
+            // select one new app in navbar menu
+            let menus = webClient.env.services.menu.getApps();
+            webClient.env.services.menu.selectMenu(menus[1], { resetScreen: true });
+            await nextTick();
+            assert.strictEqual(document.querySelector(".o_action_manager").textContent, "");
+            assert.containsOnce(root, '[data-menu-xmlid="menu_1"]');
+            assert.containsNone(root, ".o_action_manager .test_client_action");
+            def.resolve();
+            // we need to wait 2 ticks because the action container wait for
+            // an animation frame before updating itself in this case
+            await nextTick();
+            await nextTick();
+            assert.containsOnce(root, ".o_action_manager .test_client_action");
+        }
+    );
 });

@@ -10,7 +10,13 @@ const { Component, xml, onWillDestroy } = owl;
 export class ActionContainer extends Component {
     setup() {
         this.info = {};
-        this.onActionManagerUpdate = ({ detail: info }) => {
+        this.onActionManagerUpdate = async ({ detail: info }) => {
+            if (info.Component && !this.info.Component) {
+                // we wait for one animation frame before rendering, so the new
+                // rendering does not cancel the "empty" rendering, and we get
+                // the chance to see the wonderful white screen
+                await new Promise((resolve) => requestAnimationFrame(resolve));
+            }
             this.info = info;
             this.render();
         };

@@ -48,12 +48,18 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             }
             return menu;
         },
-        async selectMenu(menu) {
+        async selectMenu(menu, options = {}) {
             menu = typeof menu === "number" ? this.getMenu(menu) : menu;
             if (!menu.actionID) {
                 return;
             }
-            await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true });
+            const actionPromise = env.services.action.doAction(menu.actionID, {
+                clearBreadcrumbs: true,
+                resetScreen: options.resetScreen,
+            });
+            if (!options.resetScreen) {
+                await actionPromise;
+            }
             this.setCurrentMenu(menu);
         },
         setCurrentMenu(menu) {

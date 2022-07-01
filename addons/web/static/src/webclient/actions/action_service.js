@@ -35,6 +35,7 @@ const viewRegistry = registry.category("views");
  * @typedef {Object} ActionOptions
  * @property {Context} [additionalContext]
  * @property {boolean} [clearBreadcrumbs]
+ * @property {boolean} [resetScreen]
  * @property {CallableFunction} [onClose]
  * @property {Object} [props]
  * @property {ViewType} [viewType]
@@ -1174,6 +1175,9 @@ function makeActionManager(env) {
      * @returns {Promise<number | undefined | void>}
      */
     async function doAction(actionRequest, options = {}) {
+        if (options.resetScreen) {
+            env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        }
         const actionProm = _loadAction(actionRequest, options.additionalContext);
         let action = await keepLast.add(actionProm);
         action = _preprocessAction(action, options.additionalContext);
