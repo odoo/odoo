@@ -65,7 +65,6 @@ TextField.components = {
 TextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
     resId: { type: [Number, Boolean], optional: true },
     resModel: { type: String, optional: true },
 };
@@ -100,7 +99,6 @@ ListTextField.components = {
 ListTextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
     resId: { type: [Number, Boolean], optional: true },
     resModel: { type: String, optional: true },
 };

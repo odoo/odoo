@@ -52,7 +52,6 @@ BadgeSelectionField.props = {
     ...standardFieldProps,
     horizontal: { type: Boolean, optional: true },
     options: Object,
-    placeholder: { type: String, optional: true },
 };
 
 BadgeSelectionField.displayName = _lt("Badges");

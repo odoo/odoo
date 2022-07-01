@@ -34,7 +34,6 @@ IntegerField.props = {
     inputType: { type: String, optional: true },
     step: { type: Number, optional: true },
     invalidate: { type: Function, optional: true },
-    placeholder: { type: String, optional: true },
 };
 IntegerField.defaultProps = {
     inputType: "text",

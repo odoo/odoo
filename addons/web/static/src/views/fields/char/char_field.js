@@ -35,7 +35,6 @@ CharField.props = {
     ...standardFieldProps,
     autocomplete: { type: String, optional: true },
     isPassword: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
     shouldTrim: { type: Boolean, optional: true },
     maxLength: { type: Number, optional: true },
     isTranslatable: { type: Boolean, optional: true },

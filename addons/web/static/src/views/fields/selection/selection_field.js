@@ -52,7 +52,6 @@ SelectionField.template = "web.SelectionField";
 SelectionField.props = {
     ...standardFieldProps,
     options: Object,
-    placeholder: { type: String, optional: true },
     required: { type: Boolean, optional: true },
 };
 

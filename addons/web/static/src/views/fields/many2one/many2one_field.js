@@ -179,7 +179,6 @@ Many2OneField.components = {
 };
 Many2OneField.props = {
     ...standardFieldProps,
-    placeholder: { type: String, optional: true },
     canOpen: { type: Boolean, optional: true },
     canCreate: { type: Boolean, optional: true },
     canWrite: { type: Boolean, optional: true },

@@ -29,7 +29,6 @@ FontSelectionField.template = "web.FontSelectionField";
 FontSelectionField.props = {
     ...standardFieldProps,
     options: Object,
-    placeholder: { type: String, optional: true },
     required: { type: Boolean, optional: true },
 };
 FontSelectionField.defaultProps = {

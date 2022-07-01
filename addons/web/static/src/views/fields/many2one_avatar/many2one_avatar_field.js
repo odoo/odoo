@@ -15,7 +15,6 @@ Many2OneAvatarField.components = {
 };
 Many2OneAvatarField.props = {
     ...standardFieldProps,
-    placeholder: { type: String, optional: true },
     relation: String,
     getContext: { type: Function, optional: true },
     getDomain: { type: Function, optional: true },

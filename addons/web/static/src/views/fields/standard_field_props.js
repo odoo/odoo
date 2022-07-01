@@ -3,6 +3,7 @@
 export const standardFieldProps = {
     id: { type: String, optional: true },
     name: { type: String, optional: true },
+    placeholder: { type: String, optional: true },
     readonly: { type: Boolean, optional: true },
     record: { type: Object, optional: true },
     type: { type: String, optional: true },

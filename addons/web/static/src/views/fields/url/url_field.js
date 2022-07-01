@@ -29,7 +29,6 @@ export class UrlField extends Component {
 UrlField.template = "web.UrlField";
 UrlField.props = {
     ...standardFieldProps,
-    placeholder: { type: String, optional: true },
     text: { type: String, optional: true },
     websitePath: { type: Boolean, optional: true },
 };
