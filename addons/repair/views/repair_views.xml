@@ -92,8 +92,6 @@
                         <group>
                             <field name="schedule_date"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
-                            <field name="location_id" options="{'no_create': True}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="account.group_delivery_invoice_address"/>
@@ -145,8 +143,14 @@
                                 <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot" attrs="{'readonly':[('tracking', 'not in', ['serial', 'lot'])]}"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
+                                <field name="product_qty" invisible="1"/>
+                                <field name="product_type" invisible="1"/>
+                                <field name="reserved_availability" invisible="1"/>
+                                <field name="forecast_expected_date" invisible="1"/>
+                                <field name="type" invisible="1"/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
+                                <field name="forecast_availability" attrs="{'column_invisible': [('parent.state', 'in', ('done', 'cancel'))]}" string="Reserved" widget="forecast_widget"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -211,11 +215,17 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Repair Notes">
+                    <page string="Repair Notes" name="repair_notes">
                         <field name="internal_notes" placeholder="Add internal notes."/>
                     </page>
-                    <page string="Quotation Notes">
+                    <page string="Quotation Notes" name="quotation_notes">
                         <field name="quotation_notes" placeholder="Add quotation notes."/>
+                    </page>
+                    <page string="Miscellaneous" name="miscellaneous">
+                        <group>
+                            <field name="location_id" string="Repair Location" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
                     </page>
                 </notebook>
                 </sheet>

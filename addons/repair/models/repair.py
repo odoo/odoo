@@ -14,6 +14,10 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     repair_id = fields.Many2one('repair.order', check_company=True)
+    repair_line_id = fields.One2many('repair.line', 'move_id')
+
+    def _is_consuming(self):
+        return super()._is_consuming() or self.repair_line_id.type == 'add'
 
 
 class Repair(models.Model):
@@ -310,6 +314,7 @@ class Repair(models.Model):
         self._check_company()
         self.operations._check_company()
         self.fees_lines._check_company()
+        self.operations.move_id._action_confirm()
         before_repair = self.filtered(lambda repair: repair.invoice_method == 'b4repair')
         before_repair.write({'state': '2binvoiced'})
         to_confirm = self - before_repair
@@ -322,6 +327,7 @@ class Repair(models.Model):
         invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
+        self.operations.move_id._action_cancel()
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
@@ -554,7 +560,6 @@ class Repair(models.Model):
     def action_repair_done(self):
         """ Creates stock move for operation and stock move for final product of repair order.
         @return: Move ids of final products
-
         """
         if self.filtered(lambda repair: not repair.repaired):
             raise UserError(_("Repair must be repaired in order to make the product moves."))
@@ -573,35 +578,8 @@ class Repair(models.Model):
 
             moves = self.env['stock.move']
             for operation in repair.operations:
-                move = Move.create({
-                    'name': repair.name,
-                    'product_id': operation.product_id.id,
-                    'product_uom_qty': operation.product_uom_qty,
-                    'product_uom': operation.product_uom.id,
-                    'partner_id': repair.address_id.id,
-                    'location_id': operation.location_id.id,
-                    'location_dest_id': operation.location_dest_id.id,
-                    'repair_id': repair.id,
-                    'origin': repair.name,
-                    'company_id': repair.company_id.id,
-                })
+                move = operation.move_id
 
-                # Best effort to reserve the product in a (sub)-location where it is available
-                product_qty = move.product_uom._compute_quantity(
-                    operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
-                available_quantity = self.env['stock.quant']._get_available_quantity(
-                    move.product_id,
-                    move.location_id,
-                    lot_id=operation.lot_id,
-                    strict=False,
-                )
-                move._update_reserved_quantity(
-                    product_qty,
-                    available_quantity,
-                    move.location_id,
-                    lot_id=operation.lot_id,
-                    strict=False,
-                )
                 # Then, set the quantity done. If the required quantity was not reserved, negative
                 # quant is created in operation.location_id.
                 move._set_quantity_done(operation.product_uom_qty)
@@ -610,7 +588,7 @@ class Repair(models.Model):
                     move.move_line_ids.lot_id = operation.lot_id
 
                 moves |= move
-                operation.write({'move_id': move.id, 'state': 'done'})
+                operation.write({'state': 'done'})
             move = Move.create({
                 'name': repair.name,
                 'product_id': repair.product_id.id,
@@ -699,9 +677,8 @@ class RepairLine(models.Model):
     move_id = fields.Many2one(
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
-    lot_id = fields.Many2one(
-        'stock.lot', 'Lot/Serial',
-        domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
+    move_line_id = fields.Many2one('stock.move.line', compute='_compute_move_line_id')
+    lot_id = fields.Many2one('stock.lot', related='move_line_id.lot_id', readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -710,6 +687,11 @@ class RepairLine(models.Model):
         copy=False, readonly=True, required=True,
         help='The status of a repair line is set automatically to the one of the linked repair order.')
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking")
+    product_type = fields.Selection(related='product_id.detailed_type')
+    forecast_availability = fields.Float(related="move_id.forecast_availability")
+    reserved_availability = fields.Float(related="move_id.reserved_availability")
+    forecast_expected_date = fields.Datetime(related="move_id.forecast_expected_date")
+    product_qty = fields.Float(related="move_id.product_qty")
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
     def _compute_price_total_and_subtotal(self):
@@ -737,6 +719,12 @@ class RepairLine(models.Model):
             else:
                 line.location_id = line.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', line.repair_id.company_id.id)], limit=1).id
                 line.location_dest_id = line.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [line.repair_id.company_id.id, False])], limit=1).id
+
+    @api.depends('move_id.move_line_ids')
+    def _compute_move_line_id(self):
+        self.move_line_id = False
+        repair_lines_with_move_line = self.filtered(lambda rl: rl.move_id.move_line_ids)
+        repair_lines_with_move_line.move_line_id = repair_lines_with_move_line.move_id.move_line_ids
 
     @api.onchange('type')
     def onchange_operation_type(self):
@@ -801,6 +789,36 @@ class RepairLine(models.Model):
                 return {'warning': warning}
             else:
                 self.price_unit = price
+
+    @api.model
+    def _get_default_picking_type_id(self, company_id):
+        return self.env['stock.picking.type'].search([
+            ('code', '=', 'repair'),
+            ('warehouse_id.company_id', '=', company_id),
+        ], limit=1).id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for operation in res:
+            repair = operation.repair_id
+            move = self.env['stock.move'].create({
+                'name': repair.name,
+                'product_id': operation.product_id.id,
+                'product_uom_qty': operation.product_uom_qty,
+                'product_uom': operation.product_uom.id,
+                'partner_id': repair.address_id.id,
+                'picking_type_id': operation._get_default_picking_type_id(self.env.company.id),
+                'location_id': operation.location_id.id,
+                'location_dest_id': operation.location_dest_id.id,
+                'repair_id': repair.id,
+                'origin': repair.name,
+                'company_id': repair.company_id.id,
+                'state': operation.state,
+            })
+            operation.move_id = move
+
+        return res
 
 
 class RepairFee(models.Model):

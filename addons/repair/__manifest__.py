@@ -39,5 +39,6 @@ The following topics are covered by this module:
     'demo': ['data/repair_demo.xml'],
     'installable': True,
     'application': True,
+    'post_init_hook': '_create_repair_picking_type',
     'license': 'LGPL-3',
 }
