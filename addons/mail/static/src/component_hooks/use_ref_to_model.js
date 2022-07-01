@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillDestroy, onWillUpdateProps, useComponent, useRef } = owl;
+const { onWillDestroy, onWillRender, onWillUpdateProps, useComponent, useRef } = owl;
 
 /**
  * This hook provides support for saving the result of useRef directly into the
@@ -30,6 +30,16 @@ export function useRefToModel({ fieldName, modelName, refName }) {
         }
         if (nextRecord) {
             nextRecord.update({ [fieldName]: ref });
+        }
+    });
+    onWillRender(() => {
+        const record = modelManager.models[modelName].get(component.props.localId);
+        if (record && !record[fieldName]) {
+            // When the record is deleted then created again, its
+            // localId can be the same. In this scenario, the Component
+            // would not call setup neither willUpdateprops. Therefore,
+            // we need to set the ref for this new record.
+            record.update({ [fieldName]: ref });
         }
     });
     onWillDestroy(() => {
