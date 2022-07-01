@@ -3,7 +3,7 @@
 
 import logging
 import os
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -188,14 +188,31 @@ class IrModuleModule(models.Model):
     def _post_copy(self, old_rec, new_rec):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
+        cur_lang = self.env.lang or 'en_US'
+        old_rec.flush_recordset()
         for (src_field, dst_field) in translated_fields:
-            self._cr.execute("""INSERT INTO ir_translation (lang, src, name, res_id, state, value, type, module)
-                                SELECT t.lang, t.src, %s, %s, t.state, t.value, t.type, t.module
-                                FROM ir_translation t
-                                WHERE name = %s
-                                  AND res_id = %s
-                                ON CONFLICT DO NOTHING""",
-                             (dst_field, new_rec.id, src_field, old_rec.id))
+            __, src_fname = src_field.split(',')
+            dst_mname, dst_fname = dst_field.split(',')
+            if dst_mname != new_rec._name:
+                continue
+            old_field = old_rec._fields[src_fname]
+            old_translations = old_field._get_stored_translations(old_rec)
+            if not old_translations:
+                continue
+            if not callable(old_field.translate):
+                if old_rec[src_fname] == new_rec[dst_fname]:
+                    new_rec.update_field_translations(dst_fname, old_translations)
+            else:
+                old_translation_lang = old_translations.get(cur_lang) or old_translations.get('en_US')
+                # {from_lang_term: {lang: to_lang_term}
+                translation_dictionary = old_field.get_translation_dictionary(old_translation_lang, {
+                    lang: value for lang, value in old_translations.items() if lang != cur_lang})
+                # {lang: {old_term: new_term}
+                translations = defaultdict(dict)
+                for from_lang_term, to_lang_terms in translation_dictionary.items():
+                    for lang, to_lang_term in to_lang_terms.items():
+                        translations[lang][from_lang_term] = to_lang_term
+                new_rec.with_context(install_filename='dummy').update_field_translations(dst_fname, translations)
 
     def _theme_load(self, website):
         """

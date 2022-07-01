@@ -38,21 +38,10 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         website.domain = self.base_url()  # for _is_canonical_url
         website.default_lang_id = en
         website.language_ids = en + it + be
-        params = {
-            'src': country1.name,
-            'value': country1.name + ' Italia',
-            'type': 'model',
-            'name': 'res.country,name',
-            'res_id': country1.id,
-            'lang': it.code,
-            'state': 'translated',
-        }
-        self.env['ir.translation'].create(params)
-        params.update({
-            'value': country1.name + ' Belgium',
-            'lang': be.code,
+        country1.update_field_translations('name', {
+            it.code: country1.name + ' Italia',
+            be.code: country1.name + ' Belgium'
         })
-        self.env['ir.translation'].create(params)
 
         r = self.url_open(f'/test_lang_url/{country1.id}')
         self.assertEqual(r.status_code, 200)
