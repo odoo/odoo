@@ -168,4 +168,31 @@
         </div>
     </colorpicker>
 </template>
+<template id="web_editor.tests">
+    <t t-call="web.layout">
+        <t t-set="title">Odoo Editor Tests</t>
+        <t t-set="head">
+            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/src/base_style.css"/>
+            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/src/checklist.css"/>
+            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.css"/>
+            <style type="text/css">
+                b.zws {
+                    background-color: #c00;
+                    color: white;
+                    border-radius: 3px;
+                    padding: 1px 3px;
+                    font-size: 8px;
+                    vertical-align: middle;
+                }
+            </style>
+            <script src="/web_editor/static/lib/DOMPurify.js"></script>
+            <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.js"></script>
+            <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/chai.js"></script>
+            <script>mocha.setup('bdd').fullTrace()</script>
+            <script src="/web_editor/static/src/js/editor/odoo-editor/test/editor-test.js" type="module"></script>
+        </t>
+        <div id="mocha"></div>
+        <div id="editor-test-container"></div>
+    </t>
+</template>
 </odoo>

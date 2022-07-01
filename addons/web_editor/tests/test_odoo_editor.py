@@ -7,4 +7,4 @@ import odoo.tests
 class TestOdooEditor(odoo.tests.HttpCase):
 
     def test_odoo_editor_suite(self):
-        self.browser_js('/web_editor/static/src/js/editor/odoo-editor/test/editor-test.html', "", "", timeout=1800)
+        self.browser_js('/web_editor/tests', "", "", login='admin', timeout=1800)
