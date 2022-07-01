@@ -6,6 +6,7 @@ import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotController } from "./pivot_controller";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
+import { PivotSearchModel } from "./pivot_search_model";
 
 const viewRegistry = registry.category("views");
 
@@ -18,6 +19,7 @@ export const pivotView = {
     Renderer: PivotRenderer,
     Model: PivotModel,
     ArchParser: PivotArchParser,
+    SearchModel: PivotSearchModel,
     searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
     buttonTemplate: "web.PivotView.Buttons",
 
