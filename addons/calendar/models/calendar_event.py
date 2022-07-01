@@ -352,13 +352,14 @@ class Meeting(models.Model):
         defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
         for event in self:
             if event.recurrency:
+                event.update(defaults)  # default recurrence values are needed to correctly compute the recurrence params
                 event_values = event._get_recurrence_params()
                 rrule_values = {
                     field: event.recurrence_id[field]
                     for field in recurrence_fields
                     if event.recurrence_id[field]
                 }
-                event.update({**false_values, **defaults, **event_values, **rrule_values})
+                event.update({**false_values, **event_values, **rrule_values})
             else:
                 event.update(false_values)
 
@@ -1082,8 +1083,8 @@ class Meeting(models.Model):
         """
         if not self.start:
             return fields.Date.today()
-        if self.recurrence_id.event_tz:
-            tz = pytz.timezone(self.recurrence_id.event_tz)
+        if self.recurrency and self.event_tz:
+            tz = pytz.timezone(self.event_tz)
             # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
             start = self.start if not self.allday else self.start.replace(hour=12)
             return pytz.utc.localize(start).astimezone(tz).date()
