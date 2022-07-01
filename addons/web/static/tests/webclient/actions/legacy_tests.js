@@ -64,14 +64,14 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.containsOnce(document.body, ".o_notification.border-warning");
         assert.strictEqual($(".o_notification_title").text(), "Warning!!!");
         assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
@@ -90,7 +90,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
@@ -98,7 +98,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body").text(), "This is a warning...");
@@ -116,7 +116,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...\nabc",
@@ -124,7 +124,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body")[0].innerText, "This is a warning...\nabc");
@@ -615,7 +615,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.strictEqual($(target).find(".breadcrumb-item").text(), "Partners");
 
         await doAction(webClient, {
@@ -721,25 +721,25 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
 
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
 
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_form_view");
+        assert.containsOnce(target, ".o_legacy_form_view");
 
         await testUtils.dom.click(target.querySelector(".o_back_button"));
         await legacyExtraNextTick();
 
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
 
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
 
         def.resolve();
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_form_view");
+        assert.containsOnce(target, ".o_legacy_form_view");
     });
 });

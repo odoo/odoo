@@ -1,11 +1,10 @@
+// WOWL TODO: remove this file
 odoo.define('hr_timesheet.res.config.form', function (require) {
     "use strict";
 
     const core = require('web.core');
     const config = require('web.config');
     const Dialog = require('web.Dialog');
-    const viewRegistry = require('web.view_registry');
-    const BaseSetting = require('base.settings');
     const QWeb = core.qweb;
     
     const _t = core._t;
@@ -59,16 +58,6 @@ odoo.define('hr_timesheet.res.config.form', function (require) {
     };
 
 
-    var TimesheetConfigFormRenderer = BaseSetting.Renderer.extend(TimesheetConfigQRCodeMixin);
-    const BaseSettingView = viewRegistry.get('base_settings');
-    var TimesheetConfigFormView = BaseSettingView.extend({
-        config: _.extend({}, BaseSettingView.prototype.config, {
-            Renderer : TimesheetConfigFormRenderer,
-        }),
-    });
-
-    viewRegistry.add('hr_timesheet_config_form', TimesheetConfigFormView);
-
-    return {TimesheetConfigQRCodeDialog, TimesheetConfigQRCodeMixin, TimesheetConfigFormRenderer, TimesheetConfigFormView};
+    return {TimesheetConfigQRCodeDialog, TimesheetConfigQRCodeMixin};
 
 });
