@@ -1939,7 +1939,7 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
         await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         expectedContext = {
-            group_by: [],
+            group_by: ["product_id"],
             pivot_column_groupby: ["date:day", "customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
@@ -1999,7 +1999,7 @@ QUnit.module("Views", (hooks) => {
         // Unload the filter
         await removeFacet(pivot); // remove previous favorite
         expectedContext = {
-            group_by: [],
+            group_by: ["product_id"],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
@@ -2040,7 +2040,7 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el, "tbody .o_pivot_header_cell_closed");
         await click(pivot.el, ".dropdown-menu span:nth-child(5)");
         expectedContext = {
-            group_by: [],
+            group_by: ["product_id"],
             pivot_column_groupby: [],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
@@ -2054,7 +2054,7 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el, "thead .o_pivot_header_cell_closed");
         await click(pivot.el, ".dropdown-menu span:nth-child(2)");
         expectedContext = {
-            group_by: [],
+            group_by: ["product_id"],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
@@ -3266,7 +3266,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
 
         const expectedContext = {
-            group_by: [],
+            group_by: ["product_id"],
             pivot_column_groupby: ["customer"],
             pivot_measures: ["foo"],
             pivot_row_groupby: ["product_id"],
@@ -3496,7 +3496,7 @@ QUnit.module("Views", (hooks) => {
                         pivot_measures: ["__count"],
                         pivot_column_groupby: [],
                         pivot_row_groupby: ["product_id"],
-                        group_by: [],
+                        group_by: ["product_id"],
                         comparison: {
                             comparisonId: "previous_period",
                             comparisonRange: [
@@ -5389,6 +5389,192 @@ QUnit.module("Views", (hooks) => {
 
             const values = ["1", "1", "0%", "1", "1", "0%", "1", "0", "-100%", "0", "1", "100%"];
             assert.strictEqual(getCurrentValues(pivot), values.join());
+        }
+    );
+
+    QUnit.test("pivot_row_groupby should be also used after first load", async function (assert) {
+        const ids = [1, 2];
+        const expectedContexts = [
+            {
+                group_by: ["product_id"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["product_id"],
+            },
+            {
+                group_by: ["customer"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["customer"],
+            },
+        ];
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            searchViewArch: `
+                <search>
+                    <filter name='product_id' string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name='customer' string="Customer" context="{'group_by':'customer'}"/>
+                </search>
+            `,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "create_or_replace") {
+                    assert.deepEqual(args.args[0].context, expectedContexts.shift());
+                    return ids.shift();
+                }
+            },
+        });
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "true", "Undefined"],
+            "The row headers should be as expected"
+        );
+
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody .o_group_by_menu .o_menu_item")); // select "Product"
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite");
+        await saveFavorite(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await removeFacet(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "true", "Undefined"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleMenuItem(pivot, "Favorite");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleGroupByMenu(pivot);
+        await toggleMenuItem(pivot, "Customer");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "First", "xpad", "Second", "First"],
+            "The row headers should be as expected"
+        );
+
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelectorAll("tbody .o_group_by_menu .o_menu_item")[1]); // select "Customer"
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite 2");
+        await saveFavorite(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+    });
+
+    QUnit.test(
+        "pivot_row_groupby should be also used after first load (2)",
+        async function (assert) {
+            const pivot = await makeView({
+                serverData,
+                type: "pivot",
+                resModel: "partner",
+                groupBy: ["product_id"],
+                arch: `<pivot/>`,
+                irFilters: [
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "Favorite (legacy)",
+                        id: 1,
+                        context: `
+                            {
+                                "group_by": [],
+                                "pivot_row_groupby": ["bar"],
+                                "pivot_col_groupby": [],
+                                "pivot_measures": ["foo"],
+                            }
+                        `,
+                        sort: "[]",
+                        domain: "",
+                        is_default: false,
+                        model_id: "foo",
+                        action_id: false,
+                    },
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "Favorite",
+                        id: 2,
+                        context: `
+                            {
+                                "group_by": ["customer"],
+                                "pivot_row_groupby": ["customer"],
+                                "pivot_col_groupby": [],
+                                "pivot_measures": ["foo"],
+                            }
+                        `,
+                        sort: "[]",
+                        domain: "",
+                        is_default: false,
+                        model_id: "foo",
+                        action_id: false,
+                    },
+                ],
+            });
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "xphone", "xpad"],
+                "The row headers should be as expected"
+            );
+
+            await toggleFavoriteMenu(pivot);
+            await toggleMenuItem(pivot, "Favorite (legacy)");
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "true", "Undefined"],
+                "The row headers should be as expected"
+            );
+
+            await toggleMenuItem(pivot, "Favorite");
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "First", "Second"],
+                "The row headers should be as expected"
+            );
         }
     );
 });

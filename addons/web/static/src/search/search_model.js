@@ -1741,7 +1741,15 @@ export class SearchModel extends EventBus {
             }
         }
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
-        const groupBys = this._getGroupBy();
+        let groupBys;
+        const { viewType } = this.env.config;
+        if (viewType === "pivot" && context.pivot_row_groupby) {
+            groupBys = context.pivot_row_groupby;
+        } else if (viewType === "graph" && context.graph_groupbys) {
+            groupBys = context.graph_groupbys;
+        } else {
+            groupBys = this._getGroupBy();
+        }
         const comparison = this.getFullComparison();
         const orderBy = this._getOrderBy();
         const userId = isShared ? false : this.userService.userId;
@@ -1883,6 +1891,14 @@ export class SearchModel extends EventBus {
                 return [searchItem.fieldName];
             }
             case "favorite": {
+                const { context } = searchItem;
+                const { viewType } = this.env.config;
+                if (viewType === "pivot" && context.pivot_row_groupby) {
+                    return context.pivot_row_groupby;
+                }
+                if (viewType === "graph" && context.graph_groupbys) {
+                    return context.graph_groupbys;
+                }
                 return searchItem.groupBys;
             }
             default: {
