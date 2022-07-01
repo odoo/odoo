@@ -8936,6 +8936,29 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(getCard(0), "div.o_field_boolean .custom-checkbox");
     });
 
+    QUnit.test("kanban view with boolean toggle widget", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="bar" widget="boolean_toggle"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+        assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
+        assert.ok(getCard(1).querySelector("[name='bar'] input").checked);
+
+        await click(getCard(1), "[name='bar'] label");
+        assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
+        assert.notOk(getCard(1).querySelector("[name='bar'] input").checked);
+    });
+
     QUnit.test("kanban view with monetary and currency fields without widget", async (assert) => {
         const currencies = {};
         for (const record of serverData.models.currency.records) {

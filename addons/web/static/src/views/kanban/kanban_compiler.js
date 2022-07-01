@@ -280,6 +280,8 @@ export class KanbanCompiler extends ViewCompiler {
             compiled = createElement("span", { "t-esc": `record["${fieldName}"].value` });
         } else {
             compiled = super.compileField(el, params);
+            const fieldId = el.getAttribute("field_id") || el.getAttribute("name");
+            compiled.setAttribute("id", `'${fieldId}_' + props.record.id`);
         }
 
         const { bold, display } = extractAttributes(el, ["bold", "display"]);
