@@ -205,7 +205,7 @@ export class FormController extends Component {
         });
 
         onRendered(() => {
-            this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
+            this.env.config.setDisplayName(this.displayName());
         });
 
         const { autofocusFieldId, disableAutofocus } = this.archInfo;
@@ -232,6 +232,10 @@ export class FormController extends Component {
         }
 
         this.setupTranslateAlert();
+    }
+
+    displayName() {
+        return this.model.root.data.display_name || this.env._t("New");
     }
 
     beforeUnload() {
