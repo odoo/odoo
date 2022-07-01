@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -82,5 +83,12 @@ registerModel({
          * entered.
          */
         substitution: attr(),
+        suggestable: one('ComposerSuggestable', {
+            default: insertAndReplace(),
+            inverse: 'cannedResponse',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
     },
 });
