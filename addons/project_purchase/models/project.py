@@ -40,7 +40,7 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form']],
             'domain': [('id', 'in', purchase_orders.ids)],
             'context': {
-                'create': False,
+                'project_id': self.id,
             }
         }
         if len(purchase_orders) == 1:
