@@ -139,7 +139,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {integer}
      */
     getUnreadCounter() {
-        return this._thread._unreadCounter;
+        return this.messaging.livechatButtonView.publicLivechat.unreadCounter;
     },
     /**
      * Tells whether the bottom of the thread in the thread window is visible
@@ -341,7 +341,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this._thread._unreadCounter > 0 &&
+            this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
             !this.isFolded()
         ) {
             this._thread.markAsRead();

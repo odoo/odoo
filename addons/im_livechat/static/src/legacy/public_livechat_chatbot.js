@@ -7,7 +7,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, increment, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -109,7 +109,7 @@ const QWeb = core.qweb;
         message.body = utils.Markup(message.body);
         this._addMessage(message, options);
         if (this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.legacyChatWindow.isAtBottom()) {
-            this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._unreadCounter++;
+            this.messaging.livechatButtonView.publicLivechat.update({ unreadCounter: increment() });
         }
 
         if (!options || !options.skipRenderMessages) {

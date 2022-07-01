@@ -31,5 +31,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        // amount of messages that have not yet been read on this chat
+        unreadCounter: attr({
+            default: 0,
+        }),
     },
 });
