@@ -6537,6 +6537,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
  */
 registry.BackgroundPosition = SnippetOptionWidget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.targetWindow = this.ownerDocument.defaultView;
+    },
 
     /**
      * @override
@@ -6549,14 +6556,22 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         // Resize overlay content on window resize because background images
         // change size, and on carousel slide because they sometimes take up
         // more space and move elements around them.
-        $(window).on('resize.bgposition', () => this._dimensionOverlay());
+        this.targetWindow.$(this.targetWindow).on('resize.bgposition', () => this._dimensionOverlay());
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        if (this.iframeManipulators) {
+            this.iframeManipulators.remove();
+        }
     },
     /**
      * @override
      */
     destroy: function () {
         this._toggleBgOverlay(false);
-        $(window).off('.bgposition');
+        this.targetWindow.$(this.targetWindow).off('.bgposition');
         this._super.apply(this, arguments);
     },
 
@@ -6601,8 +6616,8 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         };
         // Make sure the element is in a visible area.
         const rect = this.$target[0].getBoundingClientRect();
-        const viewportTop = $(window).scrollTop();
-        const viewportBottom = viewportTop + $(window).height();
+        const viewportTop = this.targetWindow.$(this.targetWindow).scrollTop();
+        const viewportBottom = viewportTop + this.targetWindow.$(this.targetWindow).height();
         const visibleHeight = rect.top < viewportTop
             ? Math.max(0, Math.min(viewportBottom, rect.bottom) - viewportTop) // Starts above
             : rect.top < viewportBottom
@@ -6652,7 +6667,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @private
      */
     _initOverlay: function () {
-        this.$backgroundOverlay = $(qweb.render('web_editor.background_position_overlay'));
+        this.$backgroundOverlay = this.targetWindow.$(qweb.render('web_editor.background_position_overlay'));
         this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
 
@@ -6664,7 +6679,14 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             this._toggleBgOverlay(false);
         });
 
-        this.$backgroundOverlay.insertAfter(this.$overlay);
+        if (this.$overlay[0].ownerDocument !== this.$target[0].ownerDocument) {
+            this.iframeManipulators = document.createElement('div');
+            this.iframeManipulators.id = 'oe_manipulators';
+            this.targetWindow.document.body.appendChild(this.iframeManipulators);
+            this.$backgroundOverlay.appendTo(this.iframeManipulators);
+        } else {
+            this.$backgroundOverlay.insertAfter(this.$overlay);
+        }
     },
     /**
      * Sets the overlay in the right place so that the draggable background
@@ -6692,7 +6714,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             height: `${this.$target.innerHeight()}px`,
         });
 
-        const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
+        const topPos = Math.max(0, $(this.targetWindow).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
     },
     /**
@@ -6716,14 +6738,21 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         }
 
         this.trigger_up('hide_overlay');
-        this.trigger_up('activate_snippet', {
-            $snippet: this.$target,
-            previewMode: true,
-        });
+        // If the window is different, the bgOverlay will not be inside
+        // this.$overlay, so no need to activate the snippet to display it.
+        // Activating it would even be worse because if it's inside the iframe
+        // it will display the margin/padding overlay on top of the bgOverlay.
+        if (this.targetWindow === window) {
+            this.trigger_up('activate_snippet', {
+                $snippet: this.$target,
+                previewMode: true,
+            });
+        }
+
         this.trigger_up('block_preview_overlays');
 
         // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
-        this.$bgDragger = this.$target.clone().empty();
+        this.$bgDragger = this.targetWindow.$(this.$target.clone().empty());
         // Prevent clone from being seen as editor if target is editor (eg. background on root tag)
         this.$bgDragger.removeClass('o_editable');
         // Some CSS child selector rules will not be applied since the clone has a different container from $target.
@@ -6747,7 +6776,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.
-        window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
+        setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
     },
     /**
      * Returns the difference between the target's size and the background's
@@ -6796,7 +6825,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     _onDragBackgroundStart: function (ev) {
         ev.preventDefault();
         this.$bgDragger.addClass('o_we_grabbing');
-        const $document = $(document);
+        const $document = this.targetWindow.$(this.$target[0].ownerDocument);
         $document.on('mousemove.bgposition', this._onDragBackgroundMove.bind(this));
         $document.one('mouseup', () => {
             this.$bgDragger.removeClass('o_we_grabbing');
