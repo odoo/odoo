@@ -723,3 +723,7 @@ class Web_Editor(http.Controller):
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+
+    @http.route('/web_editor/tests', type='http', auth="user")
+    def test_suite(self, mod=None, **kwargs):
+        return request.render('web_editor.tests')
