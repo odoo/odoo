@@ -25,6 +25,10 @@ FormRenderer.include({
         this.hasAttachmentViewerFeature = params.hasAttachmentViewerFeature;
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
+        this.messaging = undefined;
+        if (owl.Component.env.services.messaging) {
+            owl.Component.env.services.messaging.get().then(messaging => this.messaging = messaging);
+        }
         this._chatterContainerComponent = undefined;
         /**
          * The target of chatter, if chatter has to be appended to the DOM.
