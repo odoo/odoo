@@ -7,7 +7,8 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
-        'view.xml'
+        'view.xml',
+        'data/test_translation_import_data.xml'
     ],
     'installable': True,
     'assets': {

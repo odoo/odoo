@@ -2,19 +2,19 @@
 <odoo>
     <data noupdate="1">
 
-        <record id="action_test_translation_import" model="ir.actions.act_window">
-            <field name="name">Test translation import</field>
+        <record id="action_test_translation_import_model1" model="ir.actions.act_window">
+            <field name="name">Test translation import model1</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">test.translation.import</field>
+            <field name="res_model">test.translation.import.model1</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
         </record>
 
-        <menuitem id="menu_test_translation" name="Test translation" sequence="650"/>
+        <menuitem id="menu_test_translation_import" name="Test translation model1" sequence="650"/>
 
-        <menuitem id="menu_test_translation_import"
-            name="Test translation import"
-            action="action_test_translation_import"
-            parent="menu_test_translation"/>
+        <menuitem id="menu_test_translation_import_model1"
+            name="Test translation import model1"
+            action="action_test_translation_import_model1"
+            parent="menu_test_translation_import"/>
     </data>
 </odoo>
