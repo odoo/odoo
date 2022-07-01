@@ -1,39 +1,31 @@
-odoo.define('account.ShowGroupedList', function (require) {
-"use strict";
+/** @odoo-module */
 
-const AbstractFieldOwl = require('web.AbstractFieldOwl');
-const field_registry = require('web.field_registry_owl');
+import { registry } from "@web/core/registry";
 
 const { Component, onWillUpdateProps } = owl;
 
-class ListItem extends Component { }
-ListItem.template = 'account.GroupedItemTemplate';
+class ListItem extends Component {}
+ListItem.template = "account.GroupedItemTemplate";
 ListItem.props = ["item_vals", "options"];
 
-class ListGroup extends Component { }
-ListGroup.template = 'account.GroupedItemsTemplate';
-ListGroup.components = { ListItem }
+class ListGroup extends Component {}
+ListGroup.template = "account.GroupedItemsTemplate";
+ListGroup.components = { ListItem };
 ListGroup.props = ["group_vals", "options"];
 
-
-class ShowGroupedList extends AbstractFieldOwl {
+class ShowGroupedList extends Component {
     setup() {
-        super.setup();
-        this.data = this.value ? JSON.parse(this.value) : {
-            groups_vals: [],
-            options: {
-                discarded_number: '',
-                columns: [],
-            },
-        };
-        onWillUpdateProps(() => {
-            Object.assign(this.data, JSON.parse(this.value));
-        });
+        this.formatData(this.props);
+        onWillUpdateProps((nextProps) => this.formatData(nextProps));
+    }
+
+    formatData(props) {
+        this.data = props.value
+            ? JSON.parse(props.value)
+            : { groups_vals: [], options: { discarded_number: "", columns: [] } };
     }
 }
-ShowGroupedList.template = 'account.GroupedListTemplate';
-ShowGroupedList.components = { ListGroup }
+ShowGroupedList.template = "account.GroupedListTemplate";
+ShowGroupedList.components = { ListGroup };
 
-field_registry.add('grouped_view_widget', ShowGroupedList);
-return ShowGroupedList;
-});
+registry.category("fields").add("grouped_view_widget", ShowGroupedList);

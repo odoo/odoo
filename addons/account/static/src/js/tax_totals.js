@@ -1,43 +1,34 @@
-/** @odoo-module alias=account.tax_group_owl **/
-"use strict";
+/** @odoo-module **/
 
-import session from 'web.session';
-import AbstractFieldOwl from 'web.AbstractFieldOwl';
-import fieldUtils from 'web.field_utils';
-import field_registry from 'web.field_registry_owl';
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { formatFloat } from "@web/views/fields/formatters";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
-const { onPatched, onWillUpdateProps, useRef, useState } = owl;
+const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
 /**
     A line of some TaxTotalsComponent, giving the values of a tax group.
 **/
-class TaxGroupComponent extends LegacyComponent {
+class TaxGroupComponent extends Component {
     setup() {
-        this.inputTax = useRef('taxValueInput');
-        this.state = useState({value: 'readonly'});
-        this.allowTaxEdition = this.props.mode === 'edit' ? this.props.allowTaxEdition : false;
-        onPatched(this.onPatched);
-        onWillUpdateProps(this.onWillUpdateProps);
+        this.inputTax = useRef("taxValueInput");
+        this.state = useState({value: "readonly"});
+        onPatched(() => {
+            if (this.state.value === "edit") {
+                const { taxGroup, currency } = this.props;
+                const newVal = formatFloat(taxGroup.tax_group_amount, { digits: currency.digits });
+                this.inputTax.el.value = newVal;
+                this.inputTax.el.focus(); // Focus the input
+            }
+        });
+        onWillUpdateProps(() => {
+            this.setState("readonly");
+        });
     }
 
-    //--------------------------------------------------------------------------
-    // Life cycle methods
-    //--------------------------------------------------------------------------
-
-    onWillUpdateProps(nextProps) {
-        this.setState('readonly'); // If props are edited, we set the state to readonly
-    }
-
-    onPatched() {
-        if (this.state.value === 'edit') {
-            let newValue = this.props.taxGroup.tax_group_amount;
-            let currency = session.get_currency(this.props.record.data.currency_id.data.id);
-
-            newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits});
-            this.inputTax.el.focus(); // Focus the input
-            this.inputTax.el.value = newValue;
-        }
+    get allowTaxEdition() {
+        return !this.props.isReadonly && this.props.allowTaxEdition;
     }
 
     //--------------------------------------------------------------------------
@@ -57,11 +48,11 @@ class TaxGroupComponent extends LegacyComponent {
      * @param {String} value
      */
     setState(value) {
-        if (['readonly', 'edit', 'disable'].includes(value)) {
+        if (["readonly", "edit", "disable"].includes(value)) {
             this.state.value = value;
         }
         else {
-            this.state.value = 'readonly';
+            this.state.value = "readonly";
         }
     }
 
@@ -75,33 +66,40 @@ class TaxGroupComponent extends LegacyComponent {
      * the modification does not take place.
      */
     _onChangeTaxValue() {
-        this.setState('disable'); // Disable the input
-        let newValue = this.inputTax.el.value; // Get the new value
-        let currency = session.get_currency(this.props.record.data.currency_id.data.id); // The records using this widget must have a currency_id field.
+        this.setState("disable"); // Disable the input
+        let newValue = Number(this.inputTax.el.value); // Get the new value
         try {
-            newValue = fieldUtils.parse.float(newValue); // Need a float for format the value
-            newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits}); // Return a string rounded to currency precision
-            newValue = fieldUtils.parse.float(newValue); // Convert back to Float to compare with oldValue to know if value has changed
+            newValue = formatFloat(newValue, { digits: this.props.currency.digits }); // Return a string rounded to currency precision
         } catch (_err) {
-            $(this.inputTax.el).addClass('o_field_invalid');
-            this.setState('edit');
+            this.props.invalidate();
+            this.setState("edit");
             return;
         }
-        // The newValue can't be equals to 0
+        // The newValue can"t be equals to 0
         if (newValue === this.props.taxGroup.tax_group_amount || newValue === 0) {
-            this.setState('readonly');
+            this.setState("readonly");
             return;
         }
+        const oldValue = this.props.taxGroup.tax_group_amount;
         this.props.taxGroup.tax_group_amount = newValue;
+        this.props.taxGroup.formatted_tax_group_amount = this.props.taxGroup.formatted_tax_group_amount.replace(oldValue.toString(), newValue.toString());
         this.props.onChangeTaxGroup({
-            oldValue: this.props.taxGroup.tax_group_amount,
-            newValue: newValue,
+            oldValue,
+            newValue: Number(newValue),
             taxGroupId: this.props.taxGroup.tax_group_id
         });
     }
 }
-TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record', 'onChangeTaxGroup', 'mode'];
-TaxGroupComponent.template = 'account.TaxGroupComponent';
+
+TaxGroupComponent.props = {
+    currency: {},
+    taxGroup: { optional: true },
+    allowTaxEdition: { optional: true },
+    onChangeTaxGroup: { optional: true },
+    isReadonly: Boolean,
+    invalidate: Function,
+};
+TaxGroupComponent.template = "account.TaxGroupComponent";
 
 /**
     Widget used to display tax totals by tax groups for invoices, PO and SO,
@@ -110,49 +108,50 @@ TaxGroupComponent.template = 'account.TaxGroupComponent';
     Note that this widget requires the object it is used on to have a
     currency_id field.
 **/
-class TaxTotalsComponent extends AbstractFieldOwl {
+export class TaxTotalsComponent extends Component {
     setup() {
-        super.setup();
-        this.totals = useState({value: this.value ? JSON.parse(this.value) : null});
-        this.allowTaxEdition = this.nodeOptions['allowTaxEdition'];
-        onWillUpdateProps(this.onWillUpdateProps);
-    }
-
-    onWillUpdateProps(nextProps) {
-        // We only reformat tax groups if there are changed
-        this.totals.value = JSON.parse(nextProps.record.data[this.props.fieldName]);
-    }
-
-    _onKeydown(ev) {
-        switch (ev.which) {
-            // Trigger only if the user clicks on ENTER or on TAB.
-            case $.ui.keyCode.ENTER:
-            case $.ui.keyCode.TAB:
-                // trigger blur to prevent the code being executed twice
-                $(ev.target).blur();
-        }
+        this.totals = this.props.parsedValue;
+        onWillUpdateProps((nextProps) => {
+            // We only reformat tax groups if there are changed
+            this.totals = nextProps.parsedValue;
+        });
     }
 
     /**
      * This method is the main function of the tax group widget.
-     * It is called by an event trigger (from the TaxGroupComponent) and receives
-     * a particular payload.
+     * It is called by the TaxGroupComponent and receives the
+     * newer tax value.
      *
      * It is responsible for calculating taxes based on tax groups and triggering
      * an event to notify the ORM of a change.
      */
-    _onChangeTaxValueByTaxGroup(ev) {
-        this.trigger('field-changed', {
-            dataPointID: this.record.id,
-            changes: { tax_totals_json: JSON.stringify(this.totals.value) }
-        })
+    _onChangeTaxValueByTaxGroup({ oldValue, newValue, taxGroupId }) {
+        if (oldValue === newValue) return;
+        const [oldTotal, newTotal] = [this.totals.amount_total, this.totals.amount_untaxed + newValue];
+        this.totals.amount_total = newTotal;
+        this.totals.formatted_amount_total = this.totals.formatted_amount_total.replace(oldTotal.toString(), newTotal.toString());
+        this.props.update(JSON.stringify(this.totals));
     }
 }
 
-TaxTotalsComponent.template = 'account.TaxTotalsField';
+TaxTotalsComponent.template = "account.TaxTotalsField";
 TaxTotalsComponent.components = { TaxGroupComponent };
+TaxTotalsComponent.props = {
+    ...standardFieldProps,
+    allowTaxEdition: {type: Boolean, optional: true},
+    currency: {},
+    invalidate: Function,
+    parsedValue: Object,
+}
 
+TaxTotalsComponent.extractProps = (fieldName, record, attrs) => {
+    const parsedValue = record.data[fieldName] ? JSON.parse(record.data[fieldName]) : null;
+    return {
+        parsedValue,
+        currency: session.currencies[record.data.currency_id[0]],
+        allowTaxEdition: parsedValue && parsedValue.allow_tax_edition || attrs.allowTaxEdition,
+        invalidate: () => record.setInvalidField(fieldName),
+    };
+};
 
-field_registry.add('account-tax-totals-field', TaxTotalsComponent);
-
-export default TaxTotalsComponent
+registry.category("fields").add("account-tax-totals-field", TaxTotalsComponent);

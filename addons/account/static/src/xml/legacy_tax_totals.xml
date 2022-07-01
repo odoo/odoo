@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="account.TaxGroupComponent" owl="1">
+    <t t-name="account.LegacyTaxGroupComponent" owl="1">
         <tr>
             <td class="o_td_label">
                 <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
@@ -17,7 +17,7 @@
                                 class="o_field_float
                                 o_field_number o_input"
                                 t-att-disabled="state.value === 'disable'"
-                                t-on-change.prevent="_onChangeTaxValue"/>
+                                t-on-blur.prevent="_onChangeTaxValue"/>
                         </span>
                     </t>
                     <t t-else="">
@@ -38,10 +38,10 @@
         </tr>
     </t>
 
-    <t t-name="account.TaxTotalsField" owl="1">
-        <table t-if="totals" class="oe_right">
+    <div t-name="account.LegacyTaxTotalsField" owl="1">
+        <table t-if="totals.value" class="oe_right">
             <tbody>
-                <t t-foreach="totals.subtotals" t-as="subtotal" t-key="subtotal['name']">
+                <t t-foreach="totals.value.subtotals" t-as="subtotal" t-key="subtotal['name']">
                     <tr>
                         <td class="o_td_label">
                             <label class="o_form_label o_tax_total_label" t-esc="subtotal['name']"/>
@@ -52,14 +52,13 @@
                         </td>
                     </tr>
 
-                    <t t-foreach="totals.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
-                        <TaxGroupComponent
-                            currency="props.currency"
+                    <t t-foreach="totals.value.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
+                        <LegacyTaxGroupComponent
                             taxGroup="taxGroup"
-                            isReadonly="props.readonly"
-                            allowTaxEdition="props.allowTaxEdition"
+                            record="record"
+                            mode="mode"
+                            allowTaxEdition="totals.value.allow_tax_edition"
                             onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
-                            invalidate="props.invalidate"
                         />
                     </t>
                 </t>
@@ -73,13 +72,13 @@
                     <td>
                         <span
                             name="amount_total"
-                            t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
-                            t-esc="totals.formatted_amount_total"
+                            t-att-class="Object.keys(totals.value.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
+                            t-esc="totals.value.formatted_amount_total"
                             style="white-space: nowrap; font-weight: bold; font-size: 1.3em;"
                         />
                     </td>
                 </tr>
             </tbody>
         </table>
-    </t>
+    </div>
 </templates>
