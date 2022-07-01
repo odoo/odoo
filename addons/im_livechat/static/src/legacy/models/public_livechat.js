@@ -16,8 +16,8 @@ import { sprintf } from 'web.utils';
  */
 const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     /**
-     * @override
      * @private
+     * @param {Messaging} messaging
      * @param {Object} params
      * @param {Object} params.data
      * @param {boolean} [params.data.folded] states whether the livechat is
@@ -34,9 +34,10 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {string} params.data.uuid the UUID of this livechat.
      * @param {@im_livechat/legacy/widgets/livechat_button} params.parent
      */
-    init(params) {
+    init(messaging, params) {
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(params.parent);
+        this.messaging = messaging;
 
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;

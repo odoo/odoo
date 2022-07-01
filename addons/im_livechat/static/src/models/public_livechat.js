@@ -18,7 +18,7 @@ registerModel({
             if (!this.data) {
                 return clear();
             }
-            return new PublicLivechat({
+            return new PublicLivechat(this.messaging, {
                 parent: this.livechatButtonOwner.widget,
                 data: this.data,
             });
