@@ -52,15 +52,4 @@
             </filter>
         </field>
     </record>
-
-    <record id="hr_applicant_view_kanban" model="ir.ui.view">
-        <field name="name">hr.applicant.view.kanban.inherit.skills</field>
-        <field name="model">hr.applicant</field>
-        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
-        <field name="arch" type="xml">
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="js_class">hr_applicant_kanban</attribute>
-            </xpath>
-        </field>
-    </record>
 </odoo>
