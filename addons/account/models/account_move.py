@@ -1008,8 +1008,8 @@ class AccountMove(models.Model):
                 if line.tax_repartition_line_id:
                     current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
                 elif line.tax_ids:
-                    if self.is_invoice(include_receipts=True):
-                        is_refund = self.type in ('out_refund', 'in_refund')
+                    if invoice.is_invoice(include_receipts=True):
+                        is_refund = invoice.type in ('out_refund', 'in_refund')
                     else:
                         tax_type = line.tax_ids[0].type_tax_use
                         is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
