@@ -586,7 +586,12 @@ export const editorCommands = {
             ) {
                 setSelection(block, 0, block, nodeSize(block));
                 editor.historyPauseSteps();
+                // Keep the alignment and remove rest of the applied styles.
+                const textAlign = block.style.textAlign;
                 editor.execCommand('removeFormat');
+                if (textAlign) {
+                    block.style.textAlign = textAlign;
+                }
                 editor.historyUnpauseSteps();
                 const inLI = block.closest('li');
                 if (inLI && tagName === "P") {
