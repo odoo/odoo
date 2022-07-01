@@ -63,7 +63,7 @@ registerModel({
          * @private
          * @returns {MessageView[]}
          */
-        _computeMessageViews() {
+        _computeMessageListViewMessageViewItems() {
             if (!this.threadViewOwner.threadCache) {
                 return clear();
             }
@@ -114,8 +114,8 @@ registerModel({
         /**
          * States the message views used to display this thread view owner's messages.
          */
-        messageViews: many('MessageView', {
-            compute: '_computeMessageViews',
+        messageListViewMessageViewItems: many('MessageListViewMessageViewItem', {
+            compute: '_computeMessageListViewMessageViewItems',
             inverse: 'messageListViewOwner',
             isCausal: true,
         }),

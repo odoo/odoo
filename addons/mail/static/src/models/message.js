@@ -826,6 +826,10 @@ registerModel({
             inverse: 'message',
             isCausal: true,
         }),
+        messageListViewMessageViewItems: many('MessageListViewMessageViewItem', {
+            inverse: 'message',
+            isCausal: true,
+        }),
         notifications: many('Notification', {
             inverse: 'message',
             isCausal: true,
