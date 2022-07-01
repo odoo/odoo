@@ -23,7 +23,7 @@ const READ_LESS = _lt("read less");
  * Any thread that extends mail.model.AbstractThread can be used with this
  * widget.
  */
-const ThreadWidget = Widget.extend({
+const PublicLivechatView = Widget.extend({
     className: 'o_mail_thread',
 
     events: {
@@ -613,6 +613,6 @@ const ThreadWidget = Widget.extend({
     },
 });
 
-ThreadWidget.ORDER = ORDER;
+PublicLivechatView.ORDER = ORDER;
 
-export default ThreadWidget;
+export default PublicLivechatView;
