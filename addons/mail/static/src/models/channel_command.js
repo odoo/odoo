@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -127,6 +128,13 @@ registerModel({
          *  The keyword to use a specific command.
          */
         name: attr({
+            readonly: true,
+            required: true,
+        }),
+        suggestable: one('ComposerSuggestable', {
+            default: insertAndReplace(),
+            inverse: 'channelCommand',
+            isCausal: true,
             readonly: true,
             required: true,
         }),
