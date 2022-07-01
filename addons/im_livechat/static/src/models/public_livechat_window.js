@@ -28,6 +28,7 @@ registerModel({
             }
             return new PublicLivechatWindow(
                 this.livechatButtonViewOwner.widget,
+                this.messaging,
                 this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
                 {
                     displayStars: false,
