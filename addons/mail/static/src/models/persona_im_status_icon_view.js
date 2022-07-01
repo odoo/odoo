@@ -28,7 +28,7 @@ registerModel({
                 return replace(this.channelMemberViewOwner.channelMember.partner.persona);
             }
             if (this.composerSuggestionViewOwner) {
-                return replace(this.composerSuggestionViewOwner.partner.persona);
+                return replace(this.composerSuggestionViewOwner.suggestable.partner.persona);
             }
             if (this.messageViewOwner) {
                 return replace(this.messageViewOwner.message.author.persona);

@@ -13,7 +13,7 @@ import { sprintf } from '@web/core/utils/strings';
  */
 registerModel({
     name: 'ComposerSuggestion',
-    identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
+    identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], 'suggestable'],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -53,17 +53,17 @@ registerModel({
          * @returns {string}
          */
         _computeMentionText() {
-            if (this.cannedResponse) {
-                return this.cannedResponse.substitution;
+            if (this.suggestable.cannedResponse) {
+                return this.suggestable.cannedResponse.substitution;
             }
-            if (this.channelCommand) {
-                return this.channelCommand.name;
+            if (this.suggestable.channelCommand) {
+                return this.suggestable.channelCommand.name;
             }
-            if (this.partner) {
-                return this.partner.name;
+            if (this.suggestable.partner) {
+                return this.suggestable.partner.name;
             }
-            if (this.thread) {
-                return this.thread.name;
+            if (this.suggestable.thread) {
+                return this.suggestable.thread.name;
             }
         },
         /**
@@ -71,57 +71,32 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.partner && this.partner.isImStatusSet ? insertAndReplace() : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeRecord() {
-            if (this.cannedResponse) {
-                return replace(this.cannedResponse);
-            }
-            if (this.channelCommand) {
-                return replace(this.channelCommand);
-            }
-            if (this.partner) {
-                return replace(this.partner);
-            }
-            if (this.thread) {
-                return replace(this.thread);
-            }
-            return clear();
+            return this.suggestable.partner && this.suggestable.partner.isImStatusSet ? insertAndReplace() : clear();
         },
         /**
          * @private
          * @returns {string|FieldCommand}
          */
         _computeTitle() {
-            if (this.cannedResponse) {
-                return sprintf("%s: %s", this.record.source, this.record.substitution);
+            if (this.suggestable.cannedResponse) {
+                return sprintf("%s: %s", this.suggestable.cannedResponse.source, this.suggestable.cannedResponse.substitution);
             }
-            if (this.thread) {
-                return this.record.name;
+            if (this.suggestable.thread) {
+                return this.suggestable.thread.name;
             }
-            if (this.channelCommand) {
-                return sprintf("%s: %s", this.record.name, this.record.help);
+            if (this.suggestable.channelCommand) {
+                return sprintf("%s: %s", this.suggestable.channelCommand.name, this.suggestable.channelCommand.help);
             }
-            if (this.partner) {
-                if (this.record.email) {
-                    return sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+            if (this.suggestable.partner) {
+                if (this.suggestable.partner.email) {
+                    return sprintf("%s (%s)", this.suggestable.partner.nameOrDisplayName, this.suggestable.partner.email);
                 }
-                return this.record.nameOrDisplayName;
+                return this.suggestable.partner.nameOrDisplayName;
             }
             return clear();
         },
     },
     fields: {
-        cannedResponse: one('CannedResponse', {
-            readonly: true,
-        }),
-        channelCommand: one('ChannelCommand', {
-            readonly: true,
-        }),
         composerViewOwner: one('ComposerView', {
             compute: '_computeComposerViewOwner',
             required: true,
@@ -144,20 +119,16 @@ registerModel({
         mentionText: attr({
             compute: '_computeMentionText',
         }),
-        record: one('Record', {
-            compute: '_computeRecord',
-        }),
-        partner: one('Partner', {
-            readonly: true,
-        }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'composerSuggestionViewOwner',
             isCausal: true,
             readonly: true,
         }),
-        thread: one('Thread', {
+        suggestable: one('ComposerSuggestable', {
+            inverse: 'composerSuggestions',
             readonly: true,
+            required: true,
         }),
         /**
          * Descriptive title for this suggestion. Useful to be able to

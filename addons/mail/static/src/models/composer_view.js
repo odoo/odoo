@@ -143,11 +143,11 @@ registerModel({
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            if (this.activeSuggestion.thread) {
-                Object.assign(updateData, { mentionedChannels: link(this.activeSuggestion.thread) });
+            if (this.activeSuggestion.suggestable.thread) {
+                Object.assign(updateData, { mentionedChannels: link(this.activeSuggestion.suggestable.thread) });
             }
-            if (this.activeSuggestion.partner) {
-                Object.assign(updateData, { mentionedPartners: link(this.activeSuggestion.partner) });
+            if (this.activeSuggestion.suggestable.partner) {
+                Object.assign(updateData, { mentionedPartners: link(this.activeSuggestion.suggestable.partner) });
             }
             this.composer.update(updateData);
             for (const composerView of this.composer.composerViews) {
@@ -1389,31 +1389,17 @@ registerModel({
             this.update({
                 extraSuggestions: insertAndReplace(
                     extraSuggestedRecords.map(record => {
-                        switch (record.constructor.name) {
-                            case 'CannedResponse':
-                                return { cannedResponse: replace(record) };
-                            case 'ChannelCommand':
-                                return { channelCommand: replace(record) };
-                            case 'Partner':
-                                return { partner: replace(record) };
-                            case 'Thread':
-                                return { thread: replace(record) };
-                        }
+                        return {
+                            suggestable: replace(record.suggestable),
+                        };
                     }),
                 ),
                 hasToScrollToActiveSuggestion: true,
                 mainSuggestions: insertAndReplace(
                     mainSuggestedRecords.map(record => {
-                        switch (record.constructor.name) {
-                            case 'CannedResponse':
-                                return { cannedResponse: replace(record) };
-                            case 'ChannelCommand':
-                                return { channelCommand: replace(record) };
-                            case 'Partner':
-                                return { partner: replace(record) };
-                            case 'Thread':
-                                return { thread: replace(record) };
-                        }
+                        return {
+                            suggestable: replace(record.suggestable),
+                        };
                     }),
                 ),
             });
