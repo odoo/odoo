@@ -15,7 +15,7 @@ registerModel({
          */
         onClickReply(ev) {
             markEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo');
-            const threadView = this.messageView && this.messageView.messageListViewOwner && this.messageView.messageListViewOwner.threadViewOwner;
+            const threadView = this.messageView && this.messageView.messageListViewMessageViewItemOwner && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner;
             const parentMessage = this.messageView.message.parentMessage;
             if (!threadView || !parentMessage) {
                 return;
