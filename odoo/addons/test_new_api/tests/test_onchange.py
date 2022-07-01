@@ -120,7 +120,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
             strip_prefix('messages.', field_onchange),
-            ['author', 'body', 'name', 'size', 'important'],
+            ['author', 'body', 'name', 'size', 'important', 'sequence'],
         )
 
         # modify discussion name
@@ -148,6 +148,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(result['value']['messages'], [
             (5,),
             (1, message1.id, {
+                'sequence': 10,
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
                 'author': USER.name_get()[0],
@@ -155,6 +156,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
                 'important': False,
             }),
             (1, message2.id, {
+                'sequence': 10,
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "XYZ",          # this must be sent back
                 'author': USER.name_get()[0],
@@ -162,6 +164,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
                 'important': False,
             }),
             (0, 0, {
+                'sequence': 10,
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
                 'author': USER.name_get()[0],
@@ -193,7 +196,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
             strip_prefix('messages.', field_onchange),
-            ['author', 'body', 'name', 'size', 'important'],
+            ['author', 'body', 'name', 'size', 'important', 'sequence'],
         )
 
         # modify discussion name, and check that the reference of the new line
@@ -219,6 +222,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertItemsEqual(result['value']['messages'], [
             (5,),
             (0, REFERENCE, {
+                'sequence': 10,
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
@@ -793,7 +797,7 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(record.foo, "oof")
         self.assertEqual(record.count, 1, "value onchange must be called only one time")
 
-    def test_onchange_one2many(self):
+    def test_onchange_one2many_edit_line(self):
         record = self.env['test_new_api.model_parent_m2o'].create({
             'name': 'Family',
             'child_ids': [

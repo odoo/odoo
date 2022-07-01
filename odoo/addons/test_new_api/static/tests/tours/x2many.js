@@ -373,7 +373,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click'
     }, {
         content: "test one2many's line onchange",
-        trigger: '.o_list_view .o_selected_row td:nth(3):contains(3)',
+        trigger: '.o_list_view .o_selected_row td:nth(4):contains(3)',
         run: function () {}, // don't blur the many2one
     }, {
         content: "open the many2one to select an other user",

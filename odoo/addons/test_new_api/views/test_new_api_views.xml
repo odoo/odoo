@@ -55,12 +55,14 @@
                             <page string="Messages">
                                 <field name="messages">
                                     <tree string="Messages">
+                                        <field name="sequence" widget="handle"/>
                                         <field name="name"/>
                                         <field name="body"/>
                                         <field name="important"/>
                                     </tree>
                                     <form string="Message">
                                         <group>
+                                            <field name="sequence" invisible="1"/>
                                             <field name="name"/>
                                             <field name="author"/>
                                             <field name="size"/>
@@ -124,6 +126,7 @@
                             <page string="Messages">
                                 <field name="messages">
                                     <tree name="Messages" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
                                         <field name="name"/>
                                         <field name="author"/>
                                         <field name="body" required="1"/>
@@ -167,6 +170,7 @@
                             <field name="messages" />
                             <field name="important_messages">
                                 <tree string="Important messages">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="author"/>
                                     <field name="size"/>
@@ -194,6 +198,7 @@
             <field name="model">test_new_api.message</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
+                    <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="author"/>
                     <field name="size"/>
@@ -210,6 +215,7 @@
                 <form string="Message">
                     <sheet>
                         <group>
+                            <field name="sequence" invisible="1"/>
                             <field name="discussion"/>
                             <field name="name"/>
                             <field name="author"/>

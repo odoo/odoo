@@ -3229,7 +3229,7 @@ class One2many(_RelationalMulti):
                     elif command[0] == 4:
                         to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
-                    elif command[0] in (5, 6) :
+                    elif command[0] in (5, 6):
                         # do not try to delete anything in creation mode if nothing has been created before
                         line_ids = command[2] if command[0] == 6 else []
                         if not allow_full_delete and not line_ids:
@@ -3243,7 +3243,8 @@ class One2many(_RelationalMulti):
                         lines[inverse] = recs[-1]
 
             flush()
-
+            for rec in records:
+                rec.env.cache._data.pop(self, False)
         else:
             cache = records.env.cache
 

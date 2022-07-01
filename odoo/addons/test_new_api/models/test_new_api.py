@@ -126,8 +126,10 @@ class Discussion(models.Model):
 class Message(models.Model):
     _name = 'test_new_api.message'
     _description = 'Test New API Message'
+    _order = 'sequence, id'
 
     discussion = fields.Many2one('test_new_api.discussion', ondelete='cascade')
+    sequence = fields.Integer(string='Sequence', default=10)
     body = fields.Text()
     author = fields.Many2one('res.users', default=lambda self: self.env.user)
     name = fields.Char(string='Title', compute='_compute_name', store=True)

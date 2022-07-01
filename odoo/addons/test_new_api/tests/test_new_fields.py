@@ -2139,6 +2139,34 @@ class TestFields(TransactionCaseWithUserDemo):
         category21.write({'discussions': [(4, discussion2.id)]})
         self.assertEqual(discussion2.categories.ids, category21.ids)
 
+    def test_74_relational_order(self):
+        """ Check the consistency of relational fields if lines are in different order,
+          and the _order in the child models are different from id. """
+
+        discussion1 = self.env['test_new_api.discussion'].create([
+            {'name': "discussion1", 'participants': [(4, self.env.user.id)]}
+        ])
+
+        message1, message2 = self.env['test_new_api.message'].create([
+            {'sequence': 1, 'discussion': discussion1.id},
+            {'sequence': 2, 'discussion': discussion1.id},
+        ])
+
+        messages12 = message1 + message2
+        messages21 = message2 + message1
+        self.assertEqual(discussion1.messages.ids, messages12.ids)
+
+        # Let's add a new line, but before saving we reorder the lines to [new, 2, 1]-order
+        # (the reorder can be done, for example, using the widget="handle" on the sequence field):
+        discussion1.write({'messages': [
+            (0, 'virtual_xxxx', {'sequence': 1}),
+            (4, message2.id, False),
+            (1, message1.id, {'sequence': 3}),
+        ]})
+
+        # make sure the order of the lines is as expected
+        self.assertEqual(discussion1.messages.ids, discussion1.messages[0].ids + messages21.ids)
+
     def test_80_copy(self):
         Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
