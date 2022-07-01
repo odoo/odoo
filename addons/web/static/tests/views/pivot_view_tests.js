@@ -5383,4 +5383,164 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(getCurrentValues(target), values.join());
         }
     );
+
+    QUnit.test("pivot_row_groupby should be also used after first load", async function (assert) {
+        const ids = [1, 2];
+        const expectedContexts = [
+            {
+                group_by: ["bar"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["product_id"],
+            },
+            {
+                group_by: ["bar", "customer"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["customer"],
+            },
+        ];
+
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            searchViewArch: `
+                <search>
+                    <filter name='product_id' string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name='customer' string="Customer" context="{'group_by':'customer'}"/>
+                </search>
+            `,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "create_or_replace") {
+                    assert.deepEqual(args.args[0].context, expectedContexts.shift());
+                    return ids.shift();
+                }
+            },
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "No", "Yes"],
+            "The row headers should be as expected"
+        );
+
+        await click(target.querySelector("tbody th")); // click on row header "Total"
+        await click(target.querySelector("tbody th")); // click on row header "Total"
+        await click(target.querySelector("tbody .o_group_by_menu .o_menu_item")); // select "Product"
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Favorite");
+        await saveFavorite(target);
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await removeFacet(target);
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "No", "Yes"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(target);
+        await toggleMenuItem(target, "Favorite");
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Customer");
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "First", "xpad", "First", "Second"],
+            "The row headers should be as expected"
+        );
+
+        await click(target.querySelector("tbody th")); // click on row header "Total"
+        await click(target.querySelector("tbody th")); // click on row header "Total"
+        await click(target.querySelectorAll("tbody .o_group_by_menu .o_menu_item")[1]); // select "Customer"
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "Favorite 2");
+        await saveFavorite(target);
+
+        assert.deepEqual(
+            [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+    });
+
+    QUnit.test(
+        "pivot_row_groupby should be also used after first load (2)",
+        async function (assert) {
+            await makeView({
+                serverData,
+                type: "pivot",
+                resModel: "partner",
+                groupBy: ["product_id"],
+                arch: `<pivot/>`,
+                irFilters: [
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "Favorite",
+                        id: 1,
+                        context: `
+                            {
+                                "group_by": [],
+                                "pivot_row_groupby": ["customer"],
+                                "pivot_col_groupby": [],
+                                "pivot_measures": ["foo"],
+                            }
+                        `,
+                        sort: "[]",
+                        domain: "",
+                        is_default: false,
+                        model_id: "foo",
+                        action_id: false,
+                    },
+                ],
+            });
+
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "xphone", "xpad"],
+                "The row headers should be as expected"
+            );
+
+            await toggleFavoriteMenu(target);
+            await toggleMenuItem(target, "Favorite");
+
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "First", "Second"],
+                "The row headers should be as expected"
+            );
+        }
+    );
 });
