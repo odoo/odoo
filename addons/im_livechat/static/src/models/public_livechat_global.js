@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 import utils from 'web.utils';
 
@@ -43,6 +43,10 @@ registerModel({
         chatbotServerUrl: attr(),
         isAvailable: attr({
             default: false,
+        }),
+        notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
         }),
         options: attr({
             default: {},

@@ -27,7 +27,7 @@ LivechatButton.include({
             else {
                 session.rpc('/bus/test_mode_activated', {}).then(function (in_test_mode) {
                     if (in_test_mode) {
-                        self._handleNotification({
+                        self.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
                             type: 'mail.channel/new_message',
                             payload: {
                                 id: self.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id,
