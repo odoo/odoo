@@ -6,8 +6,8 @@ const tour = require('web_tour.tour');
 tour.register('generic_website_editor', {
     test: true,
 }, [{
-    trigger: 'a.o_frontend_to_backend_edit_btn',
-    content: 'Go to backend',
+    content: 'Click edit button',
+    trigger: '.o_edit_website_container > a',
 },
 {
     trigger: 'iframe body:not([data-hello="world"])',
@@ -19,8 +19,8 @@ tour.register('generic_website_editor', {
 tour.register('specific_website_editor', {
     test: true,
 }, [{
-    trigger: 'a.o_frontend_to_backend_edit_btn',
-    content: 'Go to backend',
+    content: 'Click edit button',
+    trigger: '.o_edit_website_container > a',
 },
 {
     trigger: 'iframe body[data-hello="world"]',
