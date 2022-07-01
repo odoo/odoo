@@ -4,27 +4,27 @@
     <t t-name="mail.ComposerSuggestion" owl="1">
         <t t-if="composerSuggestion">
             <a class="o_ComposerSuggestion dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': composerSuggestion.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="composerSuggestion.title" role="menuitem" t-on-click="composerSuggestion.onClick" t-ref="root">
-                <t t-if="composerSuggestion.cannedResponse">
-                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.source"/></strong>
-                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.record.substitution"/></em>
+                <t t-if="composerSuggestion.suggestable.cannedResponse">
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.suggestable.cannedResponse.source"/></strong>
+                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.suggestable.cannedResponse.substitution"/></em>
                 </t>
-                <t t-if="composerSuggestion.thread">
-                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.name"/></strong>
+                <t t-if="composerSuggestion.suggestable.thread">
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.suggestable.thread.name"/></strong>
                 </t>
-                <t t-if="composerSuggestion.channelCommand">
-                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.name"/></strong>
-                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.record.help"/></em>
+                <t t-if="composerSuggestion.suggestable.channelCommand">
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.suggestable.channelCommand.name"/></strong>
+                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.suggestable.channelCommand.help"/></em>
                 </t>
-                <t t-if="composerSuggestion.partner">
+                <t t-if="composerSuggestion.suggestable.partner">
                     <PersonaImStatusIcon
                         t-if="composerSuggestion.personaImStatusIconView"
                         className="'o_ComposerSuggestion_personaImStatusIcon flex-shrink-0 mr-1'"
                         hasBackground="false"
                         record="composerSuggestion.personaImStatusIconView"
                     />
-                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.nameOrDisplayName"/></strong>
-                    <t t-if="composerSuggestion.record.email">
-                        <em class="o_ComposerSuggestion_part2 text-600 text-truncate">(<t t-esc="composerSuggestion.record.email"/>)</em>
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.suggestable.partner.nameOrDisplayName"/></strong>
+                    <t t-if="composerSuggestion.suggestable.partner.email">
+                        <em class="o_ComposerSuggestion_part2 text-600 text-truncate">(<t t-esc="composerSuggestion.suggestable.partner.email"/>)</em>
                     </t>
                 </t>
             </a>

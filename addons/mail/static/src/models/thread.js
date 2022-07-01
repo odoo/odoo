@@ -2257,6 +2257,13 @@ registerModel({
         serverMessageUnreadCounter: attr({
             default: 0,
         }),
+        suggestable: one('ComposerSuggestable', {
+            default: insertAndReplace(),
+            inverse: 'thread',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         /**
          * Determines the `SuggestedRecipientInfo` concerning `this`.
          */

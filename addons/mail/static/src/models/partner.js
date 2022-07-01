@@ -451,6 +451,13 @@ registerModel({
         rtcSessions: many('RtcSession', {
             inverse: 'partner',
         }),
+        suggestable: one('ComposerSuggestable', {
+            default: insertAndReplace(),
+            inverse: 'partner',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         user: one('User', {
             inverse: 'partner',
         }),
