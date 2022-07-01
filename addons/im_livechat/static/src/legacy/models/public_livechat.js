@@ -39,7 +39,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.setParent(params.parent);
         this.messaging = messaging;
 
-        this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
         this._name = params.data.name;
         this._status = params.data.status || '';
@@ -129,9 +128,9 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         }
 
         if (_.isBoolean(params.data.folded)) {
-            this._folded = params.data.folded;
+            this.messaging.livechatButtonView.publicLivechat.update({ isFolded: params.data.folded });
         } else {
-            this._folded = params.data.state === 'folded';
+            this.messaging.livechatButtonView.publicLivechat.update({ isFolded: params.data.state === 'folded' });
         }
     },
 
@@ -153,7 +152,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {boolean} folded
      */
     fold(folded) {
-        this._folded = folded;
+        this.messaging.livechatButtonView.publicLivechat.update({ isFolded: folded });
     },
     /**
      * @override
@@ -302,7 +301,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
-            folded: this._folded,
+            folded: this.messaging.livechatButtonView.publicLivechat.isFolded,
             id: this._id,
             message_unread_counter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
             operator_pid: this._operatorPID,

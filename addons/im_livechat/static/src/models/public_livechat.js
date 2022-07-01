@@ -25,6 +25,9 @@ registerModel({
     },
     fields: {
         data: attr(),
+        isFolded: attr({
+            default: false,
+        }),
         legacyPublicLivechat: attr(),
         livechatButtonOwner: one('LivechatButtonView', {
             inverse: 'publicLivechat',
