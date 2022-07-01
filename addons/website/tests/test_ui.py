@@ -3,6 +3,8 @@
 
 import base64
 
+from werkzeug.urls import url_encode
+
 import odoo
 import odoo.tests
 
@@ -173,9 +175,9 @@ class TestUi(odoo.tests.HttpCase):
             'path': custom_url,
             'website_id': new_website.id,
         })
-
-        self.start_tour("/website/force/%s" % website_default.id, "generic_website_editor", login='admin')
-        self.start_tour("/website/force/%s" % new_website.id, "specific_website_editor", login='admin')
+        url_params = url_encode({'path': '/@/'})
+        self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login='admin')
+        self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login='admin')
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
