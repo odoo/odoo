@@ -501,12 +501,13 @@ class StockMove(models.Model):
 
     def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
         self.ensure_one()
-
+        valuation_partner_id = self._get_partner_id_for_valuation_lines()
         move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
         date = self._context.get('force_period_date', fields.Date.context_today(self))
         return {
             'journal_id': journal_id,
             'line_ids': move_ids,
+            'partner_id': valuation_partner_id,
             'date': date,
             'ref': description,
             'stock_move_id': self.id,
@@ -538,7 +539,6 @@ class StockMove(models.Model):
         if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
             # if the move isn't owned by the company, we don't make any valuation
             return am_vals
-
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
         company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 

@@ -54,7 +54,8 @@ class AccountMove(models.Model):
             if invoice.sudo().stock_valuation_layer_ids:
                 continue
             if invoice.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
-                valued_lines |= invoice.invoice_line_ids
+                valued_lines |= invoice.invoice_line_ids.filtered(
+                    lambda l: l.product_id and l.product_id.cost_method != 'standard')
         if valued_lines:
             stock_valuation_layers |= valued_lines._create_in_invoice_svl()
 
@@ -71,6 +72,12 @@ class AccountMove(models.Model):
 
         # Post entries.
         posted = super()._post(soft)
+
+        for layer in stock_valuation_layers:
+            description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}" 
+            layer.description = description
+            layer.account_move_id.ref = description
+            layer.account_move_id.line_ids.write({'name': description})
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         # We don't have currency loss or gain at this point. The invoice price with the daily
