@@ -86,7 +86,7 @@ class MailMail(models.Model):
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
     scheduled_date = fields.Char('Scheduled Send Date',
-        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
 
     def _compute_mail_message_id_int(self):
         for mail in self:
