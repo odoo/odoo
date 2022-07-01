@@ -1221,7 +1221,7 @@ class Request:
         :param basestring data: response body
         :param headers: HTTP headers to set on the response
         :type headers: ``[(name, value)]``
-        :param collections.Mapping cookies: cookies to set on the client
+        :param collections.abc.Mapping cookies: cookies to set on the client
         """
         response = Response(data, headers=headers)
         if cookies:
