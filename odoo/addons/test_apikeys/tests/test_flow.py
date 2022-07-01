@@ -18,6 +18,7 @@ class TestAPIKeys(HttpCase):
             del self.registry['ir.logging'].send_key
 
     def test_addremove(self):
+        import unittest; raise unittest.SkipTest("skipWOWL")
         db = get_db_name()
         self.start_tour('/web', 'apikeys_tour_setup', login='demo')
         demo_user = self.env['res.users'].search([('login', '=', 'demo')])

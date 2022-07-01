@@ -11,10 +11,6 @@ import { session as sessionInfo } from "@web/session";
 import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 import { config as transitionConfig } from "@web/core/transition";
 
-import { registry } from "@web/core/registry";
-import { formView } from "@web/views/form/form_view";
-import { listView } from "@web/views/list/list_view";
-
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
@@ -248,10 +244,6 @@ export async function setupTests() {
         patchLegacyCoreBus();
         patchOdoo();
         patchSessionInfo();
-
-        // WOWL: remove this once new form and list views are activated
-        registry.category("views").add("form", formView, { force: true });
-        registry.category("views").add("list", listView, { force: true });
     });
 
     const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;

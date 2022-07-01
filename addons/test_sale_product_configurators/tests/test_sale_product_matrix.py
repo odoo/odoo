@@ -31,6 +31,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.currency.action_unarchive()
 
     def test_sale_matrix_ui(self):
+        import unittest; raise unittest.SkipTest("skipWOWL")
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 

@@ -12,8 +12,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { isRelational } from "@web/views/utils";
-import { FormViewDialog } from "web.view_dialogs";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
 import { KanbanAnimatedNumber } from "./kanban_animated_number";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
@@ -357,45 +356,24 @@ export class KanbanRenderer extends Component {
             const context = { ...group.context };
             context[`default_${group.groupByField.name}`] = group.value;
             context.default_name = values.name || values.display_name;
-            // FIXME: since the new form view is not added to the registry yet, we
-            // can't use the new FormViewDialog, as it would instantiate the legacy
-            // form view. As a consequence, the control panel buttons would not be
-            // moved to the footer.
-            const adapterParent = standaloneAdapter({ Component });
-            const dialog = new FormViewDialog(adapterParent, {
-                res_model: this.props.list.resModel,
-                context,
-                title: this.env._t("Create"),
-                disable_multiple_selection: true,
-                on_saved: async (record) => {
-                    await group.load();
-                    this.props.list.quickCreate(group);
-                    this.props.list.model.notify();
-                },
-                // on_closed: () => {
-                //     this.props.list.quickCreate(group);
-                // },
-            });
-            dialog.open();
-            this.dialogClose.push(() => dialog.close());
-            // this.dialogClose.push(
-            //     this.dialog.add(
-            //         FormViewDialog,
-            //         {
-            //             resModel: this.props.list.resModel,
-            //             context,
-            //             title: this.env._t("Create"),
-            //             onRecordSaved: (record) => {
-            //                 group.addRecord(record, 0);
-            //             },
-            //         },
-            //         {
-            //             onClose: () => {
-            //                 this.props.list.quickCreate(group);
-            //             },
-            //         }
-            //     )
-            // );
+            this.dialogClose.push(
+                this.dialog.add(
+                    FormViewDialog,
+                    {
+                        resModel: this.props.list.resModel,
+                        context,
+                        title: this.env._t("Create"),
+                        onRecordSaved: (record) => {
+                            group.addRecord(record, 0);
+                        },
+                    },
+                    {
+                        onClose: () => {
+                            this.props.list.quickCreate(group);
+                        },
+                    }
+                )
+            );
         }
 
         if (record) {
@@ -416,36 +394,19 @@ export class KanbanRenderer extends Component {
     }
 
     editGroup(group) {
-        // FIXME: since the new form view is not added to the registry yet, we
-        // can't use the new FormViewDialog, as it would instantiate the legacy
-        // form view. As a consequence, the control panel buttons would not be
-        // moved to the footer.
-        const adapterParent = standaloneAdapter({ Component });
-        const dialog = new FormViewDialog(adapterParent, {
-            res_model: group.resModel,
-            res_id: group.value,
-            context: group.context,
-            title: sprintf(this.env._t("Edit: %s"), group.displayName),
-            on_saved: async () => {
-                await this.props.list.load();
-                this.props.list.model.notify();
-            },
-        });
-        dialog.open();
-        this.dialogClose.push(() => dialog.close());
-        // this.dialogClose.push(
-        //     this.dialog.add(FormViewDialog, {
-        //         context: group.context,
-        //         resId: group.value,
-        //         resModel: group.resModel,
-        //         title: sprintf(this.env._t("Edit: %s"), group.displayName),
+        this.dialogClose.push(
+            this.dialog.add(FormViewDialog, {
+                context: group.context,
+                resId: group.value,
+                resModel: group.resModel,
+                title: sprintf(this.env._t("Edit: %s"), group.displayName),
 
-        //         onRecordSaved: async () => {
-        //             await this.props.list.load();
-        //             this.props.list.model.notify();
-        //         },
-        //     })
-        // );
+                onRecordSaved: async () => {
+                    await this.props.list.load();
+                    this.props.list.model.notify();
+                },
+            })
+        );
     }
 
     archiveGroup(group) {

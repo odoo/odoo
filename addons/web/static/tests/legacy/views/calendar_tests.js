@@ -445,10 +445,10 @@ QUnit.module('LegacyViews', {
         testUtils.fields.editInput($('.modal-body input:first'), 'coucou');
         await testUtils.dom.click($('.modal-footer button.btn:contains(Edit)'));
 
-        assert.strictEqual($('.modal-lg .o_form_view').length, 1, "should open the slow create dialog");
+        assert.strictEqual($('.modal-lg .o_legacy_form_view').length, 1, "should open the slow create dialog");
         assert.strictEqual($('.modal-lg .modal-title').text(), "New Event",
             "should use the string attribute as modal title");
-        assert.strictEqual($('.modal-lg .o_form_view input[name="name"]').val(), "coucou",
+        assert.strictEqual($('.modal-lg .o_legacy_form_view input[name="name"]').val(), "coucou",
             "should have set the name from the quick create dialog");
 
         await testUtils.dom.click($('.modal-lg button.btn:contains(Save)'));
@@ -624,7 +624,7 @@ QUnit.module('LegacyViews', {
 
         assert.strictEqual($('.modal-lg .modal-title').text(), 'New Event',
             "should have switched to a bigger modal for an actual create rather than quickcreate");
-        assert.strictEqual($('.modal-lg main .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal-lg main .o_legacy_form_view.o_form_editable').length, 1,
             "should open the full event form view in a dialog");
 
         calendar.destroy();

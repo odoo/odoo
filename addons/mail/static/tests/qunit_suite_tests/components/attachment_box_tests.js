@@ -6,7 +6,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('attachment_box_tests.js');
 
-QUnit.test('base empty rendering', async function (assert) {
+QUnit.skipWOWL('base empty rendering', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -46,7 +46,7 @@ QUnit.test('base empty rendering', async function (assert) {
     );
 });
 
-QUnit.test('base non-empty rendering', async function (assert) {
+QUnit.skipWOWL('base non-empty rendering', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -100,7 +100,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
     );
 });
 
-QUnit.test('view attachments', async function (assert) {
+QUnit.skipWOWL('view attachments', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();
@@ -180,7 +180,7 @@ QUnit.test('view attachments', async function (assert) {
     );
 });
 
-QUnit.test('remove attachment should ask for confirmation', async function (assert) {
+QUnit.skipWOWL('remove attachment should ask for confirmation', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();

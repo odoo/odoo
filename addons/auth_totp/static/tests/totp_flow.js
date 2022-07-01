@@ -46,7 +46,7 @@ tour.register('totp_tour_setup', {
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "Confirm",

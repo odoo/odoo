@@ -80,7 +80,7 @@ QUnit.module('LunchListView', {
         };
     },
 }, function () {
-    QUnit.test('basic rendering', async function (assert) {
+    QUnit.skipWOWL('basic rendering', async function (assert) {
         assert.expect(9);
 
         const list = await createLunchView({

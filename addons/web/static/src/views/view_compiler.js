@@ -12,6 +12,7 @@ import { toStringExpression } from "./utils";
 /**
  * @typedef Compiler
  * @property {string} selector
+ * @property {string} [class]
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 

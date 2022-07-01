@@ -71,7 +71,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     );
 });
 
-QUnit.test('base rendering when chatter has no record', async function (assert) {
+QUnit.skipWOWL('base rendering when chatter has no record', async function (assert) {
     assert.expect(9);
 
     const { click, openView } = await start();
@@ -170,7 +170,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
     );
 });
 
-QUnit.test('show attachment box', async function (assert) {
+QUnit.skipWOWL('show attachment box', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -229,7 +229,7 @@ QUnit.test('show attachment box', async function (assert) {
     );
 });
 
-QUnit.test('chatter: drop attachments', async function (assert) {
+QUnit.skipWOWL('chatter: drop attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();

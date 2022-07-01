@@ -2372,12 +2372,12 @@ QUnit.module('Views', {
 
         await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_list_view');
+        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_legacy_list_view');
         assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
         await testUtils.dom.click($(target).find('.o_data_row .o_data_cell:first'));
         await legacyExtraNextTick();
-        assert.containsOnce(target, '.o_content .o_form_view');
+        assert.containsOnce(target, '.o_content .o_legacy_form_view');
         assert.containsNone(target, '.o_content .o_search_panel');
     });
 
@@ -2402,7 +2402,7 @@ QUnit.module('Views', {
 
         await switchView(webClient, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content .o_list_view');
+        assert.containsOnce(webClient, '.o_content .o_legacy_list_view');
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
         await switchView(webClient, 'pivot');
@@ -2537,7 +2537,7 @@ QUnit.module('Views', {
         // switch to list
         await switchView(webClient, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_list_view');
+        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_legacy_list_view');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
         assert.containsOnce(webClient, '.o_search_panel_filter_value input:checked');
         assert.containsN(webClient, '.o_data_row', 1);
@@ -2549,7 +2549,7 @@ QUnit.module('Views', {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 2);
 
-        await testUtils.dom.click($(target).find('.o_form_view button:contains("multi view")'));
+        await testUtils.dom.click($(target).find('.o_legacy_form_view button:contains("multi view")'));
         await legacyExtraNextTick();
 
         assert.containsOnce(target, '.o_legacy_kanban_view');
@@ -2566,7 +2566,7 @@ QUnit.module('Views', {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 2);
 
-        await testUtils.dom.click($(target).find('.o_form_view button:contains("multi view")'));
+        await testUtils.dom.click($(target).find('.o_legacy_form_view button:contains("multi view")'));
         await legacyExtraNextTick();
 
         assert.containsOnce(target, '.o_legacy_kanban_view');
@@ -2626,7 +2626,7 @@ QUnit.module('Views', {
         await scroll(50);
         await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(target, '.o_content .o_list_view');
+        assert.containsOnce(target, '.o_content .o_legacy_list_view');
         assert.strictEqual($(target).find('.o_search_panel').scrollTop(), 50);
 
         // simulate another scroll and switch back to kanban
@@ -2672,7 +2672,7 @@ QUnit.module('Views', {
         await testUtils.fields.many2one.clickOpenDropdown('company_id');
         await testUtils.fields.many2one.clickItem('company_id', 'Search More');
 
-        assert.containsOnce(document.body, '.modal .o_list_view');
+        assert.containsOnce(document.body, '.modal .o_legacy_list_view');
         assert.containsNone(document.body, '.modal .o_search_panel');
 
         form.destroy();

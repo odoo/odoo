@@ -39,4 +39,5 @@ class TestTourRenderInvoiceReport(AccountTestInvoicingHttpCommon):
         cls.env.ref('account.account_invoices_without_payment').report_type = 'qweb-html'
 
     def test_render_account_document_layout(self):
+        import unittest; raise unittest.SkipTest("skipWOWL")
         self.start_tour('/web', 'account_render_report', login=self.env.user.login, timeout=200)

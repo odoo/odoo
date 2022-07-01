@@ -303,6 +303,7 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.components = { FieldAdapter };
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
     if (!fieldRegistry.contains(name)) {
+        console.log(`Fields: using legacy ${name} FieldWidget`);
         fieldRegistry.add(name, LegacyField);
     }
 }

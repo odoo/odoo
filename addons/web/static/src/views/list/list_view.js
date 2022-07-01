@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-// import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
 import { RelationalModel } from "../relational_model";
 import { ListArchParser } from "./list_arch_parser";
 import { ListController } from "./list_controller";
@@ -32,4 +32,4 @@ export const listView = {
     },
 };
 
-// registry.category("views").add("list", listView);
+registry.category("views").add("list", listView);

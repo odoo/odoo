@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 (function () {
     "use strict";
 
@@ -353,6 +355,11 @@
         QUnit.config.testId = [debugTestId];
         setQUnitDebugMode();
     }
+
+    const skip = QUnit.skip;
+    QUnit.skipWOWL = (name, cb) => {
+        skip(name, cb);
+    };
 
     // Override global UnhandledRejection that is assigned wayyy before this file
     // Do not really crash on non-errors rejections

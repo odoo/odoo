@@ -205,7 +205,7 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
     ]);
 });
 
-QUnit.test('activity view: activity widget', async function (assert) {
+QUnit.skipWOWL('activity view: activity widget', async function (assert) {
     assert.expect(16);
 
     const mailActivityTypeIds = pyEnv['mail.activity.type'].search([]);

@@ -36,7 +36,7 @@
 }
 $o-form-label-margin-right: 0px;
 
-.o_form_view {
+.o_legacy_form_view {
     background-color: $o-view-background-color;
 
     // Utility classes
@@ -893,7 +893,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // One2Many List views
-    .o_field_widget .o_list_view {
+    .o_field_widget .o_legacy_list_view {
         margin-bottom: 10px;
 
         > tfoot > tr > td {
@@ -901,10 +901,10 @@ $o-form-label-margin-right: 0px;
             color: $o-main-text-color;
         }
     }
-    &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
+    &.o_form_readonly .o_field_widget .o_legacy_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
-    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+    .o_field_widget.o_readonly_modifier .o_legacy_list_view .o_row_handle {
         display: none;  // Hide the handler on readonly fields
     }
 
@@ -935,7 +935,7 @@ $o-form-label-margin-right: 0px;
 
 // Overridden style when form view in modal
 .modal .modal-dialog {
-    .o_form_view {
+    .o_legacy_form_view {
         .o_statusbar_buttons > .btn {
             /**
              * Override to prevent the status bar from increasing height when
@@ -978,7 +978,7 @@ $o-form-label-margin-right: 0px;
             }
         }
     }
-    &:not(.modal-lg) .o_form_view {
+    &:not(.modal-lg) .o_legacy_form_view {
         .o_group {
             width: 100%;
         }
@@ -1048,7 +1048,7 @@ $o-form-label-margin-right: 0px;
         }
     }
 }
-.o_form_view.o_xxs_form_view {
+.o_legacy_form_view.o_xxs_form_view {
     .oe_title {
         word-break: break-all;
     }

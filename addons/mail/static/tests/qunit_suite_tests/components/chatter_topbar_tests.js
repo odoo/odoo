@@ -62,7 +62,7 @@ QUnit.test('base rendering', async function (assert) {
     );
 });
 
-QUnit.test('base disabled rendering', async function (assert) {
+QUnit.skipWOWL('base disabled rendering', async function (assert) {
     assert.expect(8);
 
     const { openView } = await start();
@@ -152,7 +152,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
     );
 });
 
-QUnit.test('attachment counter while loading attachments', async function (assert) {
+QUnit.skipWOWL('attachment counter while loading attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -192,7 +192,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     );
 });
 
-QUnit.test('attachment counter transition when attachments become loaded)', async function (assert) {
+QUnit.skipWOWL('attachment counter transition when attachments become loaded)', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();

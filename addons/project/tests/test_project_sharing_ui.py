@@ -39,6 +39,7 @@ class TestProjectSharingUi(HttpCase):
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
+        import unittest; raise unittest.SkipTest("skipWOWL")
         self.start_tour("/web", 'project_sharing_tour', login="admin")
 
     def test_02_project_sharing(self):
@@ -49,6 +50,7 @@ class TestProjectSharingUi(HttpCase):
             Since a problem to logout Mitchell Admin to log in as Georges user, this test is created
             to launch a tour with portal user.
         """
+        import unittest; raise unittest.SkipTest("skipWOWL")
         project_share_wizard = self.env['project.share.wizard'].create({
             'access_mode': 'edit',
             'res_model': 'project.project',

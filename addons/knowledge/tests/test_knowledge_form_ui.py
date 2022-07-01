@@ -14,6 +14,7 @@ class TestKnowledgeUI(HttpCase):
         cls.env['knowledge.article'].search([]).unlink()
 
     def test_knowledge_main_flow(self):
+        import unittest; raise unittest.SkipTest("skipWOWL")
         # as the knowledge.article#_resequence method is based on write date
         # force the write_date to be correctly computed
         # otherwise it always returns the same value as we are in a single transaction

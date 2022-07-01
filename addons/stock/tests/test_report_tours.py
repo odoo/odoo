@@ -11,6 +11,7 @@ class TestStockReportTour(HttpCase):
 
     def test_stock_route_diagram_report(self):
         """ Open the route diagram report."""
+        import unittest; raise unittest.SkipTest("skipWOWL")
         url = self._get_report_url()
 
         self.start_tour(url, 'test_stock_route_diagram_report', login='admin', timeout=180)

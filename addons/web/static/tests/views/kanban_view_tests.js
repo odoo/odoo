@@ -2665,20 +2665,16 @@ QUnit.module("Views", (hooks) => {
 
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
         // specify a name and save
-        await editInput(target, ".modal .o_field_widget[name=foo]", "test");
-        await click(target, ".modal .modal-footer .btn-primary");
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "test");
+        await click(target, ".modal .o_form_button_save");
         assert.containsNone(target, ".modal");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
-        // FIXME: the new record should normally be the first one, but this behavior is temporarily
-        // broken, until we activate the new owl form view
-        const lastRecord = target.querySelectorAll(".o_kanban_group .o_kanban_record")[2];
-        assert.strictEqual(lastRecord.innerText, "test");
-        // const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
-        // assert.strictEqual(firstRecord.innerText, "test");
+        const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
+        assert.strictEqual(firstRecord.innerText, "test");
         assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
     });
 
@@ -2724,9 +2720,9 @@ QUnit.module("Views", (hooks) => {
 
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
 
-        await click(target.querySelector(".modal .modal-footer .btn-secondary"));
+        await click(target.querySelector(".modal .o_form_button_cancel"));
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
@@ -2780,9 +2776,12 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
-        assert.strictEqual(target.querySelector(".modal .o_field_widget[name=foo]").value, "blip");
-        await click(target, ".modal .modal-footer .btn-primary");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=foo] input").value,
+            "blip"
+        );
+        await click(target, ".modal .o_form_button_save");
 
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
@@ -2836,13 +2835,13 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name=state]").value,
+            target.querySelector(".modal .o_field_widget[name=state] select").value,
             '"abc"'
         );
 
-        await click(target, ".modal .modal-footer .btn-primary");
+        await click(target, ".modal .o_form_button_save");
 
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
@@ -4965,7 +4964,7 @@ QUnit.module("Views", (hooks) => {
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(target, ".modal .modal-footer .btn-primary"); // click on save
+        await click(target, ".modal .o_form_button_save"); // click on save
 
         assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(

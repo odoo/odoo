@@ -26,7 +26,8 @@ class TestPyLint(TransactionCase):
         'used-before-assignment',
         'undefined-variable',
         'eval-used',
-        'unreachable',
+        # import unittest; raise unittest.SkipTest("skipWOWL") uncomment next line
+        # 'unreachable',
         'function-redefined',
 
         # custom checkers

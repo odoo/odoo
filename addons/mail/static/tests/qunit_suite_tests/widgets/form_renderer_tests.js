@@ -264,7 +264,7 @@ QUnit.test('basic chatter rendering', async function (assert) {
     );
 });
 
-QUnit.test('basic chatter rendering without followers', async function (assert) {
+QUnit.skipWOWL('basic chatter rendering without followers', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -321,7 +321,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
     );
 });
 
-QUnit.test('basic chatter rendering without activities', async function (assert) {
+QUnit.skipWOWL('basic chatter rendering without activities', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -378,7 +378,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
     );
 });
 
-QUnit.test('basic chatter rendering without messages', async function (assert) {
+QUnit.skipWOWL('basic chatter rendering without messages', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -488,7 +488,7 @@ QUnit.test('chatter updating', async function (assert) {
     );
 });
 
-QUnit.test('chatter should become enabled when creation done', async function (assert) {
+QUnit.skipWOWL('chatter should become enabled when creation done', async function (assert) {
     assert.expect(10);
 
     const views = {
@@ -823,7 +823,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     );
 });
 
-QUnit.test('Attachments that have been unlinked from server should be visually unlinked from record', async function (assert) {
+QUnit.skipWOWL('Attachments that have been unlinked from server should be visually unlinked from record', async function (assert) {
     // Attachments that have been fetched from a record at certain time and then
     // removed from the server should be reflected on the UI when the current
     // partner accesses this record again.
@@ -890,7 +890,7 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
     );
 });
 
-QUnit.test('chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record', async function (assert) {
+QUnit.skipWOWL('chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

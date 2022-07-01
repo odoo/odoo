@@ -18,7 +18,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('chat_window_manager_tests.js');
 
-QUnit.test('[technical] messaging not created', async function (assert) {
+QUnit.skipWOWL('[technical] messaging not created', async function (assert) {
     /**
      * Creation of messaging in env is async due to generation of models being
      * async. Generation of models is async because it requires parsing of all
@@ -45,7 +45,7 @@ QUnit.test('[technical] messaging not created', async function (assert) {
     );
 });
 
-QUnit.test('initial mount', async function (assert) {
+QUnit.skipWOWL('initial mount', async function (assert) {
     assert.expect(1);
 
     await start();
@@ -56,7 +56,7 @@ QUnit.test('initial mount', async function (assert) {
     );
 });
 
-QUnit.test('chat window new message: basic rendering', async function (assert) {
+QUnit.skipWOWL('chat window new message: basic rendering', async function (assert) {
     assert.expect(10);
 
     const { click } = await start();
@@ -114,7 +114,7 @@ QUnit.test('chat window new message: basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async function (assert) {
+QUnit.skipWOWL('chat window new message: focused on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(2);
 
     const { click } = await start();
@@ -131,7 +131,7 @@ QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async fun
     );
 });
 
-QUnit.test('chat window new message: close', async function (assert) {
+QUnit.skipWOWL('chat window new message: close', async function (assert) {
     assert.expect(1);
 
     const { click } = await start();
@@ -145,7 +145,7 @@ QUnit.test('chat window new message: close', async function (assert) {
     );
 });
 
-QUnit.test('chat window new message: fold', async function (assert) {
+QUnit.skipWOWL('chat window new message: fold', async function (assert) {
     assert.expect(6);
 
     const { click } = await start();
@@ -187,7 +187,7 @@ QUnit.test('chat window new message: fold', async function (assert) {
     );
 });
 
-QUnit.test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
+QUnit.skipWOWL('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
@@ -323,7 +323,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 });
 
-QUnit.test('new message chat window should close on selecting the user if chat with the user is already open', async function (assert) {
+QUnit.skipWOWL('new message chat window should close on selecting the user if chat with the user is already open', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -376,7 +376,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
     );
 });
 
-QUnit.test('new message autocomplete should automatically select first result', async function (assert) {
+QUnit.skipWOWL('new message autocomplete should automatically select first result', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -413,7 +413,7 @@ QUnit.test('new message autocomplete should automatically select first result', 
     );
 });
 
-QUnit.test('chat window: basic rendering', async function (assert) {
+QUnit.skipWOWL('chat window: basic rendering', async function (assert) {
     assert.expect(14);
 
     const pyEnv = await startServer();
@@ -498,7 +498,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('chat window: fold', async function (assert) {
+QUnit.skipWOWL('chat window: fold', async function (assert) {
     assert.expect(9);
 
     const pyEnv = await startServer();
@@ -548,7 +548,7 @@ QUnit.test('chat window: fold', async function (assert) {
     );
 });
 
-QUnit.test('chat window: open / close', async function (assert) {
+QUnit.skipWOWL('chat window: open / close', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
@@ -603,7 +603,7 @@ QUnit.test('chat window: open / close', async function (assert) {
     );
 });
 
-QUnit.test('Mobile: opening a chat window should not update channel state on the server', async function (assert) {
+QUnit.skipWOWL('Mobile: opening a chat window should not update channel state on the server', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -632,7 +632,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
     );
 });
 
-QUnit.test('Mobile: closing a chat window should not update channel state on the server', async function (assert) {
+QUnit.skipWOWL('Mobile: closing a chat window should not update channel state on the server', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -668,7 +668,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
     );
 });
 
-QUnit.test("Mobile: chat window shouldn't open automatically after receiving a new message", async function (assert) {
+QUnit.skipWOWL("Mobile: chat window shouldn't open automatically after receiving a new message", async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -707,7 +707,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
     );
 });
 
-QUnit.test('chat window: close on ESCAPE', async function (assert) {
+QUnit.skipWOWL('chat window: close on ESCAPE', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
@@ -789,7 +789,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.verifySteps(['rpc:channel_fold/closed']);
 });
 
-QUnit.test('focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]', async function (assert) {
+QUnit.skipWOWL('focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
@@ -856,7 +856,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
     );
 });
 
-QUnit.test('chat window: composer state conservation on toggle discuss', async function (assert) {
+QUnit.skipWOWL('chat window: composer state conservation on toggle discuss', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -923,7 +923,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
 });
 
-QUnit.test('chat window: scroll conservation on toggle discuss', async function (assert) {
+QUnit.skipWOWL('chat window: scroll conservation on toggle discuss', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -995,7 +995,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
     );
 });
 
-QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]', async function (assert) {
+QUnit.skipWOWL('open 2 different chat windows: enough screen width [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
@@ -1117,7 +1117,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     );
 });
 
-QUnit.test('open 3 different chat windows: not enough screen width', async function (assert) {
+QUnit.skipWOWL('open 3 different chat windows: not enough screen width', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
@@ -1260,7 +1260,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     );
 });
 
-QUnit.test('chat window: switch on TAB', async function (assert) {
+QUnit.skipWOWL('chat window: switch on TAB', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
@@ -1348,7 +1348,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 });
 
-QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', async function (assert) {
+QUnit.skipWOWL('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', async function (assert) {
     /**
      * InnerWith computation uses following info:
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
@@ -1457,7 +1457,7 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
     );
 });
 
-QUnit.test('chat window with a thread: keep scroll position in message list on folded', async function (assert) {
+QUnit.skipWOWL('chat window with a thread: keep scroll position in message list on folded', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -1536,7 +1536,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     );
 });
 
-QUnit.test('chat window should scroll to the newly posted message just after posting it', async function (assert) {
+QUnit.skipWOWL('chat window should scroll to the newly posted message just after posting it', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -1575,7 +1575,7 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
     );
 });
 
-QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" keyboard shortcut for small screen size', async function (assert) {
+QUnit.skipWOWL('chat window: post message on non-mailing channel with "CTRL-Enter" keyboard shortcut for small screen size', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -1605,7 +1605,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     );
 });
 
-QUnit.test('chat window with a thread: keep scroll position in message list on toggle discuss when folded', async function (assert) {
+QUnit.skipWOWL('chat window with a thread: keep scroll position in message list on toggle discuss when folded', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -1678,7 +1678,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     );
 });
 
-QUnit.test('chat window does not fetch messages if hidden', async function (assert) {
+QUnit.skipWOWL('chat window does not fetch messages if hidden', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
@@ -1796,7 +1796,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
 });
 
-QUnit.test('new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation', async function (assert) {
+QUnit.skipWOWL('new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -1850,7 +1850,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     );
 });
 
-QUnit.test('new message separator is not shown in a chat window of a chat on receiving new message if there is no history of conversation', async function (assert) {
+QUnit.skipWOWL('new message separator is not shown in a chat window of a chat on receiving new message if there is no history of conversation', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -1884,7 +1884,7 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
     );
 });
 
-QUnit.test('focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]', async function (assert) {
+QUnit.skipWOWL('focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -1944,7 +1944,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
-QUnit.test('chat window should open when receiving a new DM', async function (assert) {
+QUnit.skipWOWL('chat window should open when receiving a new DM', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -1981,7 +1981,7 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
     );
 });
 
-QUnit.test('chat window should remain folded when new message is received', async function (assert) {
+QUnit.skipWOWL('chat window should remain folded when new message is received', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -2022,7 +2022,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
-QUnit.test('should not have chat window hidden menu in mobile (transition from 2 chat windows in desktop to mobile)', async function (assert) {
+QUnit.skipWOWL('should not have chat window hidden menu in mobile (transition from 2 chat windows in desktop to mobile)', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
