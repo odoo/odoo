@@ -6,6 +6,7 @@ import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphController } from "./graph_controller";
 import { GraphRenderer } from "./graph_renderer";
+import { GraphSearchModel } from "./graph_search_model";
 
 const viewRegistry = registry.category("views");
 
@@ -18,6 +19,7 @@ export const graphView = {
     Renderer: GraphRenderer,
     Model: GraphModel,
     ArchParser: GraphArchParser,
+    SearchModel: GraphSearchModel,
     searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
     buttonTemplate: "web.GraphView.Buttons",
 
