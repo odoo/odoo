@@ -162,6 +162,7 @@
         'web.assets_qweb': [
             'mail/static/src/xml/*.xml',
             'mail/static/src/components/*/*.xml',
+            'mail/static/src/widgets/*/*.xml',
         ],
     },
     'license': 'LGPL-3',
