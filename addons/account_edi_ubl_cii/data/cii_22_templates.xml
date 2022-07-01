@@ -22,7 +22,11 @@
                         <ram:SellerAssignedID
                             t-if="line.product_id and line.product_id.default_code"
                             t-out="line.product_id.default_code"/>
-                        <ram:Name t-out="line.name"/>
+                        <!-- TODO:
+                        <ram:Name t-esc="line.product_id.name or line.name"/>
+                        <ram:Description t-esc="line.name" t-if="line.name != line.product_id.name"/>
+                        -->
+                        <ram:Name t-esc="line.name"/>
                     </ram:SpecifiedTradeProduct>
 
                     <!-- Amounts. -->
