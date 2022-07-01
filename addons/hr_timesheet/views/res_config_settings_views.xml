@@ -7,9 +7,6 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="groups_id" eval="[(4, ref('hr_timesheet.group_timesheet_manager'), 0)]"/>
         <field name="arch" type="xml">
-            <xpath expr="//form" position="attributes">
-                <attribute name="js_class">hr_timesheet_config_form</attribute>
-            </xpath>
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Timesheets" string="Timesheets" data-key="hr_timesheet" groups="hr_timesheet.group_timesheet_manager" id="timesheets">
                     <h2>Time Encoding</h2>
@@ -61,10 +58,10 @@
                                             </a>
                                         </div>
                                         <div class="col-lg-3 pe-0">
-                                            <img alt="Apple App Store" class="img img-fluid o_config_app_store mt-1" style="height: 85% !important; cursor: pointer;" src="project/static/src/img/app_store.png"/>
+                                            <widget name="hr_timesheet.app_store_widget" type="apple"/>
                                         </div>
                                         <div class="col-lg-3 pe-0">
-                                            <img alt="Google Play Store" class="img img-fluid o_config_play_store mt-1" style="height: 85% !important; cursor: pointer;" src="project/static/src/img/play_store.png"/>
+                                            <widget name="hr_timesheet.app_store_widget" type="google"/>
                                         </div>
                                     </div>
                                 </div>
