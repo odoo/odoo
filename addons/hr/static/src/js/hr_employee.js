@@ -9,11 +9,6 @@ odoo.define('hr.employee_chat', function (require) {
     const ListController = require('web.ListController');
     const ListView = require('web.ListView');
 
-    var KanbanController = require('web.KanbanController');
-    var KanbanView = require('web.KanbanView');
-    var KanbanRenderer = require('web.KanbanRenderer');
-    var KanbanRecord = require('web.KanbanRecord');
-
     const ChatMixin = require('hr.chat_mixin');
 
 
@@ -138,22 +133,4 @@ odoo.define('hr.employee_chat', function (require) {
     })
 
     viewRegistry.add('hr_employee_list', EmployeeListView);
-
-    // USAGE OF CHAT MIXIN IN KANBAN VIEWS
-    var EmployeeKanbanRecord = KanbanRecord.extend(ChatMixin);
-
-    var EmployeeKanbanRenderer = KanbanRenderer.extend({
-        config: Object.assign({}, KanbanRenderer.prototype.config, {
-            KanbanRecord: EmployeeKanbanRecord,
-        }),
-    });
-
-    var EmployeeKanbanView = KanbanView.extend({
-        config: _.extend({}, KanbanView.prototype.config, {
-            Controller: KanbanController,
-            Renderer: EmployeeKanbanRenderer
-        }),
-    });
-
-    viewRegistry.add('hr_employee_kanban', EmployeeKanbanView);
 });

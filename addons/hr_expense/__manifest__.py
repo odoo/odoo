@@ -52,6 +52,8 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'hr_expense/static/src/mixins/*.js',
+            'hr_expense/static/src/views/*.js',
             'hr_expense/static/src/js/expense_views.js',
             'hr_expense/static/src/js/expense_form_view.js',
             'hr_expense/static/src/js/expense_qr_code_action.js',
@@ -63,6 +65,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
             'hr_expense/static/tests/tours/expense_upload_tours.js',
         ],
         'web.assets_qweb': [
+            'hr_expense/static/src/views/*.xml',
             'hr_expense/static/src/xml/**/*',
         ],
     },
