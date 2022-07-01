@@ -607,8 +607,14 @@ var KanbanActivity = BasicActivity.extend({
     /**
      * @private
      */
-    _reload: function () {
-        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
+    _reload: async function () {
+        const messaging = await owl.Component.env.services.messaging.get();
+        const chatter = messaging.models['Chatter'].all()[0];
+        if (chatter) {
+            chatter.reloadParentView();
+        } else {
+            this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
+        }
     },
     /**
      * @override
