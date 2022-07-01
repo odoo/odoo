@@ -10,7 +10,7 @@ import { ViewAdapter } from "@web/legacy/action_adapters";
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter');
 
-QUnit.skipWOWL('list activity widget with no activity', async function (assert) {
+QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -40,7 +40,7 @@ QUnit.skipWOWL('list activity widget with no activity', async function (assert) 
     assert.verifySteps(['/web/dataset/search_read']);
 });
 
-QUnit.skipWOWL('list activity widget with activities', async function (assert) {
+QUnit.test('list activity widget with activities', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -93,7 +93,7 @@ QUnit.skipWOWL('list activity widget with activities', async function (assert) {
     assert.verifySteps(['/web/dataset/search_read']);
 });
 
-QUnit.skipWOWL('list activity widget with exception', async function (assert) {
+QUnit.test('list activity widget with exception', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -133,7 +133,7 @@ QUnit.skipWOWL('list activity widget with exception', async function (assert) {
     assert.verifySteps(['/web/dataset/search_read']);
 });
 
-QUnit.skipWOWL('list activity widget: open dropdown', async function (assert) {
+QUnit.test('list activity widget: open dropdown', async function (assert) {
     assert.expect(9);
 
     const pyEnv = await startServer();
@@ -232,7 +232,7 @@ QUnit.skipWOWL('list activity widget: open dropdown', async function (assert) {
     ]);
 });
 
-QUnit.skipWOWL('list activity exception widget with activity', async function (assert) {
+QUnit.test('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();

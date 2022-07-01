@@ -9,7 +9,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('channel_member_list_tests.js');
 
-QUnit.skipWOWL('there should be a button to show member list in the thread view topbar initially', async function (assert) {
+QUnit.test('there should be a button to show member list in the thread view topbar initially', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -37,7 +37,7 @@ QUnit.skipWOWL('there should be a button to show member list in the thread view 
     );
 });
 
-QUnit.skipWOWL('should show member list when clicking on show member list button in thread view topbar', async function (assert) {
+QUnit.test('should show member list when clicking on show member list button in thread view topbar', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -66,7 +66,7 @@ QUnit.skipWOWL('should show member list when clicking on show member list button
     );
 });
 
-QUnit.skipWOWL('should have correct members in member list', async function (assert) {
+QUnit.test('should have correct members in member list', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -110,7 +110,7 @@ QUnit.skipWOWL('should have correct members in member list', async function (ass
     );
 });
 
-QUnit.skipWOWL('there should be a button to hide member list in the thread view topbar when the member list is visible', async function (assert) {
+QUnit.test('there should be a button to hide member list in the thread view topbar when the member list is visible', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -139,7 +139,7 @@ QUnit.skipWOWL('there should be a button to hide member list in the thread view 
     );
 });
 
-QUnit.skipWOWL('should show a button to load more members if they are not all loaded', async function (assert) {
+QUnit.test('should show a button to load more members if they are not all loaded', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -170,7 +170,7 @@ QUnit.skipWOWL('should show a button to load more members if they are not all lo
 });
 
 
-QUnit.skipWOWL('Load more button should load more members', async function (assert) {
+QUnit.test('Load more button should load more members', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();

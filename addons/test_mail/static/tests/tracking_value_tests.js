@@ -56,7 +56,7 @@ QUnit.module('tracking_value_tests.js', {
     },
 });
 
-QUnit.skipWOWL('basic rendering of tracking value (float type)', async function (assert) {
+QUnit.test('basic rendering of tracking value (float type)', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -107,7 +107,7 @@ QUnit.skipWOWL('basic rendering of tracking value (float type)', async function 
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
+QUnit.test('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -123,7 +123,7 @@ QUnit.skipWOWL('rendering of tracked field of type float: from non-0 to 0', asyn
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
+QUnit.test('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -139,7 +139,7 @@ QUnit.skipWOWL('rendering of tracked field of type float: from 0 to non-0', asyn
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
+QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -155,7 +155,7 @@ QUnit.skipWOWL('rendering of tracked field of type integer: from non-0 to 0', as
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
+QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -171,7 +171,7 @@ QUnit.skipWOWL('rendering of tracked field of type integer: from 0 to non-0', as
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
+QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -187,7 +187,7 @@ QUnit.skipWOWL('rendering of tracked field of type monetary: from non-0 to 0', a
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
+QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -235,7 +235,7 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type char: from a string to empty string', async function (assert) {
+QUnit.test('rendering of tracked field of type char: from a string to empty string', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -251,7 +251,7 @@ QUnit.skipWOWL('rendering of tracked field of type char: from a string to empty 
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type char: from empty string to a string', async function (assert) {
+QUnit.test('rendering of tracked field of type char: from empty string to a string', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -267,7 +267,7 @@ QUnit.skipWOWL('rendering of tracked field of type char: from empty string to a 
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type date: from no date to a set date', async function (assert) {
+QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -283,7 +283,7 @@ QUnit.skipWOWL('rendering of tracked field of type date: from no date to a set d
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type date: from a set date to no date', async function (assert) {
+QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -299,7 +299,7 @@ QUnit.skipWOWL('rendering of tracked field of type date: from a set date to no d
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
+QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -315,7 +315,7 @@ QUnit.skipWOWL('rendering of tracked field of type datetime: from no date and ti
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
+QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -331,7 +331,7 @@ QUnit.skipWOWL('rendering of tracked field of type datetime: from a set date and
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type text: from some text to empty', async function (assert) {
+QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -347,7 +347,7 @@ QUnit.skipWOWL('rendering of tracked field of type text: from some text to empty
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type text: from empty to some text', async function (assert) {
+QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -363,7 +363,7 @@ QUnit.skipWOWL('rendering of tracked field of type text: from empty to some text
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
+QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -379,7 +379,7 @@ QUnit.skipWOWL('rendering of tracked field of type selection: from a selection t
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
+QUnit.test('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -395,7 +395,7 @@ QUnit.skipWOWL('rendering of tracked field of type selection: from no selection 
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
+QUnit.test('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -412,7 +412,7 @@ QUnit.skipWOWL('rendering of tracked field of type many2one: from having a relat
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
+QUnit.test('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();

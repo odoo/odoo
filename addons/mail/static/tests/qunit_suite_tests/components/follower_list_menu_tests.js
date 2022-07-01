@@ -12,7 +12,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_list_menu_tests.js');
 
-QUnit.skipWOWL('base rendering not editable', async function (assert) {
+QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
     const { openView } = await start();
