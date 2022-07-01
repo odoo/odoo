@@ -2083,19 +2083,19 @@ QUnit.module("Views", (hooks) => {
                 graph_mode: "bar",
                 graph_measure: "__count",
                 graph_groupbys: ["product_id"],
-                group_by: [],
+                group_by: ["product_id"],
             },
             {
                 graph_mode: "bar",
                 graph_measure: "foo",
                 graph_groupbys: ["product_id"],
-                group_by: [],
+                group_by: ["product_id"],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
                 graph_groupbys: ["product_id"],
-                group_by: [],
+                group_by: ["product_id"],
             },
             {
                 graph_mode: "line",
@@ -3597,5 +3597,66 @@ QUnit.module("Views", (hooks) => {
             },
         });
         checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
-    })
+    });
+
+    QUnit.test("graph_groupbys should be also used after first load", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:quarter"],
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "Favorite (legacy)",
+                    id: 1,
+                    context: `{
+                        "group_by": [],
+                        "graph_measure": "revenue",
+                        "graph_mode": "line",
+                        "graph_groupbys": ["bar"],
+                    }`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "foo",
+                    action_id: false,
+                },
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "Favorite",
+                    id: 2,
+                    context: `{
+                        "group_by": ["color_id"],
+                        "graph_measure": "revenue",
+                        "graph_mode": "bar",
+                        "graph_groupbys": ["color_id"],
+                    }`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+        });
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
+        checkLegend(assert, graph, "Count");
+
+        await toggleFavoriteMenu(graph);
+        await toggleMenuItem(graph, "Favorite (legacy)");
+
+        checkModeIs(assert, graph, "line");
+        checkLabels(assert, graph, ["true", "false"]);
+        checkLegend(assert, graph, "Revenue");
+
+        await toggleMenuItem(graph, "Favorite");
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLegend(assert, graph, "Revenue");
+    });
 });
