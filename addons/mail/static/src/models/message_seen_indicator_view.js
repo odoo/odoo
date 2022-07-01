@@ -13,10 +13,10 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessageSeenIndicator() {
-            if (this.messageViewOwner.messageListViewOwner && this.messageViewOwner.messageListViewOwner.threadViewOwner.thread) {
+            if (this.messageViewOwner.messageListViewMessageViewItemOwner && this.messageViewOwner.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread) {
                 return insertAndReplace({
                     message: replace(this.messageViewOwner.message),
-                    thread: replace(this.messageViewOwner.messageListViewOwner.threadViewOwner.thread),
+                    thread: replace(this.messageViewOwner.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread),
                 });
             }
             return clear();
