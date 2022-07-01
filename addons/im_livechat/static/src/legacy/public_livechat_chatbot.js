@@ -60,7 +60,6 @@ const QWeb = core.qweb;
             if (sessionCookie) {
                 this.messaging.livechatButtonView.update({ sessionCookie });
                 if (localStorage.getItem(this.messaging.livechatButtonView.sessionCookieKey)) {
-                    this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.messaging.livechatButtonView.update({ chatbotState: 'restore_session' });
                 }
             }
