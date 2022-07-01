@@ -62,25 +62,16 @@ function insert(editor, data, {mode = "text"}) {
     }
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
-    let currentNode;
+    let startNode;
     let insertBefore = false;
     if (selection.isCollapsed) {
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !range.startOffset;
             splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
-            currentNode = range.startContainer;
+            startNode = range.startContainer;
         }
     } else {
         editor.deleteRange(selection);
-    }
-    currentNode = currentNode || editor.document.getSelection().anchorNode;
-    if (currentNode.nodeType === Node.ELEMENT_NODE) {
-        if (selection.anchorOffset === 0) {
-            currentNode.prepend(editor.document.createTextNode(''));
-            currentNode = currentNode.firstChild;
-        } else {
-            currentNode = currentNode.childNodes[selection.anchorOffset - 1];
-        }
     }
 
     const container = document.createElement('fake-element');
@@ -117,41 +108,38 @@ function insert(editor, data, {mode = "text"}) {
         }
     }
 
-    // if we have isolated block content,
-    // first we split the current focus element if it's a block
-    // then we insert the content in the right places
-    let lastChildNode = false;
-    if (containerLastChild.hasChildNodes()) {
-        let tempCurrentNode = currentNode;
-        const children = [...containerLastChild.childNodes];
-        if (insertBefore) {
-            children.reverse();
-        }
-        for (const child of children) {
-            tempCurrentNode[insertBefore ? 'before' : 'after'](child);
-            tempCurrentNode = child;
-        }
-        if (insertBefore) {
-            currentNode = tempCurrentNode;
-            lastChildNode = children[0];
+    startNode = startNode || editor.document.getSelection().anchorNode;
+    if (startNode.nodeType === Node.ELEMENT_NODE) {
+        if (selection.anchorOffset === 0) {
+            const textNode = editor.document.createTextNode('');
+            startNode.prepend(textNode);
+            startNode = textNode;
         } else {
-            lastChildNode = tempCurrentNode;
+            startNode = startNode.childNodes[selection.anchorOffset - 1];
         }
     }
 
+    // If we have isolated block content, first we split the current focus
+    // element if it's a block then we insert the content in the right places.
+    let currentNode = startNode;
+    let lastChildNode = false;
+    const _insertAt = (reference, nodes, insertBefore) => {
+        for (const child of (insertBefore ? nodes.reverse() : nodes)) {
+            reference[insertBefore ? 'before' : 'after'](child);
+            reference = child;
+        }
+    }
+    if (containerLastChild.hasChildNodes()) {
+        const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
+        _insertAt(currentNode, [...toInsert], insertBefore);
+        currentNode = insertBefore ? toInsert[0] : currentNode;
+        lastChildNode = toInsert[toInsert.length - 1];
+    }
     if (containerFirstChild.hasChildNodes()) {
-        const children = [...containerFirstChild.childNodes];
-        if (insertBefore) {
-            children.reverse();
-        }
-        for (const n of children) {
-            currentNode[insertBefore ? 'before' : 'after'](n);
-            currentNode = n;
-        }
-        if (insertBefore) {
-            currentNode = children[0];
-            insertBefore = false;
-        }
+        const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
+        _insertAt(currentNode, [...toInsert], insertBefore);
+        currentNode = toInsert[toInsert.length - 1];
+        insertBefore = false;
     }
 
     // If all the Html have been isolated, We force a split of the parent element
