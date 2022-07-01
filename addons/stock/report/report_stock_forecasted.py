@@ -93,6 +93,8 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_templates[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
             res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_templates.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_templates.mapped('outgoing_qty'))
         elif product_variant_ids:
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False
@@ -101,6 +103,8 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_variants[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
             res['virtual_available'] = sum(product_variants.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_variants.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_variants.mapped('outgoing_qty'))
         res.update(self._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
