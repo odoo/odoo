@@ -212,6 +212,11 @@ class User(models.Model):
             self.env['hr.employee'].with_context(clean_context(self.env.context)).create(employee_create_vals)
         return res
 
+    def _get_employee_fields_to_sync(self):
+        """Get values to sync to the related employee when the User is changed.
+        """
+        return ['name', 'email', 'image_1920', 'tz']
+
     def write(self, vals):
         """
         Synchronize user and its related employee
@@ -231,8 +236,9 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
+        for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
             employee_values[fname] = vals[fname]
+
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
