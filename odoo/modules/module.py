@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import collections
+import collections.abc
 import imp
 import importlib
 import inspect
@@ -368,7 +368,7 @@ def load_information_from_description_file(module, mod_path=None):
         # auto_install: [] to always auto_install a module regardless of its
         # dependencies
         auto_install = info.get('auto_install', info.get('active', False))
-        if isinstance(auto_install, collections.Iterable):
+        if isinstance(auto_install, collections.abc.Iterable):
             info['auto_install'] = set(auto_install)
             non_dependencies = info['auto_install'].difference(info['depends'])
             assert not non_dependencies,\

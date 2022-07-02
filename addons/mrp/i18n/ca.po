@@ -14,10 +14,10 @@
 # Arnau Ros, 2020
 # Susanna Pujol, 2020
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# Harcogourmet, 2022
 # Jonatan Gk, 2022
 # jabelchi, 2022
 # marcescu, 2022
+# Harcogourmet, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Harcogourmet, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +242,7 @@ msgstr "<span>Nou</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>PLANIFICAR ORDRES</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -438,7 +438,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr ""
+msgstr "Afegiu controls de qualitat a les vostres ordres de treball"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -490,7 +490,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Centres de treball alternatius"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -498,6 +498,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Centres de treball alternatius que es poden substituir a aquest per a "
+"l'expedició de producció"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -599,6 +601,8 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Termini mitjà en dies per fabricar aquest producte. En el cas de LDM "
+"multinivell, s'afegiran els terminis de fabricació dels components."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -757,7 +761,7 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
+msgstr "Estructura i cost de la LdM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -971,7 +975,7 @@ msgstr "Components"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
 msgid "Components Location"
-msgstr ""
+msgstr "Localització dels components"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -1105,7 +1109,7 @@ msgstr "Crear un nou centre de trebal"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_workcenter_report
 msgid "Create a new work orders performance"
-msgstr ""
+msgstr "Creeu un rendiment nou de les ordres de treball"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -1788,6 +1792,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
+"Impossible planificar l'ordre de treball. Consulteu les disponibilitats del "
+"centre de treball."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -1812,6 +1818,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"Data informativa que permet definir quan s'ha de tramitar com a molt tard "
+"l'ordre de fabricació per complir el lliurament a temps."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -1888,6 +1896,9 @@ msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
+"No és possible desplanificar una sola ordre de treball. En lloc d'això, "
+"hauríeu de desplanificar l'ordre de fabricació per desplanificar totes les "
+"operacions enllaçades."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -2033,6 +2044,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
+"Ubicació on voleu enviar els components resultants de l'ordre de "
+"desconstrucció."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2094,7 +2107,7 @@ msgstr "Baixa"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
 msgid "MRP Work Orders"
-msgstr ""
+msgstr "Ordres de treball MRP"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
@@ -2348,7 +2361,7 @@ msgstr "Moviment a traçar"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: Pla de comandes de producció"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
@@ -2505,6 +2518,9 @@ msgid ""
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
 msgstr ""
+"Nombre de peces que es poden produir en paral·lel. En cas que el centre de "
+"treball tingui una capacitat de 5 i hagis de produir 10 unitats a la teva "
+"comanda de treball, el temps de funcionament habitual es multiplicarà per 2."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2625,7 +2641,7 @@ msgstr "Eficiència Global de l'equip, basat en l'últim mes"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr ""
+msgstr "Eficàcia global de l'equip: sense temps de treball o bloquejat"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -2767,6 +2783,7 @@ msgstr "Ordres planificades"
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
 msgstr ""
+"Planificar les ordres de fabricació o compra en funció de les previsions"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__planned
@@ -2898,6 +2915,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Produir: traslladeu els components directament al lloc de producció i inicieu el procés de fabricació.\n"
+"Pick / Producció: descarregueu primer els components de la ubicació d'estoc a la d'entrada i després transferiu-los a la ubicació de producció."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3529,7 +3548,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "Apunteu-vos al calendari del centre de treball un cop planificat"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3581,6 +3600,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Algunes ordres de treball ja estan fetes, no podeu desplanificar aquesta "
+"ordre de fabricació."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3589,6 +3610,8 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Algunes ordres de treball ja han començat, no podeu desplanificar aquesta "
+"ordre de fabricació."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3907,6 +3930,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
+"La data de finalització prevista de l'ordre de treball no pot ser anterior a"
+" la data d'inici planificada; corregiu-la per desar l'ordre de treball."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4004,6 +4029,9 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"Aquest és el cost basat en la llista de productes del producte. Es calcula "
+"sumant els costos dels components i les operacions necessàries per construir"
+" el producte."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4037,7 +4065,7 @@ msgstr "Temps"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_efficiency
 msgid "Time Efficiency"
-msgstr ""
+msgstr "Eficiència temporal"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
@@ -4350,7 +4378,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unplan"
-msgstr ""
+msgstr "Desplanificar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_unread
@@ -4421,6 +4449,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"L'ús d'un informe MPS per programar les vostres operacions de reordenació i "
+"fabricació és útil si teniu un temps de lliurament llarg i si produïu en "
+"funció de les previsions de vendes."
 
 #. module: mrp
 #. openerp-web
@@ -4529,7 +4560,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
 msgid "When components for 1st operation are available"
-msgstr ""
+msgstr "Quan hi ha components disponibles per a la primera operació"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
