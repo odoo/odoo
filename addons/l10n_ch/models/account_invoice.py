@@ -318,7 +318,8 @@ class AccountMove(models.Model):
         # as the QR report data haven't been loaded.
         # TODO: remove this in master
         return not self.env.ref('l10n_ch.l10n_ch_swissqr_template').inherit_id \
-               and self.invoice_partner_bank_id.validate_swiss_code_arguments(self.invoice_partner_bank_id.currency_id, self.partner_id, self.invoice_payment_ref)
+               and self.invoice_partner_bank_id.validate_swiss_code_arguments(self.invoice_partner_bank_id.currency_id, self.partner_id, self.invoice_payment_ref) \
+               and self.company_id.country_id.code == 'CH'
 
     def print_ch_qr_bill(self):
         """ Triggered by the 'Print QR-bill' button.

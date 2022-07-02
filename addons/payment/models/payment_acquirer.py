@@ -496,7 +496,9 @@ class PaymentAcquirer(models.Model):
             values = method(values)
 
         values.update({
-            'tx_url': self._context.get('tx_url', self.get_form_action_url()),
+            'tx_url':  self._context.get(
+                'tx_url', self.with_context(form_action_url_values=values).get_form_action_url()
+            ),
             'submit_class': self._context.get('submit_class', 'btn btn-link'),
             'submit_txt': self._context.get('submit_txt'),
             'acquirer': self,

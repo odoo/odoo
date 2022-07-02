@@ -490,7 +490,7 @@ class AccountMove(models.Model):
         """ Useful in case we want to pre-process taxes_map """
         return taxes_map
 
-    def _recompute_tax_lines(self, recompute_tax_base_amount=False):
+    def _recompute_tax_lines(self, recompute_tax_base_amount=False, tax_rep_lines_to_recompute=None):
         """ Compute the dynamic tax lines of the journal entry.
 
         :param recompute_tax_base_amount: Flag forcing only the recomputation of the `tax_base_amount` field.
@@ -658,12 +658,19 @@ class AccountMove(models.Model):
 
             if taxes_map_entry['tax_line']:
                 # Update an existing tax line.
+                if tax_rep_lines_to_recompute and taxes_map_entry['tax_line'].tax_repartition_line_id not in tax_rep_lines_to_recompute:
+                    continue
+
                 taxes_map_entry['tax_line'].update(to_write_on_line)
             else:
                 # Create a new tax line.
                 create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                 tax_repartition_line_id = taxes_map_entry['grouping_dict']['tax_repartition_line_id']
                 tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_repartition_line_id)
+
+                if tax_rep_lines_to_recompute and tax_repartition_line not in tax_rep_lines_to_recompute:
+                    continue
+
                 tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
                 taxes_map_entry['tax_line'] = create_method({
                     **to_write_on_line,
@@ -991,29 +998,37 @@ class AccountMove(models.Model):
         '''
         for invoice in self:
             # Dispatch lines and pre-compute some aggregated values like taxes.
+            expected_tax_rep_lines = set()
+            current_tax_rep_lines = set()
+            inv_recompute_all_taxes = recompute_all_taxes
+            for line in invoice.line_ids:
+                if line.recompute_tax_line:
+                    inv_recompute_all_taxes = True
+                    line.recompute_tax_line = False
+                if line.tax_repartition_line_id:
+                    current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
+                elif line.tax_ids:
+                    if invoice.is_invoice(include_receipts=True):
+                        is_refund = invoice.type in ('out_refund', 'in_refund')
+                    else:
+                        tax_type = line.tax_ids[0].type_tax_use
+                        is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
+                    taxes = line.tax_ids.flatten_taxes_hierarchy()
+                    if is_refund:
+                        tax_rep_lines = taxes.refund_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    else:
+                        tax_rep_lines = taxes.invoice_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    for tax_rep_line in tax_rep_lines:
+                        expected_tax_rep_lines.add(tax_rep_line)
+            delta_tax_rep_lines = expected_tax_rep_lines - current_tax_rep_lines
 
-            # determine required tax_lines by finding all non-zero tax amounts
-            lines_with_taxes = invoice.line_ids.filtered(
-                lambda l: l.tax_ids and l.move_id.currency_id.compare_amounts(l.price_subtotal, l.price_total))
-
-            needed_taxes = lines_with_taxes.tax_ids._origin.flatten_taxes_hierarchy().filtered(
-                lambda tax: (
-                        tax.amount_type == 'fixed' and not invoice.company_id.currency_id.is_zero(tax.amount)
-                        or not float_is_zero(tax.amount, precision_digits=4)
-                )
-            )
-            current_taxes = invoice.line_ids.tax_line_id._origin
-
-            if (
-                recompute_all_taxes
-                or any(line.recompute_tax_line for line in invoice.line_ids)
-                or needed_taxes > current_taxes
-            ):
-                invoice.line_ids.recompute_tax_line = False
+            # Compute taxes.
+            if inv_recompute_all_taxes:
                 invoice._recompute_tax_lines()
-
-            if recompute_tax_base_amount:
+            elif recompute_tax_base_amount:
                 invoice._recompute_tax_lines(recompute_tax_base_amount=True)
+            elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
+                invoice._recompute_tax_lines(tax_rep_lines_to_recompute=delta_tax_rep_lines)
 
             if invoice.is_invoice(include_receipts=True):
 
@@ -2228,7 +2243,7 @@ class AccountMove(models.Model):
             move_vals_list.append(move.with_context(move_reverse_cancel=cancel)._reverse_move_vals(default_values, cancel=cancel))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
-        for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
+        for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False, move_reverse_cancel=cancel)):
             # Update amount_currency if the date has changed.
             if move.date != reverse_move.date:
                 for line in reverse_move.line_ids:
