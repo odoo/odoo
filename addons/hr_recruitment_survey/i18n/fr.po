@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Geoffrey_GMF <gmf@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Geoffrey_GMF <gmf@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
@@ -73,6 +74,8 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Consulter</span>\n"
+"                        <span class=\"o_stat_text\">Entrevue</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -98,13 +101,13 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
-"Sélectionnez un formulaire d'entretien pour ce poste. Vous pourrez "
-"l'imprimer et y répondre pour chaque candidat ayant postulé pour ce poste."
+"Sélectionnez un formulaire d'entrevue pour ce poste. Vous pourrez l'imprimer"
+" et y répondre pour chaque candidat ayant postulé pour ce poste."
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Create Interview Form"
-msgstr "Créer un formulaire d'entretien"
+msgstr "Créer un formulaire d'entrevue"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
@@ -171,18 +174,18 @@ msgstr "Important"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
 msgid "Interview Form"
-msgstr "Formulaire d'entretien"
+msgstr "Formulaire d'entrevue"
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form : %s"
-msgstr "Formulaire d'entretien : %s"
+msgstr "Formulaire d'entrevue : %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "Questionnaire d'entrevue"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -217,7 +220,7 @@ msgstr "Expériences professionnelles passées"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Preview Interview"
-msgstr "Aperçu de l'entretien"
+msgstr "Aperçu de l'entrevue"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -232,12 +235,12 @@ msgstr "Réponse"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "SEND INTERVIEW"
-msgstr ""
+msgstr "ENVOI ENTREVUE"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr ""
+msgstr "Voir le rapport des entrevues"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_state
@@ -285,19 +288,19 @@ msgstr "La réponse saisie n'est pas valide."
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "Le candidat \"%s\" a finit le questionnaire."
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "Le questionnaire %(survey_link)s a été envoyé à %(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The survey has been sent to \"%s\"."
-msgstr ""
+msgstr "Le questionnaire a été envoyé à \"%s\"."
 
 #. module: hr_recruitment_survey
 #: model:survey.question,constr_error_msg:hr_recruitment_survey.survey_recruitment_form_p1
@@ -320,7 +323,7 @@ msgstr "Très important"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
-msgstr ""
+msgstr "Avez-vous été référencé par un employé ? "
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
