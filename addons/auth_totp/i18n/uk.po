@@ -3,16 +3,16 @@
 # 	* auth_totp
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-06-21 13:22+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,8 +38,14 @@ msgid "2-Factor authentication is now enabled."
 msgstr "Двофакторну аутентифікацію тепер увімкнено."
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">This account is protected!</span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">Your account is protected!</span>"
@@ -85,6 +91,7 @@ msgid "Activate"
 msgstr "Активувати"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Added On"
 msgstr "Додано на"
@@ -92,11 +99,16 @@ msgstr "Додано на"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"Are you sure? Two-factor authentication will be required again on all your "
+"Are you sure? The user may be asked to enter two-factor codes again on those"
+" devices"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
-"Ви впевнені? Двофакторна афторизація буде знову необхідна на всіх ваших "
-"пристроях"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -115,7 +127,6 @@ msgstr "Встановлення модуля аутентифікації"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Скасувати"
@@ -151,9 +162,10 @@ msgid "Description"
 msgstr "Опис"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Device Name"
-msgstr "Назва пристрою"
+msgid "Device"
+msgstr "Пристрій"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -254,11 +266,13 @@ msgid "Qrcode"
 msgstr "Qr-код"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke"
 msgstr "Скасувати"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
 msgstr "Скасувати все"
@@ -294,12 +308,8 @@ msgid "Totp Secret"
 msgstr "Ключ Totp"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Trusted Device"
-msgstr "Надійний пристрій"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "Надійні пристрої"

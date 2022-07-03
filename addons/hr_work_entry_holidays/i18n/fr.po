@@ -3,8 +3,8 @@
 # 	* hr_work_entry_holidays
 # 
 # Translators:
+# Cécile Collart <cco@odoo.com>, 2019
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2019
-# Cécile Collart <cco@odoo.com>, 2020
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # Martin Trigaux, 2022
 # 
@@ -31,8 +31,17 @@ msgstr "%s: Congés"
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
-msgid "A leave cannot be set across multiple contracts."
-msgstr "Un congé ne peut pas être défini pour plusieurs contrats."
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%s\n"
+"\n"
+"Contracts:\n"
+"%s"
+msgstr ""
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract

@@ -6,17 +6,16 @@
 # Udo Hennig <info@udohennig.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
-# b69269ad567b7550d53748df6a5b0869_97d08cd, 2021
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-06-21 13:22+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,8 +41,14 @@ msgid "2-Factor authentication is now enabled."
 msgstr "Zwei-Faktor-Authentifizierung ist jetzt aktiviert."
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">This account is protected!</span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">Your account is protected!</span>"
@@ -89,6 +94,7 @@ msgid "Activate"
 msgstr "Aktivieren"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Added On"
 msgstr "Hinzugefügt am"
@@ -96,11 +102,16 @@ msgstr "Hinzugefügt am"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"Are you sure? Two-factor authentication will be required again on all your "
+"Are you sure? The user may be asked to enter two-factor codes again on those"
+" devices"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
-"Sind Sie sicher? Die Zwei-Faktor-Authentifizierung wird wieder auf allen "
-"Ihren Geräten erforderlich sein"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -119,7 +130,6 @@ msgstr "Authenticator App Einrichtung"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -155,9 +165,10 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Device Name"
-msgstr "Gerätename"
+msgid "Device"
+msgstr "Gerät"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -258,11 +269,13 @@ msgid "Qrcode"
 msgstr "Qrcode"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke"
 msgstr "Widerrufen"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
 msgstr "Alle widerrufen"
@@ -298,12 +311,8 @@ msgid "Totp Secret"
 msgstr "Totp Secret"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Trusted Device"
-msgstr "Vertrauenswürdiges Gerät"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "Vertrauenswürdige Geräte"

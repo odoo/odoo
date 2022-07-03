@@ -3183,12 +3183,14 @@ msgstr " Auf Lager"
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
 msgstr ""
+"Nur Produktionsaufträge, die entweder im Entwurfsstadium oder bestätigt "
+"sind, können %s werden."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr ""
+msgstr "Es können nur Fertigungsaufträge mit einer Stückliste %s werden."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -4583,7 +4585,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "Der Arbeitsauftrag (%s) kann nicht zweimal gestartet werden!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5420,6 +5422,8 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr ""
+"Assistent, um als erledigt zu markieren oder einen rückständigen Auftrag zu "
+"erstellen"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -5678,6 +5682,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Für Produkte, die mindestens eine Nachbestellregel haben, können Sie keine "
+"Bausatz-Stückliste anlegen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5853,6 +5859,7 @@ msgstr ""
 #, python-format
 msgid "You need at least two production orders to merge them."
 msgstr ""
+"Sie benötigen mindestens zwei Produktionsaufträge, um sie zusammenzuführen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
