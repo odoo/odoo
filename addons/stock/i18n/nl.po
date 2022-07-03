@@ -3,14 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Jordy Blankestijn <jblankestijn@erpopen.nl>, 2021
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2021
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
@@ -19,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1049,7 +1041,10 @@ msgid "As soon as possible"
 msgstr "Zo snel mogelijk"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Toewijzen"
 
@@ -7865,7 +7860,7 @@ msgstr "De naam van het magazijn moet uniek zijn per bedrijf!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "Het aantal te genereren serienummers moet groter zijn dan nul."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8545,7 +8540,10 @@ msgid "USPS Connector"
 msgstr "USPS connector"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Toewijzing ongedaan maken"
 
@@ -9520,18 +9518,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Je moet een partij/serienummer ingeven voor het product %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Je moet een geplande interne verplaatsing niet gebruiken om bepaalde "
-"producten tussen twee magazijnen te verplaatsen. Gebruik in plaats daarvan "
-"een directe interne verplaatsing of de herbevoorradingsroute."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

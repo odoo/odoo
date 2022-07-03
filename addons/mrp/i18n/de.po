@@ -3,50 +3,6 @@
 # 	* mrp
 # 
 # Translators:
-# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Pascal <paesce@gentlemansclub.de>, 2017
-# Mathias Neef <mn@copado.de>, 2017
-# Martin K <martinkuenz@gmail.com>, 2017
-# key six <mobile.umts@gmail.com>, 2017
-# Bülent Tiknas <btiknas@googlemail.com>, 2017
-# ba566f9f7abd166f8f1f032649ec3e69, 2017
-# Renzo Meister, 2017
-# Constantin Ehrenstein <transifex@skiller.eu>, 2017
-# Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# Niki Waibel, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# brokemeister <work@maltejansen.de>, 2017
-# DE T1 <e2f8846@yahoo.com>, 2017
-# 4e7311735ad180fde514b5b19202d965, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Alexander Klockhaus <a.klockhaus@gmail.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# Felix Schubert <felix.schubert@go-erp.com>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Tom, 2018
-# Rudolf Schnapka <rs@techno-flex.de>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2019
-# Bettina Pfeifer <betzilla@web.de>, 2019
-# Philipp Fürstos <pfu@odoo.com>, 2020
-# Anja Funk <anja.funk@afimage.de>, 2020
-# Andi, 2020
-# Johannes Croe <jcr@odoo.com>, 2020
-# Jérôme JEK <jek@odoo.com>, 2020
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
-# Leon Grill <leg@odoo.com>, 2020
-# Max-Milan Stoyanov, 2020
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# Tobias Arndt, 2020
-# Udo Hennig <info@udohennig.de>, 2021
-# Wolfgang Taferner, 2021
-# Chris Egal <sodaswed@web.de>, 2021
-# Andreas Schmidt <schmigo@gmail.com>, 2021
-# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Raymond Vetter, 2021
-# Robert Förster <hello@suppliot.eu>, 2021
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
@@ -55,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
-"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -466,6 +422,8 @@ msgstr "Ein Fertigungsauftrag wurde bereits ausgeführt oder storniert."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Ein Produkt mit einer Bausatz-Stückliste kann keine Nachbestellungsregel "
+"haben."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -3162,12 +3120,14 @@ msgstr " Auf Lager"
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
 msgstr ""
+"Nur Produktionsaufträge, die entweder im Entwurfsstadium oder bestätigt "
+"sind, können %s werden."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr ""
+msgstr "Es können nur Fertigungsaufträge mit einer Stückliste %s werden."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -3440,7 +3400,7 @@ msgstr "Planung"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Planungsfragen"
 
 #. module: mrp
 #. openerp-web
@@ -4567,7 +4527,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "Der Arbeitsauftrag (%s) kann nicht zweimal gestartet werden!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5400,6 +5360,8 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr ""
+"Assistent, um als erledigt zu markieren oder einen rückständigen Auftrag zu "
+"erstellen"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -5657,6 +5619,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Für Produkte, die mindestens eine Nachbestellregel haben, können Sie keine "
+"Bausatz-Stückliste anlegen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5832,6 +5796,7 @@ msgstr ""
 #, python-format
 msgid "You need at least two production orders to merge them."
 msgstr ""
+"Sie benötigen mindestens zwei Produktionsaufträge, um sie zusammenzuführen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
