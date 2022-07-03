@@ -867,7 +867,8 @@ class PaymentTransaction(models.Model):
             # Let the client post-process transactions so that they remain available in the portal
             client_handling_limit_date = datetime.now() - relativedelta.relativedelta(minutes=10)
             # Don't try forever to post-process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # as for Paypal, it sometime takes 3 or 4 days for payment verification due to weekend. Set 4 here should be fine.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
                 ('state', '=', 'done'),
