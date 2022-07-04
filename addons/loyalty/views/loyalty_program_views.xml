@@ -71,8 +71,9 @@
                             <label for="portal_visible" string="Show points" groups="base.group_no_one"/>
                             <span groups="base.group_no_one">
                                 <field name="portal_visible" class="oe_inline"/>
-                                <span attrs="{'invisible': [('portal_visible', '=', False)]}">as <field name="portal_point_name" class="oe_inline"/></span>
+                                <span attrs="{'invisible': [('portal_visible', '=', False)]}"> as <field name="portal_point_name" class="oe_inline"/></span>
                             </span>
+
                         </group>
                         <group>
                             <field name="date_to"/>
