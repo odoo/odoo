@@ -1,9 +1,6 @@
 /** @odoo-module */
 
-import * as legacyRegistry from "web.Registry";
-import * as BusService from "bus.BusService";
-import * as RamStorage from "web.RamStorage";
-import * as AbstractStorageService from "web.AbstractStorageService";
+import { busService } from "@bus/services/bus_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
@@ -11,9 +8,6 @@ import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/hel
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-const LocalStorageService = AbstractStorageService.extend({
-    storage: new RamStorage(),
-});
 const serviceRegistry = registry.category("services");
 
 QUnit.module("Calendar Notification", (hooks) => {
@@ -22,15 +16,12 @@ QUnit.module("Calendar Notification", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
 
-        legacyServicesRegistry = new legacyRegistry();
-        legacyServicesRegistry.add("bus_service", BusService);
-        legacyServicesRegistry.add("local_storage", LocalStorageService);
-
         serviceRegistry.add("calendarNotification", calendarNotificationService);
-
+        serviceRegistry.add("bus_service", busService);
         patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-            clearTimeout: () => {},
+            setTimeout(fn) {
+                this._super(fn, 0);
+            },
         });
     });
 

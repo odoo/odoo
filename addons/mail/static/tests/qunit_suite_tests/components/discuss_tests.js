@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import BusService from 'bus.BusService';
-
 import {
     afterNextRender,
     isScrolledToBottom,
@@ -14,6 +12,7 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 import { destroy } from '@web/../tests/helpers/utils';
 
 import { makeTestPromise, file } from 'web.test_utils';
+import { busService } from '@bus/services/bus_service';
 
 const { createFile, inputFiles } = file;
 
@@ -3561,15 +3560,23 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const { env, openDiscuss } = await start({
-        legacyServices: {
-            bus_service: BusService.extend({
+    const customBusService = {
+        ...busService,
+        start() {
+            const originalBusService = busService.start(...arguments);
+            Object.assign(originalBusService, {
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
                 _registerWindowUnload() {}, // Do nothing
                 isOdooFocused: () => false,
                 updateOption() {},
-            }),
+            });
+            return originalBusService;
+        },
+    };
+    const { env, openDiscuss } = await start({
+        services: {
+            bus_service: customBusService,
         },
     });
     await openDiscuss();
@@ -3599,15 +3606,23 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: "chat" });
-    const { env, openDiscuss } = await start({
-        legacyServices: {
-            bus_service: BusService.extend({
+    const customBusService = {
+        ...busService,
+        start() {
+            const originalBusService = busService.start(...arguments);
+            Object.assign(originalBusService, {
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
                 _registerWindowUnload() {}, // Do nothing
                 isOdooFocused: () => false,
                 updateOption() {},
-            }),
+            });
+            return originalBusService;
+        },
+    };
+    const { env, openDiscuss } = await start({
+        services: {
+            bus_service: customBusService,
         },
     });
     await openDiscuss();
@@ -3641,15 +3656,23 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         { channel_type: 'chat', public: 'private' },
         { channel_type: 'chat', public: 'private' },
     ]);
-    const { env, openDiscuss } = await start({
-        legacyServices: {
-            bus_service: BusService.extend({
+    const customBusService = {
+        ...busService,
+        start() {
+            const originalBusService = busService.start(...arguments);
+            Object.assign(originalBusService, {
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
                 _registerWindowUnload() {}, // Do nothing
                 isOdooFocused: () => false,
                 updateOption() {},
-            }),
+            });
+            return originalBusService;
+        },
+    };
+    const { env, openDiscuss } = await start({
+        services: {
+            bus_service: customBusService,
         },
     });
     await openDiscuss();

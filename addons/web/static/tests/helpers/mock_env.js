@@ -53,6 +53,7 @@ function prepareRegistriesWithCleanup() {
     cloneRegistryWithCleanup(registry.category("command_setup"));
     cloneRegistryWithCleanup(registry.category("view_widgets"));
     cloneRegistryWithCleanup(registry.category("fields"));
+    cloneRegistryWithCleanup(registry.category('wowlToLegacyServiceMappers'));
 
     cloneRegistryWithCleanup(registry.category("main_components"));
     cloneRegistryWithCleanup(registry.category("fields"));
@@ -63,6 +64,7 @@ function prepareRegistriesWithCleanup() {
     clearRegistryWithCleanup(registry.category("error_dialogs"));
     clearRegistryWithCleanup(registry.category("favoriteMenu"));
     clearRegistryWithCleanup(registry.category("ir.actions.report handlers"));
+    clearRegistryWithCleanup(registry.category('wowlToLegacyServiceMappers'));
 
     clearRegistryWithCleanup(registry.category("services"));
     clearServicesMetadataWithCleanup();
