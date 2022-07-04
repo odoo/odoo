@@ -178,7 +178,7 @@ class PaymentTransaction(models.Model):
 
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': payment_utils.build_token_name(notification_data['card']['last_4digits']),
+            'payment_details': notification_data['card']['last_4digits'],
             'partner_id': self.partner_id.id,
             'acquirer_ref': notification_data['card']['token'],
             'flutterwave_customer_email': notification_data['customer']['email'],

@@ -463,7 +463,7 @@ class PaymentTransaction(models.Model):
 
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': payment_utils.build_token_name(payment_method['card'].get('last4')),
+            'payment_details': payment_method['card'].get('last4'),
             'partner_id': self.partner_id.id,
             'acquirer_ref': customer_id,
             'verified': True,

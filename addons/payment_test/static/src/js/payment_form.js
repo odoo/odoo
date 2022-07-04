@@ -31,7 +31,7 @@ odoo.define('payment_test.payment_form', require => {
                 route: '/payment/test/simulate_payment',
                 params: {
                     'reference': processingValues.reference,
-                    'cc_summary': customerInput.slice(-4),
+                    'payment_details': customerInput,
                     'simulated_state': simulatedPaymentState,
                 },
             }).then(() => {

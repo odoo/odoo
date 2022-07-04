@@ -138,9 +138,10 @@ class AuthorizeAPI:
 
         payment = response.get('paymentProfile', {}).get('payment', {})
         if self.payment_method_type == 'credit_card':
-            res['name'] = payment.get('creditCard', {}).get('cardNumber')
+            # Authorize.net pads the card and account numbers with X's.
+            res['payment_details'] = payment.get('creditCard', {}).get('cardNumber')[-4:]
         else:
-            res['name'] = payment.get('bankAccount', {}).get('accountNumber')
+            res['payment_details'] = payment.get('bankAccount', {}).get('accountNumber')[-4:]
         return res
 
     def delete_customer_profile(self, profile_id):

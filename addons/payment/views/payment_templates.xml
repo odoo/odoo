@@ -120,7 +120,7 @@
                                    t-att-data-provider="token.provider"
                                    data-payment-option-type="token"/>
                             <!-- === Token name === -->
-                            <span class="payment_option_name" t-esc="token.name"/>
+                            <span class="payment_option_name" t-esc="token.display_name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
                             <!-- === "Unpublished" badge === -->
@@ -254,7 +254,7 @@
                                    t-att-data-provider="token.provider"
                                    data-payment-option-type="token"/>
                             <!-- === Token name === -->
-                            <span class="payment_option_name" t-esc="token.name"/>
+                            <span class="payment_option_name" t-esc="token.display_name"/>
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
                             <!-- === "Unpublished" badge === -->

@@ -115,20 +115,6 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     return int(float_round(major_amount * (10**decimal_number), precision_digits=0))
 
 
-# Token values formatting
-
-def build_token_name(payment_details_short=None, final_length=16):
-    """ Pad plain payment details with leading X's to build a token name of the desired length.
-
-    :param str payment_details_short: The plain part of the payment details (usually last 4 digits)
-    :param int final_length: The desired final length of the token name (16 for a bank card)
-    :return: The padded token name
-    :rtype: str
-    """
-    payment_details_short = payment_details_short or '????'
-    return f"{'X' * (final_length - len(payment_details_short))}{payment_details_short}"
-
-
 # Partner values formatting
 
 def format_partner_address(address1="", address2=""):
