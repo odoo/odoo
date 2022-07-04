@@ -417,7 +417,7 @@ class Lead(models.Model):
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
-    @api.depends(lambda self: ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields())
+    @api.depends(lambda self: ['tag_ids', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
@@ -620,17 +620,27 @@ class Lead(models.Model):
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
 
-        if not stage_is_won:
-            return super(Lead, self).write(vals)
+        # Moving between two won stages does not change the date_closed
+        leads_won_to_won = self.filtered(lambda lead: lead.stage_id.is_won and stage_is_won)
+        leads_not_won_to_won = self - leads_won_to_won
+        from_lead_values = dict([lead.id, lead.stage_id.id] for lead in leads_not_won_to_won)
+        result = True
 
-        # stage change between two won stages: does not change the date_closed
-        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
-        remaining = self - leads_already_won
-        if remaining:
-            result = super(Lead, remaining).write(vals)
-        if leads_already_won:
-            vals.pop('date_closed', False)
-            result = super(Lead, leads_already_won).write(vals)
+        if not stage_is_won:
+            result = super(Lead, self).write(vals)
+        else:
+            if leads_not_won_to_won:
+                result = super(Lead, leads_not_won_to_won).write(vals)
+            if leads_won_to_won:
+                vals.pop('date_closed', False)
+                result = super(Lead, leads_won_to_won).write(vals)
+
+        # Recompute the probabilities for a lead if its stage has changed. If it goes
+        # from a won stage to another won stage, do not recompute probability.
+        leads_to_recompute = leads_not_won_to_won.filtered(lambda lead: from_lead_values[lead.id] != lead.stage_id.id)
+        if leads_to_recompute:
+            leads_to_recompute._compute_probabilities()
+
         return result
 
     @api.model
