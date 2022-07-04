@@ -37,9 +37,7 @@ export class Chatter extends LegacyComponent {
      * @private
      */
     _notifyRendered() {
-        this.trigger('o-chatter-rendered', {
-            thread: this.chatter.thread,
-        });
+        this.trigger('o-chatter-rendered');
     }
 
     /**

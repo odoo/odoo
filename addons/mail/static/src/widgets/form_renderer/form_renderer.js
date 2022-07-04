@@ -256,16 +256,18 @@ FormRenderer.include({
             return;
         }
         var self = this;
-        const thread = ev.data.thread;
-        const attachments = thread.attachmentsInWebClientView;
-        if (attachments.length || this.attachmentViewer) {
+        const thread = this.messaging.models['Thread'].insert({
+            id: this.state.res_id,
+            model: this.state.model,
+        });
+        if (thread.attachmentsInWebClientView.length || this.attachmentViewer) {
             if (this.attachmentViewer) {
                 // FIXME should be improved : what if somehow an attachment is replaced in a thread ?
                 if (
                     this.attachmentViewer.thread !== thread ||
-                    this.attachmentViewer.attachments.length !== attachments.length
+                    this.attachmentViewer.attachments.length !== thread.attachmentsInWebClientView.length
                 ) {
-                    if (attachments.length) {
+                    if (thread.attachmentsInWebClientView.length) {
                         this.attachmentViewer.updateContents(thread);
                     }
                 } else {
