@@ -28,11 +28,14 @@ class Survey(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_course(self):
-        slides = self.slide_ids.filtered(lambda slide: slide.slide_type == "certification").exists()
-        if slides:
-            raise ValidationError(_("The Certification '%(certification_name)s' cannot be deleted because it is still being used by the Course(s) '%(courses_names)s'",
-                                    certification_name=self.title,
-                                    courses_names=', '.join(slides.mapped('channel_id.name'))))
+        # we consider it's ok to show certification names for people trying to delete courses
+        # even if they don't have access to those surveys hence the sudo usage
+        certifications = self.sudo().slide_ids.filtered(lambda slide: slide.slide_type == "certification").mapped('survey_id').exists()
+        if certifications:
+            certifications_course_mapping = [_('- %s (Courses - %s)', certi.title, '; '.join(certi.slide_channel_ids.mapped('name'))) for certi in certifications]
+            raise ValidationError(_(
+                'Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n%s',
+                '\n'.join(certifications_course_mapping)))
 
     # ---------------------------------------------------------
     # Actions
