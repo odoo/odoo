@@ -491,7 +491,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
+            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
