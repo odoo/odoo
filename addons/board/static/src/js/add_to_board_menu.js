@@ -103,8 +103,7 @@ var AddToBoardMenu = Widget.extend({
             }
         });
 
-        var domain = new Domain(this.action.domain || []);
-        domain = Domain.prototype.normalizeArray(domain.toArray().concat(searchQuery.domain));
+        var domain = Domain.prototype.normalizeArray(searchQuery.domain);
 
         var evalutatedContext = pyUtils.eval('context', context);
         for (var key in evalutatedContext) {
