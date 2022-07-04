@@ -352,7 +352,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'company_id': company_b.id,
             'acc_type': 'bank'
         })
-        partner.bank_ids = [partner_bank_a.id, partner_bank_b.id]
+        assert len(partner.bank_ids) == 2
 
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
         po_a = PurchaseOrder.with_company(company_a).create({

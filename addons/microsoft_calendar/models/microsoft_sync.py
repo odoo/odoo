@@ -107,7 +107,7 @@ class MicrosoftSync(models.AbstractModel):
 
         records_to_sync = records.filtered(lambda r: r.need_sync_m and r.active)
         for record in records_to_sync:
-            record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
+            record._microsoft_insert(record.sudo()._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
         return records
 
     @api.depends('microsoft_id')

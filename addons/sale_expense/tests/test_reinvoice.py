@@ -99,7 +99,12 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'is_expense': True,
             },
             {
-                'qty_delivered': 3.0,
+                'qty_delivered': 2.0,
+                'product_uom_qty': 1.0,
+                'is_expense': True,
+            },
+            {
+                'qty_delivered': 1.0,
                 'product_uom_qty': 1.0,
                 'is_expense': True,
             },
@@ -111,6 +116,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         ])
 
         self.assertRecordValues(sale_order.order_line[1:], [
+            {'qty_delivered_method': 'analytic'},
             {'qty_delivered_method': 'analytic'},
             {'qty_delivered_method': 'analytic'},
             {'qty_delivered_method': 'analytic'},
