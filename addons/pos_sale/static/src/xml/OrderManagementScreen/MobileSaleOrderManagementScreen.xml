@@ -2,6 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <div t-name="MobileSaleOrderManagementScreen" class="screen-full-width" owl="1">
+    <div class="order-management-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
         <div t-if="mobileState.showDetails" class="leftpane">
             <OrderDetails order="orderManagementContext.selectedOrder" />
             <div class="pads">
@@ -25,6 +26,7 @@
                 <SaleOrderList orders="orders" initHighlightedOrder="orderManagementContext.selectedOrder" />
             </div>
         </div>
+    </div>
     </div>
 
 </templates>
