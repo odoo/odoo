@@ -82,7 +82,9 @@ export function combineAttributes(el, attr, parts, glue = " ") {
     if (el.hasAttribute(attr)) {
         allValues.push(el.getAttribute(attr));
     }
-    allValues.push(...(Array.isArray(parts) ? parts : [parts]));
+    parts = Array.isArray(parts) ? parts : [parts];
+    parts = parts.filter((part) => !!part);
+    allValues.push(...parts);
     el.setAttribute(attr, allValues.join(glue));
 }
 
