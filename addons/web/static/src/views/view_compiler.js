@@ -35,6 +35,28 @@ const BUTTON_CLICK_PARAMS = [
     "debounce",
 ];
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon"];
+const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
+
+/**
+ * @param {string} str
+ * @returns {string} the interpolated string to be injected into a component's node props.
+ */
+export function toInterpolatedStringExpression(str) {
+    const matches = str.matchAll(INTERP_REGEXP);
+    const parts = [];
+    let searchString = str;
+    for (const [match, head, expr] of matches) {
+        const index = searchString.indexOf(head);
+        const left = searchString.slice(0, index);
+        if (left) {
+            parts.push(toStringExpression(left));
+        }
+        parts.push(`(${expr})`);
+        searchString = searchString.slice(index + match.length);
+    }
+    parts.push(toStringExpression(searchString));
+    return parts.join("+");
+}
 
 /**
  * @param {Element} el
@@ -72,15 +94,8 @@ export function assignOwlDirectives(target, ...sources) {
         for (const { name, value } of source.attributes) {
             if (name.startsWith("t-attf-")) {
                 const propName = name.slice(7);
-                const tAttf = value
-                    .split("}}")
-                    .map((leftAndExpr) => {
-                        const [left, expr] = leftAndExpr.split("{{");
-                        const part = toStringExpression(left);
-                        return expr ? part + `+${expr}+` : part;
-                    })
-                    .join("");
-                target.setAttribute(propName, tAttf);
+                const interpolatedExpression = toInterpolatedStringExpression(value);
+                target.setAttribute(propName, interpolatedExpression);
             } else if (name.startsWith("t-att-")) {
                 const propName = name.slice(6);
                 target.setAttribute(propName, value);
