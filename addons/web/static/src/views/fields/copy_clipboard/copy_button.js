@@ -1,33 +1,43 @@
 /** @odoo-module **/
 
-const { Component, useEffect, useState } = owl;
+import { browser } from "@web/core/browser/browser";
+import { Tooltip } from "@web/core/tooltip/tooltip";
+import { useService } from "@web/core/utils/hooks";
 
+const { Component, useRef } = owl;
 export class CopyButton extends Component {
     setup() {
-        this.state = useState({
-            isCopied: false,
-        });
-        useEffect(
-            () => {
-                return () => clearTimeout(this.timeoutId);
-            },
-            () => [this.state.isCopied]
+        this.button = useRef("button");
+        this.popover = useService("popover");
+    }
+
+    showTooltip() {
+        const closeTooltip = this.popover.add(
+            this.button.el,
+            Tooltip,
+            { tooltip: this.props.successText },
         );
+        browser.setTimeout(() => {
+            closeTooltip();
+        }, 800);
     }
 
     async onClick() {
-        // any kind of content can be copied into the clipboard using
-        // the appropriate native methods
-        if (typeof this.props.content === "string") {
-            navigator.clipboard.writeText(this.props.content).then(() => {
-                this.state.isCopied = true;
-            });
-        } else {
-            navigator.clipboard.write(this.props.content).then(() => {
-                this.state.isCopied = true;
-            });
+        try {
+            // any kind of content can be copied into the clipboard using
+            // the appropriate native methods
+            if (typeof this.props.content === "string") {
+                browser.navigator.clipboard.writeText(this.props.content).then(() => {
+                    this.showTooltip();
+                });
+            } else {
+                browser.navigator.clipboard.write(this.props.content).then(() => {
+                    this.showTooltip();
+                });
+            }
+        } catch {
+            return browser.console.warn("This browser doesn't allow to copy to clipboard");
         }
-        this.timeoutId = setTimeout(() => (this.state.isCopied = false), 800);
     }
 }
 CopyButton.template = "web.CopyButton";
