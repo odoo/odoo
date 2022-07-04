@@ -1,55 +1,17 @@
-odoo.define('bus.BusService', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var CrossTab = require('bus.CrossTab');
-var core = require('web.core');
-var ServicesMixin = require('web.ServicesMixin');
-const session = require('web.session');
+import { CrossTab } from '@bus/crosstab_bus';
 
-var BusService =  CrossTab.extend(ServicesMixin, {
-    dependencies : ['local_storage'],
+import { registry } from '@web/core/registry';
+import session from 'web.session';
 
-    // properties
-    _audio: null,
+export class BusService extends CrossTab {
+    constructor(env, services) {
+        super(env, services);
 
-    /**
-     * As the BusService doesn't extend AbstractService, we have to replicate
-     * here what is done in AbstractService
-     *
-     * @param {Object} env
-     */
-    init: function (env) {
-        this.env = env;
-        this._super();
-    },
-
-    /**
-     * Replicate the behavior of AbstractService:
-     *
-     * Directly calls the requested service, instead of triggering a
-     * 'call_service' event up, which wouldn't work as services have no parent.
-     *
-     * @param {OdooEvent} ev
-     */
-    _trigger_up: function (ev) {
-        if (ev.name === 'call_service') {
-            const payload = ev.data;
-            let args = payload.args || [];
-            if (payload.service === 'ajax' && payload.method === 'rpc') {
-                // ajax service uses an extra 'target' argument for rpc
-                args = args.concat(ev.target);
-            }
-            const service = this.env.services[payload.service];
-            const result = service[payload.method].apply(service, args);
-            payload.callback(result);
-        }
-    },
-    /**
-     * This method is necessary in order for this Class to be used to instantiate services
-     *
-     * @abstract
-     */
-    start: function () {},
+        // properties
+        this._audio = null;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -71,10 +33,10 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                     this._sendNativeNotification(options.title, options.message, callback);
                 } catch (error) {
                     // Notification without Serviceworker in Chrome Android doesn't works anymore
-                    // So we fallback to displayNotification() in this case
+                    // So we fallback to the notification service in this case
                     // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
                     if (error.message.indexOf('ServiceWorkerRegistration') > -1) {
-                        this.displayNotification(options);
+                        this.env.services['notification'].add(options.message, options);
                         this._beep();
                     } else {
                         throw error;
@@ -82,21 +44,22 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 }
             }
         } else {
-            this.displayNotification(options);
+            this.env.services['notification'].add(options.message, options);
             if (this.isMasterTab()) {
                 this._beep();
             }
         }
-    },
+    }
+
     /**
      * Register listeners on notifications received on this bus service
      *
      * @param {Object} receiver
      * @param {function} func
      */
-    onNotification: function () {
+    onNotification() {
         this.on.apply(this, ["notification"].concat(Array.prototype.slice.call(arguments)));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -107,7 +70,7 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      *
      * @private
      */
-    _beep: function () {
+    _beep() {
         if (typeof(Audio) !== "undefined") {
             if (!this._audio) {
                 this._audio = new Audio();
@@ -116,7 +79,8 @@ var BusService =  CrossTab.extend(ServicesMixin, {
             }
             Promise.resolve(this._audio.play()).catch(_.noop);
         }
-    },
+    }
+
     /**
      * Show a browser notification
      *
@@ -125,7 +89,7 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * @param {string} content
      * @param {function} [callback] if given callback will be called when user clicks on notification
      */
-    _sendNativeNotification: function (title, content, callback) {
+    _sendNativeNotification(title, content, callback) {
         var notification = new Notification(
             // The native Notification API works with plain text and not HTML
             // unescaping is safe because done only at the **last** step
@@ -145,12 +109,13 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 callback();
             }
         };
+    }
+}
+
+export const busService = {
+    dependencies: ['notification'],
+    start(env, services) {
+        return new BusService(env, services);
     },
-
-});
-
-core.serviceRegistry.add('bus_service', BusService);
-
-return BusService;
-
-});
+};
+registry.category('services').add('bus_service', busService);

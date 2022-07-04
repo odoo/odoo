@@ -18,8 +18,8 @@ registerModel({
             odoo.__DEBUG__.messaging = this;
         },
         _willDelete() {
-            if (this.env.services['legacy_bus_service']) {
-                this.env.services['legacy_bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            if (this.env.services['bus_service']) {
+                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
             delete odoo.__DEBUG__.messaging;
         },
@@ -29,7 +29,7 @@ registerModel({
          * Starts messaging and related records.
          */
         async start() {
-            this.env.services['legacy_bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
             await this.initializer.start();
             if (!this.exists()) {
                 return;

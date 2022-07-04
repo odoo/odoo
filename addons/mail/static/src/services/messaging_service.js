@@ -5,7 +5,7 @@ import { ModelManager } from '@mail/model/model_manager';
 export const messagingService = {
     dependencies: [
         'effect',
-        'legacy_bus_service',
+        'bus_service',
         'localization',
         'messagingValues',
         'orm',

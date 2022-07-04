@@ -1,45 +1,35 @@
 odoo.define('web.bus_tests', function (require) {
 "use strict";
 
-var BusService = require('bus.BusService');
-var CrossTabBus = require('bus.CrossTab');
-var AbstractStorageService = require('web.AbstractStorageService');
-var RamStorage = require('web.RamStorage');
+var { busService } = require('@bus/services/bus_service');
+var { CrossTab } = require('@bus/crosstab_bus');
 var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
-const LegacyRegistry = require("web.Registry");
+const { browser } = require("@web/core/browser/browser");
 const { ConnectionLostError } = require("@web/core/network/rpc_service");
+const { registry } = require("@web/core/registry");
 const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
-const { createWebClient } =  require('@web/../tests/webclient/helpers');
-
-const { Component } = owl;
-
-var LocalStorageServiceMock;
-
-BusService = BusService.extend({
-    TAB_HEARTBEAT_PERIOD: 10,
-    MASTER_TAB_HEARTBEAT_PERIOD: 1,
-});
-
+const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
 
 QUnit.module('Bus', {
     beforeEach: function () {
-        LocalStorageServiceMock = AbstractStorageService.extend({storage: new RamStorage()});
+        const customBusService = {
+            ...busService,
+            start() {
+                const originalBusService = busService.start(...arguments);
+                originalBusService.TAB_HEARTBEAT_PERIOD = 10;
+                originalBusService.MASTER_TAB_HEARTBEAT_PERIOD = 1;
+                return originalBusService;
+            },
+        };
+        registry.category('services').add('bus_service', customBusService);
     },
 }, function () {
     QUnit.test('notifications received from the longpolling channel', async function (assert) {
         assert.expect(6);
 
         var pollPromise = testUtils.makeTestPromise();
-
-        var parent = new Widget();
-        await testUtils.mock.addMockEnvironment(parent, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const env = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     assert.step(route + ' - ' + args.channels.join(','));
 
@@ -49,17 +39,12 @@ QUnit.module('Bus', {
                     }).bind(pollPromise);
                     return pollPromise;
                 }
-                return this._super.apply(this, arguments);
-            }
+            },
         });
-
-        var widget = new Widget(parent);
-        await widget.appendTo($('#qunit-fixture'));
-
-        widget.call('bus_service', 'onNotification', this, function (notifications) {
+        env.services['bus_service'].onNotification(null, notifications => {
             assert.step('notification - ' + notifications.toString());
         });
-        widget.call('bus_service', 'addChannel', 'lambda');
+        env.services['bus_service'].addChannel('lambda');
 
         pollPromise.resolve([{
             message: 'beta',
@@ -78,15 +63,10 @@ QUnit.module('Bus', {
             'notification - epsilon',
             '/longpolling/poll - lambda',
         ]);
-
-        parent.destroy();
     });
 
     QUnit.test('longpolling restarts when connection is lost', async function (assert) {
         assert.expect(4);
-        const legacyRegistry = new LegacyRegistry();
-        legacyRegistry.add("bus_service", BusService);
-        legacyRegistry.add("local_storage", LocalStorageServiceMock);
 
         const oldSetTimeout = window.setTimeout;
         patchWithCleanup(
@@ -99,23 +79,21 @@ QUnit.module('Bus', {
 
         let busService;
         let rpcCount = 0;
-        // Using createWebclient to get the compatibility layer between the old services and the new
-        await createWebClient({
+        const env = await makeTestEnv({
             mockRPC(route) {
                 if (route === '/longpolling/poll') {
                     rpcCount++;
                     assert.step(`polling ${rpcCount}`);
                     if (rpcCount == 1) {
-                        return Promise.reject(new ConnectionLostError());
+                        return new ConnectionLostError();
                     }
                     assert.equal(rpcCount, 2, "Should not be called after stopPolling");
                     busService.stopPolling();
-                    return Promise.reject(new ConnectionLostError());
+                    return new ConnectionLostError();
                 }
             },
-            legacyParams: { serviceRegistry: legacyRegistry },
         });
-        busService = Component.env.services.bus_service;
+        busService = env.services['bus_service'];
         busService.startPolling();
         // Give longpolling bus a tick to try to restart polling
         await nextTick();
@@ -136,48 +114,32 @@ QUnit.module('Bus', {
         assert.expect(3);
 
         // Simulate no ID of last notification in the local storage
-        testUtils.mock.patch(LocalStorageServiceMock, {
-            getItem: function (key) {
+        patchWithCleanup(browser, {
+            getItem(key) {
                 if (key === 'last_ts') {
                     return 0;
                 }
-                return this._super.apply(this, arguments);
+                return this._super(...arguments);
             },
         });
 
         var pollPromise = testUtils.makeTestPromise();
-        var parent = new Widget();
-        await testUtils.mock.addMockEnvironment(parent, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const env = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     assert.step(route);
                     assert.strictEqual(args.last, 0,
                         "provided last notification ID should be 0");
 
                     pollPromise = testUtils.makeTestPromise();
-                    pollPromise.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromise);
                     return pollPromise;
                 }
-                return this._super.apply(this, arguments);
             }
         });
 
-        var widget = new Widget(parent);
-        await widget.appendTo($('#qunit-fixture'));
-
         // trigger longpolling poll RPC
-        widget.call('bus_service', 'addChannel', 'lambda');
+        env.services['bus_service'].addChannel('lambda');
         assert.verifySteps(['/longpolling/poll']);
-
-        testUtils.mock.unpatch(LocalStorageServiceMock);
-        parent.destroy();
     });
 
     QUnit.test('cross tab bus share message from a channel', async function (assert) {
@@ -186,60 +148,33 @@ QUnit.module('Bus', {
         // master
 
         var pollPromiseMaster = testUtils.makeTestPromise();
-
-        var parentMaster = new Widget();
-        await testUtils.mock.addMockEnvironment(parentMaster, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const masterEnv = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     assert.step('master' + ' - ' + route + ' - ' + args.channels.join(','));
 
                     pollPromiseMaster = testUtils.makeTestPromise();
-                    pollPromiseMaster.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromiseMaster);
                     return pollPromiseMaster;
                 }
-                return this._super.apply(this, arguments);
             }
         });
-
-        var master = new Widget(parentMaster);
-        await master.appendTo($('#qunit-fixture'));
-
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        masterEnv.services['bus_service'].onNotification(null, notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
-        master.call('bus_service', 'addChannel', 'lambda');
+        masterEnv.services['bus_service'].addChannel('lambda');
 
         // slave
-        await testUtils.nextTick();
-        var parentSlave = new Widget();
-        await testUtils.mock.addMockEnvironment(parentSlave, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const slaveEnv = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     throw new Error("Can not use the longpolling of the slave client");
                 }
-                return this._super.apply(this, arguments);
             }
         });
-
-        var slave = new Widget(parentSlave);
-        await slave.appendTo($('#qunit-fixture'));
-
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slaveEnv.services['bus_service'].onNotification(null, notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
-        slave.call('bus_service', 'addChannel', 'lambda');
+        slaveEnv.services['bus_service'].addChannel('lambda');
 
         pollPromiseMaster.resolve([{
             id: 1,
@@ -254,9 +189,6 @@ QUnit.module('Bus', {
             'slave - notification - beta',
             'master - /longpolling/poll - lambda',
         ]);
-
-        parentMaster.destroy();
-        parentSlave.destroy();
     });
 
     QUnit.test('cross tab bus elect new master on master unload', async function (assert) {
@@ -265,67 +197,38 @@ QUnit.module('Bus', {
         // master
         var pollPromiseMaster = testUtils.makeTestPromise();
 
-        var parentMaster = new Widget();
-        await testUtils.mock.addMockEnvironment(parentMaster, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const masterEnv = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     assert.step('master - ' + route + ' - ' + args.channels.join(','));
 
                     pollPromiseMaster = testUtils.makeTestPromise();
-                    pollPromiseMaster.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromiseMaster);
                     return pollPromiseMaster;
                 }
-                return this._super.apply(this, arguments);
             }
         });
 
-        var master = new Widget(parentMaster);
-        await master.appendTo($('#qunit-fixture'));
-
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        masterEnv.services['bus_service'].onNotification(null, notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
-        master.call('bus_service', 'addChannel', 'lambda');
+        masterEnv.services['bus_service'].addChannel('lambda');
 
         // slave
-        await testUtils.nextTick();
-        var parentSlave = new Widget();
         var pollPromiseSlave = testUtils.makeTestPromise();
-        await testUtils.mock.addMockEnvironment(parentSlave, {
-            data: {},
-            services: {
-                bus_service: BusService,
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route, args) {
+        const slaveEnv = await makeTestEnv({
+            mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
                     assert.step('slave - ' + route + ' - ' + args.channels.join(','));
 
                     pollPromiseSlave = testUtils.makeTestPromise();
-                    pollPromiseSlave.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromiseSlave);
                     return pollPromiseSlave;
                 }
-                return this._super.apply(this, arguments);
             }
         });
-
-        var slave = new Widget(parentSlave);
-        await slave.appendTo($('#qunit-fixture'));
-
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slaveEnv.services['bus_service'].onNotification(null, notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
-        slave.call('bus_service', 'addChannel', 'lambda');
-
+        slaveEnv.services['bus_service'].addChannel('lambda');
         pollPromiseMaster.resolve([{
             id: 1,
             channel: 'lambda',
@@ -334,7 +237,7 @@ QUnit.module('Bus', {
         await testUtils.nextTick();
 
         // simulate unloading master
-        master.call('bus_service', '_onUnload');
+        masterEnv.services['bus_service']._onUnload();
 
         pollPromiseSlave.resolve([{
             id: 2,
@@ -352,73 +255,46 @@ QUnit.module('Bus', {
             'slave - notification - gamma',
             'slave - /longpolling/poll - lambda',
         ]);
-
-        parentMaster.destroy();
-        parentSlave.destroy();
     });
 
     QUnit.test('two tabs calling addChannel simultaneously', async function (assert) {
         assert.expect(5);
 
-        let id = 1;
-        testUtils.mock.patch(CrossTabBus, {
-            init: function () {
-                this._super.apply(this, arguments);
-                this.__tabId__ = id++;
-            },
-            addChannel: function (channel) {
+        patchWithCleanup(CrossTab.prototype, {
+            addChannel(channel) {
                 assert.step('Tab ' + this.__tabId__ + ': addChannel ' + channel);
                 this._super.apply(this, arguments);
             },
-            deleteChannel: function (channel) {
+            deleteChannel(channel) {
                 assert.step('Tab ' + this.__tabId__ + ': deleteChannel ' + channel);
                 this._super.apply(this, arguments);
             },
         });
 
         let pollPromise;
-        const parentTab1 = new Widget();
-        await testUtils.mock.addMockEnvironment(parentTab1, {
-            data: {},
-            services: {
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route) {
+        const firstTabEnv = await makeTestEnv({
+            mockRPC(route) {
                 if (route === '/longpolling/poll') {
                     pollPromise = testUtils.makeTestPromise();
-                    pollPromise.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromise);
                     return pollPromise;
                 }
-                return this._super.apply(this, arguments);
-            }
-        });
-        const parentTab2 = new Widget();
-        await testUtils.mock.addMockEnvironment(parentTab2, {
-            data: {},
-            services: {
-                local_storage: LocalStorageServiceMock,
-            },
-            mockRPC: function (route) {
-                if (route === '/longpolling/poll') {
-                    pollPromise = testUtils.makeTestPromise();
-                    pollPromise.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromise);
-                    return pollPromise;
-                }
-                return this._super.apply(this, arguments);
             }
         });
 
-        const tab1 = new CrossTabBus(parentTab1);
-        const tab2 = new CrossTabBus(parentTab2);
-
-        tab1.addChannel("alpha");
-        tab2.addChannel("alpha");
-        tab1.addChannel("beta");
-        tab2.addChannel("beta");
+        const secondTabEnv = await makeTestEnv({
+            mockRPC(route) {
+                if (route === '/longpolling/poll') {
+                    pollPromise = testUtils.makeTestPromise();
+                    return pollPromise;
+                }
+            }
+        });
+        firstTabEnv.services['bus_service'].__tabId__ = 1;
+        secondTabEnv.services['bus_service'].__tabId__ = 2;
+        firstTabEnv.services['bus_service'].addChannel('alpha');
+        secondTabEnv.services['bus_service'].addChannel('alpha');
+        firstTabEnv.services['bus_service'].addChannel('beta');
+        secondTabEnv.services['bus_service'].addChannel('beta');
 
         assert.verifySteps([
             "Tab 1: addChannel alpha",
@@ -426,10 +302,6 @@ QUnit.module('Bus', {
             "Tab 1: addChannel beta",
             "Tab 2: addChannel beta",
         ]);
-
-        testUtils.mock.unpatch(CrossTabBus);
-        parentTab1.destroy();
-        parentTab2.destroy();
     });
 });
 

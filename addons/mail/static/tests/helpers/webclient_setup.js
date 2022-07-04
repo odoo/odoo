@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { legacyBusService } from '@bus/js/services/legacy/legacy_bus_service';
-
-import BusService from 'bus.BusService';
+import { busService } from '@bus/services/bus_service';
+import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
 
 import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
@@ -15,10 +14,6 @@ import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_e
 import { registry } from '@web/core/registry';
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
-
-import AbstractStorageService from 'web.AbstractStorageService';
-import RamStorage from 'web.RamStorage';
-import LegacyRegistry from 'web.Registry';
 
 const WEBCLIENT_LOAD_ROUTES = [
     '/web/webclient/load_menus',
@@ -46,7 +41,6 @@ const SERVICES_PARAMETER_NAMES = new Set([
  *
  * @param {Object} param0
  * @param {Object} [param0.services]
- * @param {Object} [param0.legacyServices]
  * @param {number} [param0.loadingBaseDelayDuration=0]
  * @param {Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
@@ -58,7 +52,6 @@ const SERVICES_PARAMETER_NAMES = new Set([
  * to the webClient as a legacy parameter.
  */
 function setupMessagingServiceRegistries({
-    legacyServices,
     loadingBaseDelayDuration = 0,
     messagingBeforeCreationDeferred = Promise.resolve(),
     messagingBus,
@@ -66,20 +59,6 @@ function setupMessagingServiceRegistries({
     testSetupDoneDeferred,
  }) {
     const serviceRegistry = registry.category('services');
-    const legacyServiceRegistry = new LegacyRegistry();
-    legacyServices = {
-        bus_service: BusService.extend({
-            _beep() {}, // Do nothing
-            _poll() {}, // Do nothing
-            _registerWindowUnload() {}, // Do nothing
-            isOdooFocused() {
-                return true;
-            },
-            updateOption() {},
-        }),
-        local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
-        ...legacyServices,
-    };
 
     patchWithCleanup(messagingService, {
         async _startModelManager() {
@@ -101,31 +80,36 @@ function setupMessagingServiceRegistries({
         }
     };
 
+    const customBusService = {
+        start() {
+            const originalService = busService.start(...arguments);
+            Object.assign(originalService, {
+                _beep() {}, // Do nothing
+                _poll() {}, // Do nothing
+                _registerWindowUnload() {}, // Do nothing
+                isOdooFocused() {
+                    return true;
+                },
+                updateOption() {},
+            });
+            return originalService;
+        },
+    };
+
     services = {
+        bus_service: customBusService,
+        messaging: messagingService,
         messagingValues,
+        systrayService,
         ...services,
     };
-    // during tests, we need to wait for the legacyBusService to be added  before adding the messaging
-    // service to the registry or it will result in an error during the webClient creation.
-    const addMessagingToRegistryFn = ev => {
-        const { key, operation } = ev.detail;
-        if (key === 'legacy_bus_service' && operation === 'add') {
-            serviceRegistry.add('messaging', messagingService);
-            serviceRegistry.add('systray_service', systrayService);
-            serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(owl.Component.env));
-            serviceRegistry.removeEventListener('UPDATE', addMessagingToRegistryFn);
-        }
-    };
-    serviceRegistry.addEventListener('UPDATE', addMessagingToRegistryFn);
 
     Object.entries(services).forEach(([serviceName, service]) => {
         serviceRegistry.add(serviceName, service);
     });
-    Object.entries(legacyServices).forEach(([serviceName, service]) => {
-        legacyServiceRegistry.add(serviceName, service);
-    });
 
-    return legacyServiceRegistry;
+    registry.category('wowlToLegacyServiceMappers').add('bus_service_to_legacy_env', makeBusServiceToLegacyEnv);
+    registry.category('wowlToLegacyServiceMappers').add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv);
 }
 
 /**
@@ -135,8 +119,6 @@ function setupMessagingServiceRegistries({
  * @param {Object} param0
  * @param {Object} [param0.serverData]
  * @param {Object} [param0.services]
- * @param {Object} [param0.legacyServices]
- * @param {Object} [param0.legacyParams={}]
  * @param {Object} [param0.loadingBaseDelayDuration]
  * @param {Object} [param0.messagingBeforeCreationDeferred]
  * @param {Promise} [param0.testSetupDoneDeferred] The Promise to whose revolution has to be
@@ -154,7 +136,7 @@ function setupMessagingServiceRegistries({
             servicesParameters[parameterName] = value;
         }
     }
-    const legacyServiceRegistry = setupMessagingServiceRegistries(servicesParameters);
+    setupMessagingServiceRegistries(servicesParameters);
 
     const webClientParameters = {};
     for (const [parameterName, value] of param0Entries) {
@@ -162,15 +144,7 @@ function setupMessagingServiceRegistries({
             webClientParameters[parameterName] = value;
         }
     }
-    webClientParameters.legacyParams = {
-        legacyServicesToDeployInWowlEnv: {
-            legacy_bus_service: legacyBusService,
-        },
-        serviceRegistry: legacyServiceRegistry,
-        ...webClientParameters.legacyParams,
-    };
-    const webClient = await createWebClient(webClientParameters);
-    return webClient;
+    return createWebClient(webClientParameters);
 }
 
 export {

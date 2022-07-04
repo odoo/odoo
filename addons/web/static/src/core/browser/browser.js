@@ -73,6 +73,9 @@ export function makeRAMLocalStorage() {
     return {
         setItem(key, value) {
             store[key] = value;
+            window.dispatchEvent(
+                new StorageEvent('storage', { key, newValue: value })
+            );
         },
         getItem(key) {
             return store[key];
@@ -82,6 +85,9 @@ export function makeRAMLocalStorage() {
         },
         removeItem(key) {
             delete store[key];
+            window.dispatchEvent(
+                new StorageEvent('storage', { key, newValue: null })
+            );
         },
         get length() {
             return Object.keys(store).length;

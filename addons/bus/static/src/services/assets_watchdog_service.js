@@ -4,19 +4,16 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
-const { Component } = owl;
-
 export const assetsWatchdogService = {
-    dependencies: ["notification"],
+    dependencies: ["bus_service", "notification"],
 
-    start(env, { notification }) {
+    start(env, { bus_service, notification }) {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
-            const legacyEnv = Component.env;
-            legacyEnv.services.bus_service.onNotification(this, onNotification);
-            legacyEnv.services.bus_service.startPolling();
+            bus_service.onNotification(this, onNotification);
+            bus_service.startPolling();
         });
 
         /**

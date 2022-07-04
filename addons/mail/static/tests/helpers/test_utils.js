@@ -566,7 +566,6 @@ async function start(param0 = {}) {
     registerCleanup(async () => {
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
         webClient.env.services.messaging.modelManager.destroy();
-        webClient.env.services.legacy_bus_service.destroy();
         delete webClient.env.services.messaging;
         delete owl.Component.env.services.messaging;
         delete owl.Component.env[wowlServicesSymbol].messaging;

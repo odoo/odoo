@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { data } from 'mail.discuss_public_channel_template';
-import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
+import { messagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
 
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view_container/discuss_public_view_container';
@@ -46,10 +46,11 @@ Component.env = legacyEnv;
     serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
     serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
     serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
-    serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(Component.env));
 
     serviceRegistry.add('messaging', messagingService);
     serviceRegistry.add('messagingValues', messagingValuesService);
+
+    registry.category('wowlToLegacyServiceMappers').add('make_messaging_to_legacy_env', messagingToLegacyEnv);
 
     const mainComponentsRegistry = registry.category('main_components');
     mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });

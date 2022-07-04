@@ -1,33 +1,24 @@
 /** @odoo-module */
 
-import * as legacyRegistry from "web.Registry";
-import * as BusService from "bus.BusService";
-import * as RamStorage from "web.RamStorage";
-import * as AbstractStorageService from "web.AbstractStorageService";
+import { busService } from "@bus/services/bus_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
-import { assetsWatchdogService } from "@bus/js/services/assets_watchdog_service";
+import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
 import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-const LocalStorageService = AbstractStorageService.extend({
-    storage: new RamStorage(),
-});
 const serviceRegistry = registry.category("services");
 
 QUnit.module("Bus Assets WatchDog", (hooks) => {
-    let legacyServicesRegistry;
     let target;
     hooks.beforeEach((assert) => {
-        legacyServicesRegistry = new legacyRegistry();
-        legacyServicesRegistry.add("bus_service", BusService);
-        legacyServicesRegistry.add("local_storage", LocalStorageService);
-
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
+        serviceRegistry.add("bus_service", busService);
         patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-            clearTimeout: () => {},
+            setTimeout(fn) {
+                return this._super(fn, 0);
+            },
             location: {
                 reload: () => assert.step("reloadPage"),
             },
@@ -56,7 +47,6 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         };
 
         await createWebClient({
-            legacyParams: { serviceRegistry: legacyServicesRegistry },
             mockRPC,
         });
 
