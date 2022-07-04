@@ -271,7 +271,6 @@ FormRenderer.include({
                     }
                 }
                 this.trigger_up('preview_attachment_validation');
-                this._updateChatterContainerTarget();
             } else {
                 this.attachmentViewer = new AttachmentViewer(this, thread);
                 this.attachmentViewer.appendTo($(this.attachmentViewerTarget)).then(function () {
