@@ -31,7 +31,6 @@ QUnit.module('Website Backend Dashboard', {
                 if (route === '/website/fetch_dashboard_data') {
                     return Promise.resolve({
                         dashboards: {
-                            visits: {},
                             sales: { summary: {} },
                         },
                         groups: { system: true, website_designer: true },

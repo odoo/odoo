@@ -263,34 +263,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                            <div class="o_setting_left_pane">
-                                <field name="has_google_analytics_dashboard"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="has_google_analytics_dashboard"/>
-                                <div class="text-muted">
-                                    Follow your website traffic in Odoo.
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
-                                        <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
-                                    </div>
-                                    <div class="row">
-                                        <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
-                                        <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
-                                    </div>
-                                </div>
-                                <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                    <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/google_analytics_dashboard.html"
-                                        class="oe_link" target="_blank">
-                                        <i class="fa fa-arrow-right"/>
-                                        How to get my Client ID
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="plausbile_setting">
                             <div class="o_setting_left_pane">
                                 <field name="has_plausible_shared_key"/>
