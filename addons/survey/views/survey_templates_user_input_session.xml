@@ -61,7 +61,7 @@
     <template id="user_input_session_manage_content" name="Survey User Input Session Manage">
         <t t-set="question" t-value="survey.session_question_id" />
         <t t-set="is_scored_question" t-value="any(answer.answer_score for answer in question.suggested_answer_ids)" />
-        <t t-set="show_bar_chart" t-value="not question.is_page and question.question_type in ['simple_choice', 'multiple_choice']" />
+        <t t-set="show_bar_chart" t-value="question.question_type in ['simple_choice', 'multiple_choice']" />
         <t t-set="show_text_answers" t-value="question.question_type in ['char_box', 'date', 'datetime'] and not question.save_as_email and not question.save_as_nickname" />
         <div class="wrap min-vh-100 align-items-center justify-content-center d-flex flex-column o_survey_session_manage invisible"
             t-att-style="'display: none;' if is_rpc_call else ''"
