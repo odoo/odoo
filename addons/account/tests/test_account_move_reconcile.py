@@ -3330,6 +3330,56 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
         ])
 
+    def test_reconcile_cash_basis_tax_grid_reversal(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2016-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'debit': 0.0,      'credit': 1000.0,   'tax_tag_ids': [],  'account_id': self.company_data['default_account_revenue'].id},
+            {'debit': 0.0,      'credit': 333.33,   'tax_tag_ids': [],  'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1333.33,  'credit': 0.0,      'tax_tag_ids': [],  'account_id': self.company_data['default_account_receivable'].id},
+        ])
+
+        reversal_wizard = self.env['account.move.reversal']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'reason': "test_reconcile_cash_basis_tax_grid_reversal",
+                'refund_method': 'refund',
+                'journal_id': invoice.journal_id.id,
+            })
+        refund = self.env['account.move'].browse(reversal_wizard.reverse_moves()['res_id'])
+        refund.action_post()
+
+        self.assertRecordValues(refund.line_ids.sorted('balance'), [
+            {'debit': 0.0,      'credit': 1333.33,  'tax_tag_ids': [],  'account_id': self.company_data['default_account_receivable'].id},
+            {'debit': 333.33,   'credit': 0.0,      'tax_tag_ids': [],  'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1000.0,   'credit': 0.0,      'tax_tag_ids': [],  'account_id': self.company_data['default_account_revenue'].id},
+        ])
+
+        reversal_wizard = self.env['account.move.reversal']\
+            .with_context(active_model='account.move', active_ids=refund.ids)\
+            .create({
+                'reason': "test_reconcile_cash_basis_tax_grid_reversal",
+                'refund_method': 'refund',
+                'journal_id': refund.journal_id.id,
+            })
+        reversed_refund = self.env['account.move'].browse(reversal_wizard.reverse_moves()['res_id'])
+
+        self.assertRecordValues(reversed_refund.line_ids.sorted('balance'), [
+            {'debit': 0.0,      'credit': 1000.0,   'tax_tag_ids': [],  'account_id': self.company_data['default_account_revenue'].id},
+            {'debit': 0.0,      'credit': 333.33,   'tax_tag_ids': [],  'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1333.33,  'credit': 0.0,      'tax_tag_ids': [],  'account_id': self.company_data['default_account_receivable'].id},
+        ])
+
     def test_reconcile_cash_basis_tax_grid_multi_taxes(self):
         ''' Test the tax grid when reconciling an invoice with multiple taxes/tax repartition. '''
         base_taxes = self.cash_basis_tax_a_third_amount + self.cash_basis_tax_tiny_amount
