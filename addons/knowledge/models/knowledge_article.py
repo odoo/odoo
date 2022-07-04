@@ -726,10 +726,16 @@ class Article(models.Model):
         :param int before_article_id: id of an article before which the article
           should be moved. Otherwise it is put as last parent children;
         :param bool is_private: set as private;
+
+        :return: True
         """
         self.ensure_one()
-        parent = self.browse(parent_id) if parent_id else self.env['knowledge.article']
-        before_article = self.browse(before_article_id)
+        before_article = self.env['knowledge.article'].browse(before_article_id) if before_article_id else self.env['knowledge.article']
+        parent = self.env['knowledge.article'].browse(parent_id) if parent_id else self.env['knowledge.article']
+
+        if is_private:
+            # making an article private requires a lot of extra-processing, use specific method
+            return self._move_and_make_private(parent=parent, before_article=before_article)
 
         values = {'parent_id': parent_id}
         if before_article:
@@ -738,34 +744,10 @@ class Article(models.Model):
             # be sure to have an internal permission on the article if moved outside
             # of an hierarchy
             values.update({
-                'internal_permission': 'none' if is_private else 'write',
+                'internal_permission': 'write',
                 'is_desynchronized': False
             })
 
-        # if set as standalone private: remove members, ensure current user is the
-        # only member -> require sudo to bypass member ACLs
-        if not parent and is_private:
-            # explicitly check for rights before going into sudo
-            try:
-                self.check_access_rights('write')
-                (self + parent).check_access_rule('write')
-            except:
-                raise AccessError(
-                    _("You are not allowed to move this article under article %(parent_name)s",
-                      parent_name=parent.display_name)
-                )
-            self_sudo = self.sudo()
-            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-            member_command = [(2, member.id) for member in self_sudo.article_member_ids if member.partner_id != self.env.user.partner_id]
-            if self_member:
-                member_command.append((1, self_member.id, {'permission': 'write'}))
-            else:
-                member_command.append((0, 0, {
-                    'partner_id': self.env.user.partner_id.id,
-                    'permission': 'write'
-                }))
-            values['article_member_ids'] = member_command
-            return self_sudo.write(values)
         return self.write(values)
 
     def _resequence(self):
@@ -1199,6 +1181,59 @@ class Article(models.Model):
             })
 
         return writable_descendants
+
+    def _move_and_make_private(self, parent=False, before_article=False):
+        """ Set as private: remove members, ensure current user is the only member
+        with write access. Requires a sudo to bypass member ACLs after checking
+        write access on the article.
+
+        :param <knowledge.article> parent: an optional parent to move the article under;
+        :param <knowledge.article> before_article: article before which the article
+          should be moved. Otherwise it is put as last parent children;
+
+        :return: True
+        """
+        self.ensure_one()
+        parent = parent if parent is not False else self.env['knowledge.article']
+        before_article = before_article if before_article is not False else self.env['knowledge.article']
+
+        article_values = {'parent_id': parent.id}
+        if before_article:
+            article_values['sequence'] = before_article.sequence
+
+        # when moving as root: imply member manipulations hence sudo and forced ACL check
+        writable_self = self
+        if not parent:
+            try:
+                self.check_access_rights('write')
+                (self + parent).check_access_rule('write')
+            except:
+                raise AccessError(
+                    _("You are not allowed to move this article under article %(parent_name)s",
+                      parent_name=parent.display_name)
+                )
+
+            # be sure to have an internal permission on the article if moved outside
+            # of an hierarchy
+            article_values.update({
+                'internal_permission': 'none',
+                'is_desynchronized': False,
+            })
+
+            writable_self = self.sudo()
+            self_member = writable_self.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
+            member_command = [(2, member.id) for member in writable_self.article_member_ids if member.partner_id != self.env.user.partner_id]
+
+            if self_member:
+                member_command.append((1, self_member.id, {'permission': 'write'}))
+            else:
+                member_command.append((0, 0, {
+                    'partner_id': self.env.user.partner_id.id,
+                    'permission': 'write'
+                }))
+            article_values['article_member_ids'] = member_command
+
+        return writable_self.write(article_values)
 
     # ------------------------------------------------------------
     # PERMISSIONS BATCH COMPUTATION
