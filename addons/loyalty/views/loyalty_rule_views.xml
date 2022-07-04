@@ -7,22 +7,7 @@
             <form class="loyalty-rule-form">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
-                            <field name="product_ids" widget="many2many_tags"/>
-                            <field name="product_category_id"/>
-                            <field name="product_tag_id"/>
-                        </group>
-                        <group>
-                            <label for="reward_point_amount"/>
-                            <span>
-                                <field name="reward_point_amount" class="oe_inline"/>
-                                <field name="reward_point_name" class="oe_inline"/>
-                            </span>
-                            <label for="reward_point_mode" string=""/>
-                            <field name="reward_point_mode" widget="radio" nolabel="1"/>
-                        </group>
-                        <group>
+                        <group string="Conditions">
                             <field name="minimum_qty"/>
                             <label for="minimum_amount"/>
                             <div class="o_row">
@@ -30,13 +15,35 @@
                                 <span>tax</span>
                                 <field name="minimum_amount_tax_mode" class="oe_inline"/>
                             </div>
+                        </group>      
+                        <group string="Among">
+                            <field name="product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="product_category_id"/>
+                            <field name="product_tag_id"/>
+                        </group>          
+
+                        <group string="Coupon points" colspan="2" groups="base.group_no_one">
+                            <p class="text-muted">
+                                Grant the amount of coupon points defined as the coupon value
+                            </p>
+
+                            <div invisible="1">
+                                <label for="reward_point_amount"/>
+                                <span>
+                                    <field name="reward_point_amount" class="oe_inline"/>
+                                    <field name="reward_point_name" class="oe_inline"/>
+                                </span>
+                                <label for="reward_point_mode" string=""/>
+                                <field name="reward_point_mode" widget="radio" nolabel="1"/>
+                                
+                                <field name="mode" widget="radio"/>
+                                <field name="code"
+                                    attrs="{'invisible': [('mode', '!=', 'with_code')],
+                                        'required': [('mode', '=', 'with_code')]}"/>                            
+                            </div>
                         </group>
-                        <group>
-                            <field name="mode" widget="radio"/>
-                            <field name="code"
-                                attrs="{'invisible': [('mode', '!=', 'with_code')],
-                                    'required': [('mode', '=', 'with_code')]}"/>
-                        </group>
+
                     </group>
                 </sheet>
             </form>
@@ -67,6 +74,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click_edit mx-0">
+
+
+
                             <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
                                 <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/></a>
                             </t>
@@ -96,12 +106,18 @@
                                     <br/>
                                 </t>
                             </a>
+
+
+
                             <t t-if="record.code.raw_value">
                                 <a><i class="fa fa-pencil-square-o fa-fw" title="Code"/>With Code: <field name="code"/></a>
                                 <br/>
                             </t>
                             <i class="fa fa-gift fa-fw" title="conditions"/> <span>Reward <field name="reward_point_amount"/> <field name="reward_point_name"/> <field name="reward_point_mode"/></span>
+                        
+
                         </div>
+
                     </t>
                 </templates>
             </kanban>

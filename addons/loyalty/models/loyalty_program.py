@@ -24,7 +24,7 @@ class LoyaltyProgram(models.Model):
 
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
-    rule_ids = fields.One2many('loyalty.rule', 'program_id', 'Triggers', copy=True,
+    rule_ids = fields.One2many('loyalty.rule', 'program_id', 'Conditional rules', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
     reward_ids = fields.One2many('loyalty.reward', 'program_id', 'Rewards', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
@@ -77,6 +77,10 @@ class LoyaltyProgram(models.Model):
 
     @api.constrains('reward_ids')
     def _constrains_reward_ids(self):
+        for program in self:
+            print("\n\nCOUCOU\n\n")
+            print(len(program.reward_ids))
+            print(len(program.rule_ids))
         if any(not program.reward_ids for program in self):
             raise ValidationError(_('A program must have at least one reward.'))
 
