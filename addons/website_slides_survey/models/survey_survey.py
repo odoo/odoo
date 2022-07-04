@@ -28,11 +28,12 @@ class Survey(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_course(self):
-        slides = self.slide_ids.filtered(lambda slide: slide.slide_type == "certification").exists()
-        if slides:
-            raise ValidationError(_("The Certification '%(certification_name)s' cannot be deleted because it is still being used by the Course(s) '%(courses_names)s'",
-                                    certification_name=self.title,
-                                    courses_names=', '.join(slides.mapped('channel_id.name'))))
+        for record in self:
+            slides = record.slide_ids.filtered(lambda slide: slide.slide_type == "certification").exists()
+            if slides:
+                raise ValidationError(_("The Certification '%(certification_name)s' cannot be deleted because it is still being used by the Course(s) '%(courses_names)s'",
+                                        certification_name=record.title,
+                                        courses_names=', '.join(slides.mapped('channel_id.name'))))
 
     # ---------------------------------------------------------
     # Actions
