@@ -1721,8 +1721,9 @@ class SaleOrderLine(models.Model):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_uom_qty'] = self.product_uom_qty or 1.0
 
+        lang = get_lang(self.env, self.order_id.partner_id.lang).code
         product = self.product_id.with_context(
-            lang=get_lang(self.env, self.order_id.partner_id.lang).code,
+            lang=lang,
             partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
@@ -1730,7 +1731,7 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
+        vals.update(name=self.with_context(lang=lang).get_sale_order_line_multiline_description_sale(product))
 
         self._compute_tax_id()
 
@@ -1945,12 +1946,12 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - custom_ptavs):
-            name += "\n" + ptav.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + ptav.display_name
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
         custom_values = sorted(self.product_custom_attribute_value_ids, key=lambda r: (r.custom_product_template_attribute_value_id.id, r.id))
         # display the is_custom values
         for pacv in custom_values:
-            name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + pacv.display_name
 
         return name
