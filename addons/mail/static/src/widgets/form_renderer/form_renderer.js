@@ -24,6 +24,7 @@ FormRenderer.include({
     init(parent, state, params) {
         this._super(...arguments);
         this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;
+        this.isChatterInSheet = false;
         this.hasAttachmentViewerFeature = params.hasAttachmentViewerFeature;
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
@@ -132,6 +133,10 @@ FormRenderer.include({
         this._super(...arguments);
         if (this.hasChatter) {
             this.chatterContainerTargetPlaceholder.replaceWith(this._chatterContainerTarget);
+            // isChatterInSheet can only be written from this specific life-cycle method because the
+            // parentNode is not accessible before the target node is actually in DOM. Ideally this
+            // should be determined statically in `_processNode` but the parent is not provided.
+            this.isChatterInSheet = this._chatterContainerTarget.parentNode.classList.contains('o_form_sheet');
             this._updateChatterContainerTarget();
         }
         if (this.hasAttachmentViewerFeature) {
@@ -165,18 +170,18 @@ FormRenderer.include({
     _interchangeChatter() {
         const $sheetBg = this.$('.o_form_sheet_bg');
         this._updateChatterContainerTarget();
+        if (this._isChatterAside()) {
+            $(this._chatterContainerTarget).insertAfter($sheetBg);
+        } else if (this.isChatterInSheet) {
+            const $sheet = this.$('.o_form_sheet');
+            dom.append($sheet, $(this._chatterContainerTarget));
+        } else {
+            dom.append($sheetBg, $(this._chatterContainerTarget));
+        }
         if (this.hasAttachmentViewer()) {
             $(this.attachmentViewerTarget).insertAfter($sheetBg);
-            dom.append($sheetBg, $(this._chatterContainerTarget), {
-                callbacks: [{ widget: this.chatter }],
-                in_DOM: this._isInDom,
-            });
         } else {
-            $(this._chatterContainerTarget).insertAfter($sheetBg);
-            dom.append($sheetBg, $(this.attachmentViewerTarget), {
-                callbacks: [],
-                in_DOM: this._isInDom,
-            });
+            dom.append($sheetBg, $(this.attachmentViewerTarget));
         }
         this._updateChatterContainerComponent();
     },
