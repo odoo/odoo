@@ -19,7 +19,7 @@ class Article(models.Model):
     _name = "knowledge.article"
     _description = "Knowledge Article"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = "favorite_count, create_date desc, id desc"
+    _order = "favorite_count desc, write_date desc, id desc"
     _mail_post_access = 'read'
 
     active = fields.Boolean(default=True)
@@ -434,7 +434,8 @@ class Article(models.Model):
         if (value and operator == '=') or (not value and operator == '!='):
             return [('favorite_ids.user_id', 'in', [self.env.uid])]
 
-        # easier than a not in on a 2many field
+        # easier than a not in on a 2many field (hint: use sudo because of
+        # complicated ACL on favorite based on user access on article)
         favorited = self.env['knowledge.article.favorite'].sudo().search(
             [('user_id', '=', self.env.uid)]
         ).article_id
@@ -876,7 +877,7 @@ class Article(models.Model):
         search_domain = ["|", ("name", "ilike", search_query), ("root_article_id.name", "ilike", search_query)]
         articles = self.search(
             expression.AND([search_domain, [("is_user_favorite", "=", True)]]),
-            limit=limit
+            limit=None,
         )
         sorted_articles = articles.sorted(
             key=lambda a: (-1 * a.user_favorite_sequence,
@@ -890,7 +891,8 @@ class Article(models.Model):
         if len(sorted_articles) < limit:
             articles = self.search(
                 expression.AND([search_domain, [("is_user_favorite", "=", False)]]),
-                limit=(limit-len(sorted_articles))
+                limit=(limit-len(sorted_articles)),
+                order='favorite_count desc, write_date desc, id desc'
             )
             sorted_articles += articles.sorted(
                 key=lambda a: (a.favorite_count,
@@ -898,6 +900,8 @@ class Article(models.Model):
                                a.id),
                 reverse=True
             )
+        elif len(sorted_articles) > limit:
+            sorted_articles = sorted_articles[:limit]
 
         return sorted_articles.read(['id', 'name', 'is_user_favorite',
                                      'favorite_count', 'root_article_id', 'icon'])
