@@ -82,7 +82,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
             return await this.rpc({
                 model: 'sale.order',
                 method: 'search_read',
-                args: [domain, ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id'], offset, limit],
+                args: [domain, ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id', 'amount_unpaid'], offset, limit],
                 context: this.comp.env.session.user_context,
             });
         }
