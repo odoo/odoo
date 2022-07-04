@@ -167,7 +167,8 @@ class SaleOrderLine(models.Model):
             if line.product_id and line.order_id.sale_order_template_id:
                 for template_line in line.order_id.sale_order_template_id.sale_order_template_line_ids:
                     if line.product_id == template_line.product_id:
-                        line.name = template_line.with_context(lang=line.order_id.partner_id.lang).name + line._get_sale_order_line_multiline_description_variants()
+                        lang = line.order_id.partner_id.lang
+                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_sale_order_line_multiline_description_variants()
                         break
 
 
