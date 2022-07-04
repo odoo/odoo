@@ -891,7 +891,8 @@ class PaymentTransaction(models.Model):
         if not self:
             ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
             # we don't want to forever try to process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # as for Paypal, it sometime takes 3 or 4 days for payment verification due to weekend. Set 4 here should be fine.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
                                 ('is_processed', '=', False),
