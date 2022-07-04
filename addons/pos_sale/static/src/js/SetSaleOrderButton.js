@@ -30,7 +30,8 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
               // LegacyComponent doesn't work the same way as before.
               // We need to use Gui here to show the screen. This will work
               // because ui methods in Gui is bound to the root component.
-              Gui.showScreen('SaleOrderManagementScreen');
+              const screen = this.env.isMobile ? 'MobileSaleOrderManagementScreen' : 'SaleOrderManagementScreen';
+              Gui.showScreen(screen);
           } catch (error) {
               if (isConnectionError(error)) {
                   this.showPopup('ErrorPopup', {
