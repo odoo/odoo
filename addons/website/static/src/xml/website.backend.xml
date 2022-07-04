@@ -30,64 +30,34 @@
     <t t-name="website.dashboard_content">
         <div class="o_website_dashboard_content">
             <t t-call="website.plausible_content"/>
-            <t t-call="website.google_analytics_content"/>
         </div>
     </t>
-    <t t-name="website.google_analytics_content">
+
+    <t t-name="website.plausible_content">
         <div class="row o_dashboard_visits" t-if="widget.groups.website_designer">
             <div class="col-12 o_box">
-                <h2>Visits</h2>
-                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
-                    <div class="row js_analytics_components"/>
-                    <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                <h2>Analytics</h2>
+                <div t-if="widget.dashboards_data.plausible_share_url" class="row">
+                    <div class="ratio ratio-1x1">
+                        <iframe t-att-src='widget.dashboards_data.plausible_share_url' class="embed-responsive-item" frameborder="0" loading="lazy"/>
+                    </div>
                 </div>
-                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-lg-12">
+                <div t-else="" class="col-lg-12">
                     <div class="o_demo_background">
                         <div class="o_layer">
                         </div>
                         <div class="o_buttons text-center">
-                            <h3>There is no data currently available.</h3>
-                            <button class="btn btn-primary js_link_analytics_settings d-block mx-auto mb8">Connect Google Analytics</button>
+                            <h3>Easily track your visitor with Plausible</h3>
+                            <a class="btn btn-primary" target="_blank"
+                               href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/plausible.html">
+                                Connect Plausible
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </t>
-    <t t-name="website.plausible_content">
-        <div class="row" t-if="widget.groups.website_designer &amp;&amp; widget.dashboards_data.plausible_share_url">
-            <div class="col-12 o_box">
-                <h2>Analytics</h2>
-                <div>
-                    <div class="row">
-                        <div class="ratio ratio-1x1">
-                            <iframe t-att-src='widget.dashboards_data.plausible_share_url' class="embed-responsive-item" frameborder="0" loading="lazy"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <div t-name="website.unauthorized_analytics" class="col-12 js_unauthorized_message mb16">
-        <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
-        <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
-        <span t-if="reason === 'not_initialized'">Google Analytics initialization failed. Maybe this domain is not whitelisted in your Google Analytics project for this client ID.</span>
-    </div>
-
-    <div t-name="website.ga_dialog_content">
-        Your Measurement ID: <input type="text" name="ga_analytics_key" placeholder="G-XXXXXXXXXX" t-att-value="ga_analytics_key" style="width: 100%"></input>
-        <a href="https://support.google.com/analytics/answer/9304153" target="_blank">
-            <i class="fa fa-arrow-right"/>
-            How to get my Measurement ID
-        </a>
-        <br/><br/>
-        Your Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
-        <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/google_analytics_dashboard.html" target="_blank">
-            <i class="fa fa-arrow-right"/>
-            How to get my Client ID
-        </a>
-    </div>
 
     <t t-name="website.DateRangeButtons">
         <!-- TODO: Hide in mobile as it is going to push in control panel and it breaks UI, maybe we will improve it in future -->
