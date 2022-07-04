@@ -258,13 +258,6 @@ FormRenderer.include({
                 this.attachmentViewer.attachments.length !== thread.attachmentsInWebClientView.length
             ) {
                 this.attachmentViewer.updateContents(thread);
-            } else {
-                // The attachmentViewer lose its event listeners when it is reused,
-                // we just need to reregister them.
-                if (this.attachmentViewer.$el) {
-                    this.attachmentViewer._undelegateEvents();
-                    this.attachmentViewer._delegateEvents();
-                }
             }
             this.trigger_up('preview_attachment_validation');
         } else {
