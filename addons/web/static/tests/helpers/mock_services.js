@@ -12,6 +12,7 @@ import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 import { companyService } from "@web/webclient/company_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 
 const { Component, status } = owl;
 
@@ -60,7 +61,16 @@ export function makeFakeRPCService(mockRPC) {
     return {
         name: "rpc",
         start() {
-            return buildMockRPC(mockRPC);
+            const rpcService = buildMockRPC(mockRPC);
+            return function () {
+                let rejectFn;
+                const rpcProm = new Promise((resolve, reject) => {
+                    rejectFn = reject;
+                    resolve(rpcService(...arguments));
+                });
+                rpcProm.abort = () => rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                return rpcProm;
+            };
         },
         specializeForComponent: rpcService.specializeForComponent,
     };

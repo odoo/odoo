@@ -4,26 +4,23 @@ import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 
-const { Component } = owl;
-
 export const calendarNotificationService = {
-    dependencies: ["action", "notification", "rpc"],
+    dependencies: ["action", "bus_service", "notification", "rpc"],
 
-    start(env, { action, notification, rpc }) {
+    start(env, { action, bus_service, notification, rpc }) {
         let calendarNotifTimeouts = {};
         let nextCalendarNotifTimeout = null;
         const displayedNotifications = new Set();
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
-            const legacyEnv = Component.env;
-            legacyEnv.services.bus_service.onNotification(this, (notifications) => {
+            bus_service.onNotification(this, (notifications) => {
                 for (const { payload, type } of notifications) {
                     if (type === "calendar.alarm") {
                         displayCalendarNotification(payload);
                     }
                 }
             });
-            legacyEnv.services.bus_service.startPolling();
+            bus_service.startPolling();
         });
 
         /**
