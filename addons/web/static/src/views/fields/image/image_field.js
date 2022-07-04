@@ -29,23 +29,6 @@ export class ImageField extends Component {
         });
     }
 
-    get url() {
-        if (this.state.isValid && this.props.value) {
-            if (isBinarySize(this.props.value)) {
-                const previewFieldName = this.props.previewImage || this.props.name;
-                return url("/web/image", {
-                    model: this.props.resModel,
-                    id: this.props.resId,
-                    field: previewFieldName,
-                });
-            } else {
-                // Use magic-word technique for detecting image type
-                const magic = fileTypeMagicWordMap[this.props.value[0]] || "png";
-                return `data:image/${magic};base64,${this.props.value}`;
-            }
-        }
-        return placeholder;
-    }
     get sizeStyle() {
         let style = "";
         if (this.props.width) {
@@ -62,10 +45,26 @@ export class ImageField extends Component {
     get tooltipAttributes() {
         return {
             template: "web.ImageZoomTooltip",
-            info: JSON.stringify({ url: this.url }),
+            info: JSON.stringify({ url: this.getUrl(this.props.name) }),
         };
     }
 
+    getUrl(previewFieldName) {
+        if (this.state.isValid && this.props.value) {
+            if (previewFieldName !== this.props.name || isBinarySize(this.props.value)) {
+                return url("/web/image", {
+                    model: this.props.resModel,
+                    id: this.props.resId,
+                    field: previewFieldName,
+                });
+            } else {
+                // Use magic-word technique for detecting image type
+                const magic = fileTypeMagicWordMap[this.props.value[0]] || "png";
+                return `data:image/${magic};base64,${this.props.value}`;
+            }
+        }
+        return placeholder;
+    }
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
@@ -108,7 +107,7 @@ ImageField.extractProps = (fieldName, record, attrs) => {
     return {
         enableZoom: attrs.options.zoom,
         zoomDelay: attrs.options.zoom_delay,
-        previewImage: attrs.preview_image,
+        previewImage: attrs.options.preview_image,
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         width: attrs.options.size ? attrs.options.size[0] : attrs.width,
         height: attrs.options.size ? attrs.options.size[1] : attrs.height,

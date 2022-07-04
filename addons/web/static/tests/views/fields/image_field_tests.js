@@ -266,6 +266,43 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "ImageField displays the right images with zoom and preview_image options",
+        async function (assert) {
+            serverData.models.partner.records[0].document = MY_IMAGE;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <field name="document" widget="image" options="{'zoom': true, 'preview_image': 'document_preview', 'zoom_delay': 600}" />
+                </form>`,
+            });
+
+            assert.strictEqual(
+                JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
+                `data:image/png;base64,${MY_IMAGE}`,
+                "tooltip show the full image from the field value"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_image img").dataset["tooltipDelay"],
+                "600",
+                "tooltip has the right delay"
+            );
+            assert.ok(
+                target
+                    .querySelector(".o_field_image img")
+                    .dataset["src"].includes(
+                        "/web/image?model=partner&id=1&field=document_preview"
+                    ),
+                "image src is the preview image given in option"
+            );
+        }
+    );
+
     QUnit.test("ImageField in subviews is loaded correctly", async function (assert) {
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
