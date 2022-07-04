@@ -57,7 +57,7 @@
                             </div>
                             <div t-if="(env.isSmall or !group.isFolded) and group.progressBars.length" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
-                                    <t t-foreach="group.progressBars" t-as="progressBar" t-key="progressBar.color">
+                                    <t t-foreach="group.progressBars" t-as="progressBar" t-key="progressBar.value">
                                         <div t-if="progressBar.count"
                                             role="progressbar"
                                             class="progress-bar o_bar_has_records"
