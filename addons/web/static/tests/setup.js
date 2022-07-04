@@ -117,6 +117,8 @@ function makeMockLocation(hasListeners = () => true) {
 function patchBrowserWithCleanup() {
     const originalAddEventListener = browser.addEventListener;
     const originalRemoveEventListener = browser.removeEventListener;
+    const originalSetTimeout = browser.setTimeout;
+    const originalClearTimeout = browser.clearTimeout;
 
     let hasHashChangeListeners = false;
     const mockLocation = makeMockLocation(() => hasHashChangeListeners);
@@ -133,6 +135,15 @@ function patchBrowserWithCleanup() {
                 registerCleanup(() => {
                     originalRemoveEventListener(...arguments);
                 });
+            },
+            // patch setTimeout to automatically remove timeouts bound (via
+            // browser.setTimeout) during a test (e.g. during the deployment of a service)
+            setTimeout() {
+                const timeout = originalSetTimeout(...arguments);
+                registerCleanup(() => {
+                    originalClearTimeout(timeout);
+                });
+                return timeout;
             },
             navigator: {
                 userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),

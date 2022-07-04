@@ -46,6 +46,10 @@ export const legacySetupProm = new Promise((resolve) => {
     const legacyCommandService = makeLegacyCommandService(legacyEnv);
     serviceRegistry.add("legacy_command", legacyCommandService);
     serviceRegistry.add("legacy_dropdown", makeLegacyDropdownService(legacyEnv));
+    const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
+    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
+        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
+    }
     await Promise.all([whenReady(), session.is_bound]);
     legacyEnv.templates = session.owlTemplates;
     legacySetupResolver(legacyEnv);

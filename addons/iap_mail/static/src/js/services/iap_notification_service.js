@@ -4,12 +4,11 @@ import { Markup } from 'web.utils';
 import { registry } from "@web/core/registry";
 
 export const iapNotificationService = {
-    dependencies: ["notification"],
+    dependencies: ["bus_service", "notification"],
 
-    start(env, { notification }) {
+    start(env, { bus_service, notification }) {
         env.bus.on("WEB_CLIENT_READY", null, async () => {
-            const legacyEnv = owl.Component.env;
-            legacyEnv.services.bus_service.onNotification(this, (notifications) => {
+            bus_service.onNotification(this, (notifications) => {
                 for (const { payload, type } of notifications) {
                     if (type === 'iap_notification') {
                         if (payload.error_type == 'success') {
@@ -20,7 +19,7 @@ export const iapNotificationService = {
                     }
                 }
             });
-            legacyEnv.services.bus_service.startPolling();
+            bus_service.startPolling();
         });
 
         /**

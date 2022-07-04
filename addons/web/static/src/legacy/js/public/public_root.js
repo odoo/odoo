@@ -377,6 +377,10 @@ export async function createPublicRoot(RootWidget) {
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
     serviceRegistry.add("legacy_rainbowman_service", makeLegacyRainbowManService(legacyEnv));
+    const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
+    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
+        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
+    }
     await Promise.all([whenReady(), session.is_bound]);
 
     // Patch browser.fetch and the rpc service to use the correct base url when
