@@ -13,6 +13,6 @@ class PaymentTestCommon(PaymentCommon):
 
         cls.notification_data = {
             'reference': cls.reference,
-            'cc_summary': '1234',
+            'payment_details': '1234',
             'simulated_state': 'done',
         }

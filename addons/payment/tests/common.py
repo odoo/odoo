@@ -188,7 +188,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
 
     def _create_token(self, sudo=True, **values):
         default_values = {
-            'name': "XXXXXXXXXXXXXXX-2565 (TEST)",
+            'payment_details': "1234",
             'acquirer_id': self.acquirer.id,
             'partner_id': self.partner.id,
             'acquirer_ref': "Acquirer Ref (TEST)",

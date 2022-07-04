@@ -293,7 +293,7 @@ class PaymentTransaction(models.Model):
         if cust_profile:
             token = self.env['payment.token'].create({
                 'acquirer_id': self.acquirer_id.id,
-                'name': cust_profile.get('name'),
+                'payment_details': cust_profile.get('payment_details'),
                 'partner_id': self.partner_id.id,
                 'acquirer_ref': cust_profile.get('payment_profile_id'),
                 'authorize_profile': cust_profile.get('profile_id'),

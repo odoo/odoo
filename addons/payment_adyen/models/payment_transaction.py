@@ -415,7 +415,7 @@ class PaymentTransaction(models.Model):
         additional_data = notification_data['additionalData']
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': payment_utils.build_token_name(additional_data.get('cardSummary')),
+            'payment_details': additional_data.get('cardSummary'),
             'partner_id': self.partner_id.id,
             'acquirer_ref': additional_data['recurring.recurringDetailReference'],
             'adyen_shopper_reference': additional_data['recurring.shopperReference'],

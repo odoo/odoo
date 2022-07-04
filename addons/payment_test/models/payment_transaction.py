@@ -202,11 +202,10 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        payment_details_short = notification_data['cc_summary']
         state = notification_data['simulated_state']
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': payment_utils.build_token_name(payment_details_short=payment_details_short),
+            'payment_details': notification_data['payment_details'],
             'partner_id': self.partner_id.id,
             'acquirer_ref': 'fake acquirer reference',
             'verified': True,
