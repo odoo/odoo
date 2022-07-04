@@ -19,7 +19,10 @@ class TestItEdiReverseCharge(TestItEdi):
         # Helper functions -----------
         def get_tag_ids(tag_codes):
             """ Helper function to define tag ids for taxes """
-            return cls.env['account.account.tag'].search([('applicability', '=', 'taxes'), ('name', 'in', tag_codes)]).ids
+            return cls.env['account.account.tag'].search([
+                ('applicability', '=', 'taxes'),
+                ('country_id.code', '=', 'IT'),
+                ('name', 'in', tag_codes)]).ids
 
         RepartitionLine = namedtuple('Line', 'factor_percent repartition_type tag_ids')
         def repartition_lines(*lines):
