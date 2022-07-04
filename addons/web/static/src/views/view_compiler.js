@@ -345,7 +345,12 @@ export class ViewCompiler {
         }
 
         button.setAttribute("clickParams", JSON.stringify(clickParams));
-        button.setAttribute("className", toStringExpression(el.className));
+        combineAttributes(
+            button,
+            "className",
+            [toStringExpression(el.className), button.className],
+            "+` `+"
+        );
         el.removeAttribute("class");
         button.removeAttribute("class");
 
