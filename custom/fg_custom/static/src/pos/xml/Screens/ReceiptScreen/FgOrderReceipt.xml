@@ -152,10 +152,10 @@
                     <span style="margin-left: 1%;" class="pos-receipt-left-align"><b><t t-esc="Math.round(total_qty)"/> Item(s)</b></span>
                     <span class="pos-receipt-right-align"><b><t t-esc="env.pos.format_currency_no_symbol(total_amt)"/></b></span>
                 </div>
-
-                <div class="open_discount" style="margin-top: 8%;font-size: 75%;">
-                    <span class="pos-receipt-left-align"><b>OPEN AMT</b></span>
-                    <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_discount + total_product_manually_discount)"/></span>
+                <t t-set="open_amt_total" t-value="receipt.total_discount + total_product_manually_discount"/>
+                <div t-if="open_amt_total > 0" class="open_discount" style="margin-top: 8%;font-size: 75%;">
+                    <span class="pos-receipt-left-align"><b>Discounts</b></span>
+                    <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/></span>
                 </div>
 
                 <div class="open_discount" style="margin-top: 8%;font-size: 75%;">
@@ -172,6 +172,10 @@
                             <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(line.amount)"/></span>
                         </div>
                     </t>
+                    <div class="div_receipt_change" style="margin-top: 8%;">
+                        <span class="pos-receipt-left-align"><b>Change Amount</b></span>
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.change)"/></span>
+                    </div>
                 </div>
 
 <!--                <div class="order_id" style="margin-top: 8%;font-size: 75%;">-->
@@ -179,11 +183,7 @@
 <!--                    <span class="pos-receipt-right-align"><t t-esc="receipt.website_order_id"/></span>-->
 <!--                </div>-->
 
-                <div class="vat_div" style="margin-top: 8%;font-size: 75%;">
-                    <div>
-                        <span class="pos-receipt-left-align"><b>VATable (V)</b></span>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>
-                    </div>
+                <div class="vat_div" style="margin-top: 5%;font-size: 75%;">
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT-Exempt (E)</b></span>
                         <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_e)"/></span>
@@ -191,6 +191,10 @@
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT Zero-Rated (Z)</b></span>
                         <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_z)"/></span>
+                    </div>
+                    <div>
+                        <span class="pos-receipt-left-align"><b>VATable (V)</b></span>
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT</b></span>
@@ -205,9 +209,9 @@
                     <span class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
                 </div>
 
-                <div class="total_discount" style="margin-top: 8%;font-size: 75%;">
+                <div t-if="open_amt_total > 0" class="total_discount" style="margin-top: 8%;font-size: 75%;">
                     <span class="pos-receipt-left-align"><b>*TOTAL SAVINGS</b></span>
-                    <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_discount + total_product_manually_discount)"/></span>
+                    <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/></span>
                 </div>
 
                 <div class="customer_information" style="margin-top: 8%;font-size: 75%;">
