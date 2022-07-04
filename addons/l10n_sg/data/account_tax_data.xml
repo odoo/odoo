@@ -635,7 +635,7 @@
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [ref('account_tax_report_line_applicable_goods_imported_value')],
+                        'plus_report_line_ids': [ref('account_tax_report_line_applicable_goods_imported_value'), ref('account_tax_report_line_total_taxable_purchases')],
                     }),
                     (0,0, {
                         'factor_percent': 100,
@@ -646,7 +646,7 @@
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [ref('account_tax_report_line_applicable_goods_imported_value')],
+                        'minus_report_line_ids': [ref('account_tax_report_line_applicable_goods_imported_value'), ref('account_tax_report_line_total_taxable_purchases')],
                     }),
                     (0,0, {
                         'factor_percent': 100,
