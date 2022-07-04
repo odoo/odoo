@@ -1,20 +1,50 @@
-odoo.define('barcodes.barcode_mobile_tests', function () {
+odoo.define('barcodes.barcode_mobile_tests', function (require) {
     "use strict";
 
-    QUnit.module('Barcodes', {}, function () {
+    const {barcodeService} = require("@barcodes/barcode_service");
+    const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
+    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+    const { registry } = require("@web/core/registry");
+    var testUtils = require('web.test_utils');
+
+    const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
+    const isMobileChrome = barcodeService.isMobileChrome;
+    var triggerEvent = testUtils.dom.triggerEvent;
+
+    function triggerKeyDown(char, target = document.body) {
+        let keycode;
+        if (char === 'Enter') {
+            keycode = $.ui.keyCode.ENTER;
+        } else if (char === "Tab") {
+            keycode = $.ui.keyCode.TAB;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        triggerEvent(target, 'keydown', {
+            key: char,
+            keyCode: keycode,
+        });
+    }
+    
+    QUnit.module('Barcodes', {
+        before() {
+            barcodeService.maxTimeBetweenKeysInMs = 0;
+            barcodeService.isMobileChrome = true;
+            registry.category("services").add("barcode", barcodeService, { force: true});
+            // remove this one later
+            registry.category("services").add("barcode_remapper", barcodeRemapperService);
+            this.env = makeTestEnv();
+        },
+        after() {
+            barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
+            barcodeService.isMobileChrome = isMobileChrome;
+        },
+    }, function () {
 
         QUnit.module('Barcodes Mobile');
 
         QUnit.test('barcode field automatically focus behavior', function (assert) {
             assert.expect(10);
-
-            // Mock Chrome mobile environment
-            var barcodeEvents = odoo.__DEBUG__.services["barcodes.BarcodeEvents"].BarcodeEvents;
-            var __isChromeMobile = barcodeEvents.isChromeMobile;
-            barcodeEvents.isChromeMobile = true;
-            // Rebind keyboard events
-            barcodeEvents.stop();
-            barcodeEvents.start();
 
             var $form = $(
                 '<form>' +
@@ -34,12 +64,13 @@ odoo.define('barcodes.barcode_mobile_tests', function () {
             $('#qunit-fixture').append($form);
 
             // Some elements doesn't need to keep the focus
-            $('body').keydown();
+            triggerKeyDown('a', document.body)
             assert.strictEqual(document.activeElement.name, 'barcode',
                 "hidden barcode input should have the focus");
 
             var $element = $form.find('select');
-            $element.focus().keydown();
+            $element.focus();
+            triggerKeyDown('b', $element[0]);
             assert.strictEqual(document.activeElement.name, 'barcode',
                 "hidden barcode input should have the focus");
 
@@ -49,7 +80,9 @@ odoo.define('barcodes.barcode_mobile_tests', function () {
                 'text', 'explicit_text'];
             for (var i = 0; i < keepFocusedElements.length; ++i) {
                 $element = $form.find('input[name=' + keepFocusedElements[i] + ']');
-                $element.focus().keydown();
+                $element.focus();
+                triggerKeyDown('c', $element[0]);
+    
                 assert.strictEqual(document.activeElement, $element[0],
                     "input " + keepFocusedElements[i] + " should keep focus");
             }
@@ -60,16 +93,12 @@ odoo.define('barcodes.barcode_mobile_tests', function () {
                 "textarea should keep focus");
             // contenteditable elements
             $element = $form.find('[contenteditable=true]');
-            $element.focus().keydown();
+            $element.focus();
+            triggerKeyDown('d', $element[0]);
             assert.strictEqual(document.activeElement, $element[0],
                 "contenteditable should keep focus");
 
             $('#qunit-fixture').empty();
-            barcodeEvents.isChromeMobile = __isChromeMobile;
-            // Rebind keyboard events
-            barcodeEvents.stop();
-            barcodeEvents.start();
-
             document.querySelector('input[name=barcode]').remove();
         });
     });

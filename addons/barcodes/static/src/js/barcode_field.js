@@ -4,18 +4,13 @@ odoo.define('barcodes.field', function(require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
-var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 // Field in which the user can both type normally and scan barcodes
 
 var FieldFloatScannable = basicFields.FieldFloat.extend({
     events: _.extend({}, basicFields.FieldFloat.prototype.events, {
-        // The barcode_events component intercepts keypresses and releases them when it
-        // appears they are not part of a barcode. But since released keypresses don't
-        // trigger native behaviour (like characters input), we must simulate it.
-        keypress: '_onKeypress',
+        barcode_scanned: '_onBarcodeScan',
     }),
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -27,7 +22,7 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
     _renderEdit: function () {
         var self = this;
         return Promise.resolve(this._super()).then(function () {
-            self.$input.data('enableBarcode', true);
+            self.$input[0].dataset.enableBarcode = true;
         });
     },
 
@@ -35,28 +30,11 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {KeyboardEvent} e
-     */
-    _onKeypress: function (e) {
-        /* only simulate a keypress if it has been previously prevented */
-        if (e.dispatched_by_barcode_reader !== true) {
-            if (!BarcodeEvents.is_special_key(e)) {
-                e.preventDefault();
-            }
-            return;
-        }
-        var character = String.fromCharCode(e.which);
-        var current_str = e.target.value;
-        var str_before_carret = current_str.substring(0, e.target.selectionStart);
-        var str_after_carret = current_str.substring(e.target.selectionEnd);
-        e.target.value = str_before_carret + character + str_after_carret;
-        var new_carret_index = str_before_carret.length + character.length;
-        e.target.setSelectionRange(new_carret_index, new_carret_index);
-        // trigger an 'input' event to notify the widget that it's value changed
-        $(e.target).trigger('input');
-    },
+    _onBarcodeScan() {
+        // trigger an 'input' event to make sure that the widget is call
+        // notifyChanges
+        this.$input.trigger('input');
+    }
 });
 
 // Field to use scan barcodes
