@@ -305,11 +305,7 @@ class KanbanGroup extends Group {
         /** @type {[string | typeof FALSE, string][]} */
         const colorEntries = Object.entries(colors);
         const selection = fieldSelection && Object.fromEntries(fieldSelection);
-
-        if (!colorEntries.some((v) => v[1] === "muted")) {
-            colorEntries.push([FALSE, "muted"]);
-        }
-
+        colorEntries.push([FALSE, "muted"]);
         return colorEntries.map(([value, color]) => {
             let string;
             if (value === FALSE) {

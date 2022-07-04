@@ -10149,4 +10149,75 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(getCardTexts()[0], "yop\nTOGGLER\nMENU");
     });
+
+    QUnit.test("'muted' already in progress bar colors", async (assert) => {
+        serverData.models.partner.records.push({ id: 5, bar: true }, { id: 6, bar: false });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="bar"/>
+                    <field name="foo"/>
+                    <progressbar field="foo" colors='{"yop": "muted", "gnap": "warning", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="state"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
+
+        assert.containsN(target, ".o_kanban_group:nth-child(1) .progress-bar", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(1) .progress-bar")].map(
+                (el) => el.dataset.tooltip
+            ),
+            ["1 blip", "1 Other"]
+        );
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .progress-bar", 4);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(2) .progress-bar")].map(
+                (el) => el.dataset.tooltip
+            ),
+            ["1 yop", "1 gnap", "1 blip", "1 Other"]
+        );
+        assert.deepEqual(getCounters(), ["2", "4"]);
+
+        await click(target.querySelector(".o_kanban_group:nth-child(2) .progress-bar"));
+
+        assert.deepEqual(getCounters(), ["2", "1"]);
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            "ABC"
+        );
+        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+
+        await click(
+            target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(2)")
+        );
+
+        assert.deepEqual(getCounters(), ["2", "1"]);
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            "GHI"
+        );
+        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+
+        await click(
+            target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(4)")
+        );
+
+        assert.deepEqual(getCounters(), ["2", "1"]);
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            ""
+        );
+        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+    });
 });
