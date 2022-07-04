@@ -37,9 +37,8 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
             let currentPartner = this.env.pos.get_order().get_partner();
             if (currentPartner) {
                 this.orderManagementContext.searchString = currentPartner.name;
-                let domain = this._computeDomain();
-                SaleOrderFetcher.setSearchDomain(domain);
             }
+            SaleOrderFetcher.setSearchDomain(this._computeDomain());
         }
         onInputKeydown(event) {
             if (event.key === 'Enter') {
