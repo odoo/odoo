@@ -529,7 +529,6 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             self.assertEqual(other.favorite_count, 0)
             self.assertEqual(other.user_favorite_sequence, -1)
 
-        # TDE FIXME: currently failing
         # search also includes descendants of articles having the term in their name
         result = self.env['knowledge.article'].get_user_sorted_articles('laygroun', limit=4)
         expected = self.article_workspace + self.workspace_children[1] + self.wkspace_grandchildren[2] + self.workspace_children[0]
