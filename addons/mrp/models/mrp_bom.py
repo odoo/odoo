@@ -507,6 +507,7 @@ class MrpByProduct(models.Model):
         default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True,
+                                     compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
                                      domain="[('category_id', '=', product_uom_category_id)]")
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', index=True)
     allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
@@ -524,11 +525,11 @@ class MrpByProduct(models.Model):
         help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
              "The total of all by-products' cost share must be less than or equal to 100.")
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
         """ Changes UoM if product_id changes. """
-        if self.product_id:
-            self.product_uom_id = self.product_id.uom_id.id
+        for record in self:
+            record.product_uom_id = record.product_id.uom_id.id
 
     def _skip_byproduct_line(self, product):
         """ Control if a byproduct line should be produced, can be inherited to add
