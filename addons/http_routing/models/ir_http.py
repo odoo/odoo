@@ -291,6 +291,9 @@ class IrHttp(models.AbstractModel):
     def get_frontend_session_info(self):
         session_info = super(IrHttp, self).get_frontend_session_info()
 
+        # this code doesn't work when http_routing is installed, but not website and portal
+        request.lang
+
         IrHttpModel = request.env['ir.http'].sudo()
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
