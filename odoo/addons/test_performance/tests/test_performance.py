@@ -112,7 +112,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N lines on rec1: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(3):
             rec1.write({'line_ids': [(0, 0, {'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
@@ -136,12 +136,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # delete N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=15, demo=15):
             rec1.write({'line_ids': [(2, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=12, demo=12):
+        with self.assertQueryCount(__system__=13, demo=13):
             rec1.write({'line_ids': [(2, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -151,12 +151,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # unlink N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=11, demo=11):
+        with self.assertQueryCount(__system__=12, demo=13):
             rec1.write({'line_ids': [(3, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=12, demo=12):
+        with self.assertQueryCount(__system__=13, demo=13):
             rec1.write({'line_ids': [(3, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -167,7 +167,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N lines from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(3):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
@@ -179,18 +179,18 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=13, demo=13):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
@@ -209,12 +209,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(6):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
 
@@ -354,7 +354,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(__system__=12, demo=12):
+        with self.assertQueryCount(__system__=13, demo=13):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [(0, 0, {'value': val}) for val in range(10)],
