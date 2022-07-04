@@ -178,7 +178,7 @@ odoo.define('web.ActionMixin', function (require) {
          * @returns {Promise}
          */
         updateControlPanel: async function (newProps = {}) {
-            if (!this.withControlPanel && !this.hasControlPanel) {
+            if ((!this.withControlPanel && !this.hasControlPanel) || !this._controlPanelWrapper) {
                 return;
             }
             const props = Object.assign({}, newProps); // Work with a clean new object
