@@ -2376,7 +2376,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="list_website_public_pages" name="Website Pages">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="container" id="list_website_pages">
+            <div class="container">
                 <t t-call="website.website_search_box_input">
                     <t t-set="_form_classes" t-valuef="mt8 float-right"/>
                     <t t-set="search_type" t-valuef="pages"/>
@@ -2397,11 +2397,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </div>
                 <div t-if="pages" class="table-responsive">
                     <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
                         <tbody>
                             <tr t-foreach="pages" t-as="page">
                                 <td><a t-att-href="page.url"><t t-esc="page.name"/></a></td>
@@ -2420,7 +2415,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="list_hybrid" name="Any Search Results">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="container pt24 pb24" id="list_website_pages">
+            <div class="container pt24 pb24">
                 <t t-call="website.website_search_box_input">
                     <t t-set="_classes" t-valuef="mt8"/>
                     <t t-set="search_type" t-valuef="all"/>
