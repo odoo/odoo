@@ -53,86 +53,6 @@ class IrTranslation(models.TransientModel):
     def _get_languages(self):
         return self.env['res.lang'].get_installed()
 
-    @api.model
-    def _get_ids(self, name, tt, lang, ids):
-        """ Return the translations of records.
-
-        :param name: a string defined as "<model_name>,<field_name>"
-        :param tt: the type of translation (should always be "model")
-        :param lang: the language code
-        :param ids: the ids of the given records
-        """
-        translations = dict.fromkeys(ids, False)
-        if ids:
-            self._cr.execute("""SELECT res_id, value FROM ir_translation
-                                WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s""",
-                             (lang, tt, name, tuple(ids)))
-            for res_id, value in self._cr.fetchall():
-                translations[res_id] = value
-        return translations
-
-    @api.model
-    def _get_source_query(self, name, types, lang, source, res_id):
-        self.flush_model()
-        if source:
-            # Note: the extra test on md5(src) is a hint for postgres to use the
-            # index ir_translation_src_md5
-            query = """SELECT value FROM ir_translation
-                       WHERE lang=%s AND type in %s AND src=%s AND md5(src)=md5(%s)"""
-            source = tools.ustr(source)
-            params = (lang or '', types, source, source)
-            if res_id:
-                query += " AND res_id in %s"
-                params += (res_id,)
-            if name:
-                query += " AND name=%s"
-                params += (tools.ustr(name),)
-        else:
-            query = """ SELECT value FROM ir_translation
-                        WHERE lang=%s AND type in %s AND name=%s """
-            params = (lang or '', types, tools.ustr(name))
-
-        return (query, params)
-
-    @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
-    def __get_source(self, name, types, lang, source, res_id):
-        # res_id is a tuple or None, otherwise ormcache cannot cache it!
-        query, params = self._get_source_query(name, types, lang, source, res_id)
-        self._cr.execute(query, params)
-        res = self._cr.fetchone()
-        trad = res and res[0] or u''
-        if source and not trad:
-            return tools.ustr(source)
-        return trad
-
-    @api.model
-    def _get_source(self, name, types, lang, source=None, res_id=None):
-        """ Return the translation for the given combination of ``name``,
-        ``type``, ``language`` and ``source``. All values passed to this method
-        should be unicode (not byte strings), especially ``source``.
-
-        :param name: identification of the term to translate, such as field name (optional if source is passed)
-        :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
-        :param lang: language code of the desired translation
-        :param source: optional source term to translate (should be unicode)
-        :param res_id: optional resource id or a list of ids to translate (if used, ``source`` should be set)
-        :rtype: unicode
-        :return: the request translation, or an empty unicode string if no translation was
-                 found and `source` was not passed
-        """
-        # FIXME: should assert that `source` is unicode and fix all callers to
-        # always pass unicode so we can remove the string encoding/decoding.
-        if not lang:
-            return tools.ustr(source or '')
-        if isinstance(types, str):
-            types = (types,)
-        if res_id:
-            if isinstance(res_id, int):
-                res_id = (res_id,)
-            else:
-                res_id = tuple(res_id)
-        return self.__get_source(name, types, lang, source, res_id)
-
     def write(self, vals):
         # try not using this api
         if 'value' in vals:
@@ -150,32 +70,6 @@ class IrTranslation(models.TransientModel):
                     record.update_field_translations(field_name, {translation.lang: {old_values[translation]: translation.value}})
                 else:
                     record[field_name] = translation.value
-
-    def _update_translations(self, vals_list):
-        """ Update translations of type 'model' or 'model_terms'.
-
-            This method is used for update of translations where the given
-            ``vals_list`` is trusted to be the right values
-            No new translation will be created
-        """
-        self.flush_model()
-        grouped_rows = {}
-        for vals in vals_list:
-            key = (vals['lang'], vals['type'], vals['name'])
-            grouped_rows.setdefault(key, [vals['value'], vals['src'], vals['state'], []])
-            grouped_rows[key][3].append(vals['res_id'])
-
-        for where, values in grouped_rows.items():
-            self._cr.execute(
-                """ UPDATE ir_translation
-                    SET value=%s,
-                        src=%s,
-                        state=%s
-                    WHERE lang=%s AND type=%s AND name=%s AND res_id in %s
-                """,
-                (values[0], values[1], values[2], where[0], where[1], where[2], tuple(values[3]))
-            )
-        self.invalidate_model(['value', 'src', 'state'])
 
     def _load_module_terms(self, modules, langs, overwrite=False):
         """ Load PO files of the given modules for the given languages. """
