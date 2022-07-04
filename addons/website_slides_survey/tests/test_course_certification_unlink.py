@@ -16,17 +16,26 @@ class TestSurvey(SlidesCase):
 
     @users('user_manager')
     def test_unlink(self):
-        self.certification = self.env['slide.slide'].create({
+        [certification, _dummy] = self.env['slide.slide'].create([{
             'name': 'Certification',
             'slide_type': 'certification',
             'channel_id': self.channel.id,
             'survey_id': self.survey.id,
-        })
+        }, {
+            'name': 'Second Certification',
+            'slide_type': 'certification',
+            'channel_id': self.channel.id,
+            'survey_id': self.survey2.id,
+        }])
 
-        with self.assertRaises(ValidationError, msg="The error is unexpected"):
-            self.survey.unlink()
+        with self.assertRaises(
+            ValidationError,
+            msg="Should raise when trying to unlink a survey linked to courses"
+        ):
+            (self.survey | self.survey2).unlink()
 
         self.assertTrue(self.survey.exists())
-        self.certification.survey_id = self.survey2
+        self.assertTrue(self.survey2.exists())
+        certification.survey_id = self.survey2
         self.survey.unlink()
         self.assertFalse(self.survey.exists())
