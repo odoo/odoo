@@ -15,11 +15,8 @@ class StockInventoryAdjustmentName(models.TransientModel):
             res['show_info'] = any(not quant.inventory_quantity_set for quant in quants)
         return res
 
-    def _default_inventory_adjustment_name(self):
-        return _("Inventory Adjustment") + " - " + fields.Date.to_string(fields.Date.today())
-
     quant_ids = fields.Many2many('stock.quant')
-    inventory_adjustment_name = fields.Char(default=_default_inventory_adjustment_name)
+    inventory_adjustment_name = fields.Char(default="Quantity Updated")
     show_info = fields.Boolean('Show warning')
 
     def action_apply(self):
