@@ -408,7 +408,7 @@ class IrFieldsConverter(models.AbstractModel):
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
                         _(u"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)")
-                        % (value, len(ids))))
+                        %(str(value).replace('%', '%%'), len(ids))))
                 id, _name = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
