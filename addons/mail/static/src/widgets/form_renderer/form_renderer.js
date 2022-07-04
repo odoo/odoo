@@ -2,6 +2,7 @@
 
 import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
 
+import dom from 'web.dom';
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';
 
@@ -84,6 +85,19 @@ FormRenderer.include({
         return this._super(...arguments);
     },
     /**
+     * Overrides the function to interchange the chatter and the preview once
+     * the chatter is in the dom.
+     *
+     * @override
+     */
+    async _renderView() {
+        await this._super(...arguments);
+        if (!this.hasChatter) {
+            return;
+        }
+        this._interchangeChatter();
+    },
+    /**
      * Overrides to re-render the chatter container with potentially new props.
      * This is done in `__renderView` specifically to wait for this render to
      * be complete before updating the form view, which prevents flickering.
@@ -140,6 +154,29 @@ FormRenderer.include({
      */
     hasAttachmentViewer() {
         return false;
+    },
+    /**
+     * Interchange the position of the chatter and the attachment preview.
+     *
+     * @private
+     */
+    _interchangeChatter() {
+        const $sheetBg = this.$('.o_form_sheet_bg');
+        this._updateChatterContainerTarget();
+        if (this.hasAttachmentViewer()) {
+            $(this.attachmentViewerTarget).insertAfter($sheetBg);
+            dom.append($sheetBg, $(this._chatterContainerTarget), {
+                callbacks: [{ widget: this.chatter }],
+                in_DOM: this._isInDom,
+            });
+        } else {
+            $(this._chatterContainerTarget).insertAfter($sheetBg);
+            dom.append($sheetBg, $(this.attachmentViewerTarget), {
+                callbacks: [],
+                in_DOM: this._isInDom,
+            });
+        }
+        this._updateChatterContainerComponent();
     },
     /**
      * @private
