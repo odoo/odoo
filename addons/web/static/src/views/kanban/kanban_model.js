@@ -21,27 +21,33 @@ const { EventBus, markRaw } = owl;
 
 const FALSE = Symbol("false");
 
+class TransactionInProgress extends Error {}
+
+class NoTransactionInProgress extends Error {}
+
 function makeTransactionManager() {
     const bus = new EventBus();
     const transactions = {};
     return {
         start: (id) => {
             if (transactions[id]) {
-                throw new Error(`Transaction in progress: commit or abort to start a new one.`);
+                throw new TransactionInProgress(
+                    `Transaction in progress: commit or abort to start a new one.`
+                );
             }
             transactions[id] = true;
             bus.trigger("START");
         },
         commit: (id) => {
             if (!transactions[id]) {
-                throw new Error(`No transaction in progress.`);
+                throw new NoTransactionInProgress(`No transaction in progress.`);
             }
             delete transactions[id];
             bus.trigger("COMMIT");
         },
         abort: (id) => {
             if (!transactions[id]) {
-                throw new Error(`No transaction in progress.`);
+                throw new NoTransactionInProgress(`No transaction in progress.`);
             }
             delete transactions[id];
             bus.trigger("ABORT");
@@ -406,7 +412,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @param {string} dataGroupId
      * @param {string} refId
      * @param {string} targetGroupId
-     * @returns {Promise<Record>}
      */
     async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
         const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
@@ -418,7 +423,14 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
         const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
 
-        this.model.transaction.start(dataRecordId);
+        try {
+            this.model.transaction.start(dataRecordId);
+        } catch (err) {
+            if (err instanceof TransactionInProgress) {
+                return;
+            }
+            throw err;
+        }
 
         // Move from one group to another
         try {
@@ -445,8 +457,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             this.model.notify();
             throw err;
         }
-
-        return record;
     }
 
     // ------------------------------------------------------------------------
