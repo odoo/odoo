@@ -290,7 +290,7 @@ class FSWatcherInotify(FSWatcherBase):
     def start(self):
         self.started = True
         self.thread = threading.Thread(target=self.run, name="odoo.service.autoreload.watcher")
-        self.thread.setDaemon(True)
+        self.thread.daemon = True
         self.thread.start()
 
     def stop(self):
@@ -431,7 +431,7 @@ class ThreadedServer(CommonServer):
             def target():
                 self.cron_thread(i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
-            t.setDaemon(True)
+            t.daemon = True
             t.type = 'cron'
             t.start()
             _logger.debug("cron%d started!" % i)
@@ -444,7 +444,7 @@ class ThreadedServer(CommonServer):
 
     def http_spawn(self):
         t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
-        t.setDaemon(True)
+        t.daemon = True
         t.start()
 
     def start(self, stop=False):
@@ -487,8 +487,8 @@ class ThreadedServer(CommonServer):
         me = threading.current_thread()
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
-            _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
+            _logger.debug('process %r (%r)', thread, thread.daemon)
+            if (thread != me and not thread.daemon and thread.ident != self.main_thread_id and
                     thread not in self.limits_reached_threads):
                 while thread.is_alive() and (time.time() - stop_time) < 1:
                     # We wait for requests to finish, up to 1 second.
