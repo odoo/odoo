@@ -251,32 +251,28 @@ FormRenderer.include({
             id: this.state.res_id,
             model: this.state.model,
         });
-        if (thread.attachmentsInWebClientView.length || this.attachmentViewer) {
-            if (this.attachmentViewer) {
-                // FIXME should be improved : what if somehow an attachment is replaced in a thread ?
-                if (
-                    this.attachmentViewer.thread !== thread ||
-                    this.attachmentViewer.attachments.length !== thread.attachmentsInWebClientView.length
-                ) {
-                    if (thread.attachmentsInWebClientView.length) {
-                        this.attachmentViewer.updateContents(thread);
-                    }
-                } else {
-                    // The attachmentViewer lose its event listeners when it is reused,
-                    // we just need to reregister them.
-                    if (this.attachmentViewer.$el) {
-                        this.attachmentViewer._undelegateEvents();
-                        this.attachmentViewer._delegateEvents();
-                    }
-                }
-                this.trigger_up('preview_attachment_validation');
+        if (this.attachmentViewer) {
+            // FIXME should be improved : what if somehow an attachment is replaced in a thread ?
+            if (
+                this.attachmentViewer.thread !== thread ||
+                this.attachmentViewer.attachments.length !== thread.attachmentsInWebClientView.length
+            ) {
+                this.attachmentViewer.updateContents(thread);
             } else {
-                this.attachmentViewer = new AttachmentViewer(this, thread);
-                this.attachmentViewer.appendTo($(this.attachmentViewerTarget)).then(function () {
-                    self.trigger_up('preview_attachment_validation');
-                    self._interchangeChatter();
-                });
+                // The attachmentViewer lose its event listeners when it is reused,
+                // we just need to reregister them.
+                if (this.attachmentViewer.$el) {
+                    this.attachmentViewer._undelegateEvents();
+                    this.attachmentViewer._delegateEvents();
+                }
             }
+            this.trigger_up('preview_attachment_validation');
+        } else {
+            this.attachmentViewer = new AttachmentViewer(this, thread);
+            this.attachmentViewer.appendTo($(this.attachmentViewerTarget)).then(function () {
+                self.trigger_up('preview_attachment_validation');
+                self._interchangeChatter();
+            });
         }
     },
 });
