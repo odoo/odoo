@@ -486,7 +486,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     # If not cr, get cr from current thread database
     local_cr = None
     if not cr:
-        db_name = getattr(threading.currentThread(), 'dbname', None)
+        db_name = getattr(threading.current_thread(), 'dbname', None)
         if db_name:
             local_cr = cr = odoo.registry(db_name).cursor()
         else:

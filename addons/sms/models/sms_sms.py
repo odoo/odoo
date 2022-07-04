@@ -55,7 +55,7 @@ class SmsSms(models.Model):
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(delete_all=delete_all, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
-            if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
+            if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
                 self._cr.commit()
 
     def cancel(self):
@@ -81,7 +81,7 @@ class SmsSms(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            auto_commit = not getattr(threading.current_thread(), 'testing', False)
             res = self.browse(ids).send(delete_all=False, auto_commit=auto_commit, raise_exception=False)
         except Exception:
             _logger.exception("Failed processing SMS queue")

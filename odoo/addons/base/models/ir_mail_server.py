@@ -186,7 +186,7 @@ class IrMailServer(models.Model):
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
         """
         # Do not actually connect while running in test mode
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.current_thread(), 'testing', False):
             return None
 
         mail_server = smtp_encryption = None
@@ -488,7 +488,7 @@ class IrMailServer(models.Model):
             message['To'] = x_forge_to
 
         # Do not actually send emails in testing mode!
-        if getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode():
+        if getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode():
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 

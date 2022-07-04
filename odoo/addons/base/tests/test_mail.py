@@ -559,6 +559,6 @@ class TestEmailMessage(TransactionCase):
         msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
         smtp = FakeSMTP()
-        self.patch(threading.currentThread(), 'testing', False)
+        self.patch(threading.current_thread(), 'testing', False)
         self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
         self.assertTrue(smtp.email_sent)
