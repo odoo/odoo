@@ -16,7 +16,7 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group name="general_information">
-                        <field name="name"/>
+                        <field name="payment_details"/>
                         <field name="partner_id" />
                     </group>
                     <group name="technical_information">
@@ -34,7 +34,7 @@
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
             <tree string="Payment Tokens">
-                <field name="name"/>
+                <field name="payment_details"/>
                 <field name="partner_id"/>
                 <field name="acquirer_id" readonly="1"/>
                 <field name="acquirer_ref" readonly="1"/>

@@ -6,4 +6,5 @@ from . import test_account_payment
 from . import test_flows
 from . import test_multicompany_flows
 from . import test_payment_acquirer
+from . import test_payment_token
 from . import test_payment_transaction

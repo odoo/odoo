@@ -228,10 +228,9 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        token_name = notification_data.get('CARDNO') or payment_utils.build_token_name()
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': token_name,  # Already padded with 'X's
+            'payment_details': notification_data.get('CARDNO')[-4:],  # Ogone pads details with X's.
             'partner_id': self.partner_id.id,
             'acquirer_ref': notification_data['ALIAS'],
             'verified': True,  # The payment is authorized, so the payment method is valid

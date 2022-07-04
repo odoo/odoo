@@ -16,9 +16,9 @@ class PaymentToken(models.Model):
     acquirer_id = fields.Many2one(
         string="Acquirer Account", comodel_name='payment.acquirer', required=True)
     provider = fields.Selection(related='acquirer_id.provider')
-    name = fields.Char(
-        string="Name", help="The anonymized acquirer reference of the payment method",
-        required=True)
+    payment_details = fields.Char(
+        string="Payment Details", help="The clear part of the payment method's payment details.",
+    )
     partner_id = fields.Many2one(string="Partner", comodel_name='res.partner', required=True)
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
         related='acquirer_id.company_id', store=True, index=True)
@@ -77,8 +77,6 @@ class PaymentToken(models.Model):
 
         return super().write(values)
 
-    #=== BUSINESS METHODS ===#
-
     def _handle_archiving(self):
         """ Handle the archiving of the current tokens.
 
@@ -88,6 +86,45 @@ class PaymentToken(models.Model):
         :return: None
         """
         return None
+
+    def name_get(self):
+        return [(token.id, token._build_display_name()) for token in self]
+
+    #=== BUSINESS METHODS ===#
+
+    def _build_display_name(self, *args, max_length=34, should_pad=True, **kwargs):
+        """ Build a token name of the desired maximum length with the format •••• 1234.
+
+        The payment details are padded on the left with up to four padding characters. The padding
+        is only added if there is enough room for it. If not, it is either reduced or not added at
+        all. If there is not enough room for the payment details either, they are trimmed from the
+        left.
+
+        For a module to customize the display name of a token, it must override this method.
+
+        Note: self.ensure_one()
+
+        :param list args: The arguments passed by QWeb when calling this method.
+        :param int max_length: The desired maximum length of the token name.
+        :param bool should_pad: Whether the token should be padded or not.
+        :param dict kwargs: Optional data used in overrides of this method.
+        :return: The padded token name.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        padding_length = max_length - len(self.payment_details)
+        if not self.payment_details:
+            create_date_str = self.create_date.strftime('%Y/%m/%d')
+            display_name = _("Payment details saved on %(date)s", date=create_date_str)
+        elif padding_length >= 2:  # Enough room for padding.
+            padding = '•' * min(padding_length - 1, 4) + ' ' if should_pad else ''
+            display_name = ''.join([padding, self.payment_details])
+        elif padding_length > 0:  # Not enough room for padding.
+            display_name = self.payment_details
+        else:  # Not enough room for neither padding nor the payment details.
+            display_name = self.payment_details[-max_length:] if max_length > 0 else ''
+        return display_name
 
     def get_linked_records_info(self):
         """ Return a list of information about records linked to the current token.

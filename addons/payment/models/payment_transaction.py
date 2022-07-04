@@ -1059,8 +1059,10 @@ class PaymentTransaction(models.Model):
         elif self.operation in ('online_token', 'offline'):
             message = _(
                 "A transaction with reference %(ref)s has been initiated using the payment method "
-                "%(token_name)s (%(acq_name)s).",
-                ref=self.reference, token_name=self.token_id.name, acq_name=self.acquirer_id.name
+                "%(token)s (%(acq_name)s).",
+                ref=self.reference,
+                token=self.token_id._build_display_name(),
+                acq_name=self.acquirer_id.name
             )
         else:  # 'validation'
             message = _(
