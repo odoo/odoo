@@ -4,7 +4,7 @@ import legacyEnv from 'web.commonEnv';
 import { useService } from '@web/core/utils/hooks';
 import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
 
-const { markup, Component, useState, useChildSubEnv, useEffect, onWillStart } = owl;
+const { markup, Component, useState, useChildSubEnv, useEffect, onWillStart, onMounted } = owl;
 
 export class WebsiteEditorComponent extends Component {
     /**
@@ -17,7 +17,7 @@ export class WebsiteEditorComponent extends Component {
         this.websiteContext = useState(this.websiteService.context);
         this.state = useState({
             reloading: false,
-            showWysiwyg: this.websiteContext.isPublicRootReady,
+            showWysiwyg: false,
         });
         this.wysiwygOptions = {};
 
@@ -33,6 +33,12 @@ export class WebsiteEditorComponent extends Component {
                 this.publicRootReady();
             }
         }, () => [this.websiteContext.isPublicRootReady]);
+
+        onMounted(() => {
+            if (this.websiteContext.isPublicRootReady) {
+                this.publicRootReady();
+            }
+        });
     }
     /**
      * Starts the wysiwyg or disable edition if currently
