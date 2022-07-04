@@ -587,6 +587,10 @@ class AccountJournal(models.Model):
     @api.model
     def _fill_missing_values(self, vals):
         journal_type = vals.get('type')
+        if 'import_file' in self.env.context and not journal_type:
+            vals['type'] = 'general'
+            if not vals.get('code'):
+                vals['code'] = vals.get('name')
 
         # 'type' field is required.
         if not journal_type:
