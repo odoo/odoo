@@ -4,7 +4,8 @@
 from datetime import date, timedelta
 
 import requests
-import werkzeug
+
+from html import unescape
 
 from odoo import models, api, service
 from odoo.tools.translate import _
@@ -69,7 +70,7 @@ class MercuryTransaction(models.Model):
         try:
             r = requests.post(url, data=xml_transaction, headers=headers, timeout=65)
             r.raise_for_status()
-            response = werkzeug.utils.unescape(r.content.decode())
+            response = unescape(r.content.decode())
         except Exception:
             response = "timeout"
 
