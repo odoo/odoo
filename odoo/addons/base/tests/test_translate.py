@@ -260,7 +260,7 @@ class TestLanguageInstall(TransactionCase):
         def _load_module_terms(self, modules, langs, overwrite=False):
             loaded.append((modules, langs, overwrite))
 
-        with patch('odoo.addons.base.models.ir_translation.IrTranslation._load_module_terms', _load_module_terms):
+        with patch('odoo.addons.base.models.ir_module.Module._load_module_terms', _load_module_terms):
             wizard.lang_install()
 
         # _load_module_terms is called once with lang='fr_FR' and overwrite=True

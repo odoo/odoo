@@ -2740,7 +2740,7 @@ class TestViewTranslations(common.TransactionCase):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('fr_FR')
         cls.env['res.lang']._activate_lang('nl_NL')
-        cls.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        cls.env['ir.module.module']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({
