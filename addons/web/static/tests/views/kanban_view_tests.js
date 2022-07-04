@@ -33,6 +33,7 @@ import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { kanbanView } from "@web/views/kanban/kanban_view";
+import { ViewButton } from "@web/views/view_button/view_button";
 import AbstractField from "web.AbstractField";
 import legacyFieldRegistry from "web.field_registry";
 import Widget from "web.Widget";
@@ -858,6 +859,60 @@ QUnit.module("Views", (hooks) => {
             "true/hello blip/hello blip !/hello blip }}",
             "true/hello gnap/hello gnap !/hello gnap }}",
             "true/hello blip/hello blip !/hello blip }}",
+        ]);
+    });
+
+    QUnit.test("view button and string interpolated attribute in kanban", async (assert) => {
+        patchWithCleanup(ViewButton.prototype, {
+            setup() {
+                this._super();
+                assert.step(
+                    `[${this.props.clickParams["name"]}] className: '${this.props.className}'`
+                );
+            },
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <a name="one" type="object" class="hola"/>
+                                <a name="two" type="object" class="hola" t-attf-class="hello"/>
+                                <a name="sri" type="object" class="hola" t-attf-class="{{record.foo.value}}"/>
+                                <a name="foa" type="object" class="hola" t-attf-class="{{record.foo.value}} olleh"/>
+                                <a name="fye" type="object" class="hola" t-attf-class="hello {{record.foo.value}}"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+        assert.verifySteps([
+            "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
+            "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
+            "[sri] className: 'hola oe_kanban_action oe_kanban_action_a yop'",
+            "[foa] className: 'hola oe_kanban_action oe_kanban_action_a yop olleh'",
+            "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello yop'",
+            "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
+            "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
+            "[sri] className: 'hola oe_kanban_action oe_kanban_action_a blip'",
+            "[foa] className: 'hola oe_kanban_action oe_kanban_action_a blip olleh'",
+            "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello blip'",
+            "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
+            "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
+            "[sri] className: 'hola oe_kanban_action oe_kanban_action_a gnap'",
+            "[foa] className: 'hola oe_kanban_action oe_kanban_action_a gnap olleh'",
+            "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello gnap'",
+            "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
+            "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
+            "[sri] className: 'hola oe_kanban_action oe_kanban_action_a blip'",
+            "[foa] className: 'hola oe_kanban_action oe_kanban_action_a blip olleh'",
+            "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello blip'",
         ]);
     });
 
