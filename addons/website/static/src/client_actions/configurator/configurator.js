@@ -3,7 +3,7 @@
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import {ColorpickerWidget} from 'web.Colorpicker';
-import {_t, _lt, qweb} from 'web.core';
+import {_t, _lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -345,6 +345,10 @@ Object.assign(PaletteSelectionScreen, {
 });
 
 class ApplyConfiguratorScreen extends Component {
+    setup() {
+        this.websiteService = useService('website');
+    }
+
     async applyConfigurator(themeName) {
         if (!this.state.selectedIndustry) {
             return this.props.navigate(ROUTES.descriptionScreen);
@@ -353,7 +357,7 @@ class ApplyConfiguratorScreen extends Component {
             return this.props.navigate(ROUTES.paletteSelectionScreen);
         }
         if (themeName !== undefined) {
-            $('body').append(qweb.render('website.ThemePreview.Loader', {showTips: true}));
+            this.websiteService.showLoader({ showTips: true });
             const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
             let selectedPalette = this.state.selectedPalette.name;
             if (!selectedPalette) {
@@ -384,7 +388,7 @@ class ApplyConfiguratorScreen extends Component {
             // Here the website service goToWebsite method is not used because
             // the web client needs to be reloaded after the new modules have
             // been installed.
-            window.location.replace(`/web#action=website.website_preview&website_id=${resp.website_id}&enable_editor=1`);
+            window.location.replace(`/web#action=website.website_preview&website_id=${resp.website_id}&enable_editor=1&with_loader=1`);
         }
     }
 }

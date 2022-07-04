@@ -44,7 +44,7 @@ tour.register('configurator_translation', {
         trigger: 'button.btn-primary',
     }, {
         content: "Loader should be shown",
-        trigger: '.o_theme_install_loader_container',
+        trigger: '.o_website_loader_container',
         run: function () {}, // it's a check
     }, {
         content: "Wait untill the configurator is finished",
