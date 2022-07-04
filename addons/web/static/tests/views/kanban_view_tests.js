@@ -10331,4 +10331,180 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(document.activeElement, "o_searchview_input");
         }
     );
+
+    QUnit.test("no leak of TransactionInProgress (grouped case)", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["state"],
+            async mockRPC(route) {
+                if (route === "/web/dataset/resequence") {
+                    assert.step("resequence");
+                    await Promise.resolve(def);
+                }
+            },
+        });
+
+        def = makeDeferred();
+
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(1) .o_kanban_record").innerText,
+            "yop"
+        );
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            "blip"
+        );
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+
+        assert.verifySteps([]);
+
+        // move "yop" from first to second column
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.containsNone(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "yop"]
+        );
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+
+        assert.verifySteps(["resequence"]);
+
+        // try to move "yop" from second to third column
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(3)", // move yop
+            ".o_kanban_group:nth-child(3)"
+        );
+
+        assert.containsNone(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "yop"]
+        );
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+
+        assert.verifySteps([]);
+
+        def.resolve();
+        await nextTick();
+
+        // try again to move "yop" from second to third column
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(3)", // move yop
+            ".o_kanban_group:nth-child(3)"
+        );
+
+        assert.containsNone(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 3);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(3) .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["gnap", "blip", "yop"]
+        );
+
+        assert.verifySteps(["resequence"]);
+    });
+
+    QUnit.test("no leak of TransactionInProgress (not grouped case)", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban records_draggable="1">
+                    <field name="int_field" widget="handle" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            async mockRPC(route) {
+                if (route === "/web/dataset/resequence") {
+                    assert.step("resequence");
+                    await Promise.resolve(def);
+                }
+            },
+        });
+
+        def = makeDeferred();
+
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "blip", "gnap", "blip"]
+        );
+
+        assert.verifySteps([]);
+
+        // move "yop" to second place
+        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "blip", "gnap", "blip"]
+        );
+        assert.verifySteps(["resequence"]);
+
+        // try again
+        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
+
+        assert.verifySteps([]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "yop", "gnap", "blip"]
+        );
+
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "gnap", "yop", "blip"]
+        );
+        assert.verifySteps(["resequence"]);
+    });
 });
