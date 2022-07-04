@@ -29,6 +29,9 @@
         'web.assets_qweb': [
             'fg_custom/static/src/pos/xml/**/*',
         ],
+        'web.assets_backend': [
+            'fg_custom/static/src/base/*',
+        ],
     },
     'license': 'LGPL-3',
      'qweb': [],
