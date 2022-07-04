@@ -132,10 +132,6 @@
 
                 .o_buttons {
                     position: relative;
-
-                    > button {
-                        display: block;
-                    }
                 }
 
                 .o_layer {
@@ -146,61 +142,6 @@
                     width: 100%;
                     height: 100%;
                 }
-            }
-
-            .o_properties_selection {
-
-                @include media-breakpoint-up(lg) {
-                    display: flex;
-                }
-
-                margin-top: 10px;
-                margin-bottom: 10px;
-            }
-
-            .gapi-analytics-auth-styles-signinbutton {
-                cursor: pointer;
-            }
-
-            .ActiveUsers {
-                position: relative;
-                float: right;
-                right: 10px;
-                border: 1px solid map-get($grays, '200');
-                font-weight: 300;
-                white-space: nowrap;
-                padding: .5em 1.5em;
-                margin: .5em;
-                text-transform: uppercase;
-            }
-
-            .ActiveUsers-value {
-              font-weight: 300;
-              margin-right: -.25em;
-            }
-
-            .ActiveUsers.is-increasing {
-              animation: increase 3s;
-            }
-
-            .ActiveUsers.is-decreasing {
-              animation: decrease 3s;
-            }
-
-            @keyframes increase {
-              10% {
-                background-color: lighten($o-brand-primary, 30%);
-                border-color: $o-brand-primary;
-                color: $o-brand-primary;
-              }
-            }
-
-            @keyframes decrease {
-              10% {
-                background-color: lighten($o-brand-primary, 30%);
-                border-color: $o-brand-primary;
-                color: $o-brand-primary;
-              }
             }
         }
 

@@ -64,14 +64,6 @@ class ResConfigSettings(models.TransientModel):
         'Google Analytics Key',
         related='website_id.google_analytics_key',
         readonly=False)
-    google_management_client_id = fields.Char(
-        'Google Client ID',
-        related='website_id.google_management_client_id',
-        readonly=False)
-    google_management_client_secret = fields.Char(
-        'Google Client Secret',
-        related='website_id.google_management_client_secret',
-        readonly=False)
     google_search_console = fields.Char(
         'Google Search Console',
         related='website_id.google_search_console',
@@ -115,10 +107,6 @@ class ResConfigSettings(models.TransientModel):
         "Google Analytics",
         compute='_compute_has_google_analytics',
         inverse='_inverse_has_google_analytics')
-    has_google_analytics_dashboard = fields.Boolean(
-        "Google Analytics Dashboard",
-        compute='_compute_has_google_analytics_dashboard',
-        inverse='_inverse_has_google_analytics_dashboard')
     has_google_search_console = fields.Boolean(
         "Console Google Search",
         compute='_compute_has_google_search_console',
@@ -187,20 +175,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             if config.has_google_analytics:
                 continue
-            config.has_google_analytics_dashboard = False
             config.google_analytics_key = False
-
-    @api.depends('website_id')
-    def _compute_has_google_analytics_dashboard(self):
-        for config in self:
-            config.has_google_analytics_dashboard = bool(config.google_management_client_id)
-
-    def _inverse_has_google_analytics_dashboard(self):
-        for config in self:
-            if config.has_google_analytics_dashboard:
-                continue
-            config.google_management_client_id = False
-            config.google_management_client_secret = False
 
     @api.depends('website_id')
     def _compute_has_google_search_console(self):
