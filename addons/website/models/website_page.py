@@ -227,25 +227,19 @@ class Page(models.Model):
                 SELECT {table}.{id}
                 FROM {table}
                 LEFT JOIN ir_ui_view v ON {table}.{view_id} = v.{id}
-                LEFT JOIN ir_translation t ON v.{id} = t.{res_id}
-                WHERE t.lang = {lang}
-                AND t.name = ANY({names})
-                AND t.type = 'model_terms'
-                AND t.value ilike {search}
+                WHERE v.{name} ILIKE {search}
+                OR jsonb_path_query_array(v.{arch_db},'$.*')::text ILIKE {search} 
                 LIMIT {limit}
             """).format(
                 table=sql.Identifier(self._table),
                 id=sql.Identifier('id'),
                 view_id=sql.Identifier('view_id'),
-                res_id=sql.Identifier('res_id'),
-                lang=sql.Placeholder('lang'),
-                names=sql.Placeholder('names'),
+                name=sql.Identifier('name'),
+                arch_db=sql.Identifier('arch_db'),
                 search=sql.Placeholder('search'),
                 limit=sql.Placeholder('limit'),
             )
             self.env.cr.execute(query, {
-                'lang': self.env.lang,
-                'names': ['ir.ui.view,arch_db', 'ir.ui.view,name'],
                 'search': '%%%s%%' % escape_psql(search),
                 'limit': limit,
             })
