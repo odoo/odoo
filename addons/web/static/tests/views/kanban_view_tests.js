@@ -18,6 +18,7 @@ import {
     getPagerLimit,
     getPagerValue,
     pagerNext,
+    toggleFilterMenu,
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -4306,12 +4307,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("kanban view not groupable", async (assert) => {
         patchWithCleanup(kanbanView, { searchMenuTypes: ["filter", "favorite"] });
 
-        serverData.views["partner,false,search"] = `
-            <search>
-                <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
-            </search>
-        `;
-
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4326,6 +4321,12 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>
             `,
+            searchViewArch: `
+                <search>
+                    <filter string="Filter" name="filter" domain="[]"/>
+                    <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                </search>
+            `,
             async mockRPC(route, { method }) {
                 if (method === "web_read_group") {
                     throw new Error("Should not do a read_group RPC");
@@ -4337,6 +4338,10 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.containsNone(target, ".o_control_panel div.o_search_options div.o_group_by_menu");
         assert.deepEqual(getFacetTexts(target), []);
+
+        // validate presence of the search arch info
+        await toggleFilterMenu(target);
+        assert.containsOnce(target, ".o_filter_menu .o_menu_item");
     });
 
     QUnit.test("kanban view with create=False", async (assert) => {

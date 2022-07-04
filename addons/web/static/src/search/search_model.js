@@ -485,6 +485,9 @@ export class SearchModel extends EventBus {
      * @returns {string[]}
      */
     get groupBy() {
+        if (!this.searchMenuTypes.has("groupBy")) {
+            return [];
+        }
         if (!this._groupBy) {
             this._groupBy = this._getGroupBy();
         }
