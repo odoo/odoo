@@ -57,6 +57,11 @@
     <div t-name="website.unauthorized_analytics" class="col-12 js_unauthorized_message mb16">
         <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
         <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+        <p t-if="reason === 'not_initialized'">
+            Google deprecated both its "Universal Analytics" and "Google Sign-In" API. It means that only accounts and keys created before 2020 will be able to integrate their Analytics dashboard in Odoo (or any other website). This will be possible only up to mid 2023. After that, those services won't work anymore, at all.<br />
+            New Google Analytics accounts and keys are now using Google Analytics 4 which, for now, can't be integrated/embed in external websites.<br />
+            Those accounts should now check their Analytics dashboard in the Google platform directly.
+        </p>
         <span t-if="reason === 'not_initialized'">Google Analytics initialization failed. Maybe this domain is not whitelisted in your Google Analytics project for this client ID.</span>
     </div>
 
