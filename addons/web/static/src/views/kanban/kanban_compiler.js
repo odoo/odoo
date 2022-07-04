@@ -8,7 +8,7 @@ import {
     getTag,
 } from "@web/core/utils/xml";
 import { toStringExpression } from "@web/views/utils";
-import { ViewCompiler } from "@web/views/view_compiler";
+import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_compiler";
 
 /**
  * @typedef {Object} DropdownDef
@@ -17,8 +17,6 @@ import { ViewCompiler } from "@web/views/view_compiler";
  * @property {boolean} shouldInsert
  * @property {("dropdown" | "toggler" | "menu")[]} parts
  */
-
-const INTERP_REGEXP = /\{\{.*?\}\}|#\{.*?\}/g;
 
 const ACTION_TYPES = ["action", "object"];
 const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover"];
@@ -262,11 +260,7 @@ export class KanbanCompiler extends ViewCompiler {
             const attrsParts = Object.entries(attrs).map(([key, value]) => {
                 if (key.startsWith("t-attf-")) {
                     key = key.slice(7);
-                    value = value.replace(
-                        INTERP_REGEXP,
-                        (s) => "${" + s.slice(2, s[0] === "{" ? -2 : -1) + "}"
-                    );
-                    value = toStringExpression(value);
+                    value = toInterpolatedStringExpression(value);
                 } else if (key.startsWith("t-att-")) {
                     key = key.slice(6);
                     value = `"" + (${value})`;
