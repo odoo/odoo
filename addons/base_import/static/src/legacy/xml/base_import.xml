@@ -20,7 +20,7 @@
                     </p>
                     <div class="mt16 mb4">Need Help?</div>
                     <div t-foreach="widget.importTemplates" t-as="template">
-                        <a t-att-href="template.template" aria-label="Download" title="Download">
+                        <a class="btn btn-outline-primary mb32 mt8" t-att-href="template.template" aria-label="Download" title="Download">
                             <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                         </a>
                     </div>

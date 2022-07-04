@@ -95,9 +95,9 @@
             <t t-set="close_model" t-value="'res.company'"/>
 
             <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
-            <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
-            <t t-call="account.onboarding_taxes_step" name="taxes_step" />
             <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
+            <t t-call="account.onboarding_taxes_step" name="taxes_step" />
+            <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
         </t>
     </template>
     <!-- SAMPLE INVOICE EMAIL -->

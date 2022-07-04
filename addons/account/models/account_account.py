@@ -82,7 +82,8 @@ class AccountAccount(models.Model):
     )
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False, tracking=True,
+    reconcile = fields.Boolean(string='Allow Reconciliation', tracking=True,
+        compute='_compute_reconcile', store=True, readonly=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
@@ -96,10 +97,9 @@ class AccountAccount(models.Model):
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
-
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
-    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit')
+    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance')
 
     is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 
@@ -409,6 +409,11 @@ class AccountAccount(models.Model):
             if account.account_type:
                 account.internal_group = 'off_balance' if account.account_type == 'off_balance' else account.account_type.split('_')[0]
 
+    @api.depends('account_type')
+    def _compute_reconcile(self):
+        for account in self:
+            account.reconcile = account.account_type in ('asset_receivable', 'liability_payable')
+
     def _set_opening_debit(self):
         for record in self:
             record._set_opening_debit_credit(record.opening_debit, 'debit')
@@ -416,6 +421,12 @@ class AccountAccount(models.Model):
     def _set_opening_credit(self):
         for record in self:
             record._set_opening_debit_credit(record.opening_credit, 'credit')
+
+    def _set_opening_balance(self):
+        for account in self:
+            if account.opening_balance:
+                side = 'debit' if account.opening_balance > 0 else 'credit'
+                account._set_opening_debit_credit(abs(account.opening_balance), side)
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
@@ -529,11 +540,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('account_type')
     def _onchange_account_type(self):
-        self.reconcile = self.account_type in ('asset_receivable', 'liability_payable')
-        if self.account_type in ('asset_cash', 'liability_credit_card'):
-            self.reconcile = False
-        elif self.internal_group == 'off_balance':
-            self.reconcile = False
+        if self.internal_group == 'off_balance':
             self.tax_ids = False
         elif self.internal_group == 'income' and not self.tax_ids:
             self.tax_ids = self.company_id.account_sale_tax_id
@@ -588,6 +595,9 @@ class AccountAccount(models.Model):
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
                 company._auto_balance_opening_move()
+                # the current_balance of the account only includes posted moves and
+                # would always amount to 0 after the import if we didn't post the opening move
+                company.account_opening_move_id.action_post()
         return rslt
 
     def _toggle_reconcile_to_true(self):
@@ -718,6 +728,13 @@ class AccountAccount(models.Model):
             'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', related_taxes_ids)],
         }
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Chart of Accounts'),
+            'template': '/account/static/xls/coa_import_template.xlsx'
+        }]
 
 
 class AccountGroup(models.Model):

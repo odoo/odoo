@@ -1006,7 +1006,7 @@ class Partner(models.Model):
     def get_import_templates(self):
         return [{
             'label': _('Import Template for Customers'),
-            'template': '/base/static/xls/res_partner.xls'
+            'template': '/base/static/xls/res_partner.xlsx'
         }]
 
     @api.model

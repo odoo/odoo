@@ -135,7 +135,7 @@ var DataImport = AbstractAction.extend({
         // import object id
         this.id = null;
         this.session = session;
-        this._title = _t('Import a File'); // Displayed in the breadcrumbs
+        this._title = action.name || _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
         this.sheets = [];
         this.selectionFields = {};  // Used to compute fallback values in backend.
