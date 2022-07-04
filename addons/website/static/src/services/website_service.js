@@ -6,6 +6,7 @@ import ajax from 'web.ajax';
 import { getWysiwygClass } from 'web_editor.loader';
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
+import { WebsiteLoader } from '../components/website_loader/website_loader';
 
 const { reactive, EventBus } = owl;
 
@@ -62,6 +63,10 @@ export const websiteService = {
         });
         registry.category('main_components').add('FullscreenIndication', {
             Component: FullscreenIndication,
+            props: { bus },
+        });
+        registry.category('main_components').add('WebsiteLoader', {
+            Component: WebsiteLoader,
             props: { bus },
         });
         return {
@@ -202,6 +207,12 @@ export const websiteService = {
                 document.body.classList.remove('editor_has_snippets');
                 context.snippetsLoaded = false;
                 context.edition = false;
+            },
+            showLoader(props) {
+                bus.trigger('SHOW-WEBSITE-LOADER', props);
+            },
+            hideLoader() {
+                bus.trigger('HIDE-WEBSITE-LOADER');
             },
         };
     },

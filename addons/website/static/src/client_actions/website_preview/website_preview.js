@@ -83,6 +83,10 @@ export class WebsitePreview extends Component {
                     this.dialogService.add(OptimizeSEODialog);
                 }, {once: true});
             }
+            if (this.props.action.context.params && this.props.action.context.params.with_loader) {
+                this.websiteService.showLoader({ showTips: true });
+            }
+
             return () => {
                 this.websiteService.currentWebsiteId = null;
                 this.websiteService.websiteRootInstance = undefined;

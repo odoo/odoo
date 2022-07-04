@@ -5,6 +5,7 @@ import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import wUtils from 'website.utils';
+import { sprintf } from '@web/core/utils/strings';
 
 const { Component, xml, useState, onWillStart } = owl;
 
@@ -151,8 +152,11 @@ export class NewContentModal extends Component {
         });
     }
 
-    async installModule(id, redirectUrl) {
-        await this.orm.call(
+    async installModule(id, redirectUrl, moduleName) {
+        this.website.showLoader({
+            title: sprintf(this.env._t("Building your %s"), moduleName),
+        });
+        await this.orm.silent.call(
             'ir.module.module',
             'button_immediate_install',
             [id],
@@ -187,7 +191,7 @@ export class NewContentModal extends Component {
                     return el;
                 });
                 try {
-                    await this.installModule(id, element.redirectUrl);
+                    await this.installModule(id, element.redirectUrl, name);
                 } catch (error) {
                     // Update the NewContentElement with failure icon and text.
                     this.state.newContentElements = this.state.newContentElements.map(el => {
