@@ -156,14 +156,31 @@ FormRenderer.include({
      */
     _interchangeChatter() {
         const $sheetBg = this.$('.o_form_sheet_bg');
-        this._updateChatterContainerTarget();
         if (this._isChatterAside()) {
+            this._chatterContainerTarget.classList.add('o-aside');
+            this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
             $(this._chatterContainerTarget).insertAfter($sheetBg);
-        } else if (this.isChatterInSheet) {
-            const $sheet = this.$('.o_form_sheet');
-            dom.append($sheet, $(this._chatterContainerTarget));
         } else {
-            dom.append($sheetBg, $(this._chatterContainerTarget));
+            this._chatterContainerTarget.classList.remove('o-aside');
+            if (this.isChatterInSheet) {
+                this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
+                const $sheet = this.$('.o_form_sheet');
+                dom.append($sheet, $(this._chatterContainerTarget), {
+                    callbacks: [],
+                    in_DOM: this._isInDom,
+                });
+            } else {
+                if (this.hasAttachmentViewer()) {
+                    this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
+                    dom.append($sheetBg, $(this._chatterContainerTarget), {
+                        callbacks: [],
+                        in_DOM: this._isInDom,
+                    });
+                } else {
+                    this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
+                    $(this._chatterContainerTarget).insertAfter($sheetBg);
+                }
+            }
         }
         if (this.hasAttachmentViewer()) {
             $(this.attachmentViewerTarget).insertAfter($sheetBg);
@@ -211,24 +228,6 @@ FormRenderer.include({
             if (error.message !== "Mounting operation cancelled") {
                 throw error;
             }
-        }
-    },
-    /**
-     * Add a class to allow styling of chatter depending on the fact is is
-     * printed aside or underneath the form sheet.
-     *
-     * @private
-     */
-    _updateChatterContainerTarget() {
-        if (this._isChatterAside()) {
-            this._chatterContainerTarget.classList.add('o-aside');
-        } else {
-            this._chatterContainerTarget.classList.remove('o-aside');
-        }
-        if (this.hasAttachmentViewer()) {
-            this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
-        } else {
-            this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
         }
     },
     /**
