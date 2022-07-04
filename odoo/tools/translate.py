@@ -358,20 +358,6 @@ html_translate.get_text_content = get_text_content
 xml_translate.term_converter = xml_term_converter
 html_translate.term_converter = html_term_converter
 
-#
-# Warning: better use self.env['ir.translation']._get_source if you can
-#
-def translate(cr, name, source_type, lang, source=None):
-    if source and name:
-        cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s and src=%s and md5(src)=md5(%s)', (lang, source_type, str(name), source, source))
-    elif name:
-        cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s', (lang, source_type, str(name)))
-    elif source:
-        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s and md5(src)=md5(%s)', (lang, source_type, source, source))
-    res_trans = cr.fetchone()
-    res = res_trans and res_trans[0] or False
-    return res
-
 def translate_sql_constraint(cr, key, lang):
     cr.execute("""
         SELECT COALESCE(NULLIF(c.message->>%s, ''), c.message->>'en_US') as message
