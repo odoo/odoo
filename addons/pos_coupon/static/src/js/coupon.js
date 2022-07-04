@@ -173,7 +173,7 @@ odoo.define('pos_coupon.pos', function (require) {
      * @returns {number} number of free items
      */
     function computeFreeQuantity(numberItems, n, m) {
-        let factor = Math.trunc(numberItems / (n + m));
+        let factor = Math.trunc(numberItems / n);
         let free = factor * m;
         let charged = numberItems - free;
         // adjust the calculated free quantities
