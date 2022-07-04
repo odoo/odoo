@@ -996,7 +996,6 @@ class TestCowViewSaving(TestViewSavingCommon):
 
     def test_specific_view_translation(self):
         self.env['res.lang']._activate_lang('fr_BE')
-        Translation = self.env['ir.translation']
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
         self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
         self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
@@ -1011,7 +1010,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
             "updating translation of base view doesn't update specific view")
 
-        Translation._load_module_terms(['website'], ['en_US', 'fr_BE'], overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salute</div>',
