@@ -2741,6 +2741,9 @@ class AccountMove(models.Model):
             if line_vals.get('tax_repartition_line_id'):
                 # Tax line.
                 invoice_repartition_line = self.env['account.tax.repartition.line'].browse(line_vals['tax_repartition_line_id'])
+                # CABA taxes should not generate tax grids on reverse move.
+                if invoice_repartition_line.invoice_tax_id.tax_exigibility == 'on_payment':
+                    continue
                 if invoice_repartition_line not in tax_repartition_lines_mapping:
                     raise UserError(_("It seems that the taxes have been modified since the creation of the journal entry. You should create the credit note manually instead."))
                 refund_repartition_line = tax_repartition_lines_mapping[invoice_repartition_line]
@@ -2769,6 +2772,10 @@ class AccountMove(models.Model):
             elif line_vals.get('tax_ids') and line_vals['tax_ids'][0][2]:
                 # Base line.
                 taxes = self.env['account.tax'].browse(line_vals['tax_ids'][0][2]).flatten_taxes_hierarchy()
+                # CABA taxes should not generate tax grids on reverse move.
+                taxes = taxes.filtered(lambda t: t.tax_exigibility != 'on_payment')
+                if not taxes:
+                    continue
                 invoice_repartition_lines = taxes\
                     .mapped('invoice_repartition_line_ids')\
                     .filtered(lambda line: line.repartition_type == 'base')
