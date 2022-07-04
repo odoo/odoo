@@ -88,19 +88,6 @@ FormRenderer.include({
         return this._super(...arguments);
     },
     /**
-     * Overrides the function to interchange the chatter and the preview once
-     * the chatter is in the dom.
-     *
-     * @override
-     */
-    async _renderView() {
-        await this._super(...arguments);
-        if (!this.hasChatter) {
-            return;
-        }
-        this._interchangeChatter();
-    },
-    /**
      * Overrides to re-render the chatter container with potentially new props.
      * This is done in `__renderView` specifically to wait for this render to
      * be complete before updating the form view, which prevents flickering.
@@ -131,16 +118,16 @@ FormRenderer.include({
             this.attachmentViewerTarget.remove();
         }
         this._super(...arguments);
+        if (this.hasAttachmentViewerFeature) {
+            this.attachmentViewerTargetPlaceholder.replaceWith(this.attachmentViewerTarget);
+        }
         if (this.hasChatter) {
             this.chatterContainerTargetPlaceholder.replaceWith(this._chatterContainerTarget);
             // isChatterInSheet can only be written from this specific life-cycle method because the
             // parentNode is not accessible before the target node is actually in DOM. Ideally this
             // should be determined statically in `_processNode` but the parent is not provided.
             this.isChatterInSheet = this._chatterContainerTarget.parentNode.classList.contains('o_form_sheet');
-            this._updateChatterContainerTarget();
-        }
-        if (this.hasAttachmentViewerFeature) {
-            this.attachmentViewerTargetPlaceholder.replaceWith(this.attachmentViewerTarget);
+            this._interchangeChatter();
         }
     },
     /**
