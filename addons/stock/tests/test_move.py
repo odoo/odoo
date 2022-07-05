@@ -5741,3 +5741,25 @@ class StockMove(TransactionCase):
         self.assertEqual(move.forecast_availability, -1)
         move._action_confirm()
         self.assertEqual(move.forecast_availability, -1)
+
+    def test_move_compute_uom(self):
+        move = self.env['stock.move'].create({
+            'name': 'foo',
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_line_ids': [(0, 0, {})]
+        })
+        self.assertEqual(move.product_uom, self.product.uom_id)
+        self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
+
+    def test_move_line_compute_locations(self):
+        move = self.env['stock.move'].create({
+            'name': 'foo',
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_line_ids': [(0, 0, {})]
+        })
+        self.assertEqual(move.move_line_ids.location_id, self.stock_location)
+        self.assertEqual(move.move_line_ids.location_dest_id, self.customer_location)

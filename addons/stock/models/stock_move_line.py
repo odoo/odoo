@@ -27,7 +27,10 @@ class StockMoveLine(models.Model):
         help="Change to a better name", index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]",
+        compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
+    )
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_category_name = fields.Char(related="product_id.categ_id.complete_name", store=True, string="Product Category")
     reserved_qty = fields.Float(
@@ -55,8 +58,11 @@ class StockMoveLine(models.Model):
         'res.partner', 'From Owner',
         check_company=True,
         help="When validating the transfer, the products will be taken from this owner.")
-    location_id = fields.Many2one('stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
-    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True)
+    location_id = fields.Many2one(
+        'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
+        compute="_compute_location_id", store=True, readonly=False, precompute=True,
+    )
+    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, readonly=False, precompute=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_partner_id = fields.Many2one(related='picking_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -76,6 +82,15 @@ class StockMoveLine(models.Model):
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
 
+    @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
+    def _compute_product_uom_id(self):
+        for line in self:
+            if not line.product_uom_id or line.product_uom_id.category_id != line.product_id.uom_id.category_id:
+                if line.move_id.product_uom:
+                    line.product_uom_id = line.move_id.product_uom.id
+                else:
+                    line.product_uom_id = line.product_id.uom_id.id
+
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
     def _compute_lots_visible(self):
         for line in self:
@@ -91,6 +106,14 @@ class StockMoveLine(models.Model):
         for line in self:
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
+
+    @api.depends('move_id', 'move_id.location_id', 'move_id.location_dest_id')
+    def _compute_location_id(self):
+        for line in self:
+            if not line.location_id:
+                line.location_id = line.move_id.location_id or line.picking_id.location_id
+            if not line.location_dest_id:
+                line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_id
 
     def _search_picking_type_id(self, operator, value):
         return [('picking_id.picking_type_id', operator, value)]
@@ -135,11 +158,6 @@ class StockMoveLine(models.Model):
                 product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
                 self.description_picking = product._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
-            if not self.product_uom_id or self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-                if self.move_id.product_uom:
-                    self.product_uom_id = self.move_id.product_uom.id
-                else:
-                    self.product_uom_id = self.product_id.uom_id.id
 
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):
