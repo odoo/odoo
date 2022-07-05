@@ -71,7 +71,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
-            if partner.country_code == 'NL':
+            if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
                 endpoint = partner.l10n_nl_oin or partner.l10n_nl_kvk
                 scheme = '0190' if partner.l10n_nl_oin else '0106'
                 vals.update({
@@ -124,7 +124,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_identification_vals_list(partner)
 
-        if partner.country_code == 'NL':
+        if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
             endpoint = partner.l10n_nl_oin or partner.l10n_nl_kvk
             vals.append({
                 'id': endpoint,
