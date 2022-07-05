@@ -109,7 +109,6 @@ class TestPacking(TestPackingCommon):
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
-            'location_dest_id': self.stock_location.id,
             'company_id': picking.company_id.id,
         })
         self.assertEqual(package_level.state, 'draft',
@@ -172,13 +171,11 @@ class TestPacking(TestPackingCommon):
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
-            'location_dest_id': self.stock_location.id,
             'company_id': picking.company_id.id,
         })
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
-            'location_dest_id': self.stock_location.id,
             'company_id': picking.company_id.id,
         })
         picking.action_confirm()
@@ -918,7 +915,6 @@ class TestPacking(TestPackingCommon):
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
-            'location_dest_id': picking.location_dest_id.id,
             'company_id': picking.company_id.id,
         })
 
