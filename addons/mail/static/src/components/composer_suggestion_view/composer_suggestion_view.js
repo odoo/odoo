@@ -36,13 +36,13 @@ export class ComposerSuggestionView extends Component {
     _update() {
         if (
             this.root.el &&
-            this.composerSuggestionView.composerSuggestionListViewOwner.composerViewOwner.hasToScrollToActiveSuggestionView &&
-            this.composerSuggestionView.composerViewOwnerAsActiveSuggestionView
+            this.composerSuggestionView.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
+            this.composerSuggestionView.composerSuggestionListViewOwnerAsActiveSuggestionView
         ) {
             this.root.el.scrollIntoView({
                 block: 'center',
             });
-            this.composerSuggestionView.composerSuggestionListViewOwner.composerViewOwner.update({ hasToScrollToActiveSuggestionView: false });
+            this.composerSuggestionView.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
         }
     }
 
