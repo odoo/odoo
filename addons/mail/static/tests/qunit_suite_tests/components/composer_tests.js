@@ -261,12 +261,12 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "Canned responses suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInput_textarea', ':');
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
         "should display canned response suggestions on typing ':'"
     );
@@ -287,7 +287,7 @@ QUnit.test('use a canned response', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
@@ -298,10 +298,10 @@ QUnit.test('use a canned response', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a canned response suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
@@ -324,7 +324,7 @@ QUnit.test('use a canned response some text', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
@@ -341,10 +341,10 @@ QUnit.test('use a canned response some text', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a canned response suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
@@ -367,7 +367,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
@@ -378,10 +378,10 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a canned response suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
@@ -412,12 +412,12 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "channel mention suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInput_textarea', "#");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
         "should display channel mention suggestions on typing '#'"
     );
@@ -437,7 +437,7 @@ QUnit.test('mention a channel', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -448,10 +448,10 @@ QUnit.test('mention a channel', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a channel mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General ",
@@ -473,7 +473,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -490,10 +490,10 @@ QUnit.test('mention a channel after some text', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a channel mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh #General ",
@@ -515,7 +515,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -526,10 +526,10 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a channel mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General ",
@@ -560,12 +560,12 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "command suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInput_textarea', "/");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
         "should display command suggestions on typing '/'"
     );
@@ -614,7 +614,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await insertText('.o_ComposerTextInput_textarea', " is user?");
     assert.verifySteps([], "No rpc done");
 });
@@ -633,7 +633,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "command suggestions list should not be present"
     );
     assert.strictEqual(
@@ -642,7 +642,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who ",
@@ -663,7 +663,7 @@ QUnit.test('command suggestion should only open if command is the first characte
     await createComposerComponent(thread.composer);
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "command suggestions list should not be present"
     );
     assert.strictEqual(
@@ -680,7 +680,7 @@ QUnit.test('command suggestion should only open if command is the first characte
     await insertText('.o_ComposerTextInput_textarea', "/");
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should not have a command suggestion"
     );
 });
@@ -699,7 +699,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "command suggestions list should not be present"
     );
     assert.strictEqual(
@@ -708,7 +708,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who ",
@@ -743,12 +743,12 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "mention suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInput_textarea', "@");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
         "should display mention suggestions on typing '@'"
     );
@@ -774,7 +774,7 @@ QUnit.test('mention a partner', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_ComposerSuggestionListView_list',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -785,10 +785,10 @@ QUnit.test('mention a partner', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', '@Te');
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",
@@ -811,7 +811,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -828,10 +828,10 @@ QUnit.test('mention a partner after some text', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh @TestPartner ",
@@ -854,7 +854,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -865,10 +865,10 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "should have a mention suggestion"
     );
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",

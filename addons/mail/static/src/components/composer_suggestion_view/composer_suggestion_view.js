@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ComposerSuggestion extends Component {
+export class ComposerSuggestionView extends Component {
 
     /**
      * @override
@@ -20,9 +20,9 @@ export class ComposerSuggestion extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {ComposerSuggestion}
+     * @returns {ComposerSuggestionView}
      */
-    get composerSuggestion() {
+    get composerSuggestionView() {
         return this.props.record;
     }
 
@@ -36,21 +36,21 @@ export class ComposerSuggestion extends Component {
     _update() {
         if (
             this.root.el &&
-            this.composerSuggestion.composerViewOwner.hasToScrollToActiveSuggestion &&
-            this.composerSuggestion.isActive
+            this.composerSuggestionView.composerViewOwner.hasToScrollToActiveSuggestionView &&
+            this.composerSuggestionView.isActive
         ) {
             this.root.el.scrollIntoView({
                 block: 'center',
             });
-            this.composerSuggestion.composerViewOwner.update({ hasToScrollToActiveSuggestion: false });
+            this.composerSuggestionView.composerViewOwner.update({ hasToScrollToActiveSuggestionView: false });
         }
     }
 
 }
 
-Object.assign(ComposerSuggestion, {
+Object.assign(ComposerSuggestionView, {
     props: { record: Object },
-    template: 'mail.ComposerSuggestion',
+    template: 'mail.ComposerSuggestionView',
 });
 
-registerMessagingComponent(ComposerSuggestion);
+registerMessagingComponent(ComposerSuggestionView);

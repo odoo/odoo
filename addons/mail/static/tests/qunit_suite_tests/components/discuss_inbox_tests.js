@@ -86,7 +86,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "mention suggestion should be opened after typing @"
     );
 
@@ -96,7 +96,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(

@@ -15,7 +15,7 @@ registerModel({
             inverse: 'suggestable',
             readonly: true,
         }),
-        composerSuggestions: many('ComposerSuggestion', {
+        composerSuggestionViews: many('ComposerSuggestionView', {
             inverse: 'suggestable',
             isCausal: true,
         }),
