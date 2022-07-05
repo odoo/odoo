@@ -15,19 +15,19 @@ registerModel({
          */
         onClickReply(ev) {
             markEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo');
-            const threadView = this.messageView && this.messageView.messageListViewMessageViewItemOwner && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner;
+            const messageListViewMessageViewItem = this.messageView && this.messageView.messageListViewMessageViewItemOwner;
             const parentMessage = this.messageView.message.parentMessage;
-            if (!threadView || !parentMessage) {
+            if (!messageListViewMessageViewItem || !parentMessage) {
                 return;
             }
-            const parentMessageView = this.messaging.models['MessageView'].findFromIdentifyingData({
+            const parentMessageListViewMessageViewItem = this.messaging.models['MessageListViewMessageViewItem'].findFromIdentifyingData({
                 message: replace(parentMessage),
-                threadView: replace(threadView),
+                messageListViewOwner: replace(messageListViewMessageViewItem.messageListViewOwner),
             });
-            if (!parentMessageView) {
+            if (!parentMessageListViewMessageViewItem) {
                 return;
             }
-            parentMessageView.update({ doHighlight: true });
+            parentMessageListViewMessageViewItem.messageView.update({ doHighlight: true });
         },
         /**
          * @private
