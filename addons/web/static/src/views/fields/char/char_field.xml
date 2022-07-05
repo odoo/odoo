@@ -8,6 +8,7 @@
         <t t-else="">
             <input
                 class="o_input"
+                t-att-class="{'o_field_translate': props.isTranslatable}"
                 t-att-id="props.id"
                 t-att-type="props.isPassword ? 'password' : 'text'"
                 t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"

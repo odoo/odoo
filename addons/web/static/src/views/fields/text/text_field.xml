@@ -8,6 +8,7 @@
         <t t-else="">
             <textarea
                 class="o_input"
+                t-att-class="{'o_field_translate': props.isTranslatable}"
                 t-att-id="props.id"
                 t-att-placeholder="props.placeholder"
                 t-att-rows="rowCount"
