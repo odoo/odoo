@@ -76,7 +76,8 @@ odoo.define('pos_restaurant.chrome', function (require) {
                 this.showScreen('FloorScreen', { floor: table ? table.floor : null });
             }
             _shouldResetIdleTimer() {
-                return super._shouldResetIdleTimer() && this.env.pos.config.iface_floorplan && this.mainScreen.name !== 'FloorScreen';
+                const stayPaymentScreen = this.mainScreen.name === 'PaymentScreen' && this.env.pos.get_order().paymentlines.length > 0;
+                return super._shouldResetIdleTimer() && this.env.pos.config.iface_floorplan && !stayPaymentScreen && this.mainScreen.name !== 'FloorScreen';
             }
             __showScreen() {
                 super.__showScreen(...arguments);
