@@ -3,7 +3,7 @@
 
 import logging
 import os
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 from psycopg2.extras import Json
 
 from odoo import api, fields, models
@@ -189,14 +189,30 @@ class IrModuleModule(models.Model):
     def _post_copy(self, old_rec, new_rec):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
+        cur_lang = self.env.lang or 'en_US'
+        cache = self.env.cache
         for (src_field, dst_field) in translated_fields:
-            self._cr.execute("""INSERT INTO ir_translation (lang, src, name, res_id, state, value, type, module)
-                                SELECT t.lang, t.src, %s, %s, t.state, t.value, t.type, t.module
-                                FROM ir_translation t
-                                WHERE name = %s
-                                  AND res_id = %s
-                                ON CONFLICT DO NOTHING""",
-                             (dst_field, new_rec.id, src_field, old_rec.id))
+            src_mname, src_fname = src_field.split(',')
+            dst_mname, dst_fname = dst_field.split(',')
+            if dst_mname != new_rec._name:
+                continue
+            old_value_lang = old_rec[src_fname]
+            old_field = old_rec._fields[src_fname]
+            old_cache_value = cache.get(old_rec, old_field)
+            if not callable(old_field.translate):
+                # TODO cwg: check language
+                if old_rec[src_fname] == new_rec[dst_fname]:
+                    new_rec.update_field_translations(dst_fname, old_cache_value.copy())
+            else:
+                # {from_lang_term: {lang: to_lang_term}
+                translation_dictionary = old_field.get_translation_dictionary(old_value_lang, {
+                    lang: value for lang, value in old_cache_value.items() if lang != cur_lang})
+                # {lang: {old_term: new_term}
+                translations = defaultdict(dict)
+                for from_lang_term, to_lang_terms in translation_dictionary.items():
+                    for lang, to_lang_term in to_lang_terms.items():
+                        translations[lang][from_lang_term] = to_lang_term
+                new_rec.with_context(install_filename='dummy').update_field_translations(dst_fname, translations)
 
     def _theme_load(self, website):
         """
@@ -470,7 +486,8 @@ class IrModuleModule(models.Model):
         # use the translation dic of the generic to translate the specific
         self.env.cr.flush()
         # TODO CWG: check cache invalidate
-        towrite = self.env.all.towrite['ir.ui.view']
+        cache = self.env.cache
+        View = self.env['ir.ui.view']
         field = self.env['ir.ui.view']._fields['arch_db']
         # assume there are not too many records
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
@@ -502,7 +519,7 @@ class IrModuleModule(models.Model):
                 specific_arch_db[lang] = field.translate(
                     lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
             specific_arch_db['en_US'] = specific_arch_db_en
-            towrite[specific_id]['arch_db'] = Json(specific_arch_db)
+            cache.update(View.browse(specific_id), field, [specific_arch_db], dirty=True)
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:
