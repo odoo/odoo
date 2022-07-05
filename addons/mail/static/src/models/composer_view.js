@@ -273,15 +273,6 @@ registerModel({
                 replyingToMessageView: clear(),
             });
         },
-        /**
-         * @param {ComposerSuggestionView} suggestionView
-         */
-        onClickSuggestion(suggestionView) {
-            this.update({ activeSuggestionView: replace(suggestionView) });
-            this.insertSuggestion();
-            this.closeSuggestions();
-            this.update({ doFocus: true });
-        },
         onClickTextarea() {
             if (!this.exists()) {
                 return;
