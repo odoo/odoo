@@ -20,7 +20,10 @@ registerModel({
          */
         onClick(ev) {
             ev.preventDefault();
-            this.composerViewOwner.onClickSuggestion(this);
+            this.composerViewOwner.update({ activeSuggestionView: replace(this) });
+            this.composerViewOwner.insertSuggestion();
+            this.composerViewOwner.closeSuggestions();
+            this.composerViewOwner.update({ doFocus: true });
         },
          /**
          * @private
