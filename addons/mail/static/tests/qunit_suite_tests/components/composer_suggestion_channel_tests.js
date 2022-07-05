@@ -22,7 +22,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "#my-channel");
     assert.containsOnce(
         document.body,
-        `.o_ComposerSuggestion`,
+        `.o_ComposerSuggestionView`,
         "Channel mention suggestion should be present"
     );
 });
@@ -43,11 +43,11 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "#General");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part1',
+        '.o_ComposerSuggestionView_part1',
         "Channel name should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
+        document.querySelector(`.o_ComposerSuggestionView_part1`).textContent,
         "General",
         "Channel name should be displayed"
     );
@@ -68,7 +68,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "#my-channel");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestion'),
+        document.querySelector('.o_ComposerSuggestionView'),
         'active',
         "should be active initially"
     );

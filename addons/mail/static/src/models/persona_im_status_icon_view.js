@@ -54,7 +54,7 @@ registerModel({
             inverse: 'personaImStatusIconView',
             readonly: true,
         }),
-        composerSuggestionViewOwner: one('ComposerSuggestion', {
+        composerSuggestionViewOwner: one('ComposerSuggestionView', {
             inverse: 'personaImStatusIconView',
             readonly: true,
         }),

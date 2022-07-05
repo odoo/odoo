@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ComposerSuggestionList extends Component {
+export class ComposerSuggestionListView extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -19,9 +19,9 @@ export class ComposerSuggestionList extends Component {
 
 }
 
-Object.assign(ComposerSuggestionList, {
+Object.assign(ComposerSuggestionListView, {
     props: { record: Object },
-    template: 'mail.ComposerSuggestionList',
+    template: 'mail.ComposerSuggestionListView',
 });
 
-registerMessagingComponent(ComposerSuggestionList);
+registerMessagingComponent(ComposerSuggestionListView);
