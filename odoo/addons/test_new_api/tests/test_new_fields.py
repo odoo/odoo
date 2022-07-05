@@ -3928,6 +3928,43 @@ class TestPrecompute(common.TransactionCase):
         self.assertEqual(record.baz, 'baz')
         self.assertEqual(record.baz2, 'baz')
 
+    def test_precompute_readonly(self):
+        """
+        Ensures
+        - a stored, precomputed, readonly field cannot be altered by the user,
+        - a stored, precomputed, readonly field,
+          but with a states attributes changing the readonly of the field according to the state of the record,
+          can be altered by the user.
+        The `bar` field is store=True, precompute=True, readonly=True
+        The `baz` field is store=True, precompute=True, readonly=True, states={'draft': [('readonly', False)]}
+        """
+        model = self.env['test_new_api.precompute.readonly']
+
+        # no value for bar, no value for baz
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+
+        # value for bar, no value for baz
+        # bar is readonly, it must ignore the value for bar in the create values
+        record = model.create({'foo': 'foo', 'bar': 'bar'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+
+        # no value for bar, value for baz
+        # baz is readonly=True but states={'draft': [('readonly', False)]}
+        # the value for baz must be taken into account
+        record = model.create({'foo': 'foo', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+
+        # value for bar, value for baz
+        # bar must be ignored
+        # baz must be taken into account
+        record = model.create({'foo': 'foo', 'bar': 'bar', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+
     def test_precompute_required(self):
         model = self.env['test_new_api.precompute.required']
 
