@@ -372,7 +372,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("text field translatable", async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -412,12 +412,14 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
+        assert.hasClass(target.querySelector("[name=txt] textarea"), "o_field_translate");
+
         assert.containsOnce(
             target,
-            ".o_field_text .o_field_translate",
+            ".o_field_text .btn.o_field_translate",
             "should have a translate button"
         );
-        await click(target, ".o_field_text .o_field_translate");
+        await click(target, ".o_field_text .btn.o_field_translate");
 
         assert.containsOnce(target, ".modal", "there should be a translation modal");
     });
@@ -444,7 +446,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_field_text .o_field_translate",
+            ".o_field_text .btn.o_field_translate",
             "should have a translate button in create mode"
         );
     });
