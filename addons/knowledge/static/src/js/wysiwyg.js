@@ -88,6 +88,22 @@ Wysiwyg.include({
                 callback: () => {
                     this._insertTableOfContent();
                 }
+            }, {
+                groupName: 'Knowledge',
+                title: _t('Articles Structure'),
+                description: _t('Add your sub-articles structure.'),
+                fontawesome: 'fa-share-alt',
+                callback: () => {
+                    this._insertArticlesStructure(true);
+                }
+            }, {
+                groupName: 'Knowledge',
+                title: _t('Articles Index'),
+                description: _t('Add all your sub-articles index.'),
+                fontawesome: 'fa-share-alt',
+                callback: () => {
+                    this._insertArticlesStructure(false);
+                }
             });
         }
         return commands;
@@ -137,6 +153,20 @@ Wysiwyg.include({
         const tocBlock = $(QWeb.render('knowledge.toc_block', {}))[0];
         tocFragment.append(tocBlock);
         const [container] = this.odooEditor.execCommand('insertFragment', tocFragment);
+        this._notifyNewToolbars(container);
+        this._notifyNewBehaviors(container);
+    },
+    /**
+     * Insert a /structure block.
+     * It will list all the articles that are direct children of this one.
+     */
+     _insertArticlesStructure: function (onlyDirectChildren) {
+        const articlesStructureFragment = new DocumentFragment();
+        const articlesStructureBlock = $(QWeb.render('knowledge.articles_structure_wrapper', {
+            onlyDirectChildren: onlyDirectChildren
+        }))[0];
+        articlesStructureFragment.append(articlesStructureBlock);
+        const [container] = this.odooEditor.execCommand('insertFragment', articlesStructureFragment);
         this._notifyNewToolbars(container);
         this._notifyNewBehaviors(container);
     },

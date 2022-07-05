@@ -27,11 +27,13 @@ const KnowledgeBehavior = Class.extend({
      *                         widget specific functions
      * @param {Element} anchor dom node to apply the behavior to
      * @param {string} mode edit/readonly
+     * @param {Integer} articleId this id of the currently edited knowledge.article
      */
-    init: function (handler, anchor, mode) {
+    init: function (handler, anchor, mode, articleId) {
         this.handler = handler;
         this.anchor = anchor;
         this.mode = mode;
+        this.articleId = articleId;
         if (this.handler.editor) {
             this.handler.editor.observerUnactive('knowledge_attributes');
         }

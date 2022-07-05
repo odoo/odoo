@@ -39,4 +39,30 @@
             </div>
         </div><br/>
     </t>
+    <t t-name="knowledge.articles_structure_wrapper">
+        <div
+            t-attf-class="o_knowledge_articles_structure_wrapper o_knowledge_toolbars_container
+                o_knowledge_behavior_anchor o_knowledge_behavior_type_articles_structure
+                #{onlyDirectChildren ? 'o_knowledge_articles_structure_only_direct_children' : ''}">
+            <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_articles_structure"/>
+            <div class="o_knowledge_articles_structure_content"/>
+        </div>
+    </t>
+    <t t-name="knowledge.articles_structure">
+        <i t-if="!articles or articles.length === 0">No sub-articles found under this document.</i>
+        <ol t-foreach="articles" t-as="article">
+            <li>
+                <!-- Use 'data-oe-nodeid' as we need something that is not removed during sanitizing -->
+                <a t-attf-href="/knowledge/article/#{article.id}" t-att-data-oe-nodeid="article.id"
+                    class="btn btn-sm text-left o_knowledge_article_structure_link"
+                    contenteditable="false" t-out="article.name">
+                </a>
+            </li>
+            <li t-if="article.children and article.children.length !== 0">
+                <t t-call="knowledge.articles_structure">
+                    <t t-set="articles" t-value="article.children"/>
+                </t>
+            </li>
+        </ol>
+    </t>
 </templates>

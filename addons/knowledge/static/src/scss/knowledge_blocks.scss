@@ -65,6 +65,37 @@
     }
 }
 
+.o_knowledge_articles_structure_wrapper {
+    box-shadow: 0 2px 4px 4px $o-gray-200;
+    padding: 10px;
+    margin: 15px 0 15px 0;
+    .o_knowledge_articles_structure_content {
+        ol {
+            list-style-type: none;
+            margin: 0;
+            width: 100%;
+            padding-left: Min(30px, 10%);
+            li {
+                a {
+                    padding-left: 5px;
+                    width: 100%;
+                    font-family: $font-family-base !important;
+                    font-weight: $font-weight-bolder !important;
+                    border-radius: 5px;
+                    min-height: $line-height-base * $font-size-base;
+                }
+                a:hover {
+                    background-color: $o-gray-300;
+                }
+            }
+        }
+
+        > ol {
+            padding-left: 5px;
+        }
+    }
+}
+
 .o_knowledge_behavior_type_article {
     border-color: $o-gray-200;
 }

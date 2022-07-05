@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { TemplateToolbar, FileToolbar } from './knowledge_toolbars';
 import { ArticleBehavior, ContentsContainerBehavior } from './knowledge_behaviors';
 import { TableOfContentsBehavior } from './knowledge_behavior_table_of_content';
+import { ArticlesStructureBehavior, ArticlesStructureToolbar } from './knowledge_articles_structure';
 const { Component } = owl;
 
 /**
@@ -42,6 +43,10 @@ const FieldHtmlInjector = Widget.extend(WidgetAdapterMixin, {
             template: 'knowledge.file_toolbar',
             Toolbar: FileToolbar,
         },
+        o_knowledge_toolbar_type_articles_structure: {
+            template: 'knowledge.articles_structure_toolbar',
+            Toolbar: ArticlesStructureToolbar,
+        },
     },
     /**
      * Map classes used in @see OdooEditor blocks to their corresponding
@@ -56,6 +61,9 @@ const FieldHtmlInjector = Widget.extend(WidgetAdapterMixin, {
         },
         o_knowledge_behavior_type_toc: {
             Behavior: TableOfContentsBehavior,
+        },
+        o_knowledge_behavior_type_articles_structure: {
+            Behavior: ArticlesStructureBehavior,
         },
     },
     /**
@@ -74,6 +82,7 @@ const FieldHtmlInjector = Widget.extend(WidgetAdapterMixin, {
         this.mode = mode;
         this.field = field;
         this.editor = editor;
+        this.articleId = parent.record.data.id;
     },
     /**
      * Start the injection process and setup injection event listeners.
@@ -237,7 +246,7 @@ const FieldHtmlInjector = Widget.extend(WidgetAdapterMixin, {
                 return;
             }
             if (!anchor.oKnowledgeBehavior) {
-                anchor.oKnowledgeBehavior = new Behavior(this, anchor, this.mode);
+                anchor.oKnowledgeBehavior = new Behavior(this, anchor, this.mode, this.articleId);
             }
             this.behavior_anchors.add(anchor);
         });
