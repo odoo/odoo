@@ -40,19 +40,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsActive() {
-            if (this.composerSuggestionListViewOwnerAsMainSuggestion && this === this.composerSuggestionListViewOwnerAsMainSuggestion.composerViewOwner.activeSuggestionView) {
-                return true;
-            }
-            if (this.composerSuggestionListViewOwnerAsExtraSuggestion && this === this.composerSuggestionListViewOwnerAsExtraSuggestion.composerViewOwner.activeSuggestionView) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
          * @returns {string}
          */
         _computeMentionText() {
@@ -104,6 +91,9 @@ registerModel({
             compute: '_computeComposerViewOwner',
             required: true,
         }),
+        composerViewOwnerAsActiveSuggestionView: one('ComposerView', {
+            inverse: 'activeSuggestionView',
+        }),
         composerSuggestionListViewOwnerAsExtraSuggestion: one('ComposerSuggestionListView', {
             inverse: 'extraSuggestionViews',
             readonly: true,
@@ -111,10 +101,6 @@ registerModel({
         composerSuggestionListViewOwnerAsMainSuggestion: one('ComposerSuggestionListView', {
             inverse: 'mainSuggestionViews',
             readonly: true,
-        }),
-        isActive: attr({
-            compute: '_computeIsActive',
-            default: false,
         }),
         /**
          * The text that identifies this suggestion in a mention.
