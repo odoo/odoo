@@ -9251,6 +9251,7 @@ QUnit.module("Views", (hooks) => {
             "some qux value",
             "qux field should have the invalid value"
         );
+        assert.hasClass(target.querySelector("[name=qux]"), "o_field_invalid");
         assert.containsOnce(target, ".o_notification .text-danger");
         assert.containsOnce(target, ".o_form_editable .o_field_invalid[name=qux]");
         assert.verifySteps(["get_views", "onchange"]);
