@@ -5,10 +5,22 @@
 // customization (eg. form-range)
 
 // gray-color-variables
+$white: #fff !default;
 $gray-400: #ced4da !default;
+
+// color-variables
+$blue: #0d6efd !default;
+
+// theme-color-variables
+$primary: $blue !default;
+
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
 $min-contrast-ratio: 3 !default;
+
+// Body
+
+$body-bg: $white !default; // BS Default
 
 // Components
 //
@@ -36,6 +48,11 @@ $input-transition: background-color .05s ease-in-out, border-color .05s ease-in-
 
 $form-check-input-border: $border-width solid $gray-400 !default;
 $form-check-input-border-radius: 0 !default;
+
+$form-range-track-height: .1rem !default;
+$form-range-thumb-border: $border-width solid $primary !default;
+$form-range-thumb-bg: $body-bg !default;
+$form-range-thumb-active-bg: $primary !default;
 
 // Figures
 
