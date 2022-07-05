@@ -26,7 +26,7 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.containsOnce(
         document.body,
-        `.o_ComposerSuggestion`,
+        `.o_ComposerSuggestionView`,
         "Canned response suggestion should be present"
     );
 });
@@ -51,21 +51,21 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part1',
+        '.o_ComposerSuggestionView_part1',
         "Canned response source should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
+        document.querySelector(`.o_ComposerSuggestionView_part1`).textContent,
         "hello",
         "Canned response source should be displayed"
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part2',
+        '.o_ComposerSuggestionView_part2',
         "Canned response substitution should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part2`).textContent,
+        document.querySelector(`.o_ComposerSuggestionView_part2`).textContent,
         "Hello, how are you?",
         "Canned response substitution should be displayed"
     );
@@ -90,7 +90,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestion'),
+        document.querySelector('.o_ComposerSuggestionView'),
         'active',
         "should be active initially"
     );

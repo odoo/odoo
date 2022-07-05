@@ -387,14 +387,14 @@ function getCreateComposerComponent({ env, target }) {
     };
 }
 
-function getCreateComposerSuggestionComponent({ env, target }) {
-    return async function createComposerSuggestionComponent(composer, props) {
+function getCreateComposerSuggestionViewComponent({ env, target }) {
+    return async function createComposerSuggestionViewComponent(composer, props) {
         const composerView = env.services.messaging.modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
         });
-        await createRootMessagingComponent(env, "ComposerSuggestion", {
+        await createRootMessagingComponent(env, "ComposerSuggestionView", {
             props: { ...props, composerView: composerView },
             target,
         });
@@ -573,7 +573,7 @@ async function start(param0 = {}) {
         afterNextRender,
         click: getClick({ afterNextRender }),
         createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
-        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
+        createComposerSuggestionViewComponent: getCreateComposerSuggestionViewComponent({ env: webClient.env, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         env: webClient.env,

@@ -22,7 +22,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_ComposerSuggestionView',
         "Command suggestion should be present",
     );
 });
@@ -43,21 +43,21 @@ QUnit.test('command suggestion correct data', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part1',
+        '.o_ComposerSuggestionView_part1',
         "Command name should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
+        document.querySelector(`.o_ComposerSuggestionView_part1`).textContent,
         "who",
         "Command name should be displayed"
     );
     assert.containsOnce(
-        document.querySelector('.o_ComposerSuggestion'),
-        '.o_ComposerSuggestion_part2',
+        document.querySelector('.o_ComposerSuggestionView'),
+        '.o_ComposerSuggestionView_part2',
         "Command help should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part2`).textContent,
+        document.querySelector(`.o_ComposerSuggestionView_part2`).textContent,
         "List users in the current channel",
         "Command help should be displayed"
     );
@@ -78,7 +78,7 @@ QUnit.test('command suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestion'),
+        document.querySelector('.o_ComposerSuggestionView'),
         'active',
         "1st suggestion should be active initially"
     );
