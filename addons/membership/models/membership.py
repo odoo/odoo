@@ -39,7 +39,7 @@ class MembershipLine(models.Model):
              "-Cancelled Member: A member who has cancelled his membership.\n"
              "-Old Member: A member whose membership date has expired.\n"
              "-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-             "-Invoiced Member: A member whose invoice has been created.\n"
+             "-Invoiced Member: A member whose invoice has been posted.\n"
              "-Paid Member: A member who has paid the membership amount.")
 
     @api.depends('account_invoice_id.state',
