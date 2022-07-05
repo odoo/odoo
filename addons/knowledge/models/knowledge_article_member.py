@@ -49,6 +49,9 @@ class ArticleMember(models.Model):
           in self (the ones that will be deleted) to check if one of the remaining
           members has write access.
         """
+        if self.env.context.get('knowledge_member_skip_writable_check'):
+            return
+
         articles_to_check = self.article_id.filtered(lambda a: a.inherited_permission != 'write')
         if not articles_to_check:
             return
