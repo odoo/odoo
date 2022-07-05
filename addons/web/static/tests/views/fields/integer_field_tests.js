@@ -2,7 +2,13 @@
 
 import { localization } from "@web/core/l10n/localization";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    patchWithCleanup,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -297,6 +303,23 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("td:not(.o_list_record_selector)").textContent,
             "-28",
             "The new value should be saved and displayed properly."
+        );
+    });
+
+    QUnit.test("IntegerField field with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="int_field" placeholder="Placeholder"/></form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='int_field'] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='int_field'] input").placeholder,
+            "Placeholder"
         );
     });
 });

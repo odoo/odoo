@@ -1015,4 +1015,27 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("char field with placeholder", async function (assert) {
+        serverData.models.partner.fields.foo.default = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" placeholder="Placeholder" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='foo'] input").placeholder,
+            "Placeholder"
+        );
+    });
 });
