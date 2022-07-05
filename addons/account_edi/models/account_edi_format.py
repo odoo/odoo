@@ -286,6 +286,14 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         self.ensure_one()
 
+    def _is_attachment_included_in_mail(self):
+        """
+        Indicate whether the attachment linked to the EDI format should appear or not in the email generated
+        (when clicking on the 'Send & Print' button).
+        """
+        # TO OVERRIDE
+        return True
+
     ####################################################
     # Import Internal methods (not meant to be overridden)
     ####################################################

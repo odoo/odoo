@@ -13,7 +13,7 @@ class MailTemplate(models.Model):
         :param document: an edi document
         :return: list with a tuple with the name and base64 content of the attachment
         """
-        if not document.attachment_id:
+        if not document.attachment_id or not document.edi_format_id._is_attachment_included_in_mail():
             return []
         return [(document.attachment_id.name, document.attachment_id.datas)]
 

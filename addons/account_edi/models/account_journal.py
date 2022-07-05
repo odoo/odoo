@@ -49,7 +49,9 @@ class AccountJournal(models.Model):
 
         for journal in self:
             compatible_edis = edi_formats.filtered(lambda e: e._is_compatible_with_journal(journal))
-            journal.compatible_edi_ids = compatible_edis
+            # Exclude Factur-X from the compatible EDI s.t. it's not appearing on the journal
+            # Simply add Factur-X format back manually in the _compute_edi_format_ids
+            journal.compatible_edi_ids = compatible_edis.filtered(lambda e: e.code != 'facturx_1_0_05')
 
     @api.depends('type', 'company_id', 'company_id.account_fiscal_country_id')
     def _compute_edi_format_ids(self):
@@ -78,5 +80,10 @@ class AccountJournal(models.Model):
             # The existing edi formats that are already in use so we can't remove it.
             protected_edi_format_ids = protected_edi_formats_per_journal.get(journal.id, set())
             protected_edi_formats = journal.edi_format_ids.filtered(lambda e: e.id in protected_edi_format_ids)
+
+            # Since Factur-X is excluded from the compatible EDI (to be hidden in on the journal), need to add it here
+            facturx_format = self.env.ref('account_edi_ubl_cii.facturx_1_0_05', raise_if_not_found=False)
+            if facturx_format:
+                journal.edi_format_ids += facturx_format
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats

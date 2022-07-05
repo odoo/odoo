@@ -140,6 +140,12 @@ class AccountEdiFormat(models.Model):
             return True
         return super()._is_embedding_to_invoice_pdf_needed()
 
+    def _is_attachment_included_in_mail(self):
+        # EXTENDS account_edi
+        if self.code == 'facturx_1_0_05':
+            return False
+        return super()._is_attachment_included_in_mail()
+
     def _prepare_invoice_report(self, pdf_writer, edi_document):
         # EXTENDS account_edi
         self.ensure_one()
