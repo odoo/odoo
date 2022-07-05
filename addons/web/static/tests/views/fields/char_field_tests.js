@@ -307,7 +307,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("char field translatable", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         serverData.models.partner.fields.foo.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -367,17 +367,19 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
+        assert.hasClass(target.querySelector("[name=foo] input"), "o_field_translate");
+
         assert.containsOnce(
             target,
-            ".o_field_char .o_field_translate",
+            ".o_field_char .btn.o_field_translate",
             "should have a translate button"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_char .o_field_translate").textContent,
+            target.querySelector(".o_field_char .btn.o_field_translate").textContent,
             "EN",
             "the button should have as test the current language"
         );
-        await click(target, ".o_field_char .o_field_translate");
+        await click(target, ".o_field_char .btn.o_field_translate");
 
         assert.containsOnce(target, ".modal", "a translate modal should be visible");
         assert.containsN(
@@ -405,7 +407,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, `.o_field_char input[type="text"]`, "new english value");
-        await click(target, ".o_field_char .o_field_translate");
+        await click(target, ".o_field_char .btn.o_field_translate");
 
         enFields = target.querySelectorAll(".modal .o_translation_dialog .translation input");
         assert.strictEqual(
@@ -509,7 +511,7 @@ QUnit.module("Fields", (hooks) => {
             "<p>first paragraph</p><p>second paragraph</p>"
         );
 
-        await click(target, ".o_field_char .o_field_translate");
+        await click(target, ".o_field_char .btn.o_field_translate");
         assert.containsOnce(target, ".modal", "a translate modal should be visible");
         assert.containsN(
             target,
@@ -559,7 +561,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            `.o_field_char .o_field_translate`,
+            `.o_field_char .btn.o_field_translate`,
             "should have a translate button in create mode"
         );
     });
