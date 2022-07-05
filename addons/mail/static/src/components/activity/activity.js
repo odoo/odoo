@@ -174,8 +174,9 @@ class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickEdit(ev) {
-        this.activity.edit();
+    async _onClickEdit(ev) {
+        await this.activity.edit();
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**
