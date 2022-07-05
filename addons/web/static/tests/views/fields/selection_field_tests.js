@@ -395,4 +395,22 @@ QUnit.module("Fields", (hooks) => {
             "Two options in second selection as it is now required"
         );
     });
+
+    QUnit.test("selection field with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" widget="selection" placeholder="Placeholder"/>
+                </form>`,
+        });
+
+        const placeholderOption = target.querySelector(
+            ".o_field_widget[name='trululu'] select option"
+        );
+        assert.strictEqual(placeholderOption.textContent, "Placeholder");
+        assert.strictEqual(placeholderOption.value, "false");
+    });
 });

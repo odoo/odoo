@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -75,6 +75,26 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget").textContent,
             "24%",
             "The new value should be formatted properly."
+        );
+    });
+
+    QUnit.test("percentage field with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <form>
+                <field name="float_field" widget="percentage" placeholder="Placeholder"/>
+            </form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='float_field'] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='float_field'] input").placeholder,
+            "Placeholder"
         );
     });
 });

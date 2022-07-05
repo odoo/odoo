@@ -9,6 +9,7 @@ import {
     editInput,
     getFixture,
     patchWithCleanup,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 
@@ -1110,6 +1111,27 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name=float_field] input").value,
             "9.10",
             "The currency symbol is not displayed"
+        );
+    });
+
+    QUnit.test("monetary field with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="float_field" widget="monetary" placeholder="Placeholder"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='float_field'] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='float_field'] input").placeholder,
+            "Placeholder"
         );
     });
 });
