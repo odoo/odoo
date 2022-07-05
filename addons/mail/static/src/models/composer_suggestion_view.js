@@ -13,7 +13,7 @@ import { sprintf } from '@web/core/utils/strings';
  */
 registerModel({
     name: 'ComposerSuggestionView',
-    identifyingFields: [['composerSuggestionListViewOwnerAsExtraSuggestion', 'composerSuggestionListViewOwnerAsMainSuggestion'], 'suggestable'],
+    identifyingFields: [['composerSuggestionListViewExtraComposerSuggestionViewItemOwner', 'composerSuggestionListViewMainComposerSuggestionViewItemOwner']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -31,11 +31,11 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeComposerSuggestionListViewOwner() {
-            if (this.composerSuggestionListViewOwnerAsExtraSuggestion) {
-                return replace(this.composerSuggestionListViewOwnerAsExtraSuggestion);
+            if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
+                return replace(this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.composerSuggestionListViewOwner);
             }
-            if (this.composerSuggestionListViewOwnerAsMainSuggestion) {
-                return replace(this.composerSuggestionListViewOwnerAsMainSuggestion);
+            if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
+                return replace(this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.composerSuggestionListViewOwner);
             }
             return clear();
         },
@@ -44,6 +44,9 @@ registerModel({
          * @returns {string}
          */
         _computeMentionText() {
+            if (!this.suggestable) {
+                return clear();
+            }
             if (this.suggestable.cannedResponse) {
                 return this.suggestable.cannedResponse.substitution;
             }
@@ -62,13 +65,29 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.suggestable.partner && this.suggestable.partner.isImStatusSet ? insertAndReplace() : clear();
+            return this.suggestable && this.suggestable.partner && this.suggestable.partner.isImStatusSet ? insertAndReplace() : clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeSuggestable() {
+            if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
+                return replace(this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.suggestable);
+            }
+            if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
+                return replace(this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.suggestable);
+            }
+            return clear();
         },
         /**
          * @private
          * @returns {string|FieldCommand}
          */
         _computeTitle() {
+            if (!this.suggestable) {
+                return clear();
+            }
             if (this.suggestable.cannedResponse) {
                 return sprintf("%s: %s", this.suggestable.cannedResponse.source, this.suggestable.cannedResponse.substitution);
             }
@@ -95,12 +114,12 @@ registerModel({
         composerSuggestionListViewOwnerAsActiveSuggestionView: one('ComposerSuggestionListView', {
             inverse: 'activeSuggestionView',
         }),
-        composerSuggestionListViewOwnerAsExtraSuggestion: one('ComposerSuggestionListView', {
-            inverse: 'extraSuggestionViews',
+        composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
+            inverse: 'composerSuggestionView',
             readonly: true,
         }),
-        composerSuggestionListViewOwnerAsMainSuggestion: one('ComposerSuggestionListView', {
-            inverse: 'mainSuggestionViews',
+        composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
+            inverse: 'composerSuggestionView',
             readonly: true,
         }),
         /**
@@ -116,7 +135,7 @@ registerModel({
             readonly: true,
         }),
         suggestable: one('ComposerSuggestable', {
-            inverse: 'composerSuggestionViews',
+            compute: '_computeSuggestable',
             readonly: true,
             required: true,
         }),
