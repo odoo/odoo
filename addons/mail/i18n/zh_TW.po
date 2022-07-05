@@ -3290,8 +3290,9 @@ msgstr "設定對該欄位所做的每個修改都在聊天框被追蹤。值被
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
-msgstr "如果設定完畢，隊列管理員將在指定日期之後發送電子信件。如果未設定完畢，電子信件將盡快發送。"
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -7565,6 +7566,11 @@ msgstr "寫回饋"
 #, python-format
 msgid "Wrong operation name (%s)"
 msgstr "錯誤的操作名稱 (%s)"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
+msgstr ""
 
 #. module: mail
 #. openerp-web

@@ -78,7 +78,7 @@ msgstr ""
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
-"%(user_name)s пригласил вас следить за документом%(document)s:%(title)s "
+"%(user_name)s пригласил вас следить за документом %(document)s: %(title)s "
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -1120,8 +1120,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Вложения связаны с документом через модель / res_id и к сообщению через это "
-"поле."
+"Вложения связаны с документом через модель / res_id и с сообщением через это"
+" поле."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
@@ -3356,10 +3356,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
 msgstr ""
-"Если установлено, диспетчер очереди отправит письмо после даты. Если не "
-"установлено, письмо будет отправлено как можно скорее."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -7713,6 +7712,11 @@ msgstr "написать отзыв"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Wrong operation name (%s)"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
 msgstr ""
 
 #. module: mail

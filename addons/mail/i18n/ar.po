@@ -3361,10 +3361,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
 msgstr ""
-"إذا كان محددًا، سيقوم منظم قائمة الانتظار بإرسال الرسالة بعد التاريخ. إن لم "
-"يكن محددًا، سيتم إرسال الرسالة في أقرب فرصة. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -7739,6 +7738,11 @@ msgstr "كتابة ملاحظات"
 #, python-format
 msgid "Wrong operation name (%s)"
 msgstr "اسم العملية غير صحيح (%s) "
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
+msgstr ""
 
 #. module: mail
 #. openerp-web

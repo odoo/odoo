@@ -96,6 +96,15 @@ describe('Copy and paste', () => {
     });
     describe('Simple text', () => {
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'x');
+                    },
+                    contentAfter: '<p>x[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -231,6 +240,15 @@ describe('Copy and paste', () => {
     describe('Simple html span', () => {
         const simpleHtmlCharX = '<span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">x</span>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, simpleHtmlCharX);
+                    },
+                    contentAfter: '<p>x[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -345,6 +363,15 @@ describe('Copy and paste', () => {
     describe('Simple html p', () => {
         const simpleHtmlCharX = '<p>x</p>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, simpleHtmlCharX);
+                    },
+                    contentAfter: '<p>x[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -459,6 +486,15 @@ describe('Copy and paste', () => {
     describe('Complex html span', () => {
         const complexHtmlData = '<span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHtmlData);
+                    },
+                    contentAfter: '<p>1<b>23</b>&nbsp;4[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -573,6 +609,15 @@ describe('Copy and paste', () => {
     describe('Complex html p', () => {
         const complexHtmlData = '<p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">12</p><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">34</p>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHtmlData);
+                    },
+                    contentAfter: '<p>12</p><p>34[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -700,9 +745,18 @@ describe('Copy and paste', () => {
             });
         });
     });
-     describe('Complex html 3 p', () => {
+    describe('Complex html 3 p', () => {
         const complexHtmlData = '<p>1<i>X</i>2</p><p>3<i>X</i>4</p><p>5<i>X</i>6</p>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHtmlData);
+                    },
+                    contentAfter: '<p>1<i>X</i>2</p><p>3<i>X</i>4</p><p>5<i>X</i>6[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -830,6 +884,15 @@ describe('Copy and paste', () => {
     describe('Complex html p+i', () => {
         const complexHtmlData = '<p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">12</p><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><i style="box-sizing: border-box;">ii</i></p>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHtmlData);
+                    },
+                    contentAfter: '<p>12</p><p><i>ii</i>[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -955,6 +1018,15 @@ describe('Copy and paste', () => {
     describe('Complex html 3p+b', () => {
         const complexHtmlData = '<p>1<b>23</b></p><p>zzz</p><p>45<b>6</b>7</p>';
         describe('range collapsed', async () => {
+            it('should paste a text at the beginning of a p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHtmlData);
+                    },
+                    contentAfter: '<p>1<b>23</b></p><p>zzz</p><p>45<b>6</b>7[]abcd</p>',
+                });
+            });
             it('should paste a text in a p', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]cd</p>',
@@ -1070,6 +1142,51 @@ describe('Copy and paste', () => {
                         await pasteHtml(editor, '<ul><li>abc</li><li>def</li><li>ghi</li></ul>');
                     },
                     contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul>[]<p>34</p>',
+                });
+            });
+            it('should paste the text of an li into another li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li, and the text of another li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123</li><li>456[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li, insert a new li, and paste the text of a third li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>de[]f</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li><li>789</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>de123</li><li>456</li><li>789[]f</li><li>ghi</li></ul>',
+                });
+            });
+            it('should paste the text of an li into another li and insert a new li at the end of a list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc</li><li>def</li><li>ghi[]</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc</li><li>def</li><li>ghi123</li><li>456[]</li></ul>',
+                });
+            });
+            it('should insert a new li at the beginning of a list and paste the text of another li into the next li', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]abc</li><li>def</li><li>ghi</li></ul>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
+                    },
+                    contentAfter: '<ul><li>123</li><li>456[]abc</li><li>def</li><li>ghi</li></ul>',
                 });
             });
         });
