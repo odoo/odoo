@@ -224,4 +224,19 @@ QUnit.module("Fields", (hooks) => {
             "/web/image/user/17/avatar_128"
         );
     });
+
+    QUnit.test("Many2OneAvatar with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<form><field name="user_id" widget="many2one_avatar" placeholder="Placeholder"/></form>',
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='user_id'] input").placeholder,
+            "Placeholder"
+        );
+    });
 });

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -162,6 +162,26 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_float_time[name=qux] input"),
             "o_field_invalid",
             "date field should not be displayed as invalid now"
+        );
+    });
+
+    QUnit.test("float_time field with placeholder", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="qux" widget="float_time" placeholder="Placeholder"/>
+                </form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='qux'] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='qux'] input").placeholder,
+            "Placeholder"
         );
     });
 });

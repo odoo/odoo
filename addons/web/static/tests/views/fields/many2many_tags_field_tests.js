@@ -1525,4 +1525,19 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(row, ".o-autocomplete--input");
     });
+
+    QUnit.test("Many2ManyTagsField with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder"/></form>',
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='timmy'] input").placeholder,
+            "Placeholder"
+        );
+    });
 });

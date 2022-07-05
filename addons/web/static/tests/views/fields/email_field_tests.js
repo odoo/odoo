@@ -163,11 +163,12 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="empty_string" widget="email"/>
+                            <field name="empty_string" widget="email" placeholder="Placeholder"/>
                         </group>
                     </sheet>
                 </form>`,
         });
+        assert.strictEqual(target.querySelector(".o_field_email input").placeholder, "Placeholder");
 
         await click(target.querySelector(".o_form_button_save"));
         const mailtoLink = target.querySelector(".o_field_email a");
@@ -239,4 +240,27 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("email field with placeholder", async function (assert) {
+        serverData.models.partner.fields.foo.default = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" placeholder="New Placeholder" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='foo'] input").placeholder,
+            "New Placeholder"
+        );
+    });
 });

@@ -16,6 +16,12 @@ export class EmailField extends Component {
 EmailField.template = "web.EmailField";
 EmailField.props = {
     ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+};
+EmailField.extractProps = (fieldName, record, attrs) => {
+    return {
+        placeholder: attrs.placeholder,
+    };
 };
 
 EmailField.displayName = _lt("Email");
