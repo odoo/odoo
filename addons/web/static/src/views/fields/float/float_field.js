@@ -8,41 +8,27 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps } = owl;
+const { Component } = owl;
 
 export class FloatField extends Component {
     setup() {
-        this.defaultInputValue = this.getFormattedValue();
         useInputField({
-            getValue: () => this.defaultInputValue,
+            getValue: () => this.formattedValue,
             refName: "numpadDecimal",
             parse: (v) => this.parse(v),
         });
         useNumpadDecimal();
-        onWillUpdateProps((nextProps) => {
-            if (
-                nextProps.readonly !== this.props.readonly &&
-                !nextProps.readonly &&
-                nextProps.inputType !== "number"
-            ) {
-                this.defaultInputValue = this.getFormattedValue(nextProps);
-            }
-        });
     }
 
     parse(value) {
         return this.props.inputType === "number" ? Number(value) : parseFloat(value);
     }
 
-    onChange(ev) {
-        this.defaultInputValue = ev.target.value;
-    }
-
-    getFormattedValue(props = this.props) {
-        if (props.inputType === "number" && !props.readonly && props.value) {
-            return props.value;
+    get formattedValue() {
+        if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
+            return this.props.value;
         }
-        return formatFloat(props.value, { digits: props.digits });
+        return formatFloat(this.props.value, { digits: this.props.digits });
     }
 }
 
