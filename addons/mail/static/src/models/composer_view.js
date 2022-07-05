@@ -683,7 +683,7 @@ registerModel({
          * considered together.
          */
         setFirstSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
+            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
             const firstSuggestionView = suggestionViews[0];
             this.update({ activeSuggestionView: replace(firstSuggestionView) });
         },
@@ -692,7 +692,7 @@ registerModel({
          * considered together.
          */
         setLastSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
+            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
             const { length, [length - 1]: lastSuggestionView } = suggestionViews;
             this.update({ activeSuggestionView: replace(lastSuggestionView) });
         },
@@ -701,7 +701,7 @@ registerModel({
          * considered together.
          */
         setNextSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
+            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
             const activeElementIndex = suggestionViews.findIndex(
                 suggestion => suggestion === this.activeSuggestionView
             );
@@ -718,7 +718,7 @@ registerModel({
          * considered together.
          */
         setPreviousSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
+            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
             const activeElementIndex = suggestionViews.findIndex(
                 suggestion => suggestion === this.activeSuggestionView
             );
@@ -776,19 +776,22 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActiveSuggestionView() {
+            if (!this.composerSuggestionListView) {
+                return clear();
+            }
             if (
-                this.mainSuggestionViews.length === 0 &&
-                this.extraSuggestionViews.length === 0
+                this.composerSuggestionListView.mainSuggestionViews.length === 0 &&
+                this.composerSuggestionListView.extraSuggestionViews.length === 0
             ) {
                 return clear();
             }
             if (
-                this.mainSuggestionViews.includes(this.activeSuggestionView) ||
-                this.extraSuggestionViews.includes(this.activeSuggestionView)
+                this.composerSuggestionListView.mainSuggestionViews.includes(this.activeSuggestionView) ||
+                this.composerSuggestionListView.extraSuggestionViews.includes(this.activeSuggestionView)
             ) {
                 return;
             }
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
+            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
             const firstSuggestionView = suggestionViews[0];
             return replace(firstSuggestionView);
         },
@@ -889,16 +892,6 @@ registerModel({
                 return clear();
             }
             return unlink(this.mainSuggestions);
-        },
-        /**
-         * @returns {FieldCommand}
-         */
-        _computeExtraSuggestionViews() {
-            return insertAndReplace(this.extraSuggestions.map(suggestable => {
-                return {
-                    suggestable: replace(suggestable),
-                };
-            }));
         },
         /**
          * @private
@@ -1038,16 +1031,6 @@ registerModel({
             if (this.suggestionDelimiterPosition === undefined) {
                 return clear();
             }
-        },
-        /**
-         * @returns {FieldCommand}
-         */
-        _computeMainSuggestionViews() {
-            return insertAndReplace(this.mainSuggestions.map(suggestable => {
-                return {
-                    suggestable: replace(suggestable),
-                };
-            }));
         },
         /**
          * @private
@@ -1501,14 +1484,6 @@ registerModel({
         extraSuggestions: many('ComposerSuggestable', {
             compute: '_computeExtraSuggestions',
         }),
-        /**
-         * Determines the extra suggestions.
-         */
-        extraSuggestionViews: many('ComposerSuggestionView', {
-            compute: '_computeExtraSuggestionViews',
-            inverse: 'composerViewOwnerAsExtraSuggestion',
-            isCausal: true,
-        }),
         fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'composerView',
@@ -1608,14 +1583,6 @@ registerModel({
         }),
         mainSuggestions: many('ComposerSuggestable', {
             compute: '_computeMainSuggestions',
-        }),
-        /**
-         * Determines the main suggestions.
-         */
-        mainSuggestionViews: many('ComposerSuggestionView', {
-            compute: '_computeMainSuggestionViews',
-            inverse: 'composerViewOwnerAsMainSuggestion',
-            isCausal: true,
         }),
         /**
          * States the message view on which this composer allows editing (if any).

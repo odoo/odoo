@@ -13,7 +13,7 @@ import { sprintf } from '@web/core/utils/strings';
  */
 registerModel({
     name: 'ComposerSuggestionView',
-    identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], 'suggestable'],
+    identifyingFields: [['composerSuggestionListViewOwnerAsExtraSuggestion', 'composerSuggestionListViewOwnerAsMainSuggestion'], 'suggestable'],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -27,11 +27,11 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeComposerViewOwner() {
-            if (this.composerViewOwnerAsExtraSuggestion) {
-                return replace(this.composerViewOwnerAsExtraSuggestion);
+            if (this.composerSuggestionListViewOwnerAsExtraSuggestion) {
+                return replace(this.composerSuggestionListViewOwnerAsExtraSuggestion.composerViewOwner);
             }
-            if (this.composerViewOwnerAsMainSuggestion) {
-                return replace(this.composerViewOwnerAsMainSuggestion);
+            if (this.composerSuggestionListViewOwnerAsMainSuggestion) {
+                return replace(this.composerSuggestionListViewOwnerAsMainSuggestion.composerViewOwner);
             }
             return clear();
         },
@@ -40,10 +40,10 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeIsActive() {
-            if (this.composerViewOwnerAsMainSuggestion && this === this.composerViewOwnerAsMainSuggestion.activeSuggestionView) {
+            if (this.composerSuggestionListViewOwnerAsMainSuggestion && this === this.composerSuggestionListViewOwnerAsMainSuggestion.composerViewOwner.activeSuggestionView) {
                 return true;
             }
-            if (this.composerViewOwnerAsExtraSuggestion && this === this.composerViewOwnerAsExtraSuggestion.activeSuggestionView) {
+            if (this.composerSuggestionListViewOwnerAsExtraSuggestion && this === this.composerSuggestionListViewOwnerAsExtraSuggestion.composerViewOwner.activeSuggestionView) {
                 return true;
             }
             return clear();
@@ -101,11 +101,11 @@ registerModel({
             compute: '_computeComposerViewOwner',
             required: true,
         }),
-        composerViewOwnerAsExtraSuggestion: one('ComposerView', {
+        composerSuggestionListViewOwnerAsExtraSuggestion: one('ComposerSuggestionListView', {
             inverse: 'extraSuggestionViews',
             readonly: true,
         }),
-        composerViewOwnerAsMainSuggestion: one('ComposerView', {
+        composerSuggestionListViewOwnerAsMainSuggestion: one('ComposerSuggestionListView', {
             inverse: 'mainSuggestionViews',
             readonly: true,
         }),
