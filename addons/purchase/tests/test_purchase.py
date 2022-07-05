@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
-from odoo import fields
+from odoo import Command, fields
 
 
 from datetime import timedelta
@@ -215,6 +215,26 @@ class TestPurchase(AccountTestInvoicingCommon):
             line.product_packaging_qty = 1.0
         po_form.save()
         self.assertEqual(po.order_line.product_qty, 12)
+
+        # Do the same test but without form, to check the `product_packaging_id` and `product_packaging_qty` are set
+        # without manual call to onchanges
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 1.0}),
+            ]
+        })
+        self.assertEqual(po.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(po.order_line.product_packaging_qty, 1.0)
+        po.order_line.product_packaging_qty = 2.0
+        self.assertEqual(po.order_line.product_qty, 2.0)
+
+        po.order_line.product_qty = 24.0
+        self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
+        self.assertEqual(po.order_line.product_packaging_qty, 2.0)
+        po.order_line.product_packaging_qty = 1.0
+        self.assertEqual(po.order_line.product_qty, 12)
+
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
