@@ -156,31 +156,25 @@ FormRenderer.include({
      */
     _interchangeChatter() {
         const $sheetBg = this.$('.o_form_sheet_bg');
-        if (this._isChatterAside()) {
-            this._chatterContainerTarget.classList.add('o-aside');
-            this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
-            $(this._chatterContainerTarget).insertAfter($sheetBg);
-        } else {
-            this._chatterContainerTarget.classList.remove('o-aside');
-            if (this.isChatterInSheet) {
-                this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
-                const $sheet = this.$('.o_form_sheet');
-                dom.append($sheet, $(this._chatterContainerTarget), {
-                    callbacks: [],
-                    in_DOM: this._isInDom,
-                });
-            } else {
-                if (this.hasAttachmentViewer()) {
-                    this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
-                    dom.append($sheetBg, $(this._chatterContainerTarget), {
-                        callbacks: [],
-                        in_DOM: this._isInDom,
-                    });
-                } else {
-                    this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
-                    $(this._chatterContainerTarget).insertAfter($sheetBg);
-                }
+        this._chatterContainerTarget.classList.remove('o-aside');
+        this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
+        if (this.isChatterInSheet) { // in sheet
+            const $sheet = this.$('.o_form_sheet');
+            dom.append($sheet, $(this._chatterContainerTarget), {
+                callbacks: [],
+                in_DOM: this._isInDom,
+            });
+        } else if (this.hasAttachmentViewer()) { // in sheet-bg
+            this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
+            dom.append($sheetBg, $(this._chatterContainerTarget), {
+                callbacks: [],
+                in_DOM: this._isInDom,
+            });
+        } else { // after sheet-bg
+            if (this._isChatterAside()) {
+                this._chatterContainerTarget.classList.add('o-aside');
             }
+            $(this._chatterContainerTarget).insertAfter($sheetBg);
         }
         if (this.hasAttachmentViewer()) {
             $(this.attachmentViewerTarget).insertAfter($sheetBg);
