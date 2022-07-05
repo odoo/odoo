@@ -474,7 +474,8 @@ return AbstractRenderer.extend({
                         // don't use bind:  callback is called with 'index' as second parameter
                         // with value labels.indexOf(label)!
                         callback: function (label) {
-                            return self._relabelling(label);
+                            var fullText = self._relabelling(label);
+                            return self._shortenLabel(fullText);
                         },
                     },
                 }],
