@@ -145,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".o_kanban_record.oe_kanban_global_click",
+            ".o_kanban_record .oe_kanban_global_click",
             "There should be one record in the many2many"
         );
 

@@ -11,7 +11,7 @@
         padding: 0px!important;
     }
 
-    .o_kanban_record, .o_kanban_quick_create {
+    .o_kanban_record > div, .o_kanban_quick_create {
         padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
         border: 1px solid $border-color;
         background-color: $o-view-background-color;
@@ -52,9 +52,13 @@
         min-width: 150px;
         margin: 0 0 -1px;
 
+        > div {
+            height: 100%;
+        }
+
         // ------- Kanban Record, v11 Layout -------
         // Records colours
-        &::after {
+        > div::after {
             content: "";
             @include o-position-absolute(0, auto, 0, 0);
             width: $o-kanban-color-border-width;
@@ -155,7 +159,7 @@
         // ---------- Kanban Record, fill image design ----------
         // Records with images that compensate record's padding
         // filling all the available space (eg. hr, partners.. )
-        &.o_kanban_record_has_image_fill {
+        .o_kanban_record_has_image_fill {
             display: flex;
 
             .o_kanban_image_fill_left {
@@ -228,6 +232,8 @@
 
     .o_dragged {
         @extend .shadow;
+        transform: rotate(-3deg);
+        transition: transform 0.6s, box-shadow 0.3s;
     }
 
     // -------  Compatibility of old (<= v10) Generic layouts -------
@@ -331,17 +337,13 @@
         }
 
         // Kanban Record - Utility classes
-        &.oe_kanban_global_click, &.oe_kanban_global_click_edit {
+        &.oe_kanban_global_click, &.oe_kanban_global_click_edit,
+        .oe_kanban_global_click, .oe_kanban_global_click_edit {
             cursor: pointer;
             &:focus, &:focus-within {
                 outline: thin solid mix(theme-color('primary'), gray('400'));
                 outline-offset: -1px;
             }
-        }
-
-        &.o_dragged {
-            transform: rotate(-3deg);
-            transition: transform 0.6s, box-shadow 0.3s;
         }
 
         .o_attachment_image > img {

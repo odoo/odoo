@@ -19,7 +19,7 @@ import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_pa
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 
-const { Component, onWillUpdateProps, xml } = owl;
+const { Component, onMounted, onWillUpdateProps, useRef, xml } = owl;
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -169,6 +169,11 @@ export class KanbanRecord extends Component {
         }
 
         this.createRecordAndWidget(this.props);
+        this.rootRef = useRef("root");
+        onMounted(() => {
+            // FIXME: this needs to be changed to an attribute on the root node...
+            this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
+        });
         onWillUpdateProps(this.createRecordAndWidget);
     }
 
@@ -252,7 +257,7 @@ export class KanbanRecord extends Component {
                     record.model.notify();
                 },
             });
-        } else if (forceGlobalClick || ev.target.closest(ALLOW_GLOBAL_CLICK)) {
+        } else if (forceGlobalClick || this.allowGlobalClick) {
             openRecord(record);
         }
     }
@@ -393,4 +398,13 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
-KanbanRecord.template = xml`<t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}" />`;
+KanbanRecord.template = xml`
+    <div
+        role="article"
+        t-att-class="getRecordClasses()"
+        t-att-data-id="props.canResequence and props.record.id"
+        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+        t-on-click="onGlobalClick"
+        t-ref="root">
+        <t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}"/>
+    </div>`;

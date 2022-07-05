@@ -339,7 +339,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(target, `img[data-src="data:image/png;base64,${MY_IMAGE}"]`);
-        assert.containsOnce(target, ".o_kanban_record.oe_kanban_global_click");
+        assert.containsOnce(target, ".o_kanban_record .oe_kanban_global_click");
 
         // Actual flow: click on an element of the m2m to get its form view
         await click(target, ".oe_kanban_global_click");
