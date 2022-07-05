@@ -20,21 +20,22 @@ registerModel({
          */
         onClick(ev) {
             ev.preventDefault();
-            this.composerViewOwner.update({ activeSuggestionView: replace(this) });
-            this.composerViewOwner.insertSuggestion();
-            this.composerViewOwner.closeSuggestions();
-            this.composerViewOwner.update({ doFocus: true });
+            this.composerSuggestionListViewOwner.composerViewOwner.update({ activeSuggestionView: replace(this) });
+            const composerViewOwner = this.composerSuggestionListViewOwner.composerViewOwner;
+            composerViewOwner.insertSuggestion();
+            composerViewOwner.closeSuggestions();
+            composerViewOwner.update({ doFocus: true });
         },
          /**
          * @private
          * @returns {FieldCommand}
          */
-        _computeComposerViewOwner() {
+        _computeComposerSuggestionListViewOwner() {
             if (this.composerSuggestionListViewOwnerAsExtraSuggestion) {
-                return replace(this.composerSuggestionListViewOwnerAsExtraSuggestion.composerViewOwner);
+                return replace(this.composerSuggestionListViewOwnerAsExtraSuggestion);
             }
             if (this.composerSuggestionListViewOwnerAsMainSuggestion) {
-                return replace(this.composerSuggestionListViewOwnerAsMainSuggestion.composerViewOwner);
+                return replace(this.composerSuggestionListViewOwnerAsMainSuggestion);
             }
             return clear();
         },
@@ -87,8 +88,8 @@ registerModel({
         },
     },
     fields: {
-        composerViewOwner: one('ComposerView', {
-            compute: '_computeComposerViewOwner',
+        composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
+            compute: '_computeComposerSuggestionListViewOwner',
             required: true,
         }),
         composerViewOwnerAsActiveSuggestionView: one('ComposerView', {
