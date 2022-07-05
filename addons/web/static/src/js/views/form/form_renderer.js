@@ -766,6 +766,10 @@ var FormRenderer = BasicRenderer.extend({
             if (child.tag === 'field') {
                 var $el = self._renderFieldWidget(child, self.state);
                 $statusbar.append($el);
+                // if adicionado pela Multidados
+                if (child.attrs['z-index'] === '0'){
+                    $statusbar.css('z-index', 0);
+                }
             }
         });
         this._handleAttributes($statusbar, node);
