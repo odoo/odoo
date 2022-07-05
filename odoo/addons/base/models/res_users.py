@@ -1342,7 +1342,7 @@ class GroupsView(models.Model):
         else:
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
-            xml0, xml1, xml2, xml3 = [], [], [], []
+            xml0, xml1, xml2, xml3, xml4 = [], [], [], [], []
             xml_by_category = {}
             xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
 
@@ -1378,6 +1378,7 @@ class GroupsView(models.Model):
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
                     attrs['attrs'] = user_type_readonly
+                    attrs['on_change'] = '1'
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
                         xml_by_category[category_name].append(E.newline())
@@ -1387,17 +1388,17 @@ class GroupsView(models.Model):
                 else:
                     # application separator with boolean fields
                     app_name = app.name or 'Other'
-                    xml3.append(E.separator(string=app_name, colspan="4", **attrs))
+                    xml4.append(E.separator(string=app_name, colspan="4", **attrs))
                     attrs['attrs'] = user_type_readonly
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         if g == group_no_one:
                             # make the group_no_one invisible in the form view
-                            xml3.append(E.field(name=field_name, invisible="1", **attrs))
+                            xml4.append(E.field(name=field_name, invisible="1", **attrs))
                         else:
-                            xml3.append(E.field(name=field_name, **attrs))
+                            xml4.append(E.field(name=field_name, **attrs))
 
-            xml3.append({'class': "o_label_nowrap"})
+            xml4.append({'class': "o_label_nowrap"})
             if user_type_field_name:
                 user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
             else:
@@ -1405,13 +1406,28 @@ class GroupsView(models.Model):
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
                 master_category_name = xml_cat[1]
-                xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
+                xml3.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
+
+            field_name = 'user_group_warning'
+            user_group_warning_xml = E.div({
+                'class': "alert alert-warning",
+                'role': "alert",
+                'attrs': str({'invisible': [(field_name, '=', False)]})
+            })
+            user_group_warning_xml.append(E.label({
+                'for': field_name,
+                'string': "Access Rights Mismatch",
+                'class': "text text-warning fw-bold",
+            }))
+            user_group_warning_xml.append(E.field(name=field_name))
+            xml2.append(user_group_warning_xml)
 
             xml = E.field(
                 *(xml0),
                 E.group(*(xml1), col="2", groups="base.group_no_one"),
-                E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
-                E.group(*(xml3), col="4", attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")
+                E.group(*(xml2), col="4", attrs=str(user_type_attrs)),
+                E.group(*(xml3), col="2", attrs=str(user_type_attrs)),
+                E.group(*(xml4), col="4", attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view
@@ -1492,6 +1508,18 @@ class ModuleCategory(models.Model):
 class UsersView(models.Model):
     _inherit = 'res.users'
 
+    user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
+
+    @api.depends('groups_id', 'share')
+    @api.depends_context('show_user_group_warning')
+    def _compute_user_group_warning(self):
+        self.user_group_warning = False
+        if self._context.get('show_user_group_warning'):
+            for user in self.filtered_domain([('share', '=', False)]):
+                group_inheritance_warnings = self._prepare_warning_for_group_inheritance(user)
+                if group_inheritance_warnings:
+                    user.user_group_warning = group_inheritance_warnings
+
     @api.model_create_multi
     def create(self, vals_list):
         new_vals_list = []
@@ -1535,6 +1563,48 @@ class UsersView(models.Model):
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
                 user.update({'groups_id': [Command.link(group_multi_company.id)]})
         return user
+
+    def _prepare_warning_for_group_inheritance(self, user):
+        """ Check (updated) groups configuration for user. If implieds groups
+        will be added back due to inheritance and hierarchy in groups return
+        a message explaining the missing groups.
+
+        :param res.users user: target user
+
+        :return: string to display in a warning
+        """
+        # Current groups of the user
+        current_groups = user.groups_id.filtered('trans_implied_ids')
+        current_groups_by_category = defaultdict(lambda: self.env['res.groups'])
+        for group in current_groups:
+            current_groups_by_category[group.category_id] |= group.trans_implied_ids.filtered(lambda grp: grp.category_id == group.category_id)
+
+        missing_groups = {}
+        # We don't want to show warning for "Technical" and "Extra Rights" groups
+        categories_to_ignore = self.env.ref('base.module_category_hidden') + self.env.ref('base.module_category_usability')
+        for group in current_groups:
+            # Get the updated group from current groups
+            missing_implied_groups = group.implied_ids - user.groups_id
+            # Get the missing group needed in updated group's category (For example, someone changes
+            # Sales: Admin to Sales: User, but Field Service is already set to Admin, so here in the
+            # 'Sales' category, we will at the minimum need Admin group)
+            missing_implied_groups = missing_implied_groups.filtered(
+                lambda g:
+                g.category_id not in (group.category_id | categories_to_ignore) and
+                g not in current_groups_by_category[g.category_id]
+            )
+            if missing_implied_groups:
+                # prepare missing group message, by categories
+                missing_groups[group] = ", ".join(f'"{missing_group.category_id.name}: {missing_group.name}"'
+                                                  for missing_group in missing_implied_groups)
+        return "\n".join(
+            _('Since %(user)s is a/an "%(category)s: %(group)s", they will at least obtain the right %(missing_group_message)s',
+              user=user.name,
+              category=group.category_id.name,
+              group=group.name,
+              missing_group_message=missing_group_message
+             ) for group, missing_group_message in missing_groups.items()
+        )
 
     def _remove_reified_groups(self, values):
         """ return `values` without reified group fields """

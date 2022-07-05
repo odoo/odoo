@@ -363,7 +363,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
-            <field name="context">{'search_default_filter_no_share': 1}</field>
+            <field name="context">{'search_default_filter_no_share': 1, 'show_user_group_warning': True}</field>
             <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
         <record id="action_res_users_view1" model="ir.actions.act_window.view">
