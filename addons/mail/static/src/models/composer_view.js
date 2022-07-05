@@ -1407,6 +1407,7 @@ registerModel({
          */
         activeSuggestionView: one('ComposerSuggestionView', {
             compute: '_computeActiveSuggestionView',
+            inverse: 'composerViewOwnerAsActiveSuggestionView',
         }),
         /**
          * Determines the attachment list that will be used to display the attachments.
