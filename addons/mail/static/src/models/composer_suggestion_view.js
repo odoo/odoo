@@ -20,7 +20,7 @@ registerModel({
          */
         onClick(ev) {
             ev.preventDefault();
-            this.composerSuggestionListViewOwner.composerViewOwner.update({ activeSuggestionView: replace(this) });
+            this.composerSuggestionListViewOwner.update({ activeSuggestionView: replace(this) });
             const composerViewOwner = this.composerSuggestionListViewOwner.composerViewOwner;
             composerViewOwner.insertSuggestion();
             composerViewOwner.closeSuggestions();
@@ -92,7 +92,7 @@ registerModel({
             compute: '_computeComposerSuggestionListViewOwner',
             required: true,
         }),
-        composerViewOwnerAsActiveSuggestionView: one('ComposerView', {
+        composerSuggestionListViewOwnerAsActiveSuggestionView: one('ComposerSuggestionListView', {
             inverse: 'activeSuggestionView',
         }),
         composerSuggestionListViewOwnerAsExtraSuggestion: one('ComposerSuggestionListView', {
