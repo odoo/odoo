@@ -1577,6 +1577,29 @@ class PrecomputeEditable(models.Model):
             record.baz2 = record.baz
 
 
+class PrecomputeReadonly(models.Model):
+    _name = 'test_new_api.precompute.readonly'
+    _description = 'a model with precomputed readonly fields'
+
+    foo = fields.Char()
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ], default='draft')
+    bar = fields.Char(compute='_compute_bar', precompute=True, store=True, readonly=True)
+    baz = fields.Char(
+        compute='_compute_baz', precompute=True, store=True, readonly=True, states={'draft': [('readonly', False)]}
+    )
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        self.bar = "COMPUTED"
+
+    @api.depends('bar')
+    def _compute_baz(self):
+        self.baz = "COMPUTED"
+
+
 class PrecomputeRequired(models.Model):
     _name = 'test_new_api.precompute.required'
     _description = 'a model with precomputed required fields'

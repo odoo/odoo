@@ -343,3 +343,36 @@ class TestRepair(AccountTestInvoicingCommon):
         for repair in return_picking.repair_ids:
             self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
             self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
+
+    def test_repair_compute_product_uom(self):
+        repair = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': self.product_product_11.id,
+                    'price_unit': 50.0,
+                })
+            ],
+        })
+        self.assertEqual(repair.product_uom, self.product_product_3.uom_id)
+        self.assertEqual(repair.operations[0].product_uom, self.product_product_11.uom_id)
+
+    def test_repair_compute_location(self):
+        repair = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': self.product_product_11.id,
+                    'price_unit': 50.0,
+                })
+            ],
+        })
+        self.assertEqual(repair.location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(repair.operations[0].location_id, self.stock_warehouse.lot_stock_id)
+        location_dest_id = self.env['stock.location'].search([
+            ('usage', '=', 'production'),
+            ('company_id', '=', repair.company_id.id),
+        ], limit=1)
+        self.assertEqual(repair.operations[0].location_dest_id, location_dest_id)
