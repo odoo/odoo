@@ -438,8 +438,8 @@ registerModel({
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
-                    if (this.hasSuggestions) {
-                        this.setPreviousSuggestionViewActive();
+                    if (this.composerSuggestionListView) {
+                        this.composerSuggestionListView.setPreviousSuggestionViewActive();
                         this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                     }
                     break;
@@ -449,30 +449,30 @@ registerModel({
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
-                    if (this.hasSuggestions) {
-                        this.setNextSuggestionViewActive();
+                    if (this.composerSuggestionListView) {
+                        this.composerSuggestionListView.setNextSuggestionViewActive();
                         this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                     }
                     break;
                 case 'Home':
-                    if (this.hasSuggestions) {
-                        this.setFirstSuggestionViewActive();
+                    if (this.composerSuggestionListView) {
+                        this.composerSuggestionListView.setFirstSuggestionViewActive();
                         this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                     }
                     break;
                 case 'End':
-                    if (this.hasSuggestions) {
-                        this.setLastSuggestionViewActive();
+                    if (this.composerSuggestionListView) {
+                        this.composerSuggestionListView.setLastSuggestionViewActive();
                         this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                     }
                     break;
                 case 'Tab':
-                    if (this.hasSuggestions) {
+                    if (this.composerSuggestionListView) {
                         if (ev.shiftKey) {
-                            this.setPreviousSuggestionViewActive();
+                            this.composerSuggestionListView.setPreviousSuggestionViewActive();
                             this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                         } else {
-                            this.setNextSuggestionViewActive();
+                            this.composerSuggestionListView.setNextSuggestionViewActive();
                             this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
                         }
                     }
@@ -668,58 +668,6 @@ registerModel({
                 return;
             }
             this.postMessage();
-        },
-        /**
-         * Sets the first suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setFirstSuggestionViewActive() {
-            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
-            const firstSuggestionView = suggestionViews[0];
-            this.composerSuggestionListView.update({ activeSuggestionView: replace(firstSuggestionView) });
-        },
-        /**
-         * Sets the last suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setLastSuggestionViewActive() {
-            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
-            const { length, [length - 1]: lastSuggestionView } = suggestionViews;
-            this.composerSuggestionListView.update({ activeSuggestionView: replace(lastSuggestionView) });
-        },
-        /**
-         * Sets the next suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setNextSuggestionViewActive() {
-            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
-            const activeElementIndex = suggestionViews.findIndex(
-                suggestion => suggestion === this.composerSuggestionListView.activeSuggestionView
-            );
-            if (activeElementIndex === suggestionViews.length - 1) {
-                // loop when reaching the end of the list
-                this.setFirstSuggestionViewActive();
-                return;
-            }
-            const nextSuggestionView = suggestionViews[activeElementIndex + 1];
-            this.composerSuggestionListView.update({ activeSuggestionView: replace(nextSuggestionView) });
-        },
-        /**
-         * Sets the previous suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setPreviousSuggestionViewActive() {
-            const suggestionViews = this.composerSuggestionListView.mainSuggestionViews.concat(this.composerSuggestionListView.extraSuggestionViews);
-            const activeElementIndex = suggestionViews.findIndex(
-                suggestion => suggestion === this.composerSuggestionListView.activeSuggestionView
-            );
-            if (activeElementIndex === 0) {
-                // loop when reaching the start of the list
-                this.setLastSuggestionViewActive();
-                return;
-            }
-            const previousSuggestionView = suggestionViews[activeElementIndex - 1];
-            this.composerSuggestionListView.update({ activeSuggestionView: replace(previousSuggestionView) });
         },
         /**
          * Updates the textarea height of text input.
