@@ -37,7 +37,7 @@ export class ComposerSuggestionView extends Component {
         if (
             this.root.el &&
             this.composerSuggestionView.composerViewOwner.hasToScrollToActiveSuggestionView &&
-            this.composerSuggestionView.isActive
+            this.composerSuggestionView.composerViewOwnerAsActiveSuggestionView
         ) {
             this.root.el.scrollIntoView({
                 block: 'center',
