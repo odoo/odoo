@@ -1241,7 +1241,7 @@ class Article(models.Model):
                 }))
             article_values['article_member_ids'] = member_command
 
-        return writable_self.write(article_values)
+        return writable_self.with_context(knowledge_member_skip_writable_check=True).write(article_values)
 
     # ------------------------------------------------------------
     # PERMISSIONS BATCH COMPUTATION
