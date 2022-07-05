@@ -1337,7 +1337,8 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'partner_bank_id': self.employee_id.bank_account_id.id
+                'partner_bank_id': self.employee_id.bank_account_id.id,
+                'is_payment': True,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',

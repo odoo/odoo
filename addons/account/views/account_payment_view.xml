@@ -335,6 +335,7 @@
                 'default_partner_type': 'customer',
                 'search_default_inbound_filter': 1,
                 'default_move_journal_types': ('bank', 'cash'),
+                'is_payment': True,
             }</field>
             <field name="view_id" ref="view_account_payment_tree"/>
             <field name="help" type="html">
@@ -355,6 +356,7 @@
                 'default_partner_type': 'supplier',
                 'search_default_outbound_filter': 1,
                 'default_move_journal_types': ('bank', 'cash'),
+                'is_payment': True,
             }</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
@@ -370,7 +372,7 @@
             <field name="name">Internal Transfers</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1}</field>
+            <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1, 'is_payment': True}</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
