@@ -66,6 +66,7 @@ export class DocumentSelector extends FileSelector {
     }
 }
 DocumentSelector.mediaSpecificClasses = ['o_image'];
+DocumentSelector.mediaExtraClasses = [];
 DocumentSelector.tagNames = ['A'];
 DocumentSelector.attachmentsListTemplate = 'web_editor.DocumentsListTemplate';
 DocumentSelector.components = {

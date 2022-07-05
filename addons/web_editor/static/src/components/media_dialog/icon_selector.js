@@ -62,7 +62,11 @@ export class IconSelector extends Component {
         return allFonts;
     }
 }
-IconSelector.mediaSpecificClasses = [];
+IconSelector.mediaSpecificClasses = ['fa'];
+IconSelector.mediaExtraClasses = [
+    'rounded-circle', 'rounded', 'thumbnail', 'shadow',
+    /^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/,
+];
 IconSelector.tagNames = ['SPAN', 'I'];
 IconSelector.template = 'web_editor.IconSelector';
 IconSelector.components = {
