@@ -452,8 +452,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Simulating hitting the 'f' key twice
-        await editInput(targetInput, null, "f");
-        await editInput(targetInput, null, targetInput.value + "f");
+        targetInput.value = "f";
+        await triggerEvent(targetInput, null, "input");
+        targetInput.value = "ff";
+        await triggerEvent(targetInput, null, "input");
 
         assert.equal(
             targetInput,
@@ -463,11 +465,15 @@ QUnit.module("Fields", (hooks) => {
 
         // Simulating a TAB key
         triggerHotkey("Tab");
+        await triggerEvent(targetInput, null, "change");
         await nextTick();
         const secondTarget = target.querySelector(".o_selected_row [name=qux] input");
-        await editInput(secondTarget, null, 9);
-        await editInput(secondTarget, null, secondTarget.value + 9);
+        secondTarget.value = 9;
+        await triggerEvent(secondTarget, null, "input");
+        secondTarget.value = 99;
+        await triggerEvent(secondTarget, null, "input");
 
+        await triggerEvent(secondTarget, null, "change");
         await clickSave(target);
     });
 

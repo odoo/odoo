@@ -161,8 +161,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, 'div[name="float_field"] input', "108.2451938598598");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=float_field] input").value,
-            "108.2451938598598",
-            "The value should not be formatted yet."
+            "108.245",
+            "The value should have been formatted on blur."
         );
 
         await editInput(target, ".o_field_widget[name=float_field] input", "18.8958938598598");
@@ -278,8 +278,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, 'div[name="float_field"] input', "108.2458938598598");
         assert.strictEqual(
             target.querySelector('div[name="float_field"] input').value,
-            "108.2458938598598",
-            "The value should not be formatted yet."
+            "108.246",
+            "The value should have been formatted on blur."
         );
 
         await editInput(target, 'div[name="float_field"] input', "18.8958938598598");
@@ -352,8 +352,8 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
-            "123456.7890",
-            "Float value must be not formatted if input type is number."
+            "123456.789",
+            "Float value must be not formatted if input type is number. (but the trailing 0 is gone)"
         );
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
@@ -462,6 +462,54 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='float_field'] input").placeholder,
             "Placeholder"
+        );
+    });
+
+    QUnit.test("float field can be updated by another field/widget", async function (assert) {
+        class MyWidget extends owl.Component {
+            onClick() {
+                const val = this.props.record.data.float_field;
+                this.props.record.update({ float_field: val + 1 });
+            }
+        }
+        MyWidget.template = owl.xml`<button t-on-click="onClick">do it</button>`;
+        registry.category("view_widgets").add("wi", MyWidget);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="float_field"/>
+                    <field name="float_field"/>
+                    <widget name="wi"/>
+                </form>`,
+        });
+
+        await editInput(
+            target.querySelector(".o_field_widget[name=float_field] input"),
+            null,
+            "40"
+        );
+
+        assert.strictEqual(
+            "40.00",
+            target.querySelectorAll(".o_field_widget[name=float_field] input")[0].value
+        );
+        assert.strictEqual(
+            "40.00",
+            target.querySelectorAll(".o_field_widget[name=float_field] input")[1].value
+        );
+
+        await click(target, ".o_widget button");
+
+        assert.strictEqual(
+            "41.00",
+            target.querySelectorAll(".o_field_widget[name=float_field] input")[0].value
+        );
+        assert.strictEqual(
+            "41.00",
+            target.querySelectorAll(".o_field_widget[name=float_field] input")[1].value
         );
     });
 });
