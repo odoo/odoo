@@ -14,15 +14,12 @@
         }
     }
 
-    &.o-isInFormSheetBg:not(.o-aside) {
+    &.o-isInFormSheetBg {
         max-width: none;
         background-color: $white;
         @include o-form-sheet-negative-margin;
-
-        &:not(.o-aside) {
-            width: auto;
-            border-top: 1px solid $border-color;
-        }
+        width: auto;
+        border-top: 1px solid $border-color;
     }
 }
 
