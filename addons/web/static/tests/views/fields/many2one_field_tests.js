@@ -4034,4 +4034,18 @@ QUnit.module("Fields", (hooks) => {
             "Should contain 2 breadcrumbs after the clicking on the link"
         );
     });
+
+    QUnit.test("Many2oneField with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu" placeholder="Placeholder"/></form>',
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='trululu'] input").placeholder,
+            "Placeholder"
+        );
+    });
 });

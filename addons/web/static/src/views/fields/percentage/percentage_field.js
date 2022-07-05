@@ -32,6 +32,7 @@ PercentageField.props = {
     ...standardFieldProps,
     invalidate: { type: Function, optional: true },
     digits: { type: Array, optional: true },
+    placeholder: { type: String, optional: true },
 };
 PercentageField.defaultProps = {
     invalidate: () => {},
@@ -46,6 +47,7 @@ PercentageField.extractProps = (fieldName, record, attrs) => {
         digits:
             (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
             record.fields[fieldName].digits,
+        placeholder: attrs.placeholder,
     };
 };
 

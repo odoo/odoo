@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -445,6 +445,23 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget input").value,
             "123,456.79",
             "Float value must be formatted if input type isn't number."
+        );
+    });
+
+    QUnit.test("float_field field with placeholder", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="float_field" placeholder="Placeholder"/></form>',
+        });
+
+        const input = target.querySelector(".o_field_widget[name='float_field'] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='float_field'] input").placeholder,
+            "Placeholder"
         );
     });
 });
