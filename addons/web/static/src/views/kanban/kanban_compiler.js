@@ -8,8 +8,7 @@ import {
     getTag,
 } from "@web/core/utils/xml";
 import { toStringExpression } from "@web/views/utils";
-import { isTextNode, ViewCompiler } from "@web/views/view_compiler";
-import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
+import { ViewCompiler } from "@web/views/view_compiler";
 
 /**
  * @typedef {Object} DropdownDef
@@ -24,20 +23,11 @@ const INTERP_REGEXP = /\{\{.*?\}\}|#\{.*?\}/g;
 const ACTION_TYPES = ["action", "object"];
 const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover"];
 
-function getValidCards(...cardEls) {
-    return cardEls.map((c) => (isValidCard(c) ? [c] : getValidCards(...c.childNodes)));
-}
-
-function isValidCard(el) {
-    return getTag(el, true) !== "t" || el.hasAttribute("t-component");
-}
-
 let currentDropdownId = 1;
 export class KanbanCompiler extends ViewCompiler {
     setup() {
         this.ctx.readonly = "read_only_mode";
         this.compilers.push(
-            { selector: `[t-name='${KANBAN_BOX_ATTRIBUTE}']`, fn: this.compileCard },
             { selector: ".oe_kanban_colorpicker", fn: this.compileColorPicker },
             {
                 selector: ".dropdown,.o_kanban_manage_button_section",
@@ -170,40 +160,6 @@ export class KanbanCompiler extends ViewCompiler {
         }
 
         return compiled;
-    }
-
-    /**
-     * @param {Element} el
-     * @param {Object} params
-     * @returns {Element}
-     */
-    compileCard(el, params) {
-        const compiledCard = this.compileGenericNode(el, params);
-        const cards = getValidCards(compiledCard)
-            .flat(Infinity)
-            .filter((card) => card && !isTextNode(card));
-
-        // Add a root ref if we need to use it to add tooltips on the cards
-        // This means that multi-root kanban-box templates cannot have tooltips
-        // WOWL FIXME: always define ref post merge and expose whether the kanban
-        // is grouped or not so that kanban-box can use t-if t-else to avoid
-        // multi-root scenarios in "kanban list" templates.
-        const shouldDefineRef =
-            el.ownerDocument.querySelector(`[t-name='${KANBAN_TOOLTIP_ATTRIBUTE}']`) !== null;
-
-        for (const card of cards) {
-            card.setAttribute("t-att-tabindex", `props.record.model.useSampleModel?-1:0`);
-            card.setAttribute("role", `article`);
-            card.setAttribute("t-att-data-id", `props.canResequence and props.record.id`);
-            card.setAttribute("t-on-click", `onGlobalClick`);
-            if (shouldDefineRef) {
-                card.setAttribute("t-ref", "root");
-            }
-
-            combineAttributes(card, "t-att-class", "getRecordClasses()", "+' '+");
-        }
-
-        return createElement("t", cards);
     }
 
     /**
