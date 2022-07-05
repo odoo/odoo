@@ -113,6 +113,7 @@ class AccountBankStatementLine(models.Model):
 
         # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
         self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])
+        self = self.with_context(is_payment=True)
         return [
             ('statement_id', populate.randomize(self.env.registry.populated_models['account.bank.statement'])),
             ('partner_id', populate.compute(get_partner)),

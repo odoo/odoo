@@ -50,7 +50,7 @@ class TestExpenses(TestExpenseCommon):
         ''' Test expense sheet payment states when partially paid, in payment and paid. '''
 
         def get_payment(expense_sheet, amount):
-            ctx = {'active_model': 'account.move', 'active_ids': expense_sheet.account_move_id.ids}
+            ctx = {'active_model': 'account.move', 'active_ids': expense_sheet.account_move_id.ids, 'is_payment': True}
             payment_register = self.env['account.payment.register'].with_context(**ctx).create({
                 'amount': amount,
                 'journal_id': self.company_data['default_journal_bank'].id,

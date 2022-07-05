@@ -774,7 +774,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         })
         self.assertRegex(payment.name, r'BNK1/\d{4}/\d{2}/0001')
 
-        with Form(AccountPayment.with_context(default_move_journal_types=('bank', 'cash'))) as payment_form:
+        with Form(AccountPayment.with_context(default_move_journal_types=('bank', 'cash'), is_payment=True)) as payment_form:
             self.assertEqual(payment_form._values['name'], '/')
             payment_form.journal_id = self.company_data['default_journal_cash']
             self.assertRegex(payment_form._values['name'], r'CSH1/\d{4}/\d{2}/0001')

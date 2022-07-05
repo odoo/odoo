@@ -721,7 +721,7 @@ class AccountPayment(models.Model):
                 journal = self.env['account.journal'].browse(vals['journal_id'])
                 vals['currency_id'] = journal.currency_id.id or journal.company_id.currency_id.id
 
-        payments = super().create(vals_list)
+        payments = super(AccountPayment, self.with_context(is_payment=True)).create(vals_list)
 
         for i, pay in enumerate(payments):
             write_off_line_vals = write_off_line_vals_list[i]

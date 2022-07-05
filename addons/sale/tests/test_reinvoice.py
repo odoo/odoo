@@ -135,7 +135,7 @@ class TestReInvoice(TestSaleCommon):
 
         for invoice in invoices:
             self.env['account.payment.register']\
-                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .with_context(active_model='account.move', active_ids=invoice.ids, is_payment=True)\
                 .create({})\
                 ._create_payments()
 

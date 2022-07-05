@@ -1474,7 +1474,7 @@ class AccountMove(models.Model):
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
-                domain += [('payment_id', '!=' if self._context.get('is_payment') else '=', False)]
+                domain += [('payment_id', '!=' if self.is_payment() or self.payment_id else '=', False)]
             reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.search(domain, order='date asc', limit=1).name
@@ -1498,7 +1498,7 @@ class AccountMove(models.Model):
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
         elif self.journal_id.payment_sequence:
-            if self._context.get('is_payment'):
+            if self.is_payment():
                 where_string += " AND payment_id IS NOT NULL "
             else:
                 where_string += " AND payment_id IS NULL "
@@ -1513,7 +1513,7 @@ class AccountMove(models.Model):
             starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
-        if self.journal_id.payment_sequence and self._context.get('is_payment'):
+        if self.journal_id.payment_sequence and self.is_payment():
             starting_sequence = "P" + starting_sequence
         return starting_sequence
 
@@ -2514,6 +2514,9 @@ class AccountMove(models.Model):
 
     def is_outbound(self, include_receipts=True):
         return self.move_type in self.get_outbound_types(include_receipts)
+
+    def is_payment(self):
+        return self._context.get('is_payment') or self.payment_id
 
     def _affect_tax_report(self):
         return any(line._affect_tax_report() for line in self.line_ids)
