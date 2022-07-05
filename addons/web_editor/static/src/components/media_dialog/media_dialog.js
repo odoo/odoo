@@ -160,6 +160,19 @@ export class MediaDialog extends Component {
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
                     element.classList.remove(...TABS[otherTab].Component.mediaSpecificClasses);
+                    const extraClassesToRemove = [];
+                    for (const name of TABS[otherTab].Component.mediaExtraClasses) {
+                        if (typeof(name) === 'string') {
+                            extraClassesToRemove.push(name);
+                        } else { // Regex
+                            for (const className of element.classList) {
+                                if (className.match(name)) {
+                                    extraClassesToRemove.push(className);
+                                }
+                            }
+                        }
+                    }
+                    element.classList.remove(...extraClassesToRemove);
                 }
                 element.classList.remove(...this.initialIconClasses);
                 element.classList.remove('o_modified_image_to_save');
