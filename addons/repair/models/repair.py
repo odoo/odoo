@@ -38,6 +38,7 @@ class Repair(models.Model):
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom', store=True, precompute=True,
         readonly=True, required=True, states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
@@ -68,6 +69,7 @@ class Repair(models.Model):
     schedule_date = fields.Date("Scheduled Date")
     location_id = fields.Many2one(
         'stock.location', 'Location',
+        compute="_compute_location_id", store=True, precompute=True,
         index=True, readonly=True, required=True, check_company=True,
         help="This is the location where the product to repair is located.",
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
@@ -196,13 +198,17 @@ class Repair(models.Model):
                 'warning': {'title': "Warning", 'message': "Note that the warehouse of the return and repair locations don't match!"},
             }
 
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for repair in self:
+            if repair.product_id:
+                repair.product_uom = repair.product_id.uom_id
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         self.guarantee_limit = False
         if (self.product_id and self.lot_id and self.lot_id.product_id != self.product_id) or not self.product_id:
             self.lot_id = False
-        if self.product_id:
-            self.product_uom = self.product_id.uom_id.id
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
@@ -229,14 +235,15 @@ class Repair(models.Model):
             self.partner_invoice_id = addresses['invoice']
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            if self.location_id.company_id != self.company_id:
-                warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-                self.location_id = warehouse.lot_stock_id
-        else:
-            self.location_id = False
+    @api.depends('company_id')
+    def _compute_location_id(self):
+        for order in self:
+            if order.company_id:
+                if order.location_id.company_id != order.company_id:
+                    warehouse = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1)
+                    order.location_id = warehouse.lot_stock_id
+            else:
+                order.location_id = False
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
@@ -676,6 +683,7 @@ class RepairLine(models.Model):
         digits='Product Unit of Measure', required=True)
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom', store=True, readonly=False, precompute=True,
         required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     invoice_line_id = fields.Many2one(
@@ -683,9 +691,11 @@ class RepairLine(models.Model):
         copy=False, readonly=True, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
+        compute='_compute_location_id', store=True, readonly=False, precompute=True,
         index=True, required=True, check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Dest. Location',
+        compute='_compute_location_id', store=True, readonly=False, precompute=True,
         index=True, required=True, check_company=True)
     move_id = fields.Many2one(
         'stock.move', 'Inventory Move',
@@ -709,6 +719,26 @@ class RepairLine(models.Model):
             line.price_subtotal = taxes['total_excluded']
             line.price_total = taxes['total_included']
 
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for line in self:
+            line.product_uom = line.product_id.uom_id.id
+
+    @api.depends('type')
+    def _compute_location_id(self):
+        for line in self:
+            if not line.type:
+                line.location_id = False
+                line.location_dest_id = False
+            elif line.type == 'add':
+                args = line.repair_id.company_id and [('company_id', '=', line.repair_id.company_id.id)] or []
+                warehouse = line.env['stock.warehouse'].search(args, limit=1)
+                line.location_id = warehouse.lot_stock_id
+                line.location_dest_id = line.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', line.repair_id.company_id.id)], limit=1)
+            else:
+                line.location_id = line.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', line.repair_id.company_id.id)], limit=1).id
+                line.location_dest_id = line.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [line.repair_id.company_id.id, False])], limit=1).id
+
     @api.onchange('type')
     def onchange_operation_type(self):
         """ On change of operation type it sets source location, destination location
@@ -718,19 +748,12 @@ class RepairLine(models.Model):
         @return: Dictionary of values.
         """
         if not self.type:
-            self.location_id = False
-            self.location_dest_id = False
+            pass
         elif self.type == 'add':
             self.onchange_product_id()
-            args = self.repair_id.company_id and [('company_id', '=', self.repair_id.company_id.id)] or []
-            warehouse = self.env['stock.warehouse'].search(args, limit=1)
-            self.location_id = warehouse.lot_stock_id
-            self.location_dest_id = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.repair_id.company_id.id)], limit=1)
         else:
             self.price_unit = 0.0
             self.tax_id = False
-            self.location_id = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.repair_id.company_id.id)], limit=1).id
-            self.location_dest_id = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.repair_id.company_id.id, False])], limit=1).id
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
@@ -750,7 +773,6 @@ class RepairLine(models.Model):
                 self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
             else:
                 self.name += '\n' + self.product_id.description_sale
-        self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
                 fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)

@@ -4233,6 +4233,19 @@ class BaseModel(metaclass=MetaModel):
             fname
             for fname, field in self._fields.items()
             if field.precompute and field.readonly
+            # ignore `readonly=True` when it's combined with the `states` attribute,
+            # making the field readonly according to the record state.
+            # e.g.
+            # product_uom = fields.Many2one(
+            #     'uom.uom', 'Product Unit of Measure',
+            #     compute='_compute_product_uom', store=True, precompute=True,
+            #     readonly=True, required=True, states={'draft': [('readonly', False)]},
+            # )
+            and (not field.states or not any(
+                modifier == 'readonly'
+                for modifiers in field.states.values()
+                for modifier, _value in modifiers
+            ))
         )
 
         result_vals_list = []
