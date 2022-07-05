@@ -21,18 +21,21 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
             useListener('validate-order', () => this.validateOrder(false));
-            NumberBuffer.use({
+            NumberBuffer.use(this._getNumberBufferConfig);
+            useErrorHandlers();
+            this.payment_interface = null;
+            this.error = false;
+            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+        }
+        get _getNumberBufferConfig() {
+            return {
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
                 nonKeyboardInputEvent: 'input-from-numpad',
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
-            });
-            useErrorHandlers();
-            this.payment_interface = null;
-            this.error = false;
-            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+            }
         }
         get currentOrder() {
             return this.env.pos.get_order();
