@@ -61,7 +61,10 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one('uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom = fields.Many2one(
+        'uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]",
+        compute="_compute_product_uom", store=True, readonly=False, precompute=True,
+    )
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
@@ -176,6 +179,13 @@ class StockMove(models.Model):
         help="This is a technical field for calculating when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
+
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for move in self:
+            if not move.product_uom:
+                move.product_uom = move.product_id.uom_id.id
+
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -951,7 +961,6 @@ class StockMove(models.Model):
     def _onchange_product_id(self):
         product = self.product_id.with_context(lang=self._get_lang())
         self.name = product.partner_ref
-        self.product_uom = product.uom_id.id
         if product:
             self.description_picking = product._get_description(self.picking_type_id)
 
