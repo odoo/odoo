@@ -2676,6 +2676,8 @@ def record_to_values(fields, record):
     # emergency_contact or whatever. Since we always get the id anyway, just
     # remove it from the fields to read
     to_read = list(fields.keys() - {'id'})
+    if not to_read:
+        return r
     for f, v in record.read(to_read)[0].items():
         descr = fields[f]
         if descr['type'] == 'many2one':
