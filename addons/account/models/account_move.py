@@ -1363,7 +1363,7 @@ class AccountMove(models.Model):
 
     @api.depends('bank_partner_id')
     def _compute_partner_bank_id(self):
-        for move in self:
+        for move in self.filtered(lambda x: x.is_invoice(include_receipts=True)):
             bank_ids = move.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == move.company_id)
             move.partner_bank_id = bank_ids and bank_ids[0]
 
