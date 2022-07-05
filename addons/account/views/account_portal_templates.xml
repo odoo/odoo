@@ -38,7 +38,7 @@
                     <th>Invoice #</th>
                     <th>Invoice Date</th>
                     <th class='d-none d-md-table-cell'>Due Date</th>
-                    <th/>
+                    <th class="text-center">Status</th>
                     <th class="text-right">Amount Due</th>
                 </tr>
             </thead>
@@ -53,7 +53,7 @@
                         </td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
-                        <td class="tx_status">
+                        <td class="tx_status text-center">
                             <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
                                 <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>

@@ -47,7 +47,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         context = conn.conn_kw['ssl_context']
 
         def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):
-            cert_file, key_file, dummy = l10n_es_odoo_certificate._decode_certificate()
+            cert_file, key_file, dummy = l10n_es_odoo_certificate.sudo()._decode_certificate()
             cert_obj = load_certificate(FILETYPE_PEM, cert_file)
             pkey_obj = load_privatekey(FILETYPE_PEM, key_file)
 

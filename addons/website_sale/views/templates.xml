@@ -1849,7 +1849,7 @@
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                     <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
-                        <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                        <t t-set="qr_code" t-value="payment_tx_id.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                         <div class="card-body" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img class="border border-dark rounded" t-att-src="qr_code"/>
