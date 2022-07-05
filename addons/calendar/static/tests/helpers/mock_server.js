@@ -10,6 +10,32 @@ import { datetime_to_str } from 'web.time';
 
 patch(MockServer.prototype, 'calendar', {
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _performRPC(route, args) {
+        // mail.activity methods
+        if (args.model === 'mail.activity' && args.method === 'action_create_calendar_event') {
+            return {
+                type: 'ir.actions.act_window',
+                name: "Meetings",
+                res_model: 'calendar.event',
+                view_mode: 'calendar',
+                views: [[false, 'calendar']],
+                target: 'current',
+            };
+        }
+        // calendar.event methods
+        if (args.model === 'calendar.event' && args.method === "check_access_rights") {
+            return true;
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private Mocked Methods
     //--------------------------------------------------------------------------
 

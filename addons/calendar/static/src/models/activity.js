@@ -55,9 +55,7 @@ patchRecordMethods('Activity', {
                 method: 'action_create_calendar_event',
                 args: [[this.id]],
             });
-            this.env.bus.trigger('do-action', {
-                action
-            });
+            this.env.services.action.doAction(action);
         }
     },
 });
