@@ -253,6 +253,9 @@ export class ImageSelector extends FileSelector {
     }
 }
 ImageSelector.mediaSpecificClasses = ['img', 'img-fluid', 'o_we_custom_image'];
+ImageSelector.mediaExtraClasses = [
+    'rounded-circle', 'rounded', 'thumbnail', 'shadow', /^img-\S+$/,
+];
 ImageSelector.tagNames = ['IMG'];
 ImageSelector.attachmentsListTemplate = 'web_editor.ImagesListTemplate';
 ImageSelector.components = {
