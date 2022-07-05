@@ -13,8 +13,7 @@ registerModel({
          * considered together.
          */
         setFirstSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
-            const firstSuggestionView = suggestionViews[0];
+            const firstSuggestionView = this.suggestionViews[0];
             this.update({ activeSuggestionView: replace(firstSuggestionView) });
         },
         /**
@@ -22,8 +21,7 @@ registerModel({
          * considered together.
          */
         setLastSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
-            const { length, [length - 1]: lastSuggestionView } = suggestionViews;
+            const { length, [length - 1]: lastSuggestionView } = this.suggestionViews;
             this.update({ activeSuggestionView: replace(lastSuggestionView) });
         },
         /**
@@ -31,16 +29,15 @@ registerModel({
          * considered together.
          */
         setNextSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
-            const activeElementIndex = suggestionViews.findIndex(
+            const activeElementIndex = this.suggestionViews.findIndex(
                 suggestion => suggestion === this.activeSuggestionView
             );
-            if (activeElementIndex === suggestionViews.length - 1) {
+            if (activeElementIndex === this.suggestionViews.length - 1) {
                 // loop when reaching the end of the list
                 this.setFirstSuggestionViewActive();
                 return;
             }
-            const nextSuggestionView = suggestionViews[activeElementIndex + 1];
+            const nextSuggestionView = this.suggestionViews[activeElementIndex + 1];
             this.update({ activeSuggestionView: replace(nextSuggestionView) });
         },
         /**
@@ -48,8 +45,7 @@ registerModel({
          * considered together.
          */
         setPreviousSuggestionViewActive() {
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
-            const activeElementIndex = suggestionViews.findIndex(
+            const activeElementIndex = this.suggestionViews.findIndex(
                 suggestion => suggestion === this.activeSuggestionView
             );
             if (activeElementIndex === 0) {
@@ -57,7 +53,7 @@ registerModel({
                 this.setLastSuggestionViewActive();
                 return;
             }
-            const previousSuggestionView = suggestionViews[activeElementIndex - 1];
+            const previousSuggestionView = this.suggestionViews[activeElementIndex - 1];
             this.update({ activeSuggestionView: replace(previousSuggestionView) });
         },
         /**
@@ -68,20 +64,16 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActiveSuggestionView() {
-            if (
-                this.mainSuggestionViews.includes(this.activeSuggestionView) ||
-                this.extraSuggestionViews.includes(this.activeSuggestionView)
-            ) {
+            if (this.suggestionViews.includes(this.activeSuggestionView)) {
                 return;
             }
-            const suggestionViews = this.mainSuggestionViews.concat(this.extraSuggestionViews);
-            const firstSuggestionView = suggestionViews[0];
+            const firstSuggestionView = this.suggestionViews[0];
             return replace(firstSuggestionView);
         },
         /**
          * @returns {FieldCommand}
          */
-        _computeExtraSuggestionViews() {
+        _computeComposerSuggestionListViewExtraComposerSuggestionViewItems() {
             return insertAndReplace(this.composerViewOwner.extraSuggestions.map(suggestable => {
                 return {
                     suggestable: replace(suggestable),
@@ -91,12 +83,20 @@ registerModel({
         /**
          * @returns {FieldCommand}
          */
-        _computeMainSuggestionViews() {
+        _computeComposerSuggestionListViewMainComposerSuggestionViewItems() {
             return insertAndReplace(this.composerViewOwner.mainSuggestions.map(suggestable => {
                 return {
                     suggestable: replace(suggestable),
                 };
             }));
+        },
+        /**
+         * @returns {FieldCommand}
+         */
+        _computeSuggestionViews() {
+            const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(item => item.composerSuggestionView);
+            const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(item => item.composerSuggestionView);
+            return replace(mainSuggestionViews.concat(extraSuggestionViews));
         },
     },
     fields: {
@@ -109,15 +109,20 @@ registerModel({
             compute: '_computeActiveSuggestionView',
             inverse: 'composerSuggestionListViewOwnerAsActiveSuggestionView',
         }),
+        composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
+            compute: '_computeComposerSuggestionListViewExtraComposerSuggestionViewItems',
+            inverse: 'composerSuggestionListViewOwner',
+            isCausal: true,
+        }),
+        composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
+            compute: '_computeComposerSuggestionListViewMainComposerSuggestionViewItems',
+            inverse: 'composerSuggestionListViewOwner',
+            isCausal: true,
+        }),
         composerViewOwner: one('ComposerView', {
             inverse: 'composerSuggestionListView',
             readonly: true,
             required: true,
-        }),
-        extraSuggestionViews: many('ComposerSuggestionView', {
-            compute: '_computeExtraSuggestionViews',
-            inverse: 'composerSuggestionListViewOwnerAsExtraSuggestion',
-            isCausal: true,
         }),
         /**
          * Determines whether the currently active suggestion should be scrolled
@@ -126,10 +131,9 @@ registerModel({
         hasToScrollToActiveSuggestionView: attr({
             default: false,
         }),
-        mainSuggestionViews: many('ComposerSuggestionView', {
-            compute: '_computeMainSuggestionViews',
-            inverse: 'composerSuggestionListViewOwnerAsMainSuggestion',
-            isCausal: true,
-        }),
+        suggestionViews: many('ComposerSuggestionView', {
+            compute: '_computeSuggestionViews',
+            readonly: true,
+        })
     },
 });
