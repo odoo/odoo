@@ -10,7 +10,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
 from odoo.tests.common import users, Form
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, email_normalize
 
 @tagged('mail_composer')
 class TestMailComposer(TestMailCommon, TestRecipients):
@@ -626,7 +626,11 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
+            # remove alias so that _notify_get_reply_to will return the default value instead of alias
+            catchall = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
             composer.send_mail()
+            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", catchall)
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -648,6 +652,10 @@ class TestComposerResultsMass(TestMailComposer):
             # post-related fields are void
             self.assertEqual(message.subtype_id, self.env['mail.message.subtype'])
             self.assertEqual(message.partner_ids, self.env['res.partner'])
+            # email fields are valid
+            self.assertNotRegex(message.reply_to, '.*({|})', 'reply_to field should not contain template placeholders')
+            self.assertRegex(email_normalize(message.reply_to), r'^([a-zA-Z0-9]|_|-|.)+@(([a-zA-Z0-9]|-)+.?){2,}$', 'reply_to should be a valid mail adress')
+            self.assertRegex(message.reply_to, message.email_from, 'reply_to should have defaulted to email_from (assumes catchall was removed on creation)')
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
