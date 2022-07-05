@@ -21,6 +21,7 @@ class StockPackageLevel(models.Model):
     location_id = fields.Many2one('stock.location', 'From', compute='_compute_location_id', check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'To', check_company=True,
+        compute="_compute_location_dest_id", store=True, readonly=False, precompute=True,
         domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     is_done = fields.Boolean('Done', compute='_compute_is_done', inverse='_set_is_done')
     state = fields.Selection([
@@ -183,6 +184,11 @@ class StockPackageLevel(models.Model):
                 pl.location_id = pl.move_line_ids[0].location_id
             else:
                 pl.location_id = pl.picking_id.location_id
+
+    @api.depends('picking_id', 'picking_id.location_dest_id')
+    def _compute_location_dest_id(self):
+        for pl in self:
+            pl.location_dest_id = pl.picking_id.location_dest_id
 
     def action_show_package_details(self):
         self.ensure_one()
