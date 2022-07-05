@@ -367,6 +367,18 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
             'first_name': '2',
         }).resequence()
 
+    def test_resequence_with_blank_name(self):
+        """When a blank name is used, Resequence does not clash."""
+        moves = self.env['account.move']
+        for _ in range(3):
+            moves += self.create_move(date='2016-01-01')
+        moves[:1].name = False
+
+        self.env['account.resequence.wizard'].create({
+            'move_ids': moves.ids,
+            'first_name': '2',
+        }).resequence()
+
     @freeze_time('2021-10-01 00:00:00')
     def test_change_journal_on_first_account_move(self):
         """Changing the journal on the first move is allowed"""
