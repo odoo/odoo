@@ -602,7 +602,7 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_kanban_group")].map((el) =>
                     el.innerText.replace(/\s/g, " ")
                 ),
-                ["None (1)", "gold yopblip", "silver yopgnap"]
+                ["None (1)", "gold yop blip", "silver yop gnap"]
             );
 
             await click(getColumn(0));
@@ -704,6 +704,31 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")),
             ["yop", "blip", "gnap", "blip"]
+        );
+    });
+
+    QUnit.test("kanban with t-set outside card", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="int_field"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="x" t-value="record.int_field.value"/>
+                            <div>
+                                <t t-esc="x"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")),
+            ["10", "9", "17", "-4"]
         );
     });
 
@@ -3537,7 +3562,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
-        await click(target, ".oe_kanban_global_click:first-child .o_field_monetary[name=salary]");
+        await click(target.querySelector(".oe_kanban_global_click .o_field_monetary[name=salary]"));
     });
 
     QUnit.test("o2m loaded in only one batch", async (assert) => {
