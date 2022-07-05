@@ -878,7 +878,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
     await insertText('.o_ComposerTextInput_textarea', "@Te");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -903,7 +903,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@Pyn");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -934,9 +934,9 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@Te");
-    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "@Te");
-    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
     await click('.o_Composer_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
@@ -965,7 +965,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
@@ -994,7 +994,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
@@ -1023,7 +1023,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
@@ -1052,7 +1052,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     await openDiscuss();
 
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await click('.o_ComposerSuggestion');
+    await click('.o_ComposerSuggestionView');
     const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
     document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
     await insertText('.o_ComposerTextInput_textarea', ", test");
@@ -1090,9 +1090,9 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     await openDiscuss();
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await insertText('.o_ComposerTextInput_textarea', "#my");
-    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "#my");
-    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
     await click('.o_Composer_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(

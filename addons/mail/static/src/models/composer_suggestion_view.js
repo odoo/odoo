@@ -12,7 +12,7 @@ import { sprintf } from '@web/core/utils/strings';
  * and display suggested partners to mention.
  */
 registerModel({
-    name: 'ComposerSuggestion',
+    name: 'ComposerSuggestionView',
     identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], 'suggestable'],
     recordMethods: {
         /**
@@ -40,10 +40,10 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeIsActive() {
-            if (this.composerViewOwnerAsMainSuggestion && this === this.composerViewOwnerAsMainSuggestion.activeSuggestion) {
+            if (this.composerViewOwnerAsMainSuggestion && this === this.composerViewOwnerAsMainSuggestion.activeSuggestionView) {
                 return true;
             }
-            if (this.composerViewOwnerAsExtraSuggestion && this === this.composerViewOwnerAsExtraSuggestion.activeSuggestion) {
+            if (this.composerViewOwnerAsExtraSuggestion && this === this.composerViewOwnerAsExtraSuggestion.activeSuggestionView) {
                 return true;
             }
             return clear();
@@ -102,11 +102,11 @@ registerModel({
             required: true,
         }),
         composerViewOwnerAsExtraSuggestion: one('ComposerView', {
-            inverse: 'extraSuggestions',
+            inverse: 'extraSuggestionViews',
             readonly: true,
         }),
         composerViewOwnerAsMainSuggestion: one('ComposerView', {
-            inverse: 'mainSuggestions',
+            inverse: 'mainSuggestionViews',
             readonly: true,
         }),
         isActive: attr({
@@ -126,7 +126,7 @@ registerModel({
             readonly: true,
         }),
         suggestable: one('ComposerSuggestable', {
-            inverse: 'composerSuggestions',
+            inverse: 'composerSuggestionViews',
             readonly: true,
             required: true,
         }),
