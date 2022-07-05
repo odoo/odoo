@@ -56,9 +56,11 @@ class StockWarehouseOrderpoint(models.Model):
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
+        compute="_compute_warehouse_id", store=True, readonly=False,
         check_company=True, ondelete="cascade", required=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
+        compute="_compute_location_id", store=True, readonly=False,
         ondelete="cascade", required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
@@ -157,31 +159,26 @@ class StockWarehouseOrderpoint(models.Model):
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
-    @api.onchange('location_id')
-    def _onchange_location_id(self):
-        warehouse = self.location_id.warehouse_id.id
-        if warehouse:
-            self.warehouse_id = warehouse
+    @api.depends('location_id', 'company_id')
+    def _compute_warehouse_id(self):
+        for orderpoint in self:
+            if orderpoint.location_id.warehouse_id:
+                orderpoint.warehouse_id = orderpoint.location_id.warehouse_id
+            elif orderpoint.company_id:
+                orderpoint.warehouse_id = orderpoint.env['stock.warehouse'].search([
+                    ('company_id', '=', orderpoint.company_id.id)
+                ], limit=1)
 
-    @api.onchange('warehouse_id')
-    def _onchange_warehouse_id(self):
+    @api.depends('warehouse_id')
+    def _compute_location_id(self):
         """ Finds location id for changed warehouse. """
-        if self.warehouse_id:
-            self.location_id = self.warehouse_id.lot_stock_id.id
-        else:
-            self.location_id = False
+        for orderpoint in self:
+            orderpoint.location_id = orderpoint.warehouse_id.lot_stock_id.id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            self.warehouse_id = self.env['stock.warehouse'].search([
-                ('company_id', '=', self.company_id.id)
-            ], limit=1)
 
     @api.onchange('route_id')
     def _onchange_route_id(self):

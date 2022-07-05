@@ -251,6 +251,30 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             orderpoint.company_id = self.company_b.id
 
+    def test_orderpoint_3(self):
+        warehouse_a1 = self.warehouse_a
+        # Create a second warehouse the company A
+        # to test the change of location when changing of warehouse within a same company
+        warehouse_a2 = self.env['stock.warehouse'].with_user(self.user_a).sudo().create({'name': 'foo', 'code': 'foo'})
+        product = self.env['product.product'].create({
+            'type': 'product',
+            'name': 'shared product',
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_a).create({
+            'product_id': product.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a1)
+        self.assertEqual(orderpoint.location_id, warehouse_a1.lot_stock_id)
+
+        orderpoint.warehouse_id = warehouse_a2
+        self.assertEqual(orderpoint.location_id, warehouse_a2.lot_stock_id)
+
+        orderpoint.location_id = warehouse_a1.lot_stock_id
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a1)
+
+        orderpoint.location_id = warehouse_a2.lot_stock_id
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a2)
+
     def test_product_1(self):
         """ As an user of Company A, checks we can or cannot create new product
         depending of its `company_id`."""
