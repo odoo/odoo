@@ -2214,7 +2214,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
 
         mo_2 = self.env['mrp.production'].browse(mo.id + 1)
-        self.assertEqual(mo_2.state, 'progress')
+        self.assertEqual(mo_2.state, 'confirmed')
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
 
         self.assertEqual(wo_4.state, 'cancel')
