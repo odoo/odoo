@@ -30,6 +30,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         this.rpc = useWowlService('rpc');
         this.orm = useWowlService('orm');
         this.dialogs = useWowlService('dialog');
+        this.action = useWowlService('action');
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
@@ -558,6 +559,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             const currentPath = encodeURIComponent(window.location.pathname);
             const websiteId = this.websiteService.currentWebsite.id;
             callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
+        } else if (event.data.action) {
+            callback = () => {
+                this.websiteService.leaveEditMode();
+                this.action.doAction(event.data.action);
+            };
         }
         if (isDirty) {
             return this.save().then(callback);
