@@ -5721,6 +5721,22 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("empty button box", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsNone(target, ".o-form-buttonbox");
+    });
+
     QUnit.test("one2many default value creation", async function (assert) {
         assert.expect(1);
 
