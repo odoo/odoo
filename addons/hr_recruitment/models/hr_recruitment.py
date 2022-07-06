@@ -178,7 +178,7 @@ class Applicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
     interviewer_id = fields.Many2one(
-        'res.users', string='Interviewer', index=True,
+        'res.users', string='Interviewer', index=True, tracking=True,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
 
     @api.depends('date_open', 'date_closed')
