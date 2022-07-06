@@ -8,10 +8,6 @@ registerModel({
     name: 'Emoji',
     identifyingFields: ['unicode'],
     recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
         _computeEmojiRegistry() {
             return replace(this.messaging.emojiRegistry);
         },
