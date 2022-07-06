@@ -218,7 +218,7 @@ registerModel({
          */
         onClickEmoji(ev) {
             this.saveStateInStore();
-            this.insertIntoTextInput(ev.currentTarget.dataset.unicode);
+            this.insertIntoTextInput(ev.currentTarget.dataset.codepoints);
             if (!this.messaging.device.isMobileDevice) {
                 this.update({ doFocus: true });
             }
@@ -1115,7 +1115,7 @@ registerModel({
                     const regexp = new RegExp(
                         '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
                         'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
+                    htmlString = htmlString.replace(regexp, '$1' + emoji.codepoints);
                 }
             }
             return htmlString;
