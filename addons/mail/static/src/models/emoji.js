@@ -6,22 +6,28 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Emoji',
-    identifyingFields: ['unicode'],
+    identifyingFields: ['codepoints'],
     recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
         _computeEmojiRegistry() {
             return replace(this.messaging.emojiRegistry);
         },
+        _computeEmojiCategories() {
+            return replace([
+                this.messaging.emojiRegistry.categoryAll,
+                this.emojiDataCategory
+            ]);
+        },
     },
     fields: {
-        description: attr({
+        codepoints: attr({
             readonly: true,
+            required: true,
         }),
         emojiCategories: many('EmojiCategory', {
+            compute: "_computeEmojiCategories",
             inverse: 'allEmojis',
+        }),
+        emojiDataCategory: one('EmojiCategory', {
         }),
         emojiRegistry: one('EmojiRegistry', {
             compute: '_computeEmojiRegistry',
@@ -34,12 +40,11 @@ registerModel({
             readonly: true,
             isCausal: true,
         }),
-        sources: attr({
+        name: attr({
             readonly: true,
         }),
-        unicode: attr({
+        sources: attr({
             readonly: true,
-            required: true,
         }),
     },
 });

@@ -3,8 +3,8 @@
 
     <div t-name="mail.legacy.Composer.emojis" class="o_mail_emoji_container">
         <t t-foreach="emojis" t-as="emoji">
-            <span t-att-data-emoji="emoji.sources[0]" class="o_mail_emoji" t-att-title="emoji.description" t-att-aria-label="emoji.description">
-                <t t-out="emoji.unicode"/>
+            <span t-att-data-emoji="emoji.sources[0]" class="o_mail_emoji" t-att-title="emoji.name" t-att-aria-label="emoji.name">
+                <t t-out="emoji.codepoints"/>
             </span>
         </t>
     </div>
