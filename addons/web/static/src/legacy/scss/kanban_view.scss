@@ -3,7 +3,7 @@
     display: flex;
     align-content: stretch;
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         padding: 0px!important;
     }
 
@@ -12,7 +12,7 @@
         border: 1px solid $border-color;
         background-color: $o-view-background-color;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter-mobile;
         }
         &:focus, &:focus-within {
@@ -194,7 +194,7 @@
                     margin: { left: $fill-notfill-gap*0.5; right: $fill-notfill-gap*2;}
                 }
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     flex-basis: $o-kanban-image-fill-width;
                     min-height: $o-kanban-image-fill-width;
                 }
@@ -239,7 +239,7 @@
             margin: (-$o-kanban-inside-vgutter) (-$o-kanban-inside-hgutter) 0 0;
             .dropdown-toggle {
                 visibility: hidden;
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     visibility: visible;
                 }
                 @include o-kanban-dropdown;
@@ -318,7 +318,7 @@
 
             > button, > a {
                 @include o-position-absolute($right: $o-kanban-record-margin, $bottom: $o-kanban-record-margin);
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     right: $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -372,7 +372,7 @@
 
             + div {
                 padding-left: $o-kanban-image-width + $o-kanban-inside-hgutter;
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     padding-left:  $o-kanban-image-width + $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -426,7 +426,7 @@
         padding: 0;
         background-color: $gray-100;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             min-height: initial;
             height: 100%;
             overflow: scroll hidden !important;
@@ -478,7 +478,7 @@
 
             .o_kanban_config {
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     visibility: visible;
                 }
 
@@ -553,7 +553,7 @@
             margin: $border-width ($o-kanban-inside-hgutter * .5) 0;
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 margin: 0;
             }
 
@@ -579,7 +579,7 @@
         }
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .o_kanban_group, .o_column_quick_create {
             flex: 1 0 90%; // don't take full width to give a hint of next/previous column
             scroll-snap-align: center;
@@ -612,7 +612,7 @@
             width: $o-kanban-default-record-width;
             margin: ($o-kanban-record-margin * 0.5) $o-kanban-record-margin;
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 margin: 0 0 -1px 0;
                 flex: 1 0 100%;
             }
