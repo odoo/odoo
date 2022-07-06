@@ -29,10 +29,7 @@ class TestVirtualAvailable(TestStockCommon):
             'quantity': 10.0,
             'owner_id': cls.user_stock_user.partner_id.id})
 
-        cls.picking_out = cls.env['stock.picking'].create({
-            'picking_type_id': cls.env.ref('stock.picking_type_out').id,
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
+        cls.picking_out = cls.env['stock.picking'].create({'picking_type_id': cls.env.ref('stock.picking_type_out').id})
         cls.env['stock.move'].create({
             'name': 'a move',
             'product_id': cls.product_3.id,
@@ -43,9 +40,7 @@ class TestVirtualAvailable(TestStockCommon):
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
 
         cls.picking_out_2 = cls.env['stock.picking'].create({
-            'picking_type_id': cls.env.ref('stock.picking_type_out').id,
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
+            'picking_type_id': cls.env.ref('stock.picking_type_out').id})
         cls.env['stock.move'].create({
             'restrict_partner_id': cls.user_stock_user.partner_id.id,
             'name': 'another move',

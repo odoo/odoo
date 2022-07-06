@@ -324,12 +324,12 @@ class Picking(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     location_id = fields.Many2one(
         'stock.location', "Source Location",
-        default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True,
         states={'done': [('readonly', True)]})
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
-        default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True,
         states={'done': [('readonly', True)]})
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
@@ -653,6 +653,28 @@ class Picking(models.Model):
         for picking in self:
             picking.show_allocation = picking._get_show_allocation(picking.picking_type_id)
 
+    @api.depends('picking_type_id', 'partner_id')
+    def _compute_location_id(self):
+        for picking in self:
+            picking = picking.with_company(picking.company_id)
+            if picking.picking_type_id and picking.state == 'draft':
+                if picking.picking_type_id.default_location_src_id:
+                    location_id = picking.picking_type_id.default_location_src_id.id
+                elif picking.partner_id:
+                    location_id = picking.partner_id.property_stock_supplier.id
+                else:
+                    _customerloc, location_id = self.env['stock.warehouse']._get_partner_locations()
+
+                if picking.picking_type_id.default_location_dest_id:
+                    location_dest_id = picking.picking_type_id.default_location_dest_id.id
+                elif picking.partner_id:
+                    location_dest_id = picking.partner_id.property_stock_customer.id
+                else:
+                    location_dest_id, _supplierloc = self.env['stock.warehouse']._get_partner_locations()
+
+                picking.location_id = location_id
+                picking.location_dest_id = location_dest_id
+
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
         Separated out from _compute function so it can be reused in other models (e.g. batch).
@@ -693,22 +715,6 @@ class Picking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            if self.picking_type_id.default_location_src_id:
-                location_id = self.picking_type_id.default_location_src_id.id
-            elif self.partner_id:
-                location_id = self.partner_id.property_stock_supplier.id
-            else:
-                customerloc, location_id = self.env['stock.warehouse']._get_partner_locations()
-
-            if self.picking_type_id.default_location_dest_id:
-                location_dest_id = self.picking_type_id.default_location_dest_id.id
-            elif self.partner_id:
-                location_dest_id = self.partner_id.property_stock_customer.id
-            else:
-                location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
-
-            self.location_id = location_id
-            self.location_dest_id = location_dest_id
             (self.move_ids | self.move_ids_without_package).update({
                 "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
                 "company_id": self.company_id,
