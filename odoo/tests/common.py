@@ -1320,7 +1320,7 @@ class ChromeBrowser:
                 break
 
             result = self._websocket_request('Runtime.evaluate', params={
-                'expression': ready_code,
+                'expression': "try { %s } catch {}" % ready_code,
                 'awaitPromise': True,
             }, timeout=timeout-taken)['result']
 
