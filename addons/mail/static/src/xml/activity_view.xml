@@ -84,7 +84,7 @@
 
 <div t-name="mail.ActivityRenderer" class="o_activity_view" owl="1">
     <t t-if="!props.activity_types.length" t-call="web.NoContentHelper"/>
-    <table t-else="" class="table-bordered mb-5">
+    <table t-else="" class="table table-bordered mb-5">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
         <t t-call="mail.ActivityViewFooter"/>
