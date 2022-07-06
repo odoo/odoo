@@ -1933,8 +1933,6 @@ class IrQWeb(models.AbstractModel):
                     values['__qweb_attrs__'].update(field_attrs)
                 content = self._compile_to_str(content)
                 """, level))
-
-            code.append(indent_code("content = self._compile_to_str(content)", level))
             force_display_dependent = True
         else:
             if expr == T_CALL_SLOT:
@@ -2149,8 +2147,7 @@ class IrQWeb(models.AbstractModel):
             for index, (tagName, asset_attrs, content) in enumerate(t_call_assets_nodes):
                 if index:
                     yield '\\n        '
-                yield '<'
-                yield tagName
+                yield f'<{tagName}'
 
                 attrs = self._post_processing_att(tagName, asset_attrs)
                 for name, value in attrs.items():
@@ -2163,9 +2160,7 @@ class IrQWeb(models.AbstractModel):
                     yield '>'
                     if content:
                       yield content
-                    yield '</'
-                    yield tagName
-                    yield '>'
+                    yield f'</{tagName}>'
                 """, level))
 
         return code
