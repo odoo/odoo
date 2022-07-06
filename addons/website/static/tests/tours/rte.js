@@ -53,7 +53,7 @@ wTourUtils.registerEditionTour('rte_translator', {
 }, {
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
-    extra_trigger: '.o_edit_website_container > a',
+    extra_trigger: 'iframe html[lang*="en-US"]',
     consumeVisibleOnly: true,
 }, {
     content: "click on new page",
