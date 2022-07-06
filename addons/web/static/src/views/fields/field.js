@@ -202,6 +202,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: archParseBoolean(node.getAttribute("on_change")),
         FieldComponent: getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass),
+        forceSave: archParseBoolean(node.getAttribute("force_save")),
         decorations: {}, // populated below
         noLabel: archParseBoolean(node.getAttribute("nolabel")),
         props: {},

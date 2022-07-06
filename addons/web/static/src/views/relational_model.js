@@ -641,7 +641,12 @@ export class Record extends DataPoint {
     getChanges(allFields = false, parentChanges = false) {
         const changes = { ...(allFields ? this.data : this._changes) };
         for (const fieldName in changes) {
-            if (!allFields && fieldName in this.activeFields && this.isReadonly(fieldName)) {
+            if (
+                !allFields &&
+                fieldName in this.activeFields &&
+                !this.activeFields[fieldName].forceSave &&
+                this.isReadonly(fieldName)
+            ) {
                 delete changes[fieldName];
                 continue;
             }
