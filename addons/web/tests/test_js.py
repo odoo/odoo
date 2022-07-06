@@ -10,6 +10,7 @@ RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(odoo.tests.HttpCase):
 
+    @odoo.tests.no_retry
     def test_js(self):
         # webclient desktop test suite
         self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800)
