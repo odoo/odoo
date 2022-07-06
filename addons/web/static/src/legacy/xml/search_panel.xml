@@ -7,7 +7,7 @@
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
             <header class="o_search_panel_section_header text-uppercase o_cursor_default">
-                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{section.type === 'category' &amp;&amp; !section.color ? 'text-odoo' : ''}} mr-2"
+                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{section.type === 'category' &amp;&amp; !section.color ? 'text-odoo' : ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
                 <b t-esc="section.description"/>
@@ -27,22 +27,22 @@
                         <t t-set="_section" t-value="section"/>
                         <t t-set="group" t-value="section.groups.get(groupId)"/>
                         <header class="o_search_panel_group_header">
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control form-check">
                                 <!-- TODO: "indeterminate" could not be set in the template and had to be set in
                                      JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
                                 -->
                                 <input type="checkbox"
-                                    class="custom-control-input"
+                                    class="form-check-input"
                                     t-attf-id="{{ section.id }}_input_{{ groupId }})"
                                     t-on-click="() => this._toggleFilterGroup(section.id, group)"
                                 />
                                 <label t-attf-for="{{ section.id }}_input_{{ groupId }})"
-                                    class="o_search_panel_label custom-control-label"
+                                    class="o_search_panel_label form-check-label"
                                     t-att-class="{ o_with_counters: group.enableCounters }"
                                     t-att-title="group.tooltip or false"
                                     >
                                     <span class="o_search_panel_label_title">
-                                        <span t-if="group.hex_color" class="mr-1" t-attf-style="color: {{ group.hex_color }};">●</span>
+                                        <span t-if="group.hex_color" class="me-1" t-attf-style="color: {{ group.hex_color }};">●</span>
                                         <t t-esc="group.name"/>
                                     </span>
                                 </label>
@@ -91,7 +91,7 @@
                     <span t-else="" class="o_search_panel_label_title" t-esc="value.display_name"/>
                 </label>
                 <span t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted ml-2 small"
+                    class="o_search_panel_counter text-muted ms-2 small"
                     t-esc="value.__count"
                 />
             </header>
@@ -109,19 +109,19 @@
         class="o_search_panel_filter_value list-group-item border-0"
         >
         <t t-set="value" t-value="values.get(valueId)"/>
-        <div class="custom-control custom-checkbox w-100">
+        <div class="custom-control form-check w-100">
             <input type="checkbox"
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="state.active[section.id][valueId]"
-                class="custom-control-input"
+                class="form-check-input"
                 t-on-click="ev => this._toggleFilterValue(section.id, valueId, ev)"
             />
-            <label class="o_search_panel_label custom-control-label"
+            <label class="o_search_panel_label form-check-label"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
                 <span class="o_search_panel_label_title" t-esc="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted ml-2 small"
+                    class="o_search_panel_counter text-muted ms-2 small"
                     t-esc="value.__count"
                 />
             </label>

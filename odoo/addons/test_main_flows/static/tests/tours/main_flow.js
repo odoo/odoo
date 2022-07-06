@@ -42,15 +42,15 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Manufacture")',
+    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Manufacture")',
     content: _t('Check Manufacture'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Buy")',
+    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Buy")',
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
     content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',
 }, {
@@ -130,7 +130,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
     content: _t('Check Replenish on Order (MTO)'),
     position: 'right',
 }, {

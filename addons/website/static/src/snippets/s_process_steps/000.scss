@@ -21,7 +21,7 @@
                 span:after {
                     content: '';
                     z-index: -1;
-                    border-top: 1px solid gray('500');
+                    border-top: 1px solid map-get($grays, '500');
                     @include o-position-absolute(50%, 0, 0, auto);
                 }
             }
@@ -38,13 +38,13 @@
             }
             &:first-child .s_process_step_icon {
                 .fa:after { right: 0; }
-                .fa.float-right:after { width: 0; }
+                .fa.float-end:after { width: 0; }
             }
             &:last-child .s_process_step_icon {
                 span:after { left: 0; }
                 .fa {
                     &:after { left: 0; }
-                    &.float-left:after { width: 0; }
+                    &.float-start:after { width: 0; }
                 }
             }
         }

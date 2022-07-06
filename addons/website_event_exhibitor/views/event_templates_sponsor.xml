@@ -12,7 +12,7 @@
                         <t t-set="popover_content">
                             <div t-field="sponsor.name" class="h5"/>
                             <div t-if="sponsor.url" class="d-flex align-items-baseline">
-                                <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
+                                <i class="fa fa-home me-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
                             </div>
                         </t>
                         <a class="o_wevent_sponsor o_wevent_sponsor_card h-100" tabindex="0" role="button"
@@ -37,7 +37,7 @@
             t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
     </div>
     <span t-if="not sponsor.website_published"
-        class="d-flex justify-content-center badge badge-danger o_wevent_online_badge_unpublished">Unpublished</span>
+        class="d-flex justify-content-center badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</span>
 </template>
 
 </odoo>

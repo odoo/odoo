@@ -32,8 +32,8 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
     start() {
         // remove link has no sense on navbar menu links, instead show edit menu
         const $anchor = $('<a/>', {
-            href: '#', class: 'ml-2 js_edit_menu', title: _t('Edit Menu'),
-            'data-placement': 'top', 'data-toggle': 'tooltip',
+            href: '#', class: 'ms-2 js_edit_menu', title: _t('Edit Menu'),
+            'data-bs-placement': 'top', 'data-bs-toggle': 'tooltip',
         }).append($('<i/>', {class: 'fa fa-sitemap'}));
         this.$('.o_we_remove_link').replaceWith($anchor);
         return this._super(...arguments);

@@ -103,12 +103,14 @@ $o-searchpanel-filter-default-color: #D59244;
                 background: $gray-500;
                 margin-left: 4px;
                 @include o-position-absolute(0, $left: $o-searchpanel-p-tiny);
-                @include size(1px, 100%);
+                width: 1px;
+                height: 100%;
             }
 
             &:after {
                 top: 12px;
-                @include size(8px, 1px);
+                width: 8px;
+                height: 1px;
             }
 
             &:last-child:before {

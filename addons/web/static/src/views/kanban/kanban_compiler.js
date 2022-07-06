@@ -241,7 +241,7 @@ export class KanbanCompiler extends ViewCompiler {
         const { bold, display } = extractAttributes(el, ["bold", "display"]);
         const classNames = [];
         if (display === "right") {
-            classNames.push("float-right");
+            classNames.push("float-end");
         } else if (display === "full") {
             classNames.push("o_text_block");
         }

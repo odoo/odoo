@@ -47,8 +47,8 @@
 }
 
 .o_popover {
-    $border-color: gray('300');
-    $bg-color: gray('200');
+    $border-color: map-get($grays, '300');
+    $bg-color: map-get($grays, '200');
     $arrow-pad: 8px;
     $arrow-size: 8px;
     $animation-time: 0.2s;
@@ -61,7 +61,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 
     .o_popover_header {
-        background-color: gray('200');
+        background-color: map-get($grays, '200');
         font-size: 1.1rem;
         padding: 0.5rem 0.75rem;
         border-bottom: 1px solid $border-color;

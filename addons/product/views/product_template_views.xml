@@ -62,7 +62,7 @@
                             <field name="value_count" invisible="1"/>
                             <field name="attribute_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
-                            <button string="Configure" class="float-right btn-secondary"
+                            <button string="Configure" class="float-end btn-secondary"
                                 type="object" name="action_open_attribute_values"
                                 groups="product.group_product_variant"/>
                         </tree>
@@ -90,7 +90,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_image mr-1">
+                            <div class="o_kanban_image me-1">
                                 <img t-att-src="kanban_image('product.template', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </div>
                             <div class="oe_kanban_details">

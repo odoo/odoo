@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item o_cursor_pointer position-relative pl-4 {{ state.isExpanded ? 'o_expanded' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
+        <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item o_cursor_pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
             <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
             <div class="o_tree_column d-flex align-items-center">
                 <span t-if="props.isDebug and props.field.id" t-esc="`${props.field.string} (${props.field.id})`" />
@@ -64,7 +64,7 @@
                 <div class="o_export_format">
                     <strong>Export Format:</strong>
                     <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
-                        <div class="radio form-check form-check-inline pl-4">
+                        <div class="radio form-check form-check-inline ps-4">
                             <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
                             <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
                         </div>
@@ -76,29 +76,29 @@
                 <div class="o_exported_lists">
                     <div class="input-group mb-3">
                         <t t-if="state.templateId === 'new_template'">
-                            <label class="pt-2 mb-0 font-weight-bold">Save as: </label>
-                            <input t-ref="exportList" class="form-control ml-4 o_save_list_name" t-att-placeholder="newTemplateText" />
+                            <label class="pt-2 mb-0 fw-bold">Save as: </label>
+                            <input t-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="newTemplateText" />
                         </t>
                         <t t-else="">
-                            <label class="pt-2 mb-0 font-weight-bold">Template: </label>
-                            <select class="form-control ml-4 o_exported_lists_select" t-on-change="onChangeExportList">
+                            <label class="pt-2 mb-0 fw-bold">Template: </label>
+                            <select class="form-select ms-4 o_exported_lists_select" t-on-change="onChangeExportList">
                                 <option />
                                 <t t-foreach="templates" t-as="template" t-key="template.id">
                                     <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateId === template.id" />
                                 </t>
-                                <option class="font-italic" value="new_template">New template </option>
+                                <option class="fst-italic" value="new_template">New template </option>
                             </select>
                         </t>
                         <t t-if="state.isEditingTemplate">
-                            <button t-if="state.templateId === 'new_template'" type="button" class="btn btn-secondary ml-1 o_save_list_btn" t-on-click.stop="onSaveExportTemplate">
+                            <button t-if="state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="onSaveExportTemplate">
                                 <i class="fa fa-floppy-o" />
                             </button>
-                            <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn" t-on-click.stop="onCancelExportTemplate">
+                            <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="onCancelExportTemplate">
                                 <i t-attf-class="fa {{ state.templateId === 'new_template' ? 'fa-times' : 'fa-undo' }}" />
                             </button>
                         </t>
                         <t t-else="">
-                            <button t-if="state.templateId" type="button" class="btn btn-secondary ml-1 o_delete_exported_list" t-on-click.stop="onDeleteExportTemplate">
+                            <button t-if="state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="onDeleteExportTemplate">
                                 <i class="fa fa-trash" />
                             </button>
                         </t>

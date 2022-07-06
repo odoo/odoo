@@ -75,7 +75,7 @@
                     <button class="oe_stat_button" name="action_show_timesheets_by_employee_invoice_type" type="object" icon="fa-clock-o" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <div class="o_field_widget o_stat_info">
                             <div class="oe_inline">
-                                <span class="o_stat_value mr-1">
+                                <span class="o_stat_value me-1">
                                     <field name="total_timesheet_time" widget="statinfo" nolabel="1"/>
                                 </span>
                                 <span class="o_stat_value">
@@ -131,10 +131,10 @@
                                 <div class="o_td_label">
                                     <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                     <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                                    <field name="planned_hours" class="oe_inline ml-2" widget="timesheet_uom_no_toggle"/>
+                                    <field name="planned_hours" class="oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
                                     <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
                                         (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle"/> on
-                                        <span class="font-weight-bold text-dark"> Sub-tasks</span>)
+                                        <span class="fw-bold text-dark"> Sub-tasks</span>)
                                     </span>
                                 </div>
                             </group>
@@ -174,7 +174,7 @@
                                                 <field name="employee_id" widget="many2one_avatar_employee"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
-                                            <div class="col-6 float-end text-right">
+                                            <div class="col-6 float-end text-end">
                                                 <strong><t t-esc="record.date.value"/></strong>
                                             </div>
                                         </div>
@@ -183,7 +183,7 @@
                                                 <span><t t-esc="record.name.value"/></span>
                                             </div>
                                             <div class="col-6">
-                                                <span class="float-end text-right">
+                                                <span class="float-end text-end">
                                                     <field name="unit_amount" widget="float_time"/>
                                                 </span>
                                             </div>
@@ -210,8 +210,8 @@
                     <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <span>
-                                <label class="font-weight-bold" for="effective_hours" string="Hours Spent" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <label class="font-weight-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                <label class="fw-bold" for="effective_hours" string="Hours Spent" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                <label class="fw-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
 
@@ -222,17 +222,17 @@
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
                                    attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
                             <span>
-                                <label class="font-weight-bold" for="total_hours_spent" string="Total Hours"
+                                <label class="fw-bold" for="total_hours_spent" string="Total Hours"
                                        attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
-                                <label class="font-weight-bold" for="total_hours_spent" string="Total Days"
+                                <label class="fw-bold" for="total_hours_spent" string="Total Days"
                                        attrs="{'invisible': ['|', '|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
                             <span>
-                                <label class="font-weight-bold" for="remaining_hours" string="Remaining Hours"
+                                <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
                                        attrs="{'invisible': ['|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
-                                <label class="font-weight-bold" for="remaining_hours" string="Remaining Days"
+                                <label class="fw-bold" for="remaining_hours" string="Remaining Days"
                                        attrs="{'invisible': ['|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False)]}"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"

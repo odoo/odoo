@@ -2,7 +2,7 @@
     @extend .o_status;
 
     &.accepted {
-        background-color: theme-color('success');
+        background-color: map-get($theme-colors, 'success');
     }
 
     &.tentative {
@@ -10,7 +10,7 @@
     }
 
     &.declined {
-        background-color: theme-color('danger');
+        background-color: map-get($theme-colors, 'danger');
     }
 }
 
@@ -84,11 +84,11 @@
 }
 
 .o_attendee_border_accepted {
-    border-color: theme-color('success');
+    border-color: map-get($theme-colors, 'success');
 }
 .o_attendee_border_declined {
-    border-color: theme-color('danger');
+    border-color: map-get($theme-colors, 'danger');
 }
 .o_attendee_border_tentative {
-    border-color: theme-color('light');
+    border-color: map-get($theme-colors, 'light');
 }

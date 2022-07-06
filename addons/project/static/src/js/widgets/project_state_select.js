@@ -74,7 +74,7 @@ export const ProjectStateSelectionWidget = StateSelectionWidget.extend({
         $items.appendTo($dropdown);
 
         const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
-        this.$('a[data-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
+        this.$('a[data-bs-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
     }
 });
 

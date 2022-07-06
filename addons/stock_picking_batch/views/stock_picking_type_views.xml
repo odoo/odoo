@@ -9,7 +9,7 @@
                 <group attrs="{'invisible': [('code', 'not in', ('incoming', 'outgoing', 'internal'))]}">
                     <group string="Batch Transfers">
                         <field name="auto_batch"/>
-                        <span class="o_form_label font-weight-bold" attrs="{'invisible':[('auto_batch', '=', False)]}">Group by</span>
+                        <span class="o_form_label fw-bold" attrs="{'invisible':[('auto_batch', '=', False)]}">Group by</span>
                         <div name="batch_contact" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
                             <field name="batch_group_by_partner"/>
                             <label for="batch_group_by_partner" string="Contact"/>

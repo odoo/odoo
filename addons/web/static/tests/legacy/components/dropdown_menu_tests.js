@@ -76,7 +76,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             const bsDropdown = document.createElement('div');
             bsDropdown.innerHTML = `<div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" 
-                        data-toggle="dropdown" aria-expanded="false">
+                        data-bs-toggle="dropdown" aria-expanded="false">
                     BS Dropdown button
                 </button>
                 <div class="dropdown-menu">

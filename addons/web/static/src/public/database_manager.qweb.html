@@ -26,7 +26,7 @@
                 <t t-elif="insecure and databases">
                     <div class="alert alert-warning">
                         Warning, your Odoo database manager is not protected.<br/>
-                        Please <a href="#" data-toggle="modal" data-target=".o_database_master">set a master password</a> to secure it.
+                        Please <a href="#" data-bs-toggle="modal" data-bs-target=".o_database_master">set a master password</a> to secure it.
                     </div>
                 </t>
                 <t t-if="error">
@@ -39,12 +39,12 @@
                             <div class="list-group-item d-flex align-items-center">
                                 <a t-attf-href="/web?db={{ db }}" class="d-block flex-grow-1">
                                     <t t-if="db in incompatible_databases">
-                                        <i class="icon fa fa-warning float-right text-warning" title="This database may not be compatible"></i>
+                                        <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
                                     </t>
                                     <t t-out="db" />
                                 </a>
                                 <t t-if="manage">
-                                    <div class="btn-group btn-group-sm float-right">
+                                    <div class="btn-group btn-group-sm float-end">
                                         <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
                                             <i class="fa fa-floppy-o fa-fw"></i> Backup
                                         </button>
@@ -61,9 +61,9 @@
                     </div>
                     <t t-if="manage">
                         <div class="d-flex mt-2">
-                            <button type="button" data-toggle="modal" data-target=".o_database_create" class="btn btn-primary flex-grow-1">Create Database</button>
-                            <button type="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-primary flex-grow-1 ml-2">Restore Database</button>
-                            <button type="button" data-toggle="modal" data-target=".o_database_master" class="btn btn-primary flex-grow-1 ml-2">Set Master Password</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_create" class="btn btn-primary flex-grow-1">Create Database</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_restore" class="btn btn-primary flex-grow-1 ms-2">Restore Database</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_master" class="btn btn-primary flex-grow-1 ms-2">Set Master Password</button>
                         </div>
                     </t>
                     <t t-else="">
@@ -75,9 +75,9 @@
                 <t t-elif="list_db">
                     <form role="form" action="/web/database/create" method="post">
                         <t t-call="create_form" />
-                        <input type="submit" value="Create database" class="btn btn-primary float-left"/>
+                        <input type="submit" value="Create database" class="btn btn-primary float-start"/>
                     </form>
-                    <a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">or restore a database</a>
+                    <a role="button" data-bs-toggle="modal" data-bs-target=".o_database_restore" class="btn btn-link">or restore a database</a>
                 </t>
             </div>
         </div>
@@ -89,7 +89,7 @@
                     <form role="form" action="/web/database/create" method="post">
                         <div class="modal-header">
                             <h4 class="modal-title">Create Database</h4>
-                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <t t-call="create_form" />
@@ -98,7 +98,7 @@
                             </small>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>
@@ -111,7 +111,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Restore Database</h4>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
@@ -134,18 +134,18 @@
                                     In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.<br/>
                                     If you don't know, answer "This database is a copy".
                                 </p>
-                                <div class="custom-control custom-radio">
-                                    <input id="radio_copy_true" name="copy" type="radio" class="custom-control-input" value="true" checked="1" />
-                                    <label for="radio_copy_true" class="custom-control-label">This database is a copy</label>
+                                <div class="custom-control form-check">
+                                    <input id="radio_copy_true" name="copy" type="radio" class="form-check-input" value="true" checked="1" />
+                                    <label for="radio_copy_true" class="form-check-label">This database is a copy</label>
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="radio_copy_false" name="copy" type="radio" class="custom-control-input" value="false" />
-                                    <label for="radio_copy_false" class="custom-control-label">This database was moved</label>
+                                <div class="custom-control form-check">
+                                    <input id="radio_copy_false" name="copy" type="radio" class="form-check-input" value="false" />
+                                    <label for="radio_copy_false" class="form-check-label">This database was moved</label>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>
@@ -158,7 +158,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Set Master Password</h4>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_change_pwd" role="form" action="/web/database/change_password" method="post">
                         <div class="modal-body">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>
@@ -187,7 +187,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Duplicate Database</h4>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form-duplicate-db" role="form" action="/web/database/duplicate" method="post">
                         <div class="modal-body">
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>
@@ -216,7 +216,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Delete Database</h4>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
                         <div class="modal-body">
@@ -227,7 +227,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Delete" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Delete" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>
@@ -240,7 +240,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Backup Database</h4>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
                         <div class="modal-body">
@@ -251,14 +251,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="backup_format" class="col-form-label">Backup Format</label>
-                                <select id="backup_format" name="backup_format" class="form-control" required="required">
+                                <select id="backup_format" name="backup_format" class="form-select" required="required">
                                     <option value="zip">zip (includes filestore)</option>
                                     <option value="dump">pg_dump custom format (without filestore)</option>
                                 </select>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Backup" class="btn btn-primary float-right"/>
+                            <input type="submit" value="Backup" class="btn btn-primary float-end"/>
                         </div>
                     </form>
                 </div>

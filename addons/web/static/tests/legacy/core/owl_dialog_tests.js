@@ -355,7 +355,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                             </div>
                         </div>
                     </div>`
-                ).appendTo('body').modal();
+                ).appendTo('body').modal('show');
                 const modal = $modal[0];
                 modal.destroy = function () {
                     $modal.modal('hide');

@@ -448,7 +448,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _getTooltipOptions: function (widget) {
         return {
-            template: '<div class="tooltip tooltip-field-info" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
+            template: '<div class="tooltip tooltip-field-info" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
             title: function () {
                 let help = widget.attrs.help || widget.field.help || '';
                 if (session.display_switch_company_menu && widget.field.company_dependent) {

@@ -60,7 +60,7 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // it's a check
     }, { // add ourself as participant
         content: "change tab to Participants",
-        trigger: '[data-toggle="tab"]:contains(Participants)'
+        trigger: '[data-bs-toggle="tab"]:contains(Participants)'
     }, {
         content: "click to add participants",
         trigger: '.o_form_sheet .tab-pane:eq(2).active .o_field_x2many_list_row_add a'
@@ -148,7 +148,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: 'textarea[name="body"]:first:propValue(c)',
     }, { // add participants
         content: "change tab to Participants",
-        trigger: '[data-toggle="tab"]:contains(Participants)',
+        trigger: '[data-bs-toggle="tab"]:contains(Participants)',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
     }, {
         content: "click to add participants",
@@ -183,12 +183,12 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'button.o_form_button_edit',
     }, {
         content: "change tab to Messages",
-        trigger: '[data-toggle="tab"]:contains(Messages)',
+        trigger: '[data-bs-toggle="tab"]:contains(Messages)',
         extra_trigger: '.o_form_editable',
     }, { // add message d
         content: "create new message d",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: 'a[data-toggle="tab"].active:contains(Messages)',
+        extra_trigger: 'a[data-bs-toggle="tab"].active:contains(Messages)',
     }, {
         content: "insert body",
         trigger: 'textarea[name="body"]:first',
@@ -427,7 +427,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message eee
         content: "create new message eee",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: '.o_form_editable a[data-toggle="tab"].active:contains(Messages)',
+        extra_trigger: '.o_form_editable a[data-bs-toggle="tab"].active:contains(Messages)',
     }, {
         content: "change text value",
         trigger: 'textarea[name="body"]:first',

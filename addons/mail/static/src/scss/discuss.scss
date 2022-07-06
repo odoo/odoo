@@ -25,13 +25,13 @@
 
 .o_mail_preview {
     display: flex;
-    background-color: theme-color('light');
+    background-color: map-get($theme-colors, 'light');
     color: $o-main-text-color;
     cursor: pointer;
     overflow: hidden;
     position: relative;
     &:hover {
-        background-color: gray('300');
+        background-color: map-get($grays, '300');
         .o_preview_name {
             color: $headings-color;
         }
@@ -40,7 +40,7 @@
         }
     }
     &:not(:last-child) {
-        border-bottom: 1px solid gray('400');
+        border-bottom: 1px solid map-get($grays, '400');
     }
     .o_mail_preview_image {
         display: flex;
@@ -108,7 +108,7 @@
     &.o_preview_unread {
         background-color: transparent;
         &:hover {
-            background-color: theme-color('light');
+            background-color: map-get($theme-colors, 'light');
         }
         .o_preview_info {
             .o_preview_title {
@@ -124,7 +124,7 @@
     &.o_systray_activity {
         background-color: transparent;
         &:hover {
-            background-color: theme-color('light');
+            background-color: map-get($theme-colors, 'light');
         }
     }
 }
@@ -157,7 +157,7 @@
 
     .o_mail_mobile_tabs {
         display: flex;
-        box-shadow: 0 0 8px gray('400');
+        box-shadow: 0 0 8px map-get($grays, '400');
 
         .o_mail_mobile_tab {
             display: flex;
@@ -166,7 +166,7 @@
             flex-flow: column nowrap;
             justify-content: space-between;
             padding: $o-mail-chatter-mobile-gap $o-mail-chatter-mobile-gap*2;
-            box-shadow: 1px 0 0 gray('400');
+            box-shadow: 1px 0 0 map-get($grays, '400');
             text-align: center;
 
             > span {

@@ -1,5 +1,5 @@
 
-.sr-only {
+.visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -55,7 +55,7 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
         width: percentage(1/8);
         height: 30px;
         line-height: 30px;
-        color: gray('900');
+        color: map-get($grays, '900');
 
         &.prev, &.next, &.old, &.new {
             @include o-hover-opacity(.5);
@@ -72,7 +72,7 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
     }
 
     thead tr:nth-child(2) th, td.cw {
-        background-color: gray('100');
+        background-color: map-get($grays, '100');
         font-size: $font-size-sm;
         font-weight: $font-weight-bold;
         color: $o-main-text-color;

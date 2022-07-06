@@ -24,7 +24,7 @@
                     <div t-if="state.based_on" class="text-muted">Based on <a href="#" t-on-click="event => this._onOpen(event, state.based_on_id)" t-out="state.based_on"/></div>
                 </div>
                 <div class="flex-shrink-0 bg-white">
-                    <select class="o_permission custom-select"
+                    <select class="o_permission form-select"
                         t-att-value="state.internal_permission"
                         t-on-change="_onChangeInternalPermission"
                         t-att-disabled="state.user_is_admin || props.user_permission === 'write' ? undefined : 'disabled'"
@@ -45,8 +45,8 @@
                     <div class="flex-grow-1 px-3">
                         <div t-out="member.partner_name"/>
                         <div class="d-flex align-items-center text-muted">
-                            <span t-if="member.partner_share"><i class="fa fa-user pr-1" title="External Guest"/>Guest</span>
-                            <span t-if="state.user_is_admin &amp;&amp; this.isLoggedUser(member)"><i class="fa fa-cog pr-1" title="Administrator"/>Admin</span>
+                            <span t-if="member.partner_share"><i class="fa fa-user pe-1" title="External Guest"/>Guest</span>
+                            <span t-if="state.user_is_admin &amp;&amp; this.isLoggedUser(member)"><i class="fa fa-cog pe-1" title="Administrator"/>Admin</span>
                             <span t-if="(member.partner_share || (state.user_is_admin &amp;&amp; this.isLoggedUser(member))) &amp;&amp; member.partner_email" class="px-1">•</span>
                             <div class="o_member_email" t-if="member.partner_email" t-out="member.partner_email"/>
                         </div>
@@ -56,12 +56,12 @@
                         <div class="input-group">
                             <div t-if="!(member.based_on &amp;&amp; member.permission === 'none') &amp;&amp; !member.is_unique_writer
                                         &amp;&amp; (state.user_is_admin || props.user_permission === 'write' || state.partner_id === member.partner_id)"
-                                 class="d-flex align-items-center mr-2">
+                                 class="d-flex align-items-center me-2">
                                 <i class="fa fa-w fa-times o_delete text-danger" title="Remove Member"
                                    t-on-click="event => this._onRemoveMember(event, member)" type="button">
                                 </i>
                             </div>
-                            <select t-attf-class="o_permission custom-select {{ member.partner_share ? 'readonly' : '' }}"
+                            <select t-attf-class="o_permission form-select {{ member.partner_share ? 'readonly' : '' }}"
                                 t-att-value="member.permission"
                                 t-on-change="event => this._onChangeMemberPermission(event, member)"
                                 t-att-disabled="member.is_unique_writer || member.partner_share
@@ -77,7 +77,7 @@
                 </div>
             </t>
             <div t-if="state.show_admin_tip" class="d-flex align-items-center px-3 py-1 my-1 bg-light text-muted">
-                <i><i class="fa fa-cog mr-2"/>As an administrator, you can always modify this article.</i>
+                <i><i class="fa fa-cog me-2"/>As an administrator, you can always modify this article.</i>
             </div>
         </t>
     </t>

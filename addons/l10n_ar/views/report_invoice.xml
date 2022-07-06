@@ -16,7 +16,7 @@
                         <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
-                <div name="right-upper-side" class="col-5 text-right" style="padding-left: 0px;" t-if="not pre_printed_report">
+                <div name="right-upper-side" class="col-5 text-end" style="padding-left: 0px;" t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
                     <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
@@ -46,7 +46,7 @@
                         <span t-att-style="'color: %s;' % o.company_id.primary_color" t-esc="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
                     </t>
                 </div>
-                <div class="col-6 text-right" style="padding-left: 0px;">
+                <div class="col-6 text-end" style="padding-left: 0px;">
 
                     <t t-if="not pre_printed_report">
                         <!-- (7) Numero punto venta - (8) numero de documento -->
@@ -87,9 +87,9 @@
 
             <t t-set="custom_footer">
                 <div class="row">
-                    <div name="footer_left_column" class="col-8 text-left">
+                    <div name="footer_left_column" class="col-8 text-start">
                     </div>
-                    <div name="footer_right_column" class="col-4 text-right">
+                    <div name="footer_right_column" class="col-4 text-end">
                         <div name="pager" t-if="report_type == 'pdf'">
                             Page: <span class="page"/> / <span class="topage"/>
                         </div>
@@ -107,7 +107,7 @@
 
         <!-- NCM column for fiscal bond -->
         <th name="th_description" position="after">
-            <th t-if="fiscal_bond" name="th_ncm_code" class="text-left"><span>NCM</span></th>
+            <th t-if="fiscal_bond" name="th_ncm_code" class="text-start"><span>NCM</span></th>
         </th>
         <td name="account_invoice_line_name" position="after">
             <td t-if="fiscal_bond" name="ncm_code"><span t-field="line.product_id.l10n_ar_ncm_code"/></td>

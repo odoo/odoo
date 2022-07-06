@@ -3,7 +3,7 @@
 
     <template id="inline_form">
         <div t-attf-id="test-container-{{acquirer_id}}">
-            <div class="form-row">
+            <div class="row">
                 <div class="form-group">
                     <input name="acquirer_id" type="hidden" id="acquirer_id" t-att-value="id"/>
                     <input name="partner_id" type="hidden" t-att-value="partner_id"/>
@@ -22,7 +22,7 @@
                     <label for="simulated_payment_state" class="mt-0">
                         <small><b>Payment Status</b></small>
                     </label>
-                    <select id="simulated_payment_state" class="form-control">
+                    <select id="simulated_payment_state" class="form-select">
                         <option value="done" title="Successful payment">
                             Successful
                         </option>

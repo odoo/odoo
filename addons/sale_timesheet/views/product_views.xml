@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="product_tooltip" position="after">
                 <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_prepaid')]}"/>
-                <div attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_prepaid')]}" class="font-italic text-muted">
+                <div attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_prepaid')]}" class="fst-italic text-muted">
                     Warn the salesperson for an upsell when work done exceeds
                     <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
                     of hours sold. <field name="service_upsell_threshold_ratio" class="oe_inline" attrs="{'invisible': [('service_upsell_threshold_ratio', '=', False)]}"/>

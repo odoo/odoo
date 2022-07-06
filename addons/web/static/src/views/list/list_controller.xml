@@ -71,17 +71,17 @@
     </t>
 
     <t t-name="web.ListView.Selection" owl="1">
-        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
+        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center ps-0 px-lg-2 py-0 mb-0 ms-2" role="alert">
             <t t-if="env.isSmall">
                 <button class="btn btn-link py-0 o_discard_selection" t-on-click="discardSelection">
                     <span class="fa-2x">&#215;</span>
                 </button>
             </t>
-            <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+            <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
             <t t-else="">
-                <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
-                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal" t-on-click="onSelectDomain">
-                    <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+                <span class="font-monospace me-1" t-esc="nbSelected"/> selected
+                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal" t-on-click="onSelectDomain">
+                    <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
                 </a>
             </t>
         </div>

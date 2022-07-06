@@ -110,7 +110,8 @@ $o-wblog-loader-size: 50px;
     }
 
     .o_wblog_social_links > a {
-        @include size(3em);
+        width: 3em;
+        height: 3em;
         > i {
             font-size: 1.3em;
         }
@@ -191,10 +192,10 @@ $o-wblog-loader-size: 50px;
     // ==============================================
     .o_wblog_post_title {
         #o_wblog_post_name {
-            font-weight: $display4-weight;
+            font-weight: $display-font-weight;
             line-height: $display-line-height;
             // Default font-size.
-            @include font-size($display4-size);
+            @include font-size(map-get($display-font-sizes, 4));
         }
 
         #o_wblog_post_subtitle {
@@ -224,7 +225,8 @@ $o-wblog-loader-size: 50px;
             transform: translateZ(1px);
 
             div {
-                @include size($o-wblog-loader-size);
+                width: $o-wblog-loader-size;
+                height: $o-wblog-loader-size;
                 background: rgba(black, 0.15);
                 animation: o-wblog-loader 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
             }
@@ -295,7 +297,8 @@ $o-wblog-loader-size: 50px;
 
 #o_wblog_post_content_jump {
     @extend .o_scroll_button;
-    @include size($o-wblog-loader-size);
+    width: $o-wblog-loader-size;
+    height: $o-wblog-loader-size;
     background-color: rgba(black, 0.5);
 
     &:hover {

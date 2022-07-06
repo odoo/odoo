@@ -4,8 +4,8 @@
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_untaxed']" position="before">
             <tr id="order_delivery" t-if="website_sale_order and website_sale_order.carrier_id">
-              <td class="text-right border-0 text-muted"  title="Delivery will be updated after choosing a new delivery method">Delivery:</td>
-              <td class="text-xl-right border-0 text-muted" >
+              <td class="text-end border-0 text-muted"  title="Delivery will be updated after choosing a new delivery method">Delivery:</td>
+              <td class="text-xl-end border-0 text-muted" >
                    <span t-field="website_sale_order.amount_delivery" class="monetary_field" style="white-space: nowrap;" t-options='{
                       "widget": "monetary",
                       "display_currency": website_sale_order.currency_id,
@@ -18,7 +18,7 @@
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name"/>
-        <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-right ' or '') + 'badge badge-secondary'" />
+        <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-end ' or '') + 'badge text-bg-secondary'" />
         <t t-if="delivery.delivery_type == 'fixed'">
           <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class">
             <t t-esc="delivery.rate_shipment(website_sale_order)['price'] if delivery.free_over else delivery.fixed_price"

@@ -78,7 +78,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.containsNone(target, ".o_cp_action_menus");
-        await click(target.querySelector("input.custom-control-input"));
+        await click(target.querySelector("input.form-check-input"));
         assert.isVisible(
             $(target).find('.o_cp_action_menus button.dropdown-toggle:contains("Print")')[0]
         );

@@ -102,6 +102,6 @@ AddPageDialog.template = xml`
             <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
         </div>
     </div>
-    <Switch extraClasses="'offset-md-3 col-md-9 text-left'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
+    <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
 </WebsiteDialog>
 `;

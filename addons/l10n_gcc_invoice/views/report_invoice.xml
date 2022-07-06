@@ -87,7 +87,7 @@
                         <div class="col-2">
                             <span t-field="o.invoice_date"/>
                         </div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-end">
                             <strong style="white-space:nowrap">:
                                 تاريخ الفاتورة
                             </strong>
@@ -103,7 +103,7 @@
                         <div class="col-2">
                             <span t-field="o.invoice_date_due"/>
                         </div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-end">
                             <strong style="white-space:nowrap">:
                                 تاريخ الاستحقاق
                             </strong>
@@ -117,7 +117,7 @@
                         <div class="col-2">
                             <span t-field="o.invoice_origin"/>
                         </div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-end">
                             <strong style="white-space:nowrap">:
                                 المصدر
                             </strong>
@@ -132,7 +132,7 @@
                         <div class="col-2">
                             <span t-field="o.partner_id.ref"/>
                         </div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-end">
                             <strong style="white-space:nowrap">:
                                 كود العميل
                             </strong>
@@ -146,7 +146,7 @@
                         <div class="col-2">
                             <span t-field="o.ref"/>
                         </div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-end">
                             <strong style="white-space:nowrap">:
                                 رقم الإشارة
                             </strong>
@@ -159,7 +159,7 @@
                     <thead>
                         <tr>
                             <t t-set="colspan" t-value="6"/>
-                            <th name="th_description" class="text-left">
+                            <th name="th_description" class="text-start">
                                 <span>
                                     Description
                                 </span>
@@ -168,7 +168,7 @@
                                     الوصف
                                 </span>
                             </th>
-                            <th name="th_source" class="d-none text-left" t-if="0">
+                            <th name="th_source" class="d-none text-start" t-if="0">
                                 <span>
                                     Source Document
                                 </span>
@@ -177,7 +177,7 @@
                                     المستند المصدر
                                 </span>
                             </th>
-                            <th name="th_quantity" class="text-right">
+                            <th name="th_quantity" class="text-end">
                                 <span>
                                     Quantity
                                 </span>
@@ -187,7 +187,7 @@
                                 </span>
                             </th>
                             <th name="th_priceunit"
-                                class="text-right">
+                                class="text-end">
                                 <span>
                                     Unit price
                                 </span>
@@ -197,7 +197,7 @@
                                 </span>
                             </th>
                             <th name="th_price_unit" t-if="display_discount"
-                                class="text-right">
+                                class="text-end">
                                 <span>
                                     Disc.%
                                 </span>
@@ -208,7 +208,7 @@
                                 <t t-set="colspan" t-value="colspan+1"/>
                             </th>
                             <th name="th_taxes"
-                                class="text-right">
+                                class="text-end">
                                 <span>
                                     Taxes
                                 </span>
@@ -217,7 +217,7 @@
                                     الضرائب
                                 </span>
                             </th>
-                            <th name="th_subtotal" class="text-right">
+                            <th name="th_subtotal" class="text-end">
                                 <span>
                                     Amount
                                 </span>
@@ -227,7 +227,7 @@
                                 </span>
                             </th>
                             <th name="th_tax_amount"
-                                class="text-right">
+                                class="text-end">
                                 <span>
                                     VAT Amount
                                 </span>
@@ -236,7 +236,7 @@
                                     قيمة الضريبة
                                 </span>
                             </th>
-                            <th name="th_total" class="text-right">
+                            <th name="th_total" class="text-end">
                                 <span>
                                     Total Price
                                 </span>
@@ -259,7 +259,7 @@
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_total"
                                groups="account.group_show_line_subtotals_tax_included"/>
 
-                            <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                            <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_name">
                                         <t t-set="translation_name" t-value="line.with_context(lang='ar_001').product_id.name"/>
@@ -276,28 +276,28 @@
                                             <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </t>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="line.quantity"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span class="text-nowrap" t-field="line.price_unit"/>
                                     </td>
                                     <td t-if="display_discount"
-                                        class="text-right">
+                                        class="text-end">
                                         <span class="text-nowrap" t-field="line.discount"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"
                                               id="line_tax_ids"/>
                                     </td>
-                                    <td class="text-right o_price_total">
+                                    <td class="text-end o_price_total">
                                         <span class="text-nowrap" t-field="line.price_subtotal"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount"/>
                                     </td>
-                                    <td class="text-right o_price_total">
+                                    <td class="text-end o_price_total">
                                         <span class="text-nowrap" t-field="line.price_total"/>
                                     </td>
                                 </t>
@@ -316,7 +316,7 @@
                             </tr>
 
                             <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
-                                <tr class="is-subtotal text-right">
+                                <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16" style="display: inline-block">Subtotal/الإجمالي الفرعي</strong>
                                         <span
@@ -342,7 +342,7 @@
                                             الإجمالي الفرعي
                                         </strong>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="o.amount_untaxed"/>
                                     </td>
                                 </tr>
@@ -359,7 +359,7 @@
                                             المجموع
                                         </strong>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span class="text-nowrap" t-field="o.amount_total"/>
                                     </td>
                                 </tr>
@@ -374,12 +374,12 @@
                                                         <div class="col-7 oe_form_field oe_payment_label">
                                                             Paid on/دفعت في:
                                                         </div>
-                                                        <div class="col-5 pl-0 oe_form_field oe_payment_label">
+                                                        <div class="col-5 ps-0 oe_form_field oe_payment_label">
                                                             <t t-out="payment_vals['date']"/>
                                                         </div>
                                                     </i>
                                                 </td>
-                                                <td class="text-right">
+                                                <td class="text-end">
                                                     <span t-out="payment_vals['amount']"
                                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                                 </td>
@@ -394,7 +394,7 @@
                                                         المبلغ المستحق
                                                     </strong>
                                                 </td>
-                                                <td class="text-right">
+                                                <td class="text-end">
                                                     <span t-field="o.amount_residual"/>
                                                 </td>
                                             </tr>
@@ -408,13 +408,13 @@
 
                 <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                     <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-start">
                             Payment Reference :
                             <b>
                                 <span t-field="o.payment_reference"/>
                             </b>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
                             <p>
                                 <b>
                                     <span t-field="o.payment_reference"/> :
@@ -427,10 +427,10 @@
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-start">
                             <span t-field="o.invoice_payment_term_id.note"/>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
                             <span dir="rtl" t-field="o_sec.invoice_payment_term_id.note"/>
                         </div>
 
@@ -438,27 +438,27 @@
                 </p>
                 <p t-if="o.narration" name="comment">
                     <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-start">
                             <span t-field="o.narration"/>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
                             <span t-field="o_sec.narration"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-start">
                             <span t-field="o.fiscal_position_id.note"/>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
                             <span t-field="o_sec.fiscal_position_id.note"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.invoice_incoterm_id" name="incoterm">
                     <div class="row">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-start">
                             <strong>Incoterm:
                             </strong>
                             <span
@@ -467,7 +467,7 @@
                             <span
                                     t-field="o.invoice_incoterm_id.name"/>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
                             <strong>شرط تجاري:
                             </strong>
                             <span

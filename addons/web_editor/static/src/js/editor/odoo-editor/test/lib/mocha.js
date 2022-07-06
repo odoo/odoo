@@ -23976,10 +23976,10 @@
 	    });
 
 	    function setHookTitle(hook) {
-	      hook.originalTitle = hook.originalTitle || hook.title;
+	      hook.bsOriginalTitle = hook.bsOriginalTitle || hook.title;
 
 	      if (hook.ctx && hook.ctx.currentTest) {
-	        hook.title = "".concat(hook.originalTitle, " for \"").concat(hook.ctx.currentTest.title, "\"");
+	        hook.title = "".concat(hook.bsOriginalTitle, " for \"").concat(hook.ctx.currentTest.title, "\"");
 	      } else {
 	        var parentTitle;
 
@@ -23989,7 +23989,7 @@
 	          parentTitle = hook.parent.root ? '{root}' : '';
 	        }
 
-	        hook.title = "".concat(hook.originalTitle, " in \"").concat(parentTitle, "\"");
+	        hook.title = "".concat(hook.bsOriginalTitle, " in \"").concat(parentTitle, "\"");
 	      }
 	    }
 	  }

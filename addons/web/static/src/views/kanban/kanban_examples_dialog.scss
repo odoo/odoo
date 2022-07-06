@@ -2,17 +2,17 @@
 .o_kanban_examples_dialog .modal-body {
     display: flex;
     padding: 0px;
-    background: theme-color('light');
+    background: map-get($theme-colors, 'light');
 
     // sidebar
     .o_notebook_headers {
         flex: 0 0 auto;
-        border-right: 1px solid gray('300');
+        border-right: 1px solid map-get($grays, '300');
         background: white;
 
         > ul > li {
             margin: 0;
-            border-bottom: 1px solid gray('300');
+            border-bottom: 1px solid map-get($grays, '300');
 
             > a {
                 padding: 12px 15px;
@@ -78,11 +78,11 @@
         .o_kanban_examples_ghost {
             padding: 5px;
             margin-top: -1px;
-            border: thin solid gray('300');
+            border: thin solid map-get($grays, '300');
             background-color: white;
             .o_ghost_content {
                 height: 12px;
-                background: gray('300');
+                background: map-get($grays, '300');
                 &.o_ghost_tag {
                     display: inline-block;
                     width: 40%;

@@ -18,8 +18,8 @@ $o-cw-filter-avatar-size: 20px;
     flex: 1 1 auto;
     min-width: 0;
     height: 100%;
-    background-color: gray('100');
-    background: linear-gradient(-45deg, gray('100'), white);
+    background-color: map-get($grays, '100');
+    background: linear-gradient(-45deg, map-get($grays, '100'), white);
 
     .fc-event {
         margin: 0 1px;
@@ -41,8 +41,9 @@ $o-cw-filter-avatar-size: 20px;
         }
 
         .fc-bg {
-            background-color: mix(theme-color('primary'), white); // Used for placeholder events only (on creation)
-            @include size(101%); // Compensate border
+            background-color: mix(map-get($theme-colors, 'primary'), white); // Used for placeholder events only (on creation)
+            width: 101%;
+            height: 101%; // Compensate border
             opacity: 0.7;
             transition: opacity 0.2s;
         }
@@ -83,7 +84,7 @@ $o-cw-filter-avatar-size: 20px;
         }
 
         .fc-time-grid .fc-slats .fc-minor td {
-            border-top-color: gray('400');
+            border-top-color: map-get($grays, '400');
         }
 
         .fc-widget-content {
@@ -99,7 +100,7 @@ $o-cw-filter-avatar-size: 20px;
         hr.fc-widget-header {
             padding: 1px;
             border: 0;
-            background: gray('400');
+            background: map-get($grays, '400');
         }
 
         .fc-timeGrid-view .fc-day-grid .fc-row .fc-content-skeleton {
@@ -145,7 +146,7 @@ $o-cw-filter-avatar-size: 20px;
 
             // Reinfornce default border color
             tbody td {
-                border-top-color: gray('400');
+                border-top-color: map-get($grays, '400');
             }
 
             // Remove dotted borders (half-hours)
@@ -180,7 +181,7 @@ $o-cw-filter-avatar-size: 20px;
 
                 + hr.fc-widget-header {
                     padding: 1px 0 0;
-                    background: gray('300');
+                    background: map-get($grays, '300');
                 }
 
                 .fc-content-skeleton tr:not(:first-child) .fc-h-event{
@@ -191,7 +192,7 @@ $o-cw-filter-avatar-size: 20px;
             // Create a 'preudo-border' for the first row. The actual border
             // it's hidden because of border-collapse settings.
             .fc-slats tr:first-child td.fc-widget-content:last-child {
-                box-shadow: inset 0 1px 0 gray('400');
+                box-shadow: inset 0 1px 0 map-get($grays, '400');
             }
 
             .fc-day.fc-widget-content.fc-today:not(.o_calendar_disabled) {
@@ -285,7 +286,7 @@ $o-cw-filter-avatar-size: 20px;
                 margin: 5px;
                 padding: 0.1rem 0.3rem 0.1rem 0;
                 font-size: 1.2rem;
-                color: gray('900');
+                color: map-get($grays, '900');
                 font-weight: 400;
                 line-height: 1;
                 float: none !important;
@@ -295,7 +296,7 @@ $o-cw-filter-avatar-size: 20px;
                 opacity: 0.8;
 
                 .fc-day-number {
-                    color: gray('500');
+                    color: map-get($grays, '500');
                 }
             }
 
@@ -304,7 +305,7 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .fc-bg .fc-today {
-                border-color: gray('300');
+                border-color: map-get($grays, '300');
             }
             .fc-bg .fc-today:not(.o_calendar_disabled) {
                 background: $o-view-background-color;
@@ -449,7 +450,7 @@ $o-cw-filter-avatar-size: 20px;
                     border-radius: 100%;
                     text-align: center;
                     background-color: rgba(#87c0d1, 0.5);
-                    color: gray('900');
+                    color: map-get($grays, '900');
                 }
             }
 
@@ -478,7 +479,7 @@ $o-cw-filter-avatar-size: 20px;
 
                         h2 {
                             font-size: 1.2rem;
-                            color: gray('600');
+                            color: map-get($grays, '600');
                         }
                     }
 
@@ -604,7 +605,7 @@ $o-cw-filter-avatar-size: 20px;
                 text-align: center;
                 vertical-align: middle;
                 font-size: 1.2rem;
-                color: gray('900');
+                color: map-get($grays, '900');
                 font-weight: 400;
             }
 
@@ -636,7 +637,7 @@ $o-cw-filter-avatar-size: 20px;
             border-radius: 0;
 
             .ui-datepicker-title {
-                color: gray('600');
+                color: map-get($grays, '600');
                 font-size: 1.2rem;
                 font-weight: normal;
             }
@@ -649,7 +650,7 @@ $o-cw-filter-avatar-size: 20px;
                 &:before {
                     font: normal normal normal 13px/1 FontAwesome;
                     content: "\f053";
-                    color: gray('400');
+                    color: map-get($grays, '400');
                 }
                 &.ui-icon-circle-triangle-e:before {
                     content: "\f054"
@@ -662,7 +663,7 @@ $o-cw-filter-avatar-size: 20px;
                 cursor: pointer;
 
                 span:before {
-                    color: gray('800');
+                    color: map-get($grays, '800');
                 }
             }
         }
@@ -698,14 +699,16 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .o_cw_filter_input_bg {
-                @include size(1.3em);
+                width: 1.3em;
+                height: 1.3em;
                 border-width: 2px;
                 border-style: solid;
                 border-radius: 1px;
                 overflow: hidden;
 
                 &.o_beside_avatar {
-                    @include size($o-cw-filter-avatar-size);
+                    width: $o-cw-filter-avatar-size;
+                    height: $o-cw-filter-avatar-size;
                     border-radius: 2px;
                     object-fit: cover;
                 }
@@ -721,7 +724,8 @@ $o-cw-filter-avatar-size: 20px;
 
 
             .o_cw_filter_avatar {
-                @include size($o-cw-filter-avatar-size);
+                width: $o-cw-filter-avatar-size;
+                height: $o-cw-filter-avatar-size;
                 border-radius: 2px;
 
                 &.fa {
@@ -783,7 +787,8 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_avatars img {
         margin-right: 0.4rem;
-        @include size($o-cw-popup-avatar-size);
+        width: $o-cw-popup-avatar-size;
+        height: $o-cw-popup-avatar-size;
         border-radius: 100%;
     }
 
@@ -799,11 +804,11 @@ $o-cw-filter-avatar-size: 20px;
         padding-bottom: 1px; // prevents the scrollbar to show when not needed
 
         &::-webkit-scrollbar {
-            background: gray('200');
+            background: map-get($grays, '200');
             width: 6px;
         }
         &::-webkit-scrollbar-thumb {
-            background: gray('500');
+            background: map-get($grays, '500');
         }
     }
 

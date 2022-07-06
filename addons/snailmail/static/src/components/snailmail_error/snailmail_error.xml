@@ -11,7 +11,7 @@
                         The letter could not be sent due to insufficient credits on your IAP account.
                     </p>
                     <t t-if="messaging.snailmail_credits_url">
-                        <div class="text-right mx-3 mb-3">
+                        <div class="text-end mx-3 mb-3">
                             <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url" target="_blank">
                                 <i class="fa fa-arrow-right"/> Buy credits
                             </a>
@@ -23,7 +23,7 @@
                         You need credits on your IAP account to send a letter.
                     </p>
                     <t t-if="messaging.snailmail_credits_url_trial">
-                        <div class="text-right mx-3 mb-3">
+                        <div class="text-end mx-3 mb-3">
                             <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url_trial">
                                 <i class="fa fa-arrow-right"/> Buy credits
                             </a>

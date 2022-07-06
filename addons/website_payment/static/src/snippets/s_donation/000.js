@@ -77,7 +77,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
                 const before = result.position === "before";
                 const $currencySymbol = document.createElement('span');
                 $currencySymbol.innerText = result.symbol;
-                $currencySymbol.classList.add('s_donation_currency', before ? "pr-1" : "pl-1");
+                $currencySymbol.classList.add('s_donation_currency', before ? "pe-1" : "ps-1");
                 if (before) {
                     $(button).prepend($currencySymbol);
                 } else {

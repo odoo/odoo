@@ -40,7 +40,7 @@
 
             &:not(:first-child):before {
                 right: -$o-statusbar-arrow-width;
-                border-left-color: gray('300');
+                border-left-color: map-get($grays, '300');
             }
 
             &.disabled {
@@ -48,7 +48,7 @@
                 pointer-events: none;
 
                 &:not(.btn-primary) {
-                    @include plain-hover-focus() {
+                    &, &:hover, &:focus {
                         color: $text-muted;
                     }
                 }

@@ -359,7 +359,7 @@
             // sometimes, the app is just a modal that needs to be closed
             const $modal = $('.modal[role="dialog"]');
             if ($modal.length > 0) {
-                const closeButton = document.querySelector("header > button.close");
+                const closeButton = document.querySelector("header > button.btn-close");
                 if (closeButton) {
                     closeButton.focus();
                     triggerClick(closeButton, "modal close button");

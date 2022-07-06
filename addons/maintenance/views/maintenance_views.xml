@@ -62,7 +62,7 @@
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('archive', '=', False)]}">
-                        <span class="badge badge-warning float-right">Canceled</span>
+                        <span class="badge text-bg-warning float-end">Canceled</span>
                     </div>
                     <div class="oe_right">
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
@@ -139,7 +139,7 @@
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
@@ -438,7 +438,7 @@
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
 
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
@@ -458,10 +458,10 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="badge badge-danger" t-if="!selection_mode and record.maintenance_open_count.raw_value" >
+                                        <div class="badge text-bg-danger" t-if="!selection_mode and record.maintenance_open_count.raw_value" >
                                             <t t-out="record.maintenance_open_count.raw_value"/> Request
                                         </div>
-                                        <div class="badge badge-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
+                                        <div class="badge text-bg-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
                                             <t t-esc="luxon.DateTime.fromJSDate(record.next_action_date.raw_value).toFormat('d MMMM')"/>
                                         </div>
                                     </div>
@@ -666,12 +666,12 @@
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
-                                    <span class="badge badge-pill">
+                                    <span class="badge rounded-pill">
                                         <strong>Equipments:</strong> <field name="equipment_count"/>
                                     </span>
                                 </div>
-                                <div class="col-6 text-right">
-                                    <span class="badge badge-pill">
+                                <div class="col-6 text-end">
+                                    <span class="badge rounded-pill">
                                         <strong>Maintenance:</strong> <field name="maintenance_count"/>
                                     </span>
                                     <field name="technician_user_id" widget="many2one_avatar_user"/>

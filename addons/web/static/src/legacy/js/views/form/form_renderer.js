@@ -19,7 +19,7 @@ var FormRenderer = BasicRenderer.extend({
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
         'click .o_notification_box .btn-close': '_onTranslateNotificationClose',
-        'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
+        'shown.bs.tab a[data-bs-toggle="tab"]': '_onNotebookTabChanged',
         'click .o_form_label': '_onFieldLabelClicked',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
@@ -568,7 +568,7 @@ var FormRenderer = BasicRenderer.extend({
                 $result.append(dom.renderButton({
                     attrs: {
                         'class': 'oe_stat_button o_button_more dropdown-toggle',
-                        'data-toggle': 'dropdown',
+                        'data-bs-toggle': 'dropdown',
                     },
                     text: _t("More"),
                 }));
@@ -875,7 +875,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTabHeader: function (page, page_id) {
         var $a = $('<a>', {
-            'data-toggle': 'tab',
+            'data-bs-toggle': 'tab',
             disable_anchor: 'true',
             href: '#' + page_id,
             class: 'nav-link',

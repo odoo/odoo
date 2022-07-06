@@ -4,7 +4,7 @@
 <t t-name="hr_resume_data_row">
     <tr class="o_data_row o_cursor_default" t-attf-class="o_data_row #{is_last? 'o_data_row_last' : ''}" t-att-data-id="id">
         <t t-if="data.display_type === 'classic'">
-            <td class="o_resume_timeline_cell position-relative pr-lg-2">
+            <td class="o_resume_timeline_cell position-relative pe-lg-2">
                 <div class="rounded-circle bg-info position-relative"/>
             </td>
             <td class="o_data_cell pt-0 w-100">
@@ -21,7 +21,7 @@
 </t>
 
 <t t-name="hr_trash_button">
-    <td class="o_list_record_remove pr-3">
+    <td class="o_list_record_remove pe-3">
         <button name="delete" arial-label="Delete row" class="btn btn-link text-danger">
             <i class="fa fa-trash"/>
         </button>

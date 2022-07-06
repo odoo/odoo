@@ -11,7 +11,7 @@
                 <div>
                     <span t-esc="type[1]"/>
                     <span t-if="type[2].length > 0" class="dropdown float-end">
-                        <i class="fa fa-ellipsis-v fa-fw" data-toggle="dropdown"/>
+                        <i class="fa fa-ellipsis-v fa-fw" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
                             <t t-foreach="type[2]" t-as="template" t-key="template.id">
                                 <div title="This action will send an email."
@@ -76,7 +76,7 @@
     <tfoot>
         <tr class="o_data_row">
             <td class="o_record_selector p-3" t-on-click.prevent.stop="() => this.trigger('schedule_activity')">
-                <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
+                <span class="fa fa-plus pe-2"/><span>Schedule activity</span>
             </td>
         </tr>
     </tfoot>
