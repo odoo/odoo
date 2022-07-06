@@ -105,10 +105,10 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
         var $email = $jsFollow.find(".js_follow_email");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            $jsFollow.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            $jsFollow.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             return false;
         }
-        $jsFollow.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        $jsFollow.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
         var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {

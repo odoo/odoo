@@ -86,9 +86,9 @@ const Wysiwyg = Widget.extend({
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
         this.customizableLinksSelector = 'a'
-            + ':not([data-toggle="tab"])'
-            + ':not([data-toggle="collapse"])'
-            + ':not([data-toggle="dropdown"])'
+            + ':not([data-bs-toggle="tab"])'
+            + ':not([data-bs-toggle="collapse"])'
+            + ':not([data-bs-toggle="dropdown"])'
             + ':not(.dropdown-item)';
         // navigator.onLine is sometimes a false positive, this._isOnline use
         // more heuristics to bypass the limitation.
@@ -798,10 +798,10 @@ const Wysiwyg = Widget.extend({
         $editable.find('[style=""]').removeAttr('style');
         $editable.find('[title=""]').removeAttr('title');
         $editable.find('[alt=""]').removeAttr('alt');
-        $editable.find('[data-original-title=""]').removeAttr('data-original-title');
+        $editable.find('[data-bs-original-title=""]').removeAttr('data-bs-original-title');
         $editable.find('[data-editor-message]').removeAttr('data-editor-message');
         $editable.find('a.o_image, span.fa, i.fa').html('');
-        $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
+        $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-bs-original-title');
         this.odooEditor.cleanForSave($editable[0]);
         return $editable.html();
     },
@@ -1374,7 +1374,7 @@ const Wysiwyg = Widget.extend({
             const mode = justifyBtn.id.replace('justify', '').toLowerCase();
             const classes = mode === 'center' ? ['d-block', 'mx-auto'] : ['float-' + mode];
             const doAdd = classes.some(className => !this.lastMediaClicked.classList.contains(className));
-            this.lastMediaClicked.classList.remove('float-left', 'float-right');
+            this.lastMediaClicked.classList.remove('float-start', 'float-end');
             if (this.lastMediaClicked.classList.contains('mx-auto')) {
                 this.lastMediaClicked.classList.remove('d-block', 'mx-auto');
             }
@@ -1770,9 +1770,9 @@ const Wysiwyg = Widget.extend({
         let resetAlignment = true;
         if (!commandState) {
             const justifyMapping = [
-                ['float-left', 'justifyLeft'],
+                ['float-start', 'justifyLeft'],
                 ['mx-auto', 'justifyCenter'],
-                ['float-right', 'justifyRight'],
+                ['float-end', 'justifyRight'],
             ];
             commandState = (justifyMapping.find(pair => (
                 this.lastMediaClicked.classList.contains(pair[0]))
@@ -1784,7 +1784,7 @@ const Wysiwyg = Widget.extend({
         if (commandState) {
             const direction = commandState.replace('justify', '').toLowerCase();
             newClass = `fa-align-${direction === 'full' ? 'justify' : direction}`;
-            resetAlignment = !['float-left', 'mx-auto', 'float-right'].some(className => (
+            resetAlignment = !['float-start', 'mx-auto', 'float-end'].some(className => (
                 this.lastMediaClicked.classList.contains(className)
             ));
         }

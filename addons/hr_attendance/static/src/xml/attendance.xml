@@ -8,7 +8,7 @@
     <t t-name="HrAttendanceCardLayout">
         <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background d-flex flex-column align-items-center justify-content-center h-100 text-center">
             <span class="o_hr_attendance_kiosk_backdrop position-absolute top-0 start-0 end-0 bottom-0 bg-black-25"/>
-            <div class="o_hr_attendance_clock bg-black-50 p-3 py-md-2 m-0 mt-md-5 mr-md-5 h2 text-white text-monospace"/>
+            <div class="o_hr_attendance_clock bg-black-50 p-3 py-md-2 m-0 mt-md-5 me-md-5 h2 text-white font-monospace"/>
             <div t-attf-class="o_hr_attendance_kiosk_mode flex-grow-1 flex-md-grow-0 card pb-3 px-0 px-lg-5 {{kioskModeClasses ? kioskModeClasses : '' }}">
                 <div class="card-body d-flex flex-column p-0 p-md-4">
                     <t t-out="bodyContent"></t>
@@ -112,12 +112,12 @@
                         <h3 class="mt-4 mb0 text-muted">Please enter your PIN to <b t-if="checked_in">check out</b><b t-else="">check in</b></h3>
                         <div class="row">
                             <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
-                                <div class="row no-gutters" >
+                                <div class="row g-0" >
                                     <div class="col-12 mb8 mt8">
                                         <input class="o_hr_attendance_PINbox border-0 bg-white fs-1 text-center" type="password" disabled="true"/>
                                     </div>
                                 </div>
-                                <div class="row no-gutters">
+                                <div class="row g-0">
                                     <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', ['C', 'btn-warning'], '0', ['ok', 'btn-primary']]" t-as="btn_name">
                                         <div class="col-4 p-1">
                                             <a href="#" t-attf-class="o_hr_attendance_PINbox_button btn {{btn_name[1]? btn_name[1] : 'btn-secondary border'}} btn-block btn-lg {{ 'o_hr_attendance_pin_pad_button_' + btn_name[0] }} d-flex align-items-center justify-content-center">
@@ -164,7 +164,7 @@
                         <t t-if="widget.total_overtime_float &gt; 0">
                             Total extra hours: <span t-esc="widget.total_overtime"/>
                         </t>
-                        <h3 class="o_hr_attendance_random_message font-italic mb24"/>
+                        <h3 class="o_hr_attendance_random_message fst-italic mb24"/>
                         <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
                     </div>
                     <div t-else="" class="flex-grow-1">

@@ -35,15 +35,15 @@
             font-weight: 500;
 
             .o_account_dashboard_index {
-                color: gray('900');
+                color: map-get($grays, '900');
             }
 
             &.o_action_done {
-                color: gray('900');
-                background-color: gray('200');
+                color: map-get($grays, '900');
+                background-color: map-get($grays, '200');
 
                 &:after {
-                    border-left-color: gray('200');
+                    border-left-color: map-get($grays, '200');
                 }
 
                 .fa-check {
@@ -54,7 +54,7 @@
             &:last-of-type {
                 margin-left: $o-horizontal-padding;
                 padding-left: $o-horizontal-padding*.5;
-                border-left: 1px solid gray('300');
+                border-left: 1px solid map-get($grays, '300');
             }
         }
     }

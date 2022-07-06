@@ -3,7 +3,7 @@
 
     <t t-name="mail.ChatWindow" owl="1">
         <t t-if="chatWindow">
-            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-lg-top bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-top-3 bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
                 t-att-class="{
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
@@ -32,7 +32,7 @@
                 </t>
                 <t t-if="chatWindow.newMessageAutocompleteInputView">
                     <div class="o_ChatWindow_newMessageForm d-flex align-items-center m-3">
-                        <span class="o_ChatWindow_newMessageFormLabel flex-grow-0 flex-shrink-0 mr-2">
+                        <span class="o_ChatWindow_newMessageFormLabel flex-grow-0 flex-shrink-0 me-2">
                             To:
                         </span>
                         <AutocompleteInput

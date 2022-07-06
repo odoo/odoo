@@ -1212,8 +1212,8 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         this.inputEl.setAttribute('type', 'text');
         this.inputEl.setAttribute('autocomplete', 'chrome-off');
         this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        this.inputEl.classList.toggle('text-left', !unit);
-        this.inputEl.classList.toggle('text-right', !!unit);
+        this.inputEl.classList.toggle('text-start', !unit);
+        this.inputEl.classList.toggle('text-end', !!unit);
         this.containerEl.appendChild(this.inputEl);
 
         var unitEl = document.createElement('span');
@@ -1765,7 +1765,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
 
         const datetimePickerId = _.uniqueId('datetimepicker');
         this.el.classList.add('o_we_large');
-        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-left');
+        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
         this.inputEl.setAttribute('id', datetimePickerId);
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 

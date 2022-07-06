@@ -12,7 +12,7 @@
                     <div class="modal-content" t-att-class="props.contentClass">
                         <header t-if="props.header" class="modal-header">
                             <t t-if="isFullscreen">
-                                <button class="btn fa fa-arrow-left" data-dismiss="modal" aria-label="Close" t-on-click="data.close" />
+                                <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="data.close" />
                             </t>
                             <h4 class="modal-title text-break">
                                 <t t-esc="props.title"/>

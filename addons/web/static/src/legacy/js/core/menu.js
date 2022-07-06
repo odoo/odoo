@@ -181,7 +181,7 @@ export async function initAutoMoreMenu(el, options) {
             role: 'button',
             href: '#',
             class: 'nav-link dropdown-toggle o-no-caret',
-            'data-toggle': 'dropdown',
+            'data-bs-toggle': 'dropdown',
             'aria-expanded': false,
         }).forEach(([key, value]) => {
             extraItemsToggleLink.setAttribute(key, value);

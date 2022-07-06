@@ -66,7 +66,7 @@
                     <div class="oe_title">
                         <label class="o_form_label" for="name"/>
                         <h1>
-                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field name="priority" widget="priority" class="me-3"/>
                             <field name="name"/>
                         </h1>
                     </div>
@@ -250,7 +250,7 @@
                                 <div class="col-6">
                                     <strong><span><t t-esc="record.name.value"/></span></strong>
                                 </div>
-                                <div class="col-6 text-right">
+                                <div class="col-6 text-end">
                                     <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="col-6">
-                                    <span class="float-right">
+                                    <span class="float-end">
                                         <field name="partner_id"/>
                                     </span>
                                 </div>

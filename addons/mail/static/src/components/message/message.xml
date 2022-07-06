@@ -64,7 +64,7 @@
                     </div>
                     <div class="o_Message_core flex-grow-1 me-4">
                         <t t-if="!messageView.isSquashed">
-                            <div class="o_Message_header d-flex flex-wrap align-items-baseline ml-2">
+                            <div class="o_Message_header d-flex flex-wrap align-items-baseline ms-2">
                                 <t t-if="messageView.message.author">
                                     <strong class="o_Message_authorName o_Message_authorRedirect o_redirect o_cursor_pointer text-truncate" role="link" tabindex="0" t-on-click="messageView.onClickAuthorName" title="Open profile">
                                         <t t-if="messageView.message.originThread">
@@ -156,9 +156,9 @@
                             </t>
                         </div>
                         <AttachmentList t-if="messageView.attachmentList" record="messageView.attachmentList"/>
-                        <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
+                        <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ms-2">
                             <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
-                                <MessageReactionGroup className="'mr-1 mb-1'" record="messageReactionGroup"/>
+                                <MessageReactionGroup className="'me-1 mb-1'" record="messageReactionGroup"/>
                             </t>
                         </div>
                     </div>

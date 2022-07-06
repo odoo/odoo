@@ -824,7 +824,7 @@ var SnippetEditor = Widget.extend({
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
 
-        this.$el.find('[data-toggle="dropdown"]').dropdown();
+        this.$el.find('[data-bs-toggle="dropdown"]').dropdown();
 
         return Promise.all(defs).then(async () => {
             const options = _.sortBy(this.styles, '__order');
@@ -1822,7 +1822,7 @@ var SnippetsMenu = Widget.extend({
                 const $invisEntry = $('<div/>', {
                     class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
                     text: editor.getName(),
-                }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
+                }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ms-2`}));
                 $invisibleDOMPanelEl.append($invisEntry);
                 this.invisibleDOMMap.set($invisEntry[0], el);
             });
@@ -3040,7 +3040,7 @@ var SnippetsMenu = Widget.extend({
         const $input = $(`
             <we-input class="o_we_user_value_widget w-100 mx-1">
                 <div>
-                    <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-left"/>
+                    <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-start"/>
                     <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"/>
                     <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"/>
                 </div>

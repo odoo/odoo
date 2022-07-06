@@ -19,8 +19,8 @@ const {
 const DIRECTION_CARET_CLASS = {
     bottom: "dropdown",
     top: "dropup",
-    left: "dropleft",
-    right: "dropright",
+    left: "dropstart",
+    right: "dropend",
 };
 
 export const DROPDOWN = Symbol("Dropdown");

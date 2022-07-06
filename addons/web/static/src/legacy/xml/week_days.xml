@@ -4,7 +4,7 @@
         <div class="o_recurrent_weekdays border mt-2 mb-2">
             <table class="table table-responsive mb-0">
                 <tr>
-                    <th t-foreach="weekdaysShort" t-as="day" t-key="day" class="text-center border font-weight-bold">
+                    <th t-foreach="weekdaysShort" t-as="day" t-key="day" class="text-center border fw-bold">
                         <div class="o_recurrent_weekday_label" t-att-title="props.record.fields[day].string">
                             <t t-esc="props.record.fields[day].string"/>
                         </div>

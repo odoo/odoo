@@ -15,14 +15,14 @@
                     <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
                         <td/>
                     </t>
-                    <td class="text-right">
+                    <td class="text-end">
                         <span t-esc="data['subcontracting']['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                     </td>
                     <td groups="uom.group_uom"><span t-esc="data['subcontracting']['uom']"/></td>
-                    <td class="o_mrp_prod_cost text-right">
+                    <td class="o_mrp_prod_cost text-end">
                         <span t-esc="data['subcontracting']['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                     </td>
-                    <td class="o_mrp_bom_cost text-right">
+                    <td class="o_mrp_bom_cost text-end">
                         <span t-esc="data['subcontracting']['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                     </td>
                     <td/>

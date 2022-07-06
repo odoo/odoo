@@ -10,7 +10,7 @@
                             <th class="align-middle" t-if="show_project"><span>Project</span></th>
                             <th class="align-middle" t-if="show_task"><span>Task</span></th>
                             <th class="align-middle"><span>Description</span></th>
-                            <th class="text-right">
+                            <th class="text-end">
                                 <span t-if="is_uom_day">Days Spent</span>
                                 <span t-else="">Hours Spent</span>
                             </th>
@@ -34,7 +34,7 @@
                             <td >
                                 <span t-field="line.name" t-options="{'widget': 'text'}"/>
                             </td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <span t-if="is_uom_day" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}"/>
                                 <span t-else="" t-field="line.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
                             </td>
@@ -43,7 +43,7 @@
                             <t t-set="nbCols" t-value="4"/>
                             <t t-if="show_project" t-set="nbCols" t-value="nbCols + 1"/>
                             <t t-if="show_task" t-set="nbCols" t-value="nbCols + 1"/>
-                            <td class="text-right" t-attf-colspan="{{nbCols}}">
+                            <td class="text-end" t-attf-colspan="{{nbCols}}">
                                 <strong t-if="is_uom_day">
                                     <span style="margin-right: 15px;">Total (Days)</span>
                                     <t t-esc="lines._convert_hours_to_days(sum(lines.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}"/>

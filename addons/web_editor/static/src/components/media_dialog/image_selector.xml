@@ -7,7 +7,7 @@
             <img t-ref="auto-resize-image" class="img img-fluid o_we_attachment_highlight" t-att-src="props.src" t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy"/>
             <a t-if="props.author" class="o_we_media_author" t-att-href="props.authorLink" target="_blank" t-esc="props.author"/>
         </div>
-        <span t-if="props.isOptimized" class="badge badge-success">Optimized</span>
+        <span t-if="props.isOptimized" class="badge text-bg-success">Optimized</span>
     </div>
 </t>
 

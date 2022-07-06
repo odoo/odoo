@@ -2,13 +2,13 @@
 <templates id="template" xml:space="preserve">
     <t t-name="KnowledgeCommandTemplate" owl="1">
         <div class="o_command_left d-flex align-items-center">
-            <span class="pr-2" t-if="props.icon_string" t-out="props.icon_string" />
-            <span class="pr-2" t-else="">📄</span>
-            <span class="pr-2 test-ellipsis">
+            <span class="pe-2" t-if="props.icon_string" t-out="props.icon_string" />
+            <span class="pe-2" t-else="">📄</span>
+            <span class="pe-2 test-ellipsis">
                 <t t-slot="name" />
             </span>
-            <icon t-if="props.isFavorite" class="fa fa-star o_favorite pr-2 position-static" />
-            <span t-if="props.subjectName" t-out="'— '" class="text-muted small pr-2" />
+            <icon t-if="props.isFavorite" class="fa fa-star o_favorite pe-2 position-static" />
+            <span t-if="props.subjectName" t-out="'— '" class="text-muted small pe-2" />
             <span t-if="props.subjectName" class="o_command_name test-ellipsis text-muted small">
                 <t t-foreach="props.splitSubjectName" t-as="name" t-key="name_index">
                     <b t-if="name_index % 2" t-out="name" />
@@ -32,7 +32,7 @@
     <t t-name="KnowledgeExtraCommandTemplate" owl="1">
         <div class="o_command_hotkey">
             <span>
-                <icon class="fa fa-arrows-alt pr-2" />
+                <icon class="fa fa-arrows-alt pe-2" />
                 <t t-out="props.name" />
             </span>
             <span>

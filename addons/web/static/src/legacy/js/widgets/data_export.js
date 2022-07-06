@@ -105,7 +105,7 @@ var DataExport = Dialog.extend({
                     $label.html(_.str.sprintf("%s — %s", format.label, format.error));
                 }
 
-                $fmts.append($("<div class='radio form-check form-check-inline pl-4'></div>").append($radio, $label));
+                $fmts.append($("<div class='radio form-check form-check-inline ps-4'></div>").append($radio, $label));
             });
 
             self.$exportFormatInputs = $fmts.find('input');
@@ -265,7 +265,7 @@ var DataExport = Dialog.extend({
         this.$records = this.$('.o_export_tree_item');
         this.$records.each(function (i, el) {
             var $el = $(el);
-            $el.find('.o_tree_column').first().toggleClass('o_required font-weight-bolder', !!self.records[$el.data('id')].required);
+            $el.find('.o_tree_column').first().toggleClass('o_required fw-bolder', !!self.records[$el.data('id')].required);
         });
     },
     /**

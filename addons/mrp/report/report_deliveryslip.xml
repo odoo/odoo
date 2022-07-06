@@ -32,7 +32,7 @@
         <!-- do another map to get unique top level kits -->
         <t t-set="kits" t-value="has_kits.mapped('move_id.bom_line_id.bom_id.product_tmpl_id')"/>
         <t t-foreach="kits" t-as="kit">
-            <tr t-att-class="'bg-200 font-weight-bold o_line_section'">
+            <tr t-att-class="'bg-200 fw-bold o_line_section'">
                 <td colspan="99">
                     <span t-esc="kit.display_name"/>
                 </td>
@@ -62,7 +62,7 @@
         <!-- Do another section for kit-less products if they exist -->
         <t t-set="no_kit_move_lines" t-value="o.move_line_ids.filtered(lambda l: not l.move_id.bom_line_id)"/>
         <t t-if="no_kit_move_lines">
-            <tr t-att-class="'bg-200 font-weight-bold o_line_section'">
+            <tr t-att-class="'bg-200 fw-bold o_line_section'">
                 <td colspan="99">
                     <span>Products not associated with a kit</span>
                 </td>

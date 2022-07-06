@@ -111,13 +111,13 @@ $o-color-system-initialized: false;
     // value. We can thus search in those.
     @if $o-color-system-initialized {
         @if map-has-key($colors, $name) {
-            @return color($name);
+            @return map-get($colors, $name);
         }
         @if map-has-key($theme-colors, $name) {
-            @return theme-color($name);
+            @return map-get($theme-colors, $name);
         }
         @if map-has-key($grays, $name) {
-            @return gray($name);
+            @return map-get($grays, $name);
         }
     }
 

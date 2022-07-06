@@ -310,16 +310,20 @@
 
     // Append a "Rerun in debug" link.
     // Only works if the test is not hidden.
-    QUnit.testDone(async ({ testId}) => {
+    QUnit.testDone(async ({ testId }) => {
         const testElement = document.getElementById(`qunit-test-output-${testId}`);
-        if (!testElement) { // Is probably hidden because it passed
+        if (!testElement) {
+            // Is probably hidden because it passed
             return;
         }
         const reRun = testElement.querySelector("li a");
         const reRunDebug = document.createElement("a");
         reRunDebug.textContent = "Rerun in debug";
         const location = window.location;
-        reRunDebug.setAttribute("href", `${location.origin}${location.pathname}${location.search}&debugTestId=${testId}`);
+        reRunDebug.setAttribute(
+            "href",
+            `${location.origin}${location.pathname}${location.search}&debugTestId=${testId}`
+        );
 
         reRun.parentElement.insertBefore(reRunDebug, reRun.nextSibling);
     });
@@ -460,10 +464,10 @@
         const toolbar = document.querySelector("#qunit-testrunner-toolbar .qunit-url-config");
         const statsEl = document.createElement("label");
         passedEl = document.createElement("span");
-        passedEl.classList.add("text-success", "ml-5", "mr-3");
+        passedEl.classList.add("text-success", "ms-5", "me-3");
         statsEl.appendChild(passedEl);
         failedEl = document.createElement("span");
-        failedEl.classList.add("text-danger", "mr-3");
+        failedEl.classList.add("text-danger", "me-3");
         statsEl.appendChild(failedEl);
         skippedEl = document.createElement("span");
         skippedEl.classList.add("text-dark");

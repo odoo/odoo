@@ -76,7 +76,7 @@ $o-attachment-margin: 5px;
     }
 
     .o_attachment_delete {
-        background: desaturate(theme-color('primary'), 50%);
+        background: desaturate(map-get($theme-colors, 'primary'), 50%);
         color: white;
         cursor: pointer;
         font-size: 20px;
@@ -84,7 +84,7 @@ $o-attachment-margin: 5px;
         transition: all 0.3s ease 0s;
 
         &:hover {
-            background: theme-color('primary');
+            background: map-get($theme-colors, 'primary');
         }
     }
 

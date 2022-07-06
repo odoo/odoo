@@ -63,7 +63,7 @@ wTourUtils.registerEditionTour('shop_customize', {
         {
             context: "check variant price",
             extra_trigger: "iframe body:not(.editor_enable)",
-            trigger: 'iframe .custom-radio:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
+            trigger: 'iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
             run: function () {},
         },
         {

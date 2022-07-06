@@ -9,9 +9,9 @@
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage btn btn-link"
                             type="button"
                             t-att-class="{
-                                'o-active border-right': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog,
+                                'o-active border-end': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog,
                                 'o-bordered': chatterTopbar.chatter.hasExternalBorder,
-                                'border-top border-left': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
+                                'border-top border-start': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
                             }"
                             t-att-disabled="chatterTopbar.chatter.isDisabled"
                             title="Send a message"
@@ -23,7 +23,7 @@
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote btn btn-link"
                             type="button"
                             t-att-class="{
-                                'o-active border-right border-left': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
+                                'o-active border-end border-start': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
                                 'o-bordered': chatterTopbar.chatter.hasExternalBorder,
                                 'border-top': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
                             }"
@@ -46,7 +46,7 @@
                             <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments btn btn-link" type="button" t-att-disabled="chatterTopbar.chatter.isDisabled" t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'" t-on-click="chatterTopbar.chatter.onClickButtonAttachments" title="Show Attachments">
                                 <i class="fa fa-paperclip" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
-                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount pl-1" t-esc="chatterTopbar.attachmentButtonText"/>
+                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount ps-1" t-esc="chatterTopbar.attachmentButtonText"/>
                                 </t>
                                 <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin ms-1" aria-label="Attachment counter loading..."/>
@@ -67,7 +67,7 @@
                         </div>
                 </div>
                 <t t-if="chatterTopbar.chatter.hasTopbarCloseButton">
-                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-lg-bottom" title="Close" t-on-click="chatterTopbar.chatter.onClickChatterTopbarClose">
+                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-bottom-3" title="Close" t-on-click="chatterTopbar.chatter.onClickChatterTopbarClose">
                         <i class="oi oi-large oi-close"/>
                     </button>
                 </t>

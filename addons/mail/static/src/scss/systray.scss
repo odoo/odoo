@@ -24,8 +24,8 @@
             display: flex;
             flex: 0 0 auto;
             justify-content: space-between;
-            border-bottom: 1px solid gray('400');
-            box-shadow: 0 0 2px gray('400');
+            border-bottom: 1px solid map-get($grays, '400');
+            box-shadow: 0 0 2px map-get($grays, '400');
             .o_filter_button, .o_new_message {
                 padding: 5px;
             }
@@ -95,7 +95,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            width: map-get($sizes, 100);
+            width: 100%;
             margin: 0;
             max-height: none;
 
@@ -106,7 +106,7 @@
                 padding: 5px;
                 height: 44px;
                 border-bottom: 1px solid #ebebeb;
-                box-shadow: 0 0 2px gray('400');
+                box-shadow: 0 0 2px map-get($grays, '400');
             }
             .o_mail_systray_dropdown_items {
                 max-height: none;

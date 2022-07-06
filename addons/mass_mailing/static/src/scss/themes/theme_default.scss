@@ -116,11 +116,13 @@ div.col:not([align]) {
             vertical-align: middle;
             text-align: center;
             // fa-1x is not ouput
-            @include size($size);
+            width: $size;
+            height: $size;
             line-height: $size;
             @for $i from 2 through 5 {
                 &.fa-#{$i}x {
-                    @include size($size + $i);
+                    width: $size + $i;
+                    height: $size + $i;
                     line-height: $size + $i;
                 }
             }

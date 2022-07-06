@@ -3,7 +3,7 @@
         <template id="providers" name="OAuth Providers">
             <t t-if="len(providers) &gt; 0">
                 <em t-attf-class="d-block text-center text-muted small my-#{len(providers) if len(providers) &lt; 3 else 3}">- or -</em>
-                <div class="o_auth_oauth_providers list-group mt-1 mb-1 text-left">
+                <div class="o_auth_oauth_providers list-group mt-1 mb-1 text-start">
                     <a t-foreach="providers" t-as="p" class="list-group-item list-group-item-action py-2" t-att-href="p['auth_link']">
                         <i t-att-class="p['css_class']"/>
                         <t t-esc="p['body']"/>

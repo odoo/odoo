@@ -39,8 +39,8 @@
                                     <t t-else="">Member</t>
                                 </span>
                                 <field name="is_member" invisible="1"/>
-                                <button type="object" attrs="{'invisible':[('is_member', '=', True)]}" class="btn btn-primary float-right" name="action_join">Join</button>
-                                <button type="object" attrs="{'invisible':[('is_member', '=', False)]}" class="btn btn-secondary float-right" name="action_leave">Leave</button>
+                                <button type="object" attrs="{'invisible':[('is_member', '=', True)]}" class="btn btn-primary float-end" name="action_join">Join</button>
+                                <button type="object" attrs="{'invisible':[('is_member', '=', False)]}" class="btn btn-secondary float-end" name="action_leave">Leave</button>
                             </div>
                         </div>
                     </t>

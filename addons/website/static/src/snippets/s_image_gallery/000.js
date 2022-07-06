@@ -85,7 +85,7 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$indicator = this.$carousel.find('.carousel-indicators');
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
-        var $lis = this.$indicator.find('li[data-slide-to]');
+        var $lis = this.$indicator.find('li[data-bs-slide-to]');
         let indicatorWidth = this.$indicator.width();
         if (indicatorWidth === 0) {
             // An ancestor may be hidden so we try to find it and make it
@@ -135,11 +135,11 @@ const GallerySliderWidget = publicWidget.Widget.extend({
                 var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
                 var index = $item.index();
                 $lis.removeClass('active')
-                    .filter('[data-slide-to="' + index + '"]')
+                    .filter('[data-bs-slide-to="' + index + '"]')
                     .addClass('active');
             }, 0);
         });
-        this.$indicator.on('click.gallery_slider', '> li:not([data-slide-to])', function () {
+        this.$indicator.on('click.gallery_slider', '> li:not([data-bs-slide-to])', function () {
             page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
             self.$carousel.carousel(page * realNbPerPage);

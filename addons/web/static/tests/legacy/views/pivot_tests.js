@@ -268,8 +268,8 @@ QUnit.module('LegacyViews', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:first').attr('data-original-title'), 'Date');
-        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:first').attr('data-original-title'), 'Product');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:first').attr('data-bs-original-title'), 'Date');
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:first').attr('data-bs-original-title'), 'Product');
 
         pivot.destroy();
     });

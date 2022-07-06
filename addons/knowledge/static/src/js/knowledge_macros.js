@@ -157,7 +157,7 @@ export class KnowledgeMacro {
                         for (let i = 0; i < $sel.length; i++) {
                             const pane = $sel[i].closest('.tab-pane:not(.active)');
                             if (pane) {
-                                const paneSwitch = this.getElement(`[data-toggle="tab"][href*="${pane.id}"]`);
+                                const paneSwitch = this.getElement(`[data-bs-toggle="tab"][href*="${pane.id}"]`);
                                 if (paneSwitch) {
                                     paneSwitch.click();
                                     break;

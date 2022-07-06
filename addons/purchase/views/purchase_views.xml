@@ -164,7 +164,7 @@
                         <span class="o_form_label" attrs="{'invisible': [('state','not in',('draft','sent'))]}">Request for Quotation </span>
                         <span class="o_form_label" attrs="{'invisible': [('state','in',('draft','sent'))]}">Purchase Order </span>
                         <h1>
-                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
@@ -320,7 +320,7 @@
                                                          </div>
                                                          <div class="col-4">
                                                              <strong>
-                                                                 <span t-esc="record.price_subtotal.value" class="float-right text-right"/>
+                                                                 <span t-esc="record.price_subtotal.value" class="float-end text-end"/>
                                                              </strong>
                                                          </div>
                                                      </div>
@@ -490,7 +490,7 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
                                     <field name="priority" widget="priority"/>
-                                    <div class="o_kanban_record_headings ml-1">
+                                    <div class="o_kanban_record_headings ms-1">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <strong><field name="amount_total" widget="monetary"/></strong>

@@ -12,16 +12,16 @@
                 t-att-data-product-product-id="product_id"
                 data-action="o_wishlist"
                 title="Add to wishlist">
-                    <i class="fa fa-heart-o mr-2" role="img" aria-label="Add to wishlist"/>
+                    <i class="fa fa-heart-o me-2" role="img" aria-label="Add to wishlist"/>
                     Save for later
             </button>
             <small t-if="!wish" class="text-muted m-2">
                 Add to your wishlist to be notified when it's back in stock.
             </small>
             <div t-if="wish" class="alert alert-info mb-0" role="alert">
-                <h6 class="alert-heading"><i class="fa fa-check-square-o mr-2"/>Added to your wishlist</h6>
+                <h6 class="alert-heading"><i class="fa fa-check-square-o me-2"/>Added to your wishlist</h6>
                 You'll be notified as soon as the product will be available again.
-                <div class="text-right mt-2">
+                <div class="text-end mt-2">
                     <a class="alert-link" href="/shop/wishlist" title="My wishlist">
                         <small>Check my wishlist <i class="fa fa-angle-right"></i></small>
                     </a>

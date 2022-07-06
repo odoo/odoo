@@ -24,7 +24,7 @@
 
 .o_field_widget {
     .o_signature {
-        outline: 1px solid rgba(theme-color('secondary'), 0.3);
+        outline: 1px solid rgba(map-get($theme-colors, 'secondary'), 0.3);
         position: relative;
         &.o_signature_empty {
             display: flex;
@@ -40,7 +40,7 @@
 
 .o_field_invalid {
     .o_signature {
-        outline: 3px solid theme-color('danger');
+        outline: 3px solid map-get($theme-colors, 'danger');
         cursor: pointer;
     }
 }

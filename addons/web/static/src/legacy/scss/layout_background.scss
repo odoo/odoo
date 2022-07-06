@@ -1,10 +1,10 @@
 
 .o_background_footer, .o_background_header, .o_report_layout_striped {
-    color: gray('700');
+    color: map-get($grays, '700');
 }
 .o_background_header {
     min-width: 900px;
-    border-bottom: 1px solid gray('200');
+    border-bottom: 1px solid map-get($grays, '200');
     img {
         max-height: 96px;
         max-width: 200px;
@@ -42,7 +42,7 @@
         color: $o-default-report-secondary-color;
     }
     .table {
-        border-top: 1px solid gray('300');
+        border-top: 1px solid map-get($grays, '300');
     }
 
     .table td, .table th {
@@ -55,7 +55,7 @@
         color: $o-default-report-secondary-color
     }
     tbody {
-        color: gray('700');
+        color: map-get($grays, '700');
         tr {
             &:nth-child(odd) {
                 background-color: rgba(220, 205, 216, 0.2);
@@ -81,7 +81,7 @@
             &.o_total {
                 border-top: none !important;
                 td {
-                    border-top: 1px solid gray('400') !important;
+                    border-top: 1px solid map-get($grays, '400') !important;
                 }
                 strong {
                     color: $o-default-report-primary-color;

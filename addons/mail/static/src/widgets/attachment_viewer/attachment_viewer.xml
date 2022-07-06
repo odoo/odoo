@@ -4,7 +4,7 @@
     <t t-name="mail.widgets.AttachmentViewer">
         <t t-if="thread.mainAttachment">
             <t t-if="!thread.mainAttachment.isPdf">
-                <h3 class="mt0 mb8 pl-2 text-muted float-end"><t t-esc="thread.mainAttachment.filename"/></h3>
+                <h3 class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="thread.mainAttachment.filename"/></h3>
             </t>
             <div t-if="thread.mainAttachment.isImage" class="o_attachment_preview_img">
                 <img id="attachment_img" class="img img-fluid d-block" t-attf-src="/web/image/#{thread.mainAttachment.id}?unique=1"/>

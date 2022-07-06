@@ -43,7 +43,7 @@
 
                 .searchIcon {
                     @include o-position-absolute($right: 0);
-                    color: gray('700');
+                    color: map-get($grays, '700');
                 }
 
                 &:focus-within {
@@ -71,11 +71,11 @@
             display: flex;
             flex: 0 0 auto;
             flex-flow: column nowrap;
-            background: gray('900');
+            background: map-get($grays, '900');
             overflow: auto;
 
             .selected {
-                background-color: gray('800');
+                background-color: map-get($grays, '800');
                 box-shadow: inset 2px 0 0 $o-brand-primary;
             }
 
@@ -83,7 +83,7 @@
                 display: flex;
                 padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
                 height: 40px;
-                color: gray('400');
+                color: map-get($grays, '400');
                 font-size: 13px;
                 line-height: 40px;
                 cursor: pointer;
@@ -111,7 +111,7 @@
                 h2 {
                     margin: 0 0 !important;
                     @include o-base-settings-horizontal-padding(.4rem);
-                    background-color: gray('200');
+                    background-color: map-get($grays, '200');
                     font-size: 15px;
 
                     &.o_invisible_modifier + .o_settings_container {
@@ -138,7 +138,7 @@
                 align-items: center;
                 margin-bottom: 10px;
                 @include o-base-settings-horizontal-padding(.8rem);
-                background-color: gray('200');
+                background-color: map-get($grays, '200');
 
                 .icon {
                     width: 1.4em;

@@ -15,9 +15,9 @@
                                     <th><strong>Product</strong></th>
                                     <th groups="stock.group_production_lot"><strong>Lot/Serial Number</strong></th>
                                     <th groups="stock.group_tracking_lot"><strong>Package</strong></th>
-                                    <th class="text-right"><strong>Available Quantity</strong></th>
-                                    <th class="text-right"><strong>On hand Quantity</strong></th>
-                                    <th class="text-right"><strong>Counted Quantity</strong></th>
+                                    <th class="text-end"><strong>Available Quantity</strong></th>
+                                    <th class="text-end"><strong>On hand Quantity</strong></th>
+                                    <th class="text-end"><strong>Counted Quantity</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,9 +33,9 @@
                                         <td><span t-field="line.product_id"/></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
-                                        <td class="text-right"><span t-field="line.available_quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
-                                        <td class="text-right"><span t-field="line.quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
-                                        <td class="text-right">
+                                        <td class="text-end"><span t-field="line.available_quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-end"><span t-field="line.quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
                                             <t t-if="line.inventory_quantity == 0"><span></span></t>
                                             <t t-else=""><span t-field="line.inventory_quantity"/></t>

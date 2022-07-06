@@ -217,9 +217,9 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 var $field = $('<li>', {class: fieldClass});
                 let $fieldLabel;
                 if (field.icon) {
-                    $fieldLabel = $('<strong>', {class: 'mr-2', html: _.str.sprintf("<b><i class='%s'/></b>", field.icon)});
+                    $fieldLabel = $('<strong>', {class: 'me-2', html: _.str.sprintf("<b><i class='%s'/></b>", field.icon)});
                 } else {
-                    $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
+                    $fieldLabel = $('<strong>', {class: 'me-2', text: _.str.sprintf('%s : ', field.string)});
                 }
                 $fieldLabel.appendTo($field);
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});

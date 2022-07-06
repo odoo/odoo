@@ -78,8 +78,8 @@ exports.loadFromTextarea = async (parent, textarea, options) => {
     $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
     $form.on('click', 'button[type=submit]', (e) => {
         $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
-        // float-left class messes up the post layout OPW 769721
-        $form.find('.note-editable').find('img.float-left').removeClass('float-left');
+        // float-start class messes up the post layout OPW 769721
+        $form.find('.note-editable').find('img.float-start').removeClass('float-start');
         $textarea.html(wysiwyg.getValue());
     });
 

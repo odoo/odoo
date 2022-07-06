@@ -266,7 +266,7 @@ $o-form-label-margin-right: 0px;
 
                 &:not(:first-child):before {
                     right: -$o-statusbar-arrow-width;
-                    border-left-color: gray('300');
+                    border-left-color: map-get($grays, '300');
                 }
 
                 &.disabled {
@@ -275,7 +275,7 @@ $o-form-label-margin-right: 0px;
                     cursor: default;
 
                     &:not(.btn-primary) {
-                        @include plain-hover-focus() {
+                        &, &:hover, &:focus {
                             color: $text-muted;
                         }
                     }
@@ -510,7 +510,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // Status dropdown
-    a[data-toggle="dropdown"] > .o_status {
+    a[data-bs-toggle="dropdown"] > .o_status {
         height: $h3-font-size;
         width: $h3-font-size;
     }
@@ -736,7 +736,7 @@ $o-form-label-margin-right: 0px;
         .oe_subtotal_footer_separator {
             width: 100%;
             text-align: right;
-            border-top: 1px solid gray('300');
+            border-top: 1px solid map-get($grays, '300');
             font-weight: $font-weight-bold;
             font-size: 1.3em;
         }
@@ -841,7 +841,7 @@ $o-form-label-margin-right: 0px;
             .o_recurrent_weekday_label {
                 @include o-text-overflow;
             }
-            .custom-control-label {
+            .form-check-label {
                 left: 25%;
             }
         }

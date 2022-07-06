@@ -1913,7 +1913,7 @@ QUnit.module('Legacy fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -2398,7 +2398,7 @@ QUnit.module('Legacy fields', {}, function () {
                                 '<templates>' +
                                     '<t t-name="kanban-box">' +
                                         '<div class="oe_kanban_global_click">' +
-                                            '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                                            '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>' +
                                             '<span><t t-esc="record.display_name.value"/></span>' +
                                             '<span><t t-esc="record.color.value"/></span>' +
                                         '</div>' +
@@ -2545,7 +2545,7 @@ QUnit.module('Legacy fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +

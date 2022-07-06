@@ -65,7 +65,7 @@ FormRenderer.include({
             } else {
                 let pane = $sel[i].closest('.tab-pane:not(.active)');
                 if (pane) {
-                    let $paneSwitch = $(`[data-toggle="tab"][href*="${pane.id}"]`);
+                    let $paneSwitch = $(`[data-bs-toggle="tab"][href*="${pane.id}"]`);
                     if ($paneSwitch.is(':visible:hasVisibility')) {
                         return true;
                     }

@@ -82,7 +82,7 @@
             <div t-ignore="true" class="text-center">
                 <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="fa fa-fw fa-arrow-right"/>Back to edit mode</a>
             </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </template>
 
@@ -122,7 +122,7 @@
                                         type="text" placeholder="e.g. 4812"
                                         autocomplete="off"
                                         t-attf-value="{{session_code if session_code else ''}}"
-                                        class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
+                                        class="form-control o_survey_question_text_box fw-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
                                 </div>
                                 <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger h4 pt-2 px-0" role="alert">
                                     <span t-attf-class="o_survey_session_error_invalid_code {{'d-none' if error != 'survey_wrong' else ''}}">Oops! No survey matches this code.</span>
@@ -145,14 +145,14 @@
             <button
                 t-if="survey and survey.users_can_go_back"
                 t-att-disabled="not can_go_back"
-                type="submit" class="btn border-left p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
+                type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
                 <i class="fa fa-chevron-left p-2" />
             </button>
             <t t-set="can_go_forward"
                 t-value="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"/>
             <button
                 t-att-disabled="not can_go_forward"
-                type="submit" class="btn border-left p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
+                type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
                 <i class="fa fa-chevron-right p-2" />
             </button>
         </div>

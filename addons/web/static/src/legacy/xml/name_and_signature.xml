@@ -51,28 +51,28 @@
             -->
             <div class="o_web_sign_signature_group bg-white card mt-3" style="overflow: hidden;">
                 <div class="card-header">
-                    <div class="row no-gutters">
+                    <div class="row g-0">
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_auto_button mr-2 btn btn-light {{ widget.signMode === 'auto' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ widget.signMode === 'auto' ? 'active': '' }}">
                                 Auto
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_draw_button mr-2 btn btn-light {{ widget.signMode === 'draw' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ widget.signMode === 'draw' ? 'active': '' }}">
                                 Draw
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_load_button mr-2 btn btn-light {{ widget.signMode === 'load' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ widget.signMode === 'load' ? 'active': '' }}">
                                 Load
                             </a>
                         </div>
-                        <div t-attf-class="o_web_sign_draw_clear col-auto ml-auto {{ widget.signMode !== 'draw' ? 'd-none' : '' }}">
+                        <div t-attf-class="o_web_sign_draw_clear col-auto ms-auto {{ widget.signMode !== 'draw' ? 'd-none' : '' }}">
                             <a role="button" href="#" class="btn btn-link">
                                 Clear
                             </a>
                         </div>
-                        <div t-attf-class="o_web_sign_auto_select_style col-auto ml-auto {{ widget.signMode !== 'auto' ? 'd-none' : '' }}">
+                        <div t-attf-class="o_web_sign_auto_select_style col-auto ms-auto {{ widget.signMode !== 'auto' ? 'd-none' : '' }}">
                             <a role="button" href="#" class="btn btn-link">
                                 Style
                             </a>

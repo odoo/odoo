@@ -23,14 +23,14 @@
                 </div>
                 <div class="col-7">
                     <a t-attf-href="/slides/#{slug(course)}"><h3 t-out="course.name" class="m-2"/></a>
-                    <div t-out="course.description_short" class="font-weight-light o_wslides_desc_truncate_2 ml-2"/>
-                    <div class="font-weight-light ml-2 mt-2">
+                    <div t-out="course.description_short" class="fw-light o_wslides_desc_truncate_2 ms-2"/>
+                    <div class="fw-light ms-2 mt-2">
                         <t t-out="course.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                         <t t-if="course.total_slides">
                            <t t-if="course.total_time"> - </t><t t-out="course.total_slides"/> step(s)
                         </t>
                     </div>
-                    <a role="button" class="btn btn-primary ml-2 my-2" t-attf-href="/slides/#{slug(course)}">
+                    <a role="button" class="btn btn-primary ms-2 my-2" t-attf-href="/slides/#{slug(course)}">
                         Start Learning
                     </a>
                 </div>

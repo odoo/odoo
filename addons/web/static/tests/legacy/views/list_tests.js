@@ -4667,7 +4667,7 @@ QUnit.module('LegacyViews', {
         assert.strictEqual(cells[0].innerText.trim(), "",
             "Char field should yield an empty element"
         );
-        assert.containsOnce(cells[1], '.custom-checkbox',
+        assert.containsOnce(cells[1], '.form-check',
             "Boolean field has been instantiated"
         );
         assert.notOk(isNaN(cells[2].innerText.trim()), "Intger value is a number");
@@ -9852,7 +9852,7 @@ QUnit.module('LegacyViews', {
         var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
         await testUtils.dom.click($disabledCell.prev());
         assert.containsOnce($disabledCell, ':disabled:checked');
-        var $disabledLabel = $disabledCell.find('.custom-control-label');
+        var $disabledLabel = $disabledCell.find('.form-check-label');
         await testUtils.dom.click($disabledLabel);
         assert.containsOnce($disabledCell, ':checked',
             "clicking disabled checkbox did not work"
@@ -9866,7 +9866,7 @@ QUnit.module('LegacyViews', {
         var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
         await testUtils.dom.click($enabledCell.prev());
         assert.containsOnce($enabledCell, ':checked:not(:disabled)');
-        var $enabledLabel = $enabledCell.find('.custom-control-label');
+        var $enabledLabel = $enabledCell.find('.form-check-label');
         await testUtils.dom.click($enabledLabel);
         assert.containsNone($enabledCell, ':checked',
             "clicking enabled checkbox worked and unchecked it"
@@ -11464,7 +11464,7 @@ QUnit.module('LegacyViews', {
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
-        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-end'),
             'In LTR, the dropdown should be anchored to the right and expand to the left');
 
         // optional fields
@@ -11532,7 +11532,7 @@ QUnit.module('LegacyViews', {
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 
-        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-start'),
             'In RTL, the dropdown should be anchored to the left and expand to the right');
 
         list.destroy();
@@ -12235,7 +12235,7 @@ QUnit.module('LegacyViews', {
         });
 
         assert.containsN(list, '.o_data_row', 4);
-        assert.containsN(list, '.o_data_cell .custom-checkbox input:checked', 3);
+        assert.containsN(list, '.o_data_cell .form-check input:checked', 3);
 
         // select all records and edit the boolean field
         await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
@@ -12246,7 +12246,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(document.body, '.modal');
         await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-        assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
+        assert.containsNone(list, '.o_data_cell .form-check input:checked');
 
         list.destroy();
     });

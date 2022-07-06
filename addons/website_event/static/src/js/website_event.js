@@ -57,7 +57,7 @@ var EventRegistrationForm = Widget.extend({
                 $modal.appendTo(document.body);
                 const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
                 modalBS.show();
-                $modal.appendTo('body').modal();
+                $modal.appendTo('body').modal('show');
                 $modal.on('click', '.js_goto_event', function () {
                     $modal.modal('hide');
                     $button.prop('disabled', false);

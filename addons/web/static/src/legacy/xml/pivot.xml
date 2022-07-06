@@ -28,9 +28,9 @@
                         <t t-set="cell" t-value="row"/>
                     </t>
                     <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
-                        <td class="o_pivot_cell_value text-right" t-att-class="{
+                        <td class="o_pivot_cell_value text-end" t-att-class="{
                                 o_empty: cell.value === undefined,
-                                'font-weight-bold': cell.isBold,
+                                'fw-bold': cell.isBold,
                             }" t-on-click="() => this.trigger('open_view', cell)"
                                t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
                             <t t-if="cell.value !== undefined">
@@ -40,9 +40,9 @@
                                          o_null: cell.value === 0,
                                     }" t-esc="_getFormattedVariation(cell)"/>
                                 <div t-elif="props.fields and props.fields[cell.measure].type === 'boolean'" class="o_value">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" t-attf-id="checkbox_{{cell_index}}_{{row_index}}" disabled="disabled" t-att-checked="cell.value" class="custom-control-input"/>
-                                        <label t-attf-for="checkbox_{{cell_index}}_{{row_index}}" class="custom-control-label"/>
+                                    <div class="custom-control form-check">
+                                        <input type="checkbox" t-attf-id="checkbox_{{cell_index}}_{{row_index}}" disabled="disabled" t-att-checked="cell.value" class="form-check-input"/>
+                                        <label t-attf-for="checkbox_{{cell_index}}_{{row_index}}" class="form-check-label"/>
                                     </div>
                                 </div>
                                 <div t-else="1" class="o_value" t-esc="_getFormattedValue(cell)"/>

@@ -51,7 +51,7 @@
 
                                 <label for="notify_frequency" invisible="1" />
                                 <div class="o_row" attrs="{'invisible': ['|', ('recycle_mode', '=', 'automatic'), ('notify_user_ids', '=', [])]}">
-                                    <span class="mr-1">Every</span>
+                                    <span class="me-1">Every</span>
                                     <field name="notify_frequency" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
                                     <field name="notify_frequency_period" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
                                 </div>

@@ -16,10 +16,10 @@
 </thead>
 <tr t-foreach="services['data']" t-as="service">
 <t t-set="is_unit" t-value="service['is_unit']"/>
-<td t-attf-class="#{ 'font-italic' if is_unit else ''}"><t t-esc="service['name']"/></td>
-<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['sold_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
-<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['effective_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
-<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['remaining_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
+<td t-attf-class="#{ 'fst-italic' if is_unit else ''}"><t t-esc="service['name']"/></td>
+<td t-attf-class="#{ 'fst-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['sold_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
+<td t-attf-class="#{ 'fst-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['effective_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
+<td t-attf-class="#{ 'fst-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_value(service['remaining_value'], service['is_hour'])"/> <t t-esc="service['unit']"/></td>
 </tr>
 <tfoot>
 <td style="font-weight: bolder; text-align: right">Total</td>

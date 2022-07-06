@@ -331,7 +331,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         var noVariantAttributeValues = self.getNoVariantAttributeValues($parent);
         if (productCustomVariantValues || noVariantAttributeValues) {
             var $productDescription = $parent
-                .find('td.td-product_name div.float-left');
+                .find('td.td-product_name div.float-start');
 
             var $customAttributeValuesDescription = $('<div>', {
                 class: 'custom_attribute_values_description text-muted small'

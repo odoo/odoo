@@ -34,7 +34,7 @@
                 <field name="name" readonly="1"/>
                 <field name="stage_id"/>
                 <field name="priority" widget="priority" optional="show"/>
-                <field name="partner_mobile" widget="phone" readonly="1" optional="show" class="text-right"/>
+                <field name="partner_mobile" widget="phone" readonly="1" optional="show" class="text-end"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_id" widget="many2one_avatar_user" optional="hide"/>
@@ -344,9 +344,9 @@
                             <div class="ribbon ribbon-top-right" attrs="{'invisible': [('date_closed', '=', False)]}">
                                 <span class="bg-success">Hired</span>
                             </div>
-                            <span class="badge badge-pill badge-danger float-end mr-4" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}">Refused</span>
+                            <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}">Refused</span>
                             <div class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu" data-display="static">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu" data-bs-display="static">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
@@ -373,7 +373,7 @@
                                 <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="float-left mr4" groups="base.group_user">
+                                        <div class="float-start mr4" groups="base.group_user">
                                             <field name="priority" widget="priority"/>
                                         </div>
                                         <div class="o_kanban_inline_block mr8">
@@ -386,7 +386,7 @@
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
-                                        <div class="o_kanban_state_with_padding ml-1 mr-2" >
+                                        <div class="o_kanban_state_with_padding ms-1 me-2" >
                                             <field name="kanban_state" widget="kanban_state_selection"/>
                                             <field name="legend_normal" invisible="1"/>
                                             <field name="legend_blocked" invisible="1"/>
@@ -811,7 +811,7 @@
                         <field name="is_warning_visible" invisible="1"/>
                         <span attrs="{'invisible': [('is_warning_visible', '=', False)]}">
                             <span
-                                class="fa fa-exclamation-triangle text-danger pl-3">
+                                class="fa fa-exclamation-triangle text-danger ps-3">
                             </span>
                             <span class="text-danger">
                                 All applications will lose their hired date and hired status.
@@ -967,13 +967,13 @@
                                         <div class="col-4">
                                             <h3 class="o_kanban_record_title"><field name="source_id"/></h3>
                                         </div>
-                                        <div class="col-8 text-right">
+                                        <div class="col-8 text-end">
                                             <div><field name="job_id"/></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body mt-3">
-                                    <div class="text-right">
+                                    <div class="text-end">
                                         <field name="email" attrs="{'invisible': [('has_domain', '=', False)]}" widget="email"/>
                                         <button name="create_alias" class="btn btn-primary mb-2" type="object" attrs="{'invisible': ['|', ('has_domain', '=', False), ('email', '!=', False)]}">Generate Email</button>
                                     </div>

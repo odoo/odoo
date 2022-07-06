@@ -27,7 +27,7 @@ const profilingService = {
                 recordingIcon.classList.add(
                     "o_recording",
                     "badge",
-                    "badge-pill",
+                    "rounded-pill",
                     "d-inline",
                     "p-2",
                     "bg-danger",

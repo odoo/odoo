@@ -265,12 +265,12 @@ var registry = {};
 
 /**
  * This is a fix for apple device (<= IPhone 4, IPad 2)
- * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags.
+ * Standard bootstrap requires data-bs-toggle='collapse' element to be <a/> tags.
  * Unfortunatly some layouts use a <div/> tag instead. The fix forces an empty
  * click handler on these div, which allows standard bootstrap to work.
  */
 registry._fixAppleCollapse = PublicWidget.extend({
-    selector: 'div[data-toggle="collapse"]',
+    selector: 'div[data-bs-toggle="collapse"]',
     events: {
         'click': function () {},
     },

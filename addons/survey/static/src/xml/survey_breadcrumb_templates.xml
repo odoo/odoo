@@ -6,7 +6,7 @@
         <t t-set="canGoBack" t-value="widget.canGoBack"/>
         <t t-foreach="widget.pages" t-as="page">
             <t t-set="isActivePage" t-value="page.id === widget.currentPageId"/>
-            <li t-att-class="'breadcrumb-item' + (isActivePage ? ' active font-weight-bold' : '')"
+            <li t-att-class="'breadcrumb-item' + (isActivePage ? ' active fw-bold' : '')"
                 t-att-data-page-id="page.id"
                 t-att-data-page-title="page.title">
                 <t t-if="widget.currentPageId === page.id">

@@ -162,7 +162,7 @@ var KanbanColumnProgressBar = Widget.extend({
             } else {
                 value = key;
             }
-            $bar.attr('data-original-title', count + ' ' + value);
+            $bar.attr('data-bs-original-title', count + ' ' + value);
             $bar.tooltip({
                 delay: 0,
                 trigger: 'hover',

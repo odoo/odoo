@@ -116,7 +116,7 @@
                          <img border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;" />
                     </a>
                 </div>
-                <div class="col-lg-4 text-right o_mail_no_resize">
+                <div class="col-lg-4 text-end o_mail_no_resize">
                     <div class="o_mail_header_social">
                         <t t-call="mass_mailing.social_links"/>
                     </div>
@@ -137,7 +137,7 @@
                         </a>
                     </h3>
                 </div>
-                <div class="col-lg-4 text-right o_mail_no_resize">
+                <div class="col-lg-4 text-end o_mail_no_resize">
                     <div class="o_mail_header_social">
                         <t t-call="mass_mailing.social_links"/>
                     </div>
@@ -157,7 +157,7 @@
                         <img border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;width:auto"/>
                     </a>
                 </div>
-                <div class="col-lg-4 text-right"/>
+                <div class="col-lg-4 text-end"/>
             </div>
         </div>
     </div>
@@ -233,7 +233,7 @@
                     <p>Cyber-threats continue to increase.
                         <br/>The discussion will examine how to develop new norms and integrate them into EU
                     </p>
-                    <div class="text-left">
+                    <div class="text-start">
                         <a href="#" class="btn btn-primary">Register</a>
                     </div>
                 </div>
@@ -322,7 +322,7 @@
             <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
             <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
             <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
         </we-select>
         <we-colorpicker data-dependencies="border_width_opt"
                         t-att-data-apply-to="apply_to"
@@ -388,9 +388,9 @@
     <!-- H-ALIGN -->
     <div id="so_text_align" data-selector=".s_mail_text_highlight">
         <we-button-group string="Alignment">
-            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-start"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
-            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-right"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-end"/>
         </we-button-group>
     </div>
 
@@ -405,9 +405,9 @@
 
     <div id="so_block_align" data-selector=".s_mail_alert, .s_mail_blockquote, .s_mail_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
-            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
-            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
         </we-button-group>
     </div>
 
@@ -718,7 +718,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""
@@ -765,7 +765,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""
@@ -791,7 +791,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""

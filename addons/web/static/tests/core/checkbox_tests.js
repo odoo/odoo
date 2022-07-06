@@ -32,7 +32,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("can be rendered", async (assert) => {
         const env = await makeTestEnv();
         await mount(CheckBox, target, { env, props: {} });
-        assert.containsOnce(target, "div.custom-checkbox");
+        assert.containsOnce(target, "div.form-check");
     });
 
     QUnit.test("has a slot for translatable text", async (assert) => {
@@ -45,11 +45,8 @@ QUnit.module("Components", (hooks) => {
         Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
-        assert.containsOnce(target, "div.custom-checkbox");
-        assert.strictEqual(
-            target.querySelector("div.custom-checkbox").textContent,
-            "rugubudubudubu"
-        );
+        assert.containsOnce(target, "div.form-check");
+        assert.strictEqual(target.querySelector("div.form-check").textContent, "rugubudubudubu");
     });
 
     QUnit.test("call onChange prop when some change occurs", async (assert) => {
@@ -65,7 +62,7 @@ QUnit.module("Components", (hooks) => {
         Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
-        assert.containsOnce(target, "div.custom-checkbox");
+        assert.containsOnce(target, "div.form-check");
         await click(target.querySelector("input"));
         assert.strictEqual(value, true);
         await click(target.querySelector("input"));
@@ -86,12 +83,12 @@ QUnit.module("Components", (hooks) => {
         Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
-        assert.containsOnce(target, "div.custom-checkbox");
-        assert.notOk(target.querySelector("div.custom-checkbox input").checked);
-        await triggerEvent(target, "div.custom-checkbox input", "keydown", { key: "Enter" });
-        assert.ok(target.querySelector("div.custom-checkbox input").checked);
-        await triggerEvent(target, "div.custom-checkbox input", "keydown", { key: "Enter" });
-        assert.notOk(target.querySelector("div.custom-checkbox input").checked);
+        assert.containsOnce(target, "div.form-check");
+        assert.notOk(target.querySelector("div.form-check input").checked);
+        await triggerEvent(target, "div.form-check input", "keydown", { key: "Enter" });
+        assert.ok(target.querySelector("div.form-check input").checked);
+        await triggerEvent(target, "div.form-check input", "keydown", { key: "Enter" });
+        assert.notOk(target.querySelector("div.form-check input").checked);
     });
 
     QUnit.test("toggling through multiple ways", async (assert) => {
@@ -108,49 +105,43 @@ QUnit.module("Components", (hooks) => {
         Parent.template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
         Parent.components = { CheckBox };
         await mount(Parent, target, { env });
-        assert.containsOnce(target, "div.custom-checkbox");
-        assert.notOk(target.querySelector("div.custom-checkbox input").checked);
+        assert.containsOnce(target, "div.form-check");
+        assert.notOk(target.querySelector("div.form-check input").checked);
 
         // Click on div
         assert.verifySteps([]);
-        await click(target, "div.custom-checkbox");
-        assert.ok(target.querySelector("div.custom-checkbox input").checked);
+        await click(target, "div.form-check");
+        assert.ok(target.querySelector("div.form-check input").checked);
         assert.verifySteps(["true"]);
 
         // Click on label
         assert.verifySteps([]);
-        await click(target, "div.custom-checkbox label", true);
-        assert.notOk(target.querySelector("div.custom-checkbox input").checked);
+        await click(target, "div.form-check label", true);
+        assert.notOk(target.querySelector("div.form-check input").checked);
         assert.verifySteps(["false"]);
 
         // Click on input (only possible programmatically)
         assert.verifySteps([]);
-        await click(target, "div.custom-checkbox input");
-        assert.ok(target.querySelector("div.custom-checkbox input").checked);
+        await click(target, "div.form-check input");
+        assert.ok(target.querySelector("div.form-check input").checked);
         assert.verifySteps(["true"]);
 
         // When somehow applying focus on label, the focus receives it
         // (this is the default behavior from the label)
-        target.querySelector("div.custom-checkbox label").focus();
+        target.querySelector("div.form-check label").focus();
         await nextTick();
-        assert.strictEqual(
-            document.activeElement,
-            target.querySelector("div.custom-checkbox input")
-        );
+        assert.strictEqual(document.activeElement, target.querySelector("div.form-check input"));
 
         // Press Enter when focus is on input
         assert.verifySteps([]);
         triggerHotkey("Enter");
         await nextTick();
-        assert.notOk(target.querySelector("div.custom-checkbox input").checked);
+        assert.notOk(target.querySelector("div.form-check input").checked);
         assert.verifySteps(["false"]);
 
         // Pressing Space when focus is on the input is a standard behavior
         // So we simulate it and verify that it will have its standard behavior.
-        assert.strictEqual(
-            document.activeElement,
-            target.querySelector("div.custom-checkbox input")
-        );
+        assert.strictEqual(document.activeElement, target.querySelector("div.form-check input"));
         const event = triggerEvent(
             document.activeElement,
             null,
@@ -159,11 +150,11 @@ QUnit.module("Components", (hooks) => {
             { fast: true }
         );
         assert.ok(!event.defaultPrevented);
-        target.querySelector("div.custom-checkbox input").checked = true;
+        target.querySelector("div.form-check input").checked = true;
         assert.verifySteps([]);
-        triggerEvent(target, "div.custom-checkbox input", "change", {}, { fast: true });
+        triggerEvent(target, "div.form-check input", "change", {}, { fast: true });
         await nextTick();
-        assert.ok(target.querySelector("div.custom-checkbox input").checked);
+        assert.ok(target.querySelector("div.form-check input").checked);
         assert.verifySteps(["true"]);
     });
 });

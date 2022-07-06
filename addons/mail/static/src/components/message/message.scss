@@ -33,12 +33,12 @@
         // It's acceptable not to manage overflow of these tags for the moment.
         // It also excludes all div in li because 1st leaf and div child of list overflow
         // may impact the bullet point (at least it does on Safari).
-        max-width: map-get($sizes, 100);
+        max-width: 100%;
         overflow-x: auto;
     }
 
     img {
-        max-width: map-get($sizes, 100);
+        max-width: 100%;
         height: auto;
     }
 }
@@ -99,7 +99,7 @@
     transition: background-color .5s ease-out;
 
     &.o-not-discussion.o-selected {
-        border-bottom: 1px solid darken(gray('400'), 5%);
+        border-bottom: 1px solid darken(map-get($grays, '400'), 5%);
     }
 
     &.o-highlighted {

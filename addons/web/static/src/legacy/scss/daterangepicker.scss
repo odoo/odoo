@@ -12,7 +12,7 @@
             }
 
             &:not(.active) {
-                color: gray('900');
+                color: map-get($grays, '900');
             }
 
             &.prev, &.next, &.off.ends {
@@ -63,7 +63,7 @@
                 }
             }
             &:nth-child(2) th {
-                background-color: gray('100');
+                background-color: map-get($grays, '100');
                 font-size: $font-size-sm;
                 font-weight: $font-weight-bold;
                 color: $o-main-text-color;

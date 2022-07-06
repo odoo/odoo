@@ -32,7 +32,7 @@
                                         <h2>
                                             <span t-field='question.title'/>
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
-                                            <span t-if="scoring_display_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
+                                            <span t-if="scoring_display_correction" class="badge rounded-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <div class="text-muted oe_no_empty mt-1" t-if="not is_html_empty(question.description)" t-field='question.description'/>
                                         <t t-if="question.question_type in ['numerical_box', 'date', 'datetime', 'text_box', 'char_box']">
@@ -40,16 +40,16 @@
                                                 <t t-set="answer_line" t-value="answer_lines[0]"/>
                                                 <t t-if="answer_line.skipped">
                                                     <!-- question was skipped, display an orange block with the text "Skipped" in place of the answer -->
-                                                    <div class="row no-gutters">
-                                                        <div class="col-12 col-md-6 col-lg-4 rounded pl-4 o_survey_question_skipped">
+                                                    <div class="row g-0">
+                                                        <div class="col-12 col-md-6 col-lg-4 rounded ps-4 o_survey_question_skipped">
                                                             <input type="text"
-                                                                t-attf-class="form-control font-italic o_survey_question_{{question.question_type}} bg-transparent rounded-0 p-0" value="Skipped"/>
+                                                                t-attf-class="form-control fst-italic o_survey_question_{{question.question_type}} bg-transparent rounded-0 p-0" value="Skipped"/>
                                                         </div>
                                                     </div>
                                                 </t>
                                                 <t t-elif="answer_line.survey_id.scoring_type != 'no_scoring' and question.question_type in ['numerical_box', 'date', 'datetime'] and question['answer_%s' % question.question_type]">
-                                                    <div class="row no-gutters">
-                                                        <div t-attf-class="col-12 col-md-6 col-lg-4 rounded pl-4 #{'bg-success' if answer_line.answer_is_correct else 'bg-danger'}">
+                                                    <div class="row g-0">
+                                                        <div t-attf-class="col-12 col-md-6 col-lg-4 rounded ps-4 #{'bg-success' if answer_line.answer_is_correct else 'bg-danger'}">
                                                             <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
                                                             <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
                                                             <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>
@@ -67,7 +67,7 @@
                                                     and question.question_type in ['numerical_box', 'date', 'datetime']
                                                     and question['answer_%s' % question.question_type]
                                                     and not answer_line.answer_is_correct">
-                                                    <div class="row no-gutters">
+                                                    <div class="row g-0">
                                                         <t t-set="correct_answer" t-value="question['answer_%s' % question.question_type ]"/>
                                                         <div class="col-12 text-success mt-1">
                                                             The correct answer was:
@@ -92,7 +92,7 @@
                                         <t t-if="question.question_type in ['simple_choice', 'multiple_choice','matrix']">
                                             <t t-if="answer_lines">
                                                 <t t-if="answer_lines[0].skipped">
-                                                    <div class="row no-gutters">
+                                                    <div class="row g-0">
                                                         <div class="col-12 o_survey_choice_question_skipped mt-1">
                                                             This question was skipped
                                                         </div>

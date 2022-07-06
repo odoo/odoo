@@ -41,7 +41,7 @@
 
     <div t-name="mrp.workorderPopover">
         <t t-foreach="infos" t-as="info">
-            <i t-attf-class="fa fa-arrow-right mr-2 #{ info.color }"></i><t t-esc="info.msg"/><br/>
+            <i t-attf-class="fa fa-arrow-right me-2 #{ info.color }"></i><t t-esc="info.msg"/><br/>
         </t>
         <button t-if="replan" class="btn btn-primary action_replan_button">Replan</button>
     </div>

@@ -67,34 +67,22 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(cells[7].textContent, "");
 
         assert.hasAttrValue(cells[0].querySelector(".o_field_widget > div"), "title", "10/08/2017");
-        assert.hasClass(
-            cells[0].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-warning"
-        );
+        assert.hasClass(cells[0].querySelector(".o_field_widget > div"), "fw-bold text-warning");
         assert.doesNotHaveClass(
             cells[1].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-warning text-danger"
+            "fw-bold text-warning text-danger"
         );
-        assert.hasClass(
-            cells[2].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-danger"
-        );
+        assert.hasClass(cells[2].querySelector(".o_field_widget > div"), "fw-bold text-danger");
         assert.doesNotHaveClass(
             cells[3].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-warning text-danger"
+            "fw-bold text-warning text-danger"
         );
-        assert.hasClass(
-            cells[4].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-danger"
-        );
+        assert.hasClass(cells[4].querySelector(".o_field_widget > div"), "fw-bold text-danger");
         assert.doesNotHaveClass(
             cells[5].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-warning text-danger"
+            "fw-bold text-warning text-danger"
         );
-        assert.hasClass(
-            cells[6].querySelector(".o_field_widget > div"),
-            "font-weight-bold text-danger"
-        );
+        assert.hasClass(cells[6].querySelector(".o_field_widget > div"), "fw-bold text-danger");
     });
 
     QUnit.test(
@@ -221,10 +209,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(
-            target.querySelector(".o_field_widget > div "),
-            "font-weight-bold text-warning"
-        );
+        assert.hasClass(target.querySelector(".o_field_widget > div "), "fw-bold text-warning");
 
         // in edit mode, this widget should be editable.
         await click(target, ".o_form_button_edit");
@@ -341,31 +326,31 @@ QUnit.module("Fields", (hooks) => {
 
             assert.hasClass(
                 target.querySelectorAll(".o_data_cell div div")[0],
-                "font-weight-bold text-warning"
+                "fw-bold text-warning"
             );
             assert.doesNotHaveClass(
                 target.querySelectorAll(".o_data_cell div div")[1],
-                "font-weight-bold text-warning text-danger"
+                "fw-bold text-warning text-danger"
             );
             assert.hasClass(
                 target.querySelectorAll(".o_data_cell div div")[2],
-                "font-weight-bold text-danger"
+                "fw-bold text-danger"
             );
             assert.doesNotHaveClass(
                 target.querySelectorAll(".o_data_cell div div")[3],
-                "font-weight-bold text-warning text-danger"
+                "fw-bold text-warning text-danger"
             );
             assert.hasClass(
                 target.querySelectorAll(".o_data_cell div div")[4],
-                "font-weight-bold text-danger"
+                "fw-bold text-danger"
             );
             assert.doesNotHaveClass(
                 target.querySelectorAll(".o_data_cell div div")[5],
-                "font-weight-bold text-warning text-danger"
+                "fw-bold text-warning text-danger"
             );
             assert.hasClass(
                 target.querySelectorAll(".o_data_cell div div")[6],
-                "font-weight-bold text-danger"
+                "fw-bold text-danger"
             );
         }
     );

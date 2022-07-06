@@ -11,7 +11,7 @@
                             <h2><span t-field="o.name"/></h2>
                         </div>
                         <div class="col-5">
-                            <span class="text-right">
+                            <span class="text-end">
                                 <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}"/>
                             </span>
                         </div>
@@ -99,8 +99,8 @@
         <thead>
             <tr>
                 <th>Product</th>
-                <th t-if="o.state in ('progress', 'to_close','done')" t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Consumed</th>
-                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">To Consume</th>
+                <th t-if="o.state in ('progress', 'to_close','done')" t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">Consumed</th>
+                <th t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">To Consume</th>
                 <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
             </tr>
         </thead>
@@ -109,12 +109,12 @@
                 <td>
                     <span t-field="raw_line.product_id"/>
                 </td>
-                <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}" t-if="o.state in ('progress', 'to_close','done')">
+                <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}" t-if="o.state in ('progress', 'to_close','done')">
                     <div>
                         <span t-field="raw_line.quantity_done"/>
                     </div>
                 </td>
-                <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
                     <span t-field="raw_line.product_uom_qty"/>
                     <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
                 </td>
@@ -165,7 +165,7 @@
                             </t>
                             <td t-att-style="make_invisible and 'visibility:hidden'">
                                 <div t-if="move_line" t-translation="off" t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (move_line.env.user.company_id.primary_color or 'black')">
-                                    <div class="o_label_name o_label_4x12 font-weight-bold">
+                                    <div class="o_label_name o_label_4x12 fw-bold">
                                         <div t-out="move_line.product_id.display_name"/>
                                         <div><span>Quantity: </span>
                                             <span t-if="move_line.product_uom_id.category_id == uom_categ_unit">1.0</span>

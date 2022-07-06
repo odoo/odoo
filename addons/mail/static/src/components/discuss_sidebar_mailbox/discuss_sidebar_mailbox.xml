@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarMailbox" owl="1">
-        <button class="o_DiscussSidebarMailbox btn d-flex align-items-center py-1 px-0 border-0 rounded-0 font-weight-normal text-dark"
+        <button class="o_DiscussSidebarMailbox btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
             t-att-class="{
                 'bg-100': discussSidebarMailboxView.mailbox !== messaging.discuss.thread,
                 'o-active bg-200': discussSidebarMailboxView.mailbox === messaging.discuss.thread,
@@ -15,7 +15,7 @@
             </div>
             <div t-attf-class="o_DiscussSidebarMailbox_item flex-grow-1 {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
             <t t-if="discussSidebarMailboxView.mailbox.counter > 0">
-                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge badge-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'badge-primary' }} ms-1 me-3 border-0">
+                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge rounded-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3 border-0">
                     <t t-esc="discussSidebarMailboxView.mailbox.counter"/>
                 </div>
             </t>

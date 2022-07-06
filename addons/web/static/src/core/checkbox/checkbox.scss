@@ -1,13 +1,13 @@
 // = Checkbox
 // ============================================================================
 
-.custom-control.custom-checkbox .custom-control-input {
+.custom-control.form-check .form-check-input {
   &:disabled {
-    ~ .custom-control-label {
+    ~ .form-check-label {
       cursor: not-allowed;
     }
 
-    &:checked ~ .custom-control-label:after {
+    &:checked ~ .form-check-label:after {
       // Use odoo custom muted icon
       background-image: $o-custom-checkbox-indicator-icon-checked-disabled;
     }

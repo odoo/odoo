@@ -15,7 +15,7 @@ export class SearchMedia extends Component {
     }
 }
 SearchMedia.template = xml`
-<div class="input-group mr-auto">
+<div class="input-group me-auto">
     <input type="text" class="form-control o_we_search" t-att-placeholder="props.searchPlaceholder.trim()" t-att-value="props.needle" t-on-input="search" t-ref="autofocus"/>
     <div class="input-group-append">
         <div class="input-group-text o_we_search_icon">
