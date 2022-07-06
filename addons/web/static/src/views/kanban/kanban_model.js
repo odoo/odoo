@@ -433,30 +433,31 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         }
 
         // Move from one group to another
-        try {
-            if (dataGroupId !== targetGroupId) {
-                // Quick update: moves the record at the right position and notifies components
-                const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
-                targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
+        if (dataGroupId !== targetGroupId) {
+            const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
+            // Quick update: moves the record at the right position and notifies components
+            targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
+            const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
 
-                const value = isRelational(this.groupByField)
-                    ? [targetGroup.value]
-                    : targetGroup.value;
+            try {
                 await record.update({ [this.groupByField.name]: value });
                 await record.save({ noReload: true });
-                // Record can be loaded along with the group metadata
-                await Promise.all([
-                    this.updateGroupProgressData([sourceGroup, targetGroup], true),
-                    record.load(),
-                ]);
+            } catch (err) {
+                this.model.transaction.abort(dataRecordId);
+                this.model.notify();
+                throw err;
             }
-            await targetGroup.list.resequence(dataRecordId, refId);
-            this.model.transaction.commit(dataRecordId);
-        } catch (err) {
-            this.model.transaction.abort(dataRecordId);
-            this.model.notify();
-            throw err;
+
+            // Record can be loaded along with the group metadata
+            await Promise.all([
+                this.updateGroupProgressData([sourceGroup, targetGroup], true),
+                record.load(),
+            ]);
         }
+
+        await targetGroup.list.resequence(dataRecordId, refId);
+
+        this.model.transaction.commit(dataRecordId);
     }
 
     // ------------------------------------------------------------------------
