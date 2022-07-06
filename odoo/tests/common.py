@@ -388,7 +388,14 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
     def run(self, result):
-        tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+        testMethod = getattr(self, self._testMethodName)
+
+        if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
+            tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+        else:
+            tests_run_count = 1
+            _logger.info('Auto retry disabled for %s', self)
+
         failure = False
         for retry in range(tests_run_count):
             if retry:
@@ -1766,6 +1773,12 @@ class HttpSavepointCase(HttpCase):
             "Deprecated class HttpSavepointCase has been merged into HttpCase",
             DeprecationWarning, stacklevel=2,
         )
+
+
+def no_retry(arg):
+    """Disable auto retry on decorated test method or test class"""
+    arg._retry = False
+    return arg
 
 
 def users(*logins):
