@@ -6,6 +6,10 @@ from odoo import http
 from odoo.http import request
 from odoo.tools import html2plaintext
 
+import logging
+_logger = logging.getLogger(__name__)
+
+
 FIELDS_MAPPING = {
     'country': ['country'],
     'street_number': ['number'],
@@ -63,6 +67,12 @@ class AutoCompleteController(http.Controller):
         return guessed_house_number
 
     def _perform_place_search(self, partial_address, api_key=None, session_id=None, language_code=None, country_code=None):
+        if len(partial_address) <= 5:
+            return {
+                'results': [],
+                'session_id': session_id
+            }
+
         params = {
             'key': api_key,
             'fields': 'formatted_address,name',
@@ -79,11 +89,16 @@ class AutoCompleteController(http.Controller):
 
         try:
             results = requests.get(f'{GOOGLE_PLACES_ENDPOINT}/autocomplete/json', params=params, timeout=TIMEOUT).json()
-        except (TimeoutError, ValueError):
+        except (TimeoutError, ValueError) as e:
+            _logger.error(e)
             return {
                 'results': [],
                 'session_id': session_id
             }
+
+        if results.get('error_message'):
+            _logger.error(results['error_message'])
+
         results = results.get('predictions', [])
 
         # Convert google specific format to standard format.
@@ -109,8 +124,12 @@ class AutoCompleteController(http.Controller):
 
         try:
             results = requests.get(f'{GOOGLE_PLACES_ENDPOINT}/details/json', params=params, timeout=TIMEOUT).json()
-        except (TimeoutError, ValueError):
+        except (TimeoutError, ValueError) as e:
+            _logger.error(e)
             return {'address': None}
+
+        if results.get('error_message'):
+            _logger.error(results['error_message'])
 
         try:
             html_address = results['result']['adr_address']
