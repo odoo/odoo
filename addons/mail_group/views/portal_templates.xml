@@ -47,12 +47,8 @@
                         <div class="o_mail_group" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
                             <div class="input-group o_mg_subscribe_form">
                                 <input type="email" name="email" class="o_mg_subscribe_email form-control" t-att-value="email" placeholder="your email..." t-att-readonly="int(bool(email))"/>
-                                <div t-if="force_unsubscribe or is_member" class="input-group-append">
-                                   <button href="#" class="btn btn-outline-primary o_mg_subscribe_btn">Unsubscribe</button>
-                                </div>
-                                <div t-else="" class="input-group-append">
-                                   <button href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
-                                </div>
+                               <button t-if="force_unsubscribe or is_member" href="#" class="btn btn-outline-primary o_mg_subscribe_btn">Unsubscribe</button>
+                               <button t-else="" href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
                             </div>
                         </div>
                     </div>

@@ -79,14 +79,14 @@ odoo.define('web.week_days_tests', function (require) {
                 },
             });
 
-            assert.containsN(form, '.custom-control input:disabled', 7,
+            assert.containsN(form, 'input:disabled', 7,
                 "all inputs should be disabled in readonly mode");
             const labelsTexts = [...form.el.querySelectorAll('.o_recurrent_weekday_label')].map(el => el.innerText.trim());
             assert.deepEqual(labelsTexts, ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 "labels should be short week names");
 
             await testUtils.form.clickEdit(form);
-            assert.containsNone(form, '.custom-control input:disabled', 7,
+            assert.containsNone(form, 'input:disabled', 7,
                 "all inputs should be enabled in readonly mode");
 
             await testUtils.dom.click(form.el.querySelector('input[id^="sun"]'));

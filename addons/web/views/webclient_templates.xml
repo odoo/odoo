@@ -137,9 +137,7 @@
                     <label for="db" class="col-form-label">Database</label>
                     <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
                         <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
-                        <span class="input-group-append">
-                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
-                        </span>
+                        <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
                     </div>
                 </div>
 

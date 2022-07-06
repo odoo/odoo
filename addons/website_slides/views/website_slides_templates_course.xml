@@ -663,11 +663,9 @@
                             <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="form-inline my-2 my-lg-0">
                                 <div class="input-group position-relative">
                                     <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
-                                    <div class="input-group-append">
-                                        <button class="btn border" type="submit" aria-label="Search" title="Search">
-                                            <i class="fa fa-search"/>
-                                        </button>
-                                    </div>
+                                    <button class="btn border" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -743,7 +741,7 @@
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
-                        <div class="col-12 col-sm-6 col-lg-4 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+                        <div class="col-12 col-sm-6 col-lg-4 px-2 d-flex" t-call="website_slides.lesson_card"/>
                     </t>
                 </div>
             </div>

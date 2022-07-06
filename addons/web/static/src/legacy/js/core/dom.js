@@ -480,16 +480,16 @@ var dom = {
     renderCheckbox: function (options) {
         var id = _.uniqueId('checkbox-');
         var $container = $('<div/>', {
-            class: 'custom-control custom-checkbox',
+            class: 'form-check',
         });
         var $input = $('<input/>', {
             type: 'checkbox',
             id: id,
-            class: 'custom-control-input',
+            class: 'form-check-input',
         });
         var $label = $('<label/>', {
             for: id,
-            class: 'custom-control-label',
+            class: 'form-check-label',
             text: options && options.text || '',
         });
         if (!options || !options.text) {

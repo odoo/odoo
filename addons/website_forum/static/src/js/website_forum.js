@@ -335,7 +335,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                         countFlaggedPosts.classList.add('bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
-                    $(elem).next('#flag_validator').removeClass('d-none');
+                    $(elem).nextAll('.flag_validator').removeClass('d-none');
                 } else if (data.success === 'post_flagged_non_moderator') {
                     const forumAnswer = elem.closest('.forum_answer');
                     elem.innerText = _t(' Flagged');
@@ -521,8 +521,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             method: currentTarget.dataset.action,
             args: [parseInt(currentTarget.dataset.postId)],
         });
-        currentTarget.parentElement.classList.toggle('d-none');
-        const flaggedButton = currentTarget.parentElement.previousElementSibling,
+        currentTarget.parentElement.querySelectorAll('.flag_validator').forEach((element) => element.classList.toggle('d-none'));
+        const flaggedButton = currentTarget.parentElement.firstElementChild,
             child = flaggedButton.firstElementChild,
             countFlaggedPosts = this.el.querySelector('#count_flagged_posts'),
             count = parseInt(countFlaggedPosts.innerText, 10) - 1;
