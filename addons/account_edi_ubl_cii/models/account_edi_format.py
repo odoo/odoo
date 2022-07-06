@@ -161,7 +161,7 @@ class AccountEdiFormat(models.Model):
                     'title': edi_document.move_id.name,
                     'date': fields.Date.context_today(self),
                 })
-                pdf_writer.add_file_metadata(content.encode())
+                pdf_writer.add_file_metadata(content)
 
     ####################################################
     # Import: Account.edi.format override
