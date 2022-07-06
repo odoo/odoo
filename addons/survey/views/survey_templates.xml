@@ -553,14 +553,14 @@
 
     <template id="question_matrix" name="Question: matrix">
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <table class="table table-hover o_survey_question_matrix text-white text-center mb-0"
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.question_type"
                t-att-data-sub-questions="question.matrix_row_ids.ids">
             <thead>
                 <tr>
-                    <th class="border-0"> </th>
-                    <th class="border-0 font-weight-normal" t-foreach="question.suggested_answer_ids" t-as="col_label"><span t-field="col_label.value" /></th>
+                    <th> </th>
+                    <th class="font-weight-normal" t-foreach="question.suggested_answer_ids" t-as="col_label"><span t-field="col_label.value" /></th>
                 </tr>
             </thead>
             <tbody>
@@ -568,10 +568,10 @@
                 <!-- For matrix, we have an extra check because we have rows * columns total options -->
                 <t t-set="useKeySelection" t-value="useKeySelection and (len(question.suggested_answer_ids) * len(question.matrix_row_ids)) &lt; len(letters)" />
                 <tr class="bg-white text-white" t-foreach="question.matrix_row_ids" t-as="row_label" t-att-id="row_label.id">
-                    <th class="border-0 font-weight-normal text-left"><span t-field="row_label.value" /></th>
+                    <th class="font-weight-normal text-left"><span t-field="row_label.value" /></th>
                     <t t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == col_label and line.matrix_row_id == row_label)"/>
-                        <td t-att-class="'o_survey_matrix_btn text-primary border-0 position-relative %s'
+                        <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'
                         % ('o_survey_selected' if answer else '')">
                             <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
                                    t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
