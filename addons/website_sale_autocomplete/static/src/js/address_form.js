@@ -20,7 +20,7 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         this.countrySelect = document.querySelector('select[name="country_id"]');
         this.stateSelect = document.querySelector('select[name="state_id"]');
         this.dp = new DropPrevious();
-        this.sessionId = this._generateUUID()
+        this.sessionId = this._generateUUID();
 
         this._onChangeStreet = debounce(this._onChangeStreet, 200);
         this._super.apply(this, arguments);
@@ -38,30 +38,36 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         });
     },
 
-    _onChangeStreet: async function(ev) {
-        this.dp.add(
-            this._rpc({
-                route: '/autocomplete/address',
-                params: {
-                    partial_address: ev.currentTarget.value,
-                    session_id: this.sessionId || null
+    _hideAutocomplete: function (inputContainer) {
+        const dropdown = inputContainer.querySelector('.dropdown-menu');
+        if (dropdown) {
+            dropdown.remove();
+        }
+    },
+
+    _onChangeStreet: async function (ev) {
+        const inputContainer = ev.currentTarget.parentNode;
+        if (ev.currentTarget.value.length >= 5) {
+            this.dp.add(
+                this._rpc({
+                    route: '/autocomplete/address',
+                    params: {
+                        partial_address: ev.currentTarget.value,
+                        session_id: this.sessionId || null
+                    }
+                })).then((response) => {
+                    this._hideAutocomplete(inputContainer);
+                    inputContainer.appendChild($(QWeb.render("website_sale_autocomplete.AutocompleteDropDown", {
+                        results: response.results
+                    }))[0]);
+                    if (response.session_id) {
+                        this.sessionId = response.session_id;
+                    }
                 }
-            })).then((response) => {
-               if (response.results) {
-                   const inputContainer = ev.currentTarget.parentNode;
-                   const dropdown = inputContainer.querySelector('.dropdown-menu');
-                   if (dropdown) {
-                       dropdown.remove();
-                   }
-                   inputContainer.appendChild($(QWeb.render("website_sale_autocomplete.AutocompleteDropDown", {
-                       results: response.results
-                   }))[0]);
-               }
-               if (response.session_id) {
-                   this.sessionId = response.session_id;
-               }
-            }
-        );
+            );
+        } else {
+            this._hideAutocomplete(inputContainer);
+        }
     },
 
     _onClickAutocompleteResult: async function(ev) {
