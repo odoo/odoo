@@ -96,6 +96,12 @@ class ProductProduct(models.Model):
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
+    avg_cost = fields.Monetary(string="Average Cost", compute='_compute_value_svl', compute_sudo=True, currency_field='company_currency_id')
+    total_value = fields.Monetary(string="Total Value", compute='_compute_value_svl', compute_sudo=True, currency_field='company_currency_id')
+    company_currency_id = fields.Many2one(
+        'res.currency', 'Valuation Currency', compute='_compute_value_svl', compute_sudo=True,
+        help="Technical field to correctly show the currently selected company's currency that corresponds "
+             "to the totaled value of the product's valuation layers")
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
@@ -108,11 +114,12 @@ class ProductProduct(models.Model):
     @api.depends('stock_valuation_layer_ids')
     @api.depends_context('to_date', 'company')
     def _compute_value_svl(self):
-        """Compute `value_svl` and `quantity_svl`."""
-        company_id = self.env.company.id
+        """Compute totals of multiple svl related values"""
+        company_id = self.env.company
+        self.company_currency_id = company_id.currency_id
         domain = [
             ('product_id', 'in', self.ids),
-            ('company_id', '=', company_id),
+            ('company_id', '=', company_id.id),
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
@@ -121,12 +128,18 @@ class ProductProduct(models.Model):
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
-            product.value_svl = self.env.company.currency_id.round(group['value'])
+            value_svl = company_id.currency_id.round(group['value'])
+            avg_cost = value_svl / group['quantity'] if group['quantity'] else 0
+            product.value_svl = value_svl
             product.quantity_svl = group['quantity']
+            product.avg_cost = avg_cost
+            product.total_value = avg_cost * product.sudo(False).qty_available
             products |= product
         remaining = (self - products)
         remaining.value_svl = 0
         remaining.quantity_svl = 0
+        remaining.avg_cost = 0
+        remaining.total_value = 0
 
     # -------------------------------------------------------------------------
     # Actions
