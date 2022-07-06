@@ -27,7 +27,6 @@ class TestUiTranslation(odoo.tests.HttpCase):
 
     @mute_logger('odoo.sql_db', 'odoo.http')
     def test_01_sql_constraints(self):
-        import unittest; raise unittest.SkipTest("skipWOWL")
         # Raise an SQL constraint and test the message
         self.env['res.lang']._activate_lang('fr_FR')
         self.env.ref('base.module_test_new_api')._update_translations(['fr_FR'])
