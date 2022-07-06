@@ -113,7 +113,7 @@
                                     <div class="col">
                                         <a href="/slides/all?my=1" class="float-right">View all</a>
                                         <h5 class="m-0">My courses</h5>
-                                        <hr class="mt-2 pb-1 mb-1"/>
+                                        <hr class="mt-2 mb-2"/>
                                     </div>
                                 </div>
                                 <div class="row mx-n2 mt8">
@@ -131,7 +131,7 @@
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
                                     <h5 class="m-0">Most popular courses</h5>
-                                    <hr class="mt-2 pb-1 mb-1"/>
+                                    <hr class="mt-2 mb-2"/>
                                 </div>
                             </div>
                             <div class="row mx-n2 mt8">
@@ -148,7 +148,7 @@
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
                                     <h5 class="m-0">Newest courses</h5>
-                                    <hr class="mt-2 pb-1 mb-1"/>
+                                    <hr class="mt-2 mb-2"/>
                                 </div>
                             </div>
                             <div class="row mx-n2 mt8">
@@ -225,8 +225,8 @@
                         <ul class="navbar-nav flex-grow-1">
                             <t t-foreach="tag_groups" t-as="tag_group">
                                 <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
-                                <li t-att-class="'nav-item dropdown ml16 %s' % ('active' if tag_group in search_tag_groups else '')" t-if="group_frontend_tags">
-                                    <a class="nav-link dropdown-toggle"
+                                <li class="nav-item dropdown ml16" t-if="group_frontend_tags">
+                                    <a t-att-class="'nav-link dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
                                         href="/slides/all"
                                         t-att-data-target="'#navToogleTagGroup%s' % tag_group.id"
                                         role="button" data-toggle="dropdown"
@@ -309,7 +309,7 @@
                     </div>
                     <div class="row mx-n2">
                         <t t-foreach="channels" t-as="channel">
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex">
                                 <t t-call="website_slides.course_card"/>
                             </div>
                         </t>

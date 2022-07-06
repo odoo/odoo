@@ -17,7 +17,7 @@
             <!-- Content -->
             <div t-attf-class="o_wevent_events_list #{opt_events_list_cards and 'opt_event_list_cards_bg'}">
                 <div class="container">
-                    <div class="row">
+                    <div class="d-flex mx-n3">
                         <t t-call="website_event.searched_tags"/>
                     </div>
                     <div class="row">
@@ -177,11 +177,11 @@
                                     <span t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
                                 <!-- Participating -->
-                                <small t-if="event.is_participating" class="o_wevent_participating bg-success">
+                                <small t-if="event.is_participating" class="o_wevent_participating text-bg-success">
                                     <i class="fa fa-check mr-2"/>Registered
                                 </small>
                                 <!-- Unpublished -->
-                                <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
+                                <small t-if="not event.website_published" class="o_wevent_unpublished text-bg-danger">
                                     <i class="fa fa-ban mr-2"/>Unpublished
                                 </small>
                             </t>

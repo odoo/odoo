@@ -31,16 +31,16 @@
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                    <div class="o_primary col-11">
+                                    <div class="o_primary ps-3">
                                         <t t-esc="record.name.value"/>
                                     </div>
-                                    <div class="col-12 text-muted">
+                                    <div class="ps-3 text-muted">
                                         <field name="user_id" />
                                     </div>
-                                    <div class="col-12 o_secondary" groups="base.group_multi_company">
+                                    <div class="ps-3 o_secondary" groups="base.group_multi_company">
                                         <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/></small>
                                     </div>
-                                    <div t-if="record.alias_name.value and record.alias_domain.value" class="col-12 o_secondary o_job_alias">
+                                    <div t-if="record.alias_name.value and record.alias_domain.value" class="ps-3 o_secondary o_job_alias">
                                         <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                                     </div>
                                 </div>
@@ -72,7 +72,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div name="kanban_boxes" class="row o_recruitment_kanban_boxes" groups="hr_recruitment.group_hr_recruitment_user"></div>
+                                <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
                             </div>
                             <div class="container o_recruitment_job_container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
