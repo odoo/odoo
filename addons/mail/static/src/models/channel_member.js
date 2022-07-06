@@ -27,6 +27,9 @@ registerModel({
          * @returns {string}
          */
         _computeName() {
+            if (!this.partner) {
+                return;
+            }
             return this.partner.nameOrDisplayName;
         },
     },
