@@ -182,7 +182,7 @@ QUnit.test('add an emoji', async function (assert) {
     });
     await openDiscuss();
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -209,7 +209,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
     );
 
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Blabla😊",
@@ -239,7 +239,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -391,7 +391,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? 😊",
@@ -539,7 +539,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General 😊",
@@ -718,7 +718,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who 😊",
@@ -878,7 +878,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_Emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner 😊",

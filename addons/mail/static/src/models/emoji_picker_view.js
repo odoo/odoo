@@ -22,6 +22,12 @@ registerModel({
             required: true,
             isCausal: true,
         }),
+        emojiSearchBar: one('EmojiSearchBar', {
+            default: insertAndReplace(),
+            inverse: 'emojiPickerView',
+            readonly: true,
+            isCausal: true,
+        }),
         popoverViewOwner: one('PopoverView', {
             inverse: 'emojiPickerView',
             readonly: true,

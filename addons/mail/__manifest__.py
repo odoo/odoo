@@ -115,6 +115,7 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_messaging': [
             'mail/static/src/model/*.js',
             'mail/static/src/models/*.js',
+            'mail/static/src/models_data/*.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [

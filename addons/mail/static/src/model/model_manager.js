@@ -1279,7 +1279,7 @@ export class ModelManager {
      */
     _update(record, data, options = {}) {
         this._ensureNoLockingListener();
-        if (!record.exists()) {
+         if (!record.exists()) {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
         const { allowWriteReadonly = false } = options;
