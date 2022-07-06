@@ -1222,6 +1222,8 @@ class ChromeBrowser():
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'type': 'boolean', 'value': True}
+        # catch errors in ready code to prevent opening error dialogs
+        ready_code = "try { %s } catch {}" % ready_code
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
         promise_id = None
         last_bad_res = ''
