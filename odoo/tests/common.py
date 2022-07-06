@@ -66,6 +66,7 @@ except ImportError:
     # chrome headless tests will be skipped
     websocket = None
 
+from .runner import stats_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -188,9 +189,10 @@ class RecordCapturer:
 # ------------------------------------------------------------
 # Main classes
 # ------------------------------------------------------------
-class OdooSuite(unittest.suite.TestSuite):
-
-    if sys.version_info < (3, 8):
+if sys.version_info >= (3, 8):
+    BackportSuite = unittest.suite.TestSuite
+else:
+    class BackportSuite(unittest.suite.TestSuite):
         # Partial backport of bpo-24412, merged in CPython 3.8
 
         def _handleClassSetUp(self, test, result):
@@ -284,6 +286,37 @@ class OdooSuite(unittest.suite.TestSuite):
                                                                         'tearDownClass',
                                                                         className,
                                                                         info=exc)
+
+class OdooSuite(BackportSuite):
+    def _handleClassSetUp(self, test, result):
+        previous_test_class = getattr(result, '_previousTestClass', None)
+        if not (
+                previous_test_class != type(test)
+            and hasattr(result, 'stats')
+            and stats_logger.isEnabledFor(logging.INFO)
+        ):
+            super()._handleClassSetUp(test, result)
+            return
+
+        test_class = type(test)
+        test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
+        with result.collectStats(test_id):
+            super()._handleClassSetUp(test, result)
+
+    def _tearDownPreviousClass(self, test, result):
+        previous_test_class = getattr(result, '_previousTestClass', None)
+        if not (
+                previous_test_class
+            and previous_test_class != type(test)
+            and hasattr(result, 'stats')
+            and stats_logger.isEnabledFor(logging.INFO)
+        ):
+            super()._tearDownPreviousClass(test, result)
+            return
+
+        test_id = f'{previous_test_class.__module__}.{previous_test_class.__qualname__}.tearDownClass'
+        with result.collectStats(test_id):
+            super()._tearDownPreviousClass(test, result)
 
 
 class MetaCase(type):
