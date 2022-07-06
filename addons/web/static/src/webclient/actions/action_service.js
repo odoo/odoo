@@ -439,12 +439,15 @@ function makeActionManager(env) {
             },
         });
 
-        if (view.type === "form" && action.target === "new") {
-            viewProps.mode = "edit";
-        }
-
-        if (action.flags && "mode" in action.flags && view.type === "form") {
-            viewProps.mode = action.flags.mode;
+        if (view.type === "form") {
+            if (action.target === "new") {
+                viewProps.mode = "edit";
+            } else if (context.form_view_initial_mode) {
+                viewProps.mode = context.form_view_initial_mode;
+            }
+            if (action.flags && "mode" in action.flags) {
+                viewProps.mode = action.flags.mode;
+            }
         }
 
         if (target === "inline") {
