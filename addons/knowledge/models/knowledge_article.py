@@ -432,14 +432,15 @@ class Article(models.Model):
             raise NotImplementedError("Unsupported search operation on favorite articles")
 
         if (value and operator == '=') or (not value and operator == '!='):
-            return [('favorite_ids.user_id', 'in', [self.env.uid])]
+            return [('favorite_ids', 'in', self.env['knowledge.article.favorite'].sudo()._search(
+                [('user_id', '=', self.env.uid)]
+            ))]
 
         # easier than a not in on a 2many field (hint: use sudo because of
         # complicated ACL on favorite based on user access on article)
-        favorited = self.env['knowledge.article.favorite'].sudo().search(
+        return [('favorite_ids', 'not in', self.env['knowledge.article.favorite'].sudo()._search(
             [('user_id', '=', self.env.uid)]
-        ).article_id
-        return [('id', 'not in', favorited.ids)]
+        ))]
 
     # ------------------------------------------------------------
     # CRUD
