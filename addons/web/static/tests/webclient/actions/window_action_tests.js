@@ -2264,4 +2264,47 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, "table");
     });
+
+    QUnit.test("process context.form_view_initial_mode", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="name"/></form>`,
+            "partner,false,search": `<search/>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "partner",
+            views: [[false, "form"]],
+            context: {
+                form_view_initial_mode: "edit",
+            },
+        });
+
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
+    });
+
+    QUnit.test("process context.form_view_initial_mode (2)", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="name"/></form>`,
+            "partner,false,search": `<search/>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "new",
+            res_model: "partner",
+            views: [[false, "form"]],
+            context: {
+                form_view_initial_mode: "readonly",
+            },
+        });
+
+        // mode is "edit" because target="new"
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
+    });
 });
