@@ -123,7 +123,7 @@
                                                 <div class="float-right text-odoo">
                                                     <field name="price" widget="monetary"/>
                                                 </div>
-                                                <div t-if="record.is_new.raw_value" class="float-right o_lunch_new_product mr-1 badge-pill badge-success">
+                                                <div t-if="record.is_new.raw_value" class="float-end o_lunch_new_product me-1 py-0 border-0 fs-6 badge rounded-pill bg-success">
                                                     New
                                                 </div>
                                                 <strong><span t-esc="record.name.value"/></strong>

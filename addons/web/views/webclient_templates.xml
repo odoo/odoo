@@ -141,13 +141,13 @@
                     </div>
                 </div>
 
-                <div class="form-group field-login">
-                    <label for="login">Email</label>
+                <div class="mb-3 field-login">
+                    <label for="login" class="form-label">Email</label>
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
-                <div class="form-group field-password">
-                    <label for="password">Password</label>
+                <div class="mb-3 form-group">
+                    <label for="password" class="form-label">Password</label>
                     <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
@@ -158,10 +158,10 @@
                     <t t-esc="message"/>
                 </p>
 
-                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
-                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                <div t-attf-class="clearfix oe_login_buttons text-center gap-1 d-grid mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button type="submit" class="btn btn-primary">Log in</button>
                     <t t-if="debug">
-                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm">Log in as superuser</button>
                     </t>
                     <div class="o_login_auth"/>
                 </div>

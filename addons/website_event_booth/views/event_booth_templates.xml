@@ -50,7 +50,7 @@
                     <form method="post" class="form-horizontal justify-content-center mt32 js_website_submit_form o_wbooth_registration_form"
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <div class="row form-group justify-content-center">
+                        <div class="row mb-3 justify-content-center">
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
                                 <div class="col-md-4">
@@ -72,8 +72,8 @@
                         </div>
                         <t t-if="available_booth_category_ids">
                             <div t-if="event.exhibition_map" class="row">
-                                <div class="col-sm-6 offset-sm-3 mb-4">
-                                    <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#mapModal">View Floor Plan</button>
+                                <div class="d-grid col-sm-6 offset-sm-3 mb-4">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#mapModal">View Floor Plan</button>
                                     <div role="dialog" id="mapModal" class="modal" tabindex="-1">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
