@@ -1370,10 +1370,10 @@ class AccountMove(models.Model):
     @api.depends('commercial_partner_id', 'move_type')
     def _compute_bank_partner_id(self):
         for move in self:
-            if move.is_outbound():
-                move.bank_partner_id = move.commercial_partner_id
-            else:
+            if move.is_inbound():
                 move.bank_partner_id = move.company_id.partner_id
+            else:
+                move.bank_partner_id = move.commercial_partner_id
 
     @api.model
     def _get_invoice_in_payment_state(self):
