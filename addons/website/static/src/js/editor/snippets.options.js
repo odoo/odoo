@@ -1186,7 +1186,7 @@ options.registry.OptionsTab = options.Class.extend({
         }
         this.trigger_up('request_save', {
             reload: false,
-            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+            action: 'website.theme_install_kanban_action',
         });
     },
 
