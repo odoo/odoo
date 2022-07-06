@@ -113,6 +113,7 @@ export class ViewButton extends Component {
 }
 ViewButton.template = "views.ViewButton";
 ViewButton.props = [
+    "id?",
     "tag?",
     "record?",
     "className?",
