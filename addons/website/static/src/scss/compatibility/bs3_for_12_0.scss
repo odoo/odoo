@@ -230,17 +230,17 @@ $-compat-breakpoints: (
     }
     &-xs {
         &, &-block {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: block !important;
             }
         }
         &-inline {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: inline !important;
             }
         }
         &-inline-block {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: inline-block !important;
             }
         }
@@ -299,7 +299,7 @@ $-compat-breakpoints: (
 }
 .hidden {
     &-xs {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             display: none !important;
         }
     }

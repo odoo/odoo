@@ -494,7 +494,7 @@ table.table_desc tr td {
         width: 8%;
         opacity: 1;
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .carousel-control-prev,
         .carousel-control-next {
             display: none; // remove arrows on mobile
@@ -555,7 +555,7 @@ table.table_desc tr td {
     // Border
     &.s_carousel_bordered {
         border: 2rem solid rgba(0,0,0,0);
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             border: 0.5rem solid rgba(0,0,0,0);
         }
         // Controls - caret
@@ -1465,7 +1465,7 @@ $ribbon-padding: 100px;
     }
     .o_cookies_discrete {
         .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 margin-bottom: 1rem;
             }
         }
