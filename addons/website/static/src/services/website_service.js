@@ -192,7 +192,17 @@ export const websiteService = {
             },
             unblockIframe() {
                 bus.trigger('UNBLOCK');
-            }
+            },
+            leaveEditMode() {
+                // FIXME this does not care about if the page is dirty or not.
+
+                // TODO this should not be needed here, the one who was in
+                // charge of adding this class should be the one in charge of
+                // removing it.
+                document.body.classList.remove('editor_has_snippets');
+                context.snippetsLoaded = false;
+                context.edition = false;
+            },
         };
     },
 };
