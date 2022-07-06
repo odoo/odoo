@@ -13,7 +13,7 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        env.bus.on("WEB_CLIENT_READY", null, async () => {
+        env.bus.addEventListener("WEB_CLIENT_READY", async () => {
             const legacyEnv = Component.env;
             legacyEnv.services.bus_service.onNotification(this, onNotification);
             legacyEnv.services.bus_service.startPolling();
