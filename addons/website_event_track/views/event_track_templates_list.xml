@@ -139,7 +139,7 @@
     <div class="row mb-3" t-if="tracks_live">
         <div class="col-12">
             <h5 class="m-0 text-danger">Live Now</h5>
-            <hr class="mt-2 pb-1 mb-1"/>
+            <hr class="mt-2 mb-2"/>
         </div>
         <t t-call="website_event_track.track_cards_section">
             <t t-set="tracks" t-value="tracks_live"/>
@@ -148,7 +148,7 @@
     <div class="row mb-3" t-if="tracks_soon">
         <div class="col-12">
             <h5 class="m-0 text-danger">Coming soon ...</h5>
-            <hr class="mt-2 pb-1 mb-1"/>
+            <hr class="mt-2 mb-2"/>
         </div>
         <t t-call="website_event_track.track_cards_section">
             <t t-set="tracks" t-value="tracks_soon"/>
@@ -195,7 +195,7 @@
                         data-toggle="collapse">
                         <i class="fa fa-2x fa-chevron-down"/>
                     </a>
-                    <hr class="mt-2 pb-1 mb-1"/>
+                    <hr class="mt-2 mb-2"/>
                 </div>
                 <!-- DAY TRACKS LIST -->
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
