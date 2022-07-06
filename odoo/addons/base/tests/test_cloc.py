@@ -108,10 +108,10 @@ SCSS_TEST = '''
 .o_content > .o_list_view > .table-responsive > .table {
     // List views always have the table-sm class, maybe we should remove
     // it (and consider it does not exist) and change the default table paddings
-    @include o-list-view-full-width-padding($base: $table-cell-padding-sm, $ratio: 2);
+    @include o-list-view-full-width-padding($base-x: $table-cell-padding-x-sm, $base-y: $table-cell-padding-y-sm, $ratio: 2);
     &:not(.o_list_table_grouped) {
         @include media-breakpoint-up(xl) {
-            @include o-list-view-full-width-padding($base: $table-cell-padding-sm, $ratio: 2.5);
+            @include o-list-view-full-width-padding($base-x: $table-cell-padding-x-sm, $base-y: $table-cell-padding-y-sm, $ratio: 2.5);
         }
     }
 
