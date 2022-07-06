@@ -96,7 +96,7 @@
                     <div t-if="show_bar_chart or show_text_answers">
                         <div class="progress" title="Attendees are answering the question...">
                             <div class="progress-bar o_survey_session_progress_small font-weight-bold"
-                                role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                 style="overflow: visible" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                                 <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
                             </div>
                         </div>

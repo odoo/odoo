@@ -5,9 +5,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" required="required" placeholder="Gift card code..."/>
-                <div class="input-group-append">
-                    <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
-                </div>
+                <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
             </div>
         </form>
     </template>

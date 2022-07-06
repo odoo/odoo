@@ -5,14 +5,12 @@
 <!-- Editor custom -->
 <!-- helper -->
 <template id="show_flag_validator">
-    <div id="flag_validator" t-attf-class="input-group-append #{'ml-1' if object.state == 'flagged' else 'd-none'}">
-        <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" class="badge badge-light my-2 mr-2 o_wforum_flag_validator" title="Validate" data-toggle="tooltip">
-            <i class="fa fa-check text-success"/>
-        </a>
-        <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" class="badge badge-light my-2 mr-2 o_wforum_flag_mark_as_offensive" title="Mark as Offensive"  data-toggle="tooltip">
-            <i class="fa fa-times text-danger"/>
-        </a>
-    </div>
+    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="#{'' if object.state == 'flagged' else 'd-none'} flag_validator badge badge-light my-2 mr-2 o_wforum_flag_validator" title="Validate" data-bs-toggle="tooltip">
+        <i class="fa fa-check text-success"/>
+    </a>
+    <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="#{'' if object.state == 'flagged' else 'd-none'} flag_validator badge badge-light my-2 mr-2 o_wforum_flag_mark_as_offensive" title="Mark as Offensive"  data-bs-toggle="tooltip">
+        <i class="fa fa-times text-danger"/>
+    </a>
 </template>
 
 <template id="link_button">
@@ -828,8 +826,8 @@
         </div>
 
         <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
-            <div class="form-group">
-                <label for="content">Title</label>
+            <div class="mb-3">
+                <label class="form-label" for="content">Title</label>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post_name}"
                     class="form-control form-control-lg" placeholder="A clear, explicit and concise title" title="Title must not be empty"/>
@@ -849,15 +847,15 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="content">Description</label>
+            <div class="mb-3">
+                <label class="form-label" for="content">Description</label>
                 <div class="small form-text text-muted d-inline">, consider <b>adding an example</b>. </div>
                 <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
                     <t t-esc="question_content"/>
                 </textarea>
             </div>
-            <div class="form-group">
-                <label for="post_tags">Tags</label>
+            <div class="mb-3">
+                <label class="form-label" for="post_tags">Tags</label>
                 <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
                 <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                 <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
@@ -882,8 +880,8 @@
         </article>
         <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div t-if="not is_answer" class="form-group">
-                <label for="post_name">Title</label>
+            <div t-if="not is_answer" class="mb-3">
+                <label class="form-label" for="post_name">Title</label>
                 <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post.name}"
                     class="form-control form-control-lg" placeholder="Edit your Post" title="Title must not be empty"/>
                 <div class="form-text small text-muted">
@@ -902,17 +900,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label t-if="not is_answer" for="content">Description</label>
-                <label t-else="">Your Answer</label>
+            <div class="mb-3">
+                <label t-if="not is_answer" class="form-label" for="content">Description</label>
+                <label t-else="" class="form-label">Your Answer</label>
                 <div t-if="not is_answer" class="small form-text text-muted d-inline">, consider <b>adding an example</b>. </div>
                 <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
                     <t t-esc="post.content"/>
                 </textarea>
             </div>
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <div t-if="not is_answer" class="form-group">
-                <label for="post_tags">Tags</label>
+            <div t-if="not is_answer" class="mb-3">
+                <label class="form-label" for="post_tags">Tags</label>
                 <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
                 <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                 <t t-set="edit_tags_karma_fail" t-value="user.karma &lt; forum.karma_edit_retag"/>
@@ -947,19 +945,19 @@
         <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="mt32 js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
-            <div class="form-group">
-                <label for="post">Post:</label>
+            <div class="mb-3">
+                <label class="form-label" for="post">Post:</label>
                 <input type="text" disabled="True" class="form-control-plaintext" name="post" t-att-value="question.name if not question.parent_id else question.parent_id.name"/>
             </div>
-            <div class="form-group mb-4">
-                <label for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
+            <div class="mb-4">
+                <label class="form-label" for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
                 <select class="form-control custom-select custom-select-lg" name="reason_id">
                     <t t-foreach="reasons or []" t-as="reason">
                         <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
                     </t>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <button type="submit" class="btn btn-danger">
                     <t t-if="offensive">Mark as offensive</t>
                     <t t-if="not offensive">Close post</t>

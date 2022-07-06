@@ -831,7 +831,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     disabledInEditableMode: false,
     events: {
-        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
     },
 
     //--------------------------------------------------------------------------
@@ -847,12 +847,13 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         if (wysiwyg) {
             wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
         }
-        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        var clickedValue = $(ev.target).val();
+        var isList = clickedValue === 'list';
         if (!this.editableMode) {
             this._rpc({
                 route: '/shop/save_shop_layout_mode',
                 params: {
-                    'layout_mode': switchToList ? 'list' : 'grid',
+                    'layout_mode': isList ? 'list' : 'grid',
                 },
             });
         }
@@ -862,7 +863,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         // TODO should probably be improved to allow disabling transitions
         // altogether with a class/option.
         $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        $grid.toggleClass('o_wsale_layout_list', isList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
         if (wysiwyg) {

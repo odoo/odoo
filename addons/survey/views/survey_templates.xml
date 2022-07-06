@@ -381,9 +381,7 @@
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_date(answer_lines[0].value_date) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
-            <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
-            </div>
+            <div t-if="not survey_form_readonly" class="position-absolute input-group-text text-primary border-0 bg-transparent p-0" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
         </div>
     </template>
 
@@ -396,9 +394,7 @@
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_datetime(answer_lines[0].value_datetime) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
-            <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
-            </div>
+            <div t-if="not survey_form_readonly" class="position-absolute input-group-text text-primary border-0 bg-transparent p-0" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
         </div>
     </template>
 
@@ -460,7 +456,7 @@
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <div class="d-flex flex-wrap">
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
                         <t t-set="item_idx" t-value="item_idx + 1"/>
                         <t t-call="survey.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
@@ -505,7 +501,7 @@
                     <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'" />
                     <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'" />
 
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label mr-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
                         <t t-call="survey.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
                         </t>
@@ -529,7 +525,7 @@
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <div class="d-flex flex-wrap">
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
                         <t t-set="item_idx" t-value="item_idx + 1"/>
                         <t t-call="survey.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>

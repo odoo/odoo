@@ -2205,11 +2205,9 @@
                             <input type="hidden" name="url" t-att-value="path" />
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
-                            <div class="input-group-append">
-                              <button class="btn btn-secondary" type="button" id="showPass">
-                                <i class="fa fa-eye"></i>
-                              </button>
-                          </div>
+                          <button class="btn btn-secondary" type="button" id="showPass">
+                            <i class="fa fa-eye"></i>
+                          </button>
                         </div>
                     </div>
                     <button type="submit" class="h4 btn btn-primary btn-block">Access to this page</button>
@@ -2360,14 +2358,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
-        <div class="input-group-append">
-            <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
-                <i class="fa fa-search"/>
-                <span t-if="search" class="oe_search_found">
-                    <small>(<t t-out="search_count or 0"/> found)</small>
-                </span>
-            </button>
-        </div>
+        <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
+            <i class="fa fa-search"/>
+            <span t-if="search" class="oe_search_found">
+                <small>(<t t-out="search_count or 0"/> found)</small>
+            </span>
+        </button>
     </div>
 </template>
 
