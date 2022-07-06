@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryBarView',
@@ -11,10 +12,13 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActiveCategoryView() {
-            if (!this.activeByUserCategoryView) {
+            if (this.activeByUserCategoryView) {
+                return this.activeByUserCategoryView;
+            }
+            if (this.defaultActiveCategoryView) {
                 return this.defaultActiveCategoryView;
             }
-            return this.activeByUserCategoryView;
+            return clear();
         },
         /**
          * @private
@@ -22,7 +26,7 @@ registerModel({
          */
         _computeDefaultActiveCategoryView() {
             return {
-                emojiCategory: { categoryName: "all" },
+                emojiCategory: { name: "all" },
                 emojiCategoryBarViewOwner: this,
             };
         },

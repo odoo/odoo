@@ -20,6 +20,12 @@ registerModel({
             required: true,
             isCausal: true,
         }),
+        emojiSearchBar: one('EmojiSearchBar', {
+            default: {},
+            inverse: 'emojiPickerView',
+            readonly: true,
+            isCausal: true,
+        }),
         popoverViewOwner: one('PopoverView', {
             identifying: true,
             inverse: 'emojiPickerView',

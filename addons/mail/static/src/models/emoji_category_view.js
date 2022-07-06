@@ -11,6 +11,7 @@ registerModel({
          */
         onClick() {
             this.update({ emojiCategoryBarViewOwnerAsActiveByUser: this.emojiCategoryBarViewOwner });
+            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBar.reset();
         },
         /**
          * @param {MouseEvent} ev
