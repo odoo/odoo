@@ -3176,7 +3176,7 @@ export class OdooEditor extends EventTarget {
                         }
                     }
                 } else if (splitAroundUrl[i] !== '') {
-                    const textFragments = splitAroundUrl[i].split('\n');
+                    const textFragments = splitAroundUrl[i].split(/\r?\n/);
                     let textIndex = 1;
                     for (const textFragment of textFragments) {
                         this.execCommand('insertText', textFragment);
