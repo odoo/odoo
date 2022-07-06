@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import logging
 import marshal
 import os
@@ -6,10 +7,64 @@ import reprlib
 from ctypes import Structure, c_bool, c_int32, c_int64, c_ssize_t
 from multiprocessing import Lock, RawValue, RawArray
 from multiprocessing.shared_memory import SharedMemory
+from statistics import mean, quantiles
 from time import time, time_ns
 
 
 _logger = logging.getLogger(__name__)
+
+
+class SharedCacheStat:
+    """ Statistic counters for cache entries. """
+    __slots__ = (
+        '_hit', '_miss', '_overwrite_same', '_overwrite_other',
+        '_time_get', '_time_get_count', '_time_set', '_time_set_count', '_lock_time'
+    )
+    NB_TIME_SAVE = 100_000
+    def __init__(self):
+        self._hit = RawValue(c_int64, 0)
+        self._miss = RawValue(c_int64, 0)
+        self._overwrite_same = RawValue(c_int64, 0)  # Can happen if two worker check in the 'same' time if a key exist
+        self._overwrite_other = RawValue(c_int64, 0)  # Shouldn't happen
+
+        self._lock_time = Lock()
+        self._time_get = RawArray(c_int64, [-1] * self.NB_TIME_SAVE)
+        self._time_get_count = RawValue(c_int64, 0)
+        self._time_set = RawArray(c_int64, [-1] * self.NB_TIME_SAVE)
+        self._time_set_count = RawValue(c_int64, 0)
+
+    def hit(self):
+        self._hit.value += 1
+
+    def miss(self):
+        self._miss.value += 1
+
+    def overwrite(self, same_value=True):
+        if same_value:
+            self._overwrite_same.value += 1
+        else:
+            self._overwrite_other.value += 1
+
+    def ratio(self):
+        return 100.0 * self._hit.value / (self._hit.value + self._miss.value or 1)
+
+    @contextmanager
+    def time_register_set(self):
+        start = time_ns()
+        yield
+        end = time_ns() - start
+        with self._lock_time:
+            self._time_set[self._time_set_count.value % self.NB_TIME_SAVE] = end
+            self._time_set_count.value += 1
+
+    @contextmanager
+    def time_register_get(self):
+        start = time_ns()
+        yield
+        end = time_ns() - start
+        with self._lock_time:
+            self._time_get[self._time_get_count.value % self.NB_TIME_SAVE] = end
+            self._time_get_count.value += 1
 
 
 class LockIdentify:
@@ -133,6 +188,9 @@ class SharedMemoryLRU:
         self._data_free[0] = (0, self._sm.size)
         # Buffer of shared memory for data (key/value)
         self._data = self._sm.buf
+        # Stat of the Shared Cache, should be call/modify inside the lock
+        self._stats = SharedCacheStat()
+
 
     _root = property(lambda self: self._head[0], lambda self, x: self._head.__setitem__(0, x))
     _length = property(lambda self: self._head[1], lambda self, x: self._head.__setitem__(1, x))
@@ -156,6 +214,60 @@ class SharedMemoryLRU:
         """ Clear all the shared memory, shouldn't be use except for testing """
         with self._lock:
             self._clear()
+
+    def print_stats(self):
+        # 2022-07-01 13:34:01,090 44818 INFO master odoo.modules.shared_memory: Shared Cache counter statistics: 89.82322025800286 % (ratio), 1880 / 213 (hit / miss), Override: 0 (same value), 0 (other value)
+        # 2022-07-01 13:34:01,099 44818 INFO master odoo.modules.shared_memory: Shared Cache data statistics: 213 items, mean = 15909.464788732394, min = 248, max = 134516, deciles = [993.2, 2945.6, 3638.6, 4832.8, 7238.0, 9687.2, 13671.4, 21661.2, 48140.4] bytes
+        # 2022-07-01 13:34:01,104 44818 INFO master odoo.modules.shared_memory: Shared Cache time SET statistics: 213 items, mean = 0.1030, min = 0.0291, max = 0.4449, deciles = [0.040392, 0.0534256, 0.0676272, 0.07436580000000001, 0.081596, 0.0916602, 0.11676299999999999, 0.14191420000000002, 0.200109] ms
+        # 2022-07-01 13:34:01,106 44818 INFO master odoo.modules.shared_memory: Shared Cache time GET statistics: 1880 items, mean = 0.1021, min = 0.0129, max = 0.9817, deciles = [0.0331003, 0.0409992, 0.047600699999999996, 0.05621620000000001, 0.06517150000000001, 0.07753360000000001, 0.09759169999999999, 0.1330932, 0.21779579999999998] ms
+        with self._lock:
+            _logger.info(
+                "Shared Cache counter statistics: %.4f %% (ratio), %s / %s (hit / miss), Override: %s (same value), %s (other value)",
+                self._stats.ratio(),
+                self._stats._hit.value,
+                self._stats._miss.value,
+                self._stats._overwrite_same.value,
+                self._stats._overwrite_other.value,
+            )
+            sizes = [data_id.size / 1_000_000 for data_id in self._data_idx if data_id.size != -1]
+            if sizes:
+                _logger.info(
+                    "Shared Cache data statistics: %s items, %.2f %% used (%.2f MB / %.2f MB), mean = %.6f MB, min = %.6f MB, max = %.6f MB, deciles = %s MB",
+                    len(sizes),
+                    sum(sizes) * 100 / self._sm.size,
+                    sum(sizes),
+                    self._sm.size,
+                    mean(sizes),
+                    min(sizes),
+                    max(sizes),
+                    [f"{q:.6f}" for q in quantiles(sizes, n=10)],
+                )
+            with self._stats._lock_time:
+                times_set = [t / 1_000_000 for t in self._stats._time_set if t != -1]  # In ms
+                times_get = [t / 1_000_000 for t in self._stats._time_get if t != -1]  # In ms
+                if times_set:
+                    _logger.info(
+                        "Shared Cache time SET statistics: %s items, mean = %.4f, min = %.4f, max = %.4f (i=%d), sum = %.4f, deciles = %s ms",
+                        len(times_set),
+                        mean(times_set),
+                        min(times_set),
+                        max(times_set),
+                        times_set.index(max(times_set)),
+                        sum(times_set),
+                        [f"{q:.6f}" for q in quantiles(times_set, n=10)],
+                    )
+                if times_get:
+                    _logger.info(
+                        "Shared Cache time GET statistics: %s items, mean = %.4f, min = %.4f, max = %.4f (i=%d), sum = %.4f, deciles = %s ms",
+                        len(times_get),
+                        mean(times_get),
+                        min(times_get),
+                        max(times_get),
+                        times_get.index(max(times_get)),
+                        sum(times_get),
+                        [f"{q:.6f}" for q in quantiles(times_get, n=10)],
+                    )
+
 
     def _clear(self):
         """ Clear all the shared memory
@@ -381,61 +493,71 @@ class SharedMemoryLRU:
         :raises KeyError: If the key doesn't exist
         :return: The value unmarshalled
         """
-        hash_ = hash(key)
-        with self._lock:
-            self._check_consistence()
-            index, entry, val = self._lookup(key, hash_)
-            if val is None:
-                raise KeyError(f"{key} does not exist")
+        with self._stats.time_register_get():
+            hash_ = hash(key)
+            with self._lock:
+                self._check_consistence()
+                index, entry, val = self._lookup(key, hash_)
+                if val is None:
+                    self._stats.miss()
+                    raise KeyError(f"{key} does not exist")
+                self._stats.hit()
 
-            self._consistent.value = False
-            if self._root != index:
-                # Pop me from my previous location
-                self._entry_table[entry.prev].next = entry.next
-                self._entry_table[entry.next].prev = entry.prev
-                # Put me in front
-                entry.next = self._root
-                entry.prev = self._entry_table[self._root].prev
-                self._entry_table[self._entry_table[self._root].prev].next = index
-                self._entry_table[self._root].prev = index
-                self._root = index
-            self._consistent.value = True
-        return val
-
-    def __setitem__(self, key, value):
-        hash_ = hash(key)
-        data = marshal.dumps((key, value))
-        if len(data) > self._max_size_one_data:
-            raise MemoryError(f"The object of size {len(data)} is too large to put in the Shared Memory (max {self._max_size_one_data} bytes by entry)")
-
-        with self._lock:
-            self._check_consistence()
-            index, entry, val = self._lookup(key, hash_)
-            self._consistent.value = False
-            if self._root == index:  # If I am already the root, just update the hash
-                self._entry_table[index].hash = hash_
-            else:
-                if val is not None:  # Remove previous spot if exist
+                self._consistent.value = False
+                if self._root != index:
+                    # Pop me from my previous location
                     self._entry_table[entry.prev].next = entry.next
                     self._entry_table[entry.next].prev = entry.prev
-                if self._root == -1:  # First item set
-                    self._entry_table[index] = (hash_, index, index)
+                    # Put me in front
+                    entry.next = self._root
+                    entry.prev = self._entry_table[self._root].prev
+                    self._entry_table[self._entry_table[self._root].prev].next = index
+                    self._entry_table[self._root].prev = index
+                    self._root = index
+                self._consistent.value = True
+            return val
+
+    def __setitem__(self, key, value):
+        with self._stats.time_register_set():
+            hash_ = hash(key)
+            data = marshal.dumps((key, value))
+            if len(data) > self._max_size_one_data:
+                raise MemoryError(f"The object of size {len(data)} is too large to put in the Shared Memory (max {self._max_size_one_data} bytes by entry)")
+
+            with self._lock:
+                self._check_consistence()
+                index, entry, val = self._lookup(key, hash_)
+                self._consistent.value = False
+
+                if val is not None:
+                    self._stats.overwrite(val == value)
+                    # TODO: Because we normally shouldn't override values (or with the same value), maybe we should return directly it we find a value
+                    # Or we can compare it and return if it is the same ?
+
+                if self._root == index:  # If I am already the root, just update the hash
+                    self._entry_table[index].hash = hash_
                 else:
-                    old_root_i = self._root
-                    self._entry_table[index] = (hash_, self._entry_table[old_root_i].prev, old_root_i)
-                    self._entry_table[self._entry_table[old_root_i].prev].next = index
-                    self._entry_table[old_root_i].prev = index
-                self._root = index
+                    if val is not None:  # Remove previous spot if exist
+                        self._entry_table[entry.prev].next = entry.next
+                        self._entry_table[entry.next].prev = entry.prev
+                    if self._root == -1:  # First item set
+                        self._entry_table[index] = (hash_, index, index)
+                    else:
+                        old_root_i = self._root
+                        self._entry_table[index] = (hash_, self._entry_table[old_root_i].prev, old_root_i)
+                        self._entry_table[self._entry_table[old_root_i].prev].next = index
+                        self._entry_table[old_root_i].prev = index
+                    self._root = index
 
-            if val is None:
-                self._length += 1
-            else:
-                self._free(index)
-            self._malloc(data)  # Malloc use root entry to find index
+                if val is None:
+                    self._length += 1
+                else:
+                    self._free(index)
+                self._malloc(data)  # Malloc use root entry to find index
 
-            if self._length > self._max_length:
-                self._lru_pop()  # Make it after to avoid modifying index
-            self._consistent.value = True
+                if self._length > self._max_length:
+                    self._lru_pop()  # Make it after to avoid modifying index
+                self._consistent.value = True
 
     def __delitem__(self, key):
         hash_ = hash(key)

@@ -763,6 +763,8 @@ class TestSharedMemoryLRU(BaseCase):
                 "Read with 'real' sample take %.4f ms by read in multi-process (%d)",
                 (time.time() - start) * 1000 / nb_read, nb_process
             )
+            # Check print stats
+            lru.print_stats()
 
     @mute_logger('odoo.modules.shared_memory')
     def test_performance_reset_sm(self):

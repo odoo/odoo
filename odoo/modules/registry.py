@@ -42,6 +42,10 @@ def close_shared_cache():
     if isinstance(shared_cache, SharedMemoryLRU):
         shared_cache.close()
 
+def log_shared_cache_stats(sig=None, frame=None):
+    if isinstance(shared_cache, SharedMemoryLRU):
+        shared_cache.print_stats()
+
 def release_lock_shared_cache(pid):
     if isinstance(shared_cache, SharedMemoryLRU):
         shared_cache.hook_process_killed(pid)

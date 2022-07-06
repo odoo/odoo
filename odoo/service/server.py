@@ -23,7 +23,7 @@ from werkzeug.debug import DebuggedApplication
 
 import odoo
 from odoo.modules import get_modules
-from odoo.modules.registry import Registry, create_shared_cache, get_shared_cache, unlink_shared_cache, release_lock_shared_cache, close_shared_cache
+from odoo.modules.registry import Registry, create_shared_cache, get_shared_cache, unlink_shared_cache, release_lock_shared_cache, close_shared_cache, log_shared_cache_stats
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
@@ -876,6 +876,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
+        signal.signal(signal.SIGUSR2, log_shared_cache_stats)
 
         if config['http_enable']:
             # listen to socket
