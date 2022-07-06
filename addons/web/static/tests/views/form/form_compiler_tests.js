@@ -271,4 +271,24 @@ QUnit.module("Form Renderer", (hooks) => {
             resId: 1,
         });
     });
+
+    QUnit.test("compile a button with id", async (assert) => {
+        serverData.views = {
+            "partner,1,form": /*xml*/ `
+                <form>
+                    <header>
+                         <button id="action_button" string="ActionButton"/>
+                     </header>
+                </form>`,
+        };
+
+        await makeView({
+            serverData,
+            resModel: "partner",
+            type: "form",
+            resId: 1,
+        });
+
+        assert.containsOnce(target, "button[id=action_button]");
+    });
 });
