@@ -6119,6 +6119,45 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("readonly sub fields fields with force_save attribute", async function (assert) {
+        assert.expect(1);
+
+        serverData.models.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.int_field.readonly = true;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="foo" force_save="1"/>
+                            <field name="int_field"/>
+                            <field name="qux"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    // foo should be saved because of the "force_save" attribute
+                    // qux should be saved because it isn't readonly
+                    // int_field should not be saved as it is readonly
+                    assert.deepEqual(args.args[0].p, [[0, 1, { foo: "some value", qux: 6.5 }]]);
+                }
+                if (args.method === "onchange") {
+                    return {
+                        value: {
+                            p: [[5], [0, 1, { foo: "some value", int_field: 44, qux: 6.5 }]],
+                        },
+                    };
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_form_button_save"));
+    });
+
     QUnit.test("readonly set by modifier do not break many2many_tags", async function (assert) {
         serverData.models.partner.onchanges = {
             bar: function (obj) {
