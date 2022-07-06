@@ -123,12 +123,13 @@ export class FormCompiler extends ViewCompiler {
         el.classList.remove("oe_button_box");
         const buttonBox = createElement("ButtonBox");
         let slotId = 0;
-
+        let hasContent = false;
         for (const child of el.children) {
             const invisible = getModifier(child, "invisible");
             if (isAlwaysInvisible(invisible, params)) {
                 continue;
             }
+            hasContent = true;
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
                 isVisible:
@@ -140,7 +141,7 @@ export class FormCompiler extends ViewCompiler {
             append(buttonBox, mainSlot);
         }
 
-        return buttonBox;
+        return hasContent ? buttonBox : null;
     }
 
     /**
