@@ -48,7 +48,7 @@ QUnit.module('LegacyViews', {
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-footer">
-                                <a type="action" class="btn btn-primary" data-dismiss="modal"
+                                <a type="action" class="btn btn-primary" data-bs-dismiss="modal"
                                 data-o-hide-banner="true">
                                     Remove
                                 </a>
@@ -58,8 +58,8 @@ QUnit.module('LegacyViews', {
                 </div>
                 <div class="o_onboarding_container collapse show">
                     <div class="o_onboarding_wrap">
-                        <a href="#" data-toggle="modal" data-bs-target=".o_onboarding_modal"
-                           class="float-right o_onboarding_btn_close">
+                        <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal"
+                           class="float-end o_onboarding_btn_close">
                             <i class="fa fa-times" title="Close the onboarding panel" />
                         </a>
                     </div>

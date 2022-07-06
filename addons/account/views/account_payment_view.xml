@@ -66,7 +66,7 @@
                                     <div class="col-6">
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-end">
                                         <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                         <field name="currency_id" invisible="1"/>
                                     </div>
                                     <div class="col-6">
-                                        <span class="float-right">
+                                        <span class="float-end">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'secondary', 'sent': 'success'}}"/>
                                         </span>
                                     </div>

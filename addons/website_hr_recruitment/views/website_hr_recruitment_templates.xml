@@ -39,7 +39,7 @@
                         <a t-foreach="jobs" t-as="job" t-attf-href="/jobs/detail/#{ slug(job) }" t-attf-class="text-decoration-none#{' mt-3' if job_index else ''}">
                             <div class="card card-default mb32">
                                 <div class="card-body" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                    <span t-if="not job.website_published" class="badge badge-danger mb8 p-2">unpublished</span>
+                                    <span t-if="not job.website_published" class="badge text-bg-danger mb8 p-2">unpublished</span>
                                     <h3 class="text-secondary mt0 mb4">
                                         <span t-field="job.name"/>
                                     </h3>
@@ -80,8 +80,8 @@
             <section class="bg-200">
                 <div class="container">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb pl-0">
-                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary font-weight-bold">Jobs</a></li>
+                        <ol class="breadcrumb ps-0">
+                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
                         </ol>
                     </nav>
@@ -91,11 +91,11 @@
             <section class="pb32">
                 <div class="container">
                     <div class="mt32">
-                        <div class="float-right">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right">Apply Now!</a>
+                        <div class="float-end">
+                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
                         </div>
                         <h1 t-field="job.name"/>
-                        <h5 class="font-weight-light" t-field="job.address_id" t-options='{
+                        <h5 class="fw-light" t-field="job.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["city"],
                             "no_tag_br": True

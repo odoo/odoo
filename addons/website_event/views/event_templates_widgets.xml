@@ -50,9 +50,9 @@
          t-att-data-pre-countdown-text="pre_countdown_text">
         <t t-set="remaining_time" t-value="pre_remaining_time if pre_remaining_time else main_remaining_time"/>
         <span class="o_display_timer_countdown d-flex justify-content-center">
-            <span class="o_countdown_text pr-1" t-out="pre_countdown_text if pre_countdown_text else main_countdown_text if not pre_countdown_display else ''"/>
+            <span class="o_countdown_text pe-1" t-out="pre_countdown_text if pre_countdown_text else main_countdown_text if not pre_countdown_display else ''"/>
             <div t-if="int(remaining_time) > 86400"
-             class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_days pr-1">0</span><span class="o_countdown_metric pr-1">days</span></div>
+             class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_days pe-1">0</span><span class="o_countdown_metric pe-1">days</span></div>
             <div t-if="int(remaining_time) > 3600"
                  class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_hours">00</span><span class="o_countdown_metric">:</span></div>
             <div class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_minutes">00</span><span class="o_countdown_metric">:</span></div>
@@ -64,9 +64,7 @@
 <template id="display_timer_alert_widget" name="Display Countdown widget">
     <div class="o_we_track_timer alert alert-warning alert-dismissible fade show d-none mx-3 mt-3 mb-0" role="alert" t-att-data-time-to-live="time_to_live">
         Starts <span />
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <i class="fa fa-times"/>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </template>
 

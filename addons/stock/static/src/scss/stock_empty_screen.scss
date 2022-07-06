@@ -1,7 +1,8 @@
 .o_view_nocontent {
     &_barcode_scanner:before {
         @extend %o-nocontent-init-image;
-        @include size(250px, 250px);
+        width: 250px;
+        height: 250px;
         background: transparent url(/stock/static/img/barcode_scanner.png) no-repeat center;
         background-size: 250px 250px;
     }

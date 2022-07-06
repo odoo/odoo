@@ -228,7 +228,7 @@ $(function () {
             var input = widget.find('input');
             var slideID = widget.find('button').data('slide-id');
             if (input.val() && input[0].checkValidity()) {
-                widget.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                widget.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
@@ -243,7 +243,7 @@ $(function () {
                     },
                 });
             } else {
-                widget.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                widget.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                 input.focus();
             }
         });

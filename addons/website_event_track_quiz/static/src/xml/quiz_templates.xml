@@ -15,7 +15,7 @@
                                 t-att-data-text="answer.text_value"
                                 t-attf-class="o_quiz_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{widget.track.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
 
-                                <label class="my-0 d-flex align-items-center justify-content-center mr-2">
+                                <label class="my-0 d-flex align-items-center justify-content-center me-2">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
@@ -34,7 +34,7 @@
     </t>
 
     <t t-name="quiz.badge">
-        <span class="badge badge-warning ml-2">
+        <span class="badge text-bg-warning ms-2">
             <span>+ <t t-out="answer.awarded_points"/></span>
             <span t-if="answer.awarded_points == 1">Point</span>
             <span t-else="">Points</span>
@@ -68,16 +68,16 @@
         <div id="validation" class="d-md-flex">
             <div class="flex-grow-1">
                 <button t-if="!widget.track.completed" role="button" title="Check answers" aria-label="Check answers"
-                    class="btn btn-primary text-uppercase font-weight-bold o_quiz_js_quiz_submit">
+                    class="btn btn-primary text-uppercase fw-bold o_quiz_js_quiz_submit">
                     Check your answers
                 </button>
                 <t t-else="">
-                    <div t-if="widget.quiz.quizPointsGained > 0" class="alert alert-warning mr-md-3">
-                        Congratulations, you scored a total of <span t-out="widget.quiz.quizPointsGained" class="font-weight-bold"/>
+                    <div t-if="widget.quiz.quizPointsGained > 0" class="alert alert-warning me-md-3">
+                        Congratulations, you scored a total of <span t-out="widget.quiz.quizPointsGained" class="fw-bold"/>
                         <span t-if="widget.quiz.quizPointsGained == 1">point!</span>
                         <span t-else="">points!</span>
                     </div>
-                    <div t-else="" class="alert alert-warning mr-md-3">
+                    <div t-else="" class="alert alert-warning me-md-3">
                         Oopsie, you did not score any point on this quiz.
                     </div>
                 </t>

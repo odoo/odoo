@@ -23,7 +23,7 @@
                     <div class="row text-center justify-content-center">
                         <h1 class="col-12 mt-5">Thank you for rating our services!</h1>
                         <form class="col-md-6" t-attf-action="/rate/#{token}/submit_feedback" method="post">
-                            <div class="btn-group btn-group-toggle row flex-nowrap justify-content-center w-100 mt-5" data-toggle="buttons">
+                            <div class="btn-group btn-group-toggle row flex-nowrap justify-content-center w-100 mt-5" data-bs-toggle="buttons">
                                 <t t-foreach="rate_names" t-as="rate_name">
                                     <label t-attf-class="col p-4 btn o_rating_label shadow-none {{rate == rate_name and 'active' or ''}}">
                                         <input type="radio" name="rate" t-attf-id="rate_{{rate_name}}" t-att-value="rate_name" t-att-checked="rate == rate_name"/>

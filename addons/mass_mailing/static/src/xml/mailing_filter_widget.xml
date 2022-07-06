@@ -5,14 +5,14 @@
         <t t-jquery="div.o_field_many2one_selection" t-operation="append">
             <div class="o_mass_mailing_filter_container">
                 <div class="o_mass_mailing_save_filter_container pt-1">
-                    <span class="o_mass_mailing_add_filter" data-toggle="dropdown" title="Add to favorite filters">
+                    <span class="o_mass_mailing_add_filter" data-bs-toggle="dropdown" title="Add to favorite filters">
                         <span class="o_mass_mailing_no_filter">Save as Favorite Filter</span>
                         <i class="fa fa-floppy-o px-3 py-1"/>
                     </span>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <span class="ml-2 text-muted">Create Favorite Filter</span><br/>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <span class="ms-2 text-muted">Create Favorite Filter</span><br/>
                         <div class="d-inline-flex">
-                            <input type="text" class="o_mass_mailing_filter_name w-auto ml-2" placeholder='e.g. "VIP Customers"'/>
+                            <input type="text" class="o_mass_mailing_filter_name w-auto ms-2" placeholder='e.g. "VIP Customers"'/>
                             <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2">
                                 Add
                             </button>

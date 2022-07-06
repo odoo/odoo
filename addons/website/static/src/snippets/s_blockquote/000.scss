@@ -14,7 +14,7 @@
             float: left;
             border-top-right-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
-            &.float-right {
+            &.float-end {
                 border-top-left-radius: 0 !important;
                 border-bottom-left-radius: 0 !important;
             }
@@ -64,7 +64,7 @@
         border-color: o-color('secondary');
         .s_blockquote_content {
             padding: $spacer;
-            @include border-right-radius($border-radius);
+            @include border-end-radius($border-radius);
             p:last-of-type {
                 margin-bottom: 0;
             }

@@ -59,7 +59,7 @@ header {
 }
 .navbar {
     margin-bottom: 0;
-    .nav.navbar-nav.float-right {
+    .nav.navbar-nav.float-end {
         @include media-breakpoint-down(md) {
             float: none!important;
         }
@@ -187,10 +187,10 @@ li > p {
 
 // Images spacing
 img, .media_iframe_video, .o_image {
-    &.float-right {
+    &.float-end {
         margin-left: $grid-gutter-width / 2;
     }
-    &.float-left {
+    &.float-start {
         margin-right: $grid-gutter-width / 2;
     }
 }

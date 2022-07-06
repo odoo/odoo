@@ -13,11 +13,11 @@
                     <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
                         <tr>
                             <th>
-                              <h1 t-field="o.name" class="mt0 float-left"/>
+                              <h1 t-field="o.name" class="mt0 float-start"/>
                             </th>
                             <th name="td_pk_barcode" style="text-align: center">
                                 <t t-if="o.valid_sscc and env['ir.actions.report'].datamatrix_available()">
-                                    <div class="row text-left">
+                                    <div class="row text-start">
                                         <t t-set="barcode" t-value="'00' + o.name"/>
                                         <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
                                         <div class="col-3" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 100, 'height': 100}"/>
@@ -46,10 +46,10 @@
                         <thead>
                             <tr>
                                 <th>Product</th>
-                                <th name="th_quantity" class="text-right">Quantity</th>
+                                <th name="th_quantity" class="text-end">Quantity</th>
                                 <th name="th_uom" groups="uom.group_uom"/>
-                                <th name="th_serial" class="text-right" t-if="has_serial_number">Lot/Serial Number</th>
-                                <th name="th_barcode" class="text-right" t-if="has_ean_barcode"/>
+                                <th name="th_serial" class="text-end" t-if="has_serial_number">Lot/Serial Number</th>
+                                <th name="th_barcode" class="text-end" t-if="has_ean_barcode"/>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,16 +57,16 @@
                                 <td>
                                    <span  t-field="l.product_id.name"/>
                                 </td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <span t-field="l.quantity"/>
                                 </td>
                                 <td groups="uom.group_uom">
                                     <span t-field="l.product_id.uom_id.name"/>
                                 </td>
-                                <td class="text-right" t-if="has_serial_number">
+                                <td class="text-end" t-if="has_serial_number">
                                     <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
                                 </td>
-                                <td class="text-right" t-if="has_ean_barcode">
+                                <td class="text-end" t-if="has_ean_barcode">
                                     <t t-if="l.product_id.valid_ean">
                                         <t t-set="product_barcode" t-value="'01' + '0' * (14 - len(l.product_id.barcode)) + l.product_id.barcode"/>
                                         <t t-set="gs1_pattern" t-value="gs1_uom_patterns.get(l.product_uom_id.id, False)"/>
@@ -106,8 +106,8 @@
                         <div class="row">
                             <t t-set="barcode" t-value="'00' + o.name"/>
                             <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
-                            <div class="col-5 text-right" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 200, 'height': 200}"/>
-                            <div class="col-7 text-left" style="font-size:20px;">
+                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 200, 'height': 200}"/>
+                            <div class="col-7 text-start" style="font-size:20px;">
                                 <div class="row">SSCC: <span t-field="o.name"/></div>
                                 <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date"/></div>
                                 <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name"/></div>

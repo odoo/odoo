@@ -1154,7 +1154,7 @@ QUnit.module("Views", (hooks) => {
             <div class="o_onboarding_container collapse show">
                 <div class="o_onboarding" />
                     <div class="o_onboarding_wrap" />
-                        <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="float-right o_onboarding_btn_close">
+                        <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="float-end o_onboarding_btn_close">
                             <i class="fa fa-times" title="Close the onboarding panel" id="closeOnboarding"></i>
                         </a>
                         <div class="bannerContent">Content</div>

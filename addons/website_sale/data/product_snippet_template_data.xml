@@ -29,7 +29,7 @@
                             <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                         </div>
                         <button t-if="record._website_show_quick_add()"
-                                type="button" role="button" class="btn btn-primary js_add_cart ml-auto" title="Add to Cart">
+                                type="button" role="button" class="btn btn-primary js_add_cart ms-auto" title="Add to Cart">
                             <i class="fa fa-fw fa-shopping-cart"/>
                         </button>
                     </div>
@@ -59,7 +59,7 @@
                         <div>
                             <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                         </div>
-                        <a class="btn btn-primary ml-auto" t-att-href="record.website_url">
+                        <a class="btn btn-primary ms-auto" t-att-href="record.website_url">
                             <i class="fa fa-fw fa-search"/>
                         </a>
                     </div>
@@ -188,7 +188,7 @@
                     </a>
                     <div class="o_carousel_product_card_body px-3 mt-2 h-100 d-flex flex-column justify-content-between">
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
-                            <div class="h5 mb-0 mr-4">
+                            <div class="h5 mb-0 me-4">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <t t-if="is_view_active('website_sale.product_comment')">
@@ -199,7 +199,7 @@
                             </t>
                             <div class="card-title h6 w-100 mt-2" t-field="record.display_name"/>
                         </div>
-                        <div class="text-right o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
+                        <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
                             <button t-if="record._website_show_quick_add()"
                                     type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
                                 Add to Cart <i class="fa fa-fw fa-shopping-cart"/>
@@ -224,7 +224,7 @@
                             <div class="o_carousel_product_card_body p-5">
                                 <div class="card-title h1" t-field="record.display_name"/>
                                 <div class="d-flex align-items-center my-4">
-                                    <div class="text-primary h4 mb-0 mr-3">
+                                    <div class="text-primary h4 mb-0 me-3">
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                                     </div>
                                     <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -234,7 +234,7 @@
                                 </div>
                                 <div class="card-text text-muted" t-field="record.description_sale"/>
                                 <div class="mt-4">
-                                    <a class="btn btn-outline-secondary mr-1 mt-1" t-att-href="record.website_url">
+                                    <a class="btn btn-outline-secondary me-1 mt-1" t-att-href="record.website_url">
                                         View Product
                                     </a>
                                     <button t-if="record._website_show_quick_add()"
@@ -261,7 +261,7 @@
                                 <img class="img img-fluid mx-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                             </a>
                         </div>
-                        <div class="o_carousel_product_card_body col-lg-8 pl-3 d-flex flex-column justify-content-between">
+                        <div class="o_carousel_product_card_body col-lg-8 ps-3 d-flex flex-column justify-content-between">
                             <div>
                                 <div class="card-title h6" t-field="record.display_name"/>
                                 <div class="mb-2">
@@ -287,9 +287,9 @@
         </template>
 
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <span t-esc="record._get_contextual_price()" class="font-weight-bold"
+            <span t-esc="record._get_contextual_price()" class="fw-bold"
                   t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-            <del t-if="data.get('has_discounted_price')" class="text-danger ml-1 h6" style="white-space: nowrap;"
+            <del t-if="data.get('has_discounted_price')" class="text-danger ms-1 h6" style="white-space: nowrap;"
                  t-esc="data['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
         </template>
 

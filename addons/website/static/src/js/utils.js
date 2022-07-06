@@ -57,7 +57,7 @@ function autocompleteWithPages(self, $input, options) {
             });
         },
         _renderSeparator: function (ul, item) {
-            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize p-2'>")
+            return $("<li class='ui-autocomplete-category fw-bold text-capitalize p-2'>")
                    .append(`<div>${item.separator}</div>`)
                    .appendTo(ul);
         },

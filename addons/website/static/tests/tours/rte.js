@@ -41,7 +41,7 @@ wTourUtils.registerEditionTour('rte_translator', {
 }, {
     content: "load Parseltongue",
     trigger: '.modal-footer button:first',
-    extra_trigger: '.modal-dialog div[name="lang_ids"] .badge-pill .o_tag_badge_text:contains(Parseltongue)',
+    extra_trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
 }, {
     content: "click language dropdown (2)",
     trigger: 'iframe .js_language_selector .dropdown-toggle',

@@ -8,7 +8,7 @@
                 t-ref="root"
             >
                 <t t-if="!messaging.device.isSmall">
-                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-right bg-light'" record="discussView"/>
+                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-end bg-light'" record="discussView"/>
                 </t>
                 <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
                 <t t-else="">

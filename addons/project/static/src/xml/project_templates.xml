@@ -15,7 +15,7 @@
         </table>
     </t>
 
-    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble mr-2 o_color_bubble_' + color"></span>
+    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble me-2 o_color_bubble_' + color"></span>
 
     <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
         <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
@@ -212,7 +212,7 @@
                 <div t-foreach="milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
                     <OpenMilestone context="context" milestone="milestone" onMilestoneUpdate.bind="_loadQwebContext"/>
                 </div>
-                <span t-if="milestones.data.length === 0" class="text-muted font-italic">
+                <span t-if="milestones.data.length === 0" class="text-muted fst-italic">
                     Track major progress points that must be reached to achieve success.
                 </span>
             </div>
@@ -244,7 +244,7 @@
         </div>
     </t>
     <t t-name="project.task.PrivateProjectName">
-        <span class="font-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+        <span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
     </t>
 
 </templates>

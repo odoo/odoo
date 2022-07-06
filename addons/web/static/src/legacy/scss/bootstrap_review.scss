@@ -94,7 +94,7 @@
 .modal-backdrop {
     display: none;
 }
-.modal:not([data-backdrop="false"]) {
+.modal:not([data-bs-backdrop="false"]) {
     background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
 }
 
@@ -178,6 +178,6 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     }
 }
 
-.carousel-control-next .sr-only {
+.carousel-control-next .visually-hidden {
     left: 50%; // Avoid horizontal scrollbar in Chrome
 }

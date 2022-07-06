@@ -85,8 +85,8 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_detailed_type': 'product'}"/>
                                     <field name="product_tmpl_id" invisible="1"/>
-                                    <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-right oe_read_only"/>
-                                    <field name="attachments_count" class="text-left oe_read_only"
+                                    <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-end oe_read_only"/>
+                                    <field name="attachments_count" class="text-start oe_read_only"
                                     string=" "/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_category_id" invisible="1"/>
@@ -185,7 +185,7 @@
                                     <div class="o_kanban_record_headings mt4">
                                         <strong class="o_kanban_record_title"><span clatt="mt4"><field name="product_tmpl_id"/></span></strong>
                                     </div>
-                                    <span class="float-right badge badge-pill"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
+                                    <span class="float-end badge rounded-pill"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
                                 </div>
                             </div>
                         </t>

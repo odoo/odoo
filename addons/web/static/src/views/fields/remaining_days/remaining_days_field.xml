@@ -7,7 +7,7 @@
             <t t-set="formatted" t-value="formattedValue" />
             <div
                 t-att-class="{
-                    'font-weight-bold': days !== null and days lte 0,
+                    'fw-bold': days !== null and days lte 0,
                     'text-danger': days !== null and days lt 0,
                     'text-warning': days !== null and days === 0,
                 }"

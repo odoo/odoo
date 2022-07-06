@@ -31,8 +31,8 @@
                 <span class="js_menu_label o_text_overflow flex-grow-1">
                     <t t-esc="props.menu.fields['name']"/>
                 </span>
-                <span t-if="props.menu.fields['is_mega_menu']" class="badge badge-primary">Mega Menu</span>
-                <i t-if="props.menu.is_homepage" class="fa fa-home ml-3" role="img" aria-label="Home" title="Home"/>
+                <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary">Mega Menu</span>
+                <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>
             </span>
             <span class="input-group-append">
                 <button t-on-click="edit" type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
@@ -55,7 +55,7 @@
             </t>
         </ul>
         <div class="mt32">
-            <small class="float-right text-muted">
+            <small class="float-end text-muted">
                 Drag to the right to get a submenu
             </small>
             <a href="#" t-on-click="() => this.addMenu(false)">

@@ -92,7 +92,7 @@ var DocumentViewer = Widget.extend({
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
-        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
+        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
     },
     /**
@@ -157,7 +157,7 @@ var DocumentViewer = Widget.extend({
         }));
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this._hidePdfButtonsIfPresent();
-        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
+        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
     /**

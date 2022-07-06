@@ -10,9 +10,9 @@
             <table name="table_optional_products" class="table table-sm">
                 <thead>
                     <tr>
-                        <th name="th_option_name" class="text-left">Description</th>
-                        <th t-if="has_option_discount" name="th_option_discount" groups="product.group_discount_per_so_line" class="text-left">Disc.%</th>
-                        <th name="th_option_price_unit" class="text-right">Unit Price</th>
+                        <th name="th_option_name" class="text-start">Description</th>
+                        <th t-if="has_option_discount" name="th_option_discount" groups="product.group_discount_per_so_line" class="text-start">Disc.%</th>
+                        <th name="th_option_price_unit" class="text-end">Unit Price</th>
                     </tr>
                 </thead>
                 <tbody class="sale_tbody">
@@ -26,7 +26,7 @@
                             </strong>
                         </td>
                         <td name="td_option_price_unit">
-                            <strong class="text-right">
+                            <strong class="text-end">
                                 <div t-field="option.price_unit"
                                     t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'
                                     t-att-style="option.discount and 'text-decoration: line-through' or None"

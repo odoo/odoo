@@ -11,7 +11,7 @@
         @include gantt-decoration-color($success);
     }
     div.o_gantt_pill.decoration-warning {
-        @include gantt-decoration-color(gray('500'));
+        @include gantt-decoration-color(map-get($grays, '500'));
     }
     div.o_gantt_pill.decoration-danger {
         @include gantt-decoration-color($danger);

@@ -33,7 +33,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         return this._super.apply(this, arguments).then(function () {
             if (!self.$(".o_dirty_warning").length) {
                 self.$('.o_statusbar_buttons')
-                    .append($('<span/>', {text: _t("Unsaved changes"), class: 'text-muted ml-2 o_dirty_warning'}))
+                    .append($('<span/>', {text: _t("Unsaved changes"), class: 'text-muted ms-2 o_dirty_warning'}))
             }
         });
     },

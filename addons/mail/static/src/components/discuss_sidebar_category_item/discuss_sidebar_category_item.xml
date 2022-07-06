@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategoryItem" owl="1">
         <t t-if="categoryItem">
-            <t t-set="o_DiscussSidebarCategoryItem_hoverItem" t-value="'btn p-0 text-left text-700 opacity-100-hover opacity-75'"/>
-            <button class="o_DiscussSidebarCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 font-weight-normal text-reset"
+            <t t-set="o_DiscussSidebarCategoryItem_hoverItem" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
+            <button class="o_DiscussSidebarCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 fw-normal text-reset"
                 t-att-class="{
                     'bg-100': !categoryItem.isActive,
                     'o-active bg-200': categoryItem.isActive,
@@ -19,7 +19,7 @@
                         </t>
                     </div>
                 </div>
-                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread font-weight-bolder': categoryItem.isUnread }">
+                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': categoryItem.isUnread }">
                     <t t-esc="categoryItem.channel.displayName"/>
                 </span>
                 <div class="o_DiscussSidebarCategoryItem_item flex-grow-1"/>
@@ -38,7 +38,7 @@
                     <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up ms-1 me-3" t-att-class="{ 'o-isCalling text-danger': categoryItem.channel.rtc }"/>
                 </t>
                 <t t-if="categoryItem.counter > 0">
-                    <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge badge-pill badge-primary ms-1 me-3">
+                    <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge rounded-pill text-bg-primary ms-1 me-3">
                         <t t-esc="categoryItem.counter"/>
                     </div>
                 </t>

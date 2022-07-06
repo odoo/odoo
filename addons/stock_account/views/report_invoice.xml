@@ -9,19 +9,19 @@
                     <thead>
                         <tr>
                             <th><span>Product</span></th>
-                            <th class="text-right"><span>Quantity</span></th>
-                            <th class="text-right"><span>SN/LN</span></th>
+                            <th class="text-end"><span>Quantity</span></th>
+                            <th class="text-end"><span>SN/LN</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <t t-foreach="lot_values" t-as="snln_line">
                             <tr>
                                 <td><t t-esc="snln_line['product_name']"/></td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <t t-esc="snln_line['quantity']"/>
                                     <t t-esc="snln_line['uom_name']" groups="uom.group_uom"/>
                                 </td>
-                                <td class="text-right"><t t-esc="snln_line['lot_name']"/></td>
+                                <td class="text-end"><t t-esc="snln_line['lot_name']"/></td>
                             </tr>
                         </t>
                     </tbody>

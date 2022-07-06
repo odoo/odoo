@@ -35,12 +35,12 @@
                             <thead>
                                 <tr>
                                     <th><strong>Description</strong></th>
-                                    <th class="text-right"><strong>Qty</strong></th>
+                                    <th class="text-end"><strong>Qty</strong></th>
                                     <th class="text-center" groups="uom.group_uom">
                                         <strong>Product UoM</strong>
                                     </th>
                                     <th t-if="o.type_id == env.ref('purchase_requisition.type_single')">Price Unit</th>
-                                    <th class="text-right"><strong>Scheduled Date</strong></th>
+                                    <th class="text-end"><strong>Scheduled Date</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,7 +49,7 @@
                                         [ <span t-field="line_ids.product_id.code"/> ]
                                         <span t-field="line_ids.product_id.name"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="line_ids.product_qty"/>
                                     </td>
                                     <t>
@@ -60,7 +60,7 @@
                                     <td t-if="o.type_id == env.ref('purchase_requisition.type_single')">
                                         <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="line_ids.schedule_date"/>
                                     </td>
                                 </tr>
@@ -75,7 +75,7 @@
                                 <tr>
                                     <th><strong>Vendor </strong></th>
                                     <th><strong>Date</strong></th>
-                                    <th class="text-right"><strong>Reference </strong></th>
+                                    <th class="text-end"><strong>Reference </strong></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,7 +86,7 @@
                                     <td class="text-center">
                                         <span t-field="purchase_ids.date_order"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="purchase_ids.name"/>
                                     </td>
                                 </tr>

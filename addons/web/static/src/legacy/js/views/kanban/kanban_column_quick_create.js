@@ -190,7 +190,7 @@ var ColumnQuickCreate = Widget.extend({
                 examples: this.examples,
             })),
             buttons: [{
-                classes: 'btn-primary float-right',
+                classes: 'btn-primary float-end',
                 text: this.applyExamplesText,
                 close: true,
                 click: function () {
@@ -200,7 +200,7 @@ var ColumnQuickCreate = Widget.extend({
                     });
                 }
             }, {
-                classes: 'btn-secondary float-right',
+                classes: 'btn-secondary float-end',
                 close: true,
                 text: _t('Close'),
             }],

@@ -63,12 +63,12 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
-                                  class="badge-pill badge-warning ml-1">
+                                  class="rounded-pill text-bg-warning ms-1">
                                 Test Mode
                             </span>
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_acquirer.get(acquirer)">
-                                <span class="badge-pill badge-secondary ml-1">
+                                <span class="rounded-pill text-bg-secondary ms-1">
                                     + <t t-esc="fees_by_acquirer.get(acquirer)"
                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     Fees
@@ -80,7 +80,7 @@
                         <!-- === Help message === -->
                         <div t-if="not is_html_empty(acquirer.pre_msg)"
                              t-out="acquirer.pre_msg"
-                             class="text-muted ml-3"/>
+                             class="text-muted ms-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
                     <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
@@ -199,7 +199,7 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
-                                  class="badge-pill badge-warning"
+                                  class="rounded-pill text-bg-warning"
                                   style="margin-left:5px">
                                 Test Mode
                             </span>
@@ -209,7 +209,7 @@
                         <!-- === Help message === -->
                         <div t-if="not is_html_empty(acquirer.pre_msg)"
                              t-out="acquirer.pre_msg"
-                             class="text-muted ml-3"/>
+                             class="text-muted ms-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
                     <t t-if="acquirer.sudo()._should_build_inline_form(is_validation=True)">
@@ -247,7 +247,7 @@
                         </label>
                         <!-- === "Delete" token button === -->
                         <button name="o_payment_delete_token"
-                                class="btn btn-primary btn-sm float-right">
+                                class="btn btn-primary btn-sm float-end">
                             <i class="fa fa-trash"/> Delete
                         </button>
                     </div>
@@ -276,7 +276,7 @@
 
     <!-- Expandable payment icon list -->
     <template id="icon_list" name="Payment Icon List">
-        <ul class="payment_icon_list float-right list-inline" data-max-icons="3">
+        <ul class="payment_icon_list float-end list-inline" data-max-icons="3">
             <t t-set="icon_index" t-value="0"/>
             <t t-set="MAX_ICONS" t-value="3"/>
             <!-- === Icons === -->
@@ -285,7 +285,7 @@
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
                     <span t-esc="icon.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
-                          data-toggle="tooltip"
+                          data-bs-toggle="tooltip"
                           t-att-title="icon.name"/>
                 </li>
                 <t t-set="icon_index" t-value="icon_index + 1"/>
@@ -294,9 +294,9 @@
                 <!-- === "show more" button === -->
                 <!-- Only displayed if too many payment icons -->
                 <li style="display:block;" class="list-inline-item">
-                    <span class="float-right more_option text-info">
+                    <span class="float-end more_option text-info">
                         <a name="o_payment_icon_more"
-                           data-toggle="tooltip"
+                           data-bs-toggle="tooltip"
                            t-att-title="', '.join([icon.name for icon in acquirer.payment_icon_ids[MAX_ICONS:]])">
                             show more
                         </a>
@@ -305,7 +305,7 @@
                 <!-- === "show less" button === -->
                 <!-- Only displayed when "show more" is clicked -->
                 <li style="display:block;" class="list-inline-item d-none">
-                    <span class="float-right more_option text-info">
+                    <span class="float-end more_option text-info">
                         <a name="o_payment_icon_less">show less</a>
                     </span>
                 </li>
@@ -334,7 +334,7 @@
             - 'label' - The label for the submit button
             - 'icon_class' - The Font Awesome icon class (e.g. 'fa-lock') for the submit button
         -->
-        <div class="float-right mt-2">
+        <div class="float-end mt-2">
             <button name="o_payment_submit_button"
                     type="submit"
                     class="btn btn-primary btn-lg mb8 mt8"
@@ -353,22 +353,22 @@
         <div t-if="tx.state == 'pending' and not is_html_empty(tx.acquirer_id.sudo().pending_msg)"
              class="alert alert-warning alert-dismissible">
             <span t-out="tx.acquirer_id.sudo().pending_msg"/>
-            <button class="close" data-dismiss="alert" title="Dismiss">×</button>
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"></button>
         </div>
         <div t-elif="tx.state == 'authorized' and not is_html_empty(tx.acquirer_id.sudo().auth_msg)"
              class="alert alert-success alert-dismissible">
             <span t-out="tx.acquirer_id.sudo().auth_msg"/>
-            <button class="close" data-dismiss="alert" title="Dismiss">×</button>
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"></button>
         </div>
         <div t-elif="tx.state == 'done' and not is_html_empty(tx.acquirer_id.sudo().done_msg)"
              class="alert alert-success alert-dismissible">
             <span t-out="tx.acquirer_id.sudo().done_msg"/>
-            <button class="close" data-dismiss="alert" title="Dismiss">×</button>
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"></button>
         </div>
         <div t-elif="tx.state == 'cancel' and not is_html_empty(tx.acquirer_id.sudo().cancel_msg)"
              class="alert alert-danger alert-dismissible">
             <span t-out="tx.acquirer_id.sudo().cancel_msg"/>
-            <button class="close" data-dismiss="alert" title="Dismiss">×</button>
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"></button>
         </div>
         <span t-if="tx.state_message" t-esc="tx.state_message"/>
     </template>

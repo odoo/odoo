@@ -29,7 +29,7 @@
     <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="getExtension(file)"/>
-            <div class="o_image_box float-left" t-att-data-id="file.id">
+            <div class="o_image_box float-start" t-att-data-id="file.id">
                 <a t-att-href="getUrl(file.id)" t-att-title="'Download ' + file.name" aria-label="Download">
                     <span class="o_image o_hover" t-att-data-mimetype="file.type" t-att-data-ext="ext" role="img"/>
                 </a>

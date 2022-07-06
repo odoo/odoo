@@ -8,10 +8,10 @@
             t-att-aria-label="props.string"
         >
             <t t-foreach="props.radioItems" t-as="item" t-key="item[0]">
-                <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
+                <div class="custom-control form-check o_radio_item" aria-atomic="true">
                     <input
                         type="radio"
-                        class="custom-control-input o_radio_input"
+                        class="form-check-input o_radio_input"
                         t-att-checked="item[0] === value"
                         t-att-disabled="props.readonly"
                         t-att-name="id"
@@ -20,7 +20,7 @@
                         t-att-id="`${id}_${item[0]}`"
                         t-on-change="() => this.onChange(item)"
                     />
-                    <label class="custom-control-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
+                    <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
                 </div>
             </t>
         </div>

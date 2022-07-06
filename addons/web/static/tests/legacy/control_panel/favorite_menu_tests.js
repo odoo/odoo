@@ -54,8 +54,8 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 controlPanel.el.querySelector('.o_add_favorite input[type="text"]').value,
                 'Action Name'
             );
-            assert.containsN(controlPanel, '.o_add_favorite .custom-checkbox input[type="checkbox"]', 2);
-            const labelEls = controlPanel.el.querySelectorAll('.o_add_favorite .custom-checkbox label');
+            assert.containsN(controlPanel, '.o_add_favorite .form-check input[type="checkbox"]', 2);
+            const labelEls = controlPanel.el.querySelectorAll('.o_add_favorite .form-check label');
             assert.deepEqual(
                 [...labelEls].map(e => e.innerText.trim()),
                 ["Use by default", "Share with all users"]

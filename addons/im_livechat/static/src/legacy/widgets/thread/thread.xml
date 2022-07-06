@@ -199,7 +199,7 @@
                     <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">
                         <span name="notification_icon" t-attf-class="d-inline-flex align-items-center o_thread_tooltip o_thread_message_notification {{ message.hasNotificationsError() ? 'o_thread_message_notification_error' : '' }}" t-att-data-message-id="message.getID()" t-att-data-message-type="message.getType()">
                             <i t-att-class="message.getNotificationIcon()"/>
-                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="font-weight-bold ml-1"/>
+                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="fw-bold ms-1"/>
                         </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
@@ -334,7 +334,7 @@
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
-                <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
+                <div t-attf-class="o_image_box float-start #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
                     <div t-if="has_preview"
                          class="o_image o_hover"
                          t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
@@ -359,7 +359,7 @@
                 <div t-if="!editable" class="caption small">
                     <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
                     <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                    <a class="ml4 o_attachment_download float-end" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
                 </div>
                 <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>

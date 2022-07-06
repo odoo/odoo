@@ -103,7 +103,7 @@
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <button name="action_read_account" type="object" string="Setup" class="float-right btn-secondary"/>
+                    <button name="action_read_account" type="object" string="Setup" class="float-end btn-secondary"/>
                 </tree>
             </field>
         </record>
@@ -123,8 +123,8 @@
                                     <div class="col-6">
                                         <strong><field name="name"/></strong>
                                     </div>
-                                    <div class="col-6 text-right">
-                                        <span class="badge badge-pill"><t t-esc="record.code.value"/></span>
+                                    <div class="col-6 text-end">
+                                        <span class="badge rounded-pill"><t t-esc="record.code.value"/></span>
                                     </div>
                                 </div>
                                 <div>

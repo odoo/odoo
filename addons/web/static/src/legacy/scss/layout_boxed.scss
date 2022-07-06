@@ -1,9 +1,9 @@
 .o_boxed_footer, .o_boxed_header, .o_report_layout_boxed {
-    color: gray('700');
+    color: map-get($grays, '700');
     font-size: 15px;
 }
 .o_boxed_header {
-    border-bottom: 1px solid gray('200');
+    border-bottom: 1px solid map-get($grays, '200');
     img {
         max-height: 100px;
     }
@@ -35,28 +35,28 @@
         color: $o-default-report-primary-color;
     }
     table {
-        border: 1px solid gray('700');
+        border: 1px solid map-get($grays, '700');
         thead {
-            border-bottom: 2px solid gray('700');
+            border-bottom: 2px solid map-get($grays, '700');
             tr th {
                 text-transform: uppercase;
-                border: 1px solid gray('700');
+                border: 1px solid map-get($grays, '700');
                 color: $o-default-report-secondary-color;
             }
         }
         tbody {
-            color: gray('700');
+            color: map-get($grays, '700');
             tr {
                 td {
                     // remove border-top from standard layout
                     border-top: none;
-                    border-right: 1px solid gray('700');
+                    border-right: 1px solid map-get($grays, '700');
                 }
                 &.o_line_section td,
                 &.o_line_note td,
                 &.is-subtotal td {
-                    border-top: 1px solid gray('700');
-                    border-bottom: 1px solid gray('700');
+                    border-top: 1px solid map-get($grays, '700');
+                    border-bottom: 1px solid map-get($grays, '700');
                 }
                 &.o_line_section td {
                     background-color: rgba($o-default-report-primary-color, 0.7);
@@ -71,12 +71,12 @@
     }
     /* compat 12.0 */
     .page > table:not(.o_main_table) tr td:last-child {
-        background-color: gray('200');
+        background-color: map-get($grays, '200');
         color: $o-default-report-primary-color;
     }
     /* compat 12.0 */
     .row:not(#total) > div > table tbody tr:not(:last-child) td:last-child {
-        background-color: gray('200');
+        background-color: map-get($grays, '200');
         color: $o-default-report-primary-color;
     }
     /*Total table*/
@@ -85,7 +85,7 @@
     div#total table {
         thead tr:first-child,
         tr.o_subtotal {
-            border-bottom: 1px solid gray('700');
+            border-bottom: 1px solid map-get($grays, '700');
         }
         tr {
             &.o_subtotal{

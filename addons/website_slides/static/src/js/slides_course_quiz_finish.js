@@ -78,7 +78,7 @@ var SlideQuizFinishModal = Dialog.extend({
      */
     _animateProgressBar: function () {
         var self = this;
-        this.$('[data-toggle="tooltip"]').tooltip({
+        this.$('[data-bs-toggle="tooltip"]').tooltip({
             trigger: 'manual',
             container: '.progress-bar-tooltip',
         }).tooltip('show');
@@ -91,7 +91,7 @@ var SlideQuizFinishModal = Dialog.extend({
                 duration: this.quiz.rankProgress.level_up ? 1700 : 800,
                 step: function (newKarma) {
                     self.$('.tooltip-inner').text(Math.ceil(newKarma));
-                    self.$('[data-toggle="tooltip"]').tooltip('update');
+                    self.$('[data-bs-toggle="tooltip"]').tooltip('update');
                 }
             }
         );

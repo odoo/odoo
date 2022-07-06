@@ -96,7 +96,7 @@
                         <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
                         <div class="form-check o_strip_domain d-none">
                             <input type="checkbox" id="o_link_dialog_url_strip_domain" checked="checked" class="form-check-input"/>
-                            <label for="o_link_dialog_url_strip_domain" class="form-check-label font-weight-normal">
+                            <label for="o_link_dialog_url_strip_domain" class="form-check-label fw-normal">
                                 Autoconvert to relative link
                             </label>
                         </div>
@@ -107,7 +107,7 @@
                     <div class="col-md-9 d-flex align-items-center">
                         <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
                             <t t-foreach="widget.colorsData" t-as="colorData">
-                                <label role="button" class="m-0 mr-2" t-if="colorData.type !== 'custom'">
+                                <label role="button" class="m-0 me-2" t-if="colorData.type !== 'custom'">
                                     <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
                                     <span t-esc="colorData.label"
                                             t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
@@ -120,7 +120,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3">Size</label>
                         <div class="col-md-9">
-                            <select name="link_style_size" class="form-control link-style">
+                            <select name="link_style_size" class="form-select link-style">
                                 <option value="sm">Small</option>
                                 <option value="" selected="selected">Medium</option>
                                 <option value="lg">Large</option>
@@ -130,7 +130,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3">Style</label>
                         <div class="col-md-9">
-                            <select name="link_style_shape" class="form-control link-style">
+                            <select name="link_style_shape" class="form-select link-style">
                                 <option value="" selected="selected">Default</option>
                                 <option value="rounded-circle">Default + Rounded</option>
                                 <option value="outline">Outline</option>
@@ -166,17 +166,17 @@
 
     <!-- Link Edition : Popover -->
     <div t-name="wysiwyg.widgets.link.edit.tooltip" class="d-flex">
-        <span class="mr-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
+        <span class="me-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
         <div class="w-100">
             <div class="d-flex">
-                <a href="#" target="_blank" class="o_we_url_link font-weight-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
-                <a href="#" class="mx-2 o_we_copy_link text-dark" data-toggle="tooltip" data-placement="top" title="Copy Link">
+                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-2 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
-                <a href="#" class="mx-2 o_we_edit_link text-dark" data-toggle="tooltip" data-placement="top" title="Edit Link">
+                <a href="#" class="mx-2 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
                     <i class="fa fa-edit"/>
                 </a>
-                <a href="#" class="ml-2 o_we_remove_link text-dark" data-toggle="tooltip" data-placement="top" title="Remove Link">
+                <a href="#" class="ms-2 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>
@@ -213,8 +213,8 @@
                 <we-title>⌙ Style</we-title>
                 <div class="dropdown">
                     <button class="dropdown-toggle"
-                        data-toggle="dropdown" title="" tabindex="-1"
-                        data-original-title="Link Style" aria-expanded="false">
+                        data-bs-toggle="dropdown" title="" tabindex="-1"
+                        data-bs-original-title="Link Style" aria-expanded="false">
                         <we-toggler/>
                     </button>
                     <we-selection-items class="dropdown-menu" name="link_style_color">
@@ -232,7 +232,7 @@
             <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
                 <we-title> ⌙ Text Color</we-title><!-- &emsp; -->
                 <div class="dropdown">
-                    <span data-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
+                    <span data-bs-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
                     <we-selection-items class="dropdown-menu" name="link_text_color"/>
                 </div>
             </we-select>
@@ -241,7 +241,7 @@
             <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
                 <we-title> ⌙ Fill Color</we-title><!-- &emsp; -->
                 <div class="dropdown">
-                    <span data-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
+                    <span data-bs-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
                     <we-selection-items class="dropdown-menu" name="link_fill_color"/>
                 </div>
             </we-select>
@@ -251,28 +251,28 @@
             <div>
                 <we-input class="o_we_user_value_widget" title="Border Width">
                     <div class="o_custom_border_width_input">
-                        <input name="custom_border_width" type="text" class="text-right" size="2"/>
+                        <input name="custom_border_width" type="text" class="text-end" size="2"/>
                         <span>px</span>
                     </div>
                 </we-input>
                 <we-select class="o_we_user_value_widget" title="Border Style">
                     <div class="dropdown">
                         <button class="dropdown-toggle"
-                            data-toggle="dropdown" title="" tabindex="-1"
-                            data-original-title="Link Border Style" aria-expanded="false">
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Border Style" aria-expanded="false">
                             <we-toggler/>
                         </button>
                         <we-selection-items class="dropdown-menu" name="link_border_style">
                             <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
                             <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
                             <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
                         </we-selection-items>
                     </div>
                 </we-select>
                 <we-select title="Border Color" class="o_we_user_value_widget o_we_so_color_palette">
                     <div class="dropdown">
-                        <span data-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
+                        <span data-bs-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
                         <we-selection-items class="dropdown-menu" name="link_border_color"/>
                     </div>
                 </we-select>
@@ -284,8 +284,8 @@
                 <div>
                     <div class="dropdown">
                         <button class="dropdown-toggle"
-                            data-toggle="dropdown" title="" tabindex="-1"
-                            data-original-title="Link Size" aria-expanded="false">
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Size" aria-expanded="false">
                             <we-toggler>
                                 Medium
                             </we-toggler>
@@ -312,8 +312,8 @@
                 <div>
                     <div class="dropdown">
                         <button class="dropdown-toggle"
-                            data-toggle="dropdown" title="" tabindex="-1"
-                            data-original-title="Link Shape" aria-expanded="false">
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Shape" aria-expanded="false">
                             <we-toggler>
                                 Default
                             </we-toggler>
@@ -346,7 +346,7 @@
         <div class="o_we_cropper_wrapper">
             <img class="o_we_cropper_img"/>
             <div class="o_we_crop_buttons text-center mt16 position-absolute o_we_no_overlay" contenteditable="false">
-                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
                     <t t-foreach="widget.aspectRatios" t-as="ratio">
                         <t t-set="is_active" t-value="ratio === widget.aspectRatio"/>
                         <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">

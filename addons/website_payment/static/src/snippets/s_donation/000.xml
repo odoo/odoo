@@ -3,13 +3,13 @@
     <t t-name="website_payment.donation.prefilledButtons">
         <div class="s_donation_prefilled_buttons mb-2">
             <t t-foreach="prefilled_buttons" t-as="prefilled_button_value">
-                <button class="s_donation_btn btn btn-outline-primary btn-lg mb-2 mr-1 o_not_editable"
+                <button class="s_donation_btn btn btn-outline-primary btn-lg mb-2 me-1 o_not_editable"
                         type="button"
                         contenteditable="false"
                         t-att-data-donation-value="prefilled_button_value"
                         t-esc="prefilled_button_value"/>
             </t>
-            <span t-if="custom_input" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg mb-2 mr-1">
+            <span t-if="custom_input" class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg mb-2 me-1">
                 <input id="s_donation_amount_input" type="number" t-att-min="minimum_amount" class="" placeholder="Custom Amount" aria-label="Amount"/>
             </span>
         </div>
@@ -18,11 +18,11 @@
         <div class="s_donation_prefilled_buttons my-4">
             <t t-foreach="prefilled_buttons" t-as="prefilled_button">
                 <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
-                    <button class="s_donation_btn btn btn-outline-primary btn-lg mr-3"
+                    <button class="s_donation_btn btn btn-outline-primary btn-lg me-3"
                             type="button"
                             t-att-data-donation-value="prefilled_button.value"
                             t-esc="prefilled_button.value"/>
-                    <p class="s_donation_description mt-2 my-sm-auto text-muted font-italic" t-esc="prefilled_button.description"></p>
+                    <p class="s_donation_description mt-2 my-sm-auto text-muted fst-italic" t-esc="prefilled_button.description"></p>
                 </div>
             </t>
             <div t-if="custom_input" class="d-sm-flex align-items-center my-3">
@@ -35,7 +35,7 @@
     <t t-name="website_payment.donation.slider">
         <div class="s_donation_range_slider_wrap mb-2 position-relative">
             <label for="s_donation_range_slider">Choose Your Amount</label>
-            <input type="range" class="custom-range" t-att-min="minimum_amount" t-att-max="maximum_amount" t-att-step="slider_step" id="s_donation_range_slider" contenteditable="false"/>
+            <input type="range" class="form-range" t-att-min="minimum_amount" t-att-max="maximum_amount" t-att-step="slider_step" id="s_donation_range_slider" contenteditable="false"/>
             <output class="s_range_bubble" contenteditable="false">25</output>
         </div>
     </t>

@@ -65,11 +65,11 @@
                     <div t-if="not no_copyright" class="o_footer_copyright">
                         <div class="container py-3">
                             <div class="row">
-                                <div class="col-sm text-center text-sm-left text-muted">
+                                <div class="col-sm text-center text-sm-start text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
+                                    <span class="o_footer_copyright_name me-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
                                 </div>
-                                <div class="col-sm text-center text-sm-right">
+                                <div class="col-sm text-center text-sm-end">
                                     <t t-call="web.brand_promotion"/>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
         <t t-set="odoo_logo">
             <a target="_blank"
                 t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
-                class="badge badge-light">
+                class="badge text-bg-light">
                 <img alt="Odoo"
                         src="/web/static/img/odoo_logo_tiny.png"
                         style="height: 1em; vertical-align: baseline;"/>
@@ -118,7 +118,7 @@
                         <t t-out="0"/>
                         <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                             <t t-if="not disable_database_manager">
-                                <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
+                                <a class="border-end pe-2 me-1" href="/web/database/manager">Manage Databases</a>
                             </t>
                             <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
                         </div>

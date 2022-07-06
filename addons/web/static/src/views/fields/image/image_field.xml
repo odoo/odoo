@@ -12,14 +12,14 @@
                     >
                         <t t-set-slot="toggler">
                             <button
-                                class="fa fa-pencil fa-lg float-left o_select_file_button"
+                                class="fa fa-pencil fa-lg float-start o_select_file_button"
                                 data-tooltip="Edit"
                                 aria-label="Edit"
                             />
                         </t>
                         <button
                             t-if="props.value and state.isValid"
-                            class="fa fa-trash-o fa-lg float-right o_clear_file_button"
+                            class="fa fa-trash-o fa-lg float-end o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="onFileRemove"

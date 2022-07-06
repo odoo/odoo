@@ -386,7 +386,7 @@
             var input = form.find('input');
             var slideID = form.find('button').data('slide-id');
             if (input.val() && input[0].checkValidity()) {
-                form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
                 this._rpc({
                     route: '/slides/slide/send_share_email',
                     params: {
@@ -398,7 +398,7 @@
                     form.html('<div class="alert alert-info" role="alert">' + _t('<strong>Thank you!</strong> Mail has been sent.') + '</div>');
                 });
             } else {
-                form.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                 input.focus();
             }
         },

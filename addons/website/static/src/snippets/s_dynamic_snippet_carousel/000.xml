@@ -23,13 +23,13 @@
             </div>
             <!-- Controls -->
             <t t-if='slideIndexGenerator.length > 1'>
-                <a t-attf-href="##{uniqueId}" class="carousel-control-prev" data-slide="prev" role="button" aria-label="Previous" title="Previous">
+                <a t-attf-href="##{uniqueId}" class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
                     <span class="fa fa-chevron-circle-left fa-2x"/>
-                    <span class="sr-only">Previous</span>
+                    <span class="visually-hidden">Previous</span>
                 </a>
-                <a t-attf-href="##{uniqueId}" class="carousel-control-next" data-slide="next" role="button" aria-label="Next" title="Next">
+                <a t-attf-href="##{uniqueId}" class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next">
                     <span class="fa fa-chevron-circle-right fa-2x"/>
-                    <span class="sr-only">Next</span>
+                    <span class="visually-hidden">Next</span>
                 </a>
             </t>
         </div>

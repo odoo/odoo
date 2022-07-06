@@ -17,7 +17,7 @@
                 </div>
                 <hr class="o_DiscussSidebar_separator w-100 border-top"/>
                 <t t-if="messaging.models['Thread'].all(thread => thread.isPinned and thread.model === 'mail.channel').length > 19">
-                    <input class="o_DiscussSidebar_quickSearch form-control mx-4 mb-2 rounded-lg w-auto" t-on-input="discussView.onInputQuickSearch" placeholder="Quick search..." t-ref="quickSearchInput" t-esc="discussView.discuss.sidebarQuickSearchValue"/>
+                    <input class="o_DiscussSidebar_quickSearch form-control mx-4 mb-2 rounded-3 w-auto" t-on-input="discussView.onInputQuickSearch" placeholder="Quick search..." t-ref="quickSearchInput" t-esc="discussView.discuss.sidebarQuickSearchValue"/>
                 </t>
                 <DiscussSidebarCategory
                     t-if="discussView.discuss.categoryChannel"

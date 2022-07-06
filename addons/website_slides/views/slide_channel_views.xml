@@ -245,7 +245,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v" aria-hidden="false"/>
                                     </a>
                                     <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
@@ -271,7 +271,7 @@
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">
                                         <div class="o_primary">
-                                            <a type="edit" class="mr-auto">
+                                            <a type="edit" class="me-auto">
                                                 <span><field name="name" class="o_primary"/></span>
                                             </a>
                                         </div>
@@ -287,35 +287,35 @@
                                         </div>
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="d-flex" t-if="record.rating_count.raw_value">
-                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/> Reviews</a>
+                                                <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
                                                 <span><field name="rating_avg_stars"/> / 5</span>
                                             </div>
                                             <div class="d-flex">
-                                                <span class="mr-auto"><label for="total_views" class="mb0">Views</label></span>
+                                                <span class="me-auto"><label for="total_views" class="mb0">Views</label></span>
                                                 <field name="total_views"/>
                                             </div>
                                             <div class="d-flex" name="info_total_time">
-                                                <span class="mr-auto"><label for="total_time" class="mb0">Duration</label></span>
+                                                <span class="me-auto"><label for="total_time" class="mb0">Duration</label></span>
                                                 <field name="total_time" widget="float_time"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt3">
-                                        <div class="col-5 border-right">
+                                        <div class="col-5 border-end">
                                             <a name="action_view_slides" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="total_slides"/></span>
+                                                <span class="fw-bold"><field name="total_slides"/></span>
                                                 <span class="text-muted">Published Contents</span>
                                             </a>
                                         </div>
-                                        <div class="col-3 border-right">
+                                        <div class="col-3 border-end">
                                             <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="members_count"/></span>
+                                                <span class="fw-bold"><field name="members_count"/></span>
                                                 <span class="text-muted">Attendees</span>
                                             </a>
                                         </div>
                                         <div class="col-3">
                                             <a name="action_redirect_to_done_members" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="members_done_count"/></span>
+                                                <span class="fw-bold"><field name="members_done_count"/></span>
                                                 <span name="done_members_count_label" class="text-muted">Finished</span>
                                             </a>
                                         </div>

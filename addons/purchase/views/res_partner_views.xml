@@ -54,8 +54,8 @@
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                     <a t-if="record.purchase_order_count.value>0" data-type="action" data-name="%(purchase.act_res_partner_2_purchase_order)d"
-                       href="#" class="oe_kanban_action oe_kanban_action_a mr-1">
-                        <span class="badge badge-pill">
+                       href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                        <span class="badge rounded-pill">
                             <i class="fa fa-fw fa-credit-card" role="img" aria-label="Purchases" title="Purchases"/>
                             <t t-out="record.purchase_order_count.value"/>
                         </span>

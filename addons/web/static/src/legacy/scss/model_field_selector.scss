@@ -51,7 +51,7 @@
 
             .o_field_selector_popover_header {
                 color: white;
-                background: theme-color('primary');
+                background: map-get($theme-colors, 'primary');
                 font-weight: bold;
                 padding: 5px 0 5px 0.4em;
 
@@ -78,7 +78,7 @@
                         right: 0;
                     }
                     &:hover {
-                        background: darken(theme-color('primary'), 10%);
+                        background: darken(map-get($theme-colors, 'primary'), 10%);
                     }
                 }
                 &:before {
@@ -86,7 +86,7 @@
                     content: "";
                     border-left: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
                     border-right: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
-                    border-bottom: $o-field-selector-arrow-height solid theme-color('primary');
+                    border-bottom: $o-field-selector-arrow-height solid map-get($theme-colors, 'primary');
                 }
             }
             .o_field_selector_popover_body {
@@ -122,7 +122,7 @@
                 }
             }
             .o_field_selector_popover_footer {
-                background: theme-color('primary');
+                background: map-get($theme-colors, 'primary');
                 padding: 5px 0.4em;
 
                 > input {

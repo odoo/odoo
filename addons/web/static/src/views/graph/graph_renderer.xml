@@ -15,7 +15,7 @@
                             <span class="o_square badge p-2 rounded-0 align-middle me-2 border-0" t-attf-style="background-color: {{ tooltipItem.boxColor }}"> </span>
                             <span class="o_label text-truncate d-inline-block align-middle" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label" />
                         </td>
-                        <td class="o_value pl-2 text-right font-weight-bolder">
+                        <td class="o_value ps-2 text-end fw-bolder">
                             <t t-esc="tooltipItem.value"/>
                             <t t-if="mode === 'pie' and tooltipItem.percentage">
                                 (<t t-esc="tooltipItem.percentage" />%)

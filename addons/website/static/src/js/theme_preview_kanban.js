@@ -20,7 +20,7 @@ var ThemePreviewKanbanController = KanbanController.extend(ThemePreviewControlle
 
         // update breacrumb
         const websiteLink = Object.assign(document.createElement('a'), {
-            className: 'btn btn-secondary ml-3 text-black-75',
+            className: 'btn btn-secondary ms-3 text-black-75',
             href: '/',
             innerHTML: '<i class="fa fa-close"></i>',
         });

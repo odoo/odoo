@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_hr" name="Separator">
-    <div class="s_hr text-left pt32 pb32">
+    <div class="s_hr text-start pt32 pb32">
         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid;"/>
     </div>
 </template>
@@ -21,9 +21,9 @@
                 <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
             </we-select>
             <we-button-group string="Alignment" data-dependencies="!so_width_100">
-                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
                 <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
-                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
+                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
             </we-button-group>
         </div>
     </xpath>

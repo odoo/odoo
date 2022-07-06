@@ -3,7 +3,7 @@
 
     <t t-name="mail.CallParticipantCard" owl="1">
         <t t-if="callParticipantCard">
-            <div class="o_CallParticipantCard position-relative o_cursor_pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-sm"
+            <div class="o_CallParticipantCard position-relative o_cursor_pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
                 t-att-class="{
                     'o-isTalking': !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                     'o-isInvitation opacity-50': callParticipantCard.isInvitation,
@@ -20,7 +20,7 @@
                     <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
-                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-sm" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
+                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
                         <img alt="Avatar"
                              t-att-class="{
                                 'o-isTalking': callParticipantCard.isTalking,
@@ -37,10 +37,10 @@
                     <!-- overlay -->
                     <span class="o_CallParticipantCard_overlay o_CallParticipantCard_overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
                         <t t-if="!callParticipantCard.isMinimized">
-                            <span class="o_CallParticipantCard_name p-1 rounded-sm bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
+                            <span class="o_CallParticipantCard_name p-1 rounded-1 bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <small class="o_CallParticipantCard_liveIndicator o-isMinimized badge-pill badge-danger d-flex align-items-center font-weight-bolder" title="live" aria-label="live">
+                            <small class="o_CallParticipantCard_liveIndicator o-isMinimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                                 LIVE
                             </small>
                         </t>
@@ -67,7 +67,7 @@
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and !callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <span class="o_CallParticipantCard_liveIndicator badge-pill badge-danger d-flex align-items-center me-1 font-weight-bolder" title="live" aria-label="live">
+                            <span class="o_CallParticipantCard_liveIndicator rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
                                 LIVE
                             </span>
                         </t>
