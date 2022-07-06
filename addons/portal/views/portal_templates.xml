@@ -321,23 +321,19 @@
                 </div>
                 <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
-                        <div class="input-group-prepend">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
-                            <div class="dropdown-menu" role="menu">
-                                <t t-foreach='searchbar_inputs' t-as='input'>
-                                    <a t-att-href="'#' + input_value['input']"
-                                        t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
-                                        <span t-out="input_value['label']"/>
-                                    </a>
-                                </t>
-                            </div>
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach='searchbar_inputs' t-as='input'>
+                                <a t-att-href="'#' + input_value['input']"
+                                    t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
+                                    <span t-out="input_value['label']"/>
+                                </a>
+                            </t>
                         </div>
                         <input type="text" class="form-control form-control-sm" placeholder="Search" t-att-value='search' name="search"/>
-                        <span class="input-group-append">
-                            <button class="btn btn-secondary o_wait_lazy_js" type="submit">
-                                <span class="fa fa-search"/>
-                            </button>
-                        </span>
+                        <button class="btn btn-secondary o_wait_lazy_js" type="submit">
+                            <span class="fa fa-search"/>
+                        </button>
                     </div>
                 </form>
             </div>

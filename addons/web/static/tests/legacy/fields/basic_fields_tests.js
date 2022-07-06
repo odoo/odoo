@@ -408,7 +408,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
-        assert.expect(3);
+        assert.expect(7);
 
         var form = await createView({
             View: FormView,
@@ -417,14 +417,25 @@ QUnit.module('Legacy basic_fields', {
             arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
             res_id: 2,
         });
-
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-check-circle",
-            "Boolean toggle should have fa-check-circle icon");
+        // We don't check the exact value of the background as it change in community/enterprise,
+        // and it's difficult to check the value of an SVG
+        assert.containsOnce(form, ".form-check.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        let checkElement = document.querySelector('.form-check.o_boolean_toggle .form-check-input');
+        assert.ok(checkElement.matches(':checked'), "Boolean toggle should be checked");
+        let style = window.getComputedStyle(checkElement);
+        const backgroundImage = style.backgroundImage;
+        const backgroundColor = style.backgroundColor;
+        assert.ok(backgroundImage && backgroundColor, "Boolean toggle should have a background image and a background color");
 
         await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-times-circle",
-            "Boolean toggle should have fa-times-circle icon");
+        checkElement = document.querySelector('.form-check.o_boolean_toggle .form-check-input');
+        assert.notOk(checkElement.matches(':checked'), "Boolean toggle shouldn't be checked");
+        style = window.getComputedStyle(checkElement);
+        const newBackgroundImage = style.backgroundImage;
+        const newBackgroundColor = style.backgroundColor;
+        assert.ok(backgroundImage && backgroundColor, "Boolean toggle should have a background image and a background color");
+        assert.notEqual(backgroundImage, newBackgroundImage, "Background image should be different");
+        assert.notEqual(backgroundColor, newBackgroundColor, "Background color should be different");
 
         form.destroy();
     });

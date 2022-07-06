@@ -24,9 +24,7 @@
                             <label class="custom-control-label" for="profile_traces_async">Record traces</label>
                         </span>
                         <div t-if="profiling.isCollectorEnabled('traces_async')" class="input-group input-group-sm mt-2" t-on-click.stop.prevent="">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">Interval</div>
-                            </div>
+                            <div class="input-group-text">Interval</div>
                             <select class="profile_param form-control" t-on-change="(ev) => this.changeParam('traces_async_interval', ev)">
                                 <t t-set="interval" t-value="profiling.state.params.traces_async_interval"/>
                                 <option value="">Default</option>

@@ -54,9 +54,7 @@
             <div class="o_kanban_header">
                 <div class="input-group">
                     <input type="text" class="form-control o_input" placeholder="Column title"/>
-                    <span class="input-group-append">
-                        <button class="btn btn-primary o_kanban_add" type="button">Add</button>
-                    </span>
+                    <button class="btn btn-primary o_kanban_add" type="button">Add</button>
                 </div>
                 <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
                 <t t-if="widget.examples &amp;&amp; !widget.isMobile">
