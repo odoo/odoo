@@ -108,6 +108,7 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
             domain,
             context: fieldDescr.context,
             fieldDependencies: {}, // ??
+            force_save: fieldDescr.forceSave,
             mode: fieldDescr.viewMode,
             modifiers: fieldDescr.modifiers,
             name: fieldName,
