@@ -511,10 +511,12 @@ function getOpenFormView(afterEvent, openView) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
-    registry.category("views").remove("list"); // remove new list from registry
-    registry.category("views").remove("form"); // remove new form from registry
-    legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
-    legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+    if (!param0.useWowlListForm) {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+    }
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
         debounce: func => func,
