@@ -157,6 +157,26 @@ describe('Copy and paste', () => {
                     contentAfter: '<p>a<span>bx[]c</span>d</p>',
                 });
             });
+            // TODO: We might want to have it consider \n as paragraph breaks
+            // instead of linebreaks but that would be an opinionated choice.
+            it('should paste text and understand \n newlines', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br/></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'a\nb\nc\nd');
+                    },
+                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                });
+            });
+            it('should paste text and understand \r\n newlines', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br/></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'a\r\nb\r\nc\r\nd');
+                    },
+                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste a text in a p', async () => {
