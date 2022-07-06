@@ -23,6 +23,7 @@
         <field name="model_id" ref="model_knowledge_article"/>
         <field name="domain_force">[('user_has_write_access', '=', True)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="False"/>
     </record>
 
     <!-- ARTICLE MEMBER -->
