@@ -173,11 +173,11 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: dict
         """
         show_tokenize_input_mapping = {}
-        for acquirer in acquirers_sudo:
-            show_tokenize_input = acquirer.allow_tokenization \
-                                  and not acquirer._is_tokenization_required(**kwargs) \
+        for acquirer_sudo in acquirers_sudo:
+            show_tokenize_input = acquirer_sudo.allow_tokenization \
+                                  and not acquirer_sudo._is_tokenization_required(**kwargs) \
                                   and logged_in
-            show_tokenize_input_mapping[acquirer.id] = show_tokenize_input
+            show_tokenize_input_mapping[acquirer_sudo.id] = show_tokenize_input
         return show_tokenize_input_mapping
 
     def _get_payment_page_template_xmlid(self, **kwargs):
@@ -282,14 +282,11 @@ class PaymentPortal(portal.CustomerPortal):
         if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
             acquirer_sudo = request.env['payment.acquirer'].sudo().browse(payment_option_id)
             token_id = None
-            tokenization_required_or_requested = acquirer_sudo._is_tokenization_required(
-                provider=acquirer_sudo.provider, **kwargs
-            ) or tokenization_requested
             tokenize = bool(
                 # Don't tokenize if the user tried to force it through the browser's developer tools
                 acquirer_sudo.allow_tokenization
                 # Token is only created if required by the flow or requested by the user
-                and tokenization_required_or_requested
+                and (acquirer_sudo._is_tokenization_required(**kwargs) or tokenization_requested)
             )
         elif flow == 'token':  # Payment by token
             token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
