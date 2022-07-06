@@ -160,7 +160,7 @@ const DiscussWidget = AbstractAction.extend({
     _pushStateActionManager() {
         this.actionManager.do_push_state({
             action: this.action.id,
-            active_id: this.discuss.activeId,
+            active_id: this.action.context.active_id ? this.action.context.active_id : this.discuss.activeId,
         });
     },
     /**
