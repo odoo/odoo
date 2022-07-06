@@ -1,12 +1,18 @@
 /** @odoo-module */
 import { registry } from "./registry";
 import { ErrorHandler } from "./utils/components";
+import { useBus } from "@web/core/utils/hooks";
 
 const { Component, xml } = owl;
 
 export class MainComponentsContainer extends Component {
     setup() {
-        this.Components = registry.category("main_components").getEntries();
+        const mainComponents = registry.category("main_components");
+        this.Components = mainComponents.getEntries();
+        useBus(mainComponents, "UPDATE", () => {
+            this.Components = mainComponents.getEntries();
+            this.render();
+        });
     }
 
     handleComponentError(error, C) {
