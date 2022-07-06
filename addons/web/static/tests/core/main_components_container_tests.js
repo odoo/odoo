@@ -141,4 +141,16 @@ QUnit.module("Components", (hooks) => {
             "<span>MainComponentA</span>"
         );
     });
+
+    QUnit.test("MainComponentsContainer re-renders when the registry changes", async (assert) => {
+        const env = await makeTestEnv();
+        await mount(MainComponentsContainer, target, { env, props: {} });
+
+        assert.containsNone(target, ".myMainComponent");
+        class MyMainComponent extends Component {}
+        MyMainComponent.template = xml`<div class="myMainComponent" />`;
+        mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
+        await nextTick();
+        assert.containsOnce(target, ".myMainComponent");
+    });
 });
