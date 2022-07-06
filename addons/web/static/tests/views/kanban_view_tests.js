@@ -10507,4 +10507,95 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps(["resequence"]);
     });
+
+    QUnit.test("dragged record cannot be saved", async (assert) => {
+        let def;
+        serverData.models.partner.records = [
+            { id: 1, bar: false, state: "abc" },
+            { id: 2, bar: true, state: "def", foo: "blip" },
+        ];
+        serverData.models.partner.onchanges = {
+            bar() {},
+        };
+
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" required="[('bar', '=', True)]"/>
+                                <field name="state"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+            async mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step("onchange");
+                    await Promise.resolve(def);
+                }
+            },
+        });
+
+        patchWithCleanup(kanban.env.services.notification, {
+            add(message, options) {
+                assert.step("notification");
+                assert.strictEqual(options.title, "Invalid fields: ");
+                assert.strictEqual(`${message}`, "<ul><li>Foo</li></ul>");
+            },
+        });
+
+        def = makeDeferred();
+
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(1) .o_kanban_record").innerText,
+            "ABC"
+        );
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            "blipDEF"
+        );
+
+        assert.verifySteps([]);
+
+        // move "yop" from first to second column
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.containsNone(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["blipDEF", "ABC"]
+        );
+        assert.verifySteps(["onchange"]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(1) .o_kanban_record").innerText,
+            "ABC"
+        );
+        assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+            "blipDEF"
+        );
+        assert.verifySteps(["notification"]);
+    });
 });
