@@ -661,7 +661,9 @@ class Article(models.Model):
           * unreachable descendants (none, read) are set as free articles without
             root;
         """
-        writable_descendants = self._detach_unwritable_descendants()
+        # _detach_unwritable_descendants calls _filter_access_rules_python which returns
+        # a sudo-ed recordset
+        writable_descendants = self._detach_unwritable_descendants().with_env(self.env)
         return super(Article, self + writable_descendants).action_archive()
 
     # ------------------------------------------------------------
