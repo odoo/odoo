@@ -50,7 +50,7 @@
             <t t-if="question_data['is_page']">
                 <h2 class="mt16 text-uppercase text-muted" t-field="question.title"/>
                 <div t-field="question.description" class="oe_no_empty" />
-                <hr class="mt-2 pb-1 mb-1"/>
+                <hr class="mt-2 mb-2"/>
             </t>
             <div t-else="" class="ml-4 mt-5">
                 <t t-call="survey.survey_page_statistics_question" />

@@ -49,7 +49,7 @@
                                             <button t-if="can_modify" t-esc="line.product[1]" t-attf-class="btn btn-link o_lunch_open_wizard" t-attf-data-product-id="{{ line.product[0] }}" t-attf-data-id="{{ line.id }}"/>
                                             <t t-else="" t-esc="line.product[1]" />
                                             <t t-set="state_pill" t-value="states_mapping[line.raw_state]" />
-                                            <span t-esc="line.state" t-attf-class="badge badge-pill badge-{{ state_pill }}" />
+                                            <span t-esc="line.state" t-attf-class="badge rounded-pill bg-{{ state_pill }}" />
                                         </div>
                                         <div class="flex-grow-0">
                                             <t t-call="currency_field">

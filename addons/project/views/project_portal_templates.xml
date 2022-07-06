@@ -231,11 +231,11 @@
                                 </ul>
                             </li>
 
-                            <li t-if="task.user_ids or task.partner_id" class="list-group-item flex-grow-1 pl-0">
+                            <li t-if="task.user_ids or task.partner_id" class="list-group-item flex-grow-1">
                                 <div class="col-12 col-md-12 pb-2" t-if="task.user_ids">
                                     <strong>Assignees</strong>
                                     <t t-foreach="task.user_ids" t-as="user">
-                                        <div class="row pl-3 mb-3 flex-nowrap">
+                                        <div class="d-flex mb-3 flex-nowrap">
                                             <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_1024)" alt="Contact"/>
                                             <div class="ml-2">
                                                 <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
@@ -249,7 +249,7 @@
                                 </div>
                                 <div class="col-12 col-md-12 pb-2" t-if="task.partner_id">
                                     <strong>Customer</strong>
-                                    <div class="row pl-3 flex-nowrap">
+                                    <div class="d-flex flex-nowrap">
                                         <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_1024)" alt="Contact"/>
                                         <div class="ml-2">
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
