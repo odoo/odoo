@@ -439,12 +439,20 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
             const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
 
-            try {
-                await record.update({ [this.groupByField.name]: value });
-                await record.save({ noReload: true });
-            } catch (err) {
+            const abort = () => {
                 this.model.transaction.abort(dataRecordId);
                 this.model.notify();
+            };
+
+            try {
+                await record.update({ [this.groupByField.name]: value });
+                const saved = await record.save({ noReload: true });
+                if (!saved) {
+                    abort();
+                    return;
+                }
+            } catch (err) {
+                abort();
                 throw err;
             }
 
