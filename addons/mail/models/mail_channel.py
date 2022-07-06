@@ -1183,7 +1183,7 @@ class Channel(models.Model):
                     'id': member.partner_id.id,
                     'name': member.partner_id.name,
                     'im_status': member.partner_id.im_status,
-                })]
+                })] if member.partner_id else [('clear',)],
             } for member in channel_partners])],
             'memberCount': count,
         }
