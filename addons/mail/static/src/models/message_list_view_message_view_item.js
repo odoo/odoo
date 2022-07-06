@@ -13,7 +13,6 @@ registerModel({
     identifyingFields: ['messageListViewOwner', 'message'],
     fields: {
         isSquashed: attr({
-            readonly: true,
             required: true,
         }),
         message: one('Message', {
