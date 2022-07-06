@@ -37,7 +37,7 @@
             <xpath expr="//filter[@name='reserved']" position="after">
                 <separator/>
                 <filter string="Expiration Alerts" name="expiration_alerts"
-                    domain="[('removal_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('lot_id.alert_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
             </xpath>
         </field>
      </record>

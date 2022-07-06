@@ -110,7 +110,12 @@ class AccountEdiFormat(models.Model):
         """ _is_required_for_invoice for SdiCoop.
             OVERRIDE
         """
-        return invoice.is_sale_document() and invoice.country_code == 'IT'
+        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
+        return (
+            (invoice.is_sale_document() or (is_self_invoice and invoice.is_purchase_document()))
+            and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted')
+            and invoice.country_code == 'IT'
+        )
 
     def _support_batching(self, move=None, state=None, company=None):
         # OVERRIDE

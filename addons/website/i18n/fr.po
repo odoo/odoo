@@ -22,7 +22,7 @@
 # Nathan Grognet <ngr@odoo.com>, 2021
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
 # gdp Odoo <gdp@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Clément Watthez <cwa@odoo.com>, 2021
 # Julien Bertrand <jub@odoo.com>, 2022
@@ -231,7 +231,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "+ Field"
-msgstr ""
+msgstr "+ Champ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -2738,6 +2738,8 @@ msgstr "Discutez avec les visiteurs pour améliorer la traction"
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "Check out now and get $20 off your first order."
 msgstr ""
+"Passez à la caisse maintenant et obtenez 20 $ de réduction sur votre "
+"première commande."
 
 #. module: website
 #. openerp-web
@@ -4768,6 +4770,9 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing, and customer experience strategies."
 msgstr ""
+"Fondateur et visionnaire en chef, Tony est le moteur de l'entreprise. Il aime\n"
+" rester occupé en participant au développement des stratégies logicielles,\n"
+" marketing et d'expérience client."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5042,6 +5047,12 @@ msgid ""
 " story will sound fake and lack emotion. No one will be interested. Write "
 "for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
+"Les grandes histoires sont pour <b>tout le monde</b>, même lorsqu'elles ne "
+"sont écrites que <b>pour une seule personne</b>. Si vous essayez d'écrire en"
+" pensant à un public large et général, votre histoire sonnera fausse et "
+"manquera d'émotion. Personne ne sera intéressé. Ecrire pour une personne en "
+"particulier signifie que si c'est authentique pour l'un, c'est authentique "
+"pour le reste."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -5052,6 +5063,12 @@ msgid ""
 "small quirks like word choices or phrases. Write from your point of view, "
 "not from someone else's experience."
 msgstr ""
+"Les grandes histoires ont une <b>personnalité</b>. Envisagez de raconter une"
+" belle histoire qui donne de la personnalité. Écrire une histoire avec de la"
+" personnalité pour des clients potentiels aidera à établir un lien "
+"relationnel. Cela se traduit par de petites spécificités comme le choix des "
+"mots ou des phrases. Écrivez de votre point de vue, pas de l'expérience de "
+"quelqu'un d'autre."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5861,12 +5878,18 @@ msgid "Is not equal to"
 msgstr "N'est pas égal à"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr "N'est pas défini"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr "Est défini"
 
@@ -8936,7 +8959,7 @@ msgstr "Carré"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Squared Miniatures"
-msgstr ""
+msgstr "Miniatures carrées"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -11466,6 +11489,12 @@ msgstr "Tableau de bord eCommerce"
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
 msgstr "eLearning"
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr ""
 
 #. module: website
 #. openerp-web

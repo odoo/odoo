@@ -3286,8 +3286,9 @@ msgstr "설정하면 이 필드에 대한 모든 수정 사항이 채팅 사용�
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
-msgstr "설정된 경우 대기열 관리자는 설정 날짜 이후에 이메일을 보냅니다.설정되지 않은 경우, 가능한 한 빨리 이메일이 전송됩니다."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -7559,6 +7560,11 @@ msgstr "피드백 작성"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Wrong operation name (%s)"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
 msgstr ""
 
 #. module: mail

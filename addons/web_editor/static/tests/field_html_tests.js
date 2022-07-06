@@ -95,7 +95,17 @@ QUnit.module('web_editor', {}, function () {
     </div>
   </div>
 </div>`,
-
+                    }, {
+                        id: 7,
+                        display_name: "seventh record",
+                        header: "<p>Hello World</p>",
+                        body: `
+<p class="a">
+    a
+</p>
+<p class="b o_not_editable">
+    b
+</p>`,
                     }],
                 },
                 'mass.mailing': {
@@ -741,6 +751,76 @@ QUnit.module('web_editor', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('.o_not_editable should be contenteditable=false', async function (assert) {
+            assert.expect(8);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 7,
+            });
+
+            const waitForMutation = (element) => {
+                let currentResolve;
+                const promise = new Promise((resolve)=>{
+                    currentResolve = resolve;
+                });
+                const observer = new MutationObserver((records) => {
+                    currentResolve();
+                    observer.disconnect();
+                });
+                observer.observe(element, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                });
+                return promise;
+            }
+
+            assert.equal(form.$('.b').attr('contenteditable'), undefined);
+
+            let promise = new Promise((resolve) => _formResolveTestPromise = resolve);
+            await testUtils.form.clickEdit(form);
+            await promise;
+            assert.equal(form.$('.b').attr('contenteditable'), 'false');
+            await testUtils.form.clickSave(form);
+            assert.equal(form.$('.b').attr('contenteditable'), undefined);
+
+            // edit a second time
+            promise = new Promise((resolve) => _formResolveTestPromise = resolve);
+            await testUtils.form.clickEdit(form);
+            await promise;
+            await testUtils.nextTick();
+
+            // adding an element with o_not_editable
+            form.$('.b').after($(`<div class="c o_not_editable">c</div>`));
+            await waitForMutation(form.$('.c')[0]);
+            assert.equal(form.$('.c').attr('contenteditable'), 'false');
+
+            // changing the class o_not_editable back and forth
+            form.$('.a').addClass('o_not_editable');
+            await waitForMutation(form.$('.a')[0]);
+            assert.equal(form.$('.a').attr('contenteditable'), 'false');
+            form.$('.a').removeClass('o_not_editable');
+            await waitForMutation(form.$('.a')[0]);
+            assert.equal(form.$('.a').attr('contenteditable'), undefined);
+
+            // changing the class o_not_editable back and forth again
+            form.$('.a').addClass('o_not_editable');
+            await waitForMutation(form.$('.a')[0]);
+            assert.equal(form.$('.a').attr('contenteditable'), 'false');
+            form.$('.a').removeClass('o_not_editable');
+            await waitForMutation(form.$('.a')[0]);
+            assert.equal(form.$('.a').attr('contenteditable'), undefined);
+
+            form.destroy();
+        });
+
 
         QUnit.module('cssReadonly');
 

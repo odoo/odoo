@@ -38,13 +38,13 @@ msgstr "API Kullanıcı Şifresi"
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "API bağlantısı kurulamadı."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
 
 #. module: payment_ogone
 #: model:account.payment.method,name:payment_ogone.payment_method_ogone
@@ -86,7 +86,7 @@ msgstr "Sağlayıcı"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Geçersiz ödeme durumuyla alınan veriler: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/controllers/main.py:0
@@ -95,12 +95,14 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"Geçersiz imzayla alınan veriler. beklenen: %(exp)s ; alınan: %(rec)s ; veri:\n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received feedback data with unknown type: %s"
-msgstr ""
+msgstr "Türü bilinmeyen geri bildirim verileri: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
@@ -116,23 +118,24 @@ msgstr "SHA Çıkış Anahtarı"
 #: code:addons/payment_ogone/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been archived."
-msgstr ""
+msgstr "Kaydedilen ödeme yöntemleri arşivlendikten sonra geri yüklenemez."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
-msgstr ""
+msgstr "Ödeme ayrıntılarınızın saklanması ileride kullanmak için gereklidir."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
+"Yalnızca API kullanıcısını Ogone ile tanımlamak için kullanılan kimlik"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "Yalnızca hesabı Ogone ile tanımlamak için kullanılan kimlik"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
@@ -143,16 +146,16 @@ msgstr "Bu alıcı ile birlikte kullanılacak Ödeme Hizmeti Sağlayıcısı"
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "API ile iletişim başarısız oldu."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Ödeme reddedildi: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "İşlem bir belirteçle bağlantılı değildir."

@@ -301,7 +301,7 @@ class MassMailing(models.Model):
         that mailing_model being mailing.list means contacting mailing.contact
         (see mailing_model_name versus mailing_model_real). """
         for mailing in self:
-            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list']:
+            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list', 'mailing.contact']:
                 mailing.reply_to_mode = 'new'
             else:
                 mailing.reply_to_mode = 'update'
@@ -504,7 +504,7 @@ class MassMailing(models.Model):
         ])
         failed_mails.mapped('mailing_trace_ids').unlink()
         failed_mails.unlink()
-        self.write({'state': 'in_queue'})
+        self.action_put_in_queue()
 
     def action_view_traces_scheduled(self):
         return self._action_view_traces_filtered('scheduled')
@@ -750,7 +750,7 @@ class MassMailing(models.Model):
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
+        if 'partner_id' in target._fields and target._fields['partner_id'].store:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
@@ -763,11 +763,11 @@ class MassMailing(models.Model):
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
-        elif 'email_from' in target._fields:
+        elif 'email_from' in target._fields and target._fields['email_from'].store:
             mail_field = 'email_from'
-        elif 'partner_email' in target._fields:
+        elif 'partner_email' in target._fields and target._fields['partner_email'].store:
             mail_field = 'partner_email'
-        elif 'email' in target._fields:
+        elif 'email' in target._fields and target._fields['email'].store:
             mail_field = 'email'
         else:
             raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))

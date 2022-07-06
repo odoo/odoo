@@ -175,7 +175,7 @@ class WebRequest(object):
 
     .. attribute:: params
 
-        :class:`~collections.Mapping` of request parameters, not generally
+        :class:`~collections.abc.Mapping` of request parameters, not generally
         useful as they're provided directly to the handler method as keyword
         arguments
     """
@@ -227,7 +227,7 @@ class WebRequest(object):
 
     @property
     def context(self):
-        """ :class:`~collections.Mapping` of context values for the current request """
+        """ :class:`~collections.abc.Mapping` of context values for the current request """
         if self._context is None:
             self._context = frozendict(self.session.context)
         return self._context
@@ -305,7 +305,7 @@ class WebRequest(object):
         if isinstance(location, urls.URL):
             location = location.to_url()
         if local:
-            location = urls.url_parse(location).replace(scheme='', netloc='').to_url()
+            location = '/' + urls.url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/')
         if request and request.db:
             return request.registry['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
@@ -824,7 +824,7 @@ more details.
         :param basestring data: response body
         :param headers: HTTP headers to set on the response
         :type headers: ``[(name, value)]``
-        :param collections.Mapping cookies: cookies to set on the client
+        :param collections.abc.Mapping cookies: cookies to set on the client
         """
         response = Response(data, headers=headers)
         if cookies:

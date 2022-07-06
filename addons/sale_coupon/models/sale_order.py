@@ -143,19 +143,81 @@ class SaleOrder(models.Model):
         discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
         return discount_amount
 
-    def _get_reward_values_discount(self, program):
-        if program.discount_type == 'fixed_amount':
-            product_taxes = program.discount_line_product_id.taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
-            taxes = self.fiscal_position_id.map_tax(product_taxes)
+    def _get_max_reward_values_per_tax(self, program, taxes):
+        lines = self.order_line.filtered(lambda l: l.tax_id == taxes and l.product_id != program.discount_line_product_id)
+        return sum(lines.mapped(lambda l: l.price_reduce * l.product_uom_qty))
+
+    def _get_reward_values_fixed_amount(self, program):
+        discount_amount = self._get_reward_values_discount_fixed_amount(program)
+
+        # In case there is a tax set on the promotion product, we give priority to it.
+        # This allow manual overwrite of taxes for promotion.
+        if program.discount_line_product_id.taxes_id:
+            line_taxes = self.fiscal_position_id.map_tax(program.discount_line_product_id.taxes_id) if self.fiscal_position_id else program.discount_line_product_id.taxes_id
             return [{
                 'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
-                'price_unit': - self._get_reward_values_discount_fixed_amount(program),
+                'price_unit': -discount_amount,
                 'product_uom_qty': 1.0,
                 'product_uom': program.discount_line_product_id.uom_id.id,
                 'is_reward_line': True,
-                'tax_id': [(4, tax.id, False) for tax in taxes],
+                'tax_id': [(4, tax.id, False) for tax in line_taxes],
             }]
+
+        lines = self._get_paid_order_lines()
+        # Remove Free Lines
+        lines = lines.filtered('price_reduce')
+        reward_lines = {}
+
+        tax_groups = set([line.tax_id for line in lines])
+        max_discount_per_tax_groups = {tax_ids: self._get_max_reward_values_per_tax(program, tax_ids) for tax_ids in tax_groups}
+
+        for tax_ids in sorted(tax_groups, key=lambda tax_ids: max_discount_per_tax_groups[tax_ids], reverse=True):
+
+            if discount_amount <= 0:
+                return reward_lines.values()
+
+            curr_lines = lines.filtered(lambda l: l.tax_id == tax_ids)
+            lines_price = sum(curr_lines.mapped(lambda l: l.price_reduce * l.product_uom_qty))
+            lines_total = sum(curr_lines.mapped('price_total'))
+
+            discount_line_amount_price = min(max_discount_per_tax_groups[tax_ids], (discount_amount * lines_price / lines_total))
+
+            if not discount_line_amount_price:
+                continue
+
+            discount_amount -= discount_line_amount_price * lines_total / lines_price
+
+            tax_name = ""
+            if len(tax_ids) == 1:
+                tax_name = " - " + _("On product with following tax: ") + ', '.join(tax_ids.mapped('name'))
+            elif len(tax_ids) > 1:
+                tax_name = " - " + _("On product with following taxes: ") + ', '.join(tax_ids.mapped('name'))
+
+            reward_lines[tax_ids] = {
+                'name': _("Discount: ") + program.name + tax_name,
+                'product_id': program.discount_line_product_id.id,
+                'price_unit': -discount_line_amount_price,
+                'product_uom_qty': 1.0,
+                'product_uom': program.discount_line_product_id.uom_id.id,
+                'is_reward_line': True,
+                'tax_id': [(4, tax.id, False) for tax in tax_ids],
+                }
+        return reward_lines.values()
+
+    def _get_reward_values_discount(self, program):
+        if program.discount_type == 'fixed_amount':
+            return self._get_reward_values_fixed_amount(program)
+        else:
+            return self._get_reward_values_percentage_amount(program)
+
+    def _get_reward_values_percentage_amount(self, program):
+        # Invalidate multiline fixed_price discount line as they should apply after % discount
+        fixed_price_products = self._get_applied_programs().filtered(
+            lambda p: p.discount_type == 'fixed_amount'
+        ).mapped('discount_line_product_id')
+        self.order_line.filtered(lambda l: l.product_id in fixed_price_products).write({'price_unit': 0})
+
         reward_dict = {}
         lines = self._get_paid_order_lines()
         amount_total = sum([any(line.tax_id.mapped('price_include')) and line.price_total or line.price_subtotal
@@ -349,13 +411,17 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
         applied_programs = order._get_applied_programs_with_rewards_on_current_order()
-        for program in applied_programs:
+        for program in applied_programs.sorted(lambda ap: (ap.discount_type == 'fixed_amount', ap.discount_apply_on == 'on_order')):
             values = order._get_reward_line_values(program)
             lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
-            if program.reward_type == 'discount' and program.discount_type == 'percentage':
+            if program.reward_type == 'discount':
                 lines_to_remove = lines
+                lines_to_add = []
+                lines_to_keep = []
                 # Values is what discount lines should really be, lines is what we got in the SO at the moment
                 # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
+                #    As removing a lines remove all the other lines linked to the same program, we need to save them
+                #    using lines_to_keep
                 # 2. If the value is not in the lines, we should add it
                 # 3. if the lines contains a tax not in value, we should remove it
                 for value in values:
@@ -365,14 +431,21 @@ class SaleOrder(models.Model):
                         if not len(set(line.tax_id.mapped('id')).symmetric_difference(set([v[1] for v in value['tax_id']]))):
                             value_found = True
                             # Working on Case 3.
-                            lines_to_remove -= line
-                            lines_to_remove += update_line(order, line, value)
-                            continue
-                    # Case 2.
+                            # update_line update the line to the correct value and returns them if they should be unlinked
+                            update_to_remove = update_line(order, line, value)
+                            if not update_to_remove:
+                                lines_to_keep += [(0, False, value)]
+                                lines_to_remove -= line
+                    # Working on Case 2.
                     if not value_found:
-                        order.write({'order_line': [(0, False, value)]})
+                        lines_to_add += [(0, False, value)]
                 # Case 3.
-                lines_to_remove.unlink()
+                line_update = []
+                if lines_to_remove:
+                    line_update += [(3, line_id, 0) for line_id in lines_to_remove.ids]
+                    line_update += lines_to_keep
+                line_update += lines_to_add
+                order.write({'order_line': line_update})
             else:
                 update_line(order, lines, values[0]).unlink()
 

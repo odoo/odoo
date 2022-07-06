@@ -154,7 +154,7 @@ class Lead(models.Model):
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                compute="_compute_recurring_revenue_monthly_prorated",
                                                groups="crm.group_use_recurring_revenues")
-    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_action_last = fields.Datetime('Last Action', readonly=True)
@@ -253,6 +253,14 @@ class Lead(models.Model):
             else:
                 lead.user_company_ids = lead.company_id
 
+    @api.depends('company_id')
+    def _compute_company_currency(self):
+        for lead in self:
+            if not lead.company_id:
+                lead.company_currency = self.env.company.currency_id
+            else:
+                lead.company_currency = lead.company_id.currency_id
+
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
@@ -268,7 +276,7 @@ class Lead(models.Model):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             lead.team_id = team.id
 
-    @api.depends('user_id', 'team_id')
+    @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
         """ Compute company_id coherency. """
         for lead in self:
@@ -286,7 +294,9 @@ class Lead(models.Model):
                 if lead.team_id and not lead.team_id.company_id and not lead.user_id:
                     proposal = False
                 # no user and no team -> void company and let assignment do its job
-                if not lead.team_id and not lead.user_id:
+                # unless customer has a company
+                if not lead.team_id and not lead.user_id and \
+                   (not lead.partner_id or lead.partner_id.company_id != proposal):
                     proposal = False
 
             # propose a new company based on responsible, limited by team
@@ -297,6 +307,8 @@ class Lead(models.Model):
                     proposal = lead.user_id.company_id & self.env.companies
                 elif lead.team_id:
                     proposal = lead.team_id.company_id
+                elif lead.partner_id:
+                    proposal = lead.partner_id.company_id
                 else:
                     proposal = False
 

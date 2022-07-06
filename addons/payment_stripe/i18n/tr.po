@@ -28,23 +28,23 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Stripe Bağlantısı"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "API bağlantısı kurulamadı."
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Web kancanızı oluşturun"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Gizli ve Yayınlanabilir anahtarlarınızı alın"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -52,12 +52,15 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Stripe hesabınızda bir web kancası etkinleştirilmişse, bu imzalama parolası "
+"Stripe'tan Odoo'ya gönderilen iletilerin kimliğini doğrulamak için "
+"ayarlanmalıdır."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -92,25 +95,25 @@ msgstr "Sağlayıcı"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Yayınlanabilir Anahtar"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Geçersiz niyet durumuyla alınan veriler: %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Eksik niyet durumuyla alınan veriler."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Satıcı referansı eksik olan alınan veriler"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
@@ -131,25 +134,25 @@ msgstr "Stripe Payment Intent ID"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "Stripe Ödeme Yöntemi Kimliği"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "Stripe Proxy hatası: %(error)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Stripe Proxy: Proxy ile iletişim kurulurken bir hata oluştu."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Stripe Proxy: Bağlantı kurulamadı."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -165,34 +168,37 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"API ile iletişim başarısız oldu.\n"
+"Stripe bize sorun hakkında aşağıdaki bilgileri verdi:\n"
+"'%s'"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "Yalnızca hesabı Stripe ile tanımlamak için kullanılan anahtar"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "İşlem bir belirteçle bağlantılı değildir."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Ödeme belirteci yeni API'ye dönüştürülemiyor."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Webhook İmzalama Sırrı"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "You Stripe Webhook başarıyla kuruldu!"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -200,6 +206,7 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Stripe Gizli Anahtarınız ayarlanmamışsa Stripe Web Kancası oluşturamazsınız."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -207,10 +214,10 @@ msgstr ""
 msgid ""
 "You cannot set the acquirer to Test Mode while it is linked with your Stripe"
 " account."
-msgstr ""
+msgstr "Stripe hesabınızla bağlıyken alıcıyı Test Moduna ayarlayamazsınız."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Stripe Webhook'unuz zaten ayarlanmış."

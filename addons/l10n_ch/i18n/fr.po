@@ -3,6 +3,7 @@
 # 	* l10n_ch
 # 
 # Translators:
+# Fernanda Marques <fem@odoo.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_ch
 #: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_isr_report
@@ -262,7 +263,7 @@ msgstr "299 Chiffre d'affaires imposable (ch.200 moins ch.289)"
 #: model:account.tax,description:l10n_ch.5_vat_37_incl
 #: model:account.tax.template,description:l10n_ch.vat_37_incl
 msgid "3.7% Incl."
-msgstr ""
+msgstr "3,7 % Incl."
 
 #. module: l10n_ch
 #: model:account.tax,name:l10n_ch.5_vat_37
@@ -280,13 +281,13 @@ msgstr "TVA due à 3.7% (Incl. TS)"
 #: model:account.tax,description:l10n_ch.5_vat_37_invest
 #: model:account.tax.template,description:l10n_ch.vat_37_invest
 msgid "3.7% invest"
-msgstr ""
+msgstr "3,7 % invest"
 
 #. module: l10n_ch
 #: model:account.tax,description:l10n_ch.5_vat_37_invest_incl
 #: model:account.tax.template,description:l10n_ch.vat_37_invest_incl
 msgid "3.7% invest Incl."
-msgstr ""
+msgstr "3,7 % invest Incl."
 
 #. module: l10n_ch
 #: model:account.tax,name:l10n_ch.5_vat_37_purchase
@@ -509,7 +510,7 @@ msgstr "510 Solde de TVA a recevoir de l'AFC"
 #: model:account.tax,description:l10n_ch.5_vat_77_incl
 #: model:account.tax.template,description:l10n_ch.vat_77_incl
 msgid "7.7% Incl."
-msgstr ""
+msgstr "7,7 % Incl."
 
 #. module: l10n_ch
 #: model:account.tax,name:l10n_ch.5_vat_77
@@ -533,13 +534,13 @@ msgstr "TVA due a 7.7% (TN) (return)"
 #: model:account.tax,description:l10n_ch.5_vat_77_invest
 #: model:account.tax.template,description:l10n_ch.vat_77_invest
 msgid "7.7% invest."
-msgstr ""
+msgstr "7,7 % invest."
 
 #. module: l10n_ch
 #: model:account.tax,description:l10n_ch.5_vat_77_invest_incl
 #: model:account.tax.template,description:l10n_ch.vat_77_invest_incl
 msgid "7.7% invest. Incl."
-msgstr ""
+msgstr "7,7 % invest. Incl."
 
 #. module: l10n_ch
 #: model:account.tax,name:l10n_ch.5_vat_77_purchase
@@ -658,7 +659,7 @@ msgstr ""
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Montant</span>"
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
@@ -688,7 +689,7 @@ msgstr "<span>Récépissé</span>"
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Référence</span>"
 
 #. module: l10n_ch
 #: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_solde
@@ -894,7 +895,7 @@ msgstr "Dettes bancaires"
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Configuration manuelle des paramètre de la banque"
 
 #. module: l10n_ch
 #: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
@@ -1414,7 +1415,7 @@ msgstr "Variations de stocks"
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_move
@@ -1511,7 +1512,7 @@ msgstr "Réserves légales issues du bénéfice"
 #: model:account.account,name:l10n_ch.5_l10nch_chart_template_liquidity_transfer
 #: model:account.account.template,name:l10n_ch.l10nch_chart_template_liquidity_transfer
 msgid "Liquidity Transfer"
-msgstr ""
+msgstr "Transfert de liquidités"
 
 #. module: l10n_ch
 #: model:account.account,name:l10n_ch.5_ch_coa_1440
@@ -1981,7 +1982,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ch.selection__account_journal__invoice_reference_model__ch
 #: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
 msgid "Switzerland"
-msgstr ""
+msgstr "Suisse"
 
 #. module: l10n_ch
 #: model:account.tax.group,name:l10n_ch.tax_group_tva_0
@@ -2001,12 +2002,12 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.tax.group,name:l10n_ch.tax_group_tva_37
 msgid "TVA 3.7%"
-msgstr ""
+msgstr "TVA 3,7 %"
 
 #. module: l10n_ch
 #: model:account.tax.group,name:l10n_ch.tax_group_tva_77
 msgid "TVA 7.7%"
-msgstr ""
+msgstr "TVA 7,7 %"
 
 #. module: l10n_ch
 #: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot_base
@@ -2244,6 +2245,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Vous pouvez choisir différents modèles par type de référence. Le modèle par "
+"défaut est la référence Odoo."
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/models/account_invoice.py:0

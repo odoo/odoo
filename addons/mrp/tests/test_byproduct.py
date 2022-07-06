@@ -69,6 +69,7 @@ class TestMrpByProduct(common.TransactionCase):
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
         mo_form = Form(mnf_product_a)
+        mnf_product_a.move_byproduct_ids.quantity_done = 2
         mo_form.qty_producing = 2.00
         mnf_product_a = mo_form.save()
         # I finish the production order.

@@ -5,14 +5,14 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2022-06-10 08:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_editor
 #. openerp-web
@@ -442,6 +442,13 @@ msgid "Below"
 msgstr "Debajo"
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Big section heading."
+msgstr "Encabezado de sección grande."
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Blobs"
 msgstr "Blobs"
@@ -501,6 +508,13 @@ msgstr "Brillo"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Bulleted list"
+msgstr "Lista con viñetas"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
@@ -537,6 +551,13 @@ msgid "Change media description and tooltip"
 msgstr ""
 "Cambiar la descripción y el cuadro de información sobre herramientas del "
 "medio"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Checklist"
+msgstr "Lista de pendientes"
 
 #. module: web_editor
 #. openerp-web
@@ -602,6 +623,13 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Content conflict"
+msgstr "Conflicto de contenido"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Contrast"
 msgstr "Contraste"
@@ -638,6 +666,20 @@ msgstr "Portada"
 #, python-format
 msgid "Create"
 msgstr "Crear"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Create a list with numbering."
+msgstr "Crear una lista numerada."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Create a simple bulleted list."
+msgstr "Crear una lista de viñetas sencilla."
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__create_uid
@@ -996,6 +1038,7 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Gradient"
 msgstr "Gradiente"
@@ -1046,6 +1089,27 @@ msgstr "Encabezado 5"
 #, python-format
 msgid "Header 6"
 msgstr "Encabezado 6"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Heading 1"
+msgstr "Encabezado 1"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Heading 2"
+msgstr "Encabezado 2"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Heading 3"
+msgstr "Encabezado 3"
 
 #. module: web_editor
 #. openerp-web
@@ -1221,6 +1285,20 @@ msgstr "Inkwell"
 #, python-format
 msgid "Inline Text"
 msgstr "Texto en línea"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Insert a table."
+msgstr "Insertar una tabla."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Insert an horizontal rule separator."
+msgstr "Insertar un separador de regla horizontal."
 
 #. module: web_editor
 #. openerp-web
@@ -1403,6 +1481,13 @@ msgstr "Medio"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Medium section heading."
+msgstr "Encabezado de sección mediana."
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "More info about this app."
@@ -1457,6 +1542,13 @@ msgstr "No hay más registros"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/powerbox/Powerbox.js:0
+#, python-format
+msgid "No results"
+msgstr "Sin resultados"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -1473,6 +1565,13 @@ msgstr "Ninguno"
 #, python-format
 msgid "Normal"
 msgstr "Normal"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Numbered list"
+msgstr "Lista numerada"
 
 #. module: web_editor
 #. openerp-web
@@ -1547,6 +1646,13 @@ msgstr "Contorno + Redondeado"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Padding"
 msgstr "Padding"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Paragraph block."
+msgstr "Bloque de párrafo."
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2019,6 +2125,13 @@ msgid "Select a block on your page to style it."
 msgstr "Seleccione un bloque en su página para darle estilo."
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Separator"
+msgstr "Separador"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Sepia"
 msgstr "Sepia"
@@ -2121,6 +2234,14 @@ msgstr "Pequeño"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Small section heading."
+msgstr "Encabezado de sección pequeña."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
@@ -2154,6 +2275,27 @@ msgstr "Sugerencias"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Switch direction"
+msgstr "Cambiar dirección"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Switch the text's direction."
+msgstr "Cambiar la dirección del texto."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Table"
+msgstr "Tabla"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Table Options"
@@ -2175,6 +2317,7 @@ msgstr "ID de plantilla: %s"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Text"
@@ -2235,6 +2378,18 @@ msgstr "El URL proporcionado no es válido"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#, python-format
+msgid ""
+"The version from the database will be used.\n"
+"                    If you need to keep your changes, copy the content below and edit the new document."
+msgstr ""
+"Se usará la versión de la base de datos.\n"
+"                    Si necesita guardar sus cambios, copie el contenido a continuación y edite el nuevo documento."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Theme"
@@ -2246,6 +2401,13 @@ msgstr "Tema"
 #, python-format
 msgid "Theme colors"
 msgstr "Colores del tema"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#, python-format
+msgid "There is a conflict between your version and the one in the database."
+msgstr "Hay un conflicto entre su versión y la versión en la base de datos."
 
 #. module: web_editor
 #. openerp-web
@@ -2389,6 +2551,13 @@ msgstr "Alternar lista ordenada"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
+msgid "Toggle strikethrough"
+msgstr "Activar tachado"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#, python-format
 msgid "Toggle underline"
 msgstr "Alternar subrayado"
 
@@ -2406,6 +2575,13 @@ msgstr "Alternar lista desordenada"
 #, python-format
 msgid "Tooltip"
 msgstr "Información sobre herramientas"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Track tasks with a checklist."
+msgstr "Llevar el seguimiento de tareas con una lista de pendientes."
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2453,6 +2629,13 @@ msgstr "Colores transparentes"
 #, python-format
 msgid "Type"
 msgstr "Tipo"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Type \"/\" for commands"
+msgstr "Escriba \"/\" para acceder a los comandos"
 
 #. module: web_editor
 #. openerp-web
@@ -2560,6 +2743,17 @@ msgid "Walden"
 msgstr "Walden"
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#, python-format
+msgid ""
+"Warning: after closing this dialog, the version you were working on will be "
+"discarded and will never be available anymore."
+msgstr ""
+"Advertencia: después de cerrar este cuadro de diálogo se descartará la "
+"versión en la que estaba trabajando y nunca volverá a estar disponible."
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Wavy"
 msgstr "Ondulado"
@@ -2627,6 +2821,13 @@ msgid ""
 msgstr ""
 "Puede subir imágenes con el botón ubicado en la esquina superior izquierda "
 "de la pantalla."
+
+#. module: web_editor
+#: code:addons/web_editor/models/ir_qweb.py:0
+#: code:addons/web_editor/models/ir_qweb.py:0
+#, python-format
+msgid "You entered an invalid value, please try again."
+msgstr "Ingresó un valor inválido, vuelva a intentarlo."
 
 #. module: web_editor
 #: code:addons/web_editor/controllers/main.py:0

@@ -16,12 +16,13 @@
 # Arnau Ros, 2021
 # Eugeni Chafer <eugeni@chafer.cat>, 2021
 # jabelchi, 2021
-# Harcogourmet, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # marcescu, 2022
 # eriiikgt, 2022
+# Desausoi Laurent, 2022
+# Harcogourmet, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: eriiikgt, 2022\n"
+"Last-Translator: Harcogourmet, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -483,7 +484,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'pressupost' if object.state in ('draft', 'sent') else 'comanda'\"/>\n"
 "        Hola,\n"
 "        <br/><br/>\n"
 "       la teva\n"
@@ -1718,6 +1719,12 @@ msgstr "Pagament a compte: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "Dipòsits"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -4717,6 +4724,15 @@ msgstr ""
 " venda. La comunicació es lliurarà al client quan triï la forma de pagament."
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4804,7 +4820,7 @@ msgstr "comanda de venda"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr "{{ (objecte. name o').replace(' /', '_') }}"
+msgstr "{{ (object. name o').replace(' /', '_') }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

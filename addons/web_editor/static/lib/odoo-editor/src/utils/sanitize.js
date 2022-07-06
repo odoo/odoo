@@ -90,87 +90,97 @@ class Sanitize {
     }
 
     _parse(node) {
-        if (!node) {
-            return;
-        }
-
-        // Merge identical elements together
-        while (areSimilarElements(node, node.previousSibling) && !isUnbreakable(node)) {
-            getDeepRange(this.root, { select: true });
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
-            const nodeP = node.previousSibling;
-            moveNodes(...endPos(node.previousSibling), node);
-            restoreCursor();
-            node = nodeP;
-        }
-
-        // Remove zero-width spaces added by `fillEmpty` when there is content
-        // and the selection is not next to it.
-        const anchor = this.root.ownerDocument.getSelection().anchorNode;
-        if (
-            node.nodeType === Node.TEXT_NODE &&
-            node.textContent.includes('\u200B') &&
-            (
-                node.textContent.length > 1 ||
-                // There can be multiple ajacent text nodes, in which case the
-                // zero-width space is not needed either, despite being alone
-                // (length === 1) in its own text node.
-                Array.from(node.parentNode.childNodes).find(
-                    sibling =>
-                        sibling !== node &&
-                        sibling.nodeType === Node.TEXT_NODE &&
-                        sibling.length > 0
-                )
-            ) &&
-            !isBlock(node.parentElement) &&
-            anchor !== node
-        ) {
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
-            node.textContent = node.textContent.replace('\u200B', '');
-            node.parentElement.removeAttribute("oe-zws-empty-inline");
-            restoreCursor();
-        }
-
-        // Remove empty blocks in <li>
-        if (node.nodeName === 'P' && node.parentElement.tagName === 'LI') {
-            const next = node.nextSibling;
-            const pnode = node.parentElement;
-            if (isEmptyBlock(node)) {
-                const restoreCursor = preserveCursor(this.root.ownerDocument);
-                node.remove();
-                fillEmpty(pnode);
-                this._parse(next);
-                restoreCursor(new Map([[node, pnode]]));
-                return;
+        while (node) {
+            // Merge identical elements together
+            while (
+                areSimilarElements(node, node.previousSibling) &&
+                !isUnbreakable(node)
+            ) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                const nodeP = node.previousSibling;
+                moveNodes(...endPos(node.previousSibling), node);
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                node = nodeP;
             }
-        }
-        // Transform <li> into <p> if they are not in a <ul> / <ol>
-        if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
-            const p = document.createElement("p");
-            p.replaceChildren(...node.childNodes);
-            node.replaceWith(p);
-            node = p;
-        }
 
-        // Sanitize font awesome elements
-        if (isFontAwesome(node)) {
+            // Remove zero-width spaces added by `fillEmpty` when there is
+            // content and the selection is not next to it.
+            const anchor = this.root.ownerDocument.getSelection().anchorNode;
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\u200B') &&
+                (
+                    node.textContent.length > 1 ||
+                    // There can be multiple ajacent text nodes, in which case
+                    // the zero-width space is not needed either, despite being
+                    // alone (length === 1) in its own text node.
+                    Array.from(node.parentNode.childNodes).find(
+                        sibling =>
+                            sibling !== node &&
+                            sibling.nodeType === Node.TEXT_NODE &&
+                            sibling.length > 0
+                    )
+                ) &&
+                !isBlock(node.parentElement) &&
+                anchor !== node
+            ) {
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                node.textContent = node.textContent.replace('\u200B', '');
+                node.parentElement.removeAttribute("oe-zws-empty-inline");
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            // Remove empty blocks in <li>
+            if (
+                node.nodeName === 'P' &&
+                node.parentElement.tagName === 'LI' &&
+                isEmptyBlock(node)
+            ) {
+                const parent = node.parentElement;
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                node.remove();
+                fillEmpty(parent);
+                if (restoreCursor) {
+                    restoreCursor(new Map([[node, parent]]));
+                }
+            }
+
+            // Transform <li> into <p> if they are not in a <ul> / <ol>
+            if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
+                const paragraph = document.createElement("p");
+                paragraph.replaceChildren(...node.childNodes);
+                node.replaceWith(paragraph);
+                node = paragraph;
+            }
+
             // Ensure a zero width space is present inside the FA element.
-            if (node.innerHTML !== '\u200B') node.innerHTML = '&#x200B;';
-        }
+            if (isFontAwesome(node) && node.textContent !== '\u200B') {
+                node.textContent = '\u200B';
+            }
 
-        // Sanitize media elements
-        if (isMediaElement(node) || node.tagName === 'HR') {
-            // Ensure all media elements are tagged contenteditable=false.
-            // we cannot use the node.isContentEditable because it can wrongly return false
-            // when the editor is starting up ( first sanitize )
-            if (node.getAttribute('contenteditable') !== 'false') {
+            // Ensure elements which should not contain any content are tagged
+            // contenteditable=false to avoid any hiccup.
+            if (
+                (isMediaElement(node) || node.tagName === 'HR') &&
+                node.getAttribute('contenteditable') !== 'false'
+            ) {
                 node.setAttribute('contenteditable', 'false');
             }
+
+            if (node.firstChild) {
+                this._parse(node.firstChild);
+            }
+            node = node.nextSibling;
         }
 
-        // FIXME not parse out of editable zone...
-        this._parse(node.firstChild);
-        this._parse(node.nextSibling);
     }
 }
 

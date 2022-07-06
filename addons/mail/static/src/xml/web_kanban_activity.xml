@@ -3,6 +3,7 @@
 
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_mail_activity">
+        <!-- Dropdowns are created in JS to avoid some bugs, that's why the <a/> contains no args for the dropdown creation -->
         <a class="dropdown-toggle o-no-caret o_activity_btn" data-boundary="viewport" data-flip="false" data-toggle="dropdown" role="button">
             <!-- span classes are generated dynamically (see _render) -->
             <span t-att-title="widget.selection[widget.activityState]" role="img" t-att-aria-label="widget.selection[widget.activity_state]"/>

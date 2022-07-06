@@ -268,15 +268,17 @@ class MrpProduction(models.Model):
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     show_serial_mass_produce = fields.Boolean('Display the serial mass product wizard action moves', compute='_compute_show_serial_mass_produce')
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
+    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids',
+                 'procurement_group_id.stock_move_ids.move_orig_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
         for production in self:
-            production.mrp_production_child_count = len(production.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids - production)
+            production.mrp_production_child_count = len(production._get_children())
 
-    @api.depends('move_dest_ids.group_id.mrp_production_ids')
+    @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids',
+                 'procurement_group_id.stock_move_ids.move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_source_count(self):
         for production in self:
-            production.mrp_production_source_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids - production)
+            production.mrp_production_source_count = len(production._get_sources())
 
     @api.depends('procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_backorder(self):
@@ -725,6 +727,9 @@ class MrpProduction(models.Model):
                     raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
 
     def write(self, vals):
+        if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
+            vals['move_finished_ids'] = vals['move_byproduct_ids']
+            del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
         res = super(MrpProduction, self).write(vals)
@@ -1088,9 +1093,21 @@ class MrpProduction(models.Model):
 
         self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])._action_confirm()
 
+    def _get_children(self):
+        self.ensure_one()
+        procurement_moves = self.procurement_group_id.stock_move_ids
+        child_moves = procurement_moves.move_orig_ids
+        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids - self
+
+    def _get_sources(self):
+        self.ensure_one()
+        dest_moves = self.procurement_group_id.mrp_production_ids.move_dest_ids
+        parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
+        return (dest_moves | parent_moves).group_id.mrp_production_ids - self
+
     def action_view_mrp_production_childs(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
+        mrp_production_ids = self._get_children().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1110,7 +1127,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_sources(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids.ids
+        mrp_production_ids = self._get_sources().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1921,9 +1938,10 @@ class MrpProduction(models.Model):
                 order_exception, visited = exception
                 order_exceptions.update(order_exception)
                 visited_objects += visited
-            visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
+            visited_objects = [sm for sm in visited_objects if sm._name == 'stock.move']
             impacted_object = []
-            if visited_objects and visited_objects._name == 'stock.move':
+            if visited_objects:
+                visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
                 visited_objects |= visited_objects.mapped('move_orig_ids')
                 impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {
@@ -1968,7 +1986,7 @@ class MrpProduction(models.Model):
         if multiple_lot_components:
             if message:
                 message += "\n"
-            message += _("Component Lots must be unique for mass production. Please review consumption for:\n")
+            message += _("Component Lots must be unique for mass production. Please review reservation for:\n")
             message += "\n".join(component.name for component in multiple_lot_components)
         if message:
             raise UserError(message)

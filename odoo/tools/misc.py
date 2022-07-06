@@ -232,7 +232,7 @@ def flatten(list):
     """
     r = []
     for e in list:
-        if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
+        if isinstance(e, (bytes, str)) or not isinstance(e, collections.abc.Iterable):
             r.append(e)
         else:
             r.extend(flatten(e))

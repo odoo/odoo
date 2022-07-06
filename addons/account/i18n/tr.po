@@ -60,11 +60,11 @@ msgstr ""
 "    - Vergi Grubu: Vergi bir dizi alt vergidir.\n"
 "    - Sabit: Vergi tutarı, fiyat ne olursa olsun aynı kalır.\n"
 "    - Fiyatın Yüzdesi: Vergi tutarı fiyatın yüzdesidir:\n"
-"        Örneğin 100 * (1+10%) = 110 (fiyata dahil değil)\n"
-"        Örneğin 110 / (1 + 10%) = 100 (fiyata dahil)\n"
+"        örn. 100 * (1+10%) = 110 (fiyata dahil değil)\n"
+"        örn. 110 / (1 + 10%) = 100 (fiyata dahil)\n"
 "    - Vergi Dahil Fiyat Yüzdesi: Vergi tutarı fiyatın bir bölümüdür:\n"
-"        ör. 180 / (1 - 10%) = 200 (fiyata dahil değil)\n"
-"        ör. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
+"        örn. 180 / (1 - 10%) = 200 (fiyata dahil değil)\n"
+"        örn. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
 "        "
 
 #. module: account
@@ -76,17 +76,17 @@ msgstr " %(lock_type)s kilit tarihi %(lock_date)s olarak ayarlanır."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Uzlaştırılan Tedarikçi Faturaları"
+msgstr "# Denkleştirilen Tedarikçi Faturaları"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Uzlaştırılan Faturalar"
+msgstr "# Denkleştirilen Faturalar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr "# Uzlaştırılan Ekstreler"
+msgstr "# Denkleştirilen Ekstreler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -191,7 +191,7 @@ msgstr "- Onaylı ve Taslak Kayıtlar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Parçalı uzlaştırılmış girişleri incele"
+msgstr "-> Parçalı denkleştirilmiş girişleri incele"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -870,7 +870,7 @@ msgstr "<span role=\"separator\">Yeni</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">Uzlaştırma</span>"
+msgstr "<span role=\"separator\">Denkleştirme</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1351,7 +1351,7 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
-"%s hesabı uzlaştırmaya izin vermez. İzin vermek için önce bu hesabın "
+"%s hesabı denkleştirmeye izin vermez. İzin vermek için önce bu hesabın "
 "yapılandırmasını değiştirin."
 
 #. module: account
@@ -1585,7 +1585,7 @@ msgstr "Hesap Tipleri"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Hesaptan Uzlaştırmayı Kaldır"
+msgstr "Hesaptan Denkleştirmeyi Kaldır"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
@@ -1691,8 +1691,8 @@ msgid ""
 "put on the regular tax account."
 msgstr ""
 "Gerçekleşme esaslı vergileme sisteminde vergi tutarı geçişi için kullanılan "
-"hesap.Orijinal fatura uzlaştırılmadığı sürece vergi tutarını içerecektir; "
-"uzlaştırma sırasında bu tutar bu hesapta iptal edilerek normal vergi "
+"hesap.Orijinal fatura denkleştirilmediği sürece vergi tutarını içerecektir; "
+"denkleştirme sırasında bu tutar bu hesapta iptal edilerek normal vergi "
 "hesabına konulur."
 
 #. module: account
@@ -2180,7 +2180,7 @@ msgstr "Tüm Kayıtlar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr "Tüm Kalemler Uzlaştırıldı"
+msgstr "Tüm Kalemler Denkleştirildi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_common_journal_report__target_move__posted
@@ -2233,7 +2233,7 @@ msgstr "Ürün Marjlarını Analiz Edin (Faturadan Çalışır)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 msgid "Allow Reconciliation"
-msgstr "Uzlaştırmaya İzin Ver"
+msgstr "Denkleştirmeye İzin Ver"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
@@ -2440,7 +2440,7 @@ msgstr "Tutar:"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr "Bir Bilanço dışı hesap için uzlaştırma yapılamaz"
+msgstr "Bir Bilanço dışı hesap için denkleştirme yapılamaz"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -2747,7 +2747,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto Reconcile"
-msgstr "Otomatik Uzlaştır"
+msgstr "Otomatik Denkleştir"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2940,12 +2940,12 @@ msgstr "Banka İş Ortağı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Banka Uzlaştırma Kaydı Önayarları"
+msgstr "Banka Denkleştirme Kaydı Önayarları"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Banka Uzlaştırma Kaydı Önayarı"
+msgstr "Banka Denkleştirme Kaydı Önayarı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -3011,7 +3011,7 @@ msgid ""
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
 "Banka Hareketleri, aktarım veya eşitlemeden hemen sonra onaylanır. Karşı hesap banka aracı hesabıdır.\n"
-"Uzlaştırma, ikincisini kesin hesap(lar)la değiştirir."
+"Denkleştirme, ikincisini kesin hesap(lar)la değiştirir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -3039,7 +3039,7 @@ msgid ""
 "the final reconciliation allowing finding the right account."
 msgstr ""
 "Banka ekstresi işlemleri, doğru hesabın bulunmasını sağlayan nihai "
-"mutabakata kadar askıya alma hesabına kaydedilecektir."
+"denkleştirmeye kadar askıya alma hesabına kaydedilecektir."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3770,8 +3770,8 @@ msgstr ""
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Kullanıcının bu hesaptaki girişleri uzlaştırmasını istiyorsanız bu seçeneği "
-"işaretleyin."
+"Kullanıcının bu hesaptaki girişleri denkleştirmesini istiyorsanız bu "
+"seçeneği işaretleyin."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3804,7 +3804,7 @@ msgid ""
 "\"cancel\" if the invoice is already reconciled."
 msgstr ""
 "Bu faturaya nasıl alacak vermek istediğinizi seçin. Fatura zaten "
-"uzlaştırılmışsa \"değiştiremez\" veya \"iptal\" edemezsiniz."
+"denkleştirilmişse \"değiştiremez\" veya \"iptal\" edemezsiniz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -4012,7 +4012,7 @@ msgstr "Raporda kullanılacak bu rapor kaleminin tam adı."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr "Uzlaştırıcı"
+msgstr "Denkleştirici"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -4337,7 +4337,7 @@ msgstr "Yeni satın alınabilir ürün oluştur"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Yeni uzlaşma modeli oluşturun"
+msgstr "Yeni denkleştirme modeli oluşturun"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -6340,7 +6340,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_full_reconcile
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__full_reconcile_id
 msgid "Full Reconcile"
-msgstr "Tam Uzlaşma"
+msgstr "Tam Denkleştirme"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__cancel
@@ -6490,7 +6490,7 @@ msgstr "Vergi Grupları"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group payments into a single batch to ease the reconciliation process"
 msgstr ""
-"Uzlaştırma sürecini kolaylaştırmak için ödemeleri tek bir grupta gruplayın"
+"Denkleştirme sürecini kolaylaştırmak için ödemeleri tek bir grupta gruplayın"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -6519,13 +6519,13 @@ msgstr "Mesaj Var"
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_payment__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Uzlaştırılan Kayıtlar Var"
+msgstr "Denkleştirilen Kayıtlar Var"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Eşleşmeyen Girişler Var"
+msgstr "Denkleştirilmeyen Kayıtlar Var"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6863,8 +6863,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
-"Bir hareketin uzlaşmasını kaldırdığınızda, o işleme bağlı eylemler devre "
-"dışı bırakılmayacağı için o işleme bağlı bütün eylemleri de kontrol "
+"Bir hareketin denkleştirmesini kaldırdığınızda, o işleme bağlı eylemler "
+"devre dışı bırakılmayacağı için o işleme bağlı bütün eylemleri de kontrol "
 "etmelisiniz"
 
 #. module: account
@@ -7049,8 +7049,8 @@ msgid ""
 "Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
-"Gelen ödemeler Gelen Ödeme Ara Hesabına nakledilir. Banka uzlaştırma sihirbaz'ında mavi çizgiler olarak görünürler.\n"
-"Banka hareketleri daha sonra Alacak Hesabı yerine Gelen Ödeme Ara Hesaplarında uzlaştırılır."
+"Gelen ödemeler Gelen Ödeme Ara Hesabına nakledilir. Banka denkleştirme sihirbaz'ında mavi çizgiler olarak görünürler.\n"
+"Banka hareketleri daha sonra Alacak Hesabı yerine Gelen Ödeme Ara Hesaplarında denkleştirilir."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -7522,7 +7522,7 @@ msgstr "Doğrulanacak Faturalar"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr "Yevmiye kalemleri olan faturalar bu ödemelerle uzlaştırılmıştır."
+msgstr "Yevmiye kalemleri olan faturalar bu ödemelerle denkleştirilmiştir."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -7616,7 +7616,7 @@ msgstr "Yazdırıldı"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_reconciled
 #: model:ir.model.fields,field_description:account.field_account_payment__is_reconciled
 msgid "Is Reconciled"
-msgstr "Uzlaştırıldı mı"
+msgstr "Denkleştirildi mi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_rounding_line
@@ -8296,8 +8296,8 @@ msgid ""
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
 "Bu iş ortağı için son kez eşleşen fatura ve ödemeler. En azından bir "
-"uzlaşılamayan borç ve alacak yoksa veya \"Bitti\" düğmesini tıklarsanız "
-"ayarlanır."
+"denkleştirilemeyen borç ve alacak yoksa veya \"Bitti\" düğmesini tıklarsanız"
+" ayarlanır."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8402,7 +8402,7 @@ msgstr "Satır alt toplamları vergi görüntüleme"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
-msgstr "\"Bilanço Dışı\" hesap bulunan kalemler uzlaştırılamaz"
+msgstr "\"Bilanço Dışı\" hesap bulunan kalemler denkleştirilemez"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__children_line_ids
@@ -8682,8 +8682,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
-"Bu satır için eşleşen numara, kısmen uzlaştırılmışsa 'P' veya varsa tam "
-"mutabakatın adı."
+"Bu satır için eşleşen numara, kısmen denkleştirilmişse 'P' veya varsa tam "
+"denkleştirmenin adı."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -9717,8 +9717,8 @@ msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
-"Giden Ödemeler Giden Ödeme Ara Hesabına nakledilir. Banka uzlaştırma sihirbaz'ında mavi çizgiler olarak görünürler.\n"
-"Banka hareketleri daha sonra Borç Hesabı yerine Giden Ödeme Ara Hesabı üzerinde uzlaştırılır."
+"Giden Ödemeler Giden Ödeme Ara Hesabına nakledilir. Banka denkleştirme sihirbaz'ında mavi çizgiler olarak görünürler.\n"
+"Banka hareketleri daha sonra Borç Hesabı yerine Giden Ödeme Ara Hesabı üzerinde denkleştirilir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -9778,7 +9778,7 @@ msgstr "Ödenmemiş Alacaklar"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
-msgstr "Uzlaştırılmamış Ödeme"
+msgstr "Denkleştirilmemiş Ödeme"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9870,7 +9870,7 @@ msgstr "Parçalı"
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
 msgid "Partial Reconcile"
-msgstr "Parçalı Uzlaştır"
+msgstr "Parçalı Denkleştir"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__refund
@@ -10236,7 +10236,8 @@ msgstr ""
 msgid ""
 "Payments generated during the reconciliation of this bank statement lines."
 msgstr ""
-"Bu banka ekstresi satırlarının mutabakatı sırasında oluşturulan ödemeler."
+"Bu banka ekstresi satırlarının denkleştirmesi sırasında oluşturulan "
+"ödemeler."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -10887,60 +10888,66 @@ msgstr "Vergi Satırını Yeniden Hesapla"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line_template
 msgid "Reconcile Model Line Template"
-msgstr "Uzlaştırma Modeli Satırı Şablonu"
+msgstr "Denkleştirme Modeli Satırı Şablonu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr "Uzlaştırma Modeli Şablonu"
+msgstr "Denkleştirme Modeli Şablonu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "Uzlaştırılmış"
+msgstr "Denkleştirilmiş"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "Mutabık Kılınan Faturalar"
+msgstr "Denkleştirilen Faturalar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled Entries"
-msgstr "Uzlaştırılmış Girişler"
+msgstr "Denkleştirilmiş Girişler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Uzlaştırılmış Faturalar"
+msgstr "Denkleştirilmiş Faturalar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
 msgid "Reconciled Invoices Type"
-msgstr "Mutabakata Varılmış Fatura Türü"
+msgstr "Denkleştirilmiş Fatura Türü"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_ids
 msgid "Reconciled Statements"
-msgstr "Mutabık Kılınan İfadeler"
+msgstr "Denkleştirilen İfadeler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
 msgid "Reconciliation Model"
-msgstr "Uzlaştırma Modeli"
+msgstr "Denkleştirme Modeli"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "Uzlaştırma Modelleri"
+msgstr "Denkleştirme Modelleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr "Uzlaştırma Parçaları"
+msgstr "Denkleştirme Parçaları"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11346,7 +11353,7 @@ msgstr "Ters"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Revert reconciliation"
-msgstr "Uzlaştırmayı Geri Al"
+msgstr "Denkleştirmeyi Geri Al"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -11414,7 +11421,7 @@ msgstr "Muadil girişi önerme kuralı"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "Uzlaştırma modeli için kurallar"
+msgstr "Denkleştirme modeli için kurallar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -11773,7 +11780,8 @@ msgid ""
 "for such taxes on a given account during reconciliation."
 msgstr ""
 "Eğer vergiler gerçekleşme esasını kullanıyorsa, ve bu vergiler için "
-"uzlaştırma süresince belirtilen hesapta bir giriş oluşturacaksa bunu seçin."
+"denkleştirme süresince belirtilen hesapta bir giriş oluşturacaksa bunu "
+"seçin."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -12119,7 +12127,7 @@ msgstr "Taslağa Sıfırla Düğmesini Göster"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr "Mutabık Kılınmayan Banka Ekstresi Satırını Göster"
+msgstr "Denkleştirilmeyen Banka Ekstresi Satırını Göster"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -13057,14 +13065,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
 msgstr ""
-"Ödemenin halihazırda mutabık kılınmış olup olmadığını gösteren teknik alan."
+"Ödemenin halihazırda denkleştirilmiş olup olmadığını gösteren teknik alan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
 msgid ""
 "Technical field indicating if the statement line is already reconciled."
 msgstr ""
-"İfade satırının zaten mutabık kılınmış olup olmadığını gösteren teknik alan."
+"İfade satırının zaten denkleştirilmiş olup olmadığını gösteren teknik alan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__show_decimal_separator
@@ -13267,9 +13275,9 @@ msgid ""
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Gerçekleşme esaslı vergi uzlaştırmalarını takip etmek için kullanılan teknik"
-" alan. Kaynak iptalinde şu gereklidir: bu bölümü de iptal etmek için ters "
-"yevmiye girişi gönderecektir."
+"Gerçekleşme esaslı vergi denkleştirmelerini takip etmek için kullanılan "
+"teknik alan. Kaynak iptalinde şu gereklidir: bu bölümü de iptal etmek için "
+"ters yevmiye girişi gönderecektir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -13607,9 +13615,10 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
-"Bu ekstre satırında uzlaşmaya bırakılan tutar (yevmiye kalemlerinin "
-"bakiyesine göre imzalanmış), para biriminde ifade edilmiştir. Bu, uzlaştırma"
-" modellerinin uygulanmasını hızlandırmak için teknik bir alan kullanımıdır."
+"Bu ekstre satırında denkleştirmeye bırakılan tutar (yevmiye kalemlerinin "
+"bakiyesine göre imzalanmış), para biriminde ifade edilmiştir. Bu, "
+"denkleştirme modellerinin uygulanmasını hızlandırmak için teknik bir alan "
+"kullanımıdır."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13631,7 +13640,7 @@ msgstr "Bir banka günlüğünün banka hesabı aynı şirkete ait olmalıdır (
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Banka uzlaştırması için kullanılan banka hesap ekstresi"
+msgstr "Banka denkleştirmesi için kullanılan banka hesap ekstresi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -13641,8 +13650,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"Satırlarını uzlaştırırken, bu girişteki vergilerden oluşturulan nakit temel "
-"girişleri."
+"Satırlarını denkleştirirken, bu girişteki vergilerden oluşturulan nakit "
+"temel girişleri."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -13742,7 +13751,7 @@ msgstr "Bu şirket için vergi raporlarının kullanılacağı ülke"
 msgid "The credit note is auto-validated and reconciled with the invoice."
 msgstr ""
 "İade/Fiyat Farkı faturası otomatik olarak doğrulanır ve fatura ile "
-"uzlaştırılır."
+"denkleştirilir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13751,7 +13760,7 @@ msgid ""
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
 "İade/Fiyat Farkı faturası otomatik olarak doğrulanır ve fatura ile "
-"uzlaştırılır. Orijinal fatura yeni taslak olarak kopyalanır."
+"denkleştirilir. Orijinal fatura yeni taslak olarak kopyalanır."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13782,8 +13791,8 @@ msgid ""
 msgstr ""
 "Banka ekstrenizin geçerli durumu:- Yeni: Taslak Yevmiye Kayıtları tamamen "
 "düzenlenebilir.- İşlenme: Artık onaylanan Yevmiye Kayıtları düzenlenemez, "
-"uzlaştırmaya hazır.- Doğrulandı: Tüm satırlar uzlaştırıldı. İşlenecek hiçbir"
-" şey kalmadı."
+"denkleştirmeye hazır.- Doğrulandı: Tüm satırlar denkleştirildi. İşlenecek "
+"hiçbir şey kalmadı."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14137,7 +14146,7 @@ msgid ""
 "the invoices & payments matching was performed."
 msgstr ""
 "İş ortağının son fatura ve ödemelerinin eşleştirmesinden bu yana en az bir "
-"uzlaşmamış borç ve alacak var."
+"denkleşmemiş borç ve alacak var."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14187,7 +14196,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Uzlaştırma modeli yalnızca seçilen müşteri / satıcı kategorilerine "
+"Denkleştirme modeli yalnızca seçilen müşteri / satıcı kategorilerine "
 "uygulanacaktır."
 
 #. module: account
@@ -14197,7 +14206,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"Uzlaştırma modeli yalnızca seçilen müşterilere / satıcılara uygulanacaktır."
+"Denkleştirme modeli yalnızca seçilen müşterilere / satıcılara "
+"uygulanacaktır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -14208,7 +14218,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Uzlaştırma modeli yalnızca seçilen işlem türüne uygulanır:\n"
+"Denkleştirme modeli yalnızca seçilen işlem türüne uygulanır:\n"
 "        * Alınan Tutar: Yalnızca bir tutar alınırken uygulanır.\n"
 "        * Ödenen Tutar: Yalnızca bir tutar ödenirken uygulanır.\n"
 "        * Ödenen / Alınan Tutar: Her iki durumda da uygulanır."
@@ -14219,7 +14229,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Uzlaştırma modeli yalnızca bir müşteri / tedarikçi ayarlandığında uygulanır."
+"Denkleştirme modeli yalnızca bir müşteri / tedarikçi ayarlandığında "
+"uygulanır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14228,7 +14239,7 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Uzlaştırma modeli yalnızca, belirtilen tutardan daha az, daha fazla veya "
+"Denkleştirme modeli yalnızca, belirtilen tutardan daha az, daha fazla veya "
 "belirtilen tutarlar arasında olduğunda uygulanır."
 
 #. module: account
@@ -14240,7 +14251,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Uzlaştırma modeli etiket yalnızca şu durumlarda uygulanır:\n"
+"Denkleştirme modeli etiket yalnızca şu durumlarda uygulanır:\n"
 "        * İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf duyarsız).\n"
 "        * İçermez: \"İçerir\" in olumsuzlanması.\n"
 "        * Eşleşme Regex: Kendi normal ifadenizi tanımlayın."
@@ -14254,7 +14265,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Uzlaştırma modeli not yalnızca şu durumlarda uygulanır:\n"
+"Denkleştirme modeli not yalnızca şu durumlarda uygulanır:\n"
 "* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf duyarsız).\n"
 "* İçermez: \"İçerir\" in olumsuzlanması.\n"
 "* Eşleşme Regex: Kendi normal ifadenizi tanımlayın."
@@ -14268,7 +14279,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Uzlaştırma modeli işlem yalnızca şu durumlarında uygulanır:\n"
+"Denkleştirme modeli işlem yalnızca şu durumlarında uygulanır:\n"
 "* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf duyarsız).\n"
 "* İçermez: \"İçerir\" in olumsuzlanması.\n"
 "* Eşleşme Regex: Kendi normal ifadenizi tanımlayın."
@@ -14278,7 +14289,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr "Uzlaştırma modeli yalnızca seçilen yevmiyelerden kullanılabilir."
+msgstr "Denkleştirme modeli yalnızca seçilen yevmiyelerden kullanılabilir."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14420,7 +14431,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The statement line has already been reconciled."
-msgstr "Ekstre kalemi zaten uzlaştırıldı."
+msgstr "Ekstre kalemi zaten denkleştirildi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14547,8 +14558,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"Kilitlemek istediğiniz dönemde hala uzlaştırılmamış banka ekstresi satırları"
-" var. Bunları uzlaştırmalı veya silmelisiniz."
+"Kilitlemek istediğiniz dönemde hala denkleştirilmemiş banka ekstresi "
+"satırları var. Bunları denkleştirmeli veya silmelisiniz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -14614,7 +14625,7 @@ msgid ""
 msgstr ""
 "Bu hesap %(journal_names)s günlüklerinde (kimlikler %(journal_ids)s) ödeme "
 "borcu veya alacak hesabı olarak yapılandırılır. Bu, bu hesabın türünün "
-"uzlaştırılabilir olması gerektiği anlamına gelir."
+"denkleştirilebilir olması gerektiği anlamına gelir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -14673,7 +14684,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Bu, ödemeleri tek bir grupta gruplandırmanıza olanak tanır ve uzlaştırma sürecini kolaylaştırır.\n"
+"Bu, ödemeleri tek bir grupta gruplandırmanıza olanak tanır ve denkleştirme sürecini kolaylaştırır.\n"
 "-Bu, account_batch_payment modülünü yükler."
 
 #. module: account
@@ -14743,7 +14754,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "Bu alan bir banka hesap ekstresi uzlaştırmasında dikkate alınmaz."
+msgstr "Bu alan bir banka hesap ekstresi denkleştirmesinde dikkate alınmaz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -14892,8 +14903,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Bunlar, banka hesap ekstresi veya bir hesabı uzlaştırırken yevmiye kalemleri"
-" oluşturmak için kullanılabilir."
+"Bunlar, banka hesap ekstresi veya bir hesabı denkleştirirken yevmiye "
+"kalemleri oluşturmak için kullanılabilir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15284,17 +15295,17 @@ msgstr "Okunmamış Mesaj Sayacı"
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 #, python-format
 msgid "Unreconcile"
-msgstr "Uzlaşmayı Kaldır"
+msgstr "Denkleştirmeyi Kaldır"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "İşlemlerin Uzlaştırmasını kaldır"
+msgstr "İşlemlerin Denkleştirmesini kaldır"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Uzlaştırılmamış"
+msgstr "Denkleştirilmemiş"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15516,7 +15527,7 @@ msgid ""
 "rule)."
 msgstr ""
 "Hesap ekstresi satırını otomatik olarak doğrulayın (kuralınıza göre "
-"uzlaştırma)."
+"denkleştirme)."
 
 #. module: account
 #. openerp-web
@@ -15836,7 +15847,8 @@ msgstr "Muhasebe kaydında hatalı alacak ya da Borç değeri!"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "Daha önce uzlaştırılmış bazı kayıtları uzlaştırmaya çalışıyorsunuz."
+msgstr ""
+"Daha önce denkleştirilmiş bazı kayıtları denkleştirmeye çalışıyorsunuz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -15900,7 +15912,7 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
-"Dönemi/hesabı yalnızca henüz uzlaştırılmamış kalemler için "
+"Dönemi/hesabı yalnızca henüz denkleştirilmemiş kalemler için "
 "değiştirebilirsiniz."
 
 #. module: account
@@ -15922,7 +15934,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "Yalnızca onaylanan girdileri uzlaştırabilirsiniz."
+msgstr "Yalnızca onaylanan girdileri denkleştirebilirsiniz."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -16227,7 +16239,7 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"Uzlaştırılmış yevmiye girişinde bu değişikliği yapamazsınız. Sadece yasal olmayan bazı alanları değiştirebilir veya önce uzlaştırmaları iptal etmeniz gerekir.\n"
+"Denkleştirilmiş yevmiye girişinde bu değişikliği yapamazsınız. Sadece yasal olmayan bazı alanları değiştirebilir veya önce denkleştirmeleri iptal etmeniz gerekir.\n"
 "Yevmiye Girişi (id): %s (%s)"
 
 #. module: account
@@ -16266,8 +16278,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"Uzlaştırılamayan bir alacak / borç hesabına sahip olamazsınız. (hesap kodu: "
-"%s)"
+"Denkleştirilemeyen bir alacak / borç hesabına sahip olamazsınız. (hesap "
+"kodu: %s)"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16394,8 +16406,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"Bazı parçalı uzlaştırmalar hâlâ beklemede olduğunda uzlaştırmayı önlemek "
-"için bir hesap değiştiremezsiniz."
+"Bazı parçalı denkleştirmeler hâlâ beklemede olduğunda denkleştirmeyi önlemek"
+" için bir hesap değiştiremezsiniz."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

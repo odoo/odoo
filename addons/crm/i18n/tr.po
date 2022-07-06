@@ -7,7 +7,7 @@
 # Mehmet Demirel <mdemirell@gmail.com>, 2021
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2021
 # Erdem Keskin <erdemkeskines@gmail.com>, 2021
-# ANIL TAN SAĞIR <anils@projetgrup.com>, 2021
+# Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
@@ -15,14 +15,13 @@
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
-# Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Halil, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +40,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "Bu ay atanan Aday/Fırsat sayısı"
+msgstr "Bu ay atanmış Aday/Fırsat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__calendar_event_count
 msgid "# Meetings"
-msgstr "# Toplantı Sayısı"
+msgstr "# Toplantılar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
@@ -61,7 +60,7 @@ msgstr "# Fırsatlar"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr "# Geciken Fırsatlar"
+msgstr "# Gecikmiş Fırsatlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
@@ -84,7 +83,7 @@ msgstr "%(assigned)sadaylar %(team_name)s ekibine atanmıştır."
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr "%(attach_name)s (den %(lead_name)s)"
+msgstr "%(attach_name)s (%(lead_name)sden )"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -97,7 +96,9 @@ msgstr "%(duplicates)sçift adaylar birleştirilmiştir."
 #, python-format
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr "%(members_assigned)s adayların atandığı %(member_count)s satışçılar."
+msgstr ""
+"%(member_count)s satış personelleri arasından%(members_assigned)s atanmış "
+"adaylar"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -126,8 +127,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
-"Satış sürecinde ilerledikçe <b>fırsatları sürükle &amp; bırak</b> ile satış "
-"aşamaları arasında ilerletebilirsiniz."
+"Satış sürecinde ilerledikçe sütunlar arasında <b>fırsatları sürükle &amp; "
+"bırak</b> ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -226,7 +227,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Toplantılar</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Toplantılar</span>"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Toplantı</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -235,7 +236,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
 msgstr ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Benzer Adaylar</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Benzer Adaylar</span>"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Benzer Aday</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -258,7 +259,7 @@ msgid ""
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> de</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -396,13 +397,13 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Merhaba <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
-"                            <t t-out=\"object.company_id.name or ''\">Şirketim (San Fransisko)</t>' hoşgeldiniz.\n"
-"                            Sizinle tanışmaktan mutluluk duyarız! Bu sayede<t t-out=\"object.company_id.name or ''\">Şirketim (San Fransisko)</t>'un sunacaklarını keşfedebileceksiniz. Benim adım <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ve Odoo'dan en iyi şekilde faydalanabilmeniz için yardımcı olacağım. Kısa bir demo düzenleyebilir miyiz?<br/>\n"
+"                             <t t-out=\"object.company_id.name or ''\">Şirketim (San Francisco)</t> hoşgeldiniz.\n"
+"                            Sizinle tanışmaktan mutluluk duyarız! Bu sayede <t t-out=\"object.company_id.name or ''\">Şirketim (San Francisco)</t> sunacaklarını keşfedebileceksiniz. Benim adım <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ve Odoo'dan en iyi şekilde faydalanabilmeniz için yardımcı olacağım. Kısa bir demo düzenleyebilir miyiz?<br/>\n"
 "                            Lütfen istediğiniz zaman benimle temasa geçiniz!<br/><br/>\n"
 "                            Saygılarımla,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                E-posta: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>E-posta: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
 "                                Tel: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
@@ -433,9 +434,9 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"<!-- HAZIRLAYAN -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"    <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>tarafından hazırlanmıştır\n"
 "</td></tr>\n"
 "</table>\n"
 "        "
@@ -485,7 +486,7 @@ msgstr "Etkin"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr "Aktif Adaylar"
+msgstr "Etkin Adaylar"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -547,7 +548,7 @@ msgstr "Aktivite Türleri"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Activity by"
-msgstr "Activity by"
+msgstr "Aktivite tarafından"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -557,7 +558,7 @@ msgstr "Bir açıklama ekle..."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
-msgstr "Fırsat yaratılmadan önce bir yeterlilik adımı ekleyin."
+msgstr "Bir fırsat yaratılmadan önce bir yeterlilik adımı ekleyin."
 
 #. module: crm
 #. openerp-web
@@ -718,12 +719,12 @@ msgstr "Otomatik Atama Aksiyonu"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Auto Assignment Interval Unit"
-msgstr "Otomatik Atama İnterval Birimi"
+msgstr "Otomatik Atama Aralığı Birimi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_run_datetime
 msgid "Auto Assignment Next Execution Date"
-msgstr "Otomatik Atama Bir Sonraki İcra Tarihi"
+msgstr "Otomatik Atama Sonraki Yürütme Tarihi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -754,7 +755,7 @@ msgstr "Karalisteye alınan telefon sabit telefondur"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr "Wow! Son 30 günün ekip rekoru!"
+msgstr "Wow! Son 30 gün için ekip rekoru!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
@@ -776,7 +777,7 @@ msgstr "CRM Aktivite Analizi"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_recurring_plan
 msgid "CRM Recurring revenue plans"
-msgstr "CRM Yinelenen Gelir planları"
+msgstr "CRM Yinelenen gelir planları"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
@@ -833,7 +834,9 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
-msgstr "Satış öncesi süreci fırsatları ile yönetmek için kutuyu işaretleyin"
+msgstr ""
+"Fırsatlarla birlikte bir satış öncesi sürecini yönetmek için bu kutuyu "
+"işaretleyin."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
@@ -857,7 +860,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Click on the breadcrumb to go back to the Pipeline."
-msgstr "Fırsat Havuzuna geri gitmek için kırıntılara basınız."
+msgstr "Fırsat Havuzuna geri gitmek için gezintiye basınız."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -878,7 +881,7 @@ msgstr "Kapalı/Kaybedilmiş adaylar fırsata dönüştürülemez."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
 msgid "Color Index"
-msgstr "Renk"
+msgstr "Renk İndeksi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__company_id
@@ -931,7 +934,7 @@ msgstr "Tebrikler, bol şans! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr "Yaratılan fırsatları şunun parçası olarak düşünün:"
+msgstr "Yaratılan adayları şunun parçası olarak düşünün:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1057,18 +1060,17 @@ msgstr "Aday Oluştur"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr "Kayıp Nedeni Oluştur"
+msgstr "Bir Kayıp Nedeni Oluştur"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr "Yinelenen Plan Oluştur"
+msgstr "Yinelenen Bir Plan Oluştur"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr ""
-"Potansiyel fırsatlar havuzundan doğrudan aday madenciliği isteği oluşturun."
+msgstr "Fırsat havuzundan doğrudan aday madenciliği isteği oluşturun."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1133,7 +1135,7 @@ msgstr "Oluşturulma Tarihi"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_opportunity_forecast
 msgid "Crm: Forecast"
-msgstr "MİY: Öngörü"
+msgstr "Crm: Öngörü"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
@@ -1148,7 +1150,7 @@ msgstr "Para Birimi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Özel Geri Dönme Mesajı"
+msgstr "Özel İletilmeyen Mesajı"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1193,7 +1195,7 @@ msgstr "Atanana Kadarki Gün"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
 msgid "Days to Close"
-msgstr "Kapanmaya Kalan Gün"
+msgstr "Kapanacak Günler"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
@@ -1229,7 +1231,7 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
-"Fırsat havuzunuzda fırsatlar oluşturmak için Satış Ekibi mahlasına e-posta "
+"Fırsat havuzunuzda fırsatlar oluşturmak için Satış Ekibi rumuzuna e-posta "
 "gönderildiğini biliyor muydunuz?"
 
 #. module: crm
@@ -1241,7 +1243,7 @@ msgid ""
 msgstr ""
 "Şirketleri isim veya vergi numarasıyla aratarak tüm verisini anında "
 "doldurabileceğinizi biliyor muydunuz? Odoo sizin için tüm alanları doldurur:"
-" logo, adres, şirket büyüklüğü, iş bilgisi, sosyal medya hesapları vs"
+" logo, adres, şirket büyüklüğü, iş bilgisi, sosyal medya hesapları vs."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1252,7 +1254,7 @@ msgid ""
 msgstr ""
 "Üst sağdaki harita ikonunu kullanarak fırsat listesini harita görüntüsüne "
 "dönüştürebileceğinizi biliyor muydunuz? Odoo'daki birçok ekran haritaya "
-"dönüştürülebilir: görevler, kişiler, teslimat siparişleri, vs"
+"dönüştürülebilir: görevler, kontaklar, teslimat siparişleri, vs"
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1321,8 +1323,8 @@ msgstr "Örn. Aylık"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
-"Beklenen kapanış tarihlerini kolaylıkla belirleyin ve gelir akışlarına toplu"
-" bakınız"
+"Beklenen kapanış tarihlerini kolaylıkla belirleyin ve gelir akışlarınızı "
+"gözden geçirin"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1356,7 +1358,7 @@ msgstr "E-posta cc"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
 msgid "Email: Welcome Demo"
-msgstr "Eposta: Hoşgeldin Demosu"
+msgstr "E-posta: Hoşgeldin Demo"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
@@ -1366,7 +1368,7 @@ msgstr "Tüm adayları otomatik olarak zenginleştirin."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Adayları otomatik olarak zenginleştirin."
+msgstr "Adayı otomatik olarak zenginleştirin"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
@@ -1388,8 +1390,8 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Aday müşterilerinizi e-posta adreslerine göre şirket verileriyle otomatik "
-"olarak zenginleştirin."
+"Şirket veri tabanındaki e-posta adresleriyle otomatik olarak adaylarınızı "
+"zenginleştirin."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1420,7 +1422,7 @@ msgstr "Beklenen Kapanış"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr "Expected MRR"
+msgstr "Beklenen MRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1430,7 +1432,7 @@ msgstr "Beklenen Gelir"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
-msgstr "Beklenen Gelir"
+msgstr "Beklenen Gelirler"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1450,7 +1452,7 @@ msgstr "Diğer Bilgiler"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Extra fields..."
-msgstr "Ekstra alanlar..."
+msgstr "Diğer alanlar..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__field_id
@@ -1479,7 +1481,7 @@ msgstr "Tahmini aday puanlama için kullanılabilecek alanlar."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
-msgstr "Fırsat Havuzunda Katlanmış"
+msgstr "Fırsatlarda Katlanmış"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
@@ -1499,7 +1501,7 @@ msgstr "Takipçiler (İş ortakları)"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome ikonları örn. fa-tasks"
+msgstr "Font harika simgesi, örneğin fa-tasks"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
@@ -1518,7 +1520,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr "Zorla ata"
+msgstr "Atamaya zorla"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -1535,13 +1537,13 @@ msgstr "Öngörü Analizi"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr "Kimden %(source_name)s"
+msgstr "%(source_name)sden "
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s : %(source_subject)s"
-msgstr "Kimden %(source_name)s : %(source_subject)s"
+msgstr "%(source_name)sden  : %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1642,8 +1644,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"Eğer seçilmişse, satıcının güncellenen fırsatlar hakkında güncellenmeye "
-"zorlar, çoktan düzenlenmişse bile"
+"Eğer seçilmişse, önceden ayarlanmış olsa bile satıcıyı güncellenen fırsatlar"
+" hakkında güncellemeye zorlar."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1664,7 +1666,7 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
-"Eğer belirlenmişse, bu ortakla ilgili satış ve atamalar için bu Satış Ekibi "
+"Eğer ayarlanırsa, bu ortakla ilgili satış ve atamalar için bu Satış Ekibi "
 "kullanılacaktır."
 
 #. module: crm
@@ -1683,8 +1685,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Eğer  e-posta adresi kara listede ise, bağlantı, toplu e-posta gönderiminde,"
-" herhangi bir listeden mail almayacaktır.  "
+"Eğer  e-posta adresi kara listede ise, kontak, toplu e-posta gönderiminde, "
+"herhangi bir listeden mail almayacaktır"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -1692,7 +1694,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Eğer düzeltilmiş telefon numarası kara listede ise, bağlantı, toplu sms "
+"Eğer düzeltilmiş telefon numarası kara listede ise, kontak, toplu sms "
 "gönderiminde, herhangi bir listeden almayacaktır.  "
 
 #. module: crm
@@ -1747,7 +1749,9 @@ msgstr "İç Notlar"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
-msgstr "Her cron arasındaki interval tipi (ör. her 2 gün veya her 2 saat)"
+msgstr ""
+"Her cron çalıştırması arasındaki aralık türü (örneğin, her 2 günde veya her "
+"2 saatte)"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -1787,7 +1791,7 @@ msgstr "Kanban Durumu"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "Kpi Crm Lead'in Yarattığı Değer"
+msgstr "Kpi Crm Adayı Yarattığı Değer"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
@@ -1883,7 +1887,7 @@ msgstr "Aday Ataması"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr "Fırsat Ataması talep eden %(user_name)s"
+msgstr "Aday Ataması talep eden %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
@@ -1933,7 +1937,7 @@ msgstr "Metindeki Aday Puanlama Başlangıç Tarihi"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
-msgstr "Bu üyeye son 30 gün içinde atanan potansiyel müşteri"
+msgstr "Bu üyeye son 30 gün içinde atanan aday"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1979,7 +1983,7 @@ msgstr "Adaylar"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr "Fırsatlar (30 gün)"
+msgstr "Adaylar (30 gün)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1996,15 +2000,15 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Aday Analizi CRM ile ilgili gecikmelerin değerlendirilmesi ya da duruma göre"
-" adaylar gibi değişik bilgileri denetlemenizi sağlar. Aday Analizlerini "
-"doğru analizler elde etmek için değişik gruplara göre sıralayabilirsiniz."
+"Adaylar Analizi, gecikmeleri veya durum başına müşteri adaylarının sayısı "
+"gibi CRM ile ilgili farklı bilgileri kontrol etmenizi sağlar. Doğru analiz "
+"elde etmek için analizinizi farklı gruplara göre sıralayabilirsiniz."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr "Atanmış Fırsatlar"
+msgstr "Atanmış Adaylar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
@@ -2035,7 +2039,7 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
-"Adaylar ekip tahsisi en az 0,2 veya en çok 30 işgünü için yapılmalıdır,  "
+"Aday ekip tahsisi en az 0,2 veya en fazla 30 iş günü için yapılmalıdır,  "
 "%.2f değil."
 
 #. module: crm
@@ -2054,8 +2058,7 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
 msgstr ""
-"Aynısı varolan seçtiğiniz adaylar. Liste boşsa, yinelenenler bulunamadı "
-"demektir"
+"Seçilenler kopyası olan adaylar. Liste boşsa, kopya bulunamadı demektir"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2084,7 +2087,7 @@ msgstr "Hadi <b>Hadi Aktivite Planlayalım.</b>"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let’s have a look at an Opportunity."
-msgstr "Fırsatlara göz atalım."
+msgstr "Bir fırsata göz atalım."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__exist
@@ -2098,9 +2101,9 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Bağlantılı iş ortağı (opsiyonel).Genellikle aday dönüştürülürken "
-"oluşturulur. Adından, vergi numarasından yada iç referansından bir iş ortağı"
-" bulabilirsiniz."
+"Bağlantılı iş ortağı (isteğe bağlı). Genellikle müşteri adayı "
+"dönüştürülürken oluşturulur. Bir iş ortağını Adına, Vergi Numarasına, "
+"E-postasına veya İç Referansına göre bulabilirsiniz."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
@@ -2169,7 +2172,7 @@ msgstr "Ana Ek"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
 msgid "Make Quote"
-msgstr "Teklife Dönüştür"
+msgstr "Teklif Yap"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2214,13 +2217,13 @@ msgstr "Pazarlama"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Mecra"
+msgstr "Orta"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours"
-msgstr "de toplantı planlandı '%s'<br> Konu: %s <br> Zaman: %s saat"
+msgstr "'%s' de toplantı planlandı<br> Konu: %s <br> Zaman: %s saat"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2371,7 +2374,7 @@ msgstr "Yeni"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr "Yeni Fırsat"
+msgstr "Yeni Aday"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
@@ -2417,12 +2420,12 @@ msgstr "Sonraki Çalışma"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__green
 msgid "Next activity is planned"
-msgstr "Sonraki faaliyet planlandı"
+msgstr "Sonraki aktivite planlandı"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__red
 msgid "Next activity late"
-msgstr "Sonraki faaliyet gecikti"
+msgstr "Sonraki aktivite gecikti"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2537,7 +2540,7 @@ msgstr "Notlar"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Now, <b>add your Opportunity</b> to your Pipeline."
-msgstr "Şimdi, <b>Fırsatınızı</b> Fırsat Havuzuna ekleyin."
+msgstr "Şimdi, Fırsat Havuzunuza<b>Fırsatınızı ekleyin</b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -2555,7 +2558,8 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
-"Her cron arasındaki interval tipi sayısı (ör. her 2 gün veya her 4 gün)"
+"Her komut çalıştırması arasındaki aralık türü sayısı (örneğin, her 2 günde "
+"bir veya her 4 günde bir)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2665,7 +2669,7 @@ msgstr "Fırsat Gelirleri"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
 msgid "Opportunities Won"
-msgstr "Kazanılan Fırsatlar"
+msgstr "Kazanılmış Fırsatlar"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_my_activities_filter
@@ -2740,8 +2744,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Yanıtlamasalar bile gelen mesajların ekleneceği isteğe bağlı başlık (kayıt) "
-"IDsi. Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
+"Yanıt vermemiş olsalar bile, gelen tüm mesajların ekleneceği bir ileti "
+"dizisinin (kayıt) isteğe bağlı kimliği. Ayarlanırsa, bu, yeni kayıtların "
+"oluşturulmasını tamamen devre dışı bırakacaktır."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -2763,12 +2768,12 @@ msgstr "5 yıldan fazla"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
-msgstr "Geciken Fırsatlar"
+msgstr "Gecikmiş Fırsatlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
 msgid "Overdue Opportunities Revenues"
-msgstr "Geciken Fırsat Gelirleri"
+msgstr "Gecikmiş Fırsat Gelirleri"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2788,7 +2793,7 @@ msgstr "Üst Model"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Üst Kayıt Mesaj Dizisi ID"
+msgstr "Üst kayıt iş parçacığı kimliği"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
@@ -2804,12 +2809,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr "Ortak E-postası güncellenecek"
+msgstr "İş Ortağı E-postası güncellenecek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr "Ortak Telefonu Güncellenecek"
+msgstr "İş Ortağı Telefonu Güncellenecek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
@@ -2944,17 +2949,17 @@ msgstr "Teklif"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr "Eşit Dağıtılmış MRR"
+msgstr "Orantılı MRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
 msgid "Prorated Revenue"
-msgstr "Eşit Dağıtılmış Gelir"
+msgstr "Orantılı Gelir"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr "Eşit Dağıtılmış Gelirler"
+msgstr "Orantılı Gelirler"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -3001,7 +3006,7 @@ msgstr "Yinelenen Gelirler"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
 msgid "Referred By"
-msgstr "Tavsiye Eden"
+msgstr "Yönlendiren"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
@@ -3024,7 +3029,7 @@ msgstr "Tekrarlama frekansı pozitif olmalıdır."
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
 msgid "Repeatedly"
-msgstr "Tekraren"
+msgstr "Defalarca"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
@@ -3122,17 +3127,17 @@ msgstr "Satış Temsilcisi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
 msgid "Salespersons"
-msgstr "Satış görevlileri"
+msgstr "Satış Temsilcileri"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Düzeltilmiş Numara"
+msgstr "Temizlenmiş Numara"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
-msgstr "Yapmanız gereken herşeyi takip etmek için aktiviteleri programlayın"
+msgstr "Yapmanız gereken herşeyi takip etmek için aktiviteleri planlayın."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3168,8 +3173,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
-"Kontratların güncelleme periyodunu <br>(ör: Aylık, Yıllık) görmek için "
-"Fırsatlarda Yenilenen Plan oluşturun"
+"Kontratların güncelleme periyodunu görmek için Fırsatlarda Yenilenen Plan "
+"oluşturun<br>(ör: Aylık, Yıllık) "
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3287,13 +3292,13 @@ msgid ""
 "            is positioned in the sales cycle."
 msgstr ""
 "Aşamalar, satış personelinin satış döngüsünde belirli bir fırsatın nasıl "
-"konumlandığını kolayca izlemelerine olanak tanır."
+"konumlandığını kolayca takip etmelerini sağlar."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Start scheduling activities on your opportunities"
-msgstr "Fırsatlarınızda aktiviteleri programlamaya başlayın"
+msgstr "Fırsatlarınızda aktiviteleri planlamaya başlayın"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_state_id
@@ -3310,10 +3315,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Aktivite aşamalar\n"
-"Zamanı Geçmiş: Tarihi geçmiş \n"
-"Bugün: Aktivite günü bugün\n"
-"Planlanan: Gelecek aktivite."
+"Aktivitelerde aşamalar\n"
+"Gecikmiş: Tarihi geçmiş \n"
+"Bugün: Aktivite tarihi bugün\n"
+"Planlanan: Gelecek aktiviteler."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3348,7 +3353,7 @@ msgstr "Alt-Tür"
 #. module: crm
 #: model:ir.model,name:crm.model_ir_config_parameter
 msgid "System Parameter"
-msgstr "Sistem Parametreleri"
+msgstr "Sistem Parametresi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3379,8 +3384,8 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
-"E-posta adresi bu kanalla ilişkilidir. Yeni e-posta alındığında, kanalda "
-"otomatik olarak yeni bir müşteri adayı atanacaktır."
+"E-posta adresi bu kanalla ilişkilidir. Alınan yeni e-postalar, kanala atanan"
+" yeni potansiyel müşterileri otomatik olarak oluşturacaktır."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -3389,9 +3394,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Diğer isimle uyuşan model (Odoo belge gibi). Herhangi gelen cevaplanmamış "
-"bir e-posta  bu modelin yeni kaydını oluşturmaya sebep olur. (örn. bir Proje"
-" Görevi)"
+"Bu rumuzun karşılık geldiği model (Odoo Belge Türü). Mevcut bir kayda yanıt "
+"vermeyen herhangi bir gelen e-posta, bu modelin yeni bir kaydının "
+"oluşturulmasına neden olacaktır (örneğin, bir Proje Görevi)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_name
@@ -3399,8 +3404,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"E-posta rumuz adı, ör. <kariyer@example.odoo.com> adresine gelen e-postaları"
-" yakalamak istiyorsanız 'kariyer' "
+"E-posta rumuz adı, örn. <kariyer@example.odoo.com> adresine gelen "
+"e-postaları yakalamak istiyorsanız 'kariyer' "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3424,8 +3429,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Kayıtların sahibi, bu rumuza e-postalar alındıktan sonra oluşturulmuştur. Bu"
-" alan ayarlanmamışsa, sistem gönderenin (Kimden) adresinden doğru sahibini "
+"Kayıtların sahibi, bu rumuza epostalar alındıktan sonra oluşturulmuştur. Bu "
+"alan ayarlanmamışsa, sistem gönderenin (Kimden) adresinden doğru sahibini "
 "bulmaya çalışacaktır ya da o adres için hiç sistem kullanıcısı bulunamazsa "
 "Administrator hesabını kullanacaktır."
 
@@ -3437,7 +3442,7 @@ msgstr "Anlaşmanın kapanış olasılığı %0 ile %100 arasında olmalıdır!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr "Başarı oranı hesaplanması şuna dayanır: "
+msgstr "Başarı oranı şuna göre hesaplanır"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3509,7 +3514,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Bu teslimat yöntemidir. örn: Postakartı, E-posta yada Banner reklamı"
+msgstr "Bu teslimat yöntemidir, örn: Posta kartı, E-posta ya da Afiş reklamı"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -3570,7 +3575,7 @@ msgstr "İpucu: Fırsat havuzunu yönetin"
 #: model:digest.tip,name:crm.digest_tip_crm_2
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
 msgid "Tip: Opportunity win rate is predicted with AI"
-msgstr "İpucu: Fırsat kazanma ordanı yapay zeka ile öngörülür"
+msgstr "İpucu: Fırsat kazanma oranı AI ile tahmin edilir"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3582,7 +3587,7 @@ msgstr "İpucu: Fırsatların bir kısmını haritaya dönüştürün"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
-msgstr "Sıfat"
+msgstr "Başlık"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3591,8 +3596,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
-"Veri kaybını önlemek için, Adaylar ve Fırsatlar %(max_length)s gruplarına "
-"göre birleştirilebilir."
+"Veri kaybını önlemek için, Adaylar ve Fırsatlar %(max_length)s grupları "
+"tarafından birleştirilebilir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3631,7 +3636,7 @@ msgstr "Tür"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Tür, Adaylar ve Fırsatları ayırdetmek için kullanılır"
+msgstr "Tür, Adaylar ve Fırsatları ayırmak için kullanılır"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
@@ -3646,7 +3651,7 @@ msgstr "UTM kampanyası"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr "UX. Ana şirkete sınırlayın ya da şirket yoksa hepsine"
+msgstr "UX. Aday şirkete sınırlayın ya da şirket yoksa hepsine"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3657,7 +3662,7 @@ msgstr "Atanmamış"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Lead"
-msgstr "Atanmamış"
+msgstr "Atanmamış Aday"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -3703,7 +3708,7 @@ msgid ""
 "competitors\")."
 msgstr ""
 "Kaybetme Sebeplerini kullanarak fırsatların kaybedilme nedenlerine dair "
-"rapor oluşturabilirsiniz (ör. \"Rakip Fiyatın Altına Girdi\")"
+"rapor oluşturabilirsiniz (örn. \"Rakip Fiyatın Altına Girdi\")"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3721,7 +3726,7 @@ msgstr ""
 "Bir fırsat ya da müşteri yaratmadan önce eğer vasıf adımına ihtiyacınız "
 "olursa müşteri adaylarını kullanın. Bu aldığınız kartvizit, internet "
 "sitenizden doldurulmuş bir müşteri formu olabilir, ya da dışarı aktardığınız"
-" yetkisiz bir dosya  olabilir."
+" yetkisiz bir dosya olabilir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3737,7 +3742,7 @@ msgstr ""
 "doldurulmuş bir iletişim formu veya içe aktardığınız kalifiye olmayan "
 "müşterilerin dosyası, vb. olabilir. Nitelikli olduğunda, müşteri adayı adres"
 " defterinizde bir iş fırsatına ve / veya yeni bir müşteriye "
-"dönüştürülebilir. ."
+"dönüştürülebilir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -3752,7 +3757,7 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
 msgstr ""
-"Sol üsttek <i>Oluştur</i> buttonunu kullanın, ya da e-posta geçidini test "
+"Sol üstteki <i>Oluştur</i> buttonunu kullanın, ya da e-posta geçidini test "
 "etmek için %s adresine e-posta gönderin."
 
 #. module: crm
@@ -3762,7 +3767,7 @@ msgid ""
 "email gateway."
 msgstr ""
 "Sol üstteki Oluştur butonu kullanın veya e-posta geçidini test etmek için "
-"e-posta mahlası oluşturun"
+"e-posta rumuzu oluşturun"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3817,7 +3822,7 @@ msgstr "Çok Yüksek"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Visits to Leads"
-msgstr "Ziyaretçilerden Adaylar"
+msgstr "Adaylara Ziyaretler"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -3842,7 +3847,7 @@ msgstr "Websitesi iletişim geçmişi"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website
 msgid "Website of the contact"
-msgstr "İlgili kişinin Web sitesi"
+msgstr "Kontağın Web sitesi"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__weeks
@@ -3852,7 +3857,7 @@ msgstr "Hafta"
 #. module: crm
 #: model:mail.template,name:crm.mail_template_demo_crm_lead
 msgid "Welcome Demo"
-msgstr "Merhaba Demosu"
+msgstr "Merhaba Demo"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
@@ -3879,7 +3884,7 @@ msgstr "Fırsat Kazanma Hedefi"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr "Evet! Ekibin ticaret yapması için son 7 gün."
+msgstr "Evet! Takım için son 7 günün anlaşması."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -3928,7 +3933,7 @@ msgstr "PK"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr "ör. Müzakere"
+msgstr "örn. Müzakere"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3939,7 +3944,7 @@ msgstr "örn. Ürün Fiyatı"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "e.g. Too expensive"
-msgstr "ör. Çok pahalı"
+msgstr "örn. Çok pahalı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3949,7 +3954,7 @@ msgstr "Örn. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "for the leads created as of the"
+msgstr "itibariyle oluşturulan adaylar için"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

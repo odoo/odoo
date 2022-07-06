@@ -22,7 +22,7 @@ class TestLangUrl(HttpCase):
 
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
-            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello/', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
+            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
 
     def test_02_url_redirect(self):
         url = '/fr_WHATEVER/contactus'

@@ -134,6 +134,11 @@ class ProductTemplate(models.Model):
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
             self.service_type = 'manual'
+        if self._origin and self.sales_count > 0:
+            res['warning'] = {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }
         return res
 
     @api.model
@@ -273,6 +278,12 @@ class ProductTemplate(models.Model):
             'has_discounted_price': has_discounted_price,
         }
 
+    def _can_be_added_to_cart(self):
+        """
+        Pre-check to `_is_add_to_cart_possible` to know if product can be sold.
+        """
+        return self.sale_ok
+
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
         It's possible to add to cart (potentially after configuration) if
@@ -286,7 +297,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if not self.active or not self.sale_ok:
+        if not self.active or not self._can_be_added_to_cart():
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False

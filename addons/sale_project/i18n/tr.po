@@ -9,7 +9,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr "Fatura Oluştur"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Sipariş Üzerine Oluştur"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -54,7 +54,7 @@ msgstr "Oluşturulan Görev"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Faturalandırılacak SO Var"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -63,6 +63,8 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Bu hizmet satılır satılmaz faturalandırın ve harcanan zamanı izlemek için "
+"mevcut bir projede bir görev oluşturun."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -72,6 +74,9 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
+"Bu hizmet satılır satılmaz sipariş edilen miktarları faturalandırın ve "
+"harcanan süreyi izlemek için her satış siparişi satırı için bir görevle "
+"sipariş için bir proje oluşturun."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -80,12 +85,14 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold, and create an "
 "empty project for the order to track the time spent."
 msgstr ""
+"Bu hizmet satılır satılmaz sipariş edilen miktarları faturalandırın ve "
+"harcanan zamanı takip etmek için sipariş için boş bir proje oluşturun."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Bu hizmet satılır satılmaz sipariş edilen miktarları faturalandırın."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -106,12 +113,12 @@ msgstr "Hiçbiri"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr ""
+msgstr "Hiç bir şey"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Proje Sayısı"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -150,7 +157,7 @@ msgstr "Proje"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Proje & Görev"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -204,7 +211,7 @@ msgstr "Satış Siparişi"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Satış Siparişi Kimliği"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -223,6 +230,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
+"Bu görev için harcanan zamanın ekleneceği Müşteri Siparişi kalemi, "
+"müşterinize faturalandırılmak üzere."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -246,6 +255,10 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
+"Projenin bağlantılı olduğu satış siparişi kalemi. Zaman çizelgesi girişini "
+"projede tanımlanan satış siparişi kalemine bağlayın. Yalnızca satış siparişi"
+" öğesi tanımlanmayan görevlerde ve çalışanın projenin 'Çalışan/Satış "
+"Siparişi Öğe Eşlemesi'nde olmaması durumunda geçerlidir."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -262,19 +275,19 @@ msgstr "Görevin bağlı olduğu satış siparişi."
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Faturada Ara"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Satış Siparişinde Ara"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Satış Siparişi Öğelerinde Ara"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -376,7 +389,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "There is nothing to invoice in this project."
-msgstr ""
+msgstr "Bu projede fatura edilecek bir şey yok."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -400,6 +413,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"%(product_id)syeniden faturalanan bir gider olduğu için %(order_id)sgörevine"
+" bağlayamazsınız."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -413,9 +428,9 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order item:"
-msgstr ""
+msgstr "Satış siparişi öğesi için:"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order:"
-msgstr ""
+msgstr "Satış siparişi için:"

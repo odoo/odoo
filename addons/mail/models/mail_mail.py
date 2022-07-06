@@ -9,8 +9,10 @@ import psycopg2
 import smtplib
 import threading
 import re
+import pytz
 
 from collections import defaultdict
+from dateutil.parser import parse
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -79,7 +81,7 @@ class MailMail(models.Model):
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     scheduled_date = fields.Char('Scheduled Send Date',
-        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
 
     @api.model_create_multi
     def create(self, values_list):
@@ -87,7 +89,12 @@ class MailMail(models.Model):
         for values in values_list:
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
-
+            if values.get('scheduled_date'):
+                parsed_datetime = self._parse_scheduled_datetime(values['scheduled_date'])
+                if parsed_datetime:
+                    values['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                else:
+                    values['scheduled_date'] = False
         new_mails = super(MailMail, self).create(values_list)
 
         new_mails_w_attach = self
@@ -100,6 +107,12 @@ class MailMail(models.Model):
         return new_mails
 
     def write(self, vals):
+        if vals.get('scheduled_date'):
+            parsed_datetime = self._parse_scheduled_datetime(vals['scheduled_date'])
+            if parsed_datetime:
+                vals['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                vals['scheduled_date'] = False
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):
             for mail in self:
@@ -138,11 +151,13 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        filters = ['&',
-                   ('state', '=', 'outgoing'),
-                   '|',
-                   ('scheduled_date', '<', datetime.datetime.now()),
-                   ('scheduled_date', '=', False)]
+        filters = [
+            '&',
+                ('state', '=', 'outgoing'),
+                '|',
+                   ('scheduled_date', '=', False),
+                   ('scheduled_date', '<=', datetime.datetime.utcnow()),
+        ]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
         # TODO: make limit configurable
@@ -200,6 +215,42 @@ class MailMail(models.Model):
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
             self.browse(mail_to_delete_ids).sudo().unlink()
         return True
+
+    def _parse_scheduled_datetime(self, scheduled_datetime):
+        """ Taking an arbitrary datetime (either as a date, a datetime or a string)
+        try to parse it and return a datetime timezoned to UTC.
+
+        If no specific timezone information is given, we consider it as being
+        given in UTC, as all datetime values given to the server. Trying to
+        guess its timezone based on user or flow would be strange as this is
+        not standard. When manually creating datetimes for mail.mail scheduled
+        date, business code should ensure either a timezone info is set, either
+        it is converted into UTC.
+
+        Using yearfirst when parsing str datetimes eases parser's job when
+        dealing with the hard-to-parse trio (01/04/09 -> ?). In most use cases
+        year will be given first as this is the expected default formatting.
+
+        :return datetime: parsed datetime (or False if parser failed)
+        """
+        if isinstance(scheduled_datetime, datetime.datetime):
+            parsed_datetime = scheduled_datetime
+        elif isinstance(scheduled_datetime, datetime.date):
+            parsed_datetime = datetime.combine(scheduled_datetime, datetime.time.min)
+        else:
+            try:
+                parsed_datetime = parse(scheduled_datetime, yearfirst=True)
+            except (ValueError, TypeError):
+                parsed_datetime = False
+        if parsed_datetime:
+            if not parsed_datetime.tzinfo:
+                parsed_datetime = pytz.utc.localize(parsed_datetime)
+            else:
+                try:
+                    parsed_datetime = parsed_datetime.astimezone(pytz.utc)
+                except Exception:
+                    pass
+        return parsed_datetime
 
     # ------------------------------------------------------
     # mail_mail formatting, tools and send mechanism

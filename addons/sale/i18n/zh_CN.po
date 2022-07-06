@@ -11,9 +11,10 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # yong liu, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Jinjiu Liu, 2022
+# Desausoi Laurent, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jinjiu Liu, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -475,7 +476,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'报价' if object.state in ('draft', 'sent') else '订单'\"/>\n"
 "        你好,\n"
 "        <br/><br/>\n"
 "        你的\n"
@@ -1681,6 +1682,12 @@ msgstr "预付款：%s"
 #, python-format
 msgid "Down Payments"
 msgstr "首付款"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr "预付款"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -4552,6 +4559,15 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr "您可以在此处设置将在销售订单上显示的通信类型。当客户选择付款方式时，将与客户进行通信。"
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr "您无法更改产品的类型，因为它已在销售订单中使用。"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

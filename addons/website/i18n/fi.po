@@ -14,7 +14,6 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2021
 # Kari Lindgren <karisatu@gmail.com>, 2021
 # Timo Koukkari <ti.ko@netikka.fi>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2021
@@ -32,6 +31,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Teemu Tiitinen, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2022
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # 
 msgid ""
@@ -151,7 +151,7 @@ msgstr "&amp;lt;head&amp;gt;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #. openerp-web
@@ -302,7 +302,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1 km"
-msgstr ""
+msgstr "1 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -322,12 +322,12 @@ msgstr "1/4 - 3/4"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "10 m"
-msgstr ""
+msgstr "10 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 km"
-msgstr ""
+msgstr "100 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
@@ -5770,12 +5770,18 @@ msgid "Is not equal to"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr ""
 
@@ -9451,7 +9457,7 @@ msgstr ""
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "This message has been posted on your website!"
-msgstr ""
+msgstr "Tämä viesti on lähetetty verkkosivustoltasi!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -11199,6 +11205,12 @@ msgstr "Verkkokaupan työpöytä"
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
 msgstr "Verkko-oppiminen"
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr ""
 
 #. module: website
 #. openerp-web

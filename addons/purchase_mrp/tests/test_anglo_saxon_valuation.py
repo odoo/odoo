@@ -27,6 +27,8 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
         })
 
+        cls.env.company.anglo_saxon_accounting = True
+
     def test_kit_anglo_saxo_price_diff(self):
         """
         Suppose an automated-AVCO configuration and a Price Difference Account defined on

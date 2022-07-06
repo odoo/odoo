@@ -5,7 +5,6 @@
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
@@ -31,8 +30,17 @@ msgstr "%s: İzin"
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
-msgid "A leave cannot be set across multiple contracts."
-msgstr "Birden fazla sözleşme arasında izin belirlenemez."
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%s\n"
+"\n"
+"Contracts:\n"
+"%s"
+msgstr ""
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -45,6 +53,8 @@ msgid ""
 "Every new time off type in this list will be reported as select work entry "
 "in payslip."
 msgstr ""
+"Bu listedeki her yeni izin türü, maaş bordrosunda seçili puantaj olarak "
+"raporlanacaktır."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
@@ -59,7 +69,7 @@ msgstr "İK Puantaj Türü"
 #. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
 msgid "Payroll"
-msgstr "Maaş çizelgesi"
+msgstr "Bordro"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
@@ -76,7 +86,7 @@ msgid ""
 msgstr ""
 "İzin talebi oluşturulduğunda durum 'Gönderilecek' olarak ayarlanır.\n"
 "İzin talebi kullanıcı tarafından onaylandığında durum 'Onaylanacak' şeklindedir.\n"
-"İzin talebi yönetici tarafından reddedildiğinde durum 'Reddedildi'.\n"
+"İzin talebi yönetici tarafından reddedildiğinde durum 'Reddedildi' olur.\n"
 "İzin talebi yönetici tarafından onaylandığında durum 'Onaylandı' olur."
 
 #. module: hr_work_entry_holidays
@@ -86,6 +96,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"İzin için belirlenmiş bir çalışan yoktur. Lütfen doğru şirkette oturum "
+"açtığınızdan emin olun."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave

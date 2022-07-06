@@ -29,27 +29,27 @@ msgstr "إنشاء فاتورة"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "الإنشاء عند الطلب "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "عرض المشروع "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr "المشروع الناشئ"
+msgstr "المشروع المُنشأ "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr "المهمة الناشئة"
+msgstr "المهمة المُنشأة "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "يحتوي على أمر بيع لفوترته "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -58,6 +58,8 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"قم بالفوترة بمجرد أن يتم بيع الخدمة، ثم قم بإنشاء مهمة في مشروع موجود بالفعل"
+" لتتبع الوقت المقضي. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -67,6 +69,8 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
+"قم بفوترة الكميات المطلوبة بمجرد أن يتم بيع الخدمة، ثم قم بإنشاء مشروع للأمر"
+" مع مهمة لكل بند أمر بيع لتتبع الوقت المقضي. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -75,12 +79,14 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold, and create an "
 "empty project for the order to track the time spent."
 msgstr ""
+"قم بفوترة الكميات المطلوبة بمجرد أن يتم بيع الخدمة، ثم قم بإنشاء مشروع للأمر"
+" لتتبع الوقت المقضي. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "قم بفوترة الكميات المطلوبة بمجرد أن يتم بيع الخدمة. "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -106,12 +112,12 @@ msgstr "لا شيء "
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "عدد المشاريع "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr ""
+msgstr "عدد الفواتير "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -120,6 +126,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"في تأكيد أمر البيع، بإمكان هذا المنتج إنشاء مشروع و/أو مهمة.         من خلالها، بإمكانك تتبع الخدمات التي تبيعها.\n"
+"         'في مشروع أمر البيع': سوف يستخدم المشروع المهيأ لأمر البيع إذا كان محدداً أو الاستعانة مجدداً بإنشاء         مشروع جديد بناءً على القالب المحدد. "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -143,7 +151,7 @@ msgstr "المشروع"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "المشروع والمهمة "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -167,12 +175,12 @@ msgstr "أمر البيع الخاص بالمشروع "
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Projects"
-msgstr "المشروعات"
+msgstr "المشاريع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr "المشروعات المستخدمة في أمر المبيعات هذا."
+msgstr "المشاريع المستخدمة في أمر المبيعات هذا. "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -197,7 +205,7 @@ msgstr "أمر البيع"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "مُعرّف أمر البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -252,25 +260,25 @@ msgstr "أمر البيع الذي يرتبط به هذا المشروع. "
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "أمر البيع الذي ترتبط به هذه المهمة. "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "البحث في الفاتورة"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "البحث في أمر البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "البحث في عنصر أمر البيع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -289,11 +297,13 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"قم بتحديد مشروع قابل للفوترة ليكون هيكل المشروع الجديد الذي تم إنشاؤه عند "
+"بيع المنتج الحالي. سوف يتم استنساخ مراحله ومهامه. "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "قم بتحديد مشروع غير قابل للفوترة يمكن إنشاء المهام عليه. "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -334,7 +344,7 @@ msgstr "تحليل المهام"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
 msgid "Tasks associated to this sale"
-msgstr "المهام المربوطة بهذا البيع"
+msgstr "المهام المرتبطة بهذا البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -342,7 +352,7 @@ msgstr "المهام المربوطة بهذا البيع"
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr "لا ينبغي أن يكون للمنتج %s مشروع عمومي لأنه سيقوم بإنشاء مشروع."
+msgstr "يجب ألا يكون للمنتج %s مشروع عام بما أنه سوف يقوم بإنشاء مشروع. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -351,7 +361,7 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
-"لا ينبغي أن يكون للمنتج %s مشروع ولا قالب مشروع لأنه لن يقوم بإنشاء مشروع."
+"يجب ألا يكون للمنتج %s مشروع أو قالب مشروع بما أنه لن يقوم بإنشاء مشروع. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -359,13 +369,15 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "لا ينبغي أن يكون للمنتج %s لا قالب مشروع لأنه سيقوم بإنشاء مشروع."
+msgstr ""
+"يجب ألا يكون للمنتج %s قالب مشروع بما أنه سوف يقوم بإنشاء مهمة في مشروع عام."
+" "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "There is nothing to invoice in this project."
-msgstr ""
+msgstr "لا يوجد ما يمكن فوترته في هذا المشروع. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -374,13 +386,13 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
-"أنشأت هذه المهمة من: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a>"
-" (%s)"
+"تم إنشاء هذه المهمة من: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s) "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "على الفاتورة"
+msgstr "بانتظار الفوترة"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -389,20 +401,22 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"لا يمكنك ربط عنصر الطلب %(order_id)s - %(product_id)s بهذه المهمة لأنها نفقة"
+" تمت إعادة فوترتها. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
-msgstr "يجب إلغاء ربط المهمة بعنصر أمر البيع لكي تستطيع حذفها."
+msgstr "عليك إلغاء ربط المهمة من عنصر أمر البيع حتى تتمكن من حذفها. "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order item:"
-msgstr ""
+msgstr "لعنصر أمر البيع: "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order:"
-msgstr ""
+msgstr "لأمر البيع: "

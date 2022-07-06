@@ -29,6 +29,8 @@ msgid ""
 "* Cross-border: For the overseas seller \n"
 "* Express Checkout: For the Chinese Seller"
 msgstr ""
+"* Sınır ötesi: Yurtdışı satıcı için \n"
+"* Hızlı Ödeme: Çinli Satıcı İçin"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
@@ -55,12 +57,12 @@ msgstr "Cross-border"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Expected signature %(sc) but received %(sign)s."
-msgstr ""
+msgstr "%(sc) imzası bekleniyor ancak %(işaret)s alındı."
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Hızlı Ödeme (yalnızca Çinli satıcılar için)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -76,7 +78,7 @@ msgstr "Merchant Partner ID"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
@@ -102,7 +104,7 @@ msgstr "Sağlayıcı"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Referansı %(r)s veya txn_id %(t)s eksik olan veriler alındı."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -111,6 +113,8 @@ msgid ""
 "Received notification data not acknowledged by Alipay:\n"
 "%s"
 msgstr ""
+"Alipay tarafından onaylanmayan bildirim verileri alındı:\n"
+"%s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -119,6 +123,8 @@ msgid ""
 "Received notification data with unknown reference:\n"
 "%s"
 msgstr ""
+"Referansı bilinmeyen bildirim verileri alındı:\n"
+"%s"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
@@ -129,7 +135,7 @@ msgstr "Bu alıcı ile birlikte kullanılacak Ödeme Hizmeti Sağlayıcısı"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The amount does not match the total + fees."
-msgstr ""
+msgstr "Tutar toplam + ücretlerle eşleşmiyor."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -138,25 +144,28 @@ msgid ""
 "The currency returned by Alipay %(rc)s does not match the transaction "
 "currency %(tc)s."
 msgstr ""
+"Alipay %(rc)s tarafından döndürülen para birimi, işlem para birimi %(tc)s "
+"ile eşleşmiyor."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Genel Alipay iş ortağı e-postası"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"Genel iş ortağı kimliği yalnızca Alipay hesabını tanımlamak için kullanılır"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The seller email does not match the configured Alipay account."
-msgstr ""
+msgstr "Satıcı e-postası, yapılandırılan Alipay hesabıyla eşleşmiyor."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "geçersiz işlem durumu alındı: %s"

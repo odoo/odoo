@@ -594,7 +594,7 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction
         :rtype: recordset of `payment.transaction`
         """
-        self.ensure_one
+        self.ensure_one()
 
         return self.create({
             'acquirer_id': self.acquirer_id.id,

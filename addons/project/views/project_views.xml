@@ -903,7 +903,7 @@
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" optional="hide"/>
-                                    <field name="stage_id" optional="show"/>
+                                    <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"/>
                                 </tree>
                             </field>
@@ -948,6 +948,14 @@
                                         <span attrs="{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}">of</span>
                                         <field name="repeat_month" attrs="{'invisible': [('repeat_show_month', '=', False)], 'required': [('repeat_show_month', '=', True)]}" />
                                     </div>
+                                    <!-- Those fields are added to trigger the compute method for the recurrence feature. -->
+                                    <field name="mon" invisible="1"/>
+                                    <field name="tue" invisible="1"/>
+                                    <field name="wed" invisible="1"/>
+                                    <field name="thu" invisible="1"/>
+                                    <field name="fri" invisible="1"/>
+                                    <field name="sat" invisible="1"/>
+                                    <field name="sun" invisible="1"/>
 
                                     <label for="repeat_type" />
                                     <div class="o_row">

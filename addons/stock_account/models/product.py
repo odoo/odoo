@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_repr, float_compare
+from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 
@@ -227,7 +227,8 @@ class ProductProduct(models.Model):
             quantity_svl = product.sudo().quantity_svl
             if float_compare(quantity_svl, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
                 continue
-            rounded_new_price = company_id.currency_id.round(new_price)
+            digits = self.env['decimal.precision'].precision_get('Product Price')
+            rounded_new_price = float_round(new_price, precision_digits=digits)
             diff = rounded_new_price - product.standard_price
             value = company_id.currency_id.round(quantity_svl * diff)
             if company_id.currency_id.is_zero(value):

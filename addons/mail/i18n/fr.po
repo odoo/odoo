@@ -3,7 +3,7 @@
 # 	* mail
 # 
 # Translators:
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Celia Tydgat <cty@odoo.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
@@ -15,6 +15,7 @@
 # Jonathan Castillo <jcs@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Eloïse Stilmant <est@odoo.com>, 2022
+# Merlin Guillaume (megu), 2022
 # 
 msgid ""
 msgstr ""
@@ -22,13 +23,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2022\n"
+"Last-Translator: Merlin Guillaume (megu), 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -781,7 +782,7 @@ msgstr "Ajouter une signature"
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.js:0
 #, python-format
 msgid "Add a Reaction"
-msgstr ""
+msgstr "Ajouter une réaction"
 
 #. module: mail
 #. openerp-web
@@ -3365,11 +3366,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible."
+"the email will be send as soon as possible. Unless a timezone is specified, "
+"it is considered as being in UTC timezone."
 msgstr ""
-"Si cette option est définie, le gestionnaire de file d'attente enverra "
-"l'email après la date. Si cette option n'est pas définie, l'e-mail sera "
-"envoyée dès que possible."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -7743,6 +7742,11 @@ msgstr "Rédiger un commentaire"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Wrong operation name (%s)"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+msgid "YYYY-MM-DD HH:MM:SS"
 msgstr ""
 
 #. module: mail

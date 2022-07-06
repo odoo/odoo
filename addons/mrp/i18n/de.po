@@ -91,12 +91,6 @@ msgid "%s %s unbuilt in"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_routing.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (Kopie)"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
@@ -432,6 +426,8 @@ msgstr "Ein Fertigungsauftrag wurde bereits ausgeführt oder storniert."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Ein Produkt mit einer Bausatz-Stückliste kann keine Nachbestellungsregel "
+"haben."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -827,7 +823,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr "Stückliste"
+msgstr "Stücklisten"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -844,7 +840,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Blockieren"
+msgstr "Stop"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -926,7 +922,7 @@ msgstr "Stückliste Strukturen & Kosten"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "Stücklisten Typ"
+msgstr "Stücklistentyp"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1116,11 +1112,9 @@ msgstr "Komponente"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Component Lots must be unique for mass production. Please review consumption"
+"Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
-"Komponentencharge muss einzigartig für Massenproduktion sein. Bitte "
-"überprüfen Sie den Verbrauch für:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -1155,6 +1149,8 @@ msgstr "Position der Komponenten"
 msgid ""
 "Components will be reserved first for the MO with the highest priorities."
 msgstr ""
+"Die Komponenten werden zuerst für den Fertigungsauftrag mit den höchsten "
+"Prioritäten reserviert."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -1465,7 +1461,7 @@ msgstr "Datum des Arbeitsauftrags"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid "Date when the MO has been close"
-msgstr ""
+msgstr "Datum, an dem der Produktionsauftrag abgeschlossen wurde"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -2020,7 +2016,7 @@ msgstr "Wurde produziert"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__has_kits
 msgid "Has Kits"
-msgstr ""
+msgstr "Hat Bausätze"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__has_message
@@ -2256,7 +2252,7 @@ msgstr "Ist ein Abonnent"
 #: model:ir.model.fields,field_description:mrp.field_product_product__is_kits
 #: model:ir.model.fields,field_description:mrp.field_product_template__is_kits
 msgid "Is Kits"
-msgstr ""
+msgstr "Ist Bausatz"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_locked
@@ -2647,7 +2643,7 @@ msgstr "Sicherheitsvorlaufzeit der Fertigung"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
 msgid "Manufacture this product"
-msgstr "Dieses Produkt herstellen"
+msgstr "Produkt anfertigen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
@@ -3067,14 +3063,20 @@ msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"Anzahl der Stück, die parallel produziert werden können. Wenn der "
-"Arbeitsplatz eine Kapazität von 5 hat und Sie 10 Einheiten auf Ihrem "
-"Arbeitsauftrag produzieren müssen, wird die übliche Einsatzzeit mit 2 "
-"multipliziert."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3382,7 +3384,7 @@ msgstr "Planung"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Probleme bei der Planung"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_plastic_laminate
@@ -3464,7 +3466,7 @@ msgstr "Priorität"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process operations at specific work centers"
-msgstr "Verwalten Sie Arbeitsaufträge an Arbeitsplätzen"
+msgstr "Arbeitsaufträge in Work Centern verwalten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
@@ -3699,7 +3701,7 @@ msgstr "Produkte"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr "Benötigte Produkte"
+msgstr "Benötigt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
@@ -4509,7 +4511,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "Der Arbeitsauftrag (%s) kann nicht zweimal gestartet werden!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4829,14 +4831,14 @@ msgstr "Zum Rückstand"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "To Close"
-msgstr "Zu Beenden"
+msgstr "Abzuschließen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_expected_qty_uom
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "To Consume"
-msgstr "Benötigte Produkte"
+msgstr "Benötigt"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5137,7 +5139,7 @@ msgstr "Reservierung aufheben"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "UoM"
-msgstr "UoM"
+msgstr "Mengeneinheit"
 
 #. module: mrp
 #. openerp-web
@@ -5210,7 +5212,7 @@ msgstr "Sehr hoch"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Waiting"
-msgstr "Warteliste"
+msgstr "Warten"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__waiting
@@ -5232,7 +5234,7 @@ msgstr "Wartende Materialien"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr "Wartet auf einen anderen Fertigungsauftrag"
+msgstr "Wartet auf einen anderen Arbeitsauftrag"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__waiting
@@ -5355,6 +5357,8 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr ""
+"Assistent, um als erledigt zu markieren oder einen rückständigen Auftrag zu "
+"erstellen"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -5618,6 +5622,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Für Produkte, die mindestens eine Nachbestellregel haben, können Sie keine "
+"Bausatz-Stückliste anlegen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5829,7 +5835,7 @@ msgstr "und stellen fertige Produkte her, unter Verwendung von"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr "Stückliste"
+msgstr "Stücklisten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

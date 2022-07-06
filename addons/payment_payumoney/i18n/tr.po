@@ -8,7 +8,6 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
@@ -29,7 +28,7 @@ msgstr ""
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid shasign: received %(sign)s, computed %(computed)s."
-msgstr ""
+msgstr "Geçersiz shasign: %(sign)s alındı, hesaplanan %(computed)s."
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
@@ -39,13 +38,13 @@ msgstr "Ticari Anahtar"
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
-msgstr "Tüccar Tuzu"
+msgstr "Merchant Salt"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
 
 #. module: payment_payumoney
 #: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
@@ -77,7 +76,7 @@ msgstr "Sağlayıcı"
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
-msgstr ""
+msgstr "Eksik referanslı (%(ref)s) veya shasign (%(sign)s) ile alınan veriler"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
@@ -87,10 +86,10 @@ msgstr "Bu alıcı ile birlikte kullanılacak Ödeme Hizmeti Sağlayıcısı"
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "The key solely used to identify the account with PayU money"
-msgstr ""
+msgstr "Yalnızca hesabı PayU parasıyla tanımlamak için kullanılan anahtar"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "The payment encountered an error with code %s"
-msgstr ""
+msgstr "Ödeme kod %s bir hatayla karşılaştı"

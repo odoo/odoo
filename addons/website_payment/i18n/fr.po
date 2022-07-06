@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -32,6 +32,11 @@ msgid ""
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
+".\n"
+"                        <br/>\n"
+"                        Nous apprécions votre soutien à notre organisation en tant que telle.\n"
+"                        <br/>\n"
+"                        Cordialement."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -86,7 +91,7 @@ msgstr "Un don a été effectué depuis votre site web"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "A year of cultural awakening."
-msgstr ""
+msgstr "Une année d'éveil culturel."
 
 #. module: website_payment
 #. openerp-web
@@ -100,7 +105,7 @@ msgstr "Ajoutez une description ici"
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add new pre-filled option"
-msgstr ""
+msgstr "Ajouter une nouvelle option pré-remplie"
 
 #. module: website_payment
 #. openerp-web
@@ -113,17 +118,17 @@ msgstr "Montant"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "Amount ("
-msgstr ""
+msgstr "Montant ("
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Amount("
-msgstr ""
+msgstr "Montant("
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Caring for a baby for 1 month."
-msgstr ""
+msgstr "Prendre soin d'un bébé pendant 1 mois."
 
 #. module: website_payment
 #. openerp-web
@@ -150,7 +155,7 @@ msgstr "Pays <span class=\"s_website_form_mark\"> *</span>"
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Country is required."
-msgstr ""
+msgstr "Le pays est obligatoire."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -165,7 +170,7 @@ msgstr "Pays..."
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 #, python-format
 msgid "Custom Amount"
-msgstr ""
+msgstr "Montant personnalisé"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -175,18 +180,18 @@ msgstr "Cher"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Default Amount"
-msgstr ""
+msgstr "Montant par défaut"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Display Options"
-msgstr ""
+msgstr "Afficher les options"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
-msgstr ""
+msgstr "Faire un don maintenant"
 
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
@@ -199,18 +204,18 @@ msgstr "Donation"
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Donation amount must be at least %.2f."
-msgstr ""
+msgstr "Le montant du don doit être d'au moins %.2f."
 
 #. module: website_payment
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "Donation confirmation"
-msgstr ""
+msgstr "Confirmation de la donation"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Donation notification"
-msgstr ""
+msgstr "Notification de donation"
 
 #. module: website_payment
 #. openerp-web
@@ -225,26 +230,28 @@ msgid ""
 "Email\n"
 "                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"Email\n"
+"                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Email is invalid"
-msgstr ""
+msgstr "L'email n'est pas valide"
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Email is required."
-msgstr ""
+msgstr "L'email est requis"
 
 #. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Field '%s' is mandatory"
-msgstr ""
+msgstr "Le champ '%s' est obligatoire"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -254,23 +261,23 @@ msgstr "Entrée"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
 msgid "Is Donation"
-msgstr ""
+msgstr "Est une donation"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
 msgid "Is donation"
-msgstr ""
+msgstr "Est une donation"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
 #: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
 msgid "Is the payment a donation"
-msgstr ""
+msgstr "Le paiement est-il un don"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
 msgid "Make a Donation"
-msgstr ""
+msgstr "Faire un don"
 
 #. module: website_payment
 #. openerp-web
@@ -292,7 +299,7 @@ msgstr ""
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Name is required."
-msgstr ""
+msgstr "Le nom est requis."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -302,12 +309,12 @@ msgstr "Aucun"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in elementary school."
-msgstr ""
+msgstr "Un an à l'école primaire."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in high school."
-msgstr ""
+msgstr "Un an au lycée."
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
@@ -317,7 +324,7 @@ msgstr "Intermédiaire de Paiement"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "Payment Details"
-msgstr ""
+msgstr "Détails du paiement"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_transaction
@@ -328,7 +335,7 @@ msgstr "Transaction"
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "Payment received from donation with following details:"
-msgstr ""
+msgstr "Paiement reçu du don avec les détails suivants :"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
@@ -340,12 +347,12 @@ msgstr "Paiements"
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
 #, python-format
 msgid "Please select or enter an amount"
-msgstr ""
+msgstr "Veuillez sélectionner ou entrer un montant"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Pre-filled Options"
-msgstr ""
+msgstr "Options pré-remplies"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -367,26 +374,26 @@ msgstr "Curseur"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
 msgid "Small or large, your contribution is essential."
-msgstr ""
+msgstr "Petite ou grande, votre contribution est essentielle."
 
 #. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Some information is missing to process your payment."
-msgstr ""
+msgstr "Certaines informations manquent pour traiter votre paiement."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Thank you for your donation of"
-msgstr ""
+msgstr "Merci pour votre don de"
 
 #. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
 #, python-format
 msgid "The minimum donation amount is %s%s%s"
-msgstr ""
+msgstr "Le montant minimum du don est %s%s%s"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -405,7 +412,7 @@ msgstr "Erreur de validation"
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "We could not obtain payment fees."
-msgstr ""
+msgstr "Nous n'avons pas pu obtenir de frais de paiement."
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__website_id
@@ -430,17 +437,17 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Descriptions"
-msgstr ""
+msgstr "⌙ Descriptions"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Maximum"
-msgstr ""
+msgstr "⌙ Maximum"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Minimum"
-msgstr ""
+msgstr "⌙ Minimum"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options

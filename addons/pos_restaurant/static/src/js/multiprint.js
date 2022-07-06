@@ -154,6 +154,13 @@ models.Order = models.Order.extend({
             line.set_dirty(false);
         });
         this.trigger('change',this);
+        // We sync if the caller is not the current order.
+        // Otherwise, cached "changes" fields (mp_dirty, saved_resume)
+        // will be invalidated without reaching the server
+        const isTheCurrentOrder = this.pos.get_order() && this.pos.get_order().uid === this.uid;
+        if (!isTheCurrentOrder && this.server_id) {
+            this.pos.sync_from_server(null, [this], [this.uid]);
+        }
     },
     computeChanges: function(categories){
         var current_res = this.build_line_resume();

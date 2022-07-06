@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         for item in data:
             procurement_groups = self.env['procurement.group'].browse(item['ids'])
             mrp_count[item['sale_id'][0]] = len(
-                set(procurement_groups.stock_move_ids.created_production_id.ids) |
+                set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |
                 set(procurement_groups.mrp_production_ids.ids))
         for sale in self:
             sale.mrp_production_count = mrp_count.get(sale.id)
@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
     def action_view_mrp_production(self):
         self.ensure_one()
         procurement_groups = self.env['procurement.group'].search([('sale_id', 'in', self.ids)])
-        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.ids) |\
+        mrp_production_ids = set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids) |\
             set(procurement_groups.mrp_production_ids.ids)
         action = {
             'res_model': 'mrp.production',
@@ -78,10 +78,9 @@ class SaleOrderLine(models.Model):
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
-                dropship = False
-                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
+                dropship = any(m._is_dropshipped() for m in order_line.move_ids)
+                if not boms and dropship:
                     boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
-                    dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom shoud be the only one since bom_line_id was written on the moves

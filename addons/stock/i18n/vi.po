@@ -980,7 +980,10 @@ msgid "As soon as possible"
 msgstr "Càng sớm càng tốt"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Phân công"
 
@@ -7620,8 +7623,8 @@ msgstr "Tên của nhà kho phải là duy nhất đối với mỗi công ty!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "Số của số lô để được tạo phải lớn hơn 0."
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8255,7 +8258,10 @@ msgid "USPS Connector"
 msgstr "Kết nối USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -9222,18 +9228,6 @@ msgstr "Bạn cần cung cấp số Lô/Serial cho sản phẩm %s."
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "Bạn nên cập nhật tài liệu này để phản ánh T&amp;C."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Bạn không nên dùng một kế hoạch dịch chuyển nội bộ để dịch chuyển một vài "
-"sản phẩm giữa hai Kho hàng. Thay vào đó, hãy sử dụng phương thức chuyển giao"
-" nội bộ ngay lập tức hoặc Loan báo cung ứng."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

@@ -298,6 +298,7 @@ function factory(dependencies) {
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
@@ -312,6 +313,9 @@ function factory(dependencies) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
+                }
+                if (chatter && chatter.exists() && chatter.component) {
+                    chatter.component.trigger('o-message-posted');
                 }
                 if (chatterThread) {
                     if (this.exists()) {
@@ -511,6 +515,14 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return unlink(this.mainSuggestedRecords);
+        }
+
+        /**
+         * @private
+         * @return {boolean}
+         */
+        _computeHasDropZone() {
+            return true;
         }
 
         /**
@@ -925,6 +937,9 @@ function factory(dependencies) {
          */
         extraSuggestedRecords: many2many('mail.model', {
             compute: '_computeExtraSuggestedRecords',
+        }),
+        hasDropZone: attr({
+            compute: '_computeHasDropZone',
         }),
         hasFocus: attr({
             default: false,
