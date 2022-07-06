@@ -12,7 +12,7 @@
         justify-content: space-between;
         padding: $o-kanban-dashboard-vpadding $o-kanban-dashboard-hpadding;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             margin-bottom: 10px;
         }
 
@@ -172,7 +172,7 @@
                 @include o-text-overflow(inline-block);
             }
 
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 button + a {
                     display: block;
                     margin-top: map-get($spacers, 3);

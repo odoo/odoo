@@ -84,7 +84,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         font-weight: $font-weight-bold;
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .td-img {
             display: none;
         }
@@ -295,7 +295,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 }
 
 #products_grid:not(.o_wsale_layout_list) {
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         @include wsale-break-table-to-list();
     }
 
@@ -553,7 +553,7 @@ a.no-decoration {
             border: 1px solid gray('400');
             border-radius: 50%;
         }
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             > span {
                 width: 2rem;
                 height: 2rem;
@@ -610,7 +610,7 @@ a.no-decoration {
         }
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         &.o_carousel_product_left_indicators {
             flex-direction: column-reverse;
         }
@@ -716,7 +716,7 @@ a.no-decoration {
 .o_carousel_product_card {
     .o_carousel_product_card_img_top {
         object-fit: scale-down;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             height: 12rem;
         }
         @include media-breakpoint-up(md) {
