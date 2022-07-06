@@ -61,7 +61,9 @@ class PaymentTransaction(models.Model):
             # vice versa.
             if len(tx.sale_order_ids) == 1:
                 quotation = tx.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
-                if quotation and len(quotation.transaction_ids) == 1:
+                if quotation and len(quotation.transaction_ids.filtered(
+                    lambda tx: tx.state in ('authorized', 'done')  # Only consider confirmed tx
+                )) == 1:
                     # Check if the SO is fully paid
                     if quotation.currency_id.compare_amounts(tx.amount, quotation.amount_total) == 0:
                         quotation.with_context(send_email=True).action_confirm()

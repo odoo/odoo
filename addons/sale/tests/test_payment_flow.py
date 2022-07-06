@@ -197,6 +197,28 @@ class TestSalePayment(PaymentHttpCommon):
 
         self.assertEqual(self.order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')
 
+    def test_confirmed_transactions_comfirms_so_with_multiple_transaction(self):
+        """ Test that a confirmed transaction confirms a SO even if one or more non-confirmed
+        transactions are linked. """
+        # Create the payment
+        self.amount = self.order.amount_total
+        self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[self.order.id],
+            state='draft',
+            reference='Test Transaction Draft 1',
+        )
+        self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[self.order.id],
+            state='draft',
+            reference='Test Transaction Draft 2',
+        )
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.order.id], state='done')
+        tx._reconcile_after_done()
+
+        self.assertEqual(self.order.state, 'sale')
+
     def test_auto_confirm_and_auto_invoice(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
