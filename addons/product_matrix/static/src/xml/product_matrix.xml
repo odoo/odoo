@@ -4,7 +4,7 @@
             <thead>
                 <tr>
                     <t t-foreach="header" t-as="column_header">
-                        <th t-attf-class="o_matrix_title_header {{column_header_first?'text-left':'text-center'}}">
+                        <th t-attf-class="o_matrix_title_header {{column_header_first?'text-start':'text-center'}}">
                             <span t-esc="column_header.name"/>
                             <t t-call="product_matrix.extra_price">
                                 <t t-set="cell" t-value="column_header"/>
@@ -16,7 +16,7 @@
             <tbody>
                 <tr t-foreach="rows" t-as="row">
                     <t t-foreach="row" t-as="cell">
-                        <th t-if="cell.name" class="text-left">
+                        <th t-if="cell.name" class="text-start">
                             <strong t-esc="cell.name"/>
                             <t t-call="product_matrix.extra_price"/>
                         </th>
@@ -34,7 +34,7 @@
             </tbody>
         </table>
     </div>
-    <span t-name="product_matrix.extra_price" t-if="cell.price" class="badge badge-pill badge-secondary">
+    <span t-name="product_matrix.extra_price" t-if="cell.price" class="badge rounded-pill text-bg-secondary">
             <!--
                 price_extra is displayed as catalog price instead of
                 price after pricelist because it is impossible to

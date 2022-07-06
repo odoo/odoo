@@ -272,7 +272,7 @@
                                <div class="o_kanban_record_top">
                                    <div class="o_kanban_record_headings">
                                        <strong class="o_kanban_record_title">
-                                            <div class="float-right"
+                                            <div class="float-end"
                                                  t-if="record.hr_icon_display.raw_value == 'presence_present'"
                                                  name="presence_present">
                                                 <!-- Employee is present/connected and it is normal according to his work schedule  -->
@@ -280,7 +280,7 @@
                                                       title="Present" name="presence_present">
                                                 </span>
                                             </div>
-                                            <div class="float-right"
+                                            <div class="float-end"
                                                  t-if="record.hr_icon_display.raw_value == 'presence_absent'"
                                                  name="presence_absent">
                                                 <!-- Employee is not present and it is normal according to his work schedule -->
@@ -288,7 +288,7 @@
                                                       title="Absent" name="presence_absent">
                                                 </span>
                                             </div>
-                                            <div class="float-right"
+                                            <div class="float-end"
                                                  t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
                                                     name="presence_absent_active">
                                                 <!-- Employee is connected but according to his work schedule,
@@ -299,7 +299,7 @@
                                                       name="presence_absent_active">
                                                 </span>
                                             </div>
-                                            <div class="float-right"
+                                            <div class="float-end"
                                                  t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
                                                     name="presence_to_define">
                                                 <!-- Employee is not here but according to his work schedule, he should be connected -->
@@ -320,10 +320,10 @@
                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                </ul>
                            </div>
-                           <div class="oe_kanban_content position-absolute fixed-bottom mr-2 o_hr_employee_kanban_bottom">
+                           <div class="oe_kanban_content position-absolute fixed-bottom me-2 o_hr_employee_kanban_bottom">
                                <div class="o_kanban_record_bottom">
                                    <div class="oe_kanban_bottom_left"/>
-                                   <div class="oe_kanban_bottom_right float-right">
+                                   <div class="oe_kanban_bottom_right float-end">
                                        <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                        <div class="hr_activity_container">
                                            <field name="activity_ids" widget="kanban_activity"/>

@@ -564,7 +564,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            $el.addClass('float-right');
+            $el.addClass('float-end');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
             $el.addClass('o_text_block');
         }

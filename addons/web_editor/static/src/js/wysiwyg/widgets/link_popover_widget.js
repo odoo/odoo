@@ -53,13 +53,13 @@ const LinkPopoverWidget = Widget.extend({
         const popoverContainer = targetWindow.frameElement ? targetWindow.frameElement.parentElement : targetWindow.document.body;
 
         // init tooltips & popovers
-        this.$('[data-toggle="tooltip"]').tooltip({
+        this.$('[data-bs-toggle="tooltip"]').tooltip({
             delay: 0,
             placement: 'bottom',
             container: popoverContainer,
         });
         const tooltips = [];
-        for (const el of this.$('[data-toggle="tooltip"]').toArray()) {
+        for (const el of this.$('[data-bs-toggle="tooltip"]').toArray()) {
             tooltips.push(Tooltip.getOrCreateInstance(el));
         }
         let popoverShown = true;

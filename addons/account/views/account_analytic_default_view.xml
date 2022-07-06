@@ -63,7 +63,7 @@
                                 <div t-if="record.date_start.value"><i class="fa fa-calendar"></i> From <field name="date_start"/> <t t-if="record.date_stop.value">to <field name="date_stop"/></t></div>
                                 <div t-if="record.product_id.value"><strong>Product</strong> <field name="product_id"/> </div>
                                 <div t-if="record.partner_id.value"><strong>Customer</strong> <field name="partner_id"/> </div>
-                                <div class="float-right">
+                                <div class="float-end">
                                     <field name="user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div>

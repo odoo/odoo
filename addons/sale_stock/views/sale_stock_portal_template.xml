@@ -6,7 +6,7 @@
         inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='so_date']" position="after">
             <div t-if="sale_order.incoterm" class="row">
-                <div class="mb-3 col-6 ml-auto">
+                <div class="mb-3 col-6 ms-auto">
                     <strong>Incoterm: </strong> <span t-field="sale_order.incoterm"/>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                                 <a t-att-href="delivery_report_url">
                                     <span t-esc="picking.name"/>
                                 </a>
-                                <div class="small d-lg-inline-block ml-3">
+                                <div class="small d-lg-inline-block ms-3">
                                     Date:
                                     <span class="text-muted"
                                         t-field="picking.date_done"
@@ -38,15 +38,15 @@
                                 </div>
                             </div>
                             <span t-if="picking.state == 'done'"
-                                class="small badge badge-success orders_label_text_align">
+                                class="small badge text-bg-success orders_label_text_align">
                                 <i class="fa fa-fw fa-truck"/> <b>Shipped</b>
                             </span>
                             <span t-elif="picking.state == 'cancel'"
-                                class="small badge badge-danger orders_label_text_align">
+                                class="small badge text-bg-danger orders_label_text_align">
                                 <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
                             </span>
                             <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                class="small badge badge-info orders_label_text_align">
+                                class="small badge text-bg-info orders_label_text_align">
                                 <i class="fa fa-fw fa-clock-o"/> <b>Preparation</b>
                             </span>
                         </div>

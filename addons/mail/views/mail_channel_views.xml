@@ -27,8 +27,8 @@
                                     <p class="oe_module_name">
                                         <field name="description"/>
                                     </p>
-                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-right" name="channel_join">Join</button>
-                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-right" name="action_unfollow">Leave</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-end" name="channel_join">Join</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-end" name="action_unfollow">Leave</button>
                                 </div>
                             </div>
                         </t>

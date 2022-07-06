@@ -21,7 +21,7 @@ var ShareMail = publicWidget.Widget.extend({
         var input = this.$('input');
         var slideID = this.$('button').data('slide-id');
         if (input.val() && input[0].checkValidity()) {
-            this.$el.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+            this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
             this._rpc({
                 route: '/slides/slide/send_share_email',
                 params: {
@@ -32,7 +32,7 @@ var ShareMail = publicWidget.Widget.extend({
                 self.$el.html($('<div class="alert alert-info" role="alert">' + _t('<strong>Thank you!</strong> Mail has been sent.') + '</div>'));
             });
         } else {
-            this.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             input.focus();
         }
     },

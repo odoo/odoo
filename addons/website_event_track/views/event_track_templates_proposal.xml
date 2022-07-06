@@ -7,7 +7,7 @@
         <div class="container">
             <section class="pt48">
                 <h1 class="o_page_header">Call for Proposals</h1>
-                <h2 class="text-center text-secondary font-weight-bold my-4" t-out="event.name"/>
+                <h2 class="text-center text-secondary fw-bold my-4" t-out="event.name"/>
             </section>
             <section id="forms" t-if="not event.website_track_proposal">
                 <h1>Proposals are closed!</h1>
@@ -153,7 +153,7 @@
     <div id="event_track_proposal_additional_contact_section">
         <div class="mb-3">
             <input name="add_contact_information" type= "checkbox" class="o_wetrack_add_contact_information_checkbox"/>
-            <label class="font-weight-normal" for="add_contact_information">Contact me through a different email/phone</label>
+            <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
         </div>
         <div class="o_wetrack_contact_information d-none">
             <h4><b>Contact Information</b></h4>

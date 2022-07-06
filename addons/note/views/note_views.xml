@@ -98,7 +98,7 @@
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
-                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                         <span class="fa fa-ellipsis-v"/>
                     </a>
                     <div class="dropdown-menu" role="menu">
@@ -108,7 +108,7 @@
                 </div>
                 <div t-attf-class="d-flex #{noteHasFollowers ? 'flex-wrap' : 'flex-nowrap'}">
                   <div class="d-flex flex-grow-1">
-                    <span class="mr-2">
+                    <span class="me-2">
                       <a name="action_close" type="object" t-if="record.open.raw_value">
                         <i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/>
                       </a>
@@ -123,7 +123,7 @@
                     </span>
                   </div>
                   <div t-attf-class="d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
-                    <div t-if="noteHasFollowers" class="d-flex align-items-center mr-2 mt-2">
+                    <div t-if="noteHasFollowers" class="d-flex align-items-center me-2 mt-2">
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower" t-key="follower">
                         <img
                             t-if="follower_index &lt; 5"
@@ -134,7 +134,7 @@
                         <small
                             t-if="follower_index == 5"
                             t-esc="'+' + (follower_size - 5)"
-                            class="text-info font-weight-bold ml-1"/>
+                            class="text-info fw-bold ms-1"/>
                       </t>
                     </div>
                     <field name="activity_ids" widget="kanban_activity" />

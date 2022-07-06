@@ -67,7 +67,7 @@
                     <field name="quantity" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="amount_tax_company" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
-                    <field name="attachment_number" nolabel="1" class='fa fa-paperclip pr-0' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
+                    <field name="attachment_number" nolabel="1" class='fa fa-paperclip pe-0' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="total_amount_company" optional="show" sum="Total Company Currency" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="True"/>
                     <field name="total_amount" optional="hide" decoration-bf="True" groups="base.group_multi_currency"/>
                     <field name="currency_id" optional="hide" groups="base.group_multi_currency"/>
@@ -142,7 +142,7 @@
                             <field name="product_id" required="1" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"/>
                             <label for="product_description" string="" attrs="{'invisible': ['|', ('product_description', '=', False), ('product_id', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('product_description', '=', False), ('product_id', '=', False)]}">
-                                <field name ="product_description" class="font-italic"/>
+                                <field name ="product_description" class="fst-italic"/>
                             </div>
                             <field name="unit_amount" required="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)], 'readonly': ['|', ('sheet_is_editable', '=', False), ('product_has_cost', '=', True)]}"/>
                             <field name="product_uom_category_id" invisible="1"/>
@@ -173,11 +173,11 @@
                                         options="{'no_create': True}"/>
                                 </div>
                                 <div class="d-flex pt-2">
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ml-1 mr-1"> ( </span>
+                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-1"> ( </span>
                                     <field name="amount_tax"
-                                        class="pl-0"
+                                        class="ps-0"
                                         attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ml-1 mr-3"> ) </span>
+                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-3"> ) </span>
                                 </div>
                             </div>
                         </group><group>
@@ -248,7 +248,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="total_amount" widget="monetary"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle float-end"><span class="text-end"><field name="total_amount" widget="monetary"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row mt8">
@@ -256,7 +256,7 @@
                                         <span><t t-esc="record.employee_id.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="float-right text-right">
+                                        <span class="float-end text-end">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'reported': 'primary', 'refused': 'danger', 'done': 'warning',
                                             'approved': 'success'}}"/>
                                         </span>
@@ -765,8 +765,8 @@
                                     <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="account_id" optional="hide" readonly="True"/>
-                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-right pr-0" readonly="True"/>
-                                    <field name="attachment_number" class="text-right pl-0 pr-4" width="1" nolabel="1"/>
+                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True"/>
+                                    <field name="attachment_number" class="text-end ps-0 pe-4" width="1" nolabel="1"/>
                                     <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
                                     <field name="currency_id" optional="hide" readonly="True"/>
@@ -826,7 +826,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="total_amount" widget="monetary"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle float-end"><span class="text-end"><field name="total_amount" widget="monetary"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row mt8">
@@ -834,7 +834,7 @@
                                         <span><t t-esc="record.employee_id.value"/> <t t-esc="record.accounting_date.value"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="float-right text-right">
+                                        <span class="float-end text-end">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
                                             'done': 'success'}}"/>
                                         </span>

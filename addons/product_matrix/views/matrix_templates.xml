@@ -16,13 +16,13 @@
                   <tbody>
                       <tr t-foreach="grid['matrix']" t-as="row">
                           <t t-foreach="row" t-as="cell">
-                              <td t-if="cell.get('name', False)" class="text-left">
+                              <td t-if="cell.get('name', False)" class="text-start">
                                   <strong t-esc="cell['name']"/>
                                   <t t-call="product_matrix.extra_price">
                                       <t t-set="price" t-value="cell.get('price', False)"/>
                                   </t>
                               </td>
-                              <td t-else="" class="text-right">
+                              <td t-else="" class="text-end">
                                   <span t-esc="cell.get('qty', 0)" class="o_grid_cell_container"/>
                               </td>
                           </t>
@@ -33,7 +33,7 @@
     </template>
 
     <template id="extra_price">
-      <span t-if="price" class="badge badge-pill badge-secondary">
+      <span t-if="price" class="badge rounded-pill text-bg-secondary">
               <!--
                   price_extra is displayed as catalog price instead of
                   price after pricelist because it is impossible to

@@ -328,7 +328,7 @@ var NameAndSignature = Widget.extend({
         var name = this.getName();
         var isSignatureEmpty = this.isSignatureEmpty();
         this.$nameInput.parent().toggleClass('o_has_error', !name)
-            .find('.form-control, .custom-select').toggleClass('is-invalid', !name);
+            .find('.form-control, .form-select').toggleClass('is-invalid', !name);
         this.$signatureGroup.toggleClass('border-danger', isSignatureEmpty);
         return name && !isSignatureEmpty;
     },

@@ -34,7 +34,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.close",
+        trigger: ".modal-header button.btn-close",
     },
     {
         trigger: "a:contains(\"Answer\").collapsed",
@@ -52,7 +52,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.close",
+        trigger: ".modal-header button.btn-close",
     }, {
         content: "Click here to accept this answer.",
         extra_trigger: '#wrap:has(".o_wforum_validate_toggler")',

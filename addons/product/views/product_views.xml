@@ -42,7 +42,7 @@
                         <label for="name" string="Product Name"/>
                         <h1>
                             <div class="d-flex">
-                                <field name="priority" widget="priority" class="mr-3"/>
+                                <field name="priority" widget="priority" class="me-3"/>
                                 <field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/>
                             </div>
                         </h1>
@@ -69,7 +69,7 @@
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
                                     <field name="detailed_type"/>
-                                    <field name="product_tooltip" string="" class="font-italic text-muted"/>
+                                    <field name="product_tooltip" string="" class="fst-italic text-muted"/>
                                     <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
@@ -253,7 +253,7 @@
                             <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                             <p>
                                 <span>All general settings about this product are managed on</span>
-                                <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product pl-0 ml-1 mb-1"/>
+                                <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
                             </p>
                         </div>
                         <group>
@@ -265,7 +265,7 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <label for="lst_price" string="Sales Price"/>
-                                <div class="o_row col-5 pl-0">
+                                <div class="o_row col-5 ps-0">
                                     <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
                                 </div>
                                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>

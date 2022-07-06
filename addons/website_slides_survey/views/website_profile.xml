@@ -17,16 +17,16 @@
                <div class="col-12 col-lg-6" t-foreach="certificates" t-as="certificate">
                     <div class="card mb-2">
                         <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex" t-attf-onclick="location.href='/slides/#{slug(certificate.slide_id.channel_id)}';">
-                            <div class="pl-5 pr-4 rounded-left" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
+                            <div class="ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
                             <div class="p-2 w-100">
                                 <h5 class="mt-0 mb-1" t-esc="certificate.survey_id.title"/>
                                 <div t-if="user.id == uid">
-                                    <small class="font-weight-bold">Score : <span t-esc="certificate.scoring_percentage"/> %</small>
-                                    <div class="float-right">
-                                        <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
+                                    <small class="fw-bold">Score : <span t-esc="certificate.scoring_percentage"/> %</small>
+                                    <div class="float-end">
+                                        <a role="button" class="float-end" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
                                             <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
                                         </a>
-                                        <a role="button" class="mr-2" href="#"
+                                        <a role="button" class="me-2" href="#"
                                              t-attf-onclick="event.stopPropagation(); $('#slideChannelShareModal_#{certificate.slide_id.channel_id.id}').modal('show');">
                                             <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
                                         </a>
@@ -44,8 +44,8 @@
         <t t-else="">
             <div class="text-muted d-inline-block">No certifications yet!</div>
         </t>
-        <div class="text-right d-inline-block pull-right">
-            <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>All Certifications</a>
+        <div class="text-end d-inline-block pull-right">
+            <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="fa fa-arrow-right me-1"/>All Certifications</a>
         </div>
     </template>
 
@@ -57,8 +57,8 @@
 
     <template id="all_user_card" inherit_id="website_profile.all_user_card">
         <xpath expr="//td[hasclass('all_user_badge_count')]" position="after">
-            <td class="align-middle text-right pr-3 text-nowrap all_user_certification_count">
-                <b t-esc="user['certification_count']"/> <span class="text-muted small font-weight-bold">Certifications</span>
+            <td class="align-middle text-end pe-3 text-nowrap all_user_certification_count">
+                <b t-esc="user['certification_count']"/> <span class="text-muted small fw-bold">Certifications</span>
             </td>
         </xpath>
     </template>
@@ -82,7 +82,7 @@
                             <div class="col-6">
                                 <span t-field="badge.description"/>
                             </div>
-                            <div class="col-3 text-right">
+                            <div class="col-3 text-end">
                                 <b t-esc="badge.granted_users_count"/>
                                 <i class="text-muted"> awarded users</i>
                             </div>

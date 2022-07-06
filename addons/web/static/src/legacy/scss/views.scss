@@ -17,7 +17,7 @@
 // of `.o_field_widget` so it needs to be placed at an upper level.
 .o_status {
     @extend .rounded-circle;
-    background-color: gray('200');
+    background-color: map-get($grays, '200');
     height: 12px;
     width: 12px;
     box-shadow: inset 0 0 0 1px rgba($black, .2);
@@ -57,13 +57,15 @@
 
         .o_view_nocontent_smiling_face:before {
             @extend %o-nocontent-init-image;
-            @include size(120px, 140px);
+            width: 120px;
+            height: 140px;
             background: transparent url(/web/static/img/smiling_face.svg) no-repeat center;
         }
 
         .o_view_nocontent_neutral_face:before {
             @extend %o-nocontent-init-image;
-            @include size(120px, 140px);
+            width: 120px;
+            height: 140px;
             background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
         }
 
@@ -90,7 +92,7 @@
         }
     }
 
-    .custom-checkbox {
+    .form-check {
         pointer-events: none !important;
     }
 

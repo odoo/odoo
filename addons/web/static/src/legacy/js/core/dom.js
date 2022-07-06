@@ -379,7 +379,7 @@ var dom = {
         $btn.addClass('o_website_btn_loading disabled');
         $btn.prop('disabled', true);
         const $loader = $('<span/>', {
-            class: 'fa fa-refresh fa-spin mr-2',
+            class: 'fa fa-refresh fa-spin me-2',
         });
         $btn.prepend($loader);
         return () => {

@@ -86,7 +86,7 @@
                             <td>Replenishment</td>
                             <td>Receipt</td>
                             <td t-if="docs['multiple_product']">Product</td>
-                            <td class="text-right"><t t-esc="docs['uom']"/></td>
+                            <td class="text-end"><t t-esc="docs['uom']"/></td>
                             <td>Used by</td>
                             <td>Delivery</td>
                         </tr>
@@ -96,7 +96,7 @@
                             <td>Inventory On Hand</td>
                             <td/>
                             <td t-if="docs['multiple_product']"/>
-                            <td class="text-right">0</td>
+                            <td class="text-end">0</td>
                             <td/>
                             <td/>
                             <td/>
@@ -106,7 +106,7 @@
                             <td t-attf-class="#{line['is_late'] and 'o_grid_warning'}">
                                 <a t-if="line['document_in']"
                                     t-attf-href="#" t-esc="line['document_in'].name"
-                                    class="font-weight-bold" view-type="form"
+                                    class="fw-bold" view-type="form"
                                     t-att-res-model="line['document_in']._name"
                                     t-att-res-id="line['document_in'].id"/>
                                 <t t-elif="line['reservation']">
@@ -136,7 +136,7 @@
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
                             <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
-                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options="{'widget': 'float', 'precision': precision}"/></td>
+                            <td class="text-end"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options="{'widget': 'float', 'precision': precision}"/></td>
                             <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}" name="usedby_cell">
                                 <button t-if="line['move_out'] and line['move_out'].picking_id"
                                     t-attf-class="o_priority o_priority_star o_report_replenish_change_priority fa fa-star#{' one' if line['move_out'].picking_id.priority=='1' else '-o zero'}"
@@ -146,7 +146,7 @@
                                 />
                                 <a t-if="line['document_out']"
                                     t-attf-href="#" t-esc="line['document_out'].name"
-                                    class="font-weight-bold" view-type="form"
+                                    class="fw-bold" view-type="form"
                                     t-att-res-model="line['document_out']._name"
                                     t-att-res-id="line['document_out'].id"/>
                             </td>
@@ -157,23 +157,23 @@
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted Inventory</td>
-                            <td t-esc="docs['virtual_available']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
+                            <td t-esc="docs['virtual_available']" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
                         </tr>
                     </thead>
                     <tbody t-if="docs['qty']['in'] or docs['qty']['out']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
                             <td colspan="2">Incoming Draft Transfer</td>
-                            <td t-esc="docs['draft_picking_qty']['in']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
+                            <td t-esc="docs['draft_picking_qty']['in']" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
                         </tr>
                         <tr t-if="docs['draft_picking_qty']['out']" name="draft_picking_out">
                             <td colspan="2">Outgoing Draft Transfer</td>
-                            <td t-esc="-docs['draft_picking_qty']['out']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
+                            <td t-esc="-docs['draft_picking_qty']['out']" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
                         </tr>
                     </tbody>
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted with Pending</td>
-                            <td t-esc="future_virtual_available" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
+                            <td t-esc="future_virtual_available" t-options="{'widget': 'float', 'precision': precision}" class="text-end"/>
                         </tr>
                     </thead>
                 </table>

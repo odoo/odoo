@@ -49,7 +49,7 @@
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <h1><field class="o_text_overflow" name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row no-gutters align-items-end">
+                            <h2 class="o_row g-0 align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="expected_revenue" class="oe_edit_only" />
                                     <div class="o_row">
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
                                     <div class="o_row">
-                                        <field name="recurring_revenue" class="pr-2 oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                        <field name="recurring_revenue" class="pe-2 oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                     </div>
                                 </div>
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
@@ -470,11 +470,11 @@
                         <field name="phone" string="Phone" />
                         <label for="expected_revenue"/>
                         <div class="o_row">
-                            <field name="expected_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
                         </div>
                         <div class="o_row" groups="crm.group_use_recurring_revenues">
-                            <field name="recurring_revenue" class="oe_inline pr-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="recurring_revenue" class="oe_inline pe-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
                                    attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                         </div>
@@ -556,7 +556,7 @@
                                 </div>
 
                                 <div class="o_dropdown_kanban dropdown">
-                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">

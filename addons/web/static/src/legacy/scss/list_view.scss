@@ -14,7 +14,7 @@
         border-spacing: 0;
 
         thead {
-            color: $table-head-color;
+            color: color-contrast(opaque($body-bg, $light));
             border-bottom: 1px solid #cacaca;
             > tr > th:not(.o_list_record_selector) {
                 border-left: 1px solid #dfdfdf;
@@ -118,7 +118,7 @@
         .o_list_record_selector {
             width: 40px;
             padding-left: $o-horizontal-padding;
-            .custom-control-label {
+            .form-check-label {
                 cursor: pointer;
             }
         }
@@ -234,7 +234,7 @@
         .o_data_row:not(.o_selected_row) .o_data_cell {
 
             // Boolean fields in non-selected rows completely disabled.
-            .custom-checkbox {
+            .form-check {
                 pointer-events: none;
             }
 
@@ -244,7 +244,7 @@
             &.o_boolean_toggle_cell,
             &.o_toggle_button_cell {
 
-                &:not(.o_readonly_modifier) .custom-checkbox {
+                &:not(.o_readonly_modifier) .form-check {
                     pointer-events: auto;
                 }
             }

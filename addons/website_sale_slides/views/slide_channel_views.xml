@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='info_total_time']" position="after">
                 <div class="d-flex" attrs="{'invisible': [('enroll', '!=', 'payment')]}">
-                    <span class="mr-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
+                    <span class="me-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
                     <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="currency_id" attrs="{'invisible': True}"/>
                 </div>

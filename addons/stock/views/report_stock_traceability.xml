@@ -47,7 +47,7 @@
 
     <template id="report_stock_inventory">
         <div class="container-fluid o_stock_reports_page o_stock_reports_no_print">
-            <span t-if="lines" class="o_report_heading text-left"><h1>Traceability Report</h1></span>
+            <span t-if="lines" class="o_report_heading text-start"><h1>Traceability Report</h1></span>
             <span><t t-esc="context"/></span>
             <div class="o_stock_reports_table table-responsive">
                 <t t-if="not lines">
@@ -89,7 +89,7 @@
 
     <template id="report_stock_body_print">
         <div class="container o_stock_reports_page o_stock_reports_no_print">
-            <span class="text-left">
+            <span class="text-start">
                 <h3>
                     Traceability Report
                     <span t-if="reference" style="margin-left:28%">

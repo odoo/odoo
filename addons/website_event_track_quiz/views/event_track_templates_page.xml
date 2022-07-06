@@ -17,7 +17,7 @@
         </div>
     </xpath>
     <xpath expr="//div[hasclass('o_we_track_reminder_button')]" position="before">
-        <div class="o_we_track_quiz_button mr-2 my-1" t-if="track.quiz_id and not track.is_quiz_completed and not track.is_track_upcoming">
+        <div class="o_we_track_quiz_button me-2 my-1" t-if="track.quiz_id and not track.is_quiz_completed and not track.is_track_upcoming">
             <a class="btn btn-primary" href="#we_track_quiz_container" onclick="$('.o_quiz_js_quiz_container').removeClass('d-none'); ">
                 Take the Quiz
             </a>

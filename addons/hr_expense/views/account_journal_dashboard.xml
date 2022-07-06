@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//t[@id='account.JournalBodySalePurchase']//div[hasclass('o_kanban_primary_right')]" position="inside">
                 <div class="row" t-if="dashboard.number_expenses_to_pay">
-                    <div class="col overflow-hidden text-left">
+                    <div class="col overflow-hidden text-start">
                         <a type="object" t-if="journal_type == 'purchase'" name="open_expenses_action">
                             <t t-esc="dashboard.number_expenses_to_pay"/> Expenses to Process
                         </a>
                     </div>
-                    <div class="col-auto text-right">
+                    <div class="col-auto text-end">
                         <span t-if="journal_type == 'purchase'"><t t-esc="dashboard.sum_expenses_to_pay"/></span>
                     </div>
                 </div>

@@ -39,8 +39,8 @@
         }
         .dropdown-item {
             &.active .badge { // Invert badge display when the item is active
-                background-color: color-contrast(theme-color('primary'));
-                color: theme-color('primary');
+                background-color: color-contrast(map-get($theme-colors, 'primary'));
+                color: map-get($theme-colors, 'primary');
             }
         }
     }

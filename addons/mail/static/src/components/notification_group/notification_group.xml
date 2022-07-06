@@ -11,11 +11,11 @@
                 </div>
                 <div class="o_NotificationListItem_content o_NotificationGroup_content d-flex flex-column flex-grow-1 align-self-start m-2">
                     <div class="o_NotificationGroup_header o_NotificationListItem_header d-flex">
-                        <span class="o_NotificationListItem_name o_NotificationGroup_name text-truncate font-weight-bold" t-att-class="{ 'o-mobile fs-5': messaging.device.isSmall }">
+                        <span class="o_NotificationListItem_name o_NotificationGroup_name text-truncate fw-bold" t-att-class="{ 'o-mobile fs-5': messaging.device.isSmall }">
                             <t t-esc="notificationGroupView.notificationGroup.res_model_name"/>
                         </span>
                         <t t-if="notificationGroupView.notificationGroup.notifications.length > 1">
-                            <span class="o_NotificationListItem_counter o_NotificationGroup_counter mx-1 font-weight-bold">
+                            <span class="o_NotificationListItem_counter o_NotificationGroup_counter mx-1 fw-bold">
                                 (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
                             </span>
                         </t>

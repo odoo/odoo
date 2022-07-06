@@ -195,7 +195,7 @@ const QWeb = core.qweb;
     _chatbotDisableInput(disableText) {
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field')
             .prop('disabled', true)
-            .addClass('text-center font-italic bg-200')
+            .addClass('text-center fst-italic bg-200')
             .val(disableText);
     },
 
@@ -206,7 +206,7 @@ const QWeb = core.qweb;
         const $composerTextField = this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
-            .removeClass('text-center font-italic bg-200')
+            .removeClass('text-center fst-italic bg-200')
             .val('')
             .focus();
 

@@ -17,7 +17,7 @@
                                 <span class="text-center" t-out="barcode"/>
                             </t>
                         </div>
-                        <div class="text-right" style="line-height:normal">
+                        <div class="text-end" style="line-height:normal">
                             <div class="o_label_extra_data">
                                 <t t-out="extra_html"/>
                             </div>
@@ -42,7 +42,7 @@
                     <div class="o_label_name">
                         <strong t-field="product.display_name"/>
                     </div>
-                    <div class="text-right" style="padding-top:0;padding-bottom:0">
+                    <div class="text-end" style="padding-top:0;padding-bottom:0">
                         <t t-if="product.is_product_variant">
                             <strong class="o_label_price_medium" t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
                         </t>
@@ -73,7 +73,7 @@
                         <div class="o_label_left_column">
                             <span class="text-nowrap" t-field="product.default_code"/>
                         </div>
-                        <div class="o_label_price_medium text-right">
+                        <div class="o_label_price_medium text-end">
                             <t t-if="product.is_product_variant">
                                 <strong t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
                             </t>
@@ -100,7 +100,7 @@
         <template id="report_simple_label_dymo">
             <div class="o_label_sheet o_label_dymo" t-att-style="padding_page">
                 <div class="o_label_full" t-att-style="table_style">
-                    <div class= "text-left o_label_small_barcode">
+                    <div class= "text-start o_label_small_barcode">
                         <t t-if="barcode">
                             <!-- `quiet=0` to remove the left and right margins on the barcode -->
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
@@ -116,7 +116,7 @@
                     <div class="o_label_left_column">
                         <small class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div class="text-right" style="padding: 0 4px;">
+                    <div class="text-end" style="padding: 0 4px;">
                         <t t-if="product.is_product_variant">
                             <strong class="o_label_price_small" t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
                         </t>

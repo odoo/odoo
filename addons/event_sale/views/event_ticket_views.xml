@@ -75,7 +75,7 @@
                 <field name="price"/>
             </field>
             <xpath expr="//div[hasclass('col-8')]" position="after">
-                <div class="col-4 text-right"><strong> <t t-out="record.price.value"/></strong></div>
+                <div class="col-4 text-end"><strong> <t t-out="record.price.value"/></strong></div>
             </xpath>
             <xpath expr="//div[hasclass('row')]" position="after">
                 <div t-out="record.product_id.value"/>

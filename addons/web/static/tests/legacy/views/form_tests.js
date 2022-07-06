@@ -247,7 +247,7 @@ QUnit.module('LegacyViews', {
         assert.containsNone(form, 'label:contains(something_id)');
         assert.containsOnce(form, 'label:contains(f3_description)');
         assert.containsOnce(form, 'div.o_field_one2many table');
-        assert.containsOnce(form, 'tbody td:not(.o_list_record_selector) .custom-checkbox input:checked');
+        assert.containsOnce(form, 'tbody td:not(.o_list_record_selector) .form-check input:checked');
         assert.containsOnce(form, '.o_control_panel .breadcrumb:contains(second record)');
         assert.containsNone(form, 'label.o_form_label_empty:contains(timmy)');
 

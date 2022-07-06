@@ -7,7 +7,7 @@
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid gray('400');
+        border-bottom: 1px solid map-get($grays, '400');
         text-align: center;
 
         .o_thread_date {
@@ -146,7 +146,8 @@
 
         &.o_neutral_face_icon:before {
             @extend %o-nocontent-init-image;
-            @include size(120px, 140px);
+            width: 120px;
+            height: 140px;
             background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
         }
     }

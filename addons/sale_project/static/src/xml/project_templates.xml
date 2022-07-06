@@ -4,11 +4,11 @@
         <xpath expr="//t[@t-esc='milestone.name']" position="replace">
             <span>
                 <t t-esc="milestone.name"/>
-                <span t-if="milestone.allow_billable &amp;&amp; milestone.quantity_percentage &amp;&amp; !milestone.sale_line_name" class="font-italic text-muted">
+                <span t-if="milestone.allow_billable &amp;&amp; milestone.quantity_percentage &amp;&amp; !milestone.sale_line_name" class="fst-italic text-muted">
                     (<t t-esc="100 * milestone.quantity_percentage"/>%)
                 </span>
             </span>
-            <span t-if="milestone.allow_billable" class="font-italic text-muted">
+            <span t-if="milestone.allow_billable" class="fst-italic text-muted">
                 <t t-if="milestone.sale_line_name" t-esc="milestone.sale_line_name"/> 
                 <span t-if="milestone.quantity_percentage &amp;&amp; milestone.sale_line_name">
                     (<t t-esc="100 * milestone.quantity_percentage"/>%)

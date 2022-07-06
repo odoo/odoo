@@ -20,7 +20,7 @@
 }
 
 .o_field_invalid {
-    @include print-variable(o-input-border-color, theme-color('danger'));
+    @include print-variable(o-input-border-color, map-get($theme-colors, 'danger'));
 }
 
 //------------------------------------------------------------------------------
@@ -217,7 +217,7 @@
                 display: inline-block;
                 margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
                 border: 1px solid white;
-                box-shadow: 0 0 0 1px gray('300');
+                box-shadow: 0 0 0 1px map-get($grays, '300');
 
                 > a {
                     display: block;
@@ -383,15 +383,15 @@
             margin: 0px 0px 4px 4px;
             padding: 1px 6px;
             color: $o-main-color-muted;
-            border: 1px solid gray('300');
+            border: 1px solid map-get($grays, '300');
             cursor: pointer;
             &.active {
                 color: $o-brand-primary;
                 border-color: $o-brand-primary;
             }
             &:hover:not(.active) {
-                color: darken(gray('300'), 30%);
-                border-color: darken(gray('300'), 30%);
+                color: darken(map-get($grays, '300'), 30%);
+                border-color: darken(map-get($grays, '300'), 30%);
             }
         }
     }
@@ -514,7 +514,7 @@
                         background: $o-brand-primary;
                     }
                     &.o_clear_file_button{
-                        background: theme-color('danger');
+                        background: map-get($theme-colors, 'danger');
                     }
                 }
             }
@@ -525,7 +525,7 @@
         }
 
         &.o_field_invalid > img {
-            border: 1px solid theme-color('danger');
+            border: 1px solid map-get($theme-colors, 'danger');
         }
     }
 

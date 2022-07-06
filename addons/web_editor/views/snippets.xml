@@ -6,7 +6,7 @@
             <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo" disabled="true"/>
             <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat" disabled="true"/>
         </div>
-        <form class="ml-auto d-flex">
+        <form class="ms-auto d-flex">
             <!-- Uncomment the following line when the mobile preview will be available. -->
             <!-- <button type="button" class="btn btn-secondary fa fa-mobile" name="mobile" data-action="mobilePreview"/> -->
             <button type="button" class="btn btn-secondary" data-action="cancel" title="Discard record" accesskey="j">Discard</button>
@@ -140,7 +140,7 @@
         <we-row t-if="with_colors or with_images" string="Background" class="o_we_full_row">
             <t t-if="with_colors" t-call="web_editor.snippet_options_background_color_widget"/>
             <t t-if="with_images">
-                <we-button title="Image" class="ml-auto fa fa-fw fa-camera"
+                <we-button title="Image" class="ms-auto fa fa-fw fa-camera"
                            data-name="bg_image_toggle_opt"
                            t-att-data-dependencies="images_dependencies"
                            data-toggle-bg-image="true"
@@ -561,11 +561,11 @@
 
         <we-row string="Transform">
             <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>
-            <we-button class="ml-0 border-left-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
+            <we-button class="ms-0 border-start-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
                 Reset
             </we-button>
             <we-button class="fa fa-fw fa-object-ungroup" data-transform="true" data-no-preview="true" title="Transform the picture"/>
-            <we-button class="ml-0 border-left-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
+            <we-button class="ms-0 border-start-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
                 Reset
             </we-button>
         </we-row>
@@ -581,9 +581,9 @@
     <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
-            <we-button data-select-class="float-left" title="Align Left">Left</we-button>
+            <we-button data-select-class="float-start" title="Align Left">Left</we-button>
             <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
-            <we-button data-select-class="float-right" title="Align Right">Right</we-button>
+            <we-button data-select-class="float-end" title="Align Right">Right</we-button>
         </we-select>
 
         <we-row string="Style">

@@ -5,7 +5,7 @@ odoo.define('website_event.ticket_details', function (require) {
         selector: '.o_wevent_js_ticket_details',
         events: {
             'click .o_wevent_registration_btn': '_onTicketDetailsClick',
-            'change .custom-select': '_onTicketQuantityChange'
+            'change .form-select': '_onTicketQuantityChange'
         },
         start: function (){
             this.foldedByDefault = this.$el.data('foldedByDefault') === 1;
@@ -21,7 +21,7 @@ odoo.define('website_event.ticket_details', function (require) {
          */
         _getTotalTicketCount: function (){
             var ticketCount = 0;
-            this.$('.custom-select').each(function (){
+            this.$('.form-select').each(function (){
                 ticketCount += parseInt($(this).val());
             });
             return ticketCount;

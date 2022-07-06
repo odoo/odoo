@@ -63,7 +63,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
             var $emptyFlag = $emptyFlagContainer.find('small');
             if (categorySlideCount === 0 && $emptyFlag.length === 0){
                 $emptyFlagContainer.append($('<small>', {
-                    'class': "ml-1 text-muted font-weight-bold",
+                    'class': "ms-1 text-muted fw-bold",
                     text: _t("(empty)")
                 }));
             } else if (categorySlideCount > 0 && $emptyFlag.length > 0){

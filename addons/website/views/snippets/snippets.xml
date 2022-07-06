@@ -262,7 +262,7 @@
             <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
             <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
             <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
         </we-select>
         <we-colorpicker data-dependencies="border_width_opt"
                         t-att-data-apply-to="apply_to"
@@ -362,9 +362,9 @@
     <!-- H-ALIGN -->
     <div id="so_text_align" data-selector=".s_share, .s_text_highlight, .s_social_media">
         <we-button-group string="Alignment">
-            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-start"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
-            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-right"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-end"/>
         </we-button-group>
     </div>
 
@@ -400,9 +400,9 @@
 
     <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
-            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
-            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
         </we-button-group>
     </div>
 
@@ -444,8 +444,8 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button class="fa fa-fw fa-angle-left" data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward"/>
-        <we-button class="fa fa-fw fa-angle-right mr-2" data-slide="right" data-no-preview="true" data-tooltip="true" title="Move Forward"/>
+        <we-button class="fa fa-fw fa-angle-left" data-bs-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward"/>
+        <we-button class="fa fa-fw fa-angle-right me-2" data-bs-slide="right" data-no-preview="true" data-tooltip="true" title="Move Forward"/>
         <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" data-tooltip="true" title="Add Slide"/>
         <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" data-tooltip="true" title="Remove Slide"/>
     </div>
@@ -1068,7 +1068,7 @@
                 <t t-set="with_color_combinations" t-value="True"/>
                 <t t-set="with_gradients" t-value="True"/>
             </t>
-            <we-button-group class="ml-auto">
+            <we-button-group class="ms-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>
                 <we-button class="fa fa-fw fa-ban" title="None" data-background="">
                 </we-button>
@@ -1088,7 +1088,7 @@
         <we-select string="Text Alignment" data-name="text_align_opt" data-cover-opt-name="text_align">
             <we-button data-select-class="">Left</we-button>
             <we-button data-select-class="text-center">Centered</we-button>
-            <we-button data-select-class="text-right">Right</we-button>
+            <we-button data-select-class="text-end">Right</we-button>
         </we-select>
     </div>
 

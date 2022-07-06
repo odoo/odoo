@@ -38,7 +38,7 @@ wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
     },
     {
         content: "load parseltongue",
-        extra_trigger: '.modal div[name="lang_ids"] .badge-pill .o_tag_badge_text:contains(Parseltongue)',
+        extra_trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
         trigger: '.modal-footer button:first',
     },
     {

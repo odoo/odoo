@@ -50,14 +50,14 @@
             <xpath expr="//div[@id='o_page_count']" position="after">
                 <div t-if="record.lead_count.raw_value">
                     Leads / Opportunities
-                    <span class="float-right font-weight-bold">
+                    <span class="float-end fw-bold">
                         <field name="lead_count"/>
                     </span>
                 </div>
             </xpath>
             <xpath expr="//div[@id='wvisitor_visited_page']" position="after">
                 <div class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <span t-att-class="record.lead_count.raw_value ? 'font-weight-bold' : 'text-muted'">
+                    <span t-att-class="record.lead_count.raw_value ? 'fw-bold' : 'text-muted'">
                         <field name="lead_count"/>
                     </span>
                     <div t-att-class="record.lead_count.raw_value ? '' : 'text-muted'">Leads / Opportunities</div>
