@@ -150,8 +150,7 @@
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
                                         <button class="btn btn-primary" name="action_view_contacts" type="object">
-                                            <t t-esc="record.contact_count.value"/>
-                                            <span>Contacts</span>
+                                            <t t-esc="record.contact_count.value"/> <span>Contacts</span>
                                         </button>
                                     </div>
                                     <div class="flex-grow-1 d-flex flex-column align-items-end o_mass_mailing_kanban_contact_links">
@@ -194,7 +193,7 @@
                             </div>
                         </div>
                         <!-- Card when the Kanban view is not grouped -->
-                        <div class="oe_kanban_global_click o_mailing_list_kanban_ungrouped w-100 m-0 d-flex flex-row justify-content-between align-items-center flex-wrap">
+                        <div class="oe_kanban_global_click o_mailing_list_kanban_ungrouped d-flex flex-row justify-content-between align-items-center flex-wrap">
                             <div class="col-lg-3 col-sm-6 col-12 py-0 my-auto">
                                 <div class="d-flex text-large">
                                     <span class="d-inline-block text-truncate font-weight-normal text-large"
