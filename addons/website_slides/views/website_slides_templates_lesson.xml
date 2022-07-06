@@ -544,8 +544,8 @@
 </template>
 
 <template id="lesson_content_quiz_add_buttons" name="Lesson: Quiz Add Buttons template">
-    <div class="o_wslides_js_lesson_quiz_new_question row mt-3">
-        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border ml-3 #{'d-none ' if slide.question_ids else ''}" role="button">
+    <div class="o_wslides_js_lesson_quiz_new_question mt-3">
+        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border #{'d-none ' if slide.question_ids else ''}" role="button">
             <i class="fa fa-plus mr-2"/>
             <span>Add Quiz</span>
         </a>
@@ -559,18 +559,16 @@
 <!-- Slide sub-template: share: send by email -->
 <template id='slide_social_email' name="Share by Email">
     <h5 class="mt-4">Share by mail</h5>
-    <div t-if="not is_public_user" class="form-inline">
+    <div t-if="not is_public_user" class="d-flex">
         <form class="form-group oe_slide_js_share_email" role="form">
             <div class="input-group">
                 <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
-                <span class="input-group-append">
-                    <button class="btn btn-primary" type="button"
-                        data-loading-text="Sending..."
-                        t-attf-data-slide-id="#{slide.id}"
-                        style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
-                        <i class="fa fa-envelope"/> Send Email
-                    </button>
-                </span>
+                <button class="btn btn-primary" type="button"
+                    data-loading-text="Sending..."
+                    t-attf-data-slide-id="#{slide.id}"
+                    style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                    <i class="fa fa-envelope"/> Send Email
+                </button>
             </div>
             <span class="form-text text-muted d-block w-100">Send presentation through email</span>
         </form>

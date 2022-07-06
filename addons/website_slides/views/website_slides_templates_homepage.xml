@@ -80,7 +80,7 @@
                                     <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
                                     <a class="d-lg-none btn btn-sm bg-white border" href="#" data-toggle="collapse" data-target="#o_wslides_home_aside_content">More info</a>
                                 </div>
-                                <hr class="d-none d-lg-block mt-2 pt-2 mb-1"/>
+                                <hr class="d-none d-lg-block mt-2 mb-2 mb-1"/>
                             </div>
                             <div id="o_wslides_home_aside_content" class="collapse d-lg-block">
                                 <div class="row no-gutters mb-5 mt-3 mt-lg-0">
@@ -432,7 +432,7 @@
             <div class="col">
                 <a t-if="users" href="/profile/users" class="float-right">View all</a>
                 <h5 class="m-0">Leaderboard</h5>
-                <hr class="mt-2 pt-2"/>
+                <hr class="mt-2 mb-2"/>
             </div>
         </div>
         <div class="row">
@@ -489,7 +489,7 @@
             <div class="col">
                 <a href="/profile/ranks_badges?badge_category=slides" class="float-right">View all</a>
                 <h5 class="m-0">Badges</h5>
-                <hr class="mt-2 pt-2"/>
+                <hr class="mt-2 mt-2"/>
             </div>
         </div>
         <t t-foreach="challenges" t-as="challenge">

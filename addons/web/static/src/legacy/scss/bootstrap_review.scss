@@ -102,18 +102,6 @@
     right: auto#{"/*rtl:ignore*/"};
 }
 
-// Review input group: BS allows to control button and input dimensions
-// individually but fails to make input-group correctly in all cases (for some
-// strange reasons they made it work well for sm and lg but not for the normal
-// sizing).
-.input-group-prepend,
-.input-group-append {
-    > .btn {
-        @include button-size($input-padding-y, $input-padding-x, $input-font-size, $input-line-height, $input-border-radius);
-        border-width: $input-border-width;
-    }
-}
-
 // Review $link-decoration behavior
 @if $link-decoration and $link-decoration != none {
     .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {

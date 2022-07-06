@@ -22,10 +22,10 @@
                     </div>
                 </button>
             </div>
-            <div t-else="" t-attf-class="#{request.env.user.has_group('base.group_public') and 'input-group-append'}">
+            <t t-else="">
                 <button href="#" t-attf-class="btn btn-secondary js_unfollow_btn">Unsubscribe</button>
                 <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
-            </div>
+            </t>
         </div>
     </template>
 </odoo>

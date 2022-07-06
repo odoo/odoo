@@ -2993,7 +2993,7 @@ var LabelSelection = AbstractField.extend({
 
 var BooleanToggle = FieldBoolean.extend({
     description: _lt("Toggle"),
-    className: FieldBoolean.prototype.className + ' o_boolean_toggle',
+    className: FieldBoolean.prototype.className + ' o_boolean_toggle form-switch',
     isQuickEditable: true,
     events: {
         'click': '_onClick'
@@ -3014,13 +3014,6 @@ var BooleanToggle = FieldBoolean.extend({
      */
     async _render() {
         await this._super(...arguments);
-        const classToApply = this.value ? 'fa-check-circle' : 'fa-times-circle';
-        if (this.el.querySelector('i')) {
-            this.el.querySelector('i').remove();
-        }
-        const i = document.createElement("i");
-        i.setAttribute('class', `fa ${classToApply}`);
-        this.el.querySelector('label').appendChild(i);
         const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
         this.$input.prop('disabled', isReadonly);
     },

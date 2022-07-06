@@ -5,11 +5,9 @@
         <span>
             <div class="input-group">
                 <input type="number" name="qty_to_add" class="o_input o_product_qty form-control text-right" value="1" min="1"/>
-                <div class="input-group-append">
-                    <button class="btn btn-secondary o_add_qty text-right form-control" type="submit" title="Add a quantity">
-                        <i class="fa fa-plus"/>
-                    </button>
-                </div>
+                <button class="btn btn-secondary o_add_qty text-right form-control" type="submit" title="Add a quantity">
+                    <i class="fa fa-plus"/>
+                </button>
             </div>
             <span class="o_badges">
                 <t t-set="quantities" t-value="widget.quantities"/>
