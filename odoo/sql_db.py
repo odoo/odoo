@@ -344,6 +344,7 @@ class Cursor(BaseCursor):
         return self._obj.mogrify(query, params).decode(encoding, 'replace')
 
     def execute(self, query, params=None, log_exceptions=None):
+        global sql_counter
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
@@ -361,6 +362,8 @@ class Cursor(BaseCursor):
 
         # simple query count is always computed
         self.sql_log_count += 1
+        sql_counter += 1
+
         delay = (real_time() - start)
         current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
@@ -437,15 +440,10 @@ class Cursor(BaseCursor):
             return self._close(False)
 
     def _close(self, leak=False):
-        global sql_counter
-
         if not self._obj:
             return
 
         del self.cache
-
-        # simple query count is always computed
-        sql_counter += self.sql_log_count
 
         # advanced stats only if sql_log is enabled
         self.print_log()

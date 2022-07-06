@@ -1271,6 +1271,7 @@ def preload_registries(dbnames):
                              time.time() - t0,
                              odoo.sql_db.sql_counter - t0_sql)
 
+                registry._assertion_report.log_stats()
             if not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
