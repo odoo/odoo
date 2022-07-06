@@ -45,5 +45,22 @@
                 </group>
             </field>
         </record>
+
+        <!-- Stock Report View -->
+        <record model="ir.ui.view" id="product_product_stock_tree_inherit_stock_account">
+            <field name="name">product.product.stock.tree.inherit.stock.account</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_available" position="before">
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="cost_method" invisible="1"/>
+                    <field name="avg_cost" string="Unit Cost" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
+                    <field name="total_value" string="Total Value" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}" sum="Total Value"/>
+                    <button name="%(stock_valuation_layer_action)d" title="Valuation Report" type="action" class="btn-link"
+                        icon="fa-bar-chart" context="{'search_default_product_id': id, 'default_product_id': id}"  attrs="{'invisible': [('cost_method', '!=', 'fifo')]}"/>
+                </field>
+            </field>
+        </record>
    </data>
 </odoo>

@@ -1074,3 +1074,6 @@ class Warehouse(models.Model):
             'limit': 20,
             'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
+
+    def get_current_warehouses(self):
+        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'], order='name')

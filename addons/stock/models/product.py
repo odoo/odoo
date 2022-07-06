@@ -516,7 +516,6 @@ class Product(models.Model):
 
     # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
-        domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
         hide_lot = all(product.tracking == 'none' for product in self)
         self = self.with_context(
@@ -544,8 +543,10 @@ class Product(models.Model):
         else:
             self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant'].action_view_inventory()
-        action['domain'] = domain
-        action["name"] = _('Update Quantity')
+        # note that this action is used by different views w/varying customizations
+        if not self.env.context.get('is_stock_report'):
+            action['domain'] = [('product_id', 'in', self.ids)]
+            action["name"] = _('Update Quantity')
         return action
 
     def action_update_quantity_on_hand(self):
