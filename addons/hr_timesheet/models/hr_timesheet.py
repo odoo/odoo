@@ -124,11 +124,12 @@ class AccountAnalyticLine(models.Model):
 
         # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
         # TODO To be refactored in master
-        employees = self.env['hr.employee'].sudo().with_context(active_test=False).search([('user_id', 'in', user_ids)])
+        employees = self.env['hr.employee'].sudo().search([('user_id', 'in', user_ids)])
         employee_for_user_company = defaultdict(dict)
         for employee in employees:
             employee_for_user_company[employee.user_id.id][employee.company_id.id] = employee.id
 
+        employee_ids = set()
         for vals in vals_list:
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
@@ -137,7 +138,10 @@ class AccountAnalyticLine(models.Model):
                     continue
                 company_id = list(employee_for_company)[0] if len(employee_for_company) == 1 else vals.get('company_id', self.env.company.id)
                 vals['employee_id'] = employee_for_company.get(company_id, False)
-
+            elif vals.get('employee_id'):
+                employee_ids.add(vals['employee_id'])
+        if any(not emp.active for emp in self.env['hr.employee'].browse(list(employee_ids))):
+            raise UserError(_('Timesheets must be created with an active employee.'))
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
@@ -150,6 +154,10 @@ class AccountAnalyticLine(models.Model):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
+        if values.get('employee_id'):
+            employee = self.env['hr.employee'].browse(values['employee_id'])
+            if not employee.active:
+                raise UserError(_('You cannot set an archived employee to the existing timesheets.'))
         if 'name' in values and not values.get('name'):
             values['name'] = '/'
         result = super(AccountAnalyticLine, self).write(values)
