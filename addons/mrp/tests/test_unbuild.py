@@ -738,3 +738,17 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': p2.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
             {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
         ])
+
+    def test_compute_product_uom_id(self):
+        order = self.env['mrp.unbuild'].create({
+            'product_id': self.product_4.id,
+        })
+        self.assertEqual(order.product_uom_id, self.product_4.uom_id)
+
+    def test_compute_location_id(self):
+        order = self.env['mrp.unbuild'].create({
+            'product_id': self.product_4.id,
+        })
+        warehouse = self.env.ref('stock.warehouse0')
+        self.assertEqual(order.location_id, warehouse.lot_stock_id)
+        self.assertEqual(order.location_dest_id, warehouse.lot_stock_id)
