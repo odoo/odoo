@@ -2958,3 +2958,33 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
         self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+
+    def test_compute_product_id(self):
+        """
+            Tests the creation of a production order automatically sets the product when the bom is provided,
+            without the need to put it in the vals of the create nor to call onchanges.
+        """
+        order = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        self.assertEqual(order.product_id, self.bom_1.product_id)
+
+    def test_compute_product_uom_id(self):
+        """
+            Tests the creation of a production order automatically sets the uom when the bom is provided,
+            without the need to put it in the vals of the create nor to call onchanges.
+        """
+        order = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        self.assertEqual(order.product_uom_id, self.bom_1.product_uom_id)
+
+    def test_compute_bom_id(self):
+        """
+            Tests the creation of a production order automatically sets the bom when the product is provided,
+            without the need to put it in the vals of the create nor to call onchanges.
+        """
+        order = self.env['mrp.production'].create({
+            'product_id': self.bom_1.product_id.id,
+        })
+        self.assertEqual(order.bom_id, self.bom_1)
