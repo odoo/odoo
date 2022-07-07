@@ -568,7 +568,8 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName) {
         const restoreCursor = preserveCursor(editor.document);
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable).map(closestBlock))];
+        const range = getDeepRange(editor.editable, { correctTripleClick: true });
+        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         for (const block of selectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(
