@@ -43,7 +43,7 @@
                     <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <filter string="Not Blocking" name="not_blocking" domain="['|', ('is_closed', '=', True), ('dependent_ids', '=', False), ('is_private', '=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator groups="project.group_project_task_dependencies"/>
-                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
                     <separator/>
                     <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
