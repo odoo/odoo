@@ -15,7 +15,7 @@
         <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
         <script id="web.layout.odooscript" type="text/javascript">
             var odoo = {
-                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
                 debug: "<t t-esc="debug"/>",
             };
         </script>
