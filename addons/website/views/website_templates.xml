@@ -2378,7 +2378,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
-            <i class="fa fa-search"/>
+            <i class="oi oi-search"/>
             <span t-if="search" class="oe_search_found">
                 <small>(<t t-out="search_count or 0"/> found)</small>
             </span>
