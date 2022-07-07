@@ -47,6 +47,7 @@
                     <attribute name="invisible">0</attribute>
                     <attribute name="required">1</attribute>
                     <attribute name="widget">many2one_avatar_employee</attribute>
+                    <attribute name="context">{'active_test': True}</attribute>
                 </xpath>
             </field>
         </record>
@@ -163,7 +164,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
-                    <field name="employee_id" required="1"/>
+                    <field name="employee_id" required="1" context="{'active_test': True}"/>
                     <field name="user_id" invisible="1"/>
                 </xpath>
             </field>
