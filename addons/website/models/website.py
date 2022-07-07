@@ -1331,11 +1331,11 @@ class Website(models.Model):
 
             router = http.root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)
-            if lang != self.default_lang_id:
-                path = f'/{lang.url_code}{path if path != "/" else ""}'
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
-            path = urls.url_quote_plus(request.httprequest.environ['REQUEST_URI'], safe='/')
+            path = urls.url_quote_plus(request.httprequest.path, safe='/')
+        if lang != self.default_lang_id:
+            path = f'/{lang.url_code}{path if path != "/" else ""}'
         canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
         return self.get_base_url() + path + canonical_query_string
 
