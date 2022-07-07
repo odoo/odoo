@@ -4,16 +4,54 @@
 from psycopg2 import IntegrityError
 
 from odoo import exceptions
-from odoo.addons.knowledge.tests.common import KnowledgeCommonWData
+from odoo.addons.knowledge.tests.common import KnowledgeCommon
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('knowledge_internals')
-class TestKnowledgeArticleConstraints(KnowledgeCommonWData):
+class TestKnowledgeArticleConstraints(KnowledgeCommon):
     """ This test suite has the responsibility to test the different constraints
     defined on the `knowledge.article`, `knowledge.article.member` and
     `knowledge.article.favorite` models. """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Add some hierarchy to have mixed rights tests """
+        super().setUpClass()
+
+        # - Playground     seq=20    workspace    w+      (admin-w+)
+        # - Shared         seq=21    shared       none    (admin-w+,employee-r+,manager-r+)
+        cls.article_workspace = cls.env['knowledge.article'].create(
+            {'article_member_ids': [
+                (0, 0, {'partner_id': cls.user_admin.partner_id.id,
+                        'permission': 'write'})],
+             'internal_permission': 'write',
+             'favorite_ids': [(0, 0, {'sequence': 1,
+                                      'user_id': cls.user_admin.id,
+                                     }),
+             ],
+             'name': 'Playground',
+             'sequence': 20,
+            }
+        )
+        cls.article_shared = cls.env['knowledge.article'].create(
+            {'article_member_ids': [
+                (0, 0, {'partner_id': cls.partner_admin.id,
+                        'permission': 'write',
+                       }),
+                (0, 0, {'partner_id': cls.partner_employee.id,
+                        'permission': 'read',
+                       }),
+                (0, 0, {'partner_id': cls.partner_employee_manager.id,
+                        'permission': 'read',
+                       }),
+             ],
+             'internal_permission': 'none',
+             'name': 'Shared',
+             'sequence': 21,
+            }
+        )
 
     @users('employee')
     def test_article_acyclic_graph(self):
@@ -58,18 +96,20 @@ class TestKnowledgeArticleConstraints(KnowledgeCommonWData):
         self.assertMembers(private, 'none', {self.env.user.partner_id: 'write'})
         self.assertEqual(private.category, 'private')
         self.assertFalse(private.parent_id)
-        self.assertEqual(private.sequence, self._base_sequence + 1)
+        self.assertEqual(private.sequence, 22)
 
         _title = 'Fthagn, with parent (workspace)'
-        child = self.env['knowledge.article'].create({
-            'body': f'<p>{_title}</p>',
-            'name': _title,
-            'parent_id': article.id,
-        })
-        self.assertMembers(child, False, {})
-        self.assertEqual(child.category, 'workspace')
-        self.assertEqual(child.parent_id, article)
-        self.assertEqual(child.sequence, 2, 'Already two children existing')
+        children = self.env['knowledge.article'].create([
+            {'body': f'<p>{_title}</p>',
+             'name': _title,
+             'parent_id': article.id,
+            } for idx in range(3)
+        ])
+        for idx, child in enumerate(children):
+            self.assertMembers(child, False, {})
+            self.assertEqual(child.category, 'workspace')
+            self.assertEqual(child.parent_id, article)
+            self.assertEqual(child.sequence, idx, 'Batch create should correctly set sequence')
 
         _title = 'Fthagn, with parent (private)'
         child_private = self.env['knowledge.article'].create({
@@ -279,6 +319,13 @@ class TestKnowledgeArticleConstraints(KnowledgeCommonWData):
         with self.assertRaises(exceptions.ValidationError, msg='Cannot remove the last writer on an article'):
             article_private._add_members(membership_sudo.partner_id, 'none')
 
+        # moving the article to private will remove the second member
+        # but should not trigger an error since we also add 'employee' as a write member
+        article_workspace = self.article_workspace.with_env(self.env)
+        article_workspace.move_to(is_private=True)
+        self.assertEqual(article_workspace.category, 'private')
+        self.assertTrue(article_workspace._has_write_member())
+
     @mute_logger('odoo.sql_db')
     @users('employee')
     def test_favourite_uniqueness(self):
@@ -296,6 +343,7 @@ class TestKnowledgeArticleConstraints(KnowledgeCommonWData):
             article.write({'favorite_ids': [(0, 0, {'user_id': self.env.user.id})]})
         self.assertTrue(article.is_user_favorite)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     @users('employee')
     def test_member_share_restrictions(self):
         """Checking that the external partner can not have 'write' access."""

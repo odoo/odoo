@@ -105,6 +105,9 @@ class KnowledgeCommon(MailCommon):
 
 
 class KnowledgeCommonWData(KnowledgeCommon):
+    """ Light setup of articles for knowledge tests. It holds data for the
+    three main categories: workspace, shared and private articles. Some
+    children exist to have some permission tweaks. """
 
     @classmethod
     def setUpClass(cls):
@@ -112,10 +115,11 @@ class KnowledgeCommonWData(KnowledgeCommon):
         with mute_logger('odoo.models.unlink'):
             cls.env['knowledge.article'].search([]).unlink()
 
-        # - Private         seq=997   private      none (manager-w+)
+        # - Private         seq=997   private      none    (manager-w+)
         #   - Child1        seq=0     "            "
-        # - Shared          seq=998   shared       none (admin-w+,employee-r+,manager-r+)
-        #   - Child1        seq=0     "            "    (employee-w+)
+        # - Shared          seq=998   shared       none    (admin-w+,employee-r+,manager-r+)
+        #   - Child1        seq=0     "            "       (employee-w+)
+        #   - Child2        seq=0     "            "       (portal-r+)
         # - Playground      seq=999   workspace    w+
         #   - Child1        seq=0     "            "
         #   - Child2        seq=1     "            "
@@ -164,6 +168,20 @@ class KnowledgeCommonWData(KnowledgeCommon):
              'internal_permission': False,
              'name': 'Shared Child1',
              'parent_id': cls.article_shared.id,
+            },
+            {'article_member_ids': [
+                (0, 0, {'partner_id': cls.partner_portal.id,
+                        'permission': 'read',
+                       }),
+             ],
+             'internal_permission': False,
+             'favorite_ids': [
+                (0, 0, {'sequence': 1,
+                        'user_id': cls.user_portal.id,
+                       }),
+             ],
+             'name': 'Shared Child2',
+             'parent_id': cls.article_shared.id,
             }
         ])
         cls.article_private_manager = cls.env['knowledge.article'].create(
@@ -190,7 +208,7 @@ class KnowledgeArticlePermissionsCase(KnowledgeCommon):
     """ Specific test class to test permission management, inheritance and
     computation on article model, based on both article and member permissions.
     This does not really test ACLs, more the internals of permissions that
-    are then used in ACLs. """
+    are used afterwards in ACLs and in various business methods / flows. """
 
     @classmethod
     def setUpClass(cls):

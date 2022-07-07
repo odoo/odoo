@@ -8,7 +8,7 @@ from markupsafe import Markup
 from werkzeug.urls import url_join
 
 from odoo import Command, fields, models, api, _
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import get_lang
 
@@ -19,7 +19,7 @@ class Article(models.Model):
     _name = "knowledge.article"
     _description = "Knowledge Article"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = "favorite_count, create_date desc, id desc"
+    _order = "favorite_count desc, write_date desc, id desc"
     _mail_post_access = 'read'
 
     active = fields.Boolean(default=True)
@@ -140,17 +140,7 @@ class Article(models.Model):
         Ǹote: computation is done in Py instead of using optimized SQL queries
         because value are not yet in DB at this point."""
         for article in self:
-            def has_write_member(a, child_members=False):
-                if not child_members:
-                    child_members = self.env['knowledge.article.member']
-                article_members = a.article_member_ids
-                if any(m.permission == 'write' and m.partner_id not in child_members.mapped('partner_id')
-                       for m in article_members):
-                    return True
-                if a.parent_id and not a.is_desynchronized:
-                    return has_write_member(a.parent_id, article_members | child_members)
-                return False
-            if article.inherited_permission != 'write' and not has_write_member(article):
+            if article.inherited_permission != 'write' and not article._has_write_member():
                 raise ValidationError(_("The article '%s' needs at least one member with 'Write' access.", article.display_name))
 
     @api.constrains('parent_id')
@@ -412,6 +402,9 @@ class Article(models.Model):
     @api.depends_context('uid')
     @api.depends('favorite_ids.user_id')
     def _compute_is_user_favorite(self):
+        if self.env.user._is_public():
+            self.is_user_favorite = False
+            return
         for article in self:
             favorite = article.favorite_ids.filtered(lambda f: f.user_id == self.env.user)
             article.is_user_favorite = bool(favorite)
@@ -432,13 +425,15 @@ class Article(models.Model):
             raise NotImplementedError("Unsupported search operation on favorite articles")
 
         if (value and operator == '=') or (not value and operator == '!='):
-            return [('favorite_ids.user_id', 'in', [self.env.uid])]
+            return [('favorite_ids', 'in', self.env['knowledge.article.favorite'].sudo()._search(
+                [('user_id', '=', self.env.uid)]
+            ))]
 
-        # easier than a not in on a 2many field
-        favorited = self.env['knowledge.article.favorite'].sudo().search(
+        # easier than a not in on a 2many field (hint: use sudo because of
+        # complicated ACL on favorite based on user access on article)
+        return [('favorite_ids', 'not in', self.env['knowledge.article.favorite'].sudo()._search(
             [('user_id', '=', self.env.uid)]
-        ).article_id
-        return [('id', 'not in', favorited.ids)]
+        ))]
 
     # ------------------------------------------------------------
     # CRUD
@@ -666,25 +661,9 @@ class Article(models.Model):
           * unreachable descendants (none, read) are set as free articles without
             root;
         """
-        all_descendants_sudo = self.sudo()._get_descendants()
-        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
-        other_descendants_sudo = all_descendants_sudo - writable_descendants
-
-        # copy rights to allow breaking the hierarchy while keeping access for members
-        for article_sudo in other_descendants_sudo:
-            article_sudo._copy_access_from_parents()
-
-        # create new root articles: direct children of archived articles that are not archived
-        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
-        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
-        if new_roots_wperm:
-            new_roots_wperm.write({'parent_id': False})
-        for new_root in new_roots_woperm:
-            new_root.write({
-                'internal_permission': new_root.inherited_permission,
-                'parent_id': False,
-            })
-
+        # _detach_unwritable_descendants calls _filter_access_rules_python which returns
+        # a sudo-ed recordset
+        writable_descendants = self._detach_unwritable_descendants().with_env(self.env)
         return super(Article, self + writable_descendants).action_archive()
 
     # ------------------------------------------------------------
@@ -744,10 +723,16 @@ class Article(models.Model):
         :param int before_article_id: id of an article before which the article
           should be moved. Otherwise it is put as last parent children;
         :param bool is_private: set as private;
+
+        :return: True
         """
         self.ensure_one()
-        parent = self.browse(parent_id) if parent_id else self.env['knowledge.article']
-        before_article = self.browse(before_article_id)
+        before_article = self.env['knowledge.article'].browse(before_article_id) if before_article_id else self.env['knowledge.article']
+        parent = self.env['knowledge.article'].browse(parent_id) if parent_id else self.env['knowledge.article']
+
+        if is_private:
+            # making an article private requires a lot of extra-processing, use specific method
+            return self._move_and_make_private(parent=parent, before_article=before_article)
 
         values = {'parent_id': parent_id}
         if before_article:
@@ -756,34 +741,10 @@ class Article(models.Model):
             # be sure to have an internal permission on the article if moved outside
             # of an hierarchy
             values.update({
-                'internal_permission': 'none' if is_private else 'write',
+                'internal_permission': 'write',
                 'is_desynchronized': False
             })
 
-        # if set as standalone private: remove members, ensure current user is the
-        # only member -> require sudo to bypass member ACLs
-        if not parent and is_private:
-            # explicitly check for rights before going into sudo
-            try:
-                self.check_access_rights('write')
-                (self + parent).check_access_rule('write')
-            except:
-                raise AccessError(
-                    _("You are not allowed to move this article under article %(parent_name)s",
-                      parent_name=parent.display_name)
-                )
-            self_sudo = self.sudo()
-            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-            member_command = [(2, member.id) for member in self_sudo.article_member_ids if member.partner_id != self.env.user.partner_id]
-            if self_member:
-                member_command.append((1, self_member.id, {'permission': 'write'}))
-            else:
-                member_command.append((0, 0, {
-                    'partner_id': self.env.user.partner_id.id,
-                    'permission': 'write'
-                }))
-            values['article_member_ids'] = member_command
-            return self_sudo.write(values)
         return self.write(values)
 
     def _resequence(self):
@@ -912,7 +873,7 @@ class Article(models.Model):
         search_domain = ["|", ("name", "ilike", search_query), ("root_article_id.name", "ilike", search_query)]
         articles = self.search(
             expression.AND([search_domain, [("is_user_favorite", "=", True)]]),
-            limit=limit
+            limit=None,
         )
         sorted_articles = articles.sorted(
             key=lambda a: (-1 * a.user_favorite_sequence,
@@ -926,7 +887,8 @@ class Article(models.Model):
         if len(sorted_articles) < limit:
             articles = self.search(
                 expression.AND([search_domain, [("is_user_favorite", "=", False)]]),
-                limit=(limit-len(sorted_articles))
+                limit=(limit-len(sorted_articles)),
+                order='favorite_count desc, write_date desc, id desc'
             )
             sorted_articles += articles.sorted(
                 key=lambda a: (a.favorite_count,
@@ -934,24 +896,32 @@ class Article(models.Model):
                                a.id),
                 reverse=True
             )
+        elif len(sorted_articles) > limit:
+            sorted_articles = sorted_articles[:limit]
 
         return sorted_articles.read(['id', 'name', 'is_user_favorite',
                                      'favorite_count', 'root_article_id', 'icon'])
 
     # ------------------------------------------------------------
-    # PERMISSIONS / MEMBERS
+    # PERMISSIONS / MEMBERS MANAGEMENT
     # ------------------------------------------------------------
 
     def restore_article_access(self):
         """ Resets permissions based on ancestors. It removes all members except
         members on the articles that are not on any ancestor or that have higher
-        permission than from ancestors. """
+        permission than from ancestors.
+
+        Security note: this method checks for write access on current article,
+        considering it as sufficient to restore access and members.
+        """
         self.ensure_one()
         if not self.parent_id:
             return False
         if not self.env.su and not self.user_has_write_access:
-            raise AccessError(_('You cannot restore the article %(article_name)s',
-                                article_name=self.display_name))
+            raise AccessError(
+                _('You have to be editor on %(article_name)s to restore it.',
+                  article_name=self.display_name))
+
         member_permission = (self | self.parent_id)._get_article_member_permissions()
         article_members_permission = member_permission[self.id]
         parents_members_permission = member_permission[self.parent_id.id]
@@ -1018,6 +988,11 @@ class Article(models.Model):
         downgrade = not self.is_desynchronized and self.parent_id and \
                     ARTICLE_PERMISSION_LEVEL[self.parent_id.inherited_permission] > ARTICLE_PERMISSION_LEVEL[permission]
         if downgrade:
+            # desync is done as sudo, explicitly check access
+            if not self.env.su and not self.user_has_write_access:
+                raise AccessError(
+                    _('You have to be editor on %(article_name)s to change its internal permission.',
+                      article_name=self.display_name))
             return self._desync_access_from_parents(force_internal_permission=permission)
 
         values = {'internal_permission': permission}
@@ -1038,12 +1013,20 @@ class Article(models.Model):
             the article is desynchronized form its parent;
           Else we add a new member with the higher permission;
 
+        Security note: this method checks for write access on current article,
+        considering it as sufficient to modify members permissions.
+
         :param <knowledge.article.member> member: member whose permission
           is to be updated. Can be a member of 'self' or one of its ancestors;
         :param str permission: new permission, one of 'none', 'read' or 'write';
         :param bool is_based_on: whether rights are inherited or through membership;
         """
         self.ensure_one()
+        if not self.env.su and not self.user_has_write_access:
+            raise AccessError(
+                _('You have to be editor on %(article_name)s to modify members permissions.',
+                  article_name=self.display_name))
+
         if is_based_on:
             downgrade = ARTICLE_PERMISSION_LEVEL[member.permission] > ARTICLE_PERMISSION_LEVEL[permission]
             if downgrade:
@@ -1051,13 +1034,21 @@ class Article(models.Model):
             else:
                 self._add_members(member.partner_id, permission)
         else:
-            member.sudo().write({'permission': permission})
+            member.article_id.sudo().with_context(knowledge_member_skip_writable_check=True).write({
+                'article_member_ids': [(1, member.id, {'permission': permission})]
+            })
 
     def _remove_member(self, member):
         """ Removes a member from the article. If the member was based on a
         parent article, the current article will be desynchronized form its parent.
         We also ensure the partner to remove is removed after the desynchronization
         if was copied from parent.
+
+        Security note
+          * when removing themselves: users need only read access on the article
+            (automatically checked by access on self);
+          * when removing someone else: write access is required on the article
+            (explicitly checked);
 
         :param <knowledge.article.member> member: member to remove
         """
@@ -1067,35 +1058,37 @@ class Article(models.Model):
 
         # belongs to current article members
         current_membership = self.article_member_ids.filtered(lambda m: m == member)
-
         current_user_partner = self.env.user.partner_id
-        remove_self = member.partner_id == current_user_partner
+
         # If remove self member, set member permission to 'none' (= leave article) to hide the article for the user.
-        if remove_self:
+        if member.partner_id == current_user_partner:
             if current_membership:
                 members_command = [(1, current_membership.id, {'permission': 'none'})]
             else:
                 members_command = [(0, 0, {'partner_id': current_user_partner.id, 'permission': 'none'})]
             self.sudo().write({'article_member_ids': members_command})
-        # member to remove is on the article itself. Simply remove the member.
-        elif current_membership:
+        else:
             if not self.env.su and not self.user_has_write_access:
                 raise AccessError(
-                    _("You cannot remove the member %(member_name)s from article %(article_name)s",
-                      member_name=member.display_name,
-                      article_name=self.display_name
-                      ))
-            self.sudo().write({'article_member_ids': [(2, current_membership.id)]})
-        # Inherited rights from parent
-        else:
-            self._desync_access_from_parents(force_partners=self.article_member_ids.partner_id)
-            current_membership = self.article_member_ids.filtered(lambda m: m.partner_id == member.partner_id)
+                    _("You have to be editor on %(article_name)s to remove or exclude member %(member_name)s.",
+                      article_name=self.display_name,
+                      member_name=member.display_name))
+            # member is on current article: remove member
             if current_membership:
                 self.sudo().write({'article_member_ids': [(2, current_membership.id)]})
+            # inherited rights from parent: desync and remove member
+            else:
+                self._desync_access_from_parents(force_partners=self.article_member_ids.partner_id)
+                current_membership = self.article_member_ids.filtered(lambda m: m.partner_id == member.partner_id)
+                if current_membership:
+                    self.sudo().write({'article_member_ids': [(2, current_membership.id)]})
 
     def _add_members(self, partners, permission, force_update=True):
         """ Adds new members to the current article with the given permission.
         If a given partner is already member permission is updated instead.
+
+        Security note: this method checks for write access on current article,
+        considering it as sufficient to add new members.
 
         :param <res.partner> partners: recordset of res.partner for which
           new members are added;
@@ -1106,7 +1099,8 @@ class Article(models.Model):
         self.ensure_one()
         if not self.env.su and not self.user_has_write_access:
             raise AccessError(
-                _("You cannot give access to the article '%s' as you are not editor.", self.name))
+                _("You have to be editor on %(article_name)s to add members.",
+                  article_name=self.display_name))
 
         members_to_update = self.article_member_ids.filtered_domain([('partner_id', 'in', partners.ids)])
         partners_to_create = partners - members_to_update.mapped('partner_id')
@@ -1126,9 +1120,12 @@ class Article(models.Model):
 
     def _desync_access_from_parents(self, force_internal_permission=False,
                                     force_partners=False, force_member_permission=False):
-        """ Copies copy all inherited accesses from parents on the article and
-        de-synchronize the article from its parent, allowing custom access management.
-        We allow to force permission of given partners.
+        """ Copies all inherited accesses from parents on the article and desynchronize
+        the article from its parent, allowing custom access management. We allow
+        to force permission of given partners.
+
+        Security note: this method does not check accesses. Caller has to ensure
+        access is granted, depending on the business flow.
 
         :param string force_internal_permission: force a new internal permission
           for the article. Otherwise fallback on inherited computed internal
@@ -1140,7 +1137,7 @@ class Article(models.Model):
         """
         self.ensure_one()
         new_internal_permission = force_internal_permission or self.inherited_permission
-        members_commands = self._copy_access_from_parents(
+        members_commands = self._copy_access_from_parents_commands(
             force_partners=force_partners,
             force_member_permission=force_member_permission
         )
@@ -1151,16 +1148,20 @@ class Article(models.Model):
             'is_desynchronized': True,
         })
 
-    def _copy_access_from_parents(self, force_partners=False, force_member_permission=False):
-        """ Copies copy all inherited accesses from parents on the article and
-        de-synchronize the article from its parent, allowing custom access management.
-        We allow to force permission of given partners.
+    def _copy_access_from_parents_commands(self, force_partners=False, force_member_permission=False):
+        """ Prepares commands for all inherited accesses from parents on the given
+        article. It allows to de-synchronize the article from its parent and
+        allows custom access management. We allow to force permission of given
+        partners, bypassing inherited ones.
 
-        :param string force_internal_permission: force a new internal permission
-          for the article. Otherwise fallback on inherited computed internal
-          permission;
         :param <res.partner> force_partners: force permission of new members
           related to those partners;
+        :param str force_member_permission: force a new permission to partners
+          given by force_partners. Otherwise fallback on inherited computed
+          internal permission;
+
+        :return list member_commands: commands to be applied on 'article_member_ids'
+          field;
         """
         self.ensure_one()
         members_permission = self._get_article_member_permissions()[self.id]
@@ -1180,6 +1181,178 @@ class Article(models.Model):
                         'permission': new_member_permission,
                        }))
         return members_commands
+
+    def _detach_unwritable_descendants(self):
+        """ When taking specific actions on an article like archiving or making
+        it private, we want to be able to 'detach' the unaccessible children and
+        set them as free (root) articles. Indeed in those business flows you
+        should not change the current access level of children articles.
+
+        This method takes care of correctly detaching those children and returns
+        a subset of children to which the user effectively has write access to.
+
+        As the children are moved to "root" articles we also reset their desync
+        status. Indeed, a root article cannot be desyncronized as stated by SQL
+        constraints.
+
+        Note: this might produce funny results when involving a hierarchy with
+        invisible nodes in it (A-B-C where B is not achievable). You might
+        archive / privatize articles and break hierarchy without knowing it.
+
+        Security note: this method does not check accesses. Caller has to ensure
+        access is granted, depending on the business flow.
+
+        :return <knowledge.article> children: the children articles which were
+          not detached, meaning that current user has write access on them """
+        all_descendants_sudo = self.sudo()._get_descendants()
+        writable_descendants_sudo = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
+        other_descendants_sudo = all_descendants_sudo - writable_descendants_sudo
+
+        # copy rights to allow breaking the hierarchy while keeping access for members
+        # do this on synchronized articles as desynchronized one do not inherit from parent
+        for article_sudo in other_descendants_sudo.filtered(lambda article: not article.is_desynchronized):
+            article_sudo.write({
+                'article_member_ids': article_sudo._copy_access_from_parents_commands()
+            })
+
+        # create new root articles and reset desync: direct children of these articles +
+        # the writable descendants. Indeed they are going to be modified the same way
+        # as "self" (archived / moved to private) -> all their children should be detached
+        new_roots_woperm_sudo = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants_sudo) and not article.internal_permission)
+        new_roots_wperm_sudo = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants_sudo) and article.internal_permission)
+        if new_roots_wperm_sudo:
+            new_roots_wperm_sudo.write({
+                'is_desynchronized': False,
+                'parent_id': False
+            })
+        for new_root_sudo in new_roots_woperm_sudo:
+            new_root_sudo.write({
+                'is_desynchronized': False,
+                'internal_permission': new_root_sudo.inherited_permission,
+                'parent_id': False,
+            })
+
+        return writable_descendants_sudo
+
+    def _move_and_make_private(self, parent=False, before_article=False):
+        """ Set as private: remove members, ensure current user is the only member
+        with write access. Requires a sudo to bypass member ACLs after checking
+        write access on the article.
+
+        Children articles to which the user also has a write access to are made
+        private as well. Other articles are detached, see '_detach_unwritable_descendants'
+        for details.
+
+        :param <knowledge.article> parent: an optional parent to move the article under;
+        :param <knowledge.article> before_article: article before which the article
+          should be moved. Otherwise it is put as last parent children;
+
+        :return: True
+        """
+        self.ensure_one()
+        parent = parent if parent is not False else self.env['knowledge.article']
+        before_article = before_article if before_article is not False else self.env['knowledge.article']
+
+        try:
+            self.check_access_rights('write')
+            (self + parent).check_access_rule('write')
+        except (AccessError, UserError):
+            if parent:
+                raise AccessError(
+                    _("You are not allowed to move '%(article_name)s' under '%(parent_name)s'.",
+                      article_name=self.display_name,
+                      parent_name=parent.display_name)
+                )
+            raise AccessError(
+                _("You are not allowed to make '%(article_name)s' private.", article_name=self.display_name)
+            )
+
+        # first detach unwritable children (see ``_detach_unwritable_descendants``)
+        writable_descendants_sudo = self._detach_unwritable_descendants()
+
+        article_values = {
+            # reset internal permission if parent is set (will inherit) or force private (aka 'none')
+            'internal_permission': False if parent else 'none',
+            # cannot be desync when made private as we wipe members access
+            'is_desynchronized': False,
+            'parent_id': parent.id if parent else False,
+        }
+        if before_article:
+            article_values['sequence'] = before_article.sequence
+
+        self_sudo = self.sudo()
+        # remove members as the article is moved to private
+        members_to_remove = self_sudo.article_member_ids
+        self_member_command = []
+        if not parent:
+            # make sure the current user is the only member left with write access to the article
+            # if we have a parent, this is not necessary as we will inherit members access from them
+            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
+            if self_member:
+                self_member_command = [(1, self_member.id, {'permission': 'write'})]
+                # keep current member
+                members_to_remove = members_to_remove.filtered(
+                    lambda member: member.partner_id != self.env.user.partner_id
+                )
+            else:
+                self_member_command = [(0, 0, {
+                    'partner_id': self.env.user.partner_id.id,
+                    'permission': 'write'
+                })]
+
+        article_values['article_member_ids'] = [
+            (2, member.id)
+            for member in members_to_remove
+        ] + self_member_command
+
+        res = self_sudo.with_context(knowledge_member_skip_writable_check=True).write(article_values)
+
+        # remove all specific memberships configurations on children. They now inherit
+        # the only 'write' member from their parent now, making them private.
+        writable_descendants_sudo.with_context(knowledge_member_skip_writable_check=True).write({
+            'internal_permission': False,
+            'article_member_ids': [(5, 0)],
+        })
+
+        return res
+
+    def _has_write_member(self, partners_to_exclude=False, members_to_exclude=False):
+        """ Method allowing to check if this article still has at least one member
+        with write access. Typically used during constraints checks.
+
+        Please note that this method is *not* optimized and should be avoided by
+        using ``_get_article_member_permissions`` instead when possible.
+
+        :param <res.partner> partners_to_exclude: used when checking recursively
+          through article parents, we only check for the most specific access
+          for a given partner;
+        :param <knowledge.article.member> members_to_exclude: memberships that
+          should not be considered when checking for a write access, used when
+          unlinking members that should not be taken into account;
+
+        :return boolean: whether a write member has been found;
+        """
+        self.ensure_one()
+        partners_to_exclude = partners_to_exclude if partners_to_exclude else self.env['res.partner']
+
+        article_members = self.article_member_ids
+        if members_to_exclude:
+            article_members -= members_to_exclude
+
+        if any(m.permission == 'write' and m.partner_id not in partners_to_exclude
+               for m in article_members):
+            return True
+        if not self.is_desynchronized and self.parent_id:
+            return self.parent_id._has_write_member(
+                partners_to_exclude=article_members.partner_id | partners_to_exclude
+            )
+        return False
+
+    # ------------------------------------------------------------
+    # PERMISSIONS BATCH COMPUTATION
+    # ------------------------------------------------------------
 
     @api.model
     def _get_internal_permission(self, filter_domain=None):
