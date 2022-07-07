@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertyDefinitionSelection" owl="1">
+        <div class="d-flex flex-column o_field_property_selection"
+            t-ref="propertyDefinitionSelection">
+            <div class="w-100">
+                <div
+                    t-foreach="optionsVisible" t-as="option" t-key="option[0]"
+                    class="w-100 card d-flex flex-row align-items-center justify-content-between my-2 px-3 rounded o_field_property_selection_option">
+                    <span t-if="props.readonly" t-out="option[1]"/>
+                    <input
+                        t-else=""
+                        class="o_input"
+                        type="text"
+                        placeholder="Option Name"
+                        t-att-value="option[1]"
+                        t-on-change="(event) => this.onOptionChange(event, option_index)"
+                        t-on-blur="(event) => this.onOptionBlur(event, option_index)"
+                        t-on-keydown="(event) => this.onOptionKeyDown(event, option_index)"
+                    />
+                    <button
+                        class="btn btn-link text-secondary p-0 m-0"
+                        title="Select Default"
+                        t-on-click="() => this.onOptionSetDefault(option_index)">
+                        <i t-att-class="option[0] === props.default ? 'fa fa-star' : 'fa fa-star-o'"/>
+                    </button>
+                    <button
+                        t-if="!props.readonly"
+                        class="btn btn-link p-0 m-0 ms-2"
+                        title="Remove Property"
+                        t-on-click="() => this.onOptionDelete(option_index)">
+                        <i class="text-danger fa fa-times"/>
+                    </button>
+                </div>
+                <button
+                    t-if="!props.readonly"
+                    class="btn btn-link btn-sm"
+                    t-on-click="onOptionCreate"
+                    t-ref="addButton">
+                    <i class="fa fa-plus"/>
+                    Add a Value
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

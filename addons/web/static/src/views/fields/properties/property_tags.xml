@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertyTags" owl="1">
+        <div class="o_field_property_tag">
+            <TagsList
+                tags="tagListItems"
+                className="props.canChangeTags ? '' : 'o_field_property_tag_readonly' "/>
+            <div
+                t-if="!props.readonly"
+                class="o_field_property_dropdown_menu o_input_dropdown mt-2">
+                <AutoComplete
+                    value="''"
+                    sources="autocompleteSources"
+                    onSelect.bind="(event) => this.onOptionSelected(event.value)"/>
+                <a role="button" class="o_dropdown_button" draggable="false" />
+            </div>
+        </div>
+    </t>
+    <t t-name="web.PropertyTagsColorListPopover" owl="1">
+        <div class="o_tag_popover m-2">
+            <ColorList
+                colors="props.colors"
+                forceExpanded="true"
+                onColorSelected.bind="(id) => props.switchTagColor(id, props.tag)"/>
+        </div>
+    </t>
+</templates>

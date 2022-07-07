@@ -416,6 +416,20 @@ function formatSelection(value, field, options) {
     return value;
 }
 
+/**
+ * Returns a string representing the value of the python properties field.
+ *
+ * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ */
+function formatProperties(value, field) {
+    if (!value || !value.length) {
+        return '';
+    }
+    return value.map(property => property['string']).join(', ');
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Parse
 ////////////////////////////////////////////////////////////////////////////////
@@ -749,6 +763,8 @@ return {
         monetary: formatMonetary,
         one2many: formatX2Many,
         percentage: formatPercentage,
+        properties: formatProperties,
+        properties_definition: formatProperties,
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
