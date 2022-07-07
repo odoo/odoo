@@ -27,6 +27,7 @@ DateTimeField.components = {
 DateTimeField.props = {
     ...standardFieldProps,
     pickerOptions: { type: Object, optional: true },
+    placeholder: { type: String, optional: true },
 };
 DateTimeField.defaultProps = {
     pickerOptions: {},
@@ -35,9 +36,10 @@ DateTimeField.defaultProps = {
 DateTimeField.displayName = _lt("Date & Time");
 DateTimeField.supportedTypes = ["datetime"];
 
-DateTimeField.extractProps = (fieldName, record, attrs) => {
+DateTimeField.extractProps = ({ attrs }) => {
     return {
         pickerOptions: attrs.options.datepicker,
+        placeholder: attrs.placeholder,
     };
 };
 

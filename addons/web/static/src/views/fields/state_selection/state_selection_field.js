@@ -12,7 +12,7 @@ const { Component } = owl;
 
 export class StateSelectionField extends Component {
     setup() {
-        if (this.props.addCommand) {
+        if (this.props.record.activeFields[this.props.name].viewType === "form") {
             this.initiateCommand();
         }
         this.excludedValues = [];
@@ -22,21 +22,33 @@ export class StateSelectionField extends Component {
             done: "green",
         };
     }
+    get options() {
+        return Array.from(this.props.record.fields[this.props.name].selection);
+    }
     get availableOptions() {
-        return this.props.options.filter((o) => !this.excludedValues.includes(o[0]));
+        return this.options.filter((o) => !this.excludedValues.includes(o[0]));
     }
     get currentValue() {
-        return this.props.value || this.props.options[0][0];
+        return this.props.value || this.options[0][0];
     }
     get label() {
-        return formatSelection(this.currentValue, { selection: this.props.options });
+        return formatSelection(this.currentValue, { selection: this.options });
+    }
+    get showLabel() {
+        return (
+            this.props.record.activeFields[this.props.name].viewType === "list" &&
+            !this.props.hideLabel
+        );
+    }
+    get isReadonly() {
+        return this.props.record.isReadonly(this.props.name);
     }
 
     initiateCommand() {
         try {
             const commandService = useService("command");
             const provide = () => {
-                return this.props.options.map((value) => ({
+                return this.options.map((value) => ({
                     name: value[1],
                     action: () => {
                         this.props.update(value[0]);
@@ -71,24 +83,18 @@ StateSelectionField.components = {
 };
 StateSelectionField.props = {
     ...standardFieldProps,
-    addCommand: { type: Boolean, optional: true },
-    showLabel: { type: Boolean, optional: true },
-    options: Object,
+    hideLabel: { type: Boolean, optional: true },
 };
 StateSelectionField.defaultProps = {
-    addCommand: false,
-    showLabel: false,
+    hideLabel: false,
 };
 
 StateSelectionField.displayName = _lt("Label Selection");
 StateSelectionField.supportedTypes = ["selection"];
 
-StateSelectionField.extractProps = (fieldName, record, attrs) => {
+StateSelectionField.extractProps = ({ attrs }) => {
     return {
-        addCommand: record.activeFields[fieldName].viewType === "form",
-        showLabel: record.activeFields[fieldName].viewType === "list" && !attrs.options.hide_label,
-        options: Array.from(record.fields[fieldName].selection),
-        readonly: record.isReadonly(fieldName),
+        hideLabel: !!attrs.options.hide_label,
     };
 };
 

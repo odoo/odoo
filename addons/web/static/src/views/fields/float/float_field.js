@@ -52,28 +52,23 @@ FloatField.props = {
     inputType: { type: String, optional: true },
     step: { type: Number, optional: true },
     digits: { type: Array, optional: true },
-    invalidate: { type: Function, optional: true },
     placeholder: { type: String, optional: true },
 };
 FloatField.defaultProps = {
     inputType: "text",
-    invalidate: () => {},
 };
 
 FloatField.displayName = _lt("Float");
 FloatField.supportedTypes = ["float"];
 
 FloatField.isEmpty = () => false;
-FloatField.extractProps = (fieldName, record, attrs) => {
+FloatField.extractProps = ({ attrs, field }) => {
     return {
-        invalidate: () => record.setInvalidField(fieldName),
         inputType: attrs.options.type,
         step: attrs.options.step,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
-        digits:
-            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
-            record.fields[fieldName].digits,
+        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
         placeholder: attrs.placeholder,
     };
 };

@@ -254,7 +254,7 @@ X2ManyField.props = {
 X2ManyField.supportedTypes = ["one2many"];
 X2ManyField.template = "web.X2ManyField";
 X2ManyField.useSubView = true;
-X2ManyField.extractProps = (fieldName, record, attrs) => {
+X2ManyField.extractProps = ({ attrs }) => {
     return {
         addLabel: attrs["add-label"],
     };

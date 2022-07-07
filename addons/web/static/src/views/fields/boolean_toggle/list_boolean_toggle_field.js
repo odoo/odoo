@@ -3,9 +3,7 @@
 import { registry } from "@web/core/registry";
 import { BooleanToggleField } from "./boolean_toggle_field";
 
-const { Component } = owl;
-
-export class ListBooleanToggleField extends Component {
+export class ListBooleanToggleField extends BooleanToggleField {
     onClick() {
         if (!this.props.readonly) {
             this.props.update(!this.props.value);
@@ -14,6 +12,5 @@ export class ListBooleanToggleField extends Component {
 }
 
 ListBooleanToggleField.template = "web.ListBooleanToggleField";
-ListBooleanToggleField.components = { BooleanToggleField };
 
 registry.category("fields").add("list.boolean_toggle", ListBooleanToggleField);

@@ -320,6 +320,7 @@ DatePicker.props = {
     useCurrent: { type: Boolean, optional: true },
     widgetParent: { type: String, optional: true },
     daysOfWeekDisabled: { type: Array, optional: true },
+    placeholder: { type: String, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 

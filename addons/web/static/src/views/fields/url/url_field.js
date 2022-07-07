@@ -37,7 +37,7 @@ UrlField.props = {
 UrlField.displayName = _lt("URL");
 UrlField.supportedTypes = ["char"];
 
-UrlField.extractProps = (fieldName, record, attrs) => {
+UrlField.extractProps = ({ attrs }) => {
     return {
         text: attrs.text,
         websitePath: attrs.options.website_path,

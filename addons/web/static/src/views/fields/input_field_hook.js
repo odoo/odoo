@@ -33,7 +33,7 @@ export function useInputField(params) {
             const val = params.parse ? params.parse(ev.target.value) : ev.target.value;
             component.props.update(val);
         } catch (_e) {
-            component.props.invalidate();
+            component.props.record.setInvalidField(component.props.name);
         }
         if (component.props.setDirty) {
             component.props.setDirty(isDirty);
@@ -73,7 +73,7 @@ export function useInputField(params) {
                 if (urgent) {
                     return;
                 } else {
-                    component.props.invalidate();
+                    component.props.record.setInvalidField(component.props.name);
                 }
             }
             if (component.props.setDirty) {

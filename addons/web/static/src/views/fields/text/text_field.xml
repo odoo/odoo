@@ -18,8 +18,8 @@
             <t t-if="props.isTranslatable">
                 <TranslationButton
                     fieldName="props.name"
-                    resId="props.resId"
-                    resModel="props.resModel"
+                    resId="props.record.resId"
+                    resModel="props.record.resModel"
                     value="props.value"
                     updateField="props.update"
                 />

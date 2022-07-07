@@ -784,21 +784,23 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("field with widget and attributes in kanban", async (assert) => {
         assert.expect(1);
 
-        class MyField extends Component {}
-        MyField.template = xml`<span/>`;
-        MyField.extractProps = (fieldName, record, attrs) => {
-            if (record.resId === 1) {
-                assert.deepEqual(attrs, {
-                    field_id: "int_field",
-                    name: "int_field",
-                    widget: "my_field",
-                    str: "some string",
-                    bool: "true",
-                    num: "4.5",
-                    options: {},
-                });
+        class MyField extends Component {
+            setup() {
+                if (this.props.record.resId === 1) {
+                    assert.deepEqual(this.props.attrs, {
+                        name: "int_field",
+                        widget: "my_field",
+                        str: "some string",
+                        bool: "true",
+                        num: "4.5",
+                        options: {},
+                        field_id: "int_field",
+                    });
+                }
             }
-        };
+        }
+        MyField.template = xml`<span/>`;
+        MyField.extractProps = ({ attrs }) => ({ attrs });
         registry.category("fields").add("my_field", MyField);
 
         await makeView({
@@ -826,7 +828,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("field with widget and dynamic attributes in kanban", async (assert) => {
         class MyField extends Component {}
         MyField.template = xml`<span/>`;
-        MyField.extractProps = (fieldName, record, attrs) => {
+        MyField.extractProps = ({ attrs }) => {
             assert.step(
                 `${attrs["dyn-bool"]}/${attrs["interp-str"]}/${attrs["interp-str2"]}/${attrs["interp-str3"]}`
             );

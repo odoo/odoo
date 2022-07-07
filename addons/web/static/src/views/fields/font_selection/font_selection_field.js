@@ -8,8 +8,14 @@ import { formatSelection } from "../formatters";
 const { Component } = owl;
 
 export class FontSelectionField extends Component {
+    get options() {
+        return Array.from(this.props.record.fields[this.props.name].selection);
+    }
+    get isRequired() {
+        return this.props.record.isRequired(this.props.name);
+    }
     get string() {
-        return formatSelection(this.props.value, { selection: this.props.options });
+        return formatSelection(this.props.value, { selection: this.options });
     }
 
     stringify(value) {
@@ -28,21 +34,14 @@ export class FontSelectionField extends Component {
 FontSelectionField.template = "web.FontSelectionField";
 FontSelectionField.props = {
     ...standardFieldProps,
-    options: Object,
     placeholder: { type: String, optional: true },
-    required: { type: Boolean, optional: true },
-};
-FontSelectionField.defaultProps = {
-    required: false,
 };
 
 FontSelectionField.displayName = _lt("Font Selection");
 FontSelectionField.supportedTypes = ["selection"];
 
-FontSelectionField.extractProps = (fieldName, record, attrs) => {
+FontSelectionField.extractProps = ({ attrs }) => {
     return {
-        options: Array.from(record.fields[fieldName].selection),
-        required: record.isRequired(fieldName),
         placeholder: attrs.placeholder,
     };
 };
