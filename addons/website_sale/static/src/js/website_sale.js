@@ -164,8 +164,8 @@ var publicWidget = require('web.public.widget');
 publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     selector: '#o_shop_collapse_category',
     events: {
-        'click .fa-angle-right': '_onOpenClick',
-        'click .fa-angle-down': '_onCloseClick',
+        'click .o_shop_collapse_button_closed': '_onOpenClick',
+        'click .o_shop_collapse_button_open': '_onCloseClick',
     },
 
     //--------------------------------------------------------------------------
@@ -177,19 +177,21 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onOpenClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().siblings().find('.fa-angle-down:first').click();
-        $fa.parents('li').find('ul:first').show('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
+        var $btn = $(ev.currentTarget);
+        $btn.parent().siblings().find('.o_shop_collapse_button_open:first').click();
+        $btn.parents('li').find('ul:first').show();
+        $btn.toggleClass('o_shop_collapse_button_closed o_shop_collapse_button_open');
+        $btn.find('.fa').toggleClass('fa-angle-down fa-angle-right');
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onCloseClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().find('ul:first').hide('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
+        var $btn = $(ev.currentTarget);
+        $btn.parent().find('ul:first').hide();
+        $btn.toggleClass('o_shop_collapse_button_closed o_shop_collapse_button_open');
+        $btn.find('.fa').toggleClass('fa-angle-down fa-angle-right');
     },
 });
 });
