@@ -371,6 +371,11 @@ export class Record extends DataPoint {
                 case "integer":
                 case "monetary":
                     continue;
+                case "properties":
+                    if (!this.checkPropertiesValidity(fieldName)) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
                 case "one2many":
                 case "many2many":
                     if (!(await this.checkX2ManyValidity(fieldName))) {
@@ -447,6 +452,23 @@ export class Record extends DataPoint {
             }
         }
         return true;
+    }
+
+    /**
+     * The label and the id of the properties are always required.
+     *
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    checkPropertiesValidity(fieldName) {
+        const value = this.data[fieldName];
+        if (!value) {
+            return true;
+        }
+        return value.every((propertyDefinition) =>
+            !propertyDefinition.id ||
+            (propertyDefinition.string && propertyDefinition.string.length)
+        );
     }
 
     setInvalidField(fieldName) {

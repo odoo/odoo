@@ -1,0 +1,25 @@
+.o_field_property_dropdown_add {
+    * {
+        color: $primary !important;
+    }
+}
+.o_field_property_tag_readonly {
+    // deactivate all click interactions with tags
+    // if we can't change their definition
+    pointer-events: none;
+}
+
+.o_field_property_tag {
+    .o_tag {
+        margin: 1px 2px 1px 0;
+        .o_delete {
+            padding-left: 4px;
+        }
+    }
+    .o_delete {
+        margin-top: 2px;
+    }
+    .o_badge_text {
+        line-height: 1.1;
+    }
+}

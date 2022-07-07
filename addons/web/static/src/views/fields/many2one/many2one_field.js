@@ -23,7 +23,7 @@ class CreateConfirmationDialog extends Component {
 CreateConfirmationDialog.components = { Dialog };
 CreateConfirmationDialog.template = "web.Many2OneField.CreateConfirmationDialog";
 
-function m2oTupleFromData(data) {
+export function m2oTupleFromData(data) {
     const id = data.id;
     let name;
     if ("display_name" in data) {

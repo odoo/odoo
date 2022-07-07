@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertyValue" owl="1">
+        <t t-if="props.readonly &amp;&amp; !['boolean', 'many2one', 'many2many', 'tags'].includes(props.type)">
+            <span t-if="displayValue" t-out="displayValue"/>
+        </t>
+        <t t-else="">
+            <t t-if="props.type === 'boolean'">
+                <CheckBox
+                    value="propertyValue"
+                    disabled="props.readonly"
+                    onChange.bind="onValueChange"
+                />
+            </t>
+            <t t-elif="props.type === 'datetime'">
+                <DateTimePicker
+                    date="propertyValue"
+                    onDateTimeChanged.bind="onValueChange"
+                />
+            </t>
+            <t t-elif="props.type === 'date'">
+                <DatePicker
+                    date="propertyValue"
+                    onDateTimeChanged.bind="onValueChange"
+                />
+            </t>
+            <t t-elif="props.type === 'integer'">
+                <input
+                    class="o_input o_field_property_input"
+                    type="number"
+                    t-att-value="propertyValue"
+                    t-on-change="(event) => this.onValueChange(event.target.value)"
+                />
+            </t>
+            <t t-elif="props.type === 'float'">
+                <input
+                    class="o_input o_field_property_input"
+                    type="number"
+                    t-att-value="propertyValue"
+                    t-on-change="(event) => this.onValueChange(event.target.value)"
+                />
+            </t>
+            <t t-elif="props.type === 'selection'">
+                <select class="o_input" t-on-change="event => this.onValueChange(event.target.value)">
+                    <option t-att-value="false" />
+                    <t t-foreach="props.selection || []" t-as="option" t-key="option[0]">
+                        <option
+                            t-att-selected="option[0] === propertyValue"
+                            t-att-value="option[0]"
+                            t-out="option[1]"
+                        />
+                    </t>
+                </select>
+            </t>
+            <t t-elif="props.type === 'tags'">
+                <PropertyTags
+                    selectedTags="propertyValue"
+                    tags="props.tags || []"
+                    deleteAction="'value'"
+                    readonly="props.readonly"
+                    canChangeTags="props.canChangeDefinition"
+                    onValueChange.bind="onValueChange"
+                    onTagsChange.bind="props.onTagsChange"/>
+            </t>
+            <div
+                t-elif="props.type === 'many2one'"
+                class="d-flex flex-row">
+                <t t-if="props.comodel">
+                    <a
+                        t-if="props.readonly"
+                        class="o_form_uri"
+                        t-att-href="propertyValue[0] ? `#id=${propertyValue[0]}&amp;model=${props.comodel}` : '#'"
+                        t-on-click.prevent="onMany2oneClick">
+                        <span t-out="propertyValue &amp;&amp; propertyValue[1] || ''" />
+                    </a>
+                    <Many2XAutocomplete
+                        t-else=""
+                        value="propertyValue &amp;&amp; propertyValue[1] || ''"
+                        id="propertyValue[0] ? propertyValue[0].toString() : ''"
+                        resModel="props.comodel"
+                        autoSelect="true"
+                        fieldString="props.string"
+                        update.bind="onValueChange"
+                        context="props.context"
+                        getDomain.bind="() => propertyDomain"
+                        quickCreate.bind="onQuickCreate"
+                        activeActions="{canCreate: true, canCreateEdit: true, canWrite: true}"
+                    />
+                    <button
+                        t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0]"
+                        type="button"
+                        class="btn btn-secondary fa fa-external-link o_external_button o_properties_external_button py-0"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="External link"
+                        data-tooltip="External link"
+                        t-on-click="onExternalLinkClick"
+                    />
+                </t>
+            </div>
+            <t t-elif="props.type === 'many2many'">
+                <div t-if="props.comodel" class="o_field_property_many2many_value">
+                    <TagsList tags="propertyValue"/>
+                    <Many2XAutocomplete
+                        t-if="!props.readonly"
+                        id="''"
+                        resModel="props.comodel"
+                        autoSelect="true"
+                        fieldString="props.string"
+                        update.bind="onValueChange"
+                        context="props.context"
+                        getDomain.bind="() => propertyDomain"
+                        quickCreate.bind="onQuickCreate"
+                        activeActions="{canCreate: true, canCreateEdit: true, canWrite: true}"
+                        isToMany="true"
+                    />
+                </div>
+            </t>
+            <t t-else="">
+                <input
+                    class="o_input"
+                    type="text"
+                    t-att-value="propertyValue || ''"
+                    t-on-change="(event) => this.onValueChange(event.target.value)"
+                />
+            </t>
+        </t>
+    </t>
+</templates>

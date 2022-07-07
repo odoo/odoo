@@ -352,10 +352,11 @@ export function useOpenMany2XRecord({
     const addDialog = useOwnedDialogs();
     const orm = useService("orm");
 
-    return async function openDialog({ resId = false, title, context }, immediate = false) {
+    return async function openDialog({ resId = false, forceModel = null, title, context }, immediate = false) {
+        const model = forceModel || resModel;
         let viewId;
         if (resId !== false) {
-            viewId = await orm.call(resModel, "get_formview_id", [[resId]], {
+            viewId = await orm.call(model, "get_formview_id", [[resId]], {
                 context,
             });
         }
@@ -379,7 +380,7 @@ export function useOpenMany2XRecord({
                 context,
                 mode,
                 resId,
-                resModel,
+                resModel: model,
                 viewId,
                 onRecordSaved,
                 isToMany,
