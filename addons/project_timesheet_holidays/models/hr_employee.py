@@ -21,11 +21,11 @@ class Employee(models.Model):
         result = super(Employee, self).write(vals)
         if 'active' in vals:
             if vals.get('active'):
-                # Create furtur holiday timesheets
+                # Create future holiday timesheets
                 self._create_future_public_holidays_timesheets(self)
             else:
-                # Delete furtur holiday timesheets
-                future_timesheets = self.env['account.analytic.line'].search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
+                # Delete future holiday timesheets
+                future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
                 future_timesheets.write({'global_leave_id': False})
                 future_timesheets.unlink()
         return result
