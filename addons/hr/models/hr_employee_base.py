@@ -28,8 +28,11 @@ class HrEmployeeBase(models.AbstractModel):
     address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
-    mobile_phone = fields.Char('Work Mobile')
-    work_email = fields.Char('Work Email')
+    mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
+    work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
+    work_contact_id = fields.Many2one('res.partner', 'Work Contact')
+    related_contact_ids = fields.Many2many('res.partner', 'Related Contacts', compute='_compute_related_contacts')
+    related_contacts_count = fields.Integer('Number of related contacts', compute='_compute_related_contacts_count')
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute="_compute_work_location_id", store=True, readonly=False,
     domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     user_id = fields.Many2one('res.users')
@@ -155,6 +158,49 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.work_phone = employee.address_id.phone
             else:
                 employee.work_phone = False
+
+    @api.depends('work_contact_id', 'work_contact_id.mobile', 'work_contact_id.email')
+    def _compute_work_contact_details(self):
+        for employee in self:
+            if employee.work_contact_id:
+                employee.mobile_phone = employee.work_contact_id.mobile
+                employee.work_email = employee.work_contact_id.email
+
+    def _inverse_work_contact_details(self):
+        for employee in self:
+            if not employee.work_contact_id:
+                employee.work_contact_id = self.env['res.partner'].sudo().create({
+                    'email': employee.work_email,
+                    'mobile': employee.mobile_phone,
+                    'name': employee.name,
+                    'image_1920': employee.image_1920,
+                    'company_id': employee.company_id.id
+                })
+            else:
+                employee.work_contact_id.sudo().write({
+                    'email': employee.work_email,
+                    'mobile': employee.mobile_phone,
+                })
+
+    @api.depends('work_contact_id')
+    def _compute_related_contacts(self):
+        for employee in self:
+            employee.related_contact_ids = employee.work_contact_id
+
+    @api.depends('related_contact_ids')
+    def _compute_related_contacts_count(self):
+        for employee in self:
+            employee.related_contacts_count = len(employee.related_contact_ids)
+
+    def action_related_contacts(self):
+        self.ensure_one()
+        return {
+            'name': _("Related Contacts"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'kanban,tree,form',
+            'res_model': 'res.partner',
+            'domain': [('id', 'in', self.related_contact_ids.ids)]
+        }
 
     @api.depends('company_id')
     def _compute_address_id(self):

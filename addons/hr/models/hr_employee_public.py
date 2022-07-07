@@ -24,6 +24,8 @@ class HrEmployeePublic(models.Model):
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
     work_email = fields.Char(readonly=True)
+    work_contact_id = fields.Many2one(readonly=True)
+    related_contact_ids = fields.Many2many(readonly=True)
     work_location_id = fields.Many2one(readonly=True)
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
@@ -55,6 +57,12 @@ class HrEmployeePublic(models.Model):
     def _compute_employee_id(self):
         for employee in self:
             employee.employee_id = self.env['hr.employee'].browse(employee.id)
+
+    @api.depends('user_partner_id')
+    def _compute_related_contacts(self):
+        super()._computer_related_contacts()
+        for employee in self:
+            employee.related_contact_ids |= employee.user_partner_id
 
     @api.model
     def _get_fields(self):
