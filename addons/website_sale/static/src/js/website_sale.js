@@ -743,6 +743,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
+            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -1166,9 +1167,9 @@ odoo.define('website_sale.price_range_option', function (require) {
 const publicWidget = require('web.public.widget');
 
 publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '#o_wsale_price_range_option',
+    selector: '.o_wsale_products_page',
     events: {
-        'newRangeValue input[type="range"]': '_onPriceRangeSelected',
+        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
     },
 
     //----------------------------------------------------------------------
@@ -1190,6 +1191,7 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
+        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
         window.location.search = $.param(search);
     },
 });
