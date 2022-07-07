@@ -495,6 +495,13 @@ class Environment(Mapping):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
 
+    __slots__ = (
+        '__weakref__',
+        'cr', 'uid', 'context', 'su', 'args',
+        'transaction', 'all',
+        'registry', 'cache',
+        '_cache_key', '_protected',
+    )
     def __new__(cls, cr, uid, context, su=False):
         if uid == SUPERUSER_ID:
             su = True
