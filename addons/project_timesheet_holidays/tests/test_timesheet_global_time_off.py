@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import Command
 from odoo.tests import common
@@ -88,6 +88,33 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         global_time_off.unlink()
 
         self.assertFalse(leave_task.timesheet_ids.ids)
+
+    def test_timesheet_creation_and_deletion_on_employee_archive(self):
+        """ Test the timesheets linked to the global time off in the future when the employee is archived """
+        today = datetime.today()
+        leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)  # Next monday
+        leave_end_datetime = leave_start_datetime + timedelta(days=5)  # Next friday
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': leave_start_datetime,
+            'date_to': leave_end_datetime,
+        })
+
+        # 5 Timesheets should have been created for full_time_employee
+        timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        self.assertEqual(len(timesheets_full_time_employee), 5)
+
+        # All timesheets should have been deleted for full_time_employee when he is archived
+        self.full_time_employee.active = False
+        timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        self.assertEqual(len(timesheets_full_time_employee), 0)
+
+        # 5 Timesheets should have been created for full_time_employee when he is unarchived
+        self.full_time_employee.active = True
+        timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        self.assertEqual(len(timesheets_full_time_employee), 5)
 
     # This tests that no timesheet are created for days when the employee is not supposed to work
     def test_no_timesheet_on_off_days(self):
