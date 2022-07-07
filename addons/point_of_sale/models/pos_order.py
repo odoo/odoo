@@ -591,6 +591,7 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
         vals = {
             'invoice_origin': self.name,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
@@ -601,7 +602,7 @@ class PosOrder(models.Model):
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
-            'invoice_date': self.date_order.astimezone(timezone).date(),
+            'invoice_date': invoice_date.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
@@ -611,6 +612,7 @@ class PosOrder(models.Model):
         if self.note:
             vals.update({'narration': self.note})
         return vals
+
     def action_pos_order_invoice(self):
         self.write({'to_invoice': True})
         res = self._generate_pos_order_invoice()
@@ -636,7 +638,19 @@ class PosOrder(models.Model):
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
-            order._apply_invoice_payments()
+
+            if order.session_id.state != 'closed':
+                order._apply_invoice_payments()
+            else:
+                ref_params = {'invoice_name': order.account_move.name, 'pos_order_name': order.name, 'pos_session_name': order.session_id.name}
+                rinv_default_vals = {'ref': _("Reverse of %(invoice_name)s. Linked order %(pos_order_name)s was already paid in %(pos_session_name)s.", **ref_params)}
+                rinv = order.account_move._reverse_moves(default_values_list=[rinv_default_vals], cancel=True)
+                message_body_params = {
+                    'invoice_link': order.account_move._get_html_link(),
+                    'order_link': order._get_html_link(),
+                    'session_link': order.session_id._get_html_link(),
+                }
+                rinv.message_post(body=_("This automatically generated reverse of %(invoice_link)s is made because the reference order %(order_link)s is already paid in the closed pos session %(session_link)s.", **message_body_params))
 
         if not moves:
             return {}
@@ -830,7 +844,6 @@ class PosOrder(models.Model):
             'amount_tax': order.amount_tax,
             'amount_return': order.amount_return,
             'pos_session_id': order.session_id.id,
-            'is_session_closed': order.session_id.state == 'closed',
             'pricelist_id': order.pricelist_id.id,
             'partner_id': order.partner_id.id,
             'user_id': order.user_id.id,

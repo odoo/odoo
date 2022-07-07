@@ -1432,6 +1432,7 @@ class PosSession(models.Model):
     def _get_related_account_moves(self):
         pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
         invoices = self.mapped('order_ids.account_move')
+        invoices |= invoices.mapped('reversal_move_id')
         invoice_payments = self.mapped('order_ids.payment_ids.account_move_id')
         stock_account_moves = pickings.mapped('move_ids.account_move_ids')
         cash_moves = self.cash_register_id.line_ids.mapped('move_id')

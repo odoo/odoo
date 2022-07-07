@@ -2312,7 +2312,6 @@ class Order extends PosModel {
         this.amount_return = json.amount_return;
         this.account_move = json.account_move;
         this.backendId = json.id;
-        this.isFromClosedSession = json.is_session_closed;
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
     }
