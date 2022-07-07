@@ -267,7 +267,7 @@
                 <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
                 <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                 <separator/>
-                <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
                 <separator/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
