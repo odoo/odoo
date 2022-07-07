@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_cl_edi_checkout" inherit_id="website_sale.checkout">
+        <xpath expr="//a[hasclass('btn-primary')]" position="attributes">
+            <attribute name="t-att-href">
+                l10n_cl_show_extra_info and '/shop/l10n_cl_invoicing_info' or '/shop/confirm_order'
+            </attribute>
+        </xpath>
+    </template>
+
+    <template id="l10n_cl_edi_extra_info" inherit_id="website_sale.extra_info">
+        <xpath expr="//a[hasclass('btn-secondary')]" position="attributes">
+            <attribute name="t-att-href">
+                l10n_cl_show_extra_info and '/shop/l10n_cl_invoicing_info' or '/shop/checkout'
+            </attribute>
+        </xpath>
+    </template>
+
+    <template id="wizard_checkout_inherit_l10n_cl_edi" inherit_id="website_sale.wizard_checkout">
+        <xpath expr="//div[@id='wizard-step20']/parent::a" position="after">
+            <t t-if="l10n_cl_show_extra_info">
+                <a class="no-decoration col" t-att-href="step&gt;=25 and '/shop/l10n_cl_invoicing_info' or '#'">
+                    <div id="wizard-step25"
+                         t-att-class="'progress-wizard-step %s' % (step == 25 and 'active' or step&gt;25 and 'complete' or 'disabled')">
+                        <div class="progress-wizard-bar d-none d-md-block"/>
+                        <span class="progress-wizard-dot d-none d-md-inline-block"></span>
+                        <div class="text-center progress-wizard-steplabel">Invoicing Info</div>
+                    </div>
+                </a>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_cl_edi_invoicing_info">
+        <t t-call="website.layout">
+            <t t-set="no_footer" t-value="1"/>
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="25"/>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect" t-valuef="/shop/extra_info"/>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                                <div class="container">
+                                    <form action="/shop/l10n_cl_invoicing_info" method="post">
+                                        <h2 class="o_page_header mt8">Invoicing info</h2>
+                                        <h5 t-if="errors_empty" class="text-danger">Some required fields are empty</h5>
+                                        <t t-if="errors_fields"  t-foreach="errors_fields.values()" t-as="err">
+                                            <h5 class="text-danger" t-esc="err"/>
+                                        </t>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="mb-3 col-12 col-xl-6">
+                                                        <label class="col-form-label"
+                                                               for="l10n_cl_activity_description">
+                                                            Type Document
+                                                        </label>
+                                                        <div id="div_l10n_cl_type_document" class="col-sm-12">
+                                                            <div class="form-check form-check-inline">
+                                                                <input type="radio"
+                                                                       name="l10n_cl_type_document"
+                                                                       id="radio_ticket"
+                                                                       value="ticket"
+                                                                       t-att-checked="default_value.get('l10n_cl_type_document') == 'ticket'"/>
+                                                                <span for="ticket">Ticket</span>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input type="radio"
+                                                                       name="l10n_cl_type_document"
+                                                                       id="radio_invoice"
+                                                                       value="invoice"
+                                                                       t-att-checked="default_value.get('l10n_cl_type_document') == 'invoice'"/>
+                                                                <span for="invoice">Invoice</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="div_l10n_cl_additional_fields" class="row" style="display: none">
+                                                    <div id="div_l10n_cl_activity_description" class="mb-3 col-lg-6">
+                                                        <label class="col-form-label"
+                                                               for="l10n_cl_activity_description">
+                                                            Activity Description:
+                                                        </label>
+                                                        <input id="l10n_cl_activity_description" type="text"
+                                                               name="l10n_cl_activity_description"
+                                                               t-attf-class="form-control #{'l10n_cl_activity_description' in errors_empty and 'is-invalid' or ''}"
+                                                               t-att-value="default_value.get('l10n_cl_activity_description')"/>
+                                                    </div>
+                                                    <div class="mb-3 col-lg-6">
+                                                        <label class="col-form-label" for="vat">VAT</label>
+                                                        <input type="text" name="vat"
+                                                               t-attf-class="form-control #{('vat' in errors_empty or 'vat' in errors_fields) and 'is-invalid' or ''}"
+                                                               t-att-value="default_value.get('vat')"
+                                                               t-att-readonly="'1' if vat_warning else None"/>
+                                                        <small t-if="vat_warning"
+                                                               class="form-text text-muted d-block d-lg-none">
+                                                            Changing
+                                                            VAT number is not allowed once document(s) have been
+                                                            issued
+                                                            for your account. Please contact us directly for this
+                                                            operation.
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <a role="button" href="/shop/checkout" class="btn btn-secondary mb32">
+                                                <i class="fa fa-chevron-left"/>
+                                                <span>Back</span>
+                                            </a>
+                                            <a role="button" href="#"
+                                               class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">
+                                                <span>Next</span>
+                                                <i class="fa fa-chevron-right"/>
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_sale_extra_info_1"/>
+        </t>
+    </template>
+</odoo>
