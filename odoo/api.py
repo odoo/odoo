@@ -503,32 +503,36 @@ class Environment(Mapping):
         '_cache_key', '_protected',
     )
     def __new__(cls, cr, uid, context, su=False):
-        if uid == SUPERUSER_ID:
-            su = True
-        assert context is not None
-        args = (cr, uid, context, su)
+        try:
+            if uid == SUPERUSER_ID:
+                su = True
+            assert context is not None
+            args = (cr, uid, context, su)
 
-        # determine transaction object
-        transaction = cr.transaction
-        if transaction is None:
-            transaction = cr.transaction = Transaction(Registry(cr.dbname))
+            # determine transaction object
+            transaction = cr.transaction
+            if transaction is None:
+                transaction = cr.transaction = Transaction(Registry(cr.dbname))
 
-        # if env already exists, return it
-        for env in transaction.envs:
-            if env.args == args:
-                return env
+            # if env already exists, return it
+            for env in transaction.envs:
+                if env.args == args:
+                    return env
 
-        # otherwise create environment, and add it in the set
-        self = object.__new__(cls)
-        args = (cr, uid, frozendict(context), su)
-        self.cr, self.uid, self.context, self.su = self.args = args
+            # otherwise create environment, and add it in the set
+            self = object.__new__(cls)
+            args = (cr, uid, frozendict(context), su)
+            self.cr, self.uid, self.context, self.su = self.args = args
 
-        self.transaction = self.all = transaction
-        self.registry = transaction.registry
-        self.cache = transaction.cache
-        self._cache_key = {}                    # memo {field: cache_key}
-        self._protected = transaction.protected
-        transaction.envs.add(self)
+            self.transaction = self.all = transaction
+            self.registry = transaction.registry
+            self.cache = transaction.cache
+            self._cache_key = {}                    # memo {field: cache_key}
+            self._protected = transaction.protected
+            transaction.envs.add(self)
+        except Exception:
+            _logger.warning("error initialising env", exc_info=True)
+            raise
         return self
 
     #
