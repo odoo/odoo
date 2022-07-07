@@ -99,7 +99,7 @@ class StockPackageLevel(models.Model):
                 package_level.state = 'draft'
             elif not package_level.move_line_ids and package_level.move_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 package_level.state = 'confirmed'
-            elif package_level.move_line_ids and not package_level.move_line_ids.filtered(lambda ml: ml.state == 'done'):
+            elif package_level.move_line_ids and not package_level.move_line_ids.filtered(lambda ml: ml.state in ('done', 'cancel')):
                 if package_level.is_fresh_package:
                     package_level.state = 'new'
                 elif package_level._check_move_lines_map_quant_package(package_level.package_id, 'reserved_uom_qty'):
