@@ -96,18 +96,21 @@ export default {
         const $button = $(event.currentTarget);
         const $icon = $button.find('i');
         const $li = $button.closest('li');
-        const $ul = $li.find('ul');
-        let unfoldedArticles = localStorage.getItem('unfoldedArticles');
-        unfoldedArticles = unfoldedArticles ? unfoldedArticles.split(";") : [];
         const articleId = $li.data('articleId').toString();
-        if ($ul.is(':visible')) {
-            if (unfoldedArticles.indexOf(articleId) !== -1) {
-                unfoldedArticles.splice(unfoldedArticles.indexOf(articleId), 1);
-            }
+        if ($icon.hasClass('fa-caret-down')) {
+            // Hiding ul breaks nestedSortable, so move children
+            // inside sibling to not lose its content
+            const $ul = $li.find('> ul');
+            $li.find('> div').append($ul.detach().hide());
+            this._removeUnfolded(articleId);
             $icon.removeClass('fa-caret-down');
             $icon.addClass('fa-caret-right');
         } else {
-            if ($ul.length === 0) {
+            const $ul = $li.find('> div > ul');
+            if ($ul.length) {
+                // Show children content stored in sibling
+                $li.append($ul.detach().show());
+            } else {
                 // Call the children content
                 const children = await this._rpc({
                     route: '/knowledge/tree_panel/children',
@@ -117,14 +120,35 @@ export default {
                 });
                 $li.append($('<ul/>').append(children));
             }
-            if (unfoldedArticles.indexOf(articleId) === -1) {
-                unfoldedArticles.push(articleId);
-            }
+            this._addUnfolded(articleId);
             $icon.removeClass('fa-caret-right');
-            $icon.addClass('fa-caret-down');
+            $icon.addClass('fa-caret-down');  
         }
-        $ul.toggle();
-        localStorage.setItem('unfoldedArticles', unfoldedArticles.join(";"));
-    }
+    },
+
+    /**
+     * Add an article id to the list of unfolded articles ids in the cache
+     * @param {string} articleId - Id of the article to add
+     */
+    _addUnfolded: function (articleId) {
+        let unfoldedArticles = localStorage.getItem('unfoldedArticles');
+        unfoldedArticles = unfoldedArticles ? unfoldedArticles.split(";") : [];
+        if (unfoldedArticles.indexOf(articleId) === -1) {
+            unfoldedArticles.push(articleId);
+            localStorage.setItem('unfoldedArticles', unfoldedArticles.join(";"));
+        }
+    },
+    /**
+     * Remove an article id from the list of unfolded articles ids in the cache
+     * @param {string} articleId - Id of the article to remove
+     */
+     _removeUnfolded: function (articleId) {
+         let unfoldedArticles = localStorage.getItem('unfoldedArticles');
+         unfoldedArticles = unfoldedArticles ? unfoldedArticles.split(";") : [];
+         if (unfoldedArticles.indexOf(articleId) !== -1) {
+             unfoldedArticles.splice(unfoldedArticles.indexOf(articleId), 1);
+             localStorage.setItem('unfoldedArticles', unfoldedArticles.join(";"));
+         }
+     }
 };
 

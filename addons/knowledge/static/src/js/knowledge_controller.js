@@ -372,12 +372,13 @@ const KnowledgeArticleFormController = FormController.extend({
         if (!articleId) {
             return;
         }
-        this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
+        await this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
             stackPosition: 'replaceCurrentAction',
             additional_context: {
                 res_id: articleId
             }
         });
+        document.getElementById(`article_${articleId}`).scrollIntoView(false);
     },
     /**
      * @returns {Array[String]}

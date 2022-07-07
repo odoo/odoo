@@ -17,5 +17,5 @@ class KnowledgeWebsiteController(KnowledgeController):
         return super().access_knowledge_home()
 
     @http.route('/knowledge/tree_panel/children', type='json', auth='public', website=True, sitemap=False)
-    def get_tree_panel_children(self, parent_id):
-        return super().get_tree_panel_children(parent_id)
+    def get_tree_panel_children(self, parent_id, loaded_ids=None):
+        return super().get_tree_panel_children(parent_id, loaded_ids)

@@ -153,12 +153,17 @@ class KnowledgeController(http.Controller):
         )
 
     @http.route('/knowledge/tree_panel/children', type='json', auth='user')
-    def get_tree_panel_children(self, parent_id):
+    def get_tree_panel_children(self, parent_id, loaded_ids=None):
         parent = self._fetch_article(parent_id)
         if not parent:
             return werkzeug.exceptions.NotFound()
+
+        articles = parent.child_ids
+        if loaded_ids:
+            articles = articles.filtered(lambda article: article.id not in loaded_ids)
+
         return request.env['ir.qweb']._render('knowledge.articles_template', {
-            'articles': parent.child_ids,
+            'articles': articles.sorted("sequence"),
             'portal_readonly_mode': not request.env.user.has_group('base.group_user'),  # used to bypass access check (to speed up loading)
         })
 
