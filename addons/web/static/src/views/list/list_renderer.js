@@ -441,6 +441,10 @@ export class ListRenderer extends Component {
             }));
     }
 
+    displayOptionalFields() {
+        return this.getOptionalFields.length;
+    }
+
     nbRecordsInGroup(group) {
         if (group.isFolded) {
             return 0;
