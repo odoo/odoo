@@ -57,7 +57,7 @@ class MrpProduction(models.Model):
                 ('company_id', '=', company_id)
         ]
         """,
-        compute='_compute_product_id', store=True, copy=True,
+        compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
@@ -69,7 +69,7 @@ class MrpProduction(models.Model):
         compute='_compute_product_qty', store=True, copy=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True,
+        readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True,
         domain="[('category_id', '=', product_uom_category_id)]")
     lot_producing_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', copy=False,
@@ -129,7 +129,7 @@ class MrpProduction(models.Model):
                         ('product_tmpl_id.product_variant_ids','=',product_id),
                         ('product_id','=',False),
         ('type', '=', 'normal')]""",
-        check_company=True, compute='_compute_bom_id', store=True,
+        check_company=True, compute='_compute_bom_id', store=True, precompute=True,
         help="Bill of Materials allow you to define the list of required components to make a finished product.")
 
     state = fields.Selection([
