@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-from freezegun import freeze_time
-
 from odoo import exceptions
 from odoo.addons.knowledge.tests.common import KnowledgeCommonWData
 from odoo.tests.common import tagged, users
@@ -14,6 +11,63 @@ from odoo.tools import mute_logger
 class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
     """ Test business API and main tools or helpers methods. """
 
+    @classmethod
+    def setUpClass(cls):
+        """ Add some hierarchy to have mixed rights tests """
+        super().setUpClass()
+
+        # - Private         seq=997   private      none    (manager-w+)
+        #   - Child1        seq=0     "            "
+        # - Shared          seq=998   shared       none    (admin-w+,employee-r+,manager-r+)
+        #   - Child1        seq=0     "            "       (employee-w+)
+        #   - Child2        seq=0     "            "       (portal-r+)
+        #   - Child3        seq=0     "            "       (admin-w+,employee-n-)
+        # - Playground      seq=999   workspace    w+
+        #   - Child1        seq=0     "            "
+        #     - Gd Child1
+        #     - Gd Child2
+        #       - GdGd Child1
+        #   - Child2        seq=1     "            "
+        #     - Gd Child1
+        #       - GdGd Child2
+
+        cls.shared_children += cls.env['knowledge.article'].sudo().create([
+            {'article_member_ids': [
+                (0, 0, {'partner_id': cls.partner_admin.id,
+                        'permission': 'write',
+                       }),
+                (0, 0, {'partner_id': cls.partner_employee.id,
+                        'permission': 'none',
+                       }),
+             ],
+             'internal_permission': False,
+             'name': 'Shared Child3',
+             'parent_id': cls.article_shared.id,
+            },
+        ])
+
+        # to test descendants computation, add some sub children
+        cls.wkspace_grandchildren = cls.env['knowledge.article'].create([
+            {'name': 'Grand Children of workspace',
+             'parent_id': cls.workspace_children[0].id,
+            },
+            {'name': 'Grand Children of workspace',
+             'parent_id': cls.workspace_children[0].id,
+            },
+            {'name': 'Grand Children of workspace',
+             'parent_id': cls.workspace_children[1].id,
+            }
+        ])
+        cls.wkspace_grandgrandchildren = cls.env['knowledge.article'].create([
+            {'name': 'Grand Grand Children of workspace',
+             'parent_id': cls.wkspace_grandchildren[1].id,
+            },
+            {'name': 'Grand Children of workspace',
+             'parent_id': cls.wkspace_grandchildren[2].id,
+            },
+        ])
+        cls.env.flush_all()
+
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')
     def test_article_archive(self):
@@ -22,27 +76,10 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         article_workspace = self.article_workspace.with_env(self.env)
         wkspace_children = self.workspace_children.with_env(self.env)
         # to test descendants computation, add some sub children
-        wkspace_grandchildren = self.env['knowledge.article'].create([
-            {'name': 'Grand Children of workspace',
-             'parent_id': wkspace_children[0].id,
-            },
-            {'name': 'Grand Children of workspace',
-             'parent_id': wkspace_children[0].id,
-            },
-            {'name': 'Grand Children of workspace',
-             'parent_id': wkspace_children[1].id,
-            }
-        ])
-        wkspace_grandgrandchildren = self.env['knowledge.article'].create([
-            {'name': 'Grand Grand Children of workspace',
-             'parent_id': wkspace_grandchildren[1].id,
-            },
-            {'name': 'Grand Children of workspace',
-             'parent_id': wkspace_grandchildren[2].id,
-            },
-        ])
+        wkspace_grandchildren = self.wkspace_grandchildren.with_env(self.env)
+        wkspace_grandgrandchildren = self.wkspace_grandgrandchildren.with_env(self.env)
 
-        # no read access -> cracboum
+        # no write access -> cracboum
         with self.assertRaises(exceptions.AccessError,
                                msg='Employee can read thus not archive'):
             article_shared.action_archive()
@@ -71,36 +108,20 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
     def test_article_archive_mixed_rights(self):
         """ Test archive in case of mixed rights """
         # give write access to shared section, but have children in read or none
+        # and add a customer on top of shared articles to check propagation
+        self.article_shared.write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
         self.article_shared.article_member_ids.sudo().filtered(
             lambda article: article.partner_id == self.partner_employee
         ).write({'permission': 'write'})
-        # one additional read child and one additional none child
-        self.shared_children += self.env['knowledge.article'].sudo().create([
-            {'article_member_ids': [
-                (0, 0, {'partner_id': self.partner_admin.id,
-                        'permission': 'write',
-                       }),
-                (0, 0, {'partner_id': self.partner_employee.id,
-                        'permission': 'read',
-                       }),
-             ],
-             'internal_permission': False,
-             'name': 'Shared Child2',
-             'parent_id': self.article_shared.id,
-            },
-            {'article_member_ids': [
-                (0, 0, {'partner_id': self.partner_admin.id,
-                        'permission': 'write',
-                       }),
-                (0, 0, {'partner_id': self.partner_employee.id,
-                        'permission': 'none',
-                       }),
-             ],
-             'internal_permission': False,
-             'name': 'Shared Child3',
-             'parent_id': self.article_shared.id,
-            },
-        ])
+        self.shared_children[1].write({
+            'article_member_ids': [(0, 0, {'partner_id': self.partner_employee.id,
+                                           'permission': 'read'})]
+        })
 
         # prepare comparison data as sudo
         writable_child_su = self.article_shared.child_ids.filtered(lambda article: article.name in ['Shared Child1'])
@@ -113,6 +134,8 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         shared_children = article_shared.child_ids
         writable_child, readonly_child = writable_child_su.with_env(self.env), readonly_child_su.with_env(self.env)
         self.assertEqual(len(shared_children), 2)
+        self.assertFalse(readonly_child.user_has_write_access)
+        self.assertTrue(writable_child.user_has_write_access)
         self.assertEqual(shared_children, writable_child + readonly_child, 'Should see only two first children')
 
         article_shared.action_archive()
@@ -128,6 +151,23 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertEqual(readonly_child.root_article_id, readonly_child)
         self.assertFalse(hidden_child_su.parent_id, 'Archive: article should be extracted in archive process as non writable')
         self.assertEqual(hidden_child_su.root_article_id, hidden_child_su)
+
+        # verify that the child that was not accessible was moved as a root article...
+        self.assertTrue(hidden_child_su.active)
+        self.assertEqual(hidden_child_su.category, 'shared')
+        self.assertEqual(hidden_child_su.internal_permission, 'none')
+        self.assertFalse(hidden_child_su.parent_id)
+        # ... and kept his access rights: still member for employee / admin and
+        # copied customer access from the archived parent
+        self.assertMembers(
+            hidden_child_su,
+            'none',
+            {self.user_admin.partner_id: 'write',
+             self.partner_employee_manager: 'read',
+             self.partner_employee: 'none',
+             self.customer: 'read',
+            }
+        )
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')
@@ -195,7 +235,17 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
     @users('employee')
     def test_article_invite_members(self):
         """ Test inviting members API. Create a hierarchy of 3 shared articles
-        and check privilege is not granted below invited articles. """
+        and check privilege is not granted below invited articles.
+
+        # - Shared          seq=998   shared       none    (admin-w+,employee-r+,manager-r+)
+        #   - Child1        seq=0     "            "       (employee-w+)
+        #      - Gd Child1            "            "       (manager-w+,employee-r+)
+        #        - GdGd Child1        "            "       (employee-w+)
+        #      - Gd Child2            "            "       (employee-w+)
+        #   - Child2        seq=0     "            "       (portal-r+)
+        #   - Child3        seq=0     "            "       (admin-w+,employee-n-)
+
+        """
         direct_child_read, direct_child_write = self.env['knowledge.article'].sudo().create([
             {'article_member_ids': [
                 (0, 0, {'partner_id': self.partner_employee_manager.id,
@@ -207,7 +257,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
              ],
              'internal_permission': False,
              'name': 'Shared Readonly Child (should not propagate)',
-             'parent_id': self.shared_children.id,
+             'parent_id': self.shared_children[0].id,
             },
             {'article_member_ids': [
                 (0, 0, {'partner_id': self.partner_employee.id,
@@ -216,7 +266,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
              ],
              'internal_permission': False,
              'name': 'Shared Writable Child (propagate is ok)',
-             'parent_id': self.shared_children.id,
+             'parent_id': self.shared_children[0].id,
             }
         ]).with_env(self.env)
         grand_child = self.env['knowledge.article'].sudo().create({
@@ -230,7 +280,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             'parent_id': direct_child_read.id,
         }).with_env(self.env)
 
-        shared_article = self.shared_children.with_env(self.env)
+        shared_article = self.shared_children[0].with_env(self.env)
         self.assertMembers(shared_article, False,
                            {self.partner_employee: 'write'})
         self.assertMembers(direct_child_read, False,
@@ -306,7 +356,16 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
     @users('employee')
     def test_article_invite_members_non_accessible_children(self):
         """ Test that user cannot give access to non-accessible children article
-        when inviting people. """
+        when inviting people.
+
+        # Private Parent        private    none     (employee-w+)
+        # - Child1              "          write    (employee-no)
+        #   - Gd Child1
+        # - Child2              "          write    (employee-r+)
+        #   - Gd Child1
+        # - Child3              "          "        "
+        #   - Gd Child1
+        """
         private_parent = self.env['knowledge.article'].create([{
             'article_member_ids': [(0, 0, {
                 'partner_id': self.partner_employee.id,
@@ -417,6 +476,256 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         playground_articles_asmanager = playground_articles.with_user(self.user_employee_manager)
         self.assertEqual(playground_articles_asmanager.mapped('is_user_favorite'), [False, False, False])
 
+    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
+    @users('employee')
+    def test_article_make_private(self):
+        """ Testing the API that makes an article 'private'. Making an article
+        private generally:
+          - sets internal_permission 'none';
+          - sets current environment user as only write member;
+
+        A lot of extra post-processing is applied, see ``KnowledgeArticle.
+        _move_and_make_private()`` for details.
+
+        Specific setup for this test
+        # - Playground                workspace    w+    (customer-r+)
+        #   - Child1                  "            "     (customer-r+)
+        #     - ReadMemb GrandChild   "            w+    (employee-r+)
+        #     - Gd Child1             "            "
+        #     - Gd Child2             "            "
+        #       - GdGd Child1         "            "
+        #   - Child2                  "            "
+        #     - Gd Child1             "            "
+        #       - GdGd Child          "            "
+        #   - ReadMember Child        "            w+    (employee-r+)
+        #   - ReadInternal Child      "            r+    (employee2-w+)
+        #   - Hidden Child            "            w+    (employee-no)
+        """
+        article_workspace = self.article_workspace.with_env(self.env)
+        workspace_children = self.workspace_children.with_env(self.env)
+        wkspace_grandchildren = self.wkspace_grandchildren.with_env(self.env)
+        wkspace_grandgrandchildren = self.wkspace_grandgrandchildren.with_env(self.env)
+
+        # add an additional member on 'article_workspace' and one of its children for further checks
+        (self.article_workspace + self.workspace_children[0]).write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
+
+        # add 4 extra articles for further checks
+        # - one to which 'employee' only has 'read' access (as member)
+        # - one to which 'employee' only has 'read' access (internal)
+        # - one invisible, "employee2" has access to that one in write mode
+        # - one to which 'employee' only has 'read' access (as member) as grandchild (descendants testing)
+        [wkspace_child_read_member_access,
+         wkspace_child_read_internal_access,
+         wkspace_child_no_access,
+         wkspace_grandchild_read_member_access] = self.env['knowledge.article'].sudo().create([
+            {
+                'article_member_ids': [(0, 0, {
+                    'partner_id': self.partner_employee.id,
+                    'permission': 'read',
+                })],
+                'internal_permission': 'write',
+                'name': 'Read Member Child',
+                'parent_id': article_workspace.id,
+            }, {
+                'article_member_ids': [(0, 0, {
+                    'partner_id': self.partner_employee2.id,
+                    'permission': 'write',
+                })],
+                'internal_permission': 'read',
+                'name': 'Read Internal Child',
+                'parent_id': article_workspace.id,
+            }, {
+                'article_member_ids': [(0, 0, {
+                    'partner_id': self.partner_employee.id,
+                    'permission': 'none',
+                })],
+                'internal_permission': 'write',
+                'name': 'Hidden Child',
+                'parent_id': article_workspace.id,
+            }, {
+                'article_member_ids': [(0, 0, {
+                    'partner_id': self.partner_employee.id,
+                    'permission': 'read',
+                })],
+                'internal_permission': 'write',
+                'name': 'Read Member GrandChild',
+                'parent_id': workspace_children[0].id,
+            }
+        ])
+        with self.assertRaises(exceptions.AccessError):
+            wkspace_child_no_access.with_env(self.env).body
+        article_workspace._move_and_make_private()
+
+        # 1. main article was correctly moved to private
+        self.assertEqual(article_workspace.category, 'private')
+        self.assertEqual(article_workspace.internal_permission, 'none')
+        self.assertMembers(
+            article_workspace,
+            'none',
+            {self.partner_employee: 'write'}
+        )
+
+        # 2. accessible children were correctly moved to private
+        for workspace_descendant, parent_id in zip(
+                workspace_children + wkspace_grandchildren + wkspace_grandgrandchildren,
+                [article_workspace, article_workspace, workspace_children[0], workspace_children[0],
+                 workspace_children[1], wkspace_grandchildren[1], wkspace_grandchildren[2]]
+            ):
+            self.assertEqual(workspace_descendant.category, 'private')
+            self.assertEqual(workspace_descendant.inherited_permission_parent_id, article_workspace)
+            self.assertEqual(workspace_descendant.parent_id, parent_id)
+            # all specific members should have been wiped, no permission
+            self.assertMembers(
+                workspace_descendant,
+                False,
+                {}
+            )
+
+        # 3.children that were not writable are moved as a root articles and that
+        # members / internal permissions are kept
+        self.assertEqual(wkspace_child_read_member_access.category, 'workspace')
+        self.assertFalse(wkspace_child_read_member_access.parent_id)
+        self.assertMembers(
+            wkspace_child_read_member_access,
+            'write',
+            {self.partner_employee: 'read',
+             self.customer: 'read'}
+        )
+        self.assertEqual(wkspace_child_read_internal_access.category, 'workspace')
+        self.assertFalse(wkspace_child_read_internal_access.parent_id)
+        self.assertMembers(
+            wkspace_child_read_internal_access,
+            'read',
+            {self.partner_employee2: 'write',
+             self.customer: 'read'}
+        )
+        self.assertEqual(wkspace_child_no_access.category, 'workspace')
+        self.assertFalse(wkspace_child_no_access.parent_id)
+        self.assertMembers(
+            wkspace_child_no_access,
+            'write',
+            {self.partner_employee: 'none',
+             self.customer: 'read'}
+        )
+        self.assertEqual(wkspace_grandchild_read_member_access.category, 'workspace')
+        self.assertFalse(wkspace_grandchild_read_member_access.parent_id)
+        self.assertMembers(
+            wkspace_grandchild_read_member_access,
+            'write',
+            {self.partner_employee: 'read',
+             self.customer: 'read'}
+        )
+
+        # 'Hidden Child' is still not accessible for employee
+        with self.assertRaises(exceptions.AccessError):
+            wkspace_child_no_access.with_env(self.env).body
+        wkspace_child_no_access.with_user(self.user_employee2).body
+
+    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
+    @users('employee')
+    def test_article_make_private_w_desynchronized(self):
+        """ Test a special case when making private: we have desynchronized children.
+        Children that are de-synchronized should NOT have members from their parent(s)
+        copied onto them when they are detached.
+
+        Specific setup for this test
+        # - Playground                workspace    w+    (customer-r+,employee-w+)
+        #   - Child1                  "            w+DES (customer-r+,employee-r+)
+        #     - Gd Child1             "            "
+        #     - Gd Child2             "            "
+        #       - GdGd Child1         "            "
+        #   - Child2                  "            "
+        #     - Gd Child1             "            "
+        #       - GdGd Child          "            "
+        """
+        # add employee on playground and desynchronize its child
+        self.article_workspace._add_members(self.partner_employee, 'write')
+        self.workspace_children[0]._set_member_permission(
+            self.article_workspace.article_member_ids.filtered(
+                lambda member: member.partner_id == self.partner_employee
+            ),
+            'read',
+            is_based_on=True,
+        )
+        # check updated data
+        self.assertTrue(self.workspace_children[0].is_desynchronized)
+        self.assertMembers(
+            self.article_workspace,
+            'write',
+            {self.partner_employee: 'write'}
+        )
+        self.assertMembers(
+            self.workspace_children[0],
+            'write',
+            {self.partner_employee: 'read'}
+        )
+
+        article_workspace = self.article_workspace.with_env(self.env)
+        [workspace_child_desync, workspace_child_tosync] = self.workspace_children.with_env(self.env)
+
+        # add a member on the parent, it will NOT be propagated to the desync child
+        article_workspace._add_members(self.customer, 'read')
+        self.assertMembers(
+            article_workspace,
+            'write',
+            {self.customer: 'read', self.partner_employee: 'write'}
+        )
+
+        # now move the article to private and check the post-processing
+        article_workspace._move_and_make_private()
+
+        # 1. desync article: moved to root (as employee does not have write access)
+        # and is not desynchronized (root articles are never desynchornized)
+        # should be moved to root (as employee does not have write access)
+        self.assertEqual(workspace_child_desync.category, "workspace")
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+        self.assertFalse(workspace_child_desync.parent_id)
+        # it should NOT have had customer access copied onto it as it was desync when we moved it
+        self.assertMembers(
+            workspace_child_desync,
+            "write",
+            {self.partner_employee: 'read'}
+        )
+
+        # 2. sync article: NOT moved to root (as employee has write access) and is
+        # still sunchronized
+        self.assertEqual(workspace_child_tosync.category, "private")
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+        self.assertEqual(workspace_child_tosync.parent_id, article_workspace)
+
+    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
+    @users('employee_manager')
+    def test_article_make_private_w_parent(self):
+        """ Test a special case when making private: moving under an existing private parent. """
+        article_shared = self.article_shared.with_env(self.env)
+        article_private_manager = self.article_private_manager.with_env(self.env)
+
+        # first test that making 'article_shared' fails since 'employee_manager'
+        # does not have write access to it (only read)
+        with self.assertRaises(exceptions.AccessError):
+            article_shared._move_and_make_private(parent=article_private_manager)
+
+        # then grant write access to test the flow
+        article_shared.sudo().article_member_ids.filtered(
+            lambda member: member.partner_id == self.partner_employee_manager
+        ).write({'permission': 'write'})
+
+        article_shared._move_and_make_private(parent=article_private_manager)
+
+        self.assertEqual(article_shared.category, 'private')
+        # the internal permission should not be set as we inherit from our private parent
+        # members should be wiped as we inherit from our private parent
+        self.assertMembers(
+            article_shared,
+            False,
+            {}
+        )
+
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')
     def test_article_move_to(self):
@@ -439,7 +748,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         workspace_children[1].move_to(parent_id=workspace_children[0].id)
         workspace_children.flush_model()
         self.assertEqual(article_workspace.child_ids, workspace_children[0])
-        self.assertEqual(article_workspace._get_descendants(), workspace_children)
+        self.assertTrue(workspace_children < article_workspace._get_descendants())
         self.assertEqual(workspace_children.root_article_id, article_workspace)
         self.assertEqual(workspace_children[1].parent_id, workspace_children[0])
         self.assertEqual(workspace_children[0].parent_id, article_workspace)
@@ -467,15 +776,12 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
                 for user in self.user_admin + self.user_employee2 + self.user_employee_manager
             ],
         })
+
         article_workspace = self.article_workspace.with_env(self.env)
         workspace_children = self.workspace_children.with_env(self.env)
-        (article_workspace + workspace_children[1]).action_toggle_favorite()
-
-        new_root_child = self.env['knowledge.article'].create({
-            'name': 'Child3 without parent name in its name',
-            'parent_id': article_workspace.id,
-        })
-        new_root_child.flush_model()
+        wkspace_grandchildren = self.wkspace_grandchildren.with_env(self.env)
+        wkspace_grandgrandchildren = self.wkspace_grandgrandchildren.with_env(self.env)
+        (article_workspace + workspace_children[1] + wkspace_grandchildren[2]).action_toggle_favorite()
 
         # ensure initial values
         self.assertTrue(article_workspace.is_user_favorite)
@@ -487,13 +793,17 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertTrue(workspace_children[1].is_user_favorite)
         self.assertEqual(workspace_children[1].favorite_count, 4)
         self.assertEqual(workspace_children[1].user_favorite_sequence, 2)
-        self.assertFalse(new_root_child.is_user_favorite)
-        self.assertEqual(new_root_child.favorite_count, 0)
-        self.assertEqual(new_root_child.user_favorite_sequence, -1)
+        self.assertTrue(wkspace_grandchildren[2].is_user_favorite)
+        self.assertEqual(wkspace_grandchildren[2].favorite_count, 1)
+        self.assertEqual(wkspace_grandchildren[2].user_favorite_sequence, 3)
+        for other in wkspace_grandchildren[0:2] + wkspace_grandgrandchildren:
+            self.assertFalse(other.is_user_favorite)
+            self.assertEqual(other.favorite_count, 0)
+            self.assertEqual(other.user_favorite_sequence, -1)
 
         # search also includes descendants of articles having the term in their name
-        result = self.env['knowledge.article'].get_user_sorted_articles('laygroun')
-        expected = self.article_workspace + self.workspace_children[1] + self.workspace_children[0] + new_root_child
+        result = self.env['knowledge.article'].get_user_sorted_articles('laygroun', limit=4)
+        expected = self.article_workspace + self.workspace_children[1] + self.wkspace_grandchildren[2] + self.workspace_children[0]
         found_ids = [a['id'] for a in result]
         self.assertEqual(found_ids, expected.ids)
         # check returned result once (just to be sure)
@@ -504,119 +814,16 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertEqual(workspace_info['name'], article_workspace.name)
         self.assertEqual(workspace_info['root_article_id'], (article_workspace.id, f'📄 {article_workspace.name}'))
 
+        # test with bigger limit, both favorites and unfavorites
+        result = self.env['knowledge.article'].get_user_sorted_articles('laygroun', limit=10)
+        expected = self.article_workspace + self.workspace_children[1] + self.wkspace_grandchildren[2] + \
+                   self.workspace_children[0] + self.wkspace_grandgrandchildren[1] + self.wkspace_grandgrandchildren[0] + \
+                   self.wkspace_grandchildren[1] + self.wkspace_grandchildren[0]
+        self.assertEqual([a['id'] for a in result], expected.ids)
 
-@tagged('knowledge_internals')
-class TestKnowledgeArticleFields(KnowledgeCommonWData):
-    """ Test fields and their management. """
-
-    @users('employee')
-    def test_favorites(self):
-        """ Testing the API for toggling favorites. """
-        playground_articles = (self.article_workspace + self.workspace_children).with_env(self.env)
-        self.assertEqual(playground_articles.mapped('is_user_favorite'), [False, False, False])
-
-        playground_articles[0].write({'favorite_ids': [(0, 0, {'user_id': self.env.uid})]})
-        self.assertEqual(playground_articles.mapped('is_user_favorite'), [True, False, False])
-        self.assertEqual(playground_articles.mapped('user_favorite_sequence'), [1, -1, -1])
-        favorites = self.env['knowledge.article.favorite'].sudo().search([('user_id', '=', self.env.uid)])
-        self.assertEqual(favorites.article_id, playground_articles[0])
-        self.assertEqual(favorites.sequence, 1)
-
-        playground_articles[1].action_toggle_favorite()
-        self.assertEqual(playground_articles.mapped('is_user_favorite'), [True, True, False])
-        self.assertEqual(playground_articles.mapped('user_favorite_sequence'), [1, 2, -1])
-        favorites = self.env['knowledge.article.favorite'].sudo().search([('user_id', '=', self.env.uid)])
-        self.assertEqual(favorites.article_id, playground_articles[0:2])
-        self.assertEqual(favorites.mapped('sequence'), [1, 2])
-
-        playground_articles[2].with_user(self.user_employee2).action_toggle_favorite()
-        favorites = self.env['knowledge.article.favorite'].sudo().search([('user_id', '=', self.user_employee2.id)])
-        self.assertEqual(favorites.article_id, playground_articles[2])
-        self.assertEqual(favorites.sequence, 1, 'Favorite: should not be impacted by other people sequence')
-
-    @users('employee')
-    def test_fields_edition(self):
-        _reference_dt = datetime(2022, 5, 31, 10, 0, 0)
-        body_values = [False, '', '<p><br /></p>', '<p>MyBody</p>']
-
-        for index, body in enumerate(body_values):
-            self.patch(self.env.cr, 'now', lambda: _reference_dt)
-            with freeze_time(_reference_dt):
-                article = self.env['knowledge.article'].create({
-                    'body': body,
-                    'internal_permission': 'write',
-                    'name': 'MyArticle,'
-                })
-            self.assertEqual(article.last_edition_uid, self.env.user)
-            self.assertEqual(article.last_edition_date, _reference_dt)
-
-            self.patch(self.env.cr, 'now', lambda: _reference_dt + timedelta(days=1))
-
-            # fields that does not change content
-            with freeze_time(_reference_dt + timedelta(days=1)):
-                article.with_user(self.user_employee2).write({
-                    'name': 'NoContentEdition'
-                })
-            self.assertEqual(article.last_edition_uid, self.env.user)
-            self.assertEqual(article.last_edition_date, _reference_dt)
-
-            # fields that change content
-            with freeze_time(_reference_dt + timedelta(days=1)):
-                article.with_user(self.user_employee2).write({
-                    'body': body_values[(index + 1) if index < (len(body_values)-1) else 0]
-                })
-                # the with_user() below is necessary for the test to succeed,
-                # and that's kind of a bad smell...
-                article.with_user(self.user_employee2).flush_model()
-            self.assertEqual(article.last_edition_uid, self.user_employee2)
-            self.assertEqual(article.last_edition_date, _reference_dt + timedelta(days=1))
-
-
-@tagged('knowledge_internals', 'knowledge_management')
-class TestKnowledgeCommonWDataInitialValue(KnowledgeCommonWData):
-    """ Test initial values or our test data once so that other tests do not have
-    to do it. """
-
-    def test_initial_values(self):
-        """ Ensure all tests have the same basis (global values computed as root) """
-        # root
-        article_workspace = self.article_workspace
-        self.assertTrue(article_workspace.category, 'workspace')
-        self.assertEqual(article_workspace.sequence, 999)
-        article_shared = self.article_shared
-        self.assertTrue(article_shared.category, 'shared')
-        self.assertTrue(article_shared.sequence, 998)
-
-        # workspace children
-        workspace_children = article_workspace.child_ids
-        self.assertEqual(
-            workspace_children.mapped('inherited_permission'),
-            ['write', 'write']
-        )
-        self.assertEqual(workspace_children.inherited_permission_parent_id, article_workspace)
-        self.assertEqual(
-            workspace_children.mapped('internal_permission'),
-            [False, False]
-        )
-        self.assertEqual(workspace_children.root_article_id, article_workspace)
-        self.assertEqual(workspace_children.mapped('sequence'), [0, 1])
-
-    @mute_logger('odoo.addons.base.models.ir_rule')
-    @users('employee')
-    def test_initial_values_as_employee(self):
-        """ Ensure all tests have the same basis (user specific computed as
-        employee for acl-dependent tests) """
-        article_workspace = self.article_workspace.with_env(self.env)
-        self.assertTrue(article_workspace.user_has_access)
-        self.assertTrue(article_workspace.user_has_write_access)
-
-        article_shared = self.article_shared.with_env(self.env)
-        self.assertTrue(article_shared.user_has_access)
-        self.assertFalse(article_shared.user_has_write_access)
-
-        article_private = self.article_private_manager.with_env(self.env)
-        with self.assertRaises(exceptions.AccessError):
-            self.assertFalse(article_private.body)
+        # test corner case: search with less than favorite, sequence might not be taken into account
+        result = self.env['knowledge.article'].get_user_sorted_articles('laygroun', limit=1)
+        self.assertEqual([a['id'] for a in result], self.article_workspace.ids)
 
 
 @tagged('post_install', '-at_install', 'knowledge_internals', 'knowledge_management')
