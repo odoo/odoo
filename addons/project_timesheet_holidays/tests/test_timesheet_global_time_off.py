@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import common
@@ -89,6 +90,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.assertFalse(leave_task.timesheet_ids.ids)
 
+    @freeze_time('2022-01-01 08:00:00')
     def test_timesheet_creation_and_deletion_on_employee_archive(self):
         """ Test the timesheets linked to the global time off in the future when the employee is archived """
         today = datetime.today()
