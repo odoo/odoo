@@ -226,10 +226,20 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_radio > div.o_vertical",
             "should have o_vertical class"
         );
+        const verticalRadio = target.querySelector(".o_field_radio > div.o_vertical");
+        assert.strictEqual(
+            verticalRadio.querySelector(".o_radio_item:first-child").getBoundingClientRect().right,
+            verticalRadio.querySelector(".o_radio_item:last-child").getBoundingClientRect().right
+        );
         assert.containsOnce(
             target,
-            ".o_field_radio div.o_horizontal",
+            ".o_field_radio > div.o_horizontal",
             "should have o_horizontal class"
+        );
+        const horizontalRadio = target.querySelector(".o_field_radio > div.o_horizontal");
+        assert.strictEqual(
+            horizontalRadio.querySelector(".o_radio_item:first-child").getBoundingClientRect().top,
+            horizontalRadio.querySelector(".o_radio_item:last-child").getBoundingClientRect().top
         );
     });
 
