@@ -538,7 +538,10 @@ class IrHttp(models.AbstractModel):
         super(IrHttp, cls)._postprocess_args(arguments, rule)
 
         try:
-            _, path = rule.build(arguments)
+            escaped_args = {}
+            for key, value in arguments:
+                escaped_args = {key : werkzeug.url_unquote_plus(value)}
+            _, path = rule.build(escaped_args)
             assert path is not None
         except odoo.exceptions.MissingError:
             return cls._handle_exception(werkzeug.exceptions.NotFound())
