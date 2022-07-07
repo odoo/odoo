@@ -5,8 +5,7 @@
         <div class="o_column_quick_create" t-ref="root">
             <div t-if="props.folded" class="o_quick_create_folded" t-on-click="unfold">
                 <button class="o_kanban_add_column btn btn-outline-secondary w-100">
-                    <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/>
-                    Add a Column
+                    <i class="fa fa-plus me-2" role="img" aria-label="Add column" title="Add column"/><t t-out="props.groupByFieldString"/>
                 </button>
             </div>
             <div t-else="" class="o_quick_create_unfolded">
@@ -14,7 +13,7 @@
                     <div class="input-group">
                         <input type="text"
                             class="form-control o_input"
-                            placeholder="Column title"
+                            t-attf-placeholder="{{ props.groupByFieldString }}..."
                             t-ref="autofocus"
                             t-model.trim="state.columnTitle"
                             t-on-focus="() => state.hasInputFocused = true"

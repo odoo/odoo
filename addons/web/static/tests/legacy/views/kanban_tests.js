@@ -8523,5 +8523,28 @@ QUnit.module('LegacyViews', {
         kanban.destroy();
         delete widgetRegistry.map.optionwidget;
     });
+
+    QUnit.test('column quick create - title and placeholder', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="int_field"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        const productFieldName = this.data.partner.fields.product_id.string;
+        assert.strictEqual(kanban.el.querySelector('.o_column_quick_create .o_quick_create_folded').innerText, productFieldName);
+        assert.strictEqual(kanban.el.querySelector('.o_column_quick_create .o_quick_create_unfolded .input-group .o_input').getAttribute('placeholder'), productFieldName + '...');
+    });
 });
 });
