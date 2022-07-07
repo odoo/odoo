@@ -29,6 +29,7 @@ class MrpUnbuild(models.Model):
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]})
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
@@ -59,11 +60,13 @@ class MrpUnbuild(models.Model):
         'stock.location', 'Source Location',
         domain="[('usage','=','internal'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         check_company=True,
+        compute='_compute_location_id', store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]}, help="Location where the product you want to unbuild is.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location',
         domain="[('usage','=','internal'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         check_company=True,
+        compute='_compute_location_id', store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]}, help="Location where you want to send the components resulting from the unbuild order.")
     consume_line_ids = fields.One2many(
         'stock.move', 'consume_unbuild_id', readonly=True,
@@ -75,17 +78,23 @@ class MrpUnbuild(models.Model):
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft')
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            if self.location_id.company_id != self.company_id:
-                self.location_id = warehouse.lot_stock_id
-            if self.location_dest_id.company_id != self.company_id:
-                self.location_dest_id = warehouse.lot_stock_id
-        else:
-            self.location_id = False
-            self.location_dest_id = False
+    @api.depends('mo_id', 'product_id')
+    def _compute_product_uom_id(self):
+        for record in self:
+            if record.mo_id.product_id and record.mo_id.product_id == record.product_id:
+                record.product_uom_id = record.mo_id.product_uom_id.id
+            else:
+                record.product_uom_id = record.product_id.uom_id.id
+
+    @api.depends('company_id')
+    def _compute_location_id(self):
+        for order in self:
+            if order.company_id:
+                warehouse = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1)
+                if order.location_id.company_id != order.company_id:
+                    order.location_id = warehouse.lot_stock_id
+                if order.location_dest_id.company_id != order.company_id:
+                    order.location_dest_id = warehouse.lot_stock_id
 
     @api.onchange('mo_id')
     def _onchange_mo_id(self):
