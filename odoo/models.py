@@ -881,8 +881,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             continue
 
                         # recursively export the fields that follow name; use
-                        # 'display_name' where no subfield is exported
-                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
+                        # 'display_name' where no subfield is exported if the
+                        # import-compatible option is disabled, otherwise use
+                        # '_rec_name'
+                        name_field = (import_compatible and value._rec_name) or 'display_name'
+                        fields2 = [(p[1:] or [name_field] if p and p[0] == name else [])
                                    for p in fields]
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)
                         if lines2:
