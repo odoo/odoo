@@ -2357,6 +2357,68 @@ QUnit.module('Legacy relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('radio field is editable in an editable form', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="1">' +
+                    '<field name="product_id" widget="radio"/>' +
+                '</form>',
+        });
+
+        assert.containsN(form, '.o_field_radio input:enabled', 2,
+            "the field should be editable");
+
+        await testUtils.form.clickSave(form);
+
+        assert.containsN(form, '.o_field_radio input:enabled', 2,
+            "the field should be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('radio field is not editable in a readonly form', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="0">' +
+                    '<field name="product_id" widget="radio"/>' +
+                '</form>',
+            viewOptions: {
+               mode: 'readonly',
+            },
+        });
+
+        assert.containsN(form, '.o_field_radio input:disabled', 2,
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('radio field is not editable with a readonly modifier', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="product_id" widget="radio" readonly="1"/>' +
+                '</form>',
+        });
+
+        assert.containsN(form, '.o_field_radio input:disabled', 2,
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
     QUnit.test('fieldradio change value by onchange', async function (assert) {
         assert.expect(4);
 
