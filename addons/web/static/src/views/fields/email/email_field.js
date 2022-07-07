@@ -18,7 +18,7 @@ EmailField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
 };
-EmailField.extractProps = (fieldName, record, attrs) => {
+EmailField.extractProps = ({ attrs }) => {
     return {
         placeholder: attrs.placeholder,
     };

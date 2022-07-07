@@ -22,23 +22,13 @@ Many2ManyTagsAvatarField.components = {
     TagsList,
 };
 
-Many2ManyTagsAvatarField.supportedTypes = ["many2many"];
-
-Many2ManyTagsAvatarField.extractProps = (fieldName, record, attrs) => {
-    return {
-        relation: record.activeFields[fieldName].relation,
-        domain: record.getFieldDomain(fieldName),
-        context: record.getFieldContext(fieldName),
-        evalContext: record.evalContext,
-        canQuickCreate: !attrs.options.no_quick_create,
-        createDomain: attrs.options.create,
-        string: record.activeFields[fieldName].string,
-    };
-};
-
 registry.category("fields").add("many2many_tags_avatar", Many2ManyTagsAvatarField);
 
 class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
+    get itemsVisible() {
+        return this.props.record.activeFields[this.props.name].viewType === "list" ? 5 : 3;
+    }
+
     get tags() {
         return this.props.value.records.map((record) => ({
             id: record.id, // datapoint_X
@@ -47,19 +37,6 @@ class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         }));
     }
 }
-
-ListKanbanMany2ManyTagsAvatarField.extractProps = (fieldName, record, attrs) => {
-    return {
-        itemsVisible: record.activeFields[fieldName].viewType === "list" ? 5 : 3,
-        relation: record.activeFields[fieldName].relation,
-        domain: record.getFieldDomain(fieldName),
-        context: record.getFieldContext(fieldName),
-        evalContext: record.evalContext,
-        canQuickCreate: !attrs.options.no_quick_create,
-        createDomain: attrs.options.create,
-        string: record.activeFields[fieldName].string,
-    };
-};
 
 registry.category("fields").add("list.many2many_tags_avatar", ListKanbanMany2ManyTagsAvatarField);
 registry.category("fields").add("kanban.many2many_tags_avatar", ListKanbanMany2ManyTagsAvatarField);

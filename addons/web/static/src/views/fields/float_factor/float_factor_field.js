@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { FloatField } from "../float/float_field";
-import { standardFieldProps } from "../standard_field_props";
 
 const { Component } = owl;
 export class FloatFactorField extends Component {
@@ -20,26 +19,20 @@ export class FloatFactorField extends Component {
 FloatFactorField.template = "web.FloatFactorField";
 FloatFactorField.components = { FloatField };
 FloatFactorField.props = {
-    ...standardFieldProps,
-    inputType: { type: String, optional: true },
-    digits: { type: Array, optional: true },
-    invalidate: { type: Function, optional: true },
+    ...FloatField.props,
     factor: { type: Number, optional: true },
 };
 FloatFactorField.defaultProps = {
-    inputType: "text",
-    invalidate: () => {},
+    ...FloatField.defaultProps,
     factor: 1,
 };
 
 FloatFactorField.supportedTypes = ["float"];
 
 FloatFactorField.isEmpty = () => false;
-FloatFactorField.extractProps = (fieldName, record, attrs) => {
+FloatFactorField.extractProps = ({ attrs, field }) => {
     return {
-        invalidate: record.setInvalidField.bind(record),
-        inputType: attrs.options.type,
-        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
+        ...FloatField.extractProps({ attrs, field }),
         factor: attrs.options.factor,
     };
 };

@@ -28,20 +28,15 @@ export class FloatTimeField extends Component {
 FloatTimeField.template = "web.FloatTimeField";
 FloatTimeField.props = {
     ...standardFieldProps,
-    invalidate: { type: Function, optional: true },
     placeholder: { type: String, optional: true },
-};
-FloatTimeField.defaultProps = {
-    invalidate: () => {},
 };
 
 FloatTimeField.displayName = _lt("Time");
 FloatTimeField.supportedTypes = ["float"];
 
 FloatTimeField.isEmpty = () => false;
-FloatTimeField.extractProps = (fieldName, record, attrs) => {
+FloatTimeField.extractProps = ({ attrs }) => {
     return {
-        invalidate: () => record.setInvalidField(fieldName),
         placeholder: attrs.placeholder,
     };
 };

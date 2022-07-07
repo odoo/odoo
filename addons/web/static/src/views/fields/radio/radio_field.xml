@@ -5,9 +5,9 @@
         <div
             role="radiogroup"
             t-attf-class="o_{{ props.orientation }}"
-            t-att-aria-label="props.string"
+            t-att-aria-label="string"
         >
-            <t t-foreach="props.radioItems" t-as="item" t-key="item[0]">
+            <t t-foreach="items" t-as="item" t-key="item[0]">
                 <div class="custom-control form-check o_radio_item" aria-atomic="true">
                     <input
                         type="radio"

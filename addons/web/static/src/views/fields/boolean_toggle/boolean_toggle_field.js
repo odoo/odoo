@@ -7,7 +7,11 @@ import { standardFieldProps } from "../standard_field_props";
 
 const { Component } = owl;
 
-export class BooleanToggleField extends Component {}
+export class BooleanToggleField extends Component {
+    get isReadonly() {
+        return this.props.record.isReadonly(this.props.name);
+    }
+}
 
 BooleanToggleField.template = "web.BooleanToggleField";
 BooleanToggleField.components = { CheckBox };
@@ -19,10 +23,5 @@ BooleanToggleField.displayName = _lt("Toggle");
 BooleanToggleField.supportedTypes = ["boolean"];
 
 BooleanToggleField.isEmpty = () => false;
-BooleanToggleField.extractProps = (fieldName, record) => {
-    return {
-        readonly: record.isReadonly(fieldName),
-    };
-};
 
 registry.category("fields").add("boolean_toggle", BooleanToggleField);

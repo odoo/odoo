@@ -66,19 +66,15 @@ TextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
 };
 
 TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];
 
-TextField.extractProps = (fieldName, record, attrs) => {
+TextField.extractProps = ({ attrs, field }) => {
     return {
-        isTranslatable: record.fields[fieldName].translate,
+        isTranslatable: field.translate,
         placeholder: attrs.placeholder,
-        resId: record.resId,
-        resModel: record.resModel,
     };
 };
 
@@ -92,29 +88,5 @@ class ListTextField extends TextField {
         return 1;
     }
 }
-
-ListTextField.template = "web.TextField";
-ListTextField.components = {
-    TranslationButton,
-};
-ListTextField.props = {
-    ...standardFieldProps,
-    isTranslatable: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
-};
-
-ListTextField.displayName = _lt("Multiline Text");
-ListTextField.supportedTypes = ["html", "text"];
-
-ListTextField.extractProps = (fieldName, record, attrs) => {
-    return {
-        isTranslatable: record.fields[fieldName].translate,
-        placeholder: attrs.placeholder,
-        resId: record.resId,
-        resModel: record.resModel,
-    };
-};
 
 registry.category("fields").add("list.text", ListTextField);

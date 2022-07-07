@@ -52,7 +52,7 @@ ImageUrlField.props = {
 ImageUrlField.displayName = _lt("Image");
 ImageUrlField.supportedTypes = ["char"];
 
-ImageUrlField.extractProps = (fieldName, record, attrs) => {
+ImageUrlField.extractProps = ({ attrs }) => {
     return {
         width: attrs.options.size ? attrs.options.size[0] : attrs.width,
         height: attrs.options.size ? attrs.options.size[1] : attrs.height,

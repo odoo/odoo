@@ -202,4 +202,48 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_boolean_toggle");
         assert.containsOnce(target, ".o_boolean_toggle input:checked");
     });
+
+    QUnit.test(
+        "BooleanToggleField is disabled if readonly in editable list",
+        async function (assert) {
+            serverData.models.partner.fields.bar.readonly = true;
+
+            await makeView({
+                type: "list",
+                serverData,
+                resModel: "partner",
+                arch: `
+                    <list editable="bottom">
+                        <field name="bar" widget="boolean_toggle" />
+                    </list>
+                `,
+            });
+
+            assert.containsOnce(
+                target,
+                ".o_boolean_toggle input:disabled",
+                "field should be readonly"
+            );
+            assert.containsOnce(target, ".o_boolean_toggle input:not(:checked)");
+
+            await click(target, ".o_boolean_toggle");
+            assert.containsOnce(
+                target,
+                ".o_boolean_toggle input:disabled",
+                "field should still be readonly"
+            );
+            assert.containsOnce(
+                target,
+                ".o_boolean_toggle input:not(:checked)",
+                "should keep unchecked on cell click"
+            );
+
+            await click(target, ".o_boolean_toggle");
+            assert.containsOnce(
+                target,
+                ".o_boolean_toggle input:not(:checked)",
+                "should keep unchecked on click"
+            );
+        }
+    );
 });

@@ -33,23 +33,20 @@ IntegerField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
     step: { type: Number, optional: true },
-    invalidate: { type: Function, optional: true },
     placeholder: { type: String, optional: true },
 };
 IntegerField.defaultProps = {
     inputType: "text",
-    invalidate: () => {},
 };
 
 IntegerField.displayName = _lt("Integer");
 IntegerField.supportedTypes = ["integer"];
 
 IntegerField.isEmpty = (record, fieldName) => (record.data[fieldName] === false ? true : false);
-IntegerField.extractProps = (fieldName, record, attrs) => {
+IntegerField.extractProps = ({ attrs }) => {
     return {
         inputType: attrs.options.type,
         step: attrs.options.step,
-        invalidate: () => record.setInvalidField(fieldName),
         placeholder: attrs.placeholder,
     };
 };

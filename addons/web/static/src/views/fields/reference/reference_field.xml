@@ -9,7 +9,7 @@
                     t-on-change="(ev) => this.updateModel(ev.target.value || false)"
                 >
                     <option />
-                    <t t-foreach="props.modelSelection" t-as="option" t-key="option[0]">
+                    <t t-foreach="selection" t-as="option" t-key="option[0]">
                         <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-esc="option[1]" />
                     </t>
                 </select>

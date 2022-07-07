@@ -9,6 +9,9 @@ import { standardFieldProps } from "../standard_field_props";
 const { Component } = owl;
 
 export class DateField extends Component {
+    get isDateTime() {
+        return this.props.record.fields[this.props.name].type === "datetime";
+    }
     get date() {
         return this.props.value && this.props.value.startOf("day");
     }
@@ -16,7 +19,7 @@ export class DateField extends Component {
     get formattedValue() {
         return formatDate(this.props.value, {
             // get local date if field type is datetime
-            timezone: this.props.isDateTime,
+            timezone: this.isDateTime,
         });
     }
 
@@ -33,21 +36,20 @@ DateField.components = {
 };
 DateField.props = {
     ...standardFieldProps,
-    isDateTime: { type: Boolean, optional: true },
     pickerOptions: { type: Object, optional: true },
+    placeholder: { type: String, optional: true },
 };
 DateField.defaultProps = {
-    isDateTime: false,
     pickerOptions: {},
 };
 
 DateField.displayName = _lt("Date");
 DateField.supportedTypes = ["date", "datetime"];
 
-DateField.extractProps = (fieldName, record, attrs) => {
+DateField.extractProps = ({ attrs }) => {
     return {
-        isDateTime: record.fields[fieldName].type === "datetime",
         pickerOptions: attrs.options.datepicker,
+        placeholder: attrs.placeholder,
     };
 };
 

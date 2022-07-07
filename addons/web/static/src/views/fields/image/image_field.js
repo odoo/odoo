@@ -53,8 +53,8 @@ export class ImageField extends Component {
         if (this.state.isValid && this.props.value) {
             if (previewFieldName !== this.props.name || isBinarySize(this.props.value)) {
                 return url("/web/image", {
-                    model: this.props.resModel,
-                    id: this.props.resId,
+                    model: this.props.record.resModel,
+                    id: this.props.record.resId,
                     field: previewFieldName,
                 });
             } else {
@@ -93,8 +93,6 @@ ImageField.props = {
     acceptedFileExtensions: { type: String, optional: true },
     width: { type: Number, optional: true },
     height: { type: Number, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
 };
 ImageField.defaultProps = {
     acceptedFileExtensions: "image/*",
@@ -103,7 +101,7 @@ ImageField.defaultProps = {
 ImageField.displayName = _lt("Image");
 ImageField.supportedTypes = ["binary"];
 
-ImageField.extractProps = (fieldName, record, attrs) => {
+ImageField.extractProps = ({ attrs }) => {
     return {
         enableZoom: attrs.options.zoom,
         zoomDelay: attrs.options.zoom_delay,
@@ -111,8 +109,6 @@ ImageField.extractProps = (fieldName, record, attrs) => {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         width: attrs.options.size ? attrs.options.size[0] : attrs.width,
         height: attrs.options.size ? attrs.options.size[1] : attrs.height,
-        resId: record.resId,
-        resModel: record.resModel,
     };
 };
 

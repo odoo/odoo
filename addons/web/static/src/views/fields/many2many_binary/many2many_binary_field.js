@@ -52,17 +52,16 @@ Many2ManyBinaryField.props = {
     acceptedFileExtensions: { type: String, optional: true },
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
-    items: { type: Object, optional: true },
 };
 
 Many2ManyBinaryField.supportedTypes = ["many2many"];
 
 Many2ManyBinaryField.isEmpty = () => false;
-Many2ManyBinaryField.extractProps = (fieldName, record, attrs) => {
+Many2ManyBinaryField.extractProps = ({ attrs, field }) => {
     return {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
-        uploadText: record.fields[fieldName].string,
+        uploadText: field.string,
     };
 };
 
