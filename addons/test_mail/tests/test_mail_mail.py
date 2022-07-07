@@ -7,7 +7,6 @@ import smtplib
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch
 
@@ -17,6 +16,7 @@ from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import common, tagged, users
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
+from OpenSSL.SSL import Error as SSLError
 
 
 @tagged('mail_mail')

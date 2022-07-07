@@ -17,7 +17,7 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import float_repr, lazy_property, osutil, pycompat
-from odoo.tools.misc import xlsxwriter
+import xlsxwriter
 from odoo.tools.translate import _
 
 

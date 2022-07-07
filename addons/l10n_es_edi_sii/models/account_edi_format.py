@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
-from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
+from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 
 import math
 import json

@@ -785,3 +785,16 @@ class TestUsers(TransactionCase):
         self.assertFalse(user.active)
         with self.assertRaises(UserError):
             user.write({'active': True})
+
+
+class TestMonkeypatches(TransactionCase):
+    """
+        Test that monkeypatched modules work as intended.
+    """
+
+    def test_OpenSSL(self):
+        try:
+            from odoo.tools.OpenSSL._util import lib #pylint: disable=import-outside-toplevel
+        except ImportError as e:
+            self.fail(f"Import fail: {e}")
+        self.assertEqual(lib.X509_getm_notBefore, lib.X509_get_notBefore)

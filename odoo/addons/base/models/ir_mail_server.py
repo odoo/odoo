@@ -16,14 +16,14 @@ import sys
 import threading
 
 from socket import gaierror, timeout
-from OpenSSL import crypto as SSLCrypto
-from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize
+from OpenSSL import crypto as SSLCrypto
+from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+from OpenSSL.SSL import Error as SSLError
 
 
 _logger = logging.getLogger(__name__)

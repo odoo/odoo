@@ -7,7 +7,6 @@ import io
 import json
 import logging
 import netifaces
-from OpenSSL import crypto
 import os
 from pathlib import Path
 import subprocess
@@ -18,6 +17,7 @@ import time
 
 from odoo import _, http
 from odoo.tools.func import lazy_property
+from OpenSSL import crypto
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
