@@ -4,20 +4,32 @@ import { loadCSS, loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, markup, onWillStart, xml } = owl;
+const { Component, markup, onWillStart, useRef, xml } = owl;
 
 export class OnboardingBanner extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.user = useService("user");
+        this.onboardingContainerRef = useRef("onboardingContainer");
         const resModel = "searchModel" in this.env ? this.env.searchModel.resModel : undefined;
-        this.handleActionLinks = useActionLinks({
+        this._handleActionLinks = useActionLinks({
             resModel,
             reload: async () => {
                 this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
                 this.render();
             },
         });
+        this.handleActionLinks = (event) => {
+            if (event.target.dataset.oHideBanner) {
+                const collapseElement = this.onboardingContainerRef.el.querySelector(
+                    ".o_onboarding_container.collapse.show"
+                );
+                if (collapseElement) {
+                    Collapse.getOrCreateInstance(collapseElement).toggle();
+                }
+            }
+            this._handleActionLinks(event);
+        };
 
         onWillStart(this.onWillStart);
     }
@@ -47,5 +59,5 @@ export class OnboardingBanner extends Component {
     }
 }
 
-OnboardingBanner.template = xml`<div class="w-100" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
+OnboardingBanner.template = xml`<div class="w-100" t-ref="onboardingContainer" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
 OnboardingBanner.props = {};

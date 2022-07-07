@@ -10,7 +10,7 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow">
-        <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
+        <div t-attf-id="#{id}" class="carousel slide" data-bs-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
             <div class="carousel-inner" style="padding: 0;">
                  <t t-foreach="images" t-as="image">
                     <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
@@ -24,20 +24,20 @@
                     <i class="fa fa-chevron-left"/>
                 </li>
                 <t t-foreach="images" t-as="image">
-                    <li t-attf-data-target="##{id}" t-att-data-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.src})"></li>
+                    <li t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.src})"></li>
                 </t>
                 <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
                     <i class="fa fa-chevron-right"/>
                 </li>
             </ul>
 
-            <a class="carousel-control-prev o_we_no_overlay" t-attf-href="##{id}" data-slide="prev" aria-label="Previous" title="Previous">
+            <a class="carousel-control-prev o_we_no_overlay" t-attf-href="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
                 <span class="fa fa-chevron-left fa-2x text-white"></span>
-                <span class="sr-only">Previous</span>
+                <span class="visually-hidden">Previous</span>
             </a>
-            <a class="carousel-control-next o_we_no_overlay" t-attf-href="##{id}" data-slide="next" aria-label="Next" title="Next">
+            <a class="carousel-control-next o_we_no_overlay" t-attf-href="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
                 <span class="fa fa-chevron-right fa-2x text-white"></span>
-                <span class="sr-only">Next</span>
+                <span class="visually-hidden">Next</span>
             </a>
         </div>
     </t>
@@ -58,7 +58,7 @@
                 t-attf-style="">
                 <div class="modal-content bg-transparent">
                     <main class="modal-body o_slideshow bg-transparent">
-                        <button type="button" class="close text-white" data-dismiss="modal" style="position: absolute; right: 10px; top: 10px;"><span role="img" aria-label="Close">×</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close text-white" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px;"><span role="img" aria-label="Close">×</span><span class="visually-hidden">Close</span></button>
                         <t t-call="website.gallery.slideshow"></t>
                     </main>
                 </div>

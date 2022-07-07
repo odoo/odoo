@@ -35,7 +35,7 @@
         opacity: 0.8;
         border-radius: 0px;
         margin-bottom: 0; // If the button comes from a field
-        border: 0 solid gray('300');
+        border: 0 solid map-get($grays, '300');
         text-transform: capitalize !important;
 
         &:hover, &:focus {
@@ -111,7 +111,7 @@
                 width: 100%;
                 height: 100%;
                 border: none;
-                border-bottom: 1px solid gray('300');
+                border-bottom: 1px solid map-get($grays, '300');
                 margin: 0;
                 padding: 0;
                 background-color: transparent;
@@ -139,10 +139,10 @@
     //     @include o-position-absolute(100%, 0);
     //     min-width: 0;
     //     border: none;
-    //     border: 1px solid gray('300');
+    //     border: 1px solid map-get($grays, '300');
     //     margin: 0;
     //     padding: 0;
-    //     @include media-breakpoint-down(sm) {
+    //     @include media-breakpoint-down(md) {
     //         // avoid b4 drowdown inline style
     //         position: relative !important;
     //         transform: none !important;
@@ -154,9 +154,9 @@
     //     > .btn.oe_stat_button {
     //         width: 100%;
     //         border: none;
-    //         border-bottom: 1px solid gray('300');
+    //         border-bottom: 1px solid map-get($grays, '300');
 
-    //         @include media-breakpoint-down(sm) {
+    //         @include media-breakpoint-down(md) {
     //             display: inline-block;
     //             width: percentage(1/3);
     //         }

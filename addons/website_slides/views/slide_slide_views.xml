@@ -61,19 +61,19 @@
                             <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button oe_read_only"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('likes', '=', 0)]}">
                                 <span class="o_stat_value" >
-                                    <field class="ml-1" name="likes" widget="statinfo" nolabel="1"/> Likes
+                                    <field class="ms-1" name="likes" widget="statinfo" nolabel="1"/> Likes
                                 </span>
                              </button>
                              <button disabled="1" icon="fa-thumbs-down" class="oe_stat_button oe_read_only"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('dislikes', '=', 0)]}">
                                  <span class="o_stat_value">
-                                    <field class="ml-1" name="dislikes" widget="statinfo" nolabel="1"/> Dislikes
+                                    <field class="ms-1" name="dislikes" widget="statinfo" nolabel="1"/> Dislikes
                                  </span>
                              </button>
                              <button disabled="1" icon="fa-comments" class="oe_stat_button oe_read_only"
                                  attrs="{'invisible': ['|', ('channel_allow_comment', '!=', True), ('comments_count','=', 0)]}">
                                 <span class="o_stat_value">
-                                    <field class="ml-1" name="comments_count" widget="statinfo" nolabel="1"/> Comments
+                                    <field class="ms-1" name="comments_count" widget="statinfo" nolabel="1"/> Comments
                                 </span>
                             </button>
                             <button name="action_view_embeds" class="oe_stat_button" type="object" icon="fa-share-alt"
@@ -83,18 +83,18 @@
                                     <span class="o_stat_text">Embed Views</span>
                                 </div>
                             </button>
-                            <field name="is_published" class="ml-1" widget="website_redirect_button"
+                            <field name="is_published" class="ms-1" widget="website_redirect_button"
                                    attrs="{'invisible': ['|',('is_category', '=', True), ('channel_id', '=', False)]}"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
                             attrs="{'invisible': [('is_category', '=', True)]}"/>
-                        <div class="oe_title pr-xl-0">
+                        <div class="oe_title pe-xl-0">
                             <div>
                                 <label for="name" string="Content Title"/>
                             </div>
                             <h1>
-                                <field name="name" default_focus="1" placeholder="e.g. Setting up your computer" class="mr-0"/>
+                                <field name="name" default_focus="1" placeholder="e.g. Setting up your computer" class="me-0"/>
                                 <field name="is_category" invisible="1"/>
                             </h1>
                             <field name="tag_ids" attrs="{'invisible': [('is_category', '=', True)]}" widget="many2many_tags" placeholder="Tags..."/>
@@ -260,28 +260,28 @@
                                     <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
                                         <span>
                                             <t t-if="record.slide_category.raw_value == 'infographic'">
-                                                <i class="fa fa-file-image-o mr-2" aria-label="Infographic" role="img" title="Infographic"/>
+                                                <i class="fa fa-file-image-o me-2" aria-label="Infographic" role="img" title="Infographic"/>
                                             </t>
                                             <t t-elif="record.slide_category.raw_value == 'article'">
-                                                <i class="fa fa-file-code-o mr-2" aria-label="article" role="img" title="Article"/>
+                                                <i class="fa fa-file-code-o me-2" aria-label="article" role="img" title="Article"/>
                                             </t>
                                             <t t-elif="record.slide_category.raw_value == 'video'">
-                                                <i class="fa fa-file-video-o mr-2" aria-label="Video" role="img" title="Video"/>
+                                                <i class="fa fa-file-video-o me-2" aria-label="Video" role="img" title="Video"/>
                                             </t>
                                             <t t-elif="record.slide_category.raw_value == 'quiz'">
-                                                <i class="fa fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
+                                                <i class="fa fa-flag me-2" aria-label="Quiz" role="img" title="Quiz"/>
                                             </t>
-                                            <t t-else=""><i class="fa fa-file-pdf-o mr-2" aria-label="Document" role="img" title="Document"/></t>
+                                            <t t-else=""><i class="fa fa-file-pdf-o me-2" aria-label="Document" role="img" title="Document"/></t>
                                             <field name="slide_category"/>
                                         </span>
                                         <span>
-                                            <i class="fa fa-clock-o mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
+                                            <i class="fa fa-clock-o me-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
                                         </span>
                                         <span>
-                                            <i class="fa fa-question mr-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
+                                            <i class="fa fa-question me-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
                                         </span>
                                         <span>
-                                            <i class="fa fa-eye mr-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
+                                            <i class="fa fa-eye me-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
                                         </span>
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>

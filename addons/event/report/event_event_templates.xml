@@ -15,19 +15,19 @@
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_ticket_wrapper p-2">
                     <div class="o_event_foldable_badge_ticket_wrapper_top page">
-                        <h5 class="o_event_foldable_badge_event_name text-odoo font-weight-bold text-center" t-field="event.name"/>
+                        <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
                         <div class="text-center o_event_foldable_badge_font_small">
                             <span itemprop="startDate" t-out="event.date_begin.date()"
-                                class="font-weight-bold"/>
+                                class="fw-bold"/>
                             <span itemprop="startDateTime" t-out="event.date_begin"
-                                class="font-weight-bold"
+                                class="fw-bold"
                                 t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
                             <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
                             <span t-if="not event.is_one_day"
                                 itemprop="endDate" t-out="event.date_end.date()"
-                                class="font-weight-bold"/>
+                                class="fw-bold"/>
                             <span itemprop="endDateTime" t-out="event.date_end"
-                                class="font-weight-bold"
+                                class="fw-bold"
                                 t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
                         </div>
                         <div class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
@@ -63,21 +63,21 @@
                 <div class="oe_structure"/>
                 <div class="h-50 col-12 row m-0">
                     <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step font-weight-bold">1</div>
+                        <div class="o_event_foldable_badge_step fw-bold">1</div>
                         <img src="/event/static/src/img/how_to_fold_1.png" class="w-100 h-100" alt="How to Fold (1)"/>
                     </div>
                     <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step font-weight-bold">2</div>
+                        <div class="o_event_foldable_badge_step fw-bold">2</div>
                         <img src="/event/static/src/img/how_to_fold_2.png" class="w-100 h-100" alt="How to Fold (2)"/>
                     </div>
                 </div>
                 <div class="h-50 col-12 row m-0">
                     <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step font-weight-bold">3</div>
+                        <div class="o_event_foldable_badge_step fw-bold">3</div>
                         <img src="/event/static/src/img/how_to_fold_3.png" class="w-100 h-100" alt="How to Fold (3)"/>
                     </div>
                     <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step font-weight-bold">4</div>
+                        <div class="o_event_foldable_badge_step fw-bold">4</div>
                         <img src="/event/static/src/img/how_to_fold_4.png" class="w-100 h-100" alt="How to Fold (4)"/>
                     </div>
                 </div>
@@ -117,18 +117,18 @@
                                 <div class="o_event_full_page_ticket_font_faded">
                                     Event Ticket For
                                 </div>
-                                <h5 class="o_event_full_page_ticket_event_name text-odoo font-weight-bold py-0 my-0" t-field="event.name"/>
+                                <h5 class="o_event_full_page_ticket_event_name text-odoo fw-bold py-0 my-0" t-field="event.name"/>
                                 <span itemprop="startDate" t-out="event.date_begin.date()"
-                                    class="font-weight-bold"/>
+                                    class="fw-bold"/>
                                 <span itemprop="startDateTime" t-out="event.date_begin"
-                                    class="font-weight-bold"
+                                    class="fw-bold"
                                     t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                 <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
                                 <span t-if="not event.is_one_day"
                                     itemprop="endDate" t-out="event.date_end.date()"
-                                    class="font-weight-bold"/>
+                                    class="fw-bold"/>
                                 <span itemprop="endDateTime" t-out="event.date_end"
-                                    class="font-weight-bold"
+                                    class="fw-bold"
                                     t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                 <span itemprop="timeZone" class="o_event_full_page_ticket_font_faded small">(<t t-out="event.date_tz"/>)</span>
                                 <div t-if="event.address_id" class="o_event_full_page_ticket_font_faded">
@@ -147,7 +147,7 @@
                                     <img t-att-src="image_data_uri(event.organizer_id.image_128)" class="o_event_full_page_ticket_event_logo mb-2"/>
                                 </span>
                                 <div t-if="attendee and attendee.partner_id" class="mb-2 o_event_full_page_ticket_side_info_booked_by">
-                                    <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps font-weight-bold">Booked By</div>
+                                    <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps fw-bold">Booked By</div>
                                     <div class="o_event_full_page_ticket_small" t-field="attendee.partner_id"/>
                                 </div>
                             </div>
@@ -179,12 +179,12 @@
     <div class="row footer o_event_full_page_ticket_footer d-block">
         <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
             <t t-if="event.organizer_id">
-                <span class="font-weight-bold" t-field="event.organizer_id.name"></span>
-                <span t-if="event.organizer_id.phone" class="pl-3 fa fa-phone"/>
+                <span class="fw-bold" t-field="event.organizer_id.name"></span>
+                <span t-if="event.organizer_id.phone" class="ps-3 fa fa-phone"/>
                 <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone"/>
-                <span t-if="event.organizer_id.email_normalized" class="pl-3 fa fa-envelope"/>
+                <span t-if="event.organizer_id.email_normalized" class="ps-3 fa fa-envelope"/>
                 <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized"/>
-                <span t-if="event.organizer_id.website" class="pl-3 fa fa-globe"/>
+                <span t-if="event.organizer_id.website" class="ps-3 fa fa-globe"/>
                 <span t-if="event.organizer_id.website" t-field="event.organizer_id.website"/>
             </t>
             <t t-else="">

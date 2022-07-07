@@ -15,7 +15,7 @@
                         <div class="d-flex flex-wrap align-items-center justify-content-between">
                             <div>
                                 <span t-out="mo.name"/>
-                                <div class="small d-lg-inline-block ml-3">
+                                <div class="small d-lg-inline-block ms-3">
                                     Date:
                                     <span class="text-muted"
                                         t-field="mo.date_finished"
@@ -27,19 +27,19 @@
                                 </div>
                             </div>
                             <span t-if="mo.state in ['to_close', 'done']"
-                                class="small badge badge-success orders_label_text_align">
+                                class="small badge text-bg-success orders_label_text_align">
                                 <i class="fa fa-fw fa-check"/> <b>Manufactured</b>
                             </span>
                             <span t-elif="mo.state == 'cancel'"
-                                class="small badge badge-danger orders_label_text_align">
+                                class="small badge text-bg-danger orders_label_text_align">
                                 <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
                             </span>
                             <span t-elif="mo.state in ['confirmed']"
-                                class="small badge badge-info orders_label_text_align">
+                                class="small badge text-bg-info orders_label_text_align">
                                 <i class="fa fa-fw fa-clock-o"/> <b>Confirmed</b>
                             </span>
                             <span t-elif="mo.state in ['progress']"
-                                class="small badge badge-warning orders_label_text_align">
+                                class="small badge text-bg-warning orders_label_text_align">
                                 <i class="fa fa-fw fa-clock-o"/> <b>In progress</b>
                             </span>
                         </div>

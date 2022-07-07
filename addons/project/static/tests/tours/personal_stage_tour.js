@@ -45,7 +45,7 @@ tour.register('personal_stage_tour', {
     content: 'Open column edit dropdown',
     trigger: '.o_kanban_header:eq(0)',
     run: function () {
-        $('.o_kanban_config.dropdown .dropdown-toggle').eq(0).click();
+        document.querySelector('.o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'));
     },
 }, {
     content: "Try editing inbox",

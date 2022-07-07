@@ -192,7 +192,7 @@ const CountdownWidget = publicWidget.Widget.extend({
                 });
                 this.$textWrapper.text(_t("Countdown ends in"));
                 this.$textWrapper.append($('<span/>').attr({
-                    class: 's_countdown_text ml-1',
+                    class: 's_countdown_text ms-1',
                 }));
                 this.$textWrapper.appendTo(this.$wrapper);
             }

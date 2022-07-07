@@ -11,14 +11,14 @@
             <t t-set="checkIcon" t-value="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
             <t t-set="isCompanyCurrent" t-value="companyService.currentCompany.id === id"/>
             <div class="d-flex menu_companies_item" t-att-data-company-id="id">
-                <div class="border-right toggle_company" t-att-class="{'border-primary' : isCompanyCurrent}" t-on-click="() => this.toggleCompany(id)">
+                <div class="border-end toggle_company" t-att-class="{'border-primary' : isCompanyCurrent}" t-on-click="() => this.toggleCompany(id)">
                     <span class="btn border-0 p-2">
                         <i t-attf-class="fa fa-fw h2 m-0 {{checkIcon}}"/>
                     </span>
                 </div>
-                <div class="flex-grow-1 p-2 ml-1 log_into text-muted" t-att-class="{'alert-primary': isCompanyCurrent}" t-on-click="() => this.logIntoCompany(id)">
-                    <span t-esc="displayName" class="company_label" t-att-class="isCompanyCurrent ? 'text-900 font-weight-bold' : ''"/>
-                    <small t-if="isCompanyCurrent" class="ml-1">(current)</small>
+                <div class="flex-grow-1 p-2 ms-1 log_into text-muted" t-att-class="{'alert-primary': isCompanyCurrent}" t-on-click="() => this.logIntoCompany(id)">
+                    <span t-esc="displayName" class="company_label" t-att-class="isCompanyCurrent ? 'text-900 fw-bold' : ''"/>
+                    <small t-if="isCompanyCurrent" class="ms-1">(current)</small>
                 </div>
             </div>
         </t>

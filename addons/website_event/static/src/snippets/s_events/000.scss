@@ -63,8 +63,8 @@
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    width: $display4-size;
-                    height: $display4-size;
+                    width: map-get($display-font-sizes, 4);
+                    height: map-get($display-font-sizes, 4);
                     border-radius: 50%;
                     text-align: center;
 
@@ -81,7 +81,7 @@
             }
 
             a {
-                color: color-yiq($o-brand-primary);
+                color: color-contrast($o-brand-primary);
 
                 &:hover {
                     text-decoration: none;

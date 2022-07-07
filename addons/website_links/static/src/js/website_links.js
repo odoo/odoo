@@ -384,7 +384,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         this.url_copy_animating = false;
 
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
         return Promise.all(defs);
     },

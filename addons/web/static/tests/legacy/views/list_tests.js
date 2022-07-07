@@ -40,6 +40,9 @@ let serverData;
 let target;
 QUnit.module('LegacyViews', {
     beforeEach: function () {
+        // Avoid animation to not have to wait until the tooltip is removed
+        this.initialTooltipDefaultAnimation = Tooltip.Default.animation;
+        Tooltip.Default.animation = false;
         registry.category("views").remove("list"); // remove new list from registry
         registry.category("views").remove("kanban"); // remove new kanban from registry
         registry.category("views").remove("form"); // remove new form from registry
@@ -149,7 +152,10 @@ QUnit.module('LegacyViews', {
 
         serverData = { models: this.data };
         target = getFixture();
-    }
+    },
+    afterEach: async function () {
+        Tooltip.Default.animation = this.initialTooltipDefaultAnimation;
+    },
 }, function () {
 
     QUnit.module('ListView (legacy)');
@@ -4034,7 +4040,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(target, '.o_cp_action_menus', 'sidebar should be visible');
 
         await click(target.querySelector('.o_cp_action_menus .dropdown-toggle'));
-        const archiveItem = [...target.querySelectorAll('.o_cp_action_menus .dropdown-menu li > a')]
+        const archiveItem = [...target.querySelectorAll('.o_cp_action_menus .o-dropdown-menu li > a')]
             .filter((elem) => elem.textContent === 'Archive');
         await click(archiveItem[0]);
         assert.strictEqual(document.querySelectorAll('.modal').length, 1,
@@ -4430,24 +4436,25 @@ QUnit.module('LegacyViews', {
         // 1000 ms. not totally academic, but a short test suite is easier to sell :(
         list.$('th[data-name=foo]').tooltip('show', false);
 
-        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]')[0].dispatchEvent(new Event('mouseover'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 0, "should not have rendered a tooltip");
 
         odoo.debug = true;
         // it is necessary to rerender the list so tooltips can be properly created
         await list.reload();
         list.$('th[data-name=foo]').tooltip('show', false);
-        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]')[0].dispatchEvent(new Event('mouseover'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1, "should have rendered a tooltip");
 
         await list.reload();
         list.$('th[data-name=bar]').tooltip('show', false);
-        list.$('th[data-name=bar]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=bar]')[0].dispatchEvent(new Event('mouseover'));
         assert.containsOnce($, '.oe_tooltip_technical>li[data-item="widget"]',
             'widget should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
             'Button (toggle_button)', "widget description should be correct");
 
+        list.$('th[data-name=bar]')[0].dispatchEvent(new Event('mouseout'));
         odoo.debug = initialDebugMode;
         list.destroy();
     });
@@ -4660,7 +4667,7 @@ QUnit.module('LegacyViews', {
         assert.strictEqual(cells[0].innerText.trim(), "",
             "Char field should yield an empty element"
         );
-        assert.containsOnce(cells[1], '.custom-checkbox',
+        assert.containsOnce(cells[1], '.form-check',
             "Boolean field has been instantiated"
         );
         assert.notOk(isNaN(cells[2].innerText.trim()), "Intger value is a number");
@@ -9845,7 +9852,7 @@ QUnit.module('LegacyViews', {
         var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
         await testUtils.dom.click($disabledCell.prev());
         assert.containsOnce($disabledCell, ':disabled:checked');
-        var $disabledLabel = $disabledCell.find('.custom-control-label');
+        var $disabledLabel = $disabledCell.find('.form-check-label');
         await testUtils.dom.click($disabledLabel);
         assert.containsOnce($disabledCell, ':checked',
             "clicking disabled checkbox did not work"
@@ -9859,7 +9866,7 @@ QUnit.module('LegacyViews', {
         var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
         await testUtils.dom.click($enabledCell.prev());
         assert.containsOnce($enabledCell, ':checked:not(:disabled)');
-        var $enabledLabel = $enabledCell.find('.custom-control-label');
+        var $enabledLabel = $enabledCell.find('.form-check-label');
         await testUtils.dom.click($enabledLabel);
         assert.containsNone($enabledCell, ':checked',
             "clicking enabled checkbox worked and unchecked it"
@@ -11457,7 +11464,7 @@ QUnit.module('LegacyViews', {
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
-        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-end'),
             'In LTR, the dropdown should be anchored to the right and expand to the left');
 
         // optional fields
@@ -11525,7 +11532,7 @@ QUnit.module('LegacyViews', {
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 
-        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-start'),
             'In RTL, the dropdown should be anchored to the left and expand to the right');
 
         list.destroy();
@@ -12228,7 +12235,7 @@ QUnit.module('LegacyViews', {
         });
 
         assert.containsN(list, '.o_data_row', 4);
-        assert.containsN(list, '.o_data_cell .custom-checkbox input:checked', 3);
+        assert.containsN(list, '.o_data_cell .form-check input:checked', 3);
 
         // select all records and edit the boolean field
         await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
@@ -12239,7 +12246,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(document.body, '.modal');
         await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-        assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
+        assert.containsNone(list, '.o_data_cell .form-check input:checked');
 
         list.destroy();
     });

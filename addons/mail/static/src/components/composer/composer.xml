@@ -6,7 +6,7 @@
             <div class="o_Composer"
                 t-att-class="{
                     'o-focused': composerView.isFocused,
-                    'o-has-current-partner-avatar pr-3 pl-1': composerView.hasCurrentPartnerAvatar,
+                    'o-has-current-partner-avatar pe-3 ps-1': composerView.hasCurrentPartnerAvatar,
                     'o-has-footer': composerView.hasFooter,
                     'o-has-header': composerView.hasHeader,
                     'o-is-in-thread-view bg-white': composerView.threadView,
@@ -33,7 +33,7 @@
                             <span class="o_cursor_pointer" t-on-click="composerView.onClickReplyingToMessage">
                                 Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
                             </span>
-                            <i t-if="composerView.threadView.thread !== messaging.inbox" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ml-1 o_cursor_pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
+                            <i t-if="composerView.threadView.thread !== messaging.inbox" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ms-1 o_cursor_pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
                         </t>
                         <t t-if="composerView.hasThreadName">
                             <span class="o_Composer_threadName">
@@ -72,22 +72,22 @@
                     class="o_Composer_coreMain d-flex flex-nowrap align-items-start flex-grow-1"
                     t-att-class="{
                         'o-composer-is-compact': composerView.isCompact,
-                        'flex-column border rounded-lg bg-white': !composerView.isCompact,
+                        'flex-column border rounded-3 bg-white': !composerView.isCompact,
                     }"
                 >
                     <ComposerTextInput
                         className="'o_Composer_textInput flex-grow-1 align-self-stretch'"
                         classNameObj="{
                             'o-composer-is-compact': composerView.isCompact,
-                            'rounded-lg': !composerView.isCompact,
+                            'rounded-3': !composerView.isCompact,
                             'o_Composer_textInput-mobile': messaging.device.isSmall,
                             'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
-                            'rounded-lg-left': composerView.isCompact and composerView.hasCurrentPartnerAvatar,
+                            'rounded-start-3': composerView.isCompact and composerView.hasCurrentPartnerAvatar,
                         }"
                         record="composerView"
                         t-key="composerView.localId"
                     />
-                    <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing border-right': composerView and composerView.messageViewInEditing }">
+                    <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing border-end': composerView and composerView.messageViewInEditing }">
                         <div class="o_Composer_toolButtons d-flex py-1 border-top bg-white"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
@@ -95,7 +95,7 @@
                                 'flex-row flex-grow-1 justify-content-between': !composerView.isCompact,
                             }">
                             <t t-if="composerView.isCompact">
-                                <div class="o_Composer_toolButtonSeparator flex-shrink-0 my-2 border-left"/>
+                                <div class="o_Composer_toolButtonSeparator flex-shrink-0 my-2 border-start"/>
                             </t>
                             <div class="o_Composer_primaryToolButtons d-flex align-items-center" t-att-class="{ 'o-composer-is-compact px-2': composerView.isCompact }">
                                 <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light mx-1 border-0 rounded-pill bg-white"
@@ -152,9 +152,9 @@
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{
                         'o-last': !composerView.hasDiscardButton,
-                        'o-composer-is-compact border-left-0': composerView.isCompact,
+                        'o-composer-is-compact border-start-0': composerView.isCompact,
                         'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
-                        'rounded-0 rounded-lg-right': !composerView.hasDiscardButton and composerView.hasCurrentPartnerAvatar and composerView.isCompact,
+                        'rounded-0 rounded-end-3': !composerView.hasDiscardButton and composerView.hasCurrentPartnerAvatar and composerView.isCompact,
                     }"
                     t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
                     type="button"
@@ -165,7 +165,7 @@
                 </button>
             </t>
             <t t-if="composerView.hasDiscardButton">
-                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact border-left-0': composerView.isCompact, 'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar, 'rounded-0 rounded-lg-right': composerView.hasCurrentPartnerAvatar and composerView.isCompact }" type="button" t-on-click="composerView.onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact border-start-0': composerView.isCompact, 'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar, 'rounded-0 rounded-end-3': composerView.hasCurrentPartnerAvatar and composerView.isCompact }" type="button" t-on-click="composerView.onClickDiscard">
                     Discard
                 </button>
             </t>

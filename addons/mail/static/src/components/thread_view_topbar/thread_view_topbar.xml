@@ -5,26 +5,26 @@
         <t t-if="threadViewTopbar">
             <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3 bg-100" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="threadViewTopbar.thread">
-                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon mr-2 align-self-center'" thread="threadViewTopbar.thread"/>
+                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon me-2 align-self-center'" thread="threadViewTopbar.thread"/>
                 </t>
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopbar.thread">
                         <t t-if="!threadViewTopbar.isEditingThreadName">
-                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem lead flex-shrink-0 px-1 border text-truncate font-weight-bold" t-att-title="threadViewTopbar.thread.displayName" t-on-click="threadViewTopbar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadName" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadName" t-attf-class="{{ threadViewTopbar.isMouseOverThreadName and !messaging.isCurrentUserGuest ? 'o-threadNameEditable bg-white' : 'border-light' }}">
+                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem lead flex-shrink-0 px-1 border text-truncate fw-bold" t-att-title="threadViewTopbar.thread.displayName" t-on-click="threadViewTopbar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadName" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadName" t-attf-class="{{ threadViewTopbar.isMouseOverThreadName and !messaging.isCurrentUserGuest ? 'o-threadNameEditable bg-white' : 'border-light' }}">
                                 <t t-esc="threadViewTopbar.thread.displayName"/>
                             </div>
                         </t>
                         <t t-if="threadViewTopbar.isEditingThreadName">
-                            <input class="o_ThreadViewTopbar_threadNameInput lead font-weight-bold" type="text" t-att-value="threadViewTopbar.pendingThreadName" t-on-input="threadViewTopbar.onInputThreadNameInput" t-on-keydown="threadViewTopbar.onKeyDownThreadNameInput" t-ref="threadNameInput"/>
+                            <input class="o_ThreadViewTopbar_threadNameInput lead fw-bold" type="text" t-att-value="threadViewTopbar.pendingThreadName" t-on-input="threadViewTopbar.onInputThreadNameInput" t-on-keydown="threadViewTopbar.onKeyDownThreadNameInput" t-ref="threadNameInput"/>
                         </t>
                     </t>
                     <t t-if="!threadViewTopbar.thread">
-                        <div class="o_ThreadViewTopbar_threadName lead flex-shrink-0 px-1 text-truncate font-weight-bold">
+                        <div class="o_ThreadViewTopbar_threadName lead flex-shrink-0 px-1 text-truncate fw-bold">
                             Discuss
                         </div>
                     </t>
                     <t t-if="threadViewTopbar.hasDescriptionArea">
-                        <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2 py-2 border-left"/>
+                        <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-if="!threadViewTopbar.isEditingThreadDescription">
                             <t t-if="threadViewTopbar.thread.description">
                                 <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem px-1 border text-truncate" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-attf-class="{{ threadViewTopbar.isDescriptionHighlighted ? 'o-threadDescriptionEditable bg-white' : 'border-light' }}">
@@ -42,7 +42,7 @@
                         </t>
                     </t>
                 </div>
-                <div class="o_ThreadViewTopbar_actions d-flex align-items-center ml-1">
+                <div class="o_ThreadViewTopbar_actions d-flex align-items-center ms-1">
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.inbox">
                         <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickInboxMarkAllAsRead">Mark all read</button>
                     </t>
@@ -79,7 +79,7 @@
                     <div class="o_ThreadViewTopbar_userInfo d-flex align-items-center">
                         <img class="o_ThreadViewTopbar_avatar mx-1 rounded-circle o_object_fit_cover" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
                         <t t-if="!threadViewTopbar.isEditingGuestName">
-                            <span class="o_ThreadViewTopbar_userName o_ThreadViewTopbar_editableItem px-1 border font-weight-bold text-truncate" t-attf-class="{{ threadViewTopbar.isMouseOverUserName and messaging.isCurrentUserGuest ? 'o-userNameEditable bg-white' : 'border-light' }}" t-on-click="threadViewTopbar.onClickUserName" t-on-mouseenter="threadViewTopbar.onMouseEnterUserName" t-on-mouseleave="threadViewTopbar.onMouseLeaveUserName">
+                            <span class="o_ThreadViewTopbar_userName o_ThreadViewTopbar_editableItem px-1 border fw-bold text-truncate" t-attf-class="{{ threadViewTopbar.isMouseOverUserName and messaging.isCurrentUserGuest ? 'o-userNameEditable bg-white' : 'border-light' }}" t-on-click="threadViewTopbar.onClickUserName" t-on-mouseenter="threadViewTopbar.onMouseEnterUserName" t-on-mouseleave="threadViewTopbar.onMouseLeaveUserName">
                                 <t t-esc="messaging.isCurrentUserGuest ? messaging.currentGuest.name : messaging.currentUser.nameOrDisplayName"/>
                             </span>
                         </t>

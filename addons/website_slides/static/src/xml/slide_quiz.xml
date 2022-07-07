@@ -16,7 +16,7 @@
                                 t-att-data-text="answer.text_value"
                                 t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{widget.slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
 
-                                <label class="my-0 d-flex align-items-center justify-content-center mr-2">
+                                <label class="my-0 d-flex align-items-center justify-content-center me-2">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
@@ -50,12 +50,12 @@
                         <b>This course is private.
                             <span t-if="widget.publicUser">
                                 Please
-                                <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="font-weight-bold">
+                                <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="fw-bold">
                                     sign in
                                 </a>
                                 to enroll.
                             </span>
-                            <a t-else="" href="#" class="font-weight-bold o_wslides_js_channel_enroll"
+                            <a t-else="" href="#" class="fw-bold o_wslides_js_channel_enroll"
                                t-att-data-channel-id="widget.channel.channelId">
                                 <span t-if="widget.channel.channelRequestedAccess" class="text-success">
                                     Responsible already contacted.
@@ -66,7 +66,7 @@
                             </a>
                         </b>
                         <span class="my-0 h4">
-                            <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
+                            <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge rounded-pill bg-warning text-white fw-bold ms-3 px-2 py-1">
                                 + <t t-esc="widget.quiz.quizKarmaGain"/> XP
                             </span>
                         </span>
@@ -83,39 +83,39 @@
                             </span>
                         </b>
                         <span class="my-0 h4">
-                            <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
+                            <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge rounded-pill bg-warning text-white fw-bold ms-3 px-2 py-1">
                                 + <t t-esc="widget.quiz.quizKarmaGain"/> XP
                             </span>
                         </span>
-                        <div class="o_wslides_join_course_widget float-right"/>
+                        <div class="o_wslides_join_course_widget float-end"/>
                     </div>
                 </div>
                 <span t-if="widget.publicUser &amp;&amp; widget.channel.signupAllowed" class="d-block mt-2">
                     <span>Don't have an account ?</span>
-                    <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up !</a>
+                    <a class="fw-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up !</a>
                 </span>
             </div>
             <div t-else="" class="d-md-flex align-items-center justify-content-between">
                 <div t-att-class="'d-flex align-items-center' + (widget.slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
                     <button t-if="! widget.slide.completed" role="button" title="Check answers" aria-label="Check answers"
-                        class="btn btn-primary text-uppercase font-weight-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
+                        class="btn btn-primary text-uppercase fw-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
                     <b t-else="" class="my-0 h5">Done !</b>
                     <span class="my-0 h5" style="line-height: 1">
-                        <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2">
+                        <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge rounded-pill bg-warning text-white fw-bold ms-3 px-2">
                             + <t t-if="!widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
                         </span>
                     </span>
-                    <div class="ml-3 d-none text-danger o_wslides_js_quiz_submit_error">
-                        <i class="fa fa-close mr-1"/>
+                    <div class="ms-3 d-none text-danger o_wslides_js_quiz_submit_error">
+                        <i class="fa fa-close me-1"/>
                         <span class="o_wslides_js_quiz_submit_error_text"></span>
                     </div>
                 </div>
-                <div class="ml-auto mt-3 mt-md-0">
+                <div class="ms-auto mt-3 mt-md-0">
                     <button t-if="widget.quiz.quizAttemptsCount > 0 &amp;&amp; widget.slide.channelCanUpload" class="btn btn-light border o_wslides_js_lesson_quiz_reset">
                         Reset
                     </button>
                     <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext" class="btn btn-primary o_wslides_quiz_continue">
-                        Continue <i class="fa fa-chevron-right ml-1"/>
+                        Continue <i class="fa fa-chevron-right ms-1"/>
                     </button>
                 </div>
             </div>
@@ -124,17 +124,17 @@
 
     <t t-name="slide.slide.quiz.finish">
         <div>
-            <button type="button" class="o_wslides_quiz_modal_close_btn close position-absolute" data-dismiss="modal" aria-label="Close">&#215;</button>
+            <button type="button" class="o_wslides_quiz_modal_close_btn btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="o_wslides_quiz_success_image d-none d-md-flex flex-shrink-0">
                 <img class="o_wslides_quiz_modal_hero" src="/website_slides/static/src/img/quiz_modal_success.svg" alt=""/>
             </div>
-            <div class="d-flex flex-column flex-grow-1 justify-content-between pl-md-5 p-3 overflow-auto">
+            <div class="d-flex flex-column flex-grow-1 justify-content-between ps-md-5 p-3 overflow-auto">
                 <div>
-                    <h1 class="o_wslides_quiz_modal_title mt-3 display-4 font-weight-bold">Amazing!</h1>
+                    <h1 class="o_wslides_quiz_modal_title mt-3 display-4 fw-bold">Amazing!</h1>
                     <div class="pb-3">
                         <h4 class="o_wslides_quiz_modal_xp_gained pb-2 d-flex fade">
                             <t t-if="widget.quiz.quizKarmaWon > 0">
-                                You gained <span class="badge badge-pill badge-success text-white font-weight-bold ml-2 mr-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !
+                                You gained <span class="badge rounded-pill text-bg-success text-white fw-bold ms-2 me-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !
                             </t>
                             <t t-else="">You did it!</t>
                         </h4>
@@ -142,12 +142,12 @@
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.previous_rank.progress" aria-valuemin="0" aria-valuemax="100"
                                     t-attf-style="width: #{widget.quiz.rankProgress.previous_rank.progress}%"/>
-                                <div class="progress-bar-tooltip" data-toggle="tooltip" data-placement="top" t-att-title="widget.quiz.rankProgress.new_rank.karma" />
+                                <div class="progress-bar-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" t-att-title="widget.quiz.rankProgress.new_rank.karma" />
                             </div>
-                            <small class="float-left text-primary font-weight-bold o_wslides_quiz_modal_rank_lower_bound">
+                            <small class="float-start text-primary fw-bold o_wslides_quiz_modal_rank_lower_bound">
                                 <t t-esc="widget.quiz.rankProgress.previous_rank.lower_bound"/>
                             </small>
-                            <small t-if="widget.quiz.rankProgress.previous_rank.upper_bound" class="float-right font-weight-bold o_wslides_quiz_modal_rank_upper_bound">
+                            <small t-if="widget.quiz.rankProgress.previous_rank.upper_bound" class="float-end fw-bold o_wslides_quiz_modal_rank_upper_bound">
                                 <t t-esc="widget.quiz.rankProgress.previous_rank.upper_bound"/>
                             </small>
                         </div>

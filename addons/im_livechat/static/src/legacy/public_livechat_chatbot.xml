@@ -10,7 +10,7 @@
     <!-- Extend the base livechat window to include a div allowing to restart the script at the end -->
     <t t-extend="im_livechat.legacy.PublicLivechatWindow">
         <t t-jquery='div.o_chat_mini_composer' t-operation="after">
-            <div class="o_livechat_chatbot_end bg-200 font-italic text-center border" style="display: none;">
+            <div class="o_livechat_chatbot_end bg-200 fst-italic text-center border" style="display: none;">
                 <span>Conversation ended...</span>
                 <a href="#" class="o_livechat_chatbot_restart">Restart</a>
             </div>
@@ -41,7 +41,7 @@
                 <t t-foreach="message.getChatbotStepAnswers()" t-as="stepAnswer">
                     <li t-att-data-chatbot-step-answer-id="stepAnswer.id"
                         t-att-data-chatbot-step-redirect-link="stepAnswer.redirect_link"
-                        class="d-inline-block border border-primary rounded p-2 mr-3 mb-1 font-weight-bold">
+                        class="d-inline-block border border-primary rounded p-2 me-3 mb-1 fw-bold">
                         <t t-out="stepAnswer.label"/>
                     </li>
                     <br/>

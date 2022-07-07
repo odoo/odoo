@@ -12,7 +12,7 @@
                 <a href="/shop/cart" t-attf-class="#{_link_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart"/>
                     <span t-if="_text">My Cart</span>
-                    <sup class="my_cart_quantity badge badge-primary" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup class="my_cart_quantity badge text-bg-primary" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                 </a>
             </li>
         </t>
@@ -48,7 +48,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -79,7 +79,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -109,7 +109,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -119,7 +119,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -129,7 +129,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item ml-md-auto'"/>
+                <t t-set="_item_class" t-value="'nav-item ms-md-auto'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -138,7 +138,7 @@
     <!-- Search Bar input-group template -->
     <template id="search" name="Search Box">
         <t t-call="website.website_search_box_input">
-            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto mr-auto mb-2 flex-grow-1"/>
+            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto me-auto mb-2 flex-grow-1"/>
             <t t-set="_classes" t-valuef=" "/>
             <t t-set="search_type" t-valuef="products"/>
             <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0) or '/shop'"/>
@@ -190,7 +190,7 @@
                     <div class="o_wsale_product_btn"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <t t-if="'base_price' in template_price_vals">
-                            <del t-attf-class="text-muted mr-1 h6 mb-0" style="white-space: nowrap;">
+                            <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
                                 <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
                         </t>
@@ -228,7 +228,7 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
             <t t-set="curr_pl" t-value="website.pricelist_id" />
-            <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
+            <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
             <div class="dropdown-menu" role="menu">
@@ -275,13 +275,13 @@
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="w-100"/>
                             </t>
-                            <div class="products_header form-inline flex-md-nowrap justify-content-end mb-4">
+                            <div class="products_header d-flex flex-md-nowrap justify-content-end mb-4">
                                 <t t-call="website_sale.search">
-                                    <t t-set="_classes" t-valuef="w-100 w-md-auto mr-auto mb-2"/>
+                                    <t t-set="_classes" t-valuef="w-100 w-md-auto me-auto mb-2"/>
                                     <t t-set="search" t-value="original_search or search"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list" t-cache="pricelist">
-                                    <t t-set="_classes" t-valuef="ml-3 mb-2"/>
+                                    <t t-set="_classes" t-valuef="ms-3 mb-2"/>
                                 </t>
                             </div>
                             <div t-if="original_search and products" class="alert alert-warning mt8">
@@ -387,9 +387,9 @@
         <xpath expr="//div[hasclass('products_header')]/t[@t-call='website_sale.pricelist_list']" position="after">
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
-            <div class="o_sortby_dropdown dropdown dropdown_sorty_by ml-3 pb-2">
-                <span class="d-none d-lg-inline font-weight-bold text-muted">Sort By:</span>
-                <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
+            <div class="o_sortby_dropdown dropdown dropdown_sorty_by ms-3 pb-2">
+                <span class="d-none d-lg-inline fw-bold text-muted">Sort By:</span>
+                <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
                     <span class="d-none d-lg-inline">
                         <t t-if='website_sale_sortable_current'>
                             <t t-esc="website_sale_sortable_current[0][1]"/>
@@ -400,7 +400,7 @@
                     </span>
                     <i class="fa fa-sort-amount-asc d-lg-none"/>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                <div class="dropdown-menu dropdown-menu-end" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
                         <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[0])" class="dropdown-item">
                             <span t-out="sortby[1]"/>
@@ -413,13 +413,11 @@
 
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_header')]" position="inside">
-            <div class="btn-group btn-group-toggle ml-3 mb-2 d-inline-flex o_wsale_apply_layout" data-toggle="buttons">
-                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid">
-                    <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode != 'list' else None"/>
-                </label>
-                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List">
-                    <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode == 'list' else None"/>
-                </label>
+            <div class="ms-3 mb-2 d-inline-flex o_wsale_apply_layout">
+                <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
+                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid"/>
+                <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
+                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List" for="o_wsale_apply_list"/>
             </div>
         </xpath>
     </template>
@@ -439,9 +437,9 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control custom-radio mb-1 d-inline-block">
-            <input type="radio" style="pointer-events:none;" class="custom-control-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
-            <label class="custom-control-label font-weight-normal" t-att-for="c.id" t-field="c.name"/>
+        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control form-check mb-1 d-inline-block">
+            <input type="radio" style="pointer-events:none;" class="form-check-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
+            <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
     </template>
 
@@ -454,7 +452,7 @@
         </xpath>
         <xpath expr="//div[hasclass('products_categories')]" position="inside">
             <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0"
-                data-target="#wsale_products_categories_collapse" data-toggle="collapse">
+                data-bs-target="#wsale_products_categories_collapse" data-bs-toggle="collapse">
                 Show categories
             </button>
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
@@ -462,9 +460,9 @@
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
-                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control custom-radio mb-1 d-inline-block">
-                                <input type="radio" style="pointer-events:none;" class="custom-control-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
-                                <label class="custom-control-label font-weight-normal" t-att-for="all_products">All Products</label>
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control form-check mb-1 d-inline-block">
+                                <input type="radio" style="pointer-events:none;" class="form-check-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
+                                <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
                             </div>
                         </li>
                         <t t-foreach="categories" t-as="c">
@@ -508,7 +506,7 @@
         </xpath>
         <xpath expr="//div[hasclass('products_attributes_filters')]" position="inside">
             <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0"
-                data-target="#wsale_products_attributes_collapse" data-toggle="collapse">
+                data-bs-target="#wsale_products_attributes_collapse" data-bs-toggle="collapse">
                 Show options
             </button>
             <div class="collapse d-lg-block mb-lg-3" id="wsale_products_attributes_collapse">
@@ -525,7 +523,7 @@
                                     <b t-field="a.name" class="o_products_attributes_title"/>
                                 </h6>
                                 <t t-if="a.display_type == 'select'">
-                                    <select class="custom-select css_attribute_select" name="attrib">
+                                    <select class="form-select css_attribute_select" name="attrib">
                                         <option value="" />
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
@@ -535,9 +533,9 @@
                                 <t t-if="a.display_type == 'radio' or a.display_type == 'pills'">
                                     <div class="flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
-                                            <div class="custom-control custom-checkbox mb-1">
-                                                <input type="checkbox" name="attrib" class="custom-control-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
-                                                <label class="custom-control-label font-weight-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                            <div class="custom-control form-check mb-1">
+                                                <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                                <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
                                             </div>
                                         </t>
                                     </div>
@@ -563,7 +561,7 @@
                 <label class="m-0 h6 o_products_attributes_title">
                     <b>Price Range</b>
                 </label>
-                <input type="range" multiple="multiple" class="custom-range range-with-input"
+                <input type="range" multiple="multiple" class="form-range range-with-input"
                        t-att-data-currency="pricelist.currency_id.symbol"
                        t-att-data-currency-position="pricelist.currency_id.position"
                        t-att-step="pricelist.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
@@ -618,10 +616,10 @@
                             <div class="d-sm-flex justify-content-between mb-2">
                                 <t t-call="website_sale.search">
                                     <t t-set="search" t-value="False"/>
-                                    <t t-set="_classes" t-value="'mb-2 mr-sm-2'"/>
+                                    <t t-set="_classes" t-value="'mb-2 me-sm-2'"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes" t-valuef="ml-2 mb-2 float-right"/>
+                                    <t t-set="_classes" t-valuef="ms-2 mb-2 float-end"/>
                                 </t>
                             </div>
                         </div>
@@ -650,7 +648,7 @@
                                     <div>
                                         <t t-call="website_sale.product_price" />
                                         <small t-if="combination_info['base_unit_price']"
-                                               class="ml-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                               class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                             <t t-call='website_sale.base_unit_price'/>
                                         </small>
                                     </div>
@@ -673,9 +671,9 @@
                                         <t t-set="hasBuyNow" t-value="false"/>
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
-                                        <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 mr-auto">
+                                        <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 me-auto">
                                             <a role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
-                                                <i class="fa fa-shopping-cart mr-2"/>
+                                                <i class="fa fa-shopping-cart me-2"/>
                                                 <span style="font-weight: bold">ADD TO CART</span>
                                             </a>
                                         </div>
@@ -728,7 +726,7 @@
                 <t t-snippet-call="website.s_share">
                     <t t-set="_exclude_share_links" t-value="['whatsapp', 'linkedin']"/>
                     <t t-set="_no_title" t-value="True"/>
-                    <t t-set="_classes" t-valuef="text-lg-right"/>
+                    <t t-set="_classes" t-valuef="text-lg-end"/>
                     <t t-set="_link_classes" t-valuef="mx-1 my-0"/>
                 </t>
             </div>
@@ -784,7 +782,7 @@
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating" data-anchor='true'>
                 <section id="o_product_page_reviews" class="container pt32 pb32" data-anchor='true'>
-                    <a class="o_product_page_reviews_title d-flex justify-content-between text-decoration-none collapsed" type="button" data-toggle="collapse" data-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
+                    <a class="o_product_page_reviews_title d-flex justify-content-between text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
                         <h3 class="mb32">Customer Reviews</h3>
                         <i class="fa align-self-start"/>
                     </a>
@@ -806,18 +804,14 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
       <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
-        <div t-attf-class="css_quantity input-group d-inline-flex mr-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
-            <div class="input-group-prepend">
-                <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
-                    <i class="fa fa-minus"></i>
-                </a>
-            </div>
+        <div t-attf-class="css_quantity input-group d-inline-flex me-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
+            <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
+                <i class="fa fa-minus"></i>
+            </a>
             <input type="text" class="form-control quantity text-center" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-            <div class="input-group-append">
-                <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json" aria-label="Add one" title="Add one">
-                    <i class="fa fa-plus"></i>
-                </a>
-            </div>
+            <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json" aria-label="Add one" title="Add one">
+                <i class="fa fa-plus"></i>
+            </a>
         </div>
       </xpath>
     </template>
@@ -827,8 +821,8 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ml-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
-                <i class="fa fa-bolt mr-2"/>
+            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                <i class="fa fa-bolt me-2"/>
                 <span style="font-weight:bold">BUY NOW</span>
             </a>
         </xpath>
@@ -840,7 +834,7 @@
                 <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
-                <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
+                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
                     t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     itemprop="listPrice"
                 />
@@ -892,16 +886,16 @@
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div class="mb-4">
-                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio mb-1">
+                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control form-check mb-1">
                             <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                             <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
-                            <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
-                            <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label font-weight-normal">
+                            <input type="radio" name="product_id" class="form-check-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                            <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
                                 <span t-esc="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
-                                <span class="badge badge-pill badge-light border" t-if="diff_price != 0">
+                                <span class="badge rounded-pill text-bg-light border" t-if="diff_price != 0">
                                     <span class="sign_badge_price_extra" t-esc="diff_price > 0 and '+' or '-'"/>
-                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted font-italic" />
+                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted fst-italic" />
                                 </span>
                             </label>
                         </div>
@@ -999,8 +993,8 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_submit s_website_form_no_submit_options">
                                                 <div style="width: 200px;" class="s_website_form_label"/>
-                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fa fa-chevron-left"/> Previous</a>
-                                                <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-start"><span class="fa fa-chevron-left"/> Previous</a>
+                                                <a role="button" class="btn btn-primary float-end s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
                                                 <span id="s_website_form_result"></span>
                                             </div>
                                         </div>
@@ -1105,22 +1099,18 @@
                             <div class="css_quantity input-group mx-auto justify-content-center">
                                 <t t-if="not line._is_not_sellable_line()">
                                     <t t-if="show_qty">
-                                        <div class="input-group-prepend">
-                                            <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                                <i class="fa fa-minus"></i>
-                                            </a>
-                                        </div>
+                                        <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
                                         <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                                        <div class="input-group-append">
-                                            <div t-if="line._get_shop_warning(clear=False)" class="input-group-append">
-                                                <a t-attf-href="#" class="btn btn-link">
-                                                <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
-                                                </a>
-                                            </div>
-                                            <a t-else='' t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                                <i class="fa fa-plus"></i>
+                                        <t t-if="line._get_shop_warning(clear=False)">
+                                            <a t-attf-href="#" class="btn btn-link">
+                                            <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
                                             </a>
-                                        </div>
+                                        </t>
+                                        <a t-else='' t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
                                     </t>
                                     <t t-else="">
                                         <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
@@ -1197,7 +1187,7 @@
                                         <span class="fa fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
-                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-end d-none d-xl-inline-block" href="/shop/checkout?express=1">
                                         <span class="">Process Checkout</span>
                                         <span class="fa fa-chevron-right" />
                                     </a>
@@ -1212,7 +1202,7 @@
                                     <span class="fa fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
-                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-end" href="/shop/checkout?express=1">
                                     <span class="">Process Checkout</span>
                                     <span class="fa fa-chevron-right" />
                                 </a>
@@ -1232,7 +1222,7 @@
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="form-row mb8 cart_line">
+                <div class="row mb8 cart_line">
                     <div class="col-3 text-center">
                         <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
                             <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
@@ -1308,13 +1298,11 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
-                <div class="input-group-append">
-                    <a href="#" role="button" class="btn btn-secondary a-submit">Apply</a>
-                </div>
+                <a href="#" role="button" class="btn btn-secondary a-submit">Apply</a>
             </div>
         </form>
         <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <div class="alert alert-danger text-left" role="alert">This promo code is not available.</div>
+            <div class="alert alert-danger text-start" role="alert">This promo code is not available.</div>
         </t>
     </template>
 
@@ -1411,7 +1399,7 @@
             </form>
             <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="allow_edit" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="allow_edit" href="#" class="btn btn-link float-end p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
@@ -1476,7 +1464,7 @@
                                     <h5 class="text-danger" t-esc="err" />
                                 </t>
                                 <form t-if="account_on_checkout != 'mandatory' or not is_public_user" action="/shop/address" method="post" class="checkout_autoformat">
-                                    <div class="form-row">
+                                    <div class="row">
                                         <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                                             <label class="col-form-label" for="name">Name</label>
                                             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']" />
@@ -1520,7 +1508,7 @@
                                         <div class="w-100"/>
                                         <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                                             <label class="col-form-label" for="country_id">Country</label>
-                                            <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
+                                            <select id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
@@ -1531,7 +1519,7 @@
                                         </div>
                                         <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
                                             <label class="col-form-label" for="state_id">State / Province</label>
-                                            <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
+                                            <select name="state_id" t-attf-class="form-select #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
@@ -1585,12 +1573,12 @@
             <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                 <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
-                    <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
+                    <label class="col-form-label fw-normal label-optional" for="company_name">Company Name</label>
                     <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />
                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
-                    <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
+                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
@@ -1604,7 +1592,7 @@
     <template id="address_on_payment" name="Address on payment">
         <div class="card">
             <div class="card-body" id="shipping_and_billing">
-                <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
+                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
                 <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                 <div>
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
@@ -1690,13 +1678,13 @@
 
     <template id="payment_footer" name="Payment">
         <div name="o_checkbox_container"
-             class="custom-control custom-checkbox mt-2 o_accept_tc_button"/>
-        <div class="float-left mt-2">
+             class="custom-control form-check mt-2 o_accept_tc_button"/>
+        <div class="float-start mt-2">
             <a role="button" href="/shop/cart" class="btn btn-secondary">
                 <i class="fa fa-chevron-left"/> Return to Cart
             </a>
         </div>
-        <div class="float-right mt-2">
+        <div class="float-end mt-2">
             <button name="o_payment_submit_button"
                     type="submit"
                     class="btn btn-primary"
@@ -1709,8 +1697,8 @@
 
     <template id="payment_sale_note" inherit_id="payment_footer" name="Accept Terms &amp; Conditions" active="False">
         <xpath expr="//div[@name='o_checkbox_container']" position="inside">
-            <input type="checkbox" id="checkbox_tc" class="custom-control-input"/>
-            <label for="checkbox_tc" class="custom-control-label">
+            <input type="checkbox" id="checkbox_tc" class="form-check-input"/>
+            <label for="checkbox_tc" class="form-check-label">
                 I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
             </label>
         </xpath>
@@ -1725,7 +1713,7 @@
                     <t t-call="website_sale.total">
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-end d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1742,7 +1730,7 @@
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
                     <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
+                    <span class='fa fa-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
                 </div>
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                     Your cart is empty!
@@ -1828,7 +1816,7 @@
                                     </p>
                                 </t>
                                 <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
-                                <h3 class="text-left mt-3">
+                                <h3 class="text-start mt-3">
                                     <strong>Payment Information:</strong>
                                 </h3>
                                 <table class="table">
@@ -1837,10 +1825,10 @@
                                             <td colspan="2">
                                                 <t t-esc="order.get_portal_last_transaction().acquirer_id.sudo().name" />
                                             </td>
-                                            <td class="text-right" width="100">
+                                            <td class="text-end" width="100">
                                                 <strong>Total:</strong>
                                             </td>
-                                            <td class="text-right" width="100">
+                                            <td class="text-end" width="100">
                                                 <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
                                             </td>
                                         </tr>
@@ -1880,20 +1868,20 @@
                       <td class="col-md-2 col-3 border-0" ></td>
                   </tr>
                   <tr id="order_total_untaxed">
-                      <td class="text-right border-0">Subtotal:</td>
-                      <td class="text-xl-right border-0" >
+                      <td class="text-end border-0">Subtotal:</td>
+                      <td class="text-xl-end border-0" >
                           <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
-                      <td class="text-right border-0">Taxes:</td>
-                      <td class="text-xl-right border-0">
+                      <td class="text-end border-0">Taxes:</td>
+                      <td class="text-xl-end border-0">
                            <span t-field="website_sale_order.amount_tax" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
-                      <td class="text-right"><strong>Total:</strong></td>
-                      <td class="text-xl-right">
+                      <td class="text-end border-top border-bottom-0"><strong>Total:</strong></td>
+                      <td class="text-xl-end border-top border-bottom-0">
                           <strong t-field="website_sale_order.amount_total" class="monetary_field"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -1905,7 +1893,7 @@
     <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
-                <td colspan="3" class="text-center text-xl-right border-0">
+                <td colspan="3" class="text-center text-xl-end border-0">
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
@@ -1929,7 +1917,7 @@
                 (payment_tx_id.state == 'authorized' and 'alert-success') or
                 'bg-danger'}">
                 <div class="card-header">
-                    <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
+                    <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-end" target="_blank" aria-label="Edit" title="Edit"
                             t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                         <i class="fa fa-pencil"></i>
                     </a>
@@ -1990,12 +1978,12 @@
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
         <t t-set="product_carousel_block_name">Product Image</t>
-        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-ride="carousel" data-interval="0" t-att-data-name="product_carousel_block_name">
+        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
                 <div class="carousel-inner h-100">
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
-                            <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
+                            <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 ratio ratio-16x9">
                                 <t t-out="product_image.embed_code"/>
                             </div>
                             <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
@@ -2003,10 +1991,10 @@
                     </t>
                 </div>
                 <t t-if="len(product_images) > 1">
-                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-slide="prev">
+                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
                         <span class="fa fa-chevron-left fa-2x" role="img" aria-label="Previous" title="Previous"/>
                     </a>
-                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-slide="next">
+                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
                         <span class="fa fa-chevron-right fa-2x" role="img" aria-label="Next" title="Next"/>
                     </a>
                 </t>
@@ -2025,7 +2013,7 @@
     <template id="carousel_product_indicators_left" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Left" active="False">
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pr-2'"/>
+                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
             </t>
         </xpath>
         <xpath expr="//div[@id='o-carousel-product']" position="attributes">
@@ -2035,11 +2023,11 @@
 
     <template id="carousel_product_indicators" name="Carousel Product">
         <div t-ignore="True" t-attf-class="o_carousel_product_indicators {{indicators_div_class}}">
-            <ol t-if="len(product_images) > 1" t-attf-class="carousel-indicators {{indicators_list_class}} position-static pt-2 pt-lg-0 mx-auto my-0 text-left">
+            <ol t-if="len(product_images) > 1" t-attf-class="carousel-indicators {{indicators_list_class}} position-static pt-2 pt-lg-0 mx-auto my-0 text-start">
                 <li t-foreach="product_images" t-as="product_image"
                     t-attf-class="align-top position-relative {{'active' if product_image_first else ''}}"
                     data-target="#o-carousel-product"
-                    t-att-data-slide-to="str(product_image_index)">
+                    t-att-data-bs-slide-to="str(product_image_index)">
                     <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover", "alt-field": "name"}'/>
                     <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle o_product_video_thumb bg-black-50 text-center"/>
                 </li>
@@ -2094,7 +2082,7 @@
     </template>
 
     <template id="product_category_extra_link" name="Product Category Extra Link">
-        <button  class="btn btn-link btn-sm pr-0" disabled="disabled">
+        <button  class="btn btn-link btn-sm pe-0" disabled="disabled">
             <t t-if="len(categories) == 1">Category:</t>
             <t t-else="">Categories:</t>
         </button>

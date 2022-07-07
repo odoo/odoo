@@ -14,7 +14,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     ],
     events: {
         'change input[name="booth_category_id"]': '_onChangeBoothType',
-        'change .custom-checkbox > input[type="checkbox"]': '_onChangeBooth',
+        'change .form-check > input[type="checkbox"]': '_onChangeBooth',
         'click .o_wbooth_registration_submit': '_onSubmitBoothSelectionClick',
         'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
     },
@@ -43,7 +43,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             if (result.unavailable_booths.length) {
                 self.$('input[name="event_booth_ids"]').each(function (i, el) {
                     if (result.unavailable_booths.includes(parseInt(el.value))) {
-                        $(el).closest('.custom-checkbox').addClass('text-danger');
+                        $(el).closest('.form-check').addClass('text-danger');
                     }
                 });
                 self.$('.o_wbooth_unavailable_booth_alert').removeClass('d-none');
@@ -54,7 +54,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     _countSelectedBooths() {
-        return this.$('.custom-checkbox > input[type="checkbox"]:checked').length;
+        return this.$('.form-check > input[type="checkbox"]:checked').length;
     },
 
     _fillBooths() {
@@ -146,7 +146,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _onChangeBooth(ev) {
-        $(ev.currentTarget).closest('.custom-checkbox').removeClass('text-danger');
+        $(ev.currentTarget).closest('.form-check').removeClass('text-danger');
         this._updateUiAfterBoothChange(this._countSelectedBooths());
     },
 

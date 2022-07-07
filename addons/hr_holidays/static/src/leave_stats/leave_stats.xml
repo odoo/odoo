@@ -21,7 +21,7 @@
             <div t-if="state.departmentLeaves.length === 0">
                 None
             </div>
-            <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave_index" t-attf-class="d-flex flex-row justify-content-between {{leave.sameEmployee ? 'font-weight-bold': ''}}">
+            <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave_index" t-attf-class="d-flex flex-row justify-content-between {{leave.sameEmployee ? 'fw-bold': ''}}">
                 <span><t t-esc="leave.employee_id[1]"/>: <t t-esc="leave.number_of_days"/> day(s)</span>
                 <span><t t-esc="leave.dateFrom"/> - <t t-esc="leave.dateTo"/></span>
             </div>

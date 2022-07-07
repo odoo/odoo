@@ -4,7 +4,7 @@
         <xpath expr="//*[hasclass('o_ThreadNeedactionPreview_messageBody')]" position="replace">
             <t t-if="threadNeedactionPreviewView.isRating">
                 <span class="o_ThreadNeedactionPreview_ratingText">Rating:</span>
-                <img class="o_ThreadNeedactionPreview_ratingImage ml-2" t-att-src="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.rating.ratingImageUrl" t-att-alt="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.rating.ratingText"/>
+                <img class="o_ThreadNeedactionPreview_ratingImage ms-2" t-att-src="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.rating.ratingImageUrl" t-att-alt="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.rating.ratingText"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

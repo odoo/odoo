@@ -3,7 +3,7 @@
      <template id="website_knowledge_article_view_frontend" name="Website Knowledge Layout" inherit_id="knowledge.knowledge_article_view_frontend">
         <xpath expr="//a[hasclass('o_favorites_toggle_button')]" position="replace">
             <a t-if="not request.env.user._is_public()"
-               href="#" class="o_favorites_toggle_button pl-1" t-att-data-article-id="article.id">
+               href="#" class="o_favorites_toggle_button ps-1" t-att-data-article-id="article.id">
                 <i t-if="article.is_user_favorite" class="fa fa-star" />
                 <i t-else="" class="fa fa-star-o" />
             </a>

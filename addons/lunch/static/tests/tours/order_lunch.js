@@ -12,13 +12,13 @@ tour.register('order_lunch_tour', {
     position: 'bottom',
 },
 {
-    trigger: ".o_search_panel_filter_value .custom-control-input",
+    trigger: ".o_search_panel_filter_value .form-check-input",
     content: _t("Restrict your search using filters"),
     position: 'bottom',
 },
 {
     trigger: "div[role=article]",
-    extra_trigger: '.o_search_panel_filter_value .custom-control-input:checked',
+    extra_trigger: '.o_search_panel_filter_value .form-check-input:checked',
     content: _t("Click on a product you want to order and is available."),
     position: 'bottom',
 },

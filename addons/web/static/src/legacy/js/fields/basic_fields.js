@@ -1162,7 +1162,7 @@ const RemainingDays = AbstractField.extend({
      */
     _renderReadonly() {
         if (this.value === false) {
-            this.$el.removeClass('font-weight-bold text-danger text-warning');
+            this.$el.removeClass('fw-bold text-danger text-warning');
             return;
         }
         // compare the value (in the user timezone) with now (also in the user
@@ -1182,7 +1182,7 @@ const RemainingDays = AbstractField.extend({
             text = diffDays === 1 ? _t("Tomorrow") : _.str.sprintf(_t('In %s days'), diffDays);
         }
         this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
-        this.$el.toggleClass('font-weight-bold', diffDays <= 0);
+        this.$el.toggleClass('fw-bold', diffDays <= 0);
         this.$el.toggleClass('text-danger', diffDays < 0);
         this.$el.toggleClass('text-warning', diffDays === 0);
     },
@@ -2762,7 +2762,7 @@ var StateSelectionWidget = AbstractField.extend({
      * @override
      */
     getFocusableElement: function () {
-        return this.$("a[data-toggle='dropdown']");
+        return this.$("a[data-bs-toggle='dropdown']");
     },
 
     on_attach_callback() {
@@ -2863,7 +2863,7 @@ var StateSelectionWidget = AbstractField.extend({
 
         // Disable edition if the field is readonly
         var isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
-        this.$('a[data-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
+        this.$('a[data-bs-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
     },
 
     //--------------------------------------------------------------------------
@@ -2987,13 +2987,13 @@ var LabelSelection = AbstractField.extend({
     _render: function () {
         this.classes = this.nodeOptions && this.nodeOptions.classes || {};
         var labelClass = this.classes[this.value] || 'primary';
-        this.$el.addClass('badge badge-' + labelClass).text(this._formatValue(this.value));
+        this.$el.addClass('badge text-bg-' + labelClass).text(this._formatValue(this.value));
     },
 });
 
 var BooleanToggle = FieldBoolean.extend({
     description: _lt("Toggle"),
-    className: FieldBoolean.prototype.className + ' o_boolean_toggle',
+    className: FieldBoolean.prototype.className + ' o_boolean_toggle form-switch',
     isQuickEditable: true,
     events: {
         'click': '_onClick'
@@ -3014,13 +3014,6 @@ var BooleanToggle = FieldBoolean.extend({
      */
     async _render() {
         await this._super(...arguments);
-        const classToApply = this.value ? 'fa-check-circle' : 'fa-times-circle';
-        if (this.el.querySelector('i')) {
-            this.el.querySelector('i').remove();
-        }
-        const i = document.createElement("i");
-        i.setAttribute('class', `fa ${classToApply}`);
-        this.el.querySelector('label').appendChild(i);
         const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
         this.$input.prop('disabled', isReadonly);
     },

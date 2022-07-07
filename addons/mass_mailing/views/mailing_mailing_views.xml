@@ -42,8 +42,8 @@
                     <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
                     <field name="sent" sum="Total" />
-                    <field name="received_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Delivered (%)" avg="Average"/>
-                    <field name="opened_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Opened (%)" avg="Average"/>
+                    <field name="received_ratio" class="d-flex align-items-center ps-0 ps-lg-5" widget="progressbar" string="Delivered (%)" avg="Average"/>
+                    <field name="opened_ratio" class="d-flex align-items-center ps-0 ps-lg-5" widget="progressbar" string="Opened (%)" avg="Average"/>
                     <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average"/>
                     <field name="clicks_ratio" string="Clicked (%)" avg="Average"/>
                     <field name="replied_ratio" string="Replied (%)" avg="Average"/>
@@ -79,7 +79,7 @@
                                     name="action_view_traces_canceled"
                                     type="object">
                                 <strong>
-                                    <field name="canceled" class="oe_inline mr-2"/>
+                                    <field name="canceled" class="oe_inline me-2"/>
                                     <span name="canceled_text">emails have been canceled and will not be sent.</span>
                                 </strong>
                             </button>
@@ -89,7 +89,7 @@
                                     name="action_view_traces_scheduled"
                                     type="object">
                                 <strong>
-                                    <field name="scheduled" class="oe_inline mr-2"/>
+                                    <field name="scheduled" class="oe_inline me-2"/>
                                     <span name="scheduled_text">emails are in queue and will be sent soon.</span>
                                 </strong>
                             </button>
@@ -99,7 +99,7 @@
                                     name="action_view_traces_sent"
                                     type="object">
                                 <strong>
-                                    <field name="sent" class="oe_inline mr-2"/>
+                                    <field name="sent" class="oe_inline me-2"/>
                                     <span name="sent">emails have been sent.</span>
                                 </strong>
                             </button>
@@ -109,7 +109,7 @@
                                     name="action_view_traces_failed"
                                     type="object">
                                 <strong>
-                                    <field name="failed" class="oe_inline mr-2"/>
+                                    <field name="failed" class="oe_inline me-2"/>
                                     <span name="failed_text">emails could not be sent.</span>
                                 </strong>
                             </button>
@@ -189,7 +189,7 @@
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="d-flex flex-row align-items-baseline flex-wrap">
-                                    <div class="mr-5">
+                                    <div class="me-5">
                                         <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
@@ -203,16 +203,16 @@
                                                     'required':[('mailing_model_name','=','mailing.list')],
                                                     'readonly': [('state', 'in', ('sending', 'done'))]
                                             }"/>
-                                            <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ml-1"
+                                            <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
                                                 attrs="{'invisible': ['|', '|', ('contact_list_ids', '=', False), ('contact_list_ids', '=', []), ('state', 'in', ('sending', 'done'))]}"
                                                 name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}" class="o_td_label">
                                         <!-- We don't want to display label in edit mode, unless mailing is in sending or done state (where filter will be readonly) -->
-                                        <label for="mailing_filter_id" string="Filter" class="oe_read_only mr-4"
+                                        <label for="mailing_filter_id" string="Filter" class="oe_read_only me-4"
                                                attrs="{'invisible': ['|', ('state', 'in', ('sending', 'done')), ('mailing_filter_id', '=', False)]}"/>
-                                        <label for="mailing_filter_id" string="Filter" class="mr-4"
+                                        <label for="mailing_filter_id" string="Filter" class="me-4"
                                                attrs="{'invisible': ['|', ('state', 'not in', ('sending', 'done')), ('mailing_filter_id', '=', False)]}"/>
                                         <field name="mailing_filter_id" placeholder="Reload a favorite filter"
                                                class="w-auto" widget="mailing_filter"
@@ -506,7 +506,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" data-display="static" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" data-bs-display="static" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
@@ -570,12 +570,12 @@
                                     <div class="oe_kanban_bottom_left">
                                         <span attrs="{'invisible': [('sent_date', '=', False)]}"
                                             t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-calendar-check-o mr-2 small my-auto" aria-label="Sent date"/>
+                                            <span class="fa fa-calendar-check-o me-2 small my-auto" aria-label="Sent date"/>
                                             <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
                                         </span>
                                         <span attrs="{'invisible': [('schedule_date', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="fa fa-hourglass-half me-2 small my-auto" aria-label="Scheduled date"/>
                                             <span class="align-self-baseline"><field name="schedule_date" widget="date"/></span>
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
@@ -586,7 +586,7 @@
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-o mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="fa fa-hourglass-o me-2 small my-auto" aria-label="Scheduled date"/>
                                             <span class="align-self-baseline">Next Batch</span>
                                         </span>
                                     </div>

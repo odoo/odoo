@@ -3,15 +3,15 @@
 
     <t t-name="mail.CallInviteRequestPopup" owl="1">
         <t t-if="callInviteRequestPopup">
-            <div class="o_CallInviteRequestPopup d-flex flex-column m-2 p-5 border border-dark rounded-sm bg-900" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_CallInviteRequestPopup d-flex flex-column m-2 p-5 border border-dark rounded-1 bg-900" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="callInviteRequestPopup.thread.rtcInvitingSession">
                     <div class="o_CallInviteRequestPopup_partnerInfo d-flex flex-column justify-content-around align-items-center text-nowrap">
                         <img class="o_CallInviteRequestPopup_partnerInfoImage mb-2 rounded-circle o_cursor_pointer"
                             t-att-src="callInviteRequestPopup.thread.rtcInvitingSession.avatarUrl"
                             t-on-click="callInviteRequestPopup.onClickAvatar"
                             alt="Avatar"/>
-                        <span class="o_CallInviteRequestPopup_partnerInfoName w-100 font-weight-bolder text-truncate text-center overflow-hidden" t-esc="callInviteRequestPopup.thread.rtcInvitingSession.name"/>
-                        <span class="o_CallInviteRequestPopup_partnerInfoText font-italic opacity-75">Incoming Call...</span>
+                        <span class="o_CallInviteRequestPopup_partnerInfoName w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="callInviteRequestPopup.thread.rtcInvitingSession.name"/>
+                        <span class="o_CallInviteRequestPopup_partnerInfoText fst-italic opacity-75">Incoming Call...</span>
                     </div>
                 </t>
                 <div class="o_CallInviteRequestPopup_buttonList d-flex justify-content-around align-items-center w-100 mt-4">

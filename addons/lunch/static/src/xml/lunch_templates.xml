@@ -9,12 +9,12 @@
         <div class="o_lunch_banner container-fluid">
             <div class="o_lunch_widget row py-3 py-md-0">
                 <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
-                    <div class="card-body row no-gutters align-items-center">
+                    <div class="card-body row g-0 align-items-center">
                         <div class="col-3 col-md-6 col-lg-3">
                             <img class="o_image_64_cover rounded-circle" t-attf-src="{{ widget.userimage }}"/>
                         </div>
                         <div class="col-9 col-md-6 col-lg-9">
-                            <div class="pl-3">
+                            <div class="ps-3">
                                 <div class="o_lunch_user_field py-1"/>
                                 <div class="o_lunch_location_field py-1"/>
                                 <div class="d-flex flex-row py-1">
@@ -45,11 +45,11 @@
                                             <span t-esc="line.quantity"/>
                                             <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle o_add_product" t-if="can_modify" t-attf-data-id="{{ line.id }}"/>
                                         </div>
-                                        <div class="flex-grow-1 pl-2">
+                                        <div class="flex-grow-1 ps-2">
                                             <button t-if="can_modify" t-esc="line.product[1]" t-attf-class="btn btn-link o_lunch_open_wizard" t-attf-data-product-id="{{ line.product[0] }}" t-attf-data-id="{{ line.id }}"/>
                                             <t t-else="" t-esc="line.product[1]" />
                                             <t t-set="state_pill" t-value="states_mapping[line.raw_state]" />
-                                            <span t-esc="line.state" t-attf-class="badge badge-pill badge-{{ state_pill }}" />
+                                            <span t-esc="line.state" t-attf-class="badge rounded-pill bg-{{ state_pill }}" />
                                         </div>
                                         <div class="flex-grow-0">
                                             <t t-call="currency_field">
@@ -59,7 +59,7 @@
                                         </div>
                                     </div>
                                     <div t-foreach="line.toppings" t-as="topping" t-key="topping_index" class="d-flex flex-row">
-                                        <div class="flex-grow-1 pl-5">
+                                        <div class="flex-grow-1 ps-5">
                                             <span>+ <t t-esc="topping[0]"/></span>
                                         </div>
                                         <div class="flex-grow-0">
@@ -69,7 +69,7 @@
                                             </t>
                                         </div>
                                     </div>
-                                    <span t-if="line.note" t-esc="line.note" class="text-muted pl-5"/>
+                                    <span t-if="line.note" t-esc="line.note" class="text-muted ps-5"/>
                                 </li>
                             </ul>
                         </div>

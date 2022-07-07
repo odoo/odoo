@@ -4,7 +4,7 @@
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_mail_activity">
         <!-- Dropdowns are created in JS to avoid some bugs, that's why the <a/> contains no args for the dropdown creation -->
-        <a class="dropdown-toggle o-no-caret o_activity_btn" data-boundary="viewport" data-flip="false" data-toggle="dropdown" role="button">
+        <a class="dropdown-toggle o-no-caret o_activity_btn" data-boundary="viewport" data-flip="false" data-bs-toggle="dropdown" role="button">
             <!-- span classes are generated dynamically (see _render) -->
             <span t-att-title="widget.selection[widget.activityState]" role="img" t-att-aria-label="widget.selection[widget.activity_state]"/>
        </a>
@@ -36,7 +36,7 @@
 
                 <li role="menuitem" t-attf-class="o_activity_label list-group-item list-group-item list-group-item-light d-flex justify-content-between align-items-center o_activity_color_{{key}} {{!key_first ? 'mt-2' : ''}}">
                     <strong><t t-esc="selection[key]"/></strong>
-                    <span t-attf-class="badge badge-pill badge-{{contextual_class}} border-0 mr-0"><t t-esc="logs.length"/></span>
+                    <span t-attf-class="badge rounded-pill bg-{{contextual_class}} border-0 me-0"><t t-esc="logs.length"/></span>
                 </li>
                 <t t-foreach="logs" t-as="log">
                     <t t-set="edit_class" t-value="'o_edit_activity'"/>
@@ -52,8 +52,8 @@
         </ul>
     </div>
     <div class="dropdown-divider m-0"/>
-    <div role="menuitem" class="o_schedule_activity dropdown-header p-0 text-center">
-        <button class="btn btn-secondary btn-block p-3">
+    <div role="menuitem" class="o_schedule_activity d-grid dropdown-header p-0 text-center">
+        <button class="btn btn-secondary p-3">
             <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
         </button>
     </div>
@@ -63,18 +63,18 @@
     <li t-attf-class="list-group-item o_log_activity d-flex #{log_last ? 'border-bottom' : ''}" role="menuitem">
         <div t-attf-class="o_activity_title o_log_activity #{edit_class}" t-att-data-activity-id="log.id">
             <div t-attf-class="o_activity_title_entry o_mail_activity {{ log.chaining_type === 'suggest' ? 'align-items-center' : 'mb-1'}}">
-                <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
+                <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw me-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                 <strong class="text-dark o_activity_summary"><t t-esc="log.title_action or log.summary or log.activity_type_id[1]"/></strong>
                 <button t-if="log.chaining_type === 'suggest' and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
-                <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
-                <small t-if="log.user_id[0] !== session.uid and log.mail_template_ids" class="mr-1"><t t-esc="log.user_id[1]"/> -</small>
+                <span class="fa fa-clock-o fa-fw me-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <small t-if="log.user_id[0] !== session.uid and log.mail_template_ids" class="me-1"><t t-esc="log.user_id[1]"/> -</small>
                 <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
             </div>
             <t t-if="log.mail_template_ids">
                 <div t-foreach="log.mail_template_ids" t-as="mail_template" class="o_activity_title_entry mt-2" t-att-data-activity-id="log.id" t-att-data-chaining-type-activity="log.chaining_type" t-att-data-previous-activity-type-id="log.activity_type_id[0]">
-                    <i class="fa fa-envelope-o fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
+                    <i class="fa fa-envelope-o fa-fw me-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
                     <small>
                         <div class="mb-1" t-esc="mail_template.name + ':'"/>
                         <a class="o_activity_template_preview" t-att-data-template-id="mail_template.id" href="#"><b>Preview</b></a>
@@ -84,7 +84,7 @@
                 </div>
             </t>
         </div>
-        <div t-if="log.can_write" class="flex-grow-1 text-right">
+        <div t-if="log.can_write" class="flex-grow-1 text-end">
             <t t-if="log.activity_category === 'upload_file'">
                 <a  t-att-data-chaining-type-activity="log.chaining_type"
                     t-att-data-previous-activity-type-id="log.activity_type_id[0]"
@@ -106,7 +106,7 @@
                     t-att-data-activity-id="log.id"
                     t-attf-href="#o_mark_done_form{{log.id}}"
                     class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
-                    data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
+                    data-bs-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
             </t>
         </div>
     </li>

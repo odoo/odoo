@@ -38,7 +38,7 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <ul class="o_wesponsor_topbar_filters o_wevent_index_topbar_filters nav"/>
                 </form>
-                <div class="o_wevent_event_search_box d-flex align-items-center flex-wrap pl-sm-3 pr-0">
+                <div class="o_wevent_event_search_box d-flex align-items-center flex-wrap ps-sm-3 pe-0">
                     <t t-call="website_event_exhibitor.exhibitor_search_box">
                         <t t-set="search" t-value="search_key" />
                         <t t-set="placeholder" t-value="'Search an exhibitor ...'"/>
@@ -55,8 +55,8 @@
     name="Filter by Country"
     active="True">
     <xpath expr="//ul[hasclass('o_wesponsor_topbar_filters')]" position="inside">
-        <li class="nav-item dropdown mr-2 my-1">
-            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+        <li class="nav-item dropdown me-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-folder-open"/>
                 By Country
             </a>
@@ -83,8 +83,8 @@
     name="Filter by Sponsorship"
     active="True">
     <xpath expr="//ul[hasclass('o_wesponsor_topbar_filters')]" position="inside">
-        <li class="nav-item dropdown mr-2 my-1">
-            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+        <li class="nav-item dropdown me-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-folder-open"/>
                 By Level
             </a>
@@ -141,7 +141,7 @@
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
         <div class="col-12">
             <h2 class="m-0" t-out="sponsor_category['sponsorship'].name"/>
-            <hr class="mt-2 pb-1 mb-1"/>
+            <hr class="mt-2 mb-2"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
             <t t-call="website_event_exhibitor.exhibitor_card"/>
@@ -156,16 +156,16 @@
 <template id="exhibitor_card" name="Exhibitor Card">
     <article class="h-100 card border-0 shadow-sm o_wesponsor_card"
         itemscope="itemscope" itemtype="http://schema.org/Event">
-        <div class="h-100 row no-gutters" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
+        <div class="h-100 row g-0" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
             <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
                 <div class="d-block h-100 w-100">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban mr-2"/>Unpublished
+                            <i class="fa fa-ban me-2"/>Unpublished
                         </small>
-                        <img class="position-absolute mr-2 mt-2"
+                        <img class="position-absolute me-2 mt-2"
                             style="right: 0; top: 0; max-height: 20px;"
                             t-if="sponsor.partner_id.country_id"
                             t-att-src="sponsor.partner_id.country_id.image_url"
@@ -174,7 +174,7 @@
                     <div t-else="" class="o_wesponsor_gradient card-img-top"
                         style="padding-top: 50%">
                         <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban mr-2"/>Unpublished
+                            <i class="fa fa-ban me-2"/>Unpublished
                         </small>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                     <h5 class="card-title mt-0 mb-0 d-flex align-items-start">
                         <span t-field="sponsor.name" itemprop="name" class="text-break"/>
                         <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
-                            class="ml-auto badge badge-danger">Live
+                            class="ms-auto badge text-bg-danger">Live
                         </span>
                     </h5>
                     <!-- Catchy sentence -->
@@ -234,8 +234,8 @@
 
 <template id="exhibitors_search_tag" name="Exhibitors: term">
     <span t-att-data-field="field" t-att-data-value="value"
-        class="o_search_tag align-items-baseline border d-inline-flex pl-2 mt-3 rounded ml16 mb-2 bg-white">
-        <i class="fa fa-tag mr-2 text-muted"/>
+        class="o_search_tag align-items-baseline border d-inline-flex ps-2 mt-3 rounded ml16 mb-2 bg-white">
+        <i class="fa fa-tag me-2 text-muted"/>
         <t t-out="label"/>
         <span class="btn border-0 py-1">&#215;</span>
     </span>

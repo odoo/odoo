@@ -40,20 +40,20 @@
                             <th t-if="not groupby == 'project'">Project</th>
                             <th t-if="not groupby == 'task'">Task</th>
                             <th>Description</th>
-                            <th t-if="is_uom_day" class="text-right">Days Spent</th>
-                            <th t-else="" class="text-right">Hours Spent</th>
+                            <th t-if="is_uom_day" class="text-end">Days Spent</th>
+                            <th t-else="" class="text-end">Hours Spent</th>
                         </tr>
                     </thead>
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
                         <t t-set="timesheets" t-value="timesheets_with_hours[0]"/>
                         <t t-set="hours_spent" t-value="timesheets_with_hours[1]"/>
                         <tbody style="font-size: 0.8rem">
-                            <tr t-if="not groupby =='none'" class="thead-light">
+                            <tr t-if="not groupby =='none'" class="table-light">
                                 <t t-if="groupby == 'project'">
                                     <th t-if="groupby == 'project'" colspan="5">
                                         <span t-field="timesheets[0].project_id.name"/>
                                     </th>
-                                    <th colspan="1" class="text-right text-muted">
+                                    <th colspan="1" class="text-end text-muted">
                                         <t t-if="is_uom_day">
                                             Total: <span class="text-muted" t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
@@ -66,7 +66,7 @@
                                     <th colspan="5">
                                         <span t-field="timesheets[0].task_id.name"/>
                                     </th>
-                                    <th colspan="1" class="text-right text-muted">
+                                    <th colspan="1" class="text-end text-muted">
                                         <t t-if="is_uom_day">
                                             Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
@@ -79,7 +79,7 @@
                                     <th colspan="5">
                                         <span t-field="timesheets[0].date"/>
                                     </th>
-                                    <th colspan="1" class="text-right text-muted">
+                                    <th colspan="1" class="text-end text-muted">
                                         <t t-if="is_uom_day">
                                             Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
@@ -92,7 +92,7 @@
                                     <th colspan="5">
                                         <span t-field="timesheets[0].employee_id.name"/>
                                     </th>
-                                    <th colspan="1" class="text-right text-muted">
+                                    <th colspan="1" class="text-end text-muted">
                                         <t t-if="is_uom_day">
                                             Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                         </t>
@@ -103,7 +103,7 @@
                                 </t>
                             </tr>
                             <tr t-else="">
-                                <div style="text-align: right;" class="mr-2 mb-1 text-muted">
+                                <div style="text-align: right;" class="me-2 mb-1 text-muted">
                                     <t t-if="is_uom_day">
                                         Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                                     </t>
@@ -121,7 +121,7 @@
                                     <td t-if="not groupby == 'project'"><span t-field="timesheet.project_id" t-att-title="timesheet.project_id.display_name"/></td>
                                     <td t-if="not groupby == 'task'"><span t-field="timesheet.task_id" t-att-title="timesheet.task_id.display_name"/></td>
                                     <td><span t-esc="timesheet.name" t-att-title="timesheet.name"/></td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
                                         <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
                                     </td>

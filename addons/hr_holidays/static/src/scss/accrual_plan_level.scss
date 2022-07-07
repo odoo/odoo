@@ -1,9 +1,9 @@
-$o-hr-holidays-border-color: gray('300');
+$o-hr-holidays-border-color: map-get($grays, '300');
 
 .o_hr_holidays_hierarchy {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }

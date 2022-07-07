@@ -23,7 +23,7 @@
                         <span t-field="o.company_id.partner_id.name"/>
                     </strong>
                     <br/>
-                    <span name="company_activity" class="font-italic" t-field="o.company_id.report_header"/>
+                    <span name="company_activity" class="fst-italic" t-field="o.company_id.report_header"/>
                     <div/>
                     <t t-esc="' - '.join([item for item in [
                         ', '.join([item for item in [header_address.street, header_address.street2] if item]),

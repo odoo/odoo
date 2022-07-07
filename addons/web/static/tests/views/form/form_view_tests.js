@@ -288,7 +288,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_field_one2many table");
         assert.containsOnce(
             target,
-            "tbody td:not(.o_list_record_selector) .custom-checkbox input:checked"
+            "tbody td:not(.o_list_record_selector) .form-check input:checked"
         );
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
@@ -6625,7 +6625,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_external_button"));
 
         // Close modal
-        await click(target, '.modal-dialog button[class="close"]');
+        await click(target, '.modal-dialog button[class="btn-close"]');
         assert.notStrictEqual(
             $(".o_content").scrollTop(),
             0,
@@ -7656,7 +7656,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_pager_previous"));
         assert.containsOnce(target, ".alert .o_field_translate", "should have a translation alert");
         // remove translation alert by click X and check alert even after form reload
-        await click(target.querySelector(".alert .close"));
+        await click(target.querySelector(".alert .btn-close"));
         assert.containsNone(
             target,
             ".alert .o_field_translate",

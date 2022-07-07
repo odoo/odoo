@@ -13,7 +13,7 @@
     }
 }
 
-@include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+@include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
     .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
         // cancel the padding of the form_sheet when breakpoints are reached
         margin-left: -$o-sheet-cancel-hpadding*2;
@@ -128,7 +128,7 @@
                 &:hover {
                     font-weight: normal;
                 }
-                @include media-breakpoint-down(xs) {
+                @include media-breakpoint-down(sm) {
                     font-size: 1.4rem;
                     height: 40px;
                     margin-bottom: 30px;

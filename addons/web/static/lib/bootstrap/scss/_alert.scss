@@ -27,25 +27,31 @@
 // Expand the right padding and account for the close button's positioning.
 
 .alert-dismissible {
-  padding-right: $close-font-size + $alert-padding-x * 2;
+  padding-right: $alert-dismissible-padding-r;
 
   // Adjust close link position
-  .close {
+  .btn-close {
     position: absolute;
     top: 0;
     right: 0;
-    padding: $alert-padding-y $alert-padding-x;
-    color: inherit;
+    z-index: $stretched-link-z-index + 1;
+    padding: $alert-padding-y * 1.25 $alert-padding-x;
   }
 }
 
 
-// Alternate styles
-//
+// scss-docs-start alert-modifiers
 // Generate contextual modifier classes for colorizing the alert.
 
-@each $color, $value in $theme-colors {
-  .alert-#{$color} {
-    @include alert-variant(theme-color-level($color, $alert-bg-level), theme-color-level($color, $alert-border-level), theme-color-level($color, $alert-color-level));
+@each $state, $value in $theme-colors {
+  $alert-background: shift-color($value, $alert-bg-scale);
+  $alert-border: shift-color($value, $alert-border-scale);
+  $alert-color: shift-color($value, $alert-color-scale);
+  @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
+    $alert-color: mix($value, color-contrast($alert-background), abs($alert-color-scale));
+  }
+  .alert-#{$state} {
+    @include alert-variant($alert-background, $alert-border, $alert-color);
   }
 }
+// scss-docs-end alert-modifiers

@@ -11,7 +11,7 @@
         justify-content: space-between;
         padding: $o-kanban-dashboard-vpadding $o-kanban-dashboard-hpadding;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             margin-bottom: 10px;
         }
 
@@ -48,7 +48,7 @@
                 margin-bottom: 10px;
 
                 + .o_kanban_card_manage_section {
-                    border-top: 1px solid gray('200');
+                    border-top: 1px solid map-get($grays, '200');
                 }
 
                 > div {
@@ -90,7 +90,7 @@
                     padding-top: $o-kanban-dashboard-dropdown-complex-gap*3;
 
                     &:not(:first-child) {
-                        border-top: 1px solid gray('300');
+                        border-top: 1px solid map-get($grays, '300');
                     }
 
                     .oe_kanban_colorpicker {
@@ -99,11 +99,11 @@
                     }
 
                     div[class*="col-"] + div[class*="col-"] {
-                        border-left: 1px solid gray('300');
+                        border-left: 1px solid map-get($grays, '300');
                     }
 
                     // Default options box
-                    div.text-right {
+                    div.text-end {
                         text-align: left; // :/
                         @include o-kanban-dashboard-dropdown-link(0);
                     }
@@ -176,7 +176,7 @@
                 @include o-text-overflow(inline-block);
             }
 
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 button + a {
                     display: block;
                     margin-top: map-get($spacers, 3);
@@ -188,8 +188,8 @@
                 margin-bottom: -$o-kanban-dashboard-vpadding;
 
                 &.bottom_block {
-                    border-top: 1px solid gray('300');
-                    background-color: gray('200');
+                    border-top: 1px solid map-get($grays, '300');
+                    background-color: map-get($grays, '200');
                     padding-top: $o-kanban-dashboard-vpadding;
                     padding-bottom: $o-kanban-dashboard-vpadding;
                 }

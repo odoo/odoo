@@ -16,19 +16,19 @@
                     <td>
                         Today
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <t t-out="today"/>
                     </td>
                 </tr>
                 <tr t-foreach="lead_days_description" t-as="descr">
                     <td><t t-out="descr[0]"/></td>
-                    <td class="text-right"><t t-out="descr[1]"/></td>
+                    <td class="text-end"><t t-out="descr[1]"/></td>
                 </tr>
                 <tr class="table-info">
                     <td>
                         Forecasted Date
                     </td>
-                    <td class="text-right text-nowrap">
+                    <td class="text-end text-nowrap">
                         = <t t-out="lead_days_date"/>
                     </td>
                 </tr>
@@ -55,7 +55,7 @@
                 <t t-foreach="replenishment_history" t-as="line">
                     <tr>
                         <td><t t-esc="line.name"/></td>
-                        <td class="text-right text-nowrap" t-esc="line.quantity + ' ' + line.uom_name"/>
+                        <td class="text-end text-nowrap" t-esc="line.quantity + ' ' + line.uom_name"/>
                     </tr>
                 </t>
             </tbody>

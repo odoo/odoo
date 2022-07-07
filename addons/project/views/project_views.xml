@@ -252,27 +252,27 @@
                                     At each stage, employees can block tasks or mark them as ready for the next step.
                                     You can customize here the labels for each state.
                                 </p>
-                                <div class="row ml-1" colspan="2">
+                                <div class="row ms-1" colspan="2">
                                     <label for="legend_normal" string=" " class="o_status mt4"
                                         title="Task in progress. Click to block or set as done."
                                         aria-label="Task in progress. Click to block or set as done." role="img"/>
-                                    <div class="col-11 pl-0">
+                                    <div class="col-11 ps-0">
                                         <field name="legend_normal"/>
                                     </div>
                                 </div>
-                                <div class="row ml-1" colspan="2">
+                                <div class="row ms-1" colspan="2">
                                     <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
                                         title="Task is blocked. Click to unblock or set as done."
                                         aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
-                                    <div class="col-11 pl-0">
+                                    <div class="col-11 ps-0">
                                         <field name="legend_blocked"/>
                                     </div>
                                 </div>
-                                <div class="row ml-1" colspan="2">
+                                <div class="row ms-1" colspan="2">
                                     <label for="legend_done" string=" " class="o_status o_status_green mt4"
                                         title="This step is done. Click to block or set in progress."
                                         aria-label="This step is done. Click to block or set in progress." role="img"/>
-                                    <div class="col-11 pl-0">
+                                    <div class="col-11 ps-0">
                                         <field name="legend_done"/>
                                     </div>
                                 </div>
@@ -481,13 +481,13 @@
                             </div>
                         </button>
                         <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
-                            <div class="pl-4">
+                            <div class="ps-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                             </div>
                         </button>
                         <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
-                            <div class="pl-4">
+                            <div class="ps-4">
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
@@ -511,7 +511,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
-                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="mr-3"/>
+                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-3"/>
                             <field name="name" class="o_text_overflow" placeholder="Project Name"/>
                         </h1>
                     </div>
@@ -553,7 +553,7 @@
                                     <div name="alias_def" colspan="2" class="pb-2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
-                                        <label for="alias_name" class="font-weight-bold o_form_label" string="Create tasks by sending an email to"/>
+                                        <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
                                         <span class="oe_edit_only">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
@@ -697,7 +697,7 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="is_favorite" nolabel="1" width="1" widget="boolean_favorite"/>
-                    <field name="display_name" string="Name" class="font-weight-bold"/>
+                    <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create': True}"/>
@@ -732,7 +732,7 @@
                                         <field name="partner_id" string="Contact"/>
                                     </div>
                                     <div class="col-4">
-                                        <div class="oe_kanban_bottom_right float-right">
+                                        <div class="oe_kanban_bottom_right float-end">
                                             <field name="user_id" widget="many2one_avatar_user"/>
                                         </div>
                                     </div>
@@ -825,18 +825,18 @@
                                             <div class="o_primary">
                                                 <span class="o_text_overflow" t-att-title="record.display_name.value"><t t-esc="record.display_name.value"/></span>
                                                 <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
-                                                    <span class="fa fa-user mr-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
+                                                    <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
                                                 </span>
                                                 <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted o_row">
-                                                    <span class="fa fa-clock-o mr-2" title="Dates"></span><field name="date_start"/>
+                                                    <span class="fa fa-clock-o me-2" title="Dates"></span><field name="date_start"/>
                                                     <i t-if="record.date.raw_value and record.date_start.raw_value" class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"/>
                                                     <field name="date"/>
                                                 </div>
                                                 <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
-                                                    <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
+                                                    <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
                                                 </div>
                                                 <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="text-muted" groups="project.group_project_rating">
-                                                    <b class="mr-1">
+                                                    <b class="me-1">
                                                         <span style="font-weight:bold;" class="fa mt4 fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
                                                         <span style="font-weight:bold;" class="fa mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                                         <span style="font-weight:bold;" class="fa mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
@@ -880,7 +880,7 @@
                                                 <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
                                                 <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
                                             </div>
-                                            <div class="o_kanban_card_manage_section o_kanban_manage_view col-12 row pl-0" groups="!project.group_project_manager">
+                                            <div class="o_kanban_card_manage_section o_kanban_manage_view col-12 row ps-0" groups="!project.group_project_manager">
                                                 <div role="menuitem" class="w-100">
                                                     <a class="dropdown-item mx-0" role="menuitem" type="open">View</a>
                                                 </div>
@@ -1126,11 +1126,11 @@
                         <span id="end_button_box" invisible="1"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title pr-0">
+                    <div class="oe_title pe-0">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                            <field name="kanban_state" widget="state_selection" class="ms-auto"/>
                         </h1>
                     </div>
                     <group>
@@ -1200,7 +1200,7 @@
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
-                                        class="font-weight-bold" widget="badge" optional="hide"/>
+                                        class="fw-bold" widget="badge" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
                                     <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"/>
@@ -1235,13 +1235,13 @@
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
-                                        class="font-weight-bold" widget="badge" optional="hide"/>
+                                        class="fw-bold" widget="badge" optional="hide"/>
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
                                     <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
                                     <field name="stage_id" optional="show" />
-                                    <button class="oe_link float-right" string="View Task" name="action_open_task" type="object"/>
+                                    <button class="oe_link float-end" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
                             </field>
                         </page>
@@ -1414,7 +1414,7 @@
                                         </t>
                                         <t t-else="">
                                             <br/>
-                                            <span class="font-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+                                            <span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                         </t>
                                         <br />
                                         <t t-if="record.partner_id.value">
@@ -1428,7 +1428,7 @@
                                         <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" t-if="!selection_mode" groups="base.group_user">
-                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
@@ -1501,7 +1501,7 @@
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                         attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_last_text', '=', 'none')]}"
-                        class="font-weight-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
+                        class="fw-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
                     <field name="legend_normal" invisible="1"/>
                     <field name="legend_done" invisible="1"/>
                     <field name="legend_blocked" invisible="1"/>
@@ -1592,13 +1592,13 @@
                     <templates>
                         <div class="justify-content-between" t-name="activity-box">
                             <field name="user_ids" widget="many2many_avatar_user"/>
-                            <div class="text-right">
+                            <div class="text-end">
                                 <span t-att-title="record.name.value">
                                     <field name="name" display="full"/>
                                 </span>
                                 <span t-att-title="record.project_id.value">
                                     <field t-if="record.project_id.value" name="project_id" muted="1" display="full"/>
-                                    <span t-else="" class="font-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+                                    <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
                         </div>

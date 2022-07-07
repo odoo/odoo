@@ -73,7 +73,7 @@
                     <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale', 'search_default_sale': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
                 </xpath>
                 <xpath expr="//div[@name='pricing']" position="inside">
-                    <span class="ml-2"/><field name="tax_string"/>
+                    <span class="ms-2"/><field name="tax_string"/>
                 </xpath>
                 <group name="bill" position="inside">
                     <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>

@@ -43,7 +43,7 @@ var FieldBoolean = AbstractField.extend({
         // the one rendered by the widget itself. Even though the event might
         // have been fired on the non-widget version of this field, we can still
         // test the presence of its custom class.
-        if (activated && options && options.event && $(options.event.target).closest('.custom-control.custom-checkbox').length) {
+        if (activated && options && options.event && $(options.event.target).closest('.form-check').length) {
             this._setValue(!this.value);  // Toggle the checkbox
         }
         return activated;
@@ -85,7 +85,7 @@ var FieldBoolean = AbstractField.extend({
      */
     setIDForLabel: function (id) {
         this._super.apply(this, arguments);
-        this.$('.custom-control-label').attr('for', id);
+        this.$('.form-check-label').attr('for', id);
     },
 
     //--------------------------------------------------------------------------

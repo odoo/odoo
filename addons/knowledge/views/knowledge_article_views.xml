@@ -19,7 +19,7 @@
                             <!-- Search bar -->
                             <div id="knowledge_search_bar" class="d-flex align-items-center border bg-light rounded m-3 o_cursor_pointer" data-hotkey="f">
                                 <div class="flex-grow-1 px-2 py-1">Search an article...</div>
-                                <i class="oi oi-search pr-2" title="search"/>
+                                <i class="oi oi-search pe-2" title="search"/>
                             </div>
                             <!-- File explorer -->
                             <div class="flex-grow-1 position-relative">
@@ -42,10 +42,10 @@
                                     <!-- Breadcrumbs -->
                                     <ol class="breadcrumb align-items-center p-3" role="navigation">
                                         <li class="breadcrumb-item d-flex align-items-center">
-                                            <div class="o_knowledge_icon pr-1" attrs="{'invisible': [('icon', '=', False)]}">
+                                            <div class="o_knowledge_icon pe-1" attrs="{'invisible': [('icon', '=', False)]}">
                                                 <div class="o_article_emoji_dropdown dropdown">
                                                     <a href="#" class="o_article_editable_emoji o_article_emoji dropdown-toggle o-no-caret"
-                                                       type="button" data-toggle="dropdown" aria-expanded="true"
+                                                       type="button" data-bs-toggle="dropdown" aria-expanded="true"
                                                        attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}"/>
                                                     <span class="o_article_editable_emoji o_article_emoji o-no-caret"
                                                        attrs="{'invisible': [('is_locked', '=', False), ('user_has_write_access', '=', True)]}"/>
@@ -68,18 +68,18 @@
                                     </div>
                                 </div>
                                 <!-- Buttons -->
-                                <div class="d-flex flex-shrink-0 align-items-center pr-2">
-                                    <a type="button" role="button" class="btn btn-light btn-create text-capitalize mr-1" data-hotkey="c">
+                                <div class="d-flex flex-shrink-0 align-items-center pe-2">
+                                    <a type="button" role="button" class="btn btn-light btn-create text-capitalize me-1" data-hotkey="c">
                                         <i class="fa fa-plus-circle"/> Create
                                     </a>
                                     <div class="btn-group" role="toolbar" aria-label="options">
                                         <div class="o-dropdown dropdown o-dropdown--no-caret">
-                                            <a type="button" role="button" class="btn btn-light btn-share dropdown-toggle mr-1"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hotkey="s"
+                                            <a type="button" role="button" class="btn btn-light btn-share dropdown-toggle me-1"
+                                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hotkey="s"
                                                attrs="{'invisible': [('id', '=', False)]}">
                                                 <i class="fa fa-share-alt"/> Share
                                             </a>
-                                            <a type="button" role="button" class="btn btn-light btn-chatter mr-1" data-hotkey="d"
+                                            <a type="button" role="button" class="btn btn-light btn-chatter me-1" data-hotkey="d"
                                                 attrs="{'invisible': [('id', '=', False)]}">
                                                 <i class="rounded-circle text-center fa fa-comments" title="Open chatter"/>
                                             </a>
@@ -97,7 +97,7 @@
                                     </div>
                                     <div class="btn-group" role="toolbar" aria-label="options">
                                         <div class="o-dropdown dropdown o-dropdown--no-caret">
-                                            <a type="button" role="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                                            <a type="button" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false" data-hotkey="p">
                                                 <i class="fa fa-ellipsis-v"/>
                                             </a>
@@ -134,13 +134,13 @@
                                                          attrs="{'invisible': [('last_edition_uid', '=', False), ('last_edition_date', '=', False)]}"/>
                                                 </div>
                                                 <div class="px-4 py-2 mx-1" attrs="{'invisible': [('last_edition_uid', '=', False)]}">
-                                                    <h6 class="small font-weight-bold m-0">Last Edited by:</h6>
+                                                    <h6 class="small fw-bold m-0">Last Edited by:</h6>
                                                     <div class="d-flex">
                                                         <field name="last_edition_uid" widget="many2one_avatar_user" readonly="1" class="text-truncate"/>
                                                         <span class="mx-1">-</span>
                                                         <field name="last_edition_date" widget="datetime" readonly="1" class="text-nowrap"/>
                                                     </div>
-                                                    <h6 class="small font-weight-bold m-0">Created by:</h6>
+                                                    <h6 class="small fw-bold m-0">Created by:</h6>
                                                     <div class="d-flex">
                                                         <field name="create_uid" widget="many2one_avatar_user" readonly="1" class="text-truncate"/>
                                                         <span class="mx-1">-</span>
@@ -171,7 +171,7 @@
                                                     <div class="o_knowledge_icon_cover_buttons text-muted bg-white d-print-none mt-2"
                                                          attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}">
                                                         <a type="button" role="button" attrs="{'invisible': [('icon', '!=', False)]}"
-                                                           class="btn btn-secondary mr-2 pl-1 o_knowledge_add_icon">
+                                                           class="btn btn-secondary me-2 ps-1 o_knowledge_add_icon">
                                                             <i class="fa fa-fw fa-smile-o" style="font-size: 1.5em;" title="Add icon"/> Add icon
                                                         </a>
                                                         <a type="button" role="button" attrs="{'invisible': [('cover', '!=', False)]}"
@@ -185,7 +185,7 @@
                                                     <div class="o_knowledge_icon o_large" attrs="{'invisible': [('icon', '=', False)]}">
                                                         <div class="o_article_emoji_dropdown dropdown">
                                                             <a href="#" class="o_article_emoji dropdown-toggle o-no-caret"
-                                                               type="button" data-toggle="dropdown" aria-expanded="true"
+                                                               type="button" data-bs-toggle="dropdown" aria-expanded="true"
                                                                attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}"/>
                                                             <p class="o_article_emoji o-no-caret"
                                                                attrs="{'invisible': [('is_locked', '=', False), ('user_has_write_access', '=', True)]}"/>
@@ -223,7 +223,7 @@
                             </div>
                         </div>
                         <div class="o_knowledge_article_form_resizer d-print-none d-none d-sm-block px-3 opacity-75 opacity-100-hover">
-                            <span class="bg-300 pl-1"/>
+                            <span class="bg-300 ps-1"/>
                         </div>
                     </div>
                 </div>

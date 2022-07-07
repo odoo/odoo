@@ -3986,7 +3986,7 @@ QUnit.module('LegacyViews', {
             'the name should be "xmo"');
         await testUtils.fields.editInput($('.modal .o_form_editable input'), 'ged'); // change the value
         nbRPCs = 0;
-        await testUtils.dom.click($('.modal-header .close'));
+        await testUtils.dom.click($('.modal-header .btn-close'));
         assert.containsNone(document.body, '.modal');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'xmo',
             'title of the column should still be "xmo"');
@@ -5828,7 +5828,7 @@ QUnit.module('LegacyViews', {
                         '<t t-name="kanban-box">' +
                             '<div>' +
                                 '<field name="foo"/>' +
-                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary float-right" name="arbitrary">Join</button>' +
+                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary float-end" name="arbitrary">Join</button>' +
                             '</div>' +
                         '</t>' +
                     '</templates>' +
@@ -5857,7 +5857,7 @@ QUnit.module('LegacyViews', {
                         '<t t-name="kanban-box">' +
                             '<div color="color">' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<ul class="dropdown-menu" role="menu">' +
@@ -6079,7 +6079,7 @@ QUnit.module('LegacyViews', {
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value");
         assert.ok(kanban.$('.o_kanban_group:eq(1) span.o_column_title:contains(hello)').length,
             "second column should have a title with a value from the many2one");
-        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('original-title'),
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('bs-original-title'),
             "<div>Kikou</br>hello</div>",
             "second column should have a tooltip with the group_by_tooltip title and many2one field value");
 
@@ -6304,7 +6304,7 @@ QUnit.module('LegacyViews', {
                             '<t t-name="kanban-box">' +
                                 '<div color="color">' +
                                     '<div class="o_dropdown_kanban dropdown">' +
-                                        '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                        '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                         '</a>' +
                                         '<ul class="dropdown-menu" role="menu">' +
@@ -6651,7 +6651,7 @@ QUnit.module('LegacyViews', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "36",
             "counter should contain the correct value");
-        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "1 yop",
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('bsOriginalTitle'), "1 yop",
             "the counter progressbars should be correctly displayed");
 
         // archive all records of the second columns
@@ -6661,7 +6661,7 @@ QUnit.module('LegacyViews', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "0",
             "counter should contain the correct value");
-        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "0 yop",
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('bsOriginalTitle'), "0 yop",
             "the counter progressbars should have been correctly updated");
 
         kanban.destroy();
@@ -6908,7 +6908,7 @@ QUnit.module('LegacyViews', {
         });
 
         assert.deepEqual(
-            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-original-title')),
+            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-bs-original-title')),
             ['0 yop', '0 gnap', '1 blip', '0 __false', '1 yop', '1 gnap', '1 blip', '0 __false']
         );
 
@@ -6924,7 +6924,7 @@ QUnit.module('LegacyViews', {
         );
 
         assert.deepEqual(
-            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-original-title')),
+            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-bs-original-title')),
             ['0 yop', '1 gnap', '1 blip', '0 __false', '1 yop', '0 gnap', '1 blip', '0 __false']
         );
 
@@ -7686,7 +7686,7 @@ QUnit.module('LegacyViews', {
         const kanbanController = await viewCreatedPromise;
         assert.strictEqual(kanbanController.$('.o_kanban_record').text(),
             "LOADEDLOADEDLOADEDLOADED");
-        assert.hasClass(kanbanController.$('.o_kanban_record:first .o_field_char'), 'float-right');
+        assert.hasClass(kanbanController.$('.o_kanban_record:first .o_field_char'), 'float-end');
 
         kanbanController.destroy();
         delete fieldRegistry.map.asyncWidget;
@@ -7778,7 +7778,7 @@ QUnit.module('LegacyViews', {
                             '<div class="oe_kanban_global_click">' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                         '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<div class="dropdown-menu" role="menu">' +
@@ -7989,7 +7989,7 @@ QUnit.module('LegacyViews', {
         });
 
         assert.containsOnce(kanban.el.querySelector('.o_kanban_record'),
-            'div.custom-checkbox.o_field_boolean');
+            'div.form-check.o_field_boolean');
         kanban.destroy();
     });
 
@@ -8127,11 +8127,11 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
 
@@ -8148,7 +8148,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "Yes");
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "0 blip", "0 __false"],
         );
 
@@ -8163,11 +8163,11 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
 
@@ -8206,7 +8206,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8214,7 +8214,7 @@ QUnit.module('LegacyViews', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8227,7 +8227,7 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8246,7 +8246,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8254,7 +8254,7 @@ QUnit.module('LegacyViews', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8273,7 +8273,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8281,7 +8281,7 @@ QUnit.module('LegacyViews', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8324,7 +8324,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8332,7 +8332,7 @@ QUnit.module('LegacyViews', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8362,7 +8362,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "0 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8370,7 +8370,7 @@ QUnit.module('LegacyViews', {
             [],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "2 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8417,7 +8417,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8425,7 +8425,7 @@ QUnit.module('LegacyViews', {
             ["4 blip"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(
@@ -8462,7 +8462,7 @@ QUnit.module('LegacyViews', {
             ["No", "Yes"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["1 yop", "1 blip", "0 __false"],
         );
         assert.deepEqual(
@@ -8470,7 +8470,7 @@ QUnit.module('LegacyViews', {
             ["4 blip", "1 yop"],
         );
         assert.deepEqual(
-            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_legacy_kanban_counter .progress-bar")].map(el => el.dataset.bsOriginalTitle),
             ["0 yop", "1 blip", "1 __false"],
         );
         assert.deepEqual(

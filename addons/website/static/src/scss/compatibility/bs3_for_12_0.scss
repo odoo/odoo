@@ -12,8 +12,8 @@ $-compat-gray-map: (
 ) !default;
 @each $old, $new in $-compat-gray-map {
     @if not map-has-key($grays, $old) {
-        @include bg-variant(".bg-#{$old}", gray($new));
-        @include text-emphasis-variant(".text-#{$old}", gray($new));
+        @include bg-variant(".bg-#{$old}", map-get($grays, $new));
+        @include text-emphasis-variant(".text-#{$old}", map-get($grays, $new));
     }
 }
 
@@ -36,7 +36,7 @@ $-compat-gray-map: (
     }
 }
 .label-default {
-    @include badge-variant(theme-color('secondary'));
+    @include badge-variant(map-get($theme-colors, 'secondary'));
 }
 
 // Adapt center-block
@@ -202,7 +202,7 @@ $-compat-breakpoints: (
 
 // Adapt buttons
 .btn-default {
-    @include button-variant(theme-color('secondary'), theme-color('secondary'));
+    @include button-variant(map-get($theme-colors, 'secondary'), map-get($theme-colors, 'secondary'));
 }
 .btn-xs {
     @extend .btn-sm;
@@ -230,17 +230,17 @@ $-compat-breakpoints: (
     }
     &-xs {
         &, &-block {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: block !important;
             }
         }
         &-inline {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: inline !important;
             }
         }
         &-inline-block {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 display: inline-block !important;
             }
         }
@@ -299,7 +299,7 @@ $-compat-breakpoints: (
 }
 .hidden {
     &-xs {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             display: none !important;
         }
     }

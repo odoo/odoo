@@ -138,13 +138,13 @@
                                 <t t-if="installed">
                                     <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
                                 </t>
-                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-end" name="button_immediate_install">Install</button>
                                 <t t-if="!installed and to_buy">
                                     <button href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info btn-sm float_right">Upgrade</button>
-                                    <span class="badge badge-primary oe_inline o_enterprise_label">Enterprise</span>
+                                    <span class="badge text-bg-primary oe_inline o_enterprise_label">Enterprise</span>
                                 </t>
-                                <button t-if="installed and record.state.raw_value == 'disabled' and !selection_mode" type="edit" class="btn btn-primary float-right">Activate</button>
-                                <button t-if="installed and record.state.raw_value in ['enabled', 'test'] and !selection_mode" type="edit" class="btn btn-primary float-right">Configure</button>
+                                <button t-if="installed and record.state.raw_value == 'disabled' and !selection_mode" type="edit" class="btn btn-primary float-end">Activate</button>
+                                <button t-if="installed and record.state.raw_value in ['enabled', 'test'] and !selection_mode" type="edit" class="btn btn-primary float-end">Configure</button>
                             </div>
                         </div>
                     </t>

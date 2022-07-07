@@ -158,11 +158,11 @@
                        <table class="table table-sm o_main_table" name="invoice_line_table">
                            <thead>
                                <tr>
-                                   <th name="th_description" class="text-left"><span>Description</span></th>
-                                   <th name="th_quantity" class="text-right"><span>Quantity</span></th>
-                                   <th name="th_priceunit" class="text-right d-md-table-cell"><span>Unit Price</span></th>
-                                   <th name="th_taxes" class="text-left d-md-table-cell"><span>Taxes</span></th>
-                                   <th name="th_subtotal" class="text-right">
+                                   <th name="th_description" class="text-start"><span>Description</span></th>
+                                   <th name="th_quantity" class="text-end"><span>Quantity</span></th>
+                                   <th name="th_priceunit" class="text-end d-md-table-cell"><span>Unit Price</span></th>
+                                   <th name="th_taxes" class="text-start d-md-table-cell"><span>Taxes</span></th>
+                                   <th name="th_subtotal" class="text-end">
                                        <span>Amount</span>
                                    </th>
                                </tr>
@@ -171,32 +171,32 @@
                                <tr>
                                    <td name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
                                        Three Seater Sofa with Lounger in Steel Grey Colour</span></td>
-                                   <td class="text-right">
+                                   <td class="text-end">
                                        <span>5.000</span>
                                    </td>
-                                   <td class="text-right d-md-table-cell">
+                                   <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">1,500.00</span>
                                    </td>
-                                   <td class="text-left d-md-table-cell">
+                                   <td class="text-start d-md-table-cell">
                                        <span id="line_tax_ids">15.00%</span>
                                    </td>
-                                   <td class="text-right o_price_total">
+                                   <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
                                    </td>
                                </tr>
                                <tr>
                                    <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
                                        Four person modern office workstation</span></td>
-                                   <td class="text-right">
+                                   <td class="text-end">
                                        <span>5.000</span>
                                    </td>
-                                   <td class="text-right d-md-table-cell">
+                                   <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">2,350.00</span>
                                    </td>
-                                   <td class="text-left d-md-table-cell">
+                                   <td class="text-start d-md-table-cell">
                                        <span id="line_tax_ids">15.00%</span>
                                    </td>
-                                   <td class="text-right o_price_total">
+                                   <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
                                    </td>
                                </tr>
@@ -204,23 +204,23 @@
                        </table>
                        <div class="clearfix">
                            <div id="total" class="row">
-                               <div class="col-7 ml-auto">
+                               <div class="col-7 ms-auto">
                                    <table class="table table-sm" style="page-break-inside: avoid; position:relative;">
                                        <tbody><tr class="border-black o_subtotal" style="">
                                            <td><strong>Subtotal</strong></td>
-                                           <td class="text-right">
+                                           <td class="text-end">
                                                <span>$ <span class="oe_currency_value">19,250.00</span></span>
                                            </td>
                                        </tr>
                                            <tr style="">
                                                <td><span class="text-nowrap">Tax 15%</span></td>
-                                               <td class="text-right o_price_total">
+                                               <td class="text-end o_price_total">
                                                    <span class="text-nowrap">$ 2,887.50</span>
                                                </td>
                                            </tr>
                                            <tr class="border-black o_total">
                                                <td><strong>Total</strong></td>
-                                               <td class="text-right">
+                                               <td class="text-end">
                                                    <span class="text-nowrap">$ <span class="oe_currency_value">
                                                        22,137.50</span></span>
                                                </td>
@@ -291,7 +291,7 @@
     <!-- External layouts styles -->
 
     <template id="address_layout">
-        <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
+        <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
         <t t-if="address">
             <div class="address row">
                 <t t-if="information_block">
@@ -310,11 +310,11 @@
     <template id="external_layout_striped">
         <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
             <div class="o_background_header">
-            <div class="float-right">
-                <h3 class="mt0 text-right" t-field="company.report_header"/>
+            <div class="float-end">
+                <h3 class="mt0 text-end" t-field="company.report_header"/>
             </div>
-            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left" alt="Logo"/>
-            <div class="float-left company_address">
+            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
+            <div class="float-start company_address">
                 <span t-if="company.company_details" t-field="company.company_details"></span>
             </div>
             <div class="clearfix mb8"/>
@@ -348,9 +348,9 @@
                 <div class="col-6">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-6 text-right mb4">
+                <div class="col-6 text-end mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
-                    <div name="company_address" class="float-right mb4">
+                    <div name="company_address" class="float-end mb4">
                         <span t-if="company.company_details" t-field="company.company_details"></span>
                     </div>
                 </div>
@@ -417,7 +417,7 @@
                     <h5 class="mt0 mb0" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
-                    <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-right text-center">
+                    <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-end text-center">
                         <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
@@ -431,7 +431,7 @@
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
                 </div>
-                <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+                <div class="col-9 text-end" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
             </div>
             <div t-if="company.logo or company.report_header" class="row zero_min_height">
                 <div class="col-12">
@@ -515,7 +515,7 @@
                 <div class="col-2 offset-2 text-center">
                     <span t-esc="company.name"/>
                 </div>
-                <div class="col-2 offset-3 text-right">
+                <div class="col-2 offset-3 text-end">
                     <ul class="list-inline">
                         <li class="list-inline-item"><span class="page"/></li>
                         <li class="list-inline-item">/</li>

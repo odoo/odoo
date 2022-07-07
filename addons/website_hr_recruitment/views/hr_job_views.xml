@@ -11,18 +11,17 @@
                     <span class="bg-odoo">Published</span>
                 </div>
             </xpath>
+            <xpath expr="//div[@name='kanban_boxes']" position="attributes">
+                <attribute name="class" add="border-top pt-2" separator=" "/>
+            </xpath>
             <xpath expr="//div[@name='kanban_boxes']" position="inside">
                 <field name="website_url" invisible="1"/>
-                <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block">
-                    <div class="col-6 pl-0">
-                        <field name="is_published" widget='boolean_toggle'/>
-                        <span class="mr-2">
-                            <t t-if="record.is_published.raw_value">Published</t>
-                            <t t-else="">Not published</t>
-                        </span>
-                    </div>
-                    <div class="col-6" name="bottom_right"></div>
+                <div class="col-6">
+                    <field name="is_published" widget='boolean_toggle'/>
+                    <t t-if="record.is_published.raw_value">Published</t>
+                    <t t-else="">Not published</t>
                 </div>
+                <div class="col-6" name="bottom_right"></div>
             </xpath>
         </field>
     </record>
@@ -34,7 +33,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='bottom_right']" position="replace">
                 <field name="website_url" invisible="1"/>
-                <div class="o_link_trackers col-6">
+                <div class="o_link_trackers col-6 text-end">
                     <a t-att-href="record.website_url.raw_value" target="_blank">
                         <i class="fa fa-fw fa-external-link" role="img"></i>
                         Job Page

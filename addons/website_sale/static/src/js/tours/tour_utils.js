@@ -21,7 +21,7 @@ odoo.define("website_sale.tour_utils", function (require) {
         return [
             {
                 content: "Click on pricelist dropdown",
-                trigger: "div.o_pricelist_dropdown a[data-toggle=dropdown]",
+                trigger: "div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
             },
             {
                 content: "Click on pricelist",

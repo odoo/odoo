@@ -12,13 +12,13 @@
                     <div class="modal-content" t-att-class="props.contentClass">
                         <header t-if="props.header" class="modal-header">
                             <t t-if="isFullscreen">
-                                <button class="btn fa fa-arrow-left" data-dismiss="modal" aria-label="Close" t-on-click="data.close" />
+                                <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="data.close" />
                             </t>
                             <h4 class="modal-title text-break">
                                 <t t-esc="props.title"/>
                             </h4>
                             <t t-if="!isFullscreen">
-                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="data.close">×</button>
+                                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="data.close"></button>
                             </t>
                         </header>
                         <!-- FIXME: WOWL there is a bug on t-portal on owl, in which t-portal don't work on multinode.

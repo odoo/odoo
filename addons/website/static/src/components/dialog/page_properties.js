@@ -230,7 +230,7 @@ export class PagePropertiesDialogWrapper extends Component {
         return [{
             text: this.env._t("Duplicate Page"),
             icon: 'fa-clone',
-            classes: 'btn-link ml-auto',
+            classes: 'btn-link ms-auto',
             click: function () {
                 wrapper.dialogService.add(DuplicatePageDialog, {
                     pageId: wrapper.pageId,

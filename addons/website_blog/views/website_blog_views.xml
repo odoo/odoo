@@ -133,13 +133,13 @@
                                     <strong class="col-8">
                                         <span t-esc="record.name.value"/>
                                     </strong>
-                                    <strong class="col-4 text-right">
+                                    <strong class="col-4 text-end">
                                         <span t-esc="record.blog_id.value"/>
                                     </strong>
                                     <div class="col-8">
                                         <i class="fa fa-clock-o" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
                                     </div>
-                                    <div class="col-4 text-right">
+                                    <div class="col-4 text-end">
                                         <img t-if="record.author_id.raw_value"
                                              t-att-title="record.author_id.value"
                                              t-att-alt="record.author_id.value"

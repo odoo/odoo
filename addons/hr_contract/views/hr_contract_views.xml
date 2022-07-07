@@ -52,7 +52,7 @@
                         <div>
                             <field name="resource_calendar_id" required="1" nolabel="1"/>
                             <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
-                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ml-3"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
                                 data-tooltip-template="hr_contract.CalendarMismatch"
                                 data-tooltip-info='{
                                         "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
@@ -141,7 +141,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <div class="oe_title pr-0" name="title">
+                        <div class="oe_title pe-0" name="title">
                             <h1 class="d-flex flex-row justify-content-between">
                                 <field name="name" class="text-truncate" placeholder="Contract Reference"/>
                                 <field name="kanban_state" widget="state_selection" readonly="1"/>
@@ -164,7 +164,7 @@
                                 <div id="resource_calendar_warning">
                                     <field name="resource_calendar_id" required="1" nolabel="1" options="{'no_open': True, 'no_create': True}"/>
                                     <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
-                                        class="fa fa-exclamation-triangle text-danger o_calendar_warning ml-3"
+                                        class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
                                         data-tooltip-template="hr_contract.CalendarMismatch"
                                         data-tooltip-info='{
                                                 "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
@@ -272,7 +272,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="!selection_mode" groups="hr_contract.group_hr_contract_manager">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
@@ -290,10 +290,10 @@
                                     <field name="job_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <span class="float-right">
+                                    <span class="float-end">
                                         <field name="employee_id" widget="many2one_avatar_employee"/>
                                     </span>
-                                    <span class="float-right mr4">
+                                    <span class="float-end mr4">
                                         <field name="kanban_state" widget="state_selection"/>
                                     </span>
                                 </div>

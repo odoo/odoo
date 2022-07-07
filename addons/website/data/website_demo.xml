@@ -19,20 +19,20 @@
                                         <div class="col-md">
                                             <h2>Badge</h2>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Pill</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 rounded-pill bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
+                                                <a href="#" t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                    <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                                 </t>
                                             </div>
 
@@ -55,7 +55,7 @@
 
                                             <h2 class="mt-4">Dropdown</h2>
                                             <div class="dropdown">
-                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Toggle</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Toggle</button>
                                                 <div class="dropdown-menu">
                                                     <div class="dropdown-header">Header</div>
                                                     <a class="dropdown-item" href="#">Action</a>
@@ -68,14 +68,14 @@
                                             <h2 class="mt-4">Navbar</h2>
                                             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                                                 <a class="navbar-brand" href="#">Navbar</a>
-                                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                                 <span class="navbar-toggler-icon"></span>
                                                 </button>
 
                                                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                                    <ul class="navbar-nav mr-auto">
+                                                    <ul class="navbar-nav me-auto">
                                                         <li class="nav-item active">
-                                                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                                            <a class="nav-link" href="#">Home <span class="visually-hidden">(current)</span></a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="nav-link" href="#">Link</a>
@@ -85,7 +85,7 @@
                                                         </li>
                                                     </ul>
                                                     <form class="form-inline my-2 my-lg-0">
-                                                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
+                                                        <input class="form-control me-sm-2" type="search" placeholder="Search" aria-label="Search"/>
                                                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                                                     </form>
                                                 </div>
@@ -110,7 +110,7 @@
                                                         <a class="page-link" href="#">1</a>
                                                     </li>
                                                     <li class="page-item active">
-                                                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                                        <a class="page-link" href="#">2 <span class="visually-hidden">(current)</span></a>
                                                     </li>
                                                     <li class="page-item">
                                                         <a class="page-link" href="#">3</a>
@@ -163,42 +163,42 @@
                                     <h1>Utilities &amp; Typography</h1>
                                     <div class="row">
                                         <div class="col-md">
-                                            <div class="row no-gutters">
+                                            <div class="row g-0">
                                                 <t t-foreach="odoo_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto bg-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
-                                            <div class="row no-gutters mt-2">
+                                            <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto bg-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
-                                            <div class="row no-gutters mt-2">
+                                            <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_gray_colors" t-as="color">
                                                     <div t-attf-class="col-auto bg-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
-                                            <div class="row no-gutters mt-4">
+                                            <div class="row g-0 mt-4">
                                                 <t t-foreach="odoo_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
-                                            <div class="row no-gutters mt-2">
+                                            <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
                                             </div>
-                                            <div class="row no-gutters mt-2">
+                                            <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_gray_colors" t-as="color">
                                                     <div t-attf-class="col-auto text-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
@@ -243,9 +243,9 @@
                                                     <tr>
                                                         <th colspan="2" class="align-middle">Theme Colors</th>
                                                         <td t-foreach="[1, 2, 3, 4, 5]" t-as="i">
-                                                            <div class="media">
-                                                                <span t-attf-class="border p-3 mr-1 bg-o-color-#{i}"></span>
-                                                                <div class="media-body align-self-center">
+                                                            <div class="d-flex">
+                                                                <span t-attf-class="border p-3 me-1 bg-o-color-#{i}"></span>
+                                                                <div class="flex-grow-1 align-self-center">
                                                                     <h5 class="m-0">o-color-<t t-esc="i"/></h5>
                                                                 </div>
                                                             </div>
@@ -254,9 +254,9 @@
                                                     <tr>
                                                         <th colspan="2" class="align-middle">BTS Base Colors</th>
                                                         <td t-foreach="['primary', 'secondary', 'light', 'dark']" t-as="i">
-                                                            <div class="media">
-                                                                <span t-attf-class="border p-3 mr-1 bg-#{i}"></span>
-                                                                <div class="media-body align-self-center">
+                                                            <div class="d-flex">
+                                                                <span t-attf-class="border p-3 me-1 bg-#{i}"></span>
+                                                                <div class="flex-grow-1 align-self-center">
                                                                     <h5 class="m-0" t-esc="i"></h5>
                                                                 </div>
                                                             </div>
@@ -278,7 +278,7 @@
                                                         <p class="text-muted">Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur.</p>
                                                         <p class="small">Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>.</p>
                                                     </div>
-                                                    <div class="col-5 border-left">
+                                                    <div class="col-5 border-start">
                                                         <a href="#" class="mb-3 btn-block btn btn-primary">btn-primary</a>
                                                         <a href="#" class="mb-3 btn-block btn btn-secondary">btn-secondary</a>
                                                         <a href="#" class="mb-3 btn-block btn btn-outline-primary">btn-outline-primary</a>
@@ -329,7 +329,7 @@
                                                             <div class="progress-bar" style="width: 25%;">25%</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-5 border-left">
+                                                    <div class="col-5 border-start">
                                                         <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
                                                             <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-esc="'btn-' + btn"/>
                                                             <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-esc="'btn-outline-' + btn"/>

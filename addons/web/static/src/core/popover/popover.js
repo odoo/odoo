@@ -13,7 +13,17 @@ export class Popover extends Component {
     }
     onPositioned(el, { direction, variant }) {
         const position = `${direction[0]}${variant[0]}`;
-        el.classList.add(`bs-popover-${direction}`, `o-popover--${position}`);
+        const directionMap = {
+            top: "top",
+            bottom: "bottom",
+            left: "start",
+            right: "end",
+        };
+        el.classList.add(
+            `bs-popover-${directionMap[direction]}`,
+            `o-popover-${direction}`,
+            `o-popover--${position}`
+        );
         const arrowEl = el.firstElementChild;
         switch (position) {
             case "tm": // top-middle

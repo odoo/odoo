@@ -49,7 +49,7 @@
                 <span t-if="!state.suggestions.length">Loading...</span>
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
                     <li class="list-inline-item" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge badge-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
+                        <span class="o_seo_suggestion badge text-bg-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
                     </li>
                 </t>
             </ul>
@@ -67,7 +67,7 @@
             <div class="input-group">
                 <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
                 <span title="The language of the keyword and related keywords." class="input-group-append">
-                    <select t-model="state.language" class="btn btn-outline-primary pr-5 form-control">
+                    <select t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                         <t t-foreach="languages" t-as="lang" t-key="lang[0]">
                             <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
                         </t>

@@ -119,11 +119,11 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
                                             <div>
-                                                <span class="pr-1"><field name="is_favorite" widget="boolean_favorite" nolabel="1"/></span>
-                                                <div class="float-right text-odoo">
+                                                <span class="pe-1"><field name="is_favorite" widget="boolean_favorite" nolabel="1"/></span>
+                                                <div class="float-end text-odoo">
                                                     <field name="price" widget="monetary"/>
                                                 </div>
-                                                <div t-if="record.is_new.raw_value" class="float-right o_lunch_new_product mr-1 badge-pill badge-success">
+                                                <div t-if="record.is_new.raw_value" class="float-end o_lunch_new_product me-1 py-0 border-0 fs-6 badge rounded-pill bg-success">
                                                     New
                                                 </div>
                                                 <strong><span t-esc="record.name.value"/></strong>
@@ -167,7 +167,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
                                             <div>
-                                                <div class="float-right">
+                                                <div class="float-end">
                                                     <field name="price" widget="monetary"/>
                                                 </div>
                                                 <strong><span t-esc="record.name.value"/></strong>
@@ -256,8 +256,8 @@
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
-                                        <div class="float-right">
-                                            <button class="badge badge-primary" type="action"
+                                        <div class="float-end">
+                                            <button class="badge text-bg-primary" type="action"
                                                 name="%(lunch.lunch_product_action_statbutton)d"
                                                 context="{'search_default_category_id': active_id,'default_category_id': active_id}"
                                                 attrs="{'invisible': [('product_count', '=', 0)]}">

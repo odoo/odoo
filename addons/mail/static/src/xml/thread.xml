@@ -5,7 +5,7 @@
         @param {mail.DocumentViewer} widget
     -->
     <t t-name="DocumentViewer.Content">
-        <div class="o_viewer_content">
+        <div class="o_viewer_content modal-dialog modal-fullscreen">
             <t t-set="model" t-value="widget.modelName"/>
             <div class="o_viewer-header">
                 <span class="o_image_caption">
@@ -17,7 +17,7 @@
                 <div class="flex-grow-1"/>
                 <a class="o_download_btn o_document_viewer_topbar_button btn" href="#" title="Download">
                     <i class="fa fa-fw fa-download" role="img" aria-label="Download"/>
-                    <span class="d-none d-md-inline ml-2">Download</span>
+                    <span class="d-none d-md-inline ms-2">Download</span>
                 </a>
                 <a role="button" href="#" class="o_close_btn o_document_viewer_topbar_button btn" title="Close">
                     <i class="fa fa-fw fa-close" role="img" aria-label="Close"/>
@@ -42,16 +42,16 @@
             </div>
             <div t-if="widget.activeAttachment.fileType == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-bs-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-bs-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-bs-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-bs-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-bs-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-bs-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </div>
             </div>
         </div>

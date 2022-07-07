@@ -10,12 +10,12 @@
                 t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
                 >
                 <t t-if="facet.icon">
-                    <span t-attf-class="o_searchview_facet_label bg-odoo {{ facet.icon }}"/>
+                    <span t-attf-class="o_searchview_facet_label text-bg-odoo {{ facet.icon }}"/>
                 </t>
                 <t t-else="">
-                    <span class="o_searchview_facet_label bg-odoo" t-esc="facet.title"/>
+                    <span class="o_searchview_facet_label text-bg-odoo" t-esc="facet.title"/>
                 </t>
-                <div class="o_facet_values border border-odoo border-left-0">
+                <div class="o_facet_values border border-odoo border-start-0">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <t t-if="!facetValue_first">
                             <span class="o_facet_values_sep" t-esc="facet.separator"/>
@@ -67,7 +67,7 @@
                             <t t-esc="item.label"/>
                         </t>
                         <t t-else="">
-                            Search <b t-esc="item.searchItemDescription"/> <t t-esc="item.preposition"/>: <b class="font-italic text-primary" t-esc="item.label"/>
+                            Search <b t-esc="item.searchItemDescription"/> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/>
                         </t>
                     </a>
                 </li>

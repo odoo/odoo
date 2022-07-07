@@ -21,12 +21,12 @@
 
     <t t-name="CalendarView.event.popover.placeholder">
         <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
-            <div class="arrow"/>
-            <div class="card-header d-flex justify-content-between py-2 pr-2">
+            <div class="popover-arrow"/>
+            <div class="card-header d-flex justify-content-between py-2 pe-2">
                 <h4 class="p-0 pt-1">
-                    <span class="popover-header border-0"/><span t-if="displayLock" class="ml-1"><i class="fa fa-lock"/></span>
+                    <span class="popover-header border-0"/><span t-if="displayLock" class="ms-1"><i class="fa fa-lock"/></span>
                 </h4>
-                <span class="o_cw_popover_close ml-4 mt-2 mr-2"><i class="fa fa-close"/></span>
+                <span class="o_cw_popover_close ms-4 mt-2 me-2"><i class="fa fa-close"/></span>
             </div>
             <div class="o_cw_body">
             </div>
@@ -48,7 +48,7 @@
             <ul t-if="widget.isEventDetailsVisible()" class="list-group list-group-flush o_cw_popover_fields_secondary"/>
             <div t-attf-class="card-footer border-top #{ !widget.isEventEditable() &amp;&amp;!widget.isEventDeletable() ? 'o_footer_shrink' : '' }">
                 <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
-                <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+                <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ms-2">Delete</a>
             </div>
         </div>
     </t>
@@ -58,7 +58,7 @@
         <t t-set="titleWithoutSpace" t-value="widget.title.split(' ').join('')"></t>
         <div class="o_calendar_filter">
             <div class="d-flex">
-                <div class="o_calendar_filter_items_checkall mr-2" data-value="check_all">
+                <div class="o_calendar_filter_items_checkall me-2" data-value="check_all">
                     <input t-att-id="widget.title + '_id'" type="checkbox" name="selection" class="position-absolute"
                            t-att-checked="widget.filter_check_all[widget.fieldName] ? true : undefined"
                     />
@@ -68,8 +68,8 @@
                         </span>
                     </label>
                 </div>
-                <div t-if="needCollapse" type="button" data-toggle="collapse"
-                     t-attf-data-target="#o_cw_filter_collapse_#{titleWithoutSpace}"
+                <div t-if="needCollapse" type="button" data-bs-toggle="collapse"
+                     t-attf-data-bs-target="#o_cw_filter_collapse_#{titleWithoutSpace}"
                      class="justify-content-between align-items-center h5">
                     <span t-esc="widget.title"/>
                     <i class="o_cw_filter_collapse_icon fa fa-chevron-down"/>
@@ -88,12 +88,12 @@
                         <input type="checkbox" t-att-id="idForLabel" name="selection" class="position-absolute" t-att-checked="filter.active ? true : undefined"/>
 
                         <label t-att-for="idForLabel" class="d-flex align-items-start m-0">
-                            <span t-attf-class="o_cw_filter_input_bg align-items-start d-flex flex-shrink-0 justify-content-center position-relative mr-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
+                            <span t-attf-class="o_cw_filter_input_bg align-items-start d-flex flex-shrink-0 justify-content-center position-relative me-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
                                 t-att-style="color and !isColorNumber ? _.str.sprintf('border-color:%s;background-color:%s', color, color) : ''">
                                 <i class="fa fa-check position-relative"/>
                             </span>
-                            <i t-if="filter.value == 'all'" class="o_cw_filter_avatar fa fa-users fa-fw  flex-shrink-0 mr-1" role="img" aria-label="Avatar" title="Avatar"/>
-                            <img t-elif="widget.avatar_field and filter.value" t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cw_filter_avatar flex-shrink-0 mr-1" alt="Avatar"/>
+                            <i t-if="filter.value == 'all'" class="o_cw_filter_avatar fa fa-users fa-fw  flex-shrink-0 me-1" role="img" aria-label="Avatar" title="Avatar"/>
+                            <img t-elif="widget.avatar_field and filter.value" t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cw_filter_avatar flex-shrink-0 me-1" alt="Avatar"/>
                             <span class="o_cw_filter_title text-truncate flex-grow" t-esc="filter.label" t-attf-title="#{ ['all', false].includes(filter.value) or !widget.avatar_field ? filter.label : '' }"/>
                         </label>
 
@@ -127,7 +127,7 @@
 
     <t t-name="CalendarView.scale_buttons">
         <div class="btn-group dropdown">
-            <button class="btn btn-secondary dropdown-toggle scale_button_selection text-uppercase" data-hotkey="v" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle scale_button_selection text-uppercase" data-hotkey="v" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button type="button" t-if="scales.includes('day')" class="dropdown-item o_calendar_button_day btn btn-secondary text-uppercase" data-hotkey="d">Day</button>
@@ -148,7 +148,7 @@
     <t t-name="CalendarView.yearEvent.popover">
         <div class="o_cw_body">
             <t t-foreach="groupKeys" t-as="groupKey">
-                <div class="font-weight-bold mt-2" t-esc="groupKey"/>
+                <div class="fw-bold mt-2" t-esc="groupKey"/>
                 <t t-foreach="groupedEvents[groupKey]" t-as="event">
                     <t t-set="record" t-value="event.extendedProps.record"/>
                     <t t-set="color" t-value="event.extendedProps.color_index"/>
@@ -170,7 +170,7 @@
 
     <t t-name="CalendarView.yearEvent.popover.placeholder">
         <div class="popover o_cw_popover" style="position: relative">
-            <div class="arrow"></div>
+            <div class="popover-arrow"></div>
             <div class="popover-header"></div>
             <div style="position: absolute; top: 0; right: 0.5rem;">
                 <span class="o_cw_popover_close"><i class="fa fa-close small"></i></span>

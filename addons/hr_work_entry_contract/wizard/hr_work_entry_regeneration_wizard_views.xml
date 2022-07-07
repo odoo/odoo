@@ -11,7 +11,7 @@
                         <label for="date_from"></label>
                         <div name="date_from">
                             <div class="text-info" attrs="{'invisible': [('earliest_available_date_message', '=', '')]}">
-                                <i class="fa fa-info-circle mr-1" title="Hint"/>
+                                <i class="fa fa-info-circle me-1" title="Hint"/>
                                 <field name="earliest_available_date_message" nolabel="1"/>
                             </div >
                             <field name="date_from"/>
@@ -19,7 +19,7 @@
                         <label for="date_to"></label>
                         <div name="date_to">
                             <div class="text-info" attrs="{'invisible': [('latest_available_date_message', '=', '')]}">
-                                <i class="fa fa-info-circle mr-1" title="Hint"/>
+                                <i class="fa fa-info-circle me-1" title="Hint"/>
                                 <field name="latest_available_date_message" nolabel="1"/>
                             </div>
                             <field name="date_to"/>
@@ -29,7 +29,7 @@
                 <field name="search_criteria_completed" invisible="1"/>
                 <field name="valid" invisible="1"/>
                 <div attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', True)]}">
-                    <div class="text-danger"><i class="fa fa-exclamation-triangle mr-1" title="Warning"/>You are not allowed to regenerate validated work entries</div>
+                    <div class="text-danger"><i class="fa fa-exclamation-triangle me-1" title="Warning"/>You are not allowed to regenerate validated work entries</div>
                     <field name="validated_work_entry_ids" widget="many2many" nolabel="1">
                         <tree string="Work Entries"
                               default_order = "date_start"

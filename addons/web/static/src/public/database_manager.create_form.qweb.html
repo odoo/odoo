@@ -16,9 +16,7 @@
         <label for="password" class="col-md-4 col-form-label">Password</label>
         <div class="col-md-8 input-group">
             <input id="password" type="password" name="password" class="form-control" required="required" autocomplete="off"/>
-            <div class="input-group-append">
-                <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
-            </div>
+            <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
         </div>
     </div>
     <div class="form-group row">
@@ -30,7 +28,7 @@
     <div class="form-group row">
         <label for="lang" class="col-md-4 col-form-label">Language</label>
         <div class="col-md-8">
-            <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
+            <select id="lang" name="lang" class="form-select" required="required" autocomplete="off">
                 <t t-foreach="langs" t-as="lang">
                     <t t-if="lang[0] == 'en_US'">
                         <option t-att-value="lang[0]" t-out="lang[1]" selected="selected"/>
@@ -45,7 +43,7 @@
     <div class="form-group row">
         <label for="country" class="col-md-4 col-form-label ">Country</label>
         <div class="col-md-8">
-            <select id="country" name="country_code" class="form-control" autocomplete="off">
+            <select id="country" name="country_code" class="form-select" autocomplete="off">
                 <option value=""></option>
                 <t t-foreach="countries" t-as="country">
                     <option t-att-value="country[0]" t-out="country[1]"/>

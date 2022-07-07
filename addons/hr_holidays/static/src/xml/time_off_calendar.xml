@@ -13,11 +13,11 @@
     <t t-name="hr_holidays.calendar.popover.placeholder">
         <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
             <div class="arrow"/>
-            <div class="card-header d-flex justify-content-between py-2 pr-2">
+            <div class="card-header d-flex justify-content-between py-2 pe-2">
                 <h4 class="popover-header border-0 p-0 pt-1"/>
-                <div class="ml-4">
+                <div class="ms-4">
                     <i t-if="calendarIcon" t-attf-class="fa {{calendarIcon}}"></i>
-                    <span class="o_cw_popover_close ml-1"><i class="fa fa-close small"/></span>
+                    <span class="o_cw_popover_close ms-1"><i class="fa fa-close small"/></span>
                 </div>
             </div>
             <div class="o_cw_body">
@@ -42,16 +42,16 @@
             </ul>
             <div class="card-footer border-top" t-if="widget.canEdit or widget.canDelete">
                 <a t-if="widget.canEdit" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
-                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ms-2">Delete</a>
             </div>
         </div>
     </t>
 
     <t t-name="FieldRadioIcon.button">
-        <div t-if="mode === 'edit'" class="custom-control custom-radio o_radio_item" aria-atomic="true">
-            <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
+        <div t-if="mode === 'edit'" class="custom-control form-check o_radio_item" aria-atomic="true">
+            <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
                 t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
-            <label class="custom-control-label o_form_label" t-att-for="id"><img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48" /></label>
+            <label class="form-check-label o_form_label" t-att-for="id"><img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48" /></label>
         </div>
         <div t-else="">
             <img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48"/>

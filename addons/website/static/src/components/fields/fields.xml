@@ -4,16 +4,16 @@
 <t t-name="website.FieldPageUrl" owl="1">
     <div>
         <div class="d-flex">
-            <div class="input-group-text rounded-left text-lowercase border-0" t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl"/>
+            <div class="input-group-text rounded-start text-lowercase border-0" t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl"/>
             <input t-model="state.url" type="text" class="o_input"/>
         </div>
         <div t-if="enableRedirect">
             <div class="d-flex mt-4">
-                <Switch extraClasses="'mr-auto'" label="'Redirect Old URL'" value="state.redirect_old_url" onChange="(value) => this.onChangeRedirectOldUrl(value)"/>
+                <Switch extraClasses="'me-auto'" label="'Redirect Old URL'" value="state.redirect_old_url" onChange="(value) => this.onChangeRedirectOldUrl(value)"/>
                 <PageDependencies pageId="resId" mode="'popover'"/>
             </div>
             <div t-if="state.redirect_old_url" class="d-flex mt-4">
-                <label class="my-0 mr-4 font-weight-bold" for="redirect_type">Type</label>
+                <label class="my-0 me-4 fw-bold" for="redirect_type">Type</label>
                 <select class="o_input w-50" id="redirect_type" t-model="state.redirect_type">
                     <option value="301">301 Moved permanently</option>
                     <option value="302">302 Moved temporarily</option>

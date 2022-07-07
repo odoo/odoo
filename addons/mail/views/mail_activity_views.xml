@@ -37,14 +37,14 @@
                             <label for="delay_count"/>
                             <div>
                                 <div class="o_row">
-                                    <field class="col-1 pl-0 pr-0" name="delay_count"/>
-                                    <field class="col-3 pl-1 pr-1" name="delay_unit"/>
+                                    <field class="col-1 ps-0 pe-0" name="delay_count"/>
+                                    <field class="col-3 ps-1 pe-1" name="delay_unit"/>
                                     <field name="delay_from"/>
                                 </div>
                             </div>
                         </group>
                     </group>
-                    <label for="default_note" class="font-weight-bold"/>
+                    <label for="default_note" class="fw-bold"/>
                     <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
@@ -71,7 +71,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="delay_label" string="Planned in" class="text-right"/>
+                <field name="delay_label" string="Planned in" class="text-end"/>
                 <field name="delay_from" string="Type"/>
                 <field name="res_model" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>

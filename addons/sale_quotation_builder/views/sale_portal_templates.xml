@@ -10,7 +10,7 @@
                     <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
                     <a t-att-id="line.id"/>
                     <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         Product: <strong t-esc="line.product_id.name"/>:
                         the content below will disappear if this
                         product is removed from the quote.
@@ -33,7 +33,7 @@
                 </t>
                 <div class="container o_sale_order">
                     <div class="row mt16">
-                        <div class="col-lg-9 ml-auto">
+                        <div class="col-lg-9 ms-auto">
                             <div class="alert alert-info" t-ignore="True" role="status">
                                 <p>
                                     <strong>Template Header:</strong> this content

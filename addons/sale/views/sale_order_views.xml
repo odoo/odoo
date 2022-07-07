@@ -522,10 +522,10 @@
                                 <field name="company_id" invisible="1"/>
                                 <templates>
                                     <t t-name="kanban-box">
-                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click pl-0 pr-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                             <t t-if="!record.display_type.raw_value">
-                                                <div class="row no-gutters">
-                                                    <div class="col-2 pr-3">
+                                                <div class="row g-0">
+                                                    <div class="col-2 pe-3">
                                                         <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
                                                     </div>
                                                     <div class="col-10">
@@ -536,7 +536,7 @@
                                                             <div class="col-auto">
                                                                 <t t-set="line_price" t-value="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
                                                                 <t t-set="line_price" t-value="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
-                                                                <strong class="float-right text-right" t-esc="line_price" />
+                                                                <strong class="float-end text-end" t-esc="line_price" />
                                                             </div>
                                                         </div>
                                                         <div class="row">

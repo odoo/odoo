@@ -75,7 +75,7 @@
                 sample="1">
                 <field name="active" invisible="1"/>
                 <field name="expires_today" invisible="1"/>
-                <field name="name" class="font-weight-bold" />
+                <field name="name" class="fw-bold" />
                 <field name="start_date" />
                 <field name="expiration_date" widget="remaining_days"/>
                 <field name="days_left" invisible="1"/>
@@ -104,7 +104,7 @@
                             <div>
                                 <strong>
                                     <field name="vehicle_id" widget="res_partner_many2one"/>
-                                    <span class="float-right badge badge-secondary">
+                                    <span class="float-end badge text-bg-secondary">
                                         <field name="state"/>
                                     </span>
                                 </strong>
@@ -238,7 +238,7 @@
                             <label for="odometer"/>
                             <div class="o_row">
                                 <field name="odometer" class="oe_inline"/>
-                                <field name="odometer_unit" class="pl-1 pl-sm-0"/>
+                                <field name="odometer_unit" class="ps-1 ps-sm-0"/>
                             </div>
                         </group>
                     </group>
@@ -292,12 +292,12 @@
                         <div t-attf-class="oe_kanban_global_click container" class="o_kanban_record_has_image_fill">
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
-                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" t-att-alt="record.vehicle_id.value" class="o_image_24_cover float-left"/>
-                                    <div class="o_kanban_record_headings pl-2 pr-2">
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" t-att-alt="record.vehicle_id.value" class="o_image_24_cover float-start"/>
+                                    <div class="o_kanban_record_headings ps-2 pe-2">
                                         <div class="text-truncate o_kanban_record_title">
                                             <strong>
                                                 <field name="vehicle_id"/>
-                                                <span t-attf-class="float-right badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : 'badge-success'}">
+                                                <span t-attf-class="float-end badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
                                                     <field name="state"/>
                                                 </span>
                                             </strong>
@@ -309,7 +309,7 @@
                                 </div>
                                 <div class="text-truncate">
                                     <field name="purchaser_id"/>
-                                    <span class="float-right"><field name="date"/></span>
+                                    <span class="float-end"><field name="date"/></span>
                                 </div>
                                 <div class="text-truncate">
                                     <field name="vendor_id"/>

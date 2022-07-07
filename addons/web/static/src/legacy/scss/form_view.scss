@@ -1,7 +1,7 @@
 // Define left and right padding according to screen resolution
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-left: $o-horizontal-padding*2;
     }
 }
@@ -10,7 +10,7 @@
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-right: $o-horizontal-padding*2;
     }
 }
@@ -18,7 +18,7 @@
 @mixin o-form-sheet-negative-margin {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }
@@ -266,7 +266,7 @@ $o-form-label-margin-right: 0px;
 
                 &:not(:first-child):before {
                     right: -$o-statusbar-arrow-width;
-                    border-left-color: gray('300');
+                    border-left-color: map-get($grays, '300');
                 }
 
                 &.disabled {
@@ -274,7 +274,7 @@ $o-form-label-margin-right: 0px;
                     pointer-events: none;
 
                     &:not(.btn-primary) {
-                        @include plain-hover-focus() {
+                        &, &:hover, &:focus {
                             color: $text-muted;
                         }
                     }
@@ -282,7 +282,7 @@ $o-form-label-margin-right: 0px;
 
                 &.btn-primary.disabled {
                     background-color: $o-brand-odoo;
-                    color: color-yiq($o-brand-odoo);
+                    color: color-contrast($o-brand-odoo);
 
                     &:after, &:before {
                         border-left-color: $o-brand-odoo;
@@ -450,12 +450,11 @@ $o-form-label-margin-right: 0px;
             box-sizing: content-box;
             margin: 0;
             padding: 0;
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 // avoid b4 drowdown inline style
                 position: relative !important;
                 transform: none !important;
                 will-change: inherit!important;
-                margin-bottom: 20px;
                 width: 100%;
                 border-width: 0px;
             }
@@ -464,7 +463,7 @@ $o-form-label-margin-right: 0px;
                 // Override stronger ':not(.o_invisible_modifier) ~' rule
                 border-width: 0 0 $border-width!important;
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     display: inline-block;
                     width: percentage(1/3);
                 }
@@ -531,7 +530,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // Status dropdown
-    a[data-toggle="dropdown"] > .o_status {
+    a[data-bs-toggle="dropdown"] > .o_status {
         height: $h3-font-size;
         width: $h3-font-size;
     }
@@ -619,7 +618,7 @@ $o-form-label-margin-right: 0px;
     .o_checkbox_optional_field {
         display: flex;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             flex-wrap: wrap;
             justify-content: space-between;
         }
@@ -772,7 +771,7 @@ $o-form-label-margin-right: 0px;
         .oe_subtotal_footer_separator {
             width: 100%;
             text-align: right;
-            border-top: 1px solid gray('300');
+            border-top: 1px solid map-get($grays, '300');
             font-weight: $font-weight-bold;
             font-size: 1.3em;
         }
@@ -879,7 +878,7 @@ $o-form-label-margin-right: 0px;
             .o_recurrent_weekday_label {
                 @include o-text-overflow;
             }
-            .custom-control-label {
+            .form-check-label {
                 left: 25%;
             }
         }

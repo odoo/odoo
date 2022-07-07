@@ -39,7 +39,7 @@
                             <th><span>Invoice Date</span></th>
                             <th><span>Invoice Number</span></th>
                             <th><span>Reference</span></th>
-                            <th class="text-right"><span>Amount</span></th>
+                            <th class="text-end"><span>Amount</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
                                     <td><span t-field="inv.invoice_date"/></td>
                                     <td><span t-field="inv.name"/></td>
                                     <td><span t-field="inv.ref"/></td>
-                                    <td class="text-right"><span t-field="inv.amount_total"/></td>
+                                    <td class="text-end"><span t-field="inv.amount_total"/></td>
                                 </tr>
                                 <!-- PAYMENTS/REVERSALS -->
                                 <tr t-foreach="inv._get_reconciled_invoices_partials()[0]" t-as="par">
@@ -60,14 +60,14 @@
                                     <td><span t-field="payment.date"/></td>
                                     <td><span t-field="payment.name"/></td>
                                     <td><span t-field="payment.ref"/></td>
-                                    <td class="text-right">-<span t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                    <td class="text-end">-<span t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                 </tr>
                                 <!-- BALANCE -->
                                 <tr>
                                     <td/>
                                     <td><strong>Due Amount for <span t-field="inv.name"/></strong></td>
                                     <td/>
-                                    <td class="text-right"><strong><span t-field="inv.amount_residual"/></strong></td>
+                                    <td class="text-end"><strong><span t-field="inv.amount_residual"/></strong></td>
                                 </tr>
                             </t>
                         </t>

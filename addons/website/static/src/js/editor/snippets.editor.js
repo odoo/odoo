@@ -128,7 +128,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                                     _t("Invalid API Key. The following error was returned by Google:")
                                 ).append($('<i/>', {
                                     text: text,
-                                    class: 'ml-1',
+                                    class: 'ms-1',
                                 }));
                             }
                         } catch (_e) {

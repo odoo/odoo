@@ -45,8 +45,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         this.lastsearch = [];
 
-        // float-left class messes up the post layout OPW 769721
-        $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
+        // float-start class messes up the post layout OPW 769721
+        $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-start').removeClass('float-start');
 
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
@@ -56,8 +56,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         $('.forum_register_url').attr('href', forumLogin);
 
         // Initialize forum's tooltips
-        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
-        this.$('[data-toggle="popover"]').popover({offset: 8});
+        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
+        this.$('[data-bs-toggle="popover"]').popover({offset: 8});
 
         $('input.js_select2').select2({
             tags: true,
@@ -82,7 +82,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
             formatResult: function (term) {
                 if (term.isNew) {
-                    return '<span class="badge badge-primary">New</span> ' + _.escape(term.text);
+                    return '<span class="badge bg-primary">New</span> ' + _.escape(term.text);
                 } else {
                     return _.escape(term.text);
                 }
@@ -147,18 +147,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (!hasFullEdit) {
                     wysiwyg.toolbar.$el.find('#link, #media').remove();
                 }
-                // float-left class messes up the post layout OPW 769721
-                $form.find('.note-editable').find('img.float-left').removeClass('float-left');
+                // float-start class messes up the post layout OPW 769721
+                $form.find('.note-editable').find('img.float-start').removeClass('float-start');
             });
         });
 
         _.each(this.$('.o_wforum_bio_popover'), authorBox => {
             $(authorBox).popover({
                 trigger: 'hover',
-                offset: 10,
+                offset: '10',
                 animation: false,
                 html: true,
-            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
+                customClass: 'o_wforum_bio_popover_container',
+            });
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
@@ -330,11 +331,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     elem.innerText = _t(' Flagged');
                     elem.prepend(child);
                     if (countFlaggedPosts) {
-                        countFlaggedPosts.classList.remove('badge-light');
-                        countFlaggedPosts.classList.add('badge-danger');
+                        countFlaggedPosts.classList.remove('bg-light');
+                        countFlaggedPosts.classList.add('bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
-                    $(elem).next('#flag_validator').removeClass('d-none');
+                    $(elem).nextAll('.flag_validator').removeClass('d-none');
                 } else if (data.success === 'post_flagged_non_moderator') {
                     const forumAnswer = elem.closest('.forum_answer');
                     elem.innerText = _t(' Flagged');
@@ -456,7 +457,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
                     $answer.toggleClass('o_wforum_answer_correct', isCorrect);
                     $toggler.tooltip('dispose')
-                            .attr('data-original-title', newHelper)
+                            .attr('data-bs-original-title', newHelper)
                             .tooltip({delay: 0});
                 });
             }
@@ -520,8 +521,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             method: currentTarget.dataset.action,
             args: [parseInt(currentTarget.dataset.postId)],
         });
-        currentTarget.parentElement.classList.toggle('d-none');
-        const flaggedButton = currentTarget.parentElement.previousElementSibling,
+        currentTarget.parentElement.querySelectorAll('.flag_validator').forEach((element) => element.classList.toggle('d-none'));
+        const flaggedButton = currentTarget.parentElement.firstElementChild,
             child = flaggedButton.firstElementChild,
             countFlaggedPosts = this.el.querySelector('#count_flagged_posts'),
             count = parseInt(countFlaggedPosts.innerText, 10) - 1;
@@ -529,7 +530,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         flaggedButton.innerText = _t(' Flag');
         flaggedButton.prepend(child);
         if (count === 0) {
-            countFlaggedPosts.classList.add("badge-light");
+            countFlaggedPosts.classList.add("bg-light");
         }
         countFlaggedPosts.innerText = count;
     },
@@ -621,7 +622,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
      */
     _onMarkSpamClick: function (ev) {
         var key = this.$('.modal .tab-pane.active').data('key');
-        var $inputs = this.$('.modal .tab-pane.active input.custom-control-input:checked');
+        var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
         var values = _.map($inputs, function (o) {
             return parseInt(o.value);
         });

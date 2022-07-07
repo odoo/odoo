@@ -204,7 +204,7 @@
                                 '&amp;', ('active', '=', True), ('active_partner', '=', False),
                             ]}"
                             role="alert">
-                          <a class="close" data-dismiss="alert" href="#">x</a>
+                          <a class="close" data-bs-dismiss="alert" href="#">x</a>
                           <div>
                             <strong>The contact linked to this user is still active</strong>
                           </div>
@@ -299,12 +299,12 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
-                                        <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
-                                        <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
+                                        <li class="text-success float-end mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
+                                        <li class="text-danger float-end mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
-                                        <li class="badge badge-pill float-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
+                                        <li class="badge rounded-pill float-end mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
                                         <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
                                     </ul>
                                 </div>
@@ -377,7 +377,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                    <h3 class="font-weight-bold">
+                    <h3 class="fw-bold">
                         Name your key
                     </h3>
                     <p>Enter a description of and purpose for the key.</p>
@@ -402,7 +402,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <h3 class="font-weight-bold">
+                        <h3 class="fw-bold">
                             Write down your key
                         </h3>
                         <p>

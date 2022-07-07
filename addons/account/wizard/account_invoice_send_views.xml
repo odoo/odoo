@@ -29,7 +29,7 @@
                         <field name="is_email" />
                         <b><label for="is_email"/></b>
                     </div>
-                    <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                    <div class="text-start d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
                         <field name="invoice_without_email" class="mr4"/>
                     </div>
                     <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
