@@ -233,6 +233,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             'web/static/src/public/error_notifications.js',
 
+            'web/static/src/webclient/icons.scss',
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
 
