@@ -141,6 +141,7 @@ export class ListArchParser extends XMLParser {
                 };
                 treeAttr.activeActions = activeActions;
 
+                treeAttr.className = xmlDoc.getAttribute("class") || null;
                 treeAttr.editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
                 treeAttr.multiEdit = activeActions.edit
                     ? archParseBoolean(node.getAttribute("multi_edit") || "")
