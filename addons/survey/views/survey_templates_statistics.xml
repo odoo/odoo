@@ -69,25 +69,25 @@
                 <h5 t-field="question.title" class="me-3"/>
             </div>
             <!-- Question info -->
-            <div class="col-sm-6">
-                <span class="badge text-bg-info me-1" t-field='question.question_type'/>
+            <div class="col-sm-6 text-sm-end">
+                <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0" t-field='question.question_type'/>
                 <t t-if="question.question_type == 'matrix'">
-                    <span class="badge text-bg-info ms-1" t-field='question.matrix_subtype'/>
+                    <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0" t-field='question.matrix_subtype'/>
                 </t>
                 <!-- Scoring info -->
                 <t t-if="question.question_type in ['numerical_box', 'date', 'datetime']">
-                    <span class="badge text-bg-success me-1"><span t-esc="question_data['right_inputs_count']" class="me-1"/>Correct</span>
+                    <span class="badge text-bg-success ms-0 ms-sm-1 me-1 me-sm-0"><span t-esc="question_data['right_inputs_count']" class="me-1"/>Correct</span>
                     <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
-                        <span class="badge text-bg-warning me-1" t-if="question.question_type == 'multiple_choice'">
+                        <span class="badge text-bg-warning ms-0 ms-sm-1 me-1 me-sm-0" t-if="question.question_type == 'multiple_choice'">
                             <span t-esc="question_data['partial_inputs_count']" class="me-1"/>Partial
                         </span>
                     </t>
                 </t>
                 <!-- Inputs info -->
-                <span class="badge text-bg-info me-1">
+                <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0">
                     <span t-esc="len(question_data['answer_input_done_ids'])" class="me-1"/>Answered
                 </span>
-                <span class="badge text-bg-info me-1">
+                <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0">
                     <span t-esc="len(question_data['answer_input_skipped_ids'])" class="me-1"/>Skipped
                 </span>
             </div>
