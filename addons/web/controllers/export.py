@@ -7,6 +7,7 @@ import itertools
 import json
 import logging
 import operator
+import xlsxwriter
 from collections import OrderedDict
 
 from werkzeug.exceptions import InternalServerError
@@ -17,7 +18,7 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil, pycompat
-from odoo.tools.misc import xlsxwriter, get_lang
+from odoo.tools.misc import get_lang
 from odoo.tools.translate import _
 
 
