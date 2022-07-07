@@ -132,12 +132,16 @@ export class Field extends Component {
             decorationMap[decoName] = value;
         }
 
-        let propsFromAttrs = {};
-        if (this.FieldComponent.extractProps) {
-            const attrs = Object.assign({}, this.props.attrs || fieldInfo.rawAttrs, {
-                options: fieldInfo.options || {},
+        let propsFromAttrs = fieldInfo.propsFromAttrs;
+        if (this.props.attrs) {
+            const extractProps = this.FieldComponent.extractProps || (() => ({}));
+            propsFromAttrs = extractProps({
+                field,
+                attrs: {
+                    ...this.props.attrs,
+                    options: evaluateExpr(this.props.attrs.options || "{}"),
+                },
             });
-            propsFromAttrs = this.FieldComponent.extractProps(this.props.name, record, attrs);
         }
 
         const props = { ...this.props };
@@ -221,7 +225,18 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             continue;
         }
 
-        fieldInfo.rawAttrs[attribute.name] = attribute.value;
+        if (!attribute.name.startsWith("t-att")) {
+            fieldInfo.rawAttrs[attribute.name] = attribute.value;
+        }
+    }
+
+    if (viewType !== "kanban") {
+        // FIXME WOWL: find a better solution
+        const extractProps = fieldInfo.FieldComponent.extractProps || (() => ({}));
+        fieldInfo.propsFromAttrs = extractProps({
+            field,
+            attrs: { ...fieldInfo.rawAttrs, options: fieldInfo.options },
+        });
     }
 
     if (fieldInfo.modifiers.invisible !== true && X2M_TYPES.includes(field.type)) {

@@ -14,14 +14,14 @@ export class ProgressBarField extends Component {
     setup() {
         useNumpadDecimal();
         this.state = useState({
-            currentValue: this.props.currentValue.value,
-            maxValue: this.props.maxValue.value,
+            currentValue: this.getCurrentValue(this.props),
+            maxValue: this.getMaxValue(this.props),
             isEditing: false,
         });
         onWillUpdateProps((nextProps) => {
             Object.assign(this.state, {
-                currentValue: nextProps.currentValue.value,
-                maxValue: nextProps.maxValue.value,
+                currentValue: this.getCurrentValue(nextProps),
+                maxValue: this.getMaxValue(nextProps),
             });
             if (nextProps.readonly) {
                 this.state.isEditing = false;
@@ -29,30 +29,75 @@ export class ProgressBarField extends Component {
         });
     }
 
-    getFormattedValue(part, humanReadable = false) {
-        const formatter = formatters.get(this.props[part].type);
-        return formatter(this.state[part], { humanReadable });
+    get isCurrentValueInteger() {
+        return this.state.currentValue % 1 === 0;
+    }
+    get isMaxValueInteger() {
+        return this.state.maxValue % 1 === 0;
     }
 
-    /**
-     * @param {String} value
-     * @param {String} part
-     */
-    onChangeValue(value, part) {
+    getCurrentValueField(p) {
+        return typeof p.currentValueField === "string" ? p.currentValueField : p.name;
+    }
+    getMaxValueField(p) {
+        return typeof p.maxValueField === "string" ? p.maxValueField : p.name;
+    }
+
+    getCurrentValue(p) {
+        return p.record.data[this.getCurrentValueField(p)] || 0;
+    }
+    getMaxValue(p) {
+        if (p.maxValueField) {
+            return p.record.data[p.maxValueField] || 100;
+        }
+        return 100;
+    }
+
+    formatCurrentValue(humanReadable = false) {
+        const formatter = formatters.get(this.isCurrentValueInteger ? "integer" : "float");
+        return formatter(this.state.currentValue, { humanReadable });
+    }
+    formatMaxValue(humanReadable = false) {
+        const formatter = formatters.get(this.isMaxValueInteger ? "integer" : "float");
+        return formatter(this.state.maxValue, { humanReadable });
+    }
+
+    onCurrentValueChange(value) {
+        let parsedValue;
         try {
-            let parsedValue = parseFloat(value);
-            if (this.props[part].type === "integer") {
-                parsedValue = Math.floor(parsedValue);
-            }
-            this.state[part] = parsedValue;
-            this.props.updatePart(part, parsedValue);
-            if (this.props.readonly) {
-                this.state.isEditing = false;
-                this.props.record.save();
-            }
+            parsedValue = parseFloat(value);
         } catch {
-            this.props.invalidate();
+            this.props.record.setInvalidField(this.props.name);
             return;
+        }
+
+        if (this.isCurrentValueInteger) {
+            parsedValue = Math.floor(parsedValue);
+        }
+        this.state.currentValue = parsedValue;
+        this.props.record.update({ [this.getCurrentValueField(this.props)]: parsedValue });
+        if (this.props.readonly) {
+            this.state.isEditing = false;
+            this.props.record.save();
+        }
+    }
+    onMaxValueChange(value) {
+        let parsedValue;
+        try {
+            parsedValue = parseFloat(value);
+        } catch {
+            this.props.record.setInvalidField(this.props.name);
+            return;
+        }
+
+        if (this.isMaxValueInteger) {
+            parsedValue = Math.floor(parsedValue);
+        }
+        this.state.maxValue = parsedValue;
+        this.props.record.update({ [this.getMaxValueField(this.props)]: parsedValue });
+        if (this.props.readonly) {
+            this.state.isEditing = false;
+            this.props.record.save();
         }
     }
 
@@ -61,17 +106,24 @@ export class ProgressBarField extends Component {
             this.state.isEditing = true;
         }
     }
-
     onBlur() {
         if (this.props.readonly) {
             this.state.isEditing = false;
         }
     }
 
-    onInput(ev, part) {
-        const parser = parsers.get(this.props[part].type);
+    onCurrentValueInput(ev) {
+        const parser = parsers.get(this.isCurrentValueInteger ? "integer" : "float");
         try {
-            this.state[part] = parser(ev.target.value);
+            this.state.currentValue = parser(ev.target.value);
+        } catch {
+            // pass
+        }
+    }
+    onMaxValueInput(ev) {
+        const parser = parsers.get(this.isMaxValueInteger ? "integer" : "float");
+        try {
+            this.state.maxValue = parser(ev.target.value);
         } catch {
             // pass
         }
@@ -81,55 +133,22 @@ export class ProgressBarField extends Component {
 ProgressBarField.template = "web.ProgressBarField";
 ProgressBarField.props = {
     ...standardFieldProps,
-    currentValue: { type: Object, optional: true },
+    maxValueField: { type: [String, Number], optional: true },
+    currentValueField: { type: String, optional: true },
     isPercentage: { type: Boolean, optional: true },
-    maxValue: { type: Object, optional: true },
     isEditable: { type: Boolean, optional: true },
     isEditableInReadonly: { type: Boolean, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
     isMaxValueEditable: { type: Boolean, optional: true },
-    invalidate: { type: Function, optional: true },
-    updatePart: { type: Function, optional: true },
-};
-ProgressBarField.defaultProps = {
-    invalidate: () => {},
-    updatePart: () => {},
 };
 
 ProgressBarField.displayName = _lt("Progress Bar");
 ProgressBarField.supportedTypes = ["integer", "float"];
 
-ProgressBarField.extractProps = (fieldName, record, attrs) => {
-    const getPart = (part) => {
-        if (attrs.options[part]) {
-            let value = attrs.options[part];
-            let name;
-            if (isNaN(value)) {
-                value =
-                    (record.data[attrs.options[part]] !== undefined &&
-                        record.data[attrs.options[part]]) ||
-                    0;
-                name = attrs.options[part];
-            }
-            return {
-                fieldName: name,
-                value,
-                type: value % 1 === 0 ? "integer" : "float",
-            };
-        }
-        const value = part === "max_value" ? 100 : record.data[fieldName] || 0;
-        return {
-            fieldName: fieldName,
-            value,
-            type: value % 1 === 0 ? "integer" : "float",
-        };
-    };
-    const parts = {
-        currentValue: getPart("current_value"),
-        maxValue: getPart("max_value"),
-    };
+ProgressBarField.extractProps = ({ attrs }) => {
     return {
-        ...parts,
+        maxValueField: attrs.options.max_value,
+        currentValueField: attrs.options.current_value,
         isPercentage: !attrs.options.max_value,
         isEditable: attrs.options.editable,
         isEditableInReadonly: attrs.options.editable_readonly,
@@ -137,8 +156,6 @@ ProgressBarField.extractProps = (fieldName, record, attrs) => {
             attrs.options.editable &&
             (!attrs.options.edit_max_value || attrs.options.edit_current_value),
         isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
-        invalidate: () => record.setInvalidField(fieldName),
-        updatePart: (part, value) => record.update({ [parts[part].fieldName]: value }),
     };
 };
 

@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StateSelectionField" owl="1">
-        <t t-if="props.readonly">
+        <t t-if="isReadonly">
             <button class="d-flex align-items-center btn btn-link disabled">
                 <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(currentValue) }} "/>
-                <span t-if="props.showLabel" class="o_status_label" t-esc="label"/>
+                <span t-if="showLabel" class="o_status_label" t-esc="label"/>
             </button>
         </t>
         <t t-else="">
@@ -13,7 +13,7 @@
                 <t t-set-slot="toggler">
                     <div class="d-flex align-items-center">
                         <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(currentValue) }} "/>
-                        <span t-if="props.showLabel" class="o_status_label" t-esc="label"/>
+                        <span t-if="showLabel" class="o_status_label" t-esc="label"/>
                     </div>
                 </t>
                 <t t-foreach="availableOptions" t-as="option" t-key="option[0]">

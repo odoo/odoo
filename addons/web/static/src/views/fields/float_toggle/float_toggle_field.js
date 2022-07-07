@@ -42,11 +42,9 @@ FloatToggleField.defaultProps = {
 FloatToggleField.supportedTypes = ["float"];
 
 FloatToggleField.isEmpty = () => false;
-FloatToggleField.extractProps = (fieldName, record, attrs) => {
+FloatToggleField.extractProps = ({ attrs, field }) => {
     return {
-        digits:
-            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
-            record.fields[fieldName].digits,
+        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
         range: attrs.options.range,
         factor: attrs.options.factor,
         disableReadOnly: attrs.options.force_button || false,

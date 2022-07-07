@@ -106,14 +106,14 @@ QUnit.module("Form Compiler", () => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.test("properly compile field with placeholder", async (assert) => {
+    QUnit.test("properly compile field without placeholder", async (assert) => {
         const arch = /*xml*/ `
             <form>
                 <field name="display_name" placeholder="e.g. Contact's Name or //someinfo..."/>
             </form>`;
 
         const expected = /*xml*/ `
-            <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" placeholder="\`e.g. Contact's Name or //someinfo...\`"/>
+            <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -254,6 +254,7 @@ QUnit.module("Form Renderer", (hooks) => {
             }
         }
         CharField.template = owl.xml`<div/>`;
+        CharField.extractProps = ({ attrs }) => ({ placeholder: attrs.placeholder });
 
         registry.category("fields").add("char", CharField, { force: true });
 

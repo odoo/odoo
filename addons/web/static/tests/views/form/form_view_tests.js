@@ -2741,7 +2741,7 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(this.props.horizontal, true);
             }
         }
-        MyField.extractProps = function (fieldName, record, attrs) {
+        MyField.extractProps = function ({ attrs }) {
             assert.deepEqual(attrs.options, { horizontal: true });
             return { horizontal: attrs.options.horizontal };
         };

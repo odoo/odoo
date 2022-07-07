@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Many2ManyTagsAvatarField" owl="1">
-        <TagsList tags="tags" itemsVisible="props.itemsVisible"  t-on-keydown="onTagsKeydown"/>
+        <TagsList tags="tags" itemsVisible="itemsVisible"  t-on-keydown="onTagsKeydown"/>
         <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-block mw-100" t-on-keydown="onAutoCompleteKeydown" t-ref="autoComplete">
             <Many2XAutocomplete
                 id="props.id"
@@ -13,7 +13,7 @@
                 activeActions="activeActions"
                 update="update"
                 quickCreate="activeActions.canCreate ? quickCreate : null"
-                context="props.context"
+                context="context"
                 getDomain.bind="getDomain"
                 isToMany="true"
             />

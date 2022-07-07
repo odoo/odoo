@@ -12,7 +12,9 @@ export class LabelSelectionField extends Component {
         return this.props.classesObj[this.props.value] || "primary";
     }
     get string() {
-        return formatSelection(this.props.value, { selection: this.props.options });
+        return formatSelection(this.props.value, {
+            selection: Array.from(this.props.record.fields[this.props.name].selection),
+        });
     }
 }
 
@@ -20,7 +22,6 @@ LabelSelectionField.template = "web.LabelSelectionField";
 LabelSelectionField.props = {
     ...standardFieldProps,
     classesObj: { type: Object, optional: true },
-    options: Object,
 };
 LabelSelectionField.defaultProps = {
     classesObj: {},
@@ -29,10 +30,9 @@ LabelSelectionField.defaultProps = {
 LabelSelectionField.displayName = _lt("Label Selection");
 LabelSelectionField.supportedTypes = ["selection"];
 
-LabelSelectionField.extractProps = (fieldName, record, attrs) => {
+LabelSelectionField.extractProps = ({ attrs }) => {
     return {
         classesObj: attrs.options.classes,
-        options: Array.from(record.fields[fieldName].selection),
     };
 };
 

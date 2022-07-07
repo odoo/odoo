@@ -11,17 +11,17 @@ export class ColorField extends Component {
             color: this.props.value || "#000000",
         });
     }
+
+    get isReadonly() {
+        return this.props.record.isReadonly(this.props.name);
+    }
 }
 
 ColorField.template = "web.ColorField";
 ColorField.props = {
     ...standardFieldProps,
 };
-ColorField.extractProps = (fieldName, record) => {
-    return {
-        readonly: record.isReadonly(fieldName),
-    };
-};
+
 ColorField.supportedTypes = ["char"];
 
 registry.category("fields").add("color", ColorField);

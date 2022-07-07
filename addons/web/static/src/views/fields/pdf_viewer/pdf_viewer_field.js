@@ -13,7 +13,7 @@ export class PdfViewerField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            fileName: this.props.fileName || "",
+            fileName: this.fileName || "",
             isValid: true,
             objectUrl: "",
         });
@@ -24,10 +24,16 @@ export class PdfViewerField extends Component {
             }
         });
     }
+    get defaultPage() {
+        return this.props.record.data[`${this.props.name}_page`];
+    }
+    get fileName() {
+        return this.props.record.data[this.props.fileNameField];
+    }
     get file() {
         return {
-            data: this.props.fileData,
-            name: this.state.fileName || this.props.fileData || null,
+            data: this.props.value || "",
+            name: this.state.fileName || this.props.value || null,
         };
     }
     get url() {
@@ -37,8 +43,8 @@ export class PdfViewerField extends Component {
                 encodeURIComponent(
                     this.state.objectUrl ||
                         url("/web/content", {
-                            model: this.props.resModel,
-                            id: this.props.resId,
+                            model: this.props.record.resModel,
+                            id: this.props.record.resId,
                             field: this.props.previewImage || this.props.name,
                         })
                 ) +
@@ -71,28 +77,17 @@ PdfViewerField.components = {
 };
 PdfViewerField.props = {
     ...standardFieldProps,
-    defaultPage: { type: Number, optional: true },
-    fileData: { type: String, optional: true },
-    fileName: { type: String, optional: true },
+    fileNameField: { type: String, optional: true },
     previewImage: { type: String, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
-};
-PdfViewerField.defaultProps = {
-    fileData: "",
 };
 
 PdfViewerField.displayName = _lt("PDF Viewer");
 PdfViewerField.supportedTypes = ["binary"];
 
-PdfViewerField.extractProps = (fieldName, record, attrs) => {
+PdfViewerField.extractProps = ({ attrs }) => {
     return {
-        defaultPage: record.data[fieldName + "_page"],
-        fileData: record.data[fieldName] || "",
-        fileName: record.data[attrs.filename] || "",
+        fileNameField: attrs.filename,
         previewImage: attrs.options.preview_image,
-        resId: record.resId,
-        resModel: record.resModel,
     };
 };
 

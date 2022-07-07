@@ -13,29 +13,30 @@ export class StatInfoField extends Component {
         const formatter = formatters.get(this.props.type);
         return formatter(this.props.value || 0, { digits: this.props.digits });
     }
+    get label() {
+        return this.props.labelField
+            ? this.props.record.data[this.props.labelField]
+            : this.props.record.activeFields[this.props.name].string;
+    }
 }
 
 StatInfoField.template = "web.StatInfoField";
 StatInfoField.props = {
     ...standardFieldProps,
-    label: { type: String, optional: true },
+    labelField: { type: String, optional: true },
     noLabel: { type: Boolean, optional: true },
     digits: { type: Array, optional: true },
 };
 
-StatInfoField.label = _lt("Stat Info");
+StatInfoField.displayName = _lt("Stat Info");
 StatInfoField.supportedTypes = ["float", "integer", "monetary"];
 
 StatInfoField.isEmpty = () => false;
-StatInfoField.extractProps = (fieldName, record, attrs) => {
+StatInfoField.extractProps = ({ attrs, field }) => {
     return {
-        label: attrs.options.label_field
-            ? record.data[attrs.options.label_field]
-            : record.activeFields[fieldName].string,
+        labelField: attrs.options.label_field,
         noLabel: archParseBoolean(attrs.nolabel),
-        digits:
-            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
-            record.fields[fieldName].digits,
+        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
     };
 };
 

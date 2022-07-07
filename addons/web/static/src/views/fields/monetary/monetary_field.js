@@ -16,14 +16,20 @@ export class MonetaryField extends Component {
         useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => parseMonetary(v, { currencyId: this.props.currencyId }),
+            parse: (v) => parseMonetary(v, { currencyId: this.currencyId }),
         });
         useNumpadDecimal();
     }
 
+    get currencyId() {
+        return this.props.currencyField
+            ? this.props.record.data[this.props.currencyField][0]
+            : (this.props.record.data.currency_id && this.props.record.data.currency_id[0]) ||
+                  undefined;
+    }
     get currency() {
-        if (!isNaN(this.props.currencyId) && this.props.currencyId in session.currencies) {
-            return session.currencies[this.props.currencyId];
+        if (!isNaN(this.currencyId) && this.currencyId in session.currencies) {
+            return session.currencies[this.currencyId];
         }
         return null;
     }
@@ -43,7 +49,7 @@ export class MonetaryField extends Component {
         if (!this.currency) {
             return null;
         }
-        return session.currencies[this.props.currencyId].digits;
+        return session.currencies[this.currencyId].digits;
     }
 
     get formattedValue() {
@@ -52,7 +58,7 @@ export class MonetaryField extends Component {
         }
         return formatMonetary(this.props.value, {
             digits: this.currencyDigits,
-            currencyId: this.props.currencyId,
+            currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
         });
     }
@@ -61,31 +67,26 @@ export class MonetaryField extends Component {
 MonetaryField.template = "web.MonetaryField";
 MonetaryField.props = {
     ...standardFieldProps,
-    currencyId: { type: Number, optional: true },
+    currencyField: { type: String, optional: true },
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
     hideSymbol: { type: Boolean, optional: true },
-    invalidate: { type: Function, optional: true },
     placeholder: { type: String, optional: true },
 };
 MonetaryField.defaultProps = {
     hideSymbol: false,
     inputType: "text",
-    invalidate: () => {},
 };
 
 MonetaryField.supportedTypes = ["monetary", "float"];
 MonetaryField.displayName = _lt("Monetary");
 
-MonetaryField.extractProps = function (fieldName, record, attrs) {
+MonetaryField.extractProps = ({ attrs }) => {
     return {
-        currencyId: attrs.options.currency_field
-            ? record.data[attrs.options.currency_field][0]
-            : (record.data.currency_id && record.data.currency_id[0]) || undefined,
+        currencyField: attrs.options.currency_field,
         inputType: attrs.type,
-        digits: [16, 2],
+        digits: [16, 2], // FIXME WOWL
         hideSymbol: attrs.options.no_symbol,
-        invalidate: () => record.setInvalidField(fieldName),
         placeholder: attrs.placeholder,
     };
 };

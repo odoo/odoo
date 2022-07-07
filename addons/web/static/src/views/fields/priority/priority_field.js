@@ -12,15 +12,21 @@ export class PriorityField extends Component {
         this.state = useState({
             index: -1,
         });
-        if (this.props.addCommand) {
+        if (this.props.record.activeFields[this.props.name].viewType === "form") {
             this.initiateCommand();
         }
     }
 
+    get options() {
+        return Array.from(this.props.record.fields[this.props.name].selection);
+    }
     get index() {
         return this.state.index > -1
             ? this.state.index
-            : this.props.options.findIndex((o) => o[0] === this.props.value);
+            : this.options.findIndex((o) => o[0] === this.props.value);
+    }
+    get isReadonly() {
+        return this.props.record.isReadonly(this.props.name);
     }
 
     getTooltip(value) {
@@ -32,7 +38,7 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.value === value) {
             this.state.index = -1;
-            this.props.update(this.props.options[0][0]);
+            this.props.update(this.options[0][0]);
         } else {
             this.props.update(value);
         }
@@ -41,7 +47,7 @@ export class PriorityField extends Component {
         try {
             const commandService = useService("command");
             const provide = () => {
-                return this.props.options.map((value) => ({
+                return this.options.map((value) => ({
                     name: value[1],
                     action: () => {
                         this.props.update(value[0]);
@@ -68,21 +74,16 @@ export class PriorityField extends Component {
 
 PriorityField.template = "web.PriorityField";
 PriorityField.props = {
-    options: Object,
     ...standardFieldProps,
-    addCommand: { type: Boolean, optional: true },
     tooltipLabel: { type: String, optional: true },
 };
 
 PriorityField.displayName = _lt("Priority");
 PriorityField.supportedTypes = ["selection"];
 
-PriorityField.extractProps = (fieldName, record) => {
+PriorityField.extractProps = ({ field }) => {
     return {
-        addCommand: record.activeFields[fieldName].viewType === "form",
-        options: Array.from(record.fields[fieldName].selection),
-        tooltipLabel: record.fields[fieldName].string,
-        readonly: record.isReadonly(fieldName),
+        tooltipLabel: field.string,
     };
 };
 

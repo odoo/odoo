@@ -14,14 +14,24 @@ const { Component } = owl;
 
 export class StatusBarField extends Component {
     setup() {
-        if (this.props.addCommand) {
+        if (this.props.record.activeFields[this.props.name].viewType === "form") {
             this.initiateCommand();
         }
     }
 
     get currentName() {
-        const item = this.props.options.find((item) => item.isSelected);
+        const item = this.options.find((item) => item.isSelected);
         return item ? item.name : "";
+    }
+    get options() {
+        switch (this.props.record.fields[this.props.name].type) {
+            case "many2one":
+                return this.props.record.preloadedData[this.props.name];
+            case "selection":
+                return this.props.record.fields[this.props.name].selection;
+            default:
+                return [];
+        }
     }
 
     getDropdownItemClassNames(item) {
@@ -37,7 +47,7 @@ export class StatusBarField extends Component {
     }
 
     getVisibleMany2Ones() {
-        let items = this.props.options;
+        let items = this.options;
         // FIXME: do this somewhere else
         items = items.map((i) => {
             return {
@@ -53,7 +63,7 @@ export class StatusBarField extends Component {
     }
 
     getVisibleSelection() {
-        let selection = this.props.options;
+        let selection = this.options;
         if (this.props.visibleSelection.length) {
             selection = selection.filter(
                 (item) =>
@@ -140,13 +150,11 @@ StatusBarField.defaultProps = {
 };
 StatusBarField.props = {
     ...standardFieldProps,
-    addCommand: { type: Boolean, optional: true },
     canCreate: { type: Boolean, optional: true },
     canWrite: { type: Boolean, optional: true },
     displayName: { type: String, optional: true },
     isDisabled: { type: Boolean, optional: true },
     visibleSelection: { type: Array, optional: true },
-    options: Array,
 };
 StatusBarField.components = {
     Dropdown,
@@ -159,23 +167,11 @@ StatusBarField.supportedTypes = ["many2one", "selection"];
 StatusBarField.isEmpty = (record, fieldName) => {
     return record.model.env.isSmall ? !record.data[fieldName] : false;
 };
-StatusBarField.extractProps = (fieldName, record, attrs) => {
-    const getOptions = () => {
-        switch (record.fields[fieldName].type) {
-            case "many2one":
-                return record.preloadedData[fieldName];
-            case "selection":
-                return record.fields[fieldName].selection;
-            default:
-                return [];
-        }
-    };
+StatusBarField.extractProps = ({ attrs, field }) => {
     return {
-        options: getOptions(),
-        addCommand: record.activeFields[fieldName].viewType === "form",
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
-        displayName: record.fields[fieldName].string,
+        displayName: field.string,
         isDisabled: !attrs.options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
