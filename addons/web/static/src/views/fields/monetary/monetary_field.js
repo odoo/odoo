@@ -66,6 +66,7 @@ MonetaryField.props = {
     digits: { type: Array, optional: true },
     hideSymbol: { type: Boolean, optional: true },
     invalidate: { type: Function, optional: true },
+    placeholder: { type: String, optional: true },
 };
 MonetaryField.defaultProps = {
     hideSymbol: false,

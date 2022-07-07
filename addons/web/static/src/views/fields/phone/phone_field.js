@@ -16,6 +16,7 @@ export class PhoneField extends Component {
 PhoneField.template = "web.PhoneField";
 PhoneField.props = {
     ...standardFieldProps,
+    placeholder: { type: String, optional: true },
 };
 
 PhoneField.displayName = _lt("Phone");

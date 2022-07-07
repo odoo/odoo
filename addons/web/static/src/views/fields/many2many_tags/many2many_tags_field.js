@@ -269,6 +269,7 @@ Many2ManyTagsField.props = {
     canQuickCreate: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     createDomain: { type: Array, optional: true },
+    placeholder: { type: String, optional: true },
     relation: { type: String },
     domain: { type: Domain },
     context: { type: Object },

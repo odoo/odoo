@@ -23,11 +23,6 @@ EmailField.extractProps = (fieldName, record, attrs) => {
         placeholder: attrs.placeholder,
     };
 };
-EmailField.extractProps = (fieldName, record, attrs) => {
-    return {
-        placeholder: attrs.placeholder,
-    };
-};
 
 EmailField.displayName = _lt("Email");
 EmailField.supportedTypes = ["char"];
