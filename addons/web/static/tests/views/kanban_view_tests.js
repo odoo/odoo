@@ -10853,4 +10853,29 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["get_views", "web_search_read"]);
         }
     );
+
+    QUnit.test('column quick create - title and placeholder', async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="int_field"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        const productFieldName = serverData.models.partner.fields.product_id.string;
+        assert.strictEqual(target.querySelector('.o_column_quick_create .o_quick_create_folded').innerText, productFieldName);
+
+        await click(target, "button.o_kanban_add_column");
+        assert.strictEqual(target.querySelector('.o_column_quick_create .o_quick_create_unfolded .input-group .o_input').getAttribute('placeholder'), productFieldName + '...');
+    });
 });
