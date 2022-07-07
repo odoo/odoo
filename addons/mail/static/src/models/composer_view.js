@@ -1115,7 +1115,7 @@ registerModel({
                     const regexp = new RegExp(
                         '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
                         'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.codepoints);
+                    htmlString = htmlString.replace(regexp, '$1' + emoji.codepointsRepresentation);
                 }
             }
             return htmlString;

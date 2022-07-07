@@ -2,12 +2,25 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
+import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Emoji',
     identifyingFields: ['codepoints'],
     recordMethods: {
+        /**
+         * @returns {string|FieldCommand}
+         */
+        _computeCodepointsRepresentation() {
+            if (!this.emojiRegistry) {
+                return clear();
+            }
+            if (!this.hasSkinToneVariations || this.emojiRegistry.skinTone === 0) {
+                return this.codepoints;
+            }
+            const [base, ...rest] = this.codepoints;
+            return [base, this.emojiRegistry.skinToneCodepoint, ...rest].join('');
+        },
         _computeEmojiRegistry() {
             return replace(this.messaging.emojiRegistry);
         },
@@ -22,6 +35,12 @@ registerModel({
         codepoints: attr({
             readonly: true,
             required: true,
+        }),
+        codepointsRepresentation: attr({
+            compute: '_computeCodepointsRepresentation',
+        }),
+        defaultEmojiCategory: attr({
+            default: "all"
         }),
         emojiCategories: many('EmojiCategory', {
             compute: "_computeEmojiCategories",
@@ -40,6 +59,7 @@ registerModel({
             readonly: true,
             isCausal: true,
         }),
+        hasSkinToneVariations: attr(),
         name: attr({
             readonly: true,
         }),

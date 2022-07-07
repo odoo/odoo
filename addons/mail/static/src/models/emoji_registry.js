@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
 import { executeGracefully } from '@mail/utils/utils';
@@ -21,6 +21,23 @@ registerModel({
                 ...this.dataCategories,
             ]);
         },
+
+        _computeSkinToneCodepoint() {
+            switch (this.skinTone) {
+                case 1:
+                    return '\u{1F3FB}';
+                case 2:
+                    return '\u{1F3FC}';
+                case 3:
+                    return '\u{1F3FD}';
+                case 4:
+                    return '\u{1F3FE}';
+                case 5:
+                    return '\u{1F3FF}';
+                default:
+                    return '';
+            }
+        },
         async _populateFromEmojiData() {
             await executeGracefully(emojiCategoriesData.map(category => () => {
                 this.update({
@@ -39,6 +56,7 @@ registerModel({
                     emojiDataCategory: insertAndReplace(
                         { name: emojiData.category }
                     ),
+                    hasSkinToneVariations: emojiData.hasSkinToneVariations,
                 });
             }));
         },
@@ -46,7 +64,7 @@ registerModel({
             return [['smaller-first', 'sortId']];
         },
         _sortAllEmojis() {
-            return [['smaller-first', 'codepoints']];
+            return [['smaller-first', 'codepointsRepresentation']];
         }
     },
     fields: {
@@ -63,6 +81,12 @@ registerModel({
             default: insertAndReplace({ name: 'all', title: 'all', sortId: 0 }),
         }),
         dataCategories: many('EmojiCategory', {
+        }),
+        skinTone: attr({
+            default: 0,
+        }),
+        skinToneCodepoint: attr({
+            compute: '_computeSkinToneCodepoint',
         }),
     },
 });
