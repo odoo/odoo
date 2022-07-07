@@ -60,7 +60,7 @@ function checkGlobalObjectsIntegrity() {
             if (initials[index] !== finals[index]) {
                 const [, /* global */ keys] = objects[index];
                 throw new Error(
-                    `The keys "${keys}" of some global objects (usually session or _t) may have been polluted by the test "${infos.testName}" in module "${infos.moduleName}"`
+                    `The keys "${keys}" of some global objects (usually session or _t) may have been polluted by the test "${infos.testName}" in module "${infos.moduleName}". Initial: ${initials[index]}. Final: ${finals[index]}.`
                 );
             }
         }

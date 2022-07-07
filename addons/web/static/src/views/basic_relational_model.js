@@ -207,16 +207,7 @@ class DataPoint {
 
     get evalContext() {
         const datapoint = this.model.__bm__.localData[this.__bm_handle__];
-        const evalContext = this.model.__bm__._getEvalContext(datapoint);
-        // FIXME: in the basic model, we set the toJSON function on x2many values
-        // s.t. we send commands to the server. In wowl Domain, we JSON.stringify
-        // values to compare them, so it doesn't work as expected.
-        for (const key in evalContext) {
-            if (evalContext[key]) {
-                delete evalContext[key].toJSON;
-            }
-        }
-        return evalContext;
+        return this.model.__bm__._getLazyEvalContext(datapoint);
     }
 
     get fieldNames() {

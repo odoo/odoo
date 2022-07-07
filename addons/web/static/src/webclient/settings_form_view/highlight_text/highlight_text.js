@@ -5,14 +5,14 @@ const { Component, useState, onWillRender } = owl;
 
 export class HighlightText extends Component {
     setup() {
-        this.searchValue = useState(this.env.searchValue);
+        this.searchState = useState(this.env.searchState);
 
         onWillRender(() => {
             const splitText = this.props.originalText.split(
-                new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig")
+                new RegExp(`(${escapeRegExp(this.searchState.value)})`, "ig")
             );
             this.splitText =
-                this.searchValue.value.length && splitText.length > 1
+                this.searchState.value.length && splitText.length > 1
                     ? splitText
                     : [this.props.originalText];
         });

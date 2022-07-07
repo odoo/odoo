@@ -122,6 +122,9 @@ export const PY_DICT = Object.create(null);
  * @returns {AST} a python dictionary
  */
 export function toPyDict(obj) {
-    const result = Object.create(PY_DICT);
-    return Object.assign(result, obj);
+    return new Proxy(obj, {
+        getPrototypeOf() {
+            return PY_DICT;
+        },
+    });
 }

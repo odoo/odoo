@@ -22,18 +22,21 @@ export class SettingsFormRenderer extends FormRenderer {
         this.compileParams = {
             labels: labels[this.props.archInfo.arch],
             getFieldExpr: this.getFieldExpr,
-            record: this.record,
+            record: this.props.record,
         };
         super.setup();
-        this.searchValue = useState(this.env.searchValue);
+        this.searchState = useState(this.env.searchState);
     }
     search(kind, value) {
-        const labelsTmp = labels[this.props.archInfo.arch]
-            .filter((x) => x[kind] === value)
-            .map((x) => [x.label, x.groupTitle, x.groupTip]);
-        return labelsTmp
-            .join()
-            .match(new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig"));
+        const regexp = new RegExp(escapeRegExp(this.searchState.value), "i");
+        for (let x of labels[this.props.archInfo.arch]) {
+            if (x[kind] === value) {
+                if (regexp.test([x.label, x.groupTitle, x.groupTip].join())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     getFieldExpr(fieldName, fieldWidget) {
         const name = `base_settings.${fieldWidget}`;

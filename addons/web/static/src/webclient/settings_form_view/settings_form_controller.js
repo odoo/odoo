@@ -5,7 +5,6 @@ import { formView } from "@web/views/form/form_view";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
-import { useDebounced } from "@web/core/utils/timing";
 
 const { useSubEnv, useState, useRef, useEffect } = owl;
 
@@ -40,18 +39,12 @@ export class SettingsFormController extends formView.Controller {
             }
             return _continue;
         };
-        this.onSearchInput = useDebounced(this.onSearchInput, 100);
         useViewButtons(this.model, useRef("root"), { beforeExecuteAction });
         useAutofocus();
-        const searchInputRef = useRef("autofocus");
         this.state = useState({ displayNoContent: false });
-        this.searchInput = useState({ value: "" });
-        this.searchInput.reset = () => {
-            this.searchInput.value = "";
-            searchInputRef.el.value = "";
-        };
+        this.searchState = useState({ value: "" });
         this.rootRef = useRef("root");
-        useSubEnv({ searchValue: this.searchInput });
+        useSubEnv({ searchState: this.searchState });
         useSubEnv({
             config: {
                 ...this.env.config,
@@ -71,7 +64,7 @@ export class SettingsFormController extends formView.Controller {
                     this.state.displayNoContent = true;
                 }
             },
-            () => [this.searchInput.value]
+            () => [this.searchState.value]
         );
         useEffect(() => {
             if (this.env.__beforeLeave__) {
@@ -90,10 +83,6 @@ export class SettingsFormController extends formView.Controller {
 
     //This is needed to avoid writing the id on the url
     updateURL() {}
-
-    onSearchInput(ev) {
-        this.searchInput.value = ev.target.value;
-    }
 
     async save() {
         this.env.onClickViewButton({

@@ -530,7 +530,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (element.type === 'record') {
-            var data = _.extend({}, element.data, element._changes);
+            var data = Object.assign({}, element.data, element._changes);
             var relDataPoint;
             for (var fieldName in data) {
                 var field = element.fields[fieldName];
@@ -576,7 +576,7 @@ var BasicModel = AbstractModel.extend({
                 }
             }
             var record = {
-                context: _.extend({}, element.context),
+                context: Object.assign({}, element.context),
                 count: element.count,
                 data: data,
                 domain: element.domain.slice(0),
@@ -594,7 +594,7 @@ var BasicModel = AbstractModel.extend({
                 offset: element.offset,
                 ref: element.ref,
                 res_ids: element.res_ids.slice(0),
-                specialData: _.extend({}, element.specialData),
+                specialData: Object.assign({}, element.specialData),
                 type: 'record',
                 viewType: element.viewType,
             };
@@ -2208,7 +2208,7 @@ var BasicModel = AbstractModel.extend({
             return list;
         }
         var self = this;
-        list = _.extend({}, list);
+        list = Object.assign({}, list);
         list.res_ids = list.res_ids.slice(0);
         var changes = list._changes || [];
         if (options) {
@@ -3486,7 +3486,6 @@ var BasicModel = AbstractModel.extend({
     _getContext: function (element, options) {
         options = options || {};
         var context = new Context(session.user_context);
-        context.set_eval_context(this._getEvalContext(element));
 
         if (options.full || !(options.fieldName || options.additionalContext)) {
             var context_to_add = options.sanitize_default_values ?
@@ -3500,7 +3499,9 @@ var BasicModel = AbstractModel.extend({
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
             if (fieldInfo && fieldInfo.context) {
-                context.add(fieldInfo.context);
+                if (fieldInfo.context !== "{}") {
+                    context.add(fieldInfo.context);
+                }
             } else {
                 var fieldParams = element.fields[options.fieldName];
                 if (fieldParams.context) {
@@ -3519,7 +3520,12 @@ var BasicModel = AbstractModel.extend({
             context.add(options.additionalContext);
         }
 
-        return context.eval();
+        if (context.__contexts.length > 1) {
+            context.set_eval_context(this._getEvalContext(element));
+            return context.eval();
+        } else {
+            return Object.assign({}, session.user_context);
+        }
     },
     /**
      * Collects from a record a list of ids to fetch, according to fieldName,
@@ -3729,6 +3735,66 @@ var BasicModel = AbstractModel.extend({
             evalContext,
         );
     },
+
+    _getLazyEvalContext: function (element, forDomain) {
+        var evalContext = element.type === 'record' ? this._getLazyRecordEvalContext(element, forDomain) : {};
+
+        if (element.parentID) {
+            var parent = this.localData[element.parentID];
+            if (parent.type === 'list' && parent.parentID) {
+                parent = this.localData[parent.parentID];
+            }
+            if (parent.type === 'record') {
+                evalContext.parent = this._getLazyRecordEvalContext(parent, forDomain);
+            }
+        }
+        // Uses "current_company_id" because "company_id" would conflict with all the company_id fields
+        // in general, the actual "company_id" field of the form should be used for m2o domains, not this fallback
+        let current_company_id;
+        if (session.user_context.allowed_company_ids) {
+            current_company_id = session.user_context.allowed_company_ids[0];
+        } else {
+            current_company_id = session.user_companies ?
+                session.user_companies.current_company :
+                false;
+        }
+        let fallbackContext = Object.assign(
+            {
+                active_id: evalContext.id || false,
+                active_ids: evalContext.id ? [evalContext.id] : [],
+                active_model: element.model,
+                current_company_id,
+                id: evalContext.id || false,
+            },
+            pyUtils.context(),
+            session.user_context,
+            element.context,
+        );
+
+        return new Proxy(
+            {}, {
+                has(target, key) {
+                    return key in target || key in evalContext || key in fallbackContext;
+                },
+                get (target, key) {
+                    switch (true) {
+                        case key in target:
+                            return target[key];
+                        case key in evalContext:
+                            return evalContext[key];
+                        default:
+                            return fallbackContext[key];;
+                    }
+                },
+                ownKeys(target) {
+                    return [...new Set([...Reflect.ownKeys(target), ...Object.keys(fallbackContext), ...Object.keys(evalContext)])];
+                },
+                getOwnPropertyDescriptor(target, prop) {
+                    return Reflect.getOwnPropertyDescriptor(target, prop) || { writable: true, configurable: true, enumerable: true };
+                },
+            }
+        );
+    },
     /**
      * Returns the list of field names of the given element according to its
      * default view type.
@@ -3861,6 +3927,74 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+
+    _getLazyRecordEvalContext: function (record, forDomain) {
+        let self = this;
+        let relDataPoint;
+
+        // calls _generateX2ManyCommands for a given field, and returns the array of commands
+        function _generateX2ManyCommands(fieldName) {
+            var commands = self._generateX2ManyCommands(record, {fieldNames: [fieldName]});
+            return commands[fieldName];
+        }
+
+        return new Proxy({}, {
+            has(target, key) {
+                return key in target || key in record.fields;
+            },
+            ownKeys(target) {
+                return [...new Set([...Reflect.ownKeys(target), ...Object.keys(record.fields)])];
+            },
+            getOwnPropertyDescriptor(target, prop) {
+                return Reflect.getOwnPropertyDescriptor(target, prop) || { writable: true, configurable: true, enumerable: true };
+            },
+            get( target, fieldName ) {
+                if (fieldName in target){
+                    return target[fieldName];
+                }
+                const fieldValue = record._changes && fieldName in record._changes ? record._changes[fieldName] : record.data[fieldName];
+                const field = record.fields[fieldName];
+                if (fieldValue === null) {
+                    return false;
+                }
+
+                if (field.type === 'date' || field.type === 'datetime') {
+                    if (fieldValue) {
+                        return JSON.parse(JSON.stringify(fieldValue));
+                    }
+                }
+                if (field.type === 'many2one') {
+                    relDataPoint = self.localData[fieldValue];
+                    return relDataPoint ? relDataPoint.res_id : false;
+                }
+                if (field.type === 'one2many' || field.type === 'many2many') {
+                    let ids;
+                    if (!fieldValue || _.isArray(fieldValue)) { // no dataPoint created yet
+                        ids = fieldValue ? fieldValue.slice(0) : [];
+                    } else {
+                        relDataPoint = self._applyX2ManyOperations(self.localData[fieldValue]);
+                        ids = relDataPoint.res_ids.slice(0);
+                    }
+                    if (!forDomain) {
+                        // when sent to the server, the x2manys values must be a list
+                        // of commands in a context, but the list of ids in a domain
+                        ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
+                    } else if (field.type === 'one2many') { // Ids are evaluated as a list of ids
+                        /* Filtering out virtual ids from the ids list
+                        * The server will crash if there are virtual ids in there
+                        * The webClient doesn't do literal id list comparison like ids == list
+                        * Only relevant in o2m: m2m does create actual records in db
+                        */
+                        ids = _.filter(ids, function (id) {
+                            return typeof id !== 'string';
+                        });
+                    }
+                    return ids;
+                }
+                return fieldValue;
+            }
+        });
     },
     /**
      * Get the domain for a list resource.

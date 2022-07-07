@@ -6,11 +6,11 @@ export class FormLabelHighlightText extends FormLabel {
     setup() {
         super.setup();
     }
-    get labelClasses() {
-        if (this.props.labelClasses) {
-            return this.props.labelClasses;
+    get className() {
+        if (this.props.className) {
+            return this.props.className;
         }
-        return super.labelClasses;
+        return super.className;
     }
 }
 

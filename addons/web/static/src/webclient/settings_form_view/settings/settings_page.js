@@ -6,7 +6,7 @@ export class SettingsPage extends Component {
     setup() {
         this.state = useState({
             selectedTab: "",
-            search: this.env.searchValue,
+            search: this.env.searchState,
         });
 
         if (this.props.modules) {
@@ -16,7 +16,7 @@ export class SettingsPage extends Component {
 
     onSettingTabClick(key) {
         this.state.selectedTab = key;
-        this.env.searchValue.reset();
+        this.env.searchState.value = "";
     }
 }
 SettingsPage.template = "web.SettingsPage";

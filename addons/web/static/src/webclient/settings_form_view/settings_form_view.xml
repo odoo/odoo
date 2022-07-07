@@ -10,7 +10,7 @@
                     <div class="o_searchview" role="search" aria-autocomplete="list">
                         <i class="o_searchview_icon oi oi-search" role="img" aria-label="Search..." title="Search..." />
                         <div class="o_searchview_input_container">
-                            <input type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" t-on-input="onSearchInput" t-ref="autofocus"/>
+                            <input type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" t-model="searchState.value" t-ref="autofocus"/>
                         </div>
                     </div>
                 </div>

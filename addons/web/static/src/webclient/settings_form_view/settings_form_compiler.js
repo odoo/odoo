@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { createElement } from "@web/core/utils/xml";
+import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
-import { append } from "@web/views/view_compiler";
 
 function compileSettingsPage(el, params) {
     const settings = createElement("SettingsPage");
@@ -59,7 +58,7 @@ function compileSettingsApp(el, params) {
 
     settingsBlock.setAttribute(
         "t-if",
-        `!searchValue.value or search("app", "${el.getAttribute("data-key")}")`
+        `!searchState.value or search("app", "${el.getAttribute("data-key")}")`
     );
 
     return settingsBlock;
@@ -96,7 +95,7 @@ function compileSettingsGroupTitle(el, params) {
             label: groupTitle.trim(),
             ...params.config,
         });
-        res.setAttribute("t-if", `!searchValue.value or search("groupTitleId", ${groupTitleId})`);
+        res.setAttribute("t-if", `!searchState.value or search("groupTitleId", ${groupTitleId})`);
     }
 
     return res;
@@ -123,7 +122,7 @@ function compileSettingsGroupTip(el, params) {
             label: tip.trim(),
             ...params.config,
         });
-        res.setAttribute("t-if", `!searchValue.value or search("groupTipId", ${groupTipId})`);
+        res.setAttribute("t-if", `!searchState.value or search("groupTipId", ${groupTipId})`);
     }
 
     return res;
@@ -139,7 +138,7 @@ function compileSettingsContainer(el, params) {
     }
     const res = this.compileGenericNode(el, params);
     if (params.config) {
-        res.setAttribute("t-if", `!searchValue.value or search("container", ${containerId})`);
+        res.setAttribute("t-if", `!searchState.value or search("container", ${containerId})`);
     }
     return res;
 }
@@ -153,7 +152,7 @@ function compileSettingBox(el, params) {
     }
     const res = this.compileGenericNode(el, params);
     if (params.config) {
-        res.setAttribute("t-if", `!searchValue.value or search("settingBox", ${settingBoxId})`);
+        res.setAttribute("t-if", `!searchState.value or search("settingBox", ${settingBoxId})`);
     }
     return res;
 }
@@ -219,78 +218,69 @@ function compileForm() {
 export class SettingsFormCompiler extends FormCompiler {
     setup() {
         super.setup();
-        this.compilers.push(
+        this.compilers.unshift(
             {
-                tag: "form",
+                selector: "form",
                 fn: compileForm,
             },
             {
-                tag: "div",
-                class: "settings",
+                selector: "div.settings",
                 fn: compileSettingsPage,
             },
             {
-                tag: "div",
-                class: "app_settings_block",
+                selector: "div.app_settings_block",
                 fn: compileSettingsApp,
             },
             {
-                tag: "div",
-                class: "app_settings_header",
+                selector: "div.app_settings_header",
                 fn: compileSettingsHeader,
             },
             // objects to show/hide in the search
             {
-                tag: "div",
-                class: "o_setting_box",
+                selector: "div.o_setting_box",
                 fn: compileSettingBox,
             },
             {
-                tag: "div",
-                class: "o_settings_container",
+                selector: "div.o_settings_container",
                 fn: compileSettingsContainer,
             },
             // h2
             {
-                tag: "h2",
+                selector: "h2",
                 fn: compileSettingsGroupTitle,
             },
             {
-                tag: "h3",
-                class: "o_setting_tip",
+                selector: "h3.o_setting_tip",
                 fn: compileSettingsGroupTip,
             },
             // search terms and highlight :
             {
-                tag: "label",
+                selector: "label",
                 fn: compileLabel,
             },
             {
-                tag: "span",
-                class: "o_form_label",
+                selector: "span.o_form_label",
                 fn: compileGenericLabel,
             },
             {
-                tag: "div",
-                class: "text-muted",
+                selector: "div.text-muted",
                 fn: compileGenericLabel,
             },
             {
-                tag: "field",
+                selector: "field",
                 fn: compileField,
             }
         );
     }
-    // FIXME WOWL: the following line crashes, there's no record in params (MobileWebSuite)
-    // createLabelFromField(fieldId, fieldName, fieldString, label, params) {
-    //     const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-    //     let labelText = label.textContent || fieldString;
-    //     labelText = labelText ? labelText : params.record.fields[fieldName].string;
+    createLabelFromField(fieldId, fieldName, fieldString, label, params) {
+        const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
+        let labelText = label.textContent || fieldString;
+        labelText = labelText ? labelText : params.record.fields[fieldName].string;
 
-    //     params.labels.push({
-    //         label: labelText,
-    //         ...params.config,
-    //     });
-    //     return res;
-    // }
+        params.labels.push({
+            label: labelText,
+            ...params.config,
+        });
+        return res;
+    }
 }
