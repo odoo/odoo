@@ -1315,6 +1315,7 @@ class ChromeBrowser:
         return
 
     def _wait_ready(self, ready_code, timeout=60):
+        ready_code = "try { %s } catch {}" % ready_code
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.time()
         result = None
