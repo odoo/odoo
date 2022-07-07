@@ -395,6 +395,68 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('boolean field is editable in an editable form', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="1">' +
+                    '<field name="bar" widget="boolean"/>' +
+                '</form>',
+        });
+
+        assert.containsOnce(form, '.o_field_boolean input:enabled',
+            "the field should be editable");
+
+        await testUtils.form.clickSave(form);
+
+        assert.containsOnce(form, '.o_field_boolean input:enabled',
+            "the field should be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('boolean field is not editable in a readonly form', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form edit="0">' +
+                    '<field name="bar" widget="boolean"/>' +
+                '</form>',
+            viewOptions: {
+               mode: 'readonly',
+            },
+        });
+
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
+    QUnit.test('boolean field is not editable with a readonly modifier', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="bar" widget="boolean" readonly="1"/>' +
+                '</form>',
+        });
+
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            "the field should not be editable");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
