@@ -271,6 +271,17 @@ QUnit.module("Views", (hooks) => {
         assert.isNotVisible(target.querySelector(".o_list_button_discard"));
     });
 
+    QUnit.test("list with class", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree class="myClass"><field name="foo"/></tree>',
+        });
+
+        assert.hasClass(target.querySelector(".o_list_renderer"), "myClass");
+    });
+
     QUnit.test('list with create="0"', async function (assert) {
         await makeView({
             type: "list",
