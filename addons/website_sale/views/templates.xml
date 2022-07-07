@@ -138,8 +138,10 @@
     <!-- Search Bar input-group template -->
     <template id="search" name="Search Box">
         <t t-call="website.website_search_box_input">
-            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto me-auto mb-2 flex-grow-1"/>
+            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto mb-3 me-auto mb-md-0 mr-auto flex-grow-1"/>
             <t t-set="_classes" t-valuef=" "/>
+            <t t-set="_submit_classes" t-valuef="btn border border-start-0"/>
+            <t t-set="_input_classes" t-valuef="border-end-0"/>
             <t t-set="search_type" t-valuef="products"/>
             <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0) or '/shop'"/>
             <t t-set="display_image" t-valuef="true"/>
@@ -229,7 +231,8 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
             <t t-set="curr_pl" t-value="website.pricelist_id" />
-            <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
+
+            <a role="button" href="#" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
             <div class="dropdown-menu" role="menu">
@@ -276,13 +279,13 @@
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="w-100"/>
                             </t>
-                            <div class="products_header d-flex flex-md-nowrap justify-content-end mb-4">
+                            <div class="products_header btn-toolbar flex-md-nowrap mb-4">
                                 <t t-call="website_sale.search">
-                                    <t t-set="_classes" t-valuef="w-100 w-md-auto me-auto mb-2"/>
+                                    <t t-set="_classes" t-valuef="w-100 w-md-auto me-auto"/>
                                     <t t-set="search" t-value="original_search or search"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list" t-cache="pricelist">
-                                    <t t-set="_classes" t-valuef="ms-3 mb-2"/>
+                                    <t t-set="_classes" t-valuef="ms-md-3"/>
                                 </t>
                             </div>
                             <div t-if="original_search and products" class="alert alert-warning mt8">
@@ -332,7 +335,7 @@
                                 </t>
                                 <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                             </div>
-                            <div class="products_pager d-flex justify-content-center py-3">
+                            <div class="products_pager d-flex justify-content-center pt-5 pb-3">
                                 <t t-call="website.pager"/>
                             </div>
                         </div>
@@ -388,9 +391,9 @@
         <xpath expr="//div[hasclass('products_header')]/t[@t-call='website_sale.pricelist_list']" position="after">
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
-            <div class="o_sortby_dropdown dropdown dropdown_sorty_by ms-3 pb-2">
-                <span class="d-none d-lg-inline fw-bold text-muted">Sort By:</span>
-                <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
+            <div class="o_sortby_dropdown dropdown dropdown_sorty_by ms-auto ms-md-3">
+                <small class="d-none d-lg-inline text-muted">Sort By:</small>
+                <a role="button" href="#" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown">
                     <span class="d-none d-lg-inline">
                         <t t-if='website_sale_sortable_current'>
                             <t t-esc="website_sale_sortable_current[0][1]"/>
@@ -414,20 +417,20 @@
 
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_header')]" position="inside">
-            <div class="ms-3 mb-2 d-inline-flex o_wsale_apply_layout">
+            <div class="o_wsale_apply_layout btn-group ms-3 mb-2">
                 <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
-                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid"/>
+                <label t-attf-class="btn btn-light #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid"/>
                 <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
-                <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List" for="o_wsale_apply_list"/>
+                <label t-attf-class="btn btn-light #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List" for="o_wsale_apply_list"/>
             </div>
         </xpath>
     </template>
 
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
-        <li class="nav-item">
+        <li class="nav-item mb-1">
             <t t-call="website_sale.categorie_link"/>
-            <ul t-if="c.child_id" class="nav flex-column nav-hierarchy">
+            <ul t-if="c.child_id" class="nav flex-column nav-hierarchy mt-1 ps-3">
                 <t t-foreach="c.child_id" t-as="c">
                     <t t-if="not search or c.id in search_categories_ids">
                         <t t-call="website_sale.categories_recursive" />
@@ -439,7 +442,7 @@
 
     <template id="categorie_link" name="Category Link">
         <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="form-check mb-1 d-inline-block">
-            <input type="radio" style="pointer-events:none;" class="form-check-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
+            <input type="radio" t-attf-name="wsale_categories_radios{{parentCategoryId}}" style="pointer-events:none;" class="form-check-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
             <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
     </template>
@@ -452,17 +455,18 @@
             <attribute name="class" add="mb-lg-3" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('products_categories')]" position="inside">
-            <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0"
-                data-bs-target="#wsale_products_categories_collapse" data-bs-toggle="collapse">
-                Show categories
+            <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0" data-toggle="button">
+                <span class="d-block py-2" data-bs-target="#wsale_products_categories_collapse" data-bs-toggle="collapse">
+                    Show categories
+                </span>
             </button>
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
-                <h6 class="o_categories_collapse_title"><b>Categories</b></h6>
+                <h6 class="o_categories_collapse_title mb-3"><b>Categories</b></h6>
                 <ul class="nav flex-column my-2">
                     <form>
-                        <li class="nav-item">
-                            <div t-att-data-link-href="keep('/shop', category=0)" class="form-check mb-1 d-inline-block">
-                                <input type="radio" style="pointer-events:none;" class="form-check-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
+                        <li class="nav-item mb-1">
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="form-check d-inline-block">
+                                <input type="radio" name="wsale_categories_radios" style="pointer-events:none;" class="form-check-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
                                 <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
                             </div>
                         </li>
@@ -476,18 +480,25 @@
     </template>
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
-        <li class="nav-item">
+        <li class="nav-item mb-1">
             <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <t t-call="website_sale.categorie_link"/>
-                <i t-if="children" t-attf-class="fa #{'fa-angle-down' if c.id in category.parents_and_self.ids else 'fa-angle-right'}"
-                    t-attf-title="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
-                    t-attf-aria-label="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}" role="img"/>
-                <ul t-if="children" class="nav flex-column w-100 nav-hierarchy" t-att-style="'display:block;' if c.id in category.parents_and_self.ids else 'display:none;'">
-                    <t t-foreach="children" t-as="c">
-                        <t t-call="website_sale.option_collapse_categories_recursive"/>
-                    </t>
-                </ul>
+                <t t-if="children">
+                    <t t-set="isOpen" t-value="c.id in category.parents_and_self.ids"/>
+
+                    <span t-attf-class="o_shop_collapse_button_#{isOpen and 'open' or 'closed'} btn btn-link py-0 px-2">
+                        <i t-attf-class="fa fa-fw #{'fa-angle-down' if isOpen else 'fa-angle-right'}"
+                           t-attf-title="#{'Unfold' if isOpen else 'Fold'}"
+                           t-attf-aria-label="#{'Unfold' if isOpen else 'Fold'}" role="img"/>
+                    </span>
+                    <ul class="nav flex-column w-100 nav-hierarchy ps-3 my-1" t-att-style="'display:block;' if isOpen else 'display:none;'">
+                        <t t-set="parentCategoryId" t-valuef="_{{c.id}}"></t>
+                        <t t-foreach="children" t-as="c">
+                            <t t-call="website_sale.option_collapse_categories_recursive"/>
+                        </t>
+                    </ul>
+                </t>
             </div>
         </li>
     </template>
@@ -506,22 +517,24 @@
             <t t-set="enable_left_column" t-value="True"/>
         </xpath>
         <xpath expr="//div[hasclass('products_attributes_filters')]" position="inside">
-            <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0"
-                data-bs-target="#wsale_products_attributes_collapse" data-bs-toggle="collapse">
-                Show options
+            <button type="button" class="btn btn-light d-lg-none mb-2 w-100 p-0" data-toggle="button">
+                <span class="d-block py-2" data-bs-target="#wsale_products_attributes_collapse" data-bs-toggle="collapse">
+                    Show options
+                </span>
             </button>
-            <div class="collapse d-lg-block mb-lg-3" id="wsale_products_attributes_collapse">
+            <div class="collapse d-lg-block" id="wsale_products_attributes_collapse">
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-light btn-block py-0 mb-2">
-                        <small><b>Clear Filters</b></small><b class="pull-right">&#215;</b>
+                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-light d-flex py-1 mb-2">
+                        <small class="mx-auto"><b>Clear Filters</b></small>
+                        <i class="oi oi-close"/>
                     </a>
                     <ul class="nav flex-column">
                         <t t-foreach="attributes" t-as="a">
-                            <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item mb-2">
-                                <h6>
+                            <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item mb-1">
+                                <h6 class="mb-3">
                                     <b t-field="a.name" class="o_products_attributes_title"/>
                                 </h6>
                                 <t t-if="a.display_type == 'select'">
@@ -533,7 +546,7 @@
                                     </select>
                                 </t>
                                 <t t-if="a.display_type == 'radio' or a.display_type == 'pills'">
-                                    <div class="flex-column">
+                                    <div class="flex-column mb-3">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <div class="form-check mb-1">
                                                 <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
