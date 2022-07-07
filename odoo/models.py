@@ -1867,13 +1867,13 @@ class BaseModel(metaclass=MetaModel):
         return self.get_formview_action(access_uid=access_uid)
 
     @api.model
-    def search_count(self, domain):
+    def search_count(self, domain, limit=None):
         """ search_count(domain) -> int
 
         Returns the number of records in the current model matching :ref:`the
         provided domain <reference/orm/domains>`.
         """
-        res = self.search(domain, count=True)
+        res = self.search(domain, limit=limit, count=True)
         return res if isinstance(res, int) else len(res)
 
     @api.model
@@ -4885,17 +4885,19 @@ class BaseModel(metaclass=MetaModel):
 
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
+        query.limit = limit
 
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str, params = query.select("count(*)")
+            query_str, params = query.select(limit and "1" or "count(*)")
+            if limit:
+                query_str = "select count(*) from (" + query_str + ") t"
             self._cr.execute(query_str, params)
             res = self._cr.fetchone()
             return res[0]
 
         query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
-        query.limit = limit
         query.offset = offset
 
         return query
