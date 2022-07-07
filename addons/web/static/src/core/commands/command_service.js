@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { CommandPalette } from "./command_palette";
 
-const { Component, xml } = owl;
+const { Component, xml, EventBus } = owl;
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -65,6 +65,7 @@ export const commandService = {
         const registeredCommands = new Map();
         let nextToken = 0;
         let isPaletteOpened = false;
+        const bus = new EventBus();
 
         hotkeyService.add("control+k", openMainPalette, {
             bypassEditableProtection: true,
@@ -125,11 +126,11 @@ export const commandService = {
         /**
          * @param {CommandPaletteConfig} config
          * @param {Function} onClose called when the command palette is closed
-         * @returns config if the command palette is already open
          */
         function openPalette(config, onClose) {
             if (isPaletteOpened) {
-                return config;
+                bus.trigger("SET-CONFIG", config);
+                return;
             }
 
             // Open Command Palette dialog
@@ -138,6 +139,7 @@ export const commandService = {
                 CommandPalette,
                 {
                     config,
+                    bus,
                 },
                 {
                     onClose: () => {
@@ -161,16 +163,18 @@ export const commandService = {
             }
 
             const registration = Object.assign({}, command, options);
-
             if (registration.hotkey) {
-                registration.removeHotkey = hotkeyService.add(
-                    registration.hotkey,
-                    registration.action,
-                    {
-                        activeElement: registration.activeElement,
-                        global: registration.global,
+                const action = async () => {
+                    const commandService = env.services.command;
+                    const config = await command.action();
+                    if (!isPaletteOpened && config) {
+                        commandService.openPalette(config);
                     }
-                );
+                };
+                registration.removeHotkey = hotkeyService.add(registration.hotkey, action, {
+                    activeElement: registration.activeElement,
+                    global: registration.global,
+                });
             }
 
             const token = nextToken++;

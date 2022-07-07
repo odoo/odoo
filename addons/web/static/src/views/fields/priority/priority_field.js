@@ -56,10 +56,10 @@ export class PriorityField extends Component {
             };
             const name = this.env._t("Set priority...");
             const action = () => {
-                return commandService.openPalette({
+                return {
                     placeholder: this.env._t("Set a priority..."),
                     providers: [{ provide }],
-                });
+                };
             };
             const options = {
                 category: "smart_action",
