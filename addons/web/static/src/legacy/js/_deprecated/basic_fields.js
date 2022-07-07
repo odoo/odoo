@@ -126,7 +126,7 @@ var FieldBoolean = AbstractField.extend({
     _render: function () {
         var $checkbox = this._formatValue(this.value);
         this.$input = $checkbox.find('input');
-        this.$input.prop('disabled', this.hasReadonlyModifier);
+        this.$input.prop('disabled', this.hasReadonlyModifier && this.mode != 'edit');
         this.$el.addClass($checkbox.attr('class'));
         this.$el.empty().append($checkbox.contents());
     },

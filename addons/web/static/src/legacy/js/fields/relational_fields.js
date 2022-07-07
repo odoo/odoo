@@ -3544,7 +3544,7 @@ var FieldRadio = FieldSelection.extend({
                 index: index,
                 name: self.unique_id,
                 value: value,
-                disabled: self.hasReadonlyModifier,
+                disabled: self.hasReadonlyModifier && self.mode != 'edit',
             }));
         });
     },
