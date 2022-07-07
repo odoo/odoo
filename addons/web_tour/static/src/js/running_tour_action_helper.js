@@ -104,6 +104,12 @@ var RunningTourActionHelper = core.Class.extend({
             $selectedOption.prop("selected", true);
             this._click(values);
         } else {
+            const { tagName } = values.$element[0];
+            if (!["INPUT", "TEXTAREA"].includes(tagName)) {
+                const { trigger, name } = this.tip_widget.info;
+                const msg = `Element not focusable: ${trigger} has tag "${tagName.toLowerCase()}"` + (name ? ` (step name: "${name}")` : ``);
+                throw new Error(msg);
+            }
             values.$element.focusIn();
             values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));
             values.$element.text(text).trigger("input");
