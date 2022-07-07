@@ -571,7 +571,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req1_form.request_date_from = fields.Date.to_date('2021-12-06')
         req1_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req1_form.number_of_days, 3)
+        self.assertEqual(req1_form.number_of_days_display, 3)
         req1_form.save().action_approve()
 
         req2_form = Form(self.env['hr.leave'].sudo())
@@ -580,7 +580,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req2_form.request_date_from = fields.Date.to_date('2021-12-06')
         req2_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req2_form.number_of_days, 3)
+        self.assertEqual(req2_form.number_of_days_display, 3)
 
     def test_leave_with_public_holiday_other_company(self):
         other_company = self.env['res.company'].create({
