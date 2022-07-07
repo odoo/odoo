@@ -3221,11 +3221,10 @@ var FieldStatus = AbstractField.extend({
                     hotkey: "alt+shift+x",
                 },
                 action() {
-                    return env.services.command.openPalette({
+                    return {
                         placeholder: statusLabel,
                         providers: [{ provide }],
-                    });
-                },
+                    }                },
             });
             core.bus.trigger("set_legacy_command", "web.FieldStatus.moveToStage", getCommandDefinition);
         }

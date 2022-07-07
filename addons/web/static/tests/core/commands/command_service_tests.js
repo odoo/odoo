@@ -218,6 +218,39 @@ QUnit.test("global command with hotkey", async (assert) => {
     assert.verifySteps([globalHotkey]);
 });
 
+QUnit.test("open command palette with command config", async (assert) => {
+    const hotkey = "alt+a";
+    const action = () => {};
+    const provide = () => [
+        {
+            name: "Command1",
+            action,
+        },
+    ];
+    const providers = [{ provide }];
+    env.services.command.add(
+        "test",
+        () => {
+            return {
+                providers,
+            };
+        },
+        {
+            hotkey,
+        }
+    );
+
+    await mount(TestComponent, target, { env });
+
+    triggerHotkey("alt+a");
+    await nextTick();
+    assert.containsN(target, ".o_command", 1);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
+        ["Command1"]
+    );
+});
+
 QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.expect(8);
 
@@ -1045,4 +1078,40 @@ QUnit.test("openMainPalette with onClose", async (assert) => {
     triggerHotkey("escape");
     await nextTick();
     assert.verifySteps(["onClose"]);
+});
+
+QUnit.test("uses openPalette to modify the config used by the command palette", async (assert) => {
+    const action = () => {};
+    env.services.command.add("Command1", action);
+
+    await mount(TestComponent, target, { env });
+
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.deepEqual(target.querySelector(".o_command_palette_search input").value, "");
+    assert.containsN(target, ".o_command", 1);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
+        ["Command1"]
+    );
+
+    const provide = () => [
+        {
+            name: "Command2",
+            action,
+        },
+    ];
+    const providers = [{ provide }];
+    const configCustom = {
+        searchValue: "Command",
+        providers,
+    };
+    env.services.command.openPalette(configCustom);
+    await nextTick();
+    assert.containsN(target, ".o_command", 1);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
+        ["Command2"]
+    );
+    assert.deepEqual(target.querySelector(".o_command_palette_search input").value, "Command");
 });

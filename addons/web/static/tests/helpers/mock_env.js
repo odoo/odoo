@@ -50,6 +50,7 @@ function prepareRegistriesWithCleanup() {
     cloneRegistryWithCleanup(registry.category("views"));
     cloneRegistryWithCleanup(registry.category("error_handlers"));
     cloneRegistryWithCleanup(registry.category("command_provider"));
+    cloneRegistryWithCleanup(registry.category("command_setup"));
     cloneRegistryWithCleanup(registry.category("view_widgets"));
     cloneRegistryWithCleanup(registry.category("fields"));
 

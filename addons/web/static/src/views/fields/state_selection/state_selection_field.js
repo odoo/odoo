@@ -57,10 +57,10 @@ export class StateSelectionField extends Component {
             };
             const name = this.env._t("Set kanban state...");
             const action = () => {
-                return commandService.openPalette({
+                return {
                     placeholder: this.env._t("Set a kanban state..."),
                     providers: [{ provide }],
-                });
+                };
             };
             const options = {
                 category: "smart_action",

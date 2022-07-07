@@ -2577,10 +2577,10 @@ var PriorityWidget = AbstractField.extend({
                     hotkey: "alt+r",
                 },
                 action() {
-                    return env.services.command.openPalette({
+                    return {
                         placeholder: env._t("Set a priority..."),
                         providers: [{ provide }],
-                    })
+                    };
                 },
             });
             core.bus.trigger("set_legacy_command", "web.PriorityWidget.setPriority", getCommandDefinition);
@@ -2784,10 +2784,10 @@ var StateSelectionWidget = AbstractField.extend({
                     hotkey: "alt+shift+r",
                  },
                 action() {
-                    return env.services.command.openPalette({
+                    return {
                         placeholder: env._t("Set a kanban state..."),
                         providers: [{ provide }],
-                    })
+                    }
                 },
             });
             core.bus.trigger("set_legacy_command", "web.StateSelectionWidget.setKanbanState", getCommandDefinition);
