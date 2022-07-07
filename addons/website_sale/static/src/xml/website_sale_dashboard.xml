@@ -137,7 +137,7 @@
         <t t-jquery=".o_top_margin .row" t-operation="append">
             <div class="col-lg-6 col-12 o_dashboard_utms">
                 <div>
-                    <h4 class="float-left">REVENUE BY</h4>
+                    <h4 class="float-start">REVENUE BY</h4>
                     <t t-call="website_sale.LinkTrackersDropDown"/>
                 </div>
                 <div class="o_utm_no_data_img">
@@ -150,7 +150,7 @@
 
     <t t-name="website_sale.LinkTrackersDropDown">
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle utm_dropdown ml4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="utm_button_name">Campaigns</span>
+            <button class="btn btn-secondary dropdown-toggle utm_dropdown ml4" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="utm_button_name">Campaigns</span>
             </button>
             <div class="dropdown-menu" role="menu" aria-labelledby="utm_dropdown">
                 <a name="campaign_id" class="dropdown-item js_utm_selector" role="menuitem">Campaigns</a>

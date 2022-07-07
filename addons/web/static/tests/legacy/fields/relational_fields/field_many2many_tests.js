@@ -136,7 +136,7 @@ QUnit.module('Legacy fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -317,7 +317,7 @@ QUnit.module('Legacy fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -1123,23 +1123,23 @@ QUnit.module('Legacy fields', {}, function () {
                 }
             });
 
-            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(0).prop('checked'),
+            assert.notOk(form.$('.o_form_view .form-check input').eq(0).prop('checked'),
                 "first checkbox should not be checked");
-            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(1).prop('checked'),
+            assert.notOk(form.$('.o_form_view .form-check input').eq(1).prop('checked'),
                 "second checkbox should not be checked");
-            assert.ok(form.$('.o_form_view .custom-checkbox input').eq(2).prop('checked'),
+            assert.ok(form.$('.o_form_view .form-check input').eq(2).prop('checked'),
                 "third checkbox should be checked");
 
-            await testUtils.dom.click(form.$('.o_form_view .custom-checkbox input:checked'));
-            await testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
-            await testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
-            await testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
+            await testUtils.dom.click(form.$('.o_form_view .form-check input:checked'));
+            await testUtils.dom.click(form.$('.o_form_view .form-check input').first());
+            await testUtils.dom.click(form.$('.o_form_view .form-check input').first());
+            await testUtils.dom.click(form.$('.o_form_view .form-check input').first());
 
-            assert.ok(form.$('.o_form_view .custom-checkbox input').eq(0).prop('checked'),
+            assert.ok(form.$('.o_form_view .form-check input').eq(0).prop('checked'),
                 "first checkbox should be checked");
-            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(1).prop('checked'),
+            assert.notOk(form.$('.o_form_view .form-check input').eq(1).prop('checked'),
                 "second checkbox should not be checked");
-            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(2).prop('checked'),
+            assert.notOk(form.$('.o_form_view .form-check input').eq(2).prop('checked'),
                 "third checkbox should not be checked");
 
             await testUtils.form.clickSave(form);

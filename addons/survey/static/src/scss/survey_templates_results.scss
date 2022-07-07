@@ -20,7 +20,7 @@
         // Dropdown adapted from event templates to get a coherent styling
         .dropdown-toggle {
             text-align: left;
-            @include hover-focus {
+            &:hover, &:focus {
                 text-decoration: none;
             }
             &:after {
@@ -39,8 +39,8 @@
         }
         .dropdown-item {
             &.active .badge { // Invert badge display when the item is active
-                background-color: color-yiq(theme-color('primary'));
-                color: theme-color('primary');
+                background-color: color-contrast(map-get($theme-colors, 'primary'));
+                color: map-get($theme-colors, 'primary');
             }
         }
     }

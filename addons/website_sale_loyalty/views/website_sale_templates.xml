@@ -5,9 +5,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" required="required" placeholder="Gift card code..."/>
-                <div class="input-group-append">
-                    <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
-                </div>
+                <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
             </div>
         </form>
     </template>
@@ -22,7 +20,7 @@
     <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
-                <td colspan="3" class="text-center text-xl-right border-0">
+                <td colspan="3" class="text-center text-xl-end border-0">
                     <span class=''>
                         <t t-set='force_gift_card' t-value="request.params.get('gift_card_error')"/>
                         <t t-if="not force_gift_card">
@@ -32,17 +30,17 @@
                             <t t-call="website_sale_loyalty.pay_with_gift_card_form"/>
                         </div>
                         <t t-if="request.params.get('code_not_available')">
-                            <div class="alert alert-danger text-left mt16" role="alert">
+                            <div class="alert alert-danger text-start mt16" role="alert">
                                 Invalid or expired promo code.
                             </div>
                         </t>
                         <t t-if="website_sale_order.get_promo_code_error(delete=False)">
-                            <div class="alert alert-danger text-left mt16" role="alert">
+                            <div class="alert alert-danger text-start mt16" role="alert">
                                 <t t-esc="website_sale_order.get_promo_code_error()"/>
                             </div>
                         </t>
                         <t t-if="website_sale_order and website_sale_order.get_promo_code_success_message(delete=False)">
-                            <div class="alert alert-success text-left mt16" role="alert">
+                            <div class="alert alert-success text-start mt16" role="alert">
                                 You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
                             </div>
                         </t>
@@ -53,7 +51,7 @@
                                         method="post" name="claim_reward">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="reward" t-att-value="reward.id"/>
-                                        <div class="alert alert-success text-left mt16" role="alert">
+                                        <div class="alert alert-success text-start mt16" role="alert">
                                             <div class="row">
                                                 <div class="col-8">
                                                     <strong t-esc="reward.description"/>
@@ -111,8 +109,8 @@
     <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_untaxed']" position="before">
             <tr t-if="website_sale_order and website_sale_order.reward_amount">
-            <td class="text-right border-0 text-muted" title="Discounted amount">Discount:</td>
-            <td class="text-xl-right border-0 text-muted">
+            <td class="text-end border-0 text-muted" title="Discounted amount">Discount:</td>
+            <td class="text-xl-end border-0 text-muted">
                 <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;"
                     class="monetary_field"
                     t-options='{

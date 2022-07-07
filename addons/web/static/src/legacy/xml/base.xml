@@ -92,16 +92,16 @@
 </t>
 
 <t t-name="web.CustomCheckbox" owl="1">
-    <div class="custom-control custom-checkbox" t-att-class="props.class">
+    <div t-attf-class="{{ props.text ? 'custom-control form-check' : '' }}" t-att-class="props.class">
         <input
             t-att-id="props.id or _id"
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             t-att-disabled="props.disabled"
             t-att-checked="props.value"
             t-on-change="(ev) => props.onChange(ev.target.checked)"
             />
-        <label t-att-for="props.id or _id" class="custom-control-label">
+        <label t-att-for="props.id or _id" class="form-check-label">
             <t t-esc="props.text or '&#8203;'"/>
         </label>
     </div>
@@ -152,7 +152,7 @@
     <div class="btn-group dropdown" t-att-class="{ show: state.open }">
         <button type="button"
             class="dropdown-toggle btn btn-secondary o-no-caret"
-            t-attf-class="{{ icon || displayCaret || displayChevron ? 'd-flex align-items-center ' : ''}} {{ displayCaret || displayChevron ? 'pr-1 ' : ''}}"
+            t-attf-class="{{ icon || displayCaret || displayChevron ? 'd-flex align-items-center ' : ''}} {{ displayCaret || displayChevron ? 'pe-1 ' : ''}}"
             t-att-aria-expanded="state.open ? 'true' : 'false'"
             tabindex="-1"
             t-on-click="() => { state.open = !state.open }"
@@ -160,12 +160,12 @@
             t-att-title="props.hotkeyTitle"
             t-att-data-hotkey="props.hotkey"
             >
-            <i t-if="icon" t-att-class="icon + ' small mr-1'"/>
+            <i t-if="icon" t-att-class="icon + ' small me-1'"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-fw fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-fw ml-auto fa-chevron-{{ state.open ? 'down' : 'right' }}"/>
+            <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-fw ms-auto fa-chevron-{{ state.open ? 'down' : 'right' }}"/>
         </button>
-        <ul t-if="state.open" t-attf-class="dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
+        <ul t-if="state.open" t-attf-class="o-dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
             t-on-item-selected="_onItemSelected"
             >
             <t t-set="currentGroup" t-value="null"/>
@@ -201,7 +201,7 @@
                         role="separator"
                     />
                     <li class="o_item_option" role="menuitem">
-                        <a class="dropdown-item pl-5"
+                        <a class="dropdown-item ps-5"
                             t-att-class="{ selected: option.isActive }"
                             t-att-aria-checked="option.isActive ? 'true' : 'false'"
                             role="menuitemcheckbox"
@@ -243,7 +243,7 @@
             <div role="dialog" class="modal"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
-                t-att-data-backdrop="'' + props.backdrop"
+                t-att-data-bs-backdrop="'' + props.backdrop"
                 t-ref="modal"
                 t-on-close_dialog.stop="_close"
                 t-on-click="_onBackdropClick"
@@ -255,7 +255,7 @@
                                 <t t-esc="props.title"/>
                                 <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
                             </h4>
-                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                            <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="_close"></button>
                         </header>
                         <main class="modal-body">
                             <t t-slot="default"/>
@@ -293,7 +293,7 @@
     <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
             <input t-if="state.editing" type="text"
-                class="o_pager_value o_input d-inline-block w-auto text-right"
+                class="o_pager_value o_input d-inline-block w-auto text-end"
                 size="7"
                 t-ref="autofocus"
                 t-att-value="value"
@@ -312,7 +312,7 @@
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
-                class="fa fa-chevron-left px-2 btn btn-secondary o_pager_previous rounded-left"
+                class="fa fa-chevron-left px-2 btn btn-secondary o_pager_previous rounded-start"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous page"
@@ -321,7 +321,7 @@
                 t-on-click="ev => this._changeSelection(-1, ev)"
             />
             <button type="button"
-                class="fa fa-chevron-right px-2 btn btn-secondary o_pager_next rounded-right"
+                class="fa fa-chevron-right px-2 btn btn-secondary o_pager_next rounded-end"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next page"
@@ -341,9 +341,9 @@
             role="img"
             aria-label="search"
             t-on-keydown="(ev) => this._onFacetKeydown(facet, facet_index, ev)">
-            <span t-if="facet.icon" t-attf-class="o_searchview_facet_label bg-odoo {{ facet.icon }}"/>
-            <span t-else="" class="o_searchview_facet_label bg-odoo" t-esc="facet.title"/>
-            <div class="o_facet_values border border-odoo border-left-0">
+            <span t-if="facet.icon" t-attf-class="o_searchview_facet_label text-bg-odoo {{ facet.icon }}"/>
+            <span t-else="" class="o_searchview_facet_label text-bg-odoo" t-esc="facet.title"/>
+            <div class="o_facet_values border border-odoo border-start-0">
                 <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                     <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
                     <span class="o_facet_value" t-esc="facetValue"/>
@@ -384,12 +384,12 @@
                 </a>
                 <a href="#" t-on-click.prevent="">
                     <t t-if="src.parent.selection">
-                        Search <b t-esc="src.parent.description"/>: <b class="font-italic text-primary" t-esc="src.label"/></t>
+                        Search <b t-esc="src.parent.description"/>: <b class="fst-italic text-primary" t-esc="src.label"/></t>
                     <t t-elif="src.label" t-esc="src.label"/>
                     <t t-elif="['date', 'datetime'].includes(src.type)">
-                        <t>Search <b t-esc="src.description"/> at: <b class="font-italic text-primary" t-esc="state.inputValue"/></t>
+                        <t>Search <b t-esc="src.description"/> at: <b class="fst-italic text-primary" t-esc="state.inputValue"/></t>
                     </t>
-                    <t t-else="">Search <b t-esc="src.description"/> for: <b class="font-italic text-primary" t-esc="state.inputValue"/></t>
+                    <t t-else="">Search <b t-esc="src.description"/> for: <b class="fst-italic text-primary" t-esc="state.inputValue"/></t>
                 </a>
             </li>
         </ul>
@@ -593,12 +593,12 @@
 </t>
 
 <t t-name="ListView.selection">
-    <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
-        <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+    <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center ps-0 px-lg-2 py-0 mb-0 ms-2" role="alert">
+        <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
         <t t-else="">
-            <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
-            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal">
-                <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+            <span class="font-monospace me-1" t-esc="nbSelected"/> selected
+            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal">
+                <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
             </a>
         </t>
     </div>
@@ -755,8 +755,8 @@
 
 <t t-name="PivotView.buttons">
     <div class="btn-group" role="toolbar" aria-label="Main actions">
-        <button class="btn btn-primary dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
-            Measures <i class="fa fa-caret-down ml-1"/>
+        <button class="btn btn-primary dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
+            Measures <i class="fa fa-caret-down ms-1"/>
         </button>
         <div class="dropdown-menu o_pivot_measures_list" role="menu">
             <t t-foreach="measures" t-as="measure" t-key="measure_index">
@@ -775,7 +775,7 @@
 
 <t t-name="FormSelection">
     <div class="btn-group o_selection" aria-atomic="true">
-        <a href="#" data-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu">
+        <a href="#" data-bs-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu">
             <span class="o_status d-inline-block align-middle"/>
         </a>
         <div class="dropdown-menu state" role="menu"/>
@@ -783,7 +783,7 @@
 </t>
 <t t-name="FormSelection.items">
     <t t-foreach="states" t-as="rec" t-key="rec_index">
-        <a role="menuitem" href="#" class="dropdown-item pl-4" t-att-data-value="rec.name">
+        <a role="menuitem" href="#" class="dropdown-item ps-4" t-att-data-value="rec.name">
             <span t-att-class="'o_status rounded-circle d-inline-block align-middle ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
             <t t-out="rec.state_name"/>
         </a>
@@ -817,7 +817,7 @@
 </t>
 <t t-name="DomainTree.OperatorSelector">
     <div t-if="!widget.readonly" class="btn-group o_domain_tree_operator_selector" aria-atomic="true">
-        <button class="btn btn-sm btn-primary o_domain_tree_operator_caret" data-toggle="dropdown">
+        <button class="btn btn-sm btn-primary o_domain_tree_operator_caret" data-bs-toggle="dropdown">
             <t t-if="widget.operator === '&amp;'">All</t>
             <t t-if="widget.operator === '|'">Any</t>
             <t t-if="widget.operator === '!'">None</t>
@@ -891,7 +891,7 @@
             <t t-else="">
                 <t t-if="_.contains(['in', 'not in'], widget.operator)">
                     <div class="o_domain_leaf_value_input">
-                        <span class="badge badge-pill" t-foreach="widget.displayValue" t-as="val" t-key="val_index">
+                        <span class="badge rounded-pill" t-foreach="widget.displayValue" t-as="val" t-key="val_index">
                             <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
                         </span>
                     </div>
@@ -1007,10 +1007,10 @@
         t-att-id="widget.idForLabel"/>
 </t>
 <t t-name="FieldRadio.button">
-    <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
-        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
+    <div class="custom-control form-check o_radio_item" aria-atomic="true">
+        <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
             t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
-        <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
+        <label class="form-check-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
 
@@ -1064,12 +1064,12 @@
     <t t-foreach="elements" t-as="el" t-key="el_index">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+        <div t-attf-class="badge rounded-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
             <t t-set="_badge_text">
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
-                <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
+                <a role="button" href="#" class="dropdown-toggle o-no-caret" aria-expanded="false">
                     <t t-out="_badge_text"/>
                 </a>
             </t>
@@ -1091,7 +1091,7 @@
         <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
     </t>
     <t t-if="elements.length > widget.visibleAvatarCount">
-        <span class="o_m2m_avatar_empty rounded-circle text-center font-weight-bold">
+        <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
             <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
             <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
         </span>
@@ -1114,7 +1114,7 @@
                 <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
             </t>
             <t t-if="elements.length > widget.visibleAvatarCount">
-                <span class="o_m2m_avatar_empty rounded-circle text-center font-weight-bold">
+                <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
                     <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
                     <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
                 </span>
@@ -1145,9 +1145,9 @@
                 <div role="menuitem" class="o_hide_in_kanban"
                      t-att-data-id="tag_id"
                      t-att-data-color="0">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" id="o_hide_in_kanban_checkbox" class="custom-control-input"/>
-                        <label for="o_hide_in_kanban_checkbox" class="custom-control-label">Hide in Kanban</label>
+                    <div class="custom-control form-check">
+                        <input type="checkbox" id="o_hide_in_kanban_checkbox" class="form-check-input"/>
+                        <label for="o_hide_in_kanban_checkbox" class="form-check-label">Hide in Kanban</label>
                     </div>
                 </div>
             </li>
@@ -1173,7 +1173,7 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-if="selection_folded.length">
-        <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More</button>
+        <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">More</button>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="selection_folded" t-as="i" t-key="i_index">
                 <t t-call="FieldStatus.content.button">
@@ -1208,8 +1208,8 @@
     <div class="o_field_image" aria-atomic="true">
         <t t-if="widget.mode !== 'readonly'">
             <div class="o_form_image_controls">
-                <button class="fa fa-pencil fa-lg float-left o_select_file_button" title="Edit" aria-label="Edit"/>
-                <button class="fa fa-trash-o fa-lg float-right o_clear_file_button" title="Clear" aria-label="Clear"/>
+                <button class="fa fa-pencil fa-lg float-start o_select_file_button" title="Edit" aria-label="Edit"/>
+                <button class="fa fa-trash-o fa-lg float-end o_clear_file_button" title="Clear" aria-label="Clear"/>
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
@@ -1223,7 +1223,6 @@
     <img class="img img-fluid"
         alt="Binary file"
         t-att-src='url'
-        t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"/>
 </t>
 <t t-name="CopyClipboardButton">
@@ -1279,15 +1278,14 @@
     <img class="o_signature img img-fluid"
         alt="Binary file"
         t-att-src='url'
-        t-att-border="1"
         t-att-name="widget.name"/>
 </t>
 
 <div t-name="FieldBinarySignature">
     <div class="o_sign_signature_draw panel panel-default mt16 mb0">
         <div class="card-header">
-            <a role="button" class="o_sign_select_style float-right btn btn-link">Select Signature Style</a>
-            <a role="button" class="o_sign_clean float-right btn btn-link">Clear Signature</a>
+            <a role="button" class="o_sign_select_style float-end btn btn-link">Select Signature Style</a>
+            <a role="button" class="o_sign_clean float-end btn btn-link">Clear Signature</a>
             <a data-mode="draw" class="o_sign_mode o_sign_mode_draw btn btn-primary" role="button">Draw</a>
             <a data-mode="auto" class="o_sign_mode o_sign_mode_auto btn" role="button">Auto</a>
             <a data-mode="load" class="o_sign_mode o_sign_mode_load btn" role="button">Load</a>
@@ -1357,7 +1355,7 @@
     <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="file.name.replace(/^.*\./, '')"/>
-            <div class="o_image_box float-left" t-att-data-id="file.id">
+            <div class="o_image_box float-start" t-att-data-id="file.id">
                 <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download">
                     <span class="o_image o_hover" t-att-data-mimetype="mimetype" t-att-data-ext="ext" role="img"/>
                 </a>
@@ -1428,8 +1426,8 @@
 <t t-name="Export.TreeItems">
     <t t-foreach="fields" t-as="field" t-key="field_index">
         <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
-        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''} o_cursor_pointer position-relative pl-3 " tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
-            <span t-if="has_child" class="o_expand_parent d-inline-block position-absolute top-0 left-0 mt-1 ml-n3 small fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
+        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''} o_cursor_pointer position-relative ps-3 " tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
+            <span t-if="has_child" class="o_expand_parent d-inline-block position-absolute top-0 start-0 mt-1 ml-n3 small fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
             <div t-attf-class="o_tree_column text-wrap">
                 <t t-esc="field.string"/>
                 <t t-if="debug and field.id">
@@ -1442,26 +1440,26 @@
 </t>
 <t t-name="Export.SaveList">
     <div class="input-group mb-3">
-        <label class="pt-2 font-weight-bold">Save as : </label>
-        <input class="form-control ml-4 o_save_list_name"
+        <label class="pt-2 fw-bold">Save as : </label>
+        <input class="form-control ms-4 o_save_list_name"
                placeholder="New template"/>
-        <button type="button" class="btn btn-secondary ml-1 o_save_list_btn"><i class="fa fa-floppy-o"/></button>
-        <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn"><i class="fa fa-times"/></button>
+        <button type="button" class="btn btn-secondary ms-1 o_save_list_btn"><i class="fa fa-floppy-o"/></button>
+        <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn"><i class="fa fa-times"/></button>
     </div>
 </t>
 <t t-name="Export.SavedList">
     <div class="input-group mb-3">
-        <label class="pt-2 mb-0 font-weight-bold">Template: </label>
-        <select class="form-control ml-4 o_exported_lists_select">
+        <label class="pt-2 mb-0 fw-bold">Template: </label>
+        <select class="form-select ms-4 o_exported_lists_select">
             <option></option>
-            <option class="font-italic" value="new_template">New template</option>
+            <option class="fst-italic" value="new_template">New template</option>
             <t t-foreach="existing_exports" t-as="export" t-key="export_index">
                 <option t-att-value="export.id">
                     <t t-esc="export.name"/>
                 </option>
             </t>
         </select>
-        <button type="button" class="btn btn-secondary d-none ml-1 o_delete_exported_list">
+        <button type="button" class="btn btn-secondary d-none ms-1 o_delete_exported_list">
             <i class="fa fa-trash"/>
         </button>
     </div>
@@ -1488,9 +1486,9 @@
     <div aria-atomic="true">
         <div t-foreach="widget.m2mValues" t-as="m2m_value" t-key="m2m_value_index">
             <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" t-att-id="id_for_label" class="custom-control-input" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
-                <label t-att-for="id_for_label" class="custom-control-label o_form_label"><t t-esc="m2m_value[1]"/></label>
+            <div class="custom-control form-check">
+                <input type="checkbox" t-att-id="id_for_label" class="form-check-input" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <label t-att-for="id_for_label" class="form-check-label o_form_label"><t t-esc="m2m_value[1]"/></label>
             </div>
         </div>
     </div>
@@ -1513,9 +1511,7 @@
 
 <t t-name="notification-box">
     <div t-attf-class="o_notification_box mb0 alert alert-dismissible alert-{{type}}" role="alertdialog">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span class="fa fa-times"></span>
-        </button>
+        <button type="button" class="btn-close" aria-label="Close"></button>
     </div>
 </t>
 

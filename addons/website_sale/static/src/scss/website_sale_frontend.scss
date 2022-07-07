@@ -7,10 +7,10 @@ $o-wsale-wizard-dot-size: 0.625rem;
 $o-wsale-wizard-dot-active-glow: 0.25rem;
 
 $o-wsale-wizard-color-inner: white;
-$o-wsale-wizard-color-default: gray('200');
+$o-wsale-wizard-color-default: map-get($grays, '200');
 
-$o-wsale-wizard-dot-active: theme-color('primary');
-$o-wsale-wizard-dot-completed: theme-color('success');
+$o-wsale-wizard-dot-active: map-get($theme-colors, 'primary');
+$o-wsale-wizard-dot-completed: map-get($theme-colors, 'success');
 
 $o-wsale-wizard-label-default: $text-muted;
 $o-wsale-wizard-label-active: $body-color;
@@ -41,7 +41,7 @@ $o-wsale-wizard-label-completed: $success;
                 width: percentage(1/4);
             }
         }
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             &.disabled, &.complete {
                 display:none;
             }
@@ -71,7 +71,7 @@ $o-wsale-wizard-label-completed: $success;
                 display: block;
                 margin: (0.625rem + $tmp-dot-radius) 0 20px 0;
             }
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 margin-left: -15px;
                 font-size: 24px;
             }

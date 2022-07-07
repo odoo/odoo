@@ -43,12 +43,13 @@ QUnit.module('LegacyViews', {
             assert.expect(6);
 
             var banner_html =`
-                <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
+                <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog"
+                data-bs-backdrop="false">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-footer">
-                                <a type="action" class="btn btn-primary" data-dismiss="modal"
-                                data-toggle="collapse" href=".o_onboarding_container">
+                                <a type="action" class="btn btn-primary" data-bs-dismiss="modal"
+                                data-o-hide-banner="true">
                                     Remove
                                 </a>
                             </div>
@@ -57,8 +58,8 @@ QUnit.module('LegacyViews', {
                 </div>
                 <div class="o_onboarding_container collapse show">
                     <div class="o_onboarding_wrap">
-                        <a href="#" data-toggle="modal" data-target=".o_onboarding_modal"
-                           class="float-right o_onboarding_btn_close">
+                        <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal"
+                           class="float-end o_onboarding_btn_close">
                             <i class="fa fa-times" title="Close the onboarding panel" />
                         </a>
                     </div>

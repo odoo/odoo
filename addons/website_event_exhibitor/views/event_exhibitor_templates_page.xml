@@ -34,12 +34,12 @@
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not sponsor.event_id.is_ongoing">
             <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
-                Event <span t-out="sponsor.event_id.name" class="font-weight-bold"/> is over.
+                Event <span t-out="sponsor.event_id.name" class="fw-bold"/> is over.
                 <br/>
                 <span>Join us next time to meet <b t-out="sponsor.partner_name"/>!</span>
             </div>
             <div t-else="" class="alert alert-warning rounded-0 text-center" role="alert">
-                Event <span t-out="sponsor.event_id.name" class="font-weight-bold"/>
+                Event <span t-out="sponsor.event_id.name" class="fw-bold"/>
                 <span t-if="sponsor.event_id.start_today">
                     starts in
                     <span t-if="sponsor.event_id.start_remaining &gt;= 1" t-out="sponsor.event_id.start_remaining"
@@ -98,8 +98,8 @@
             About <t t-out="sponsor.name"/>
         </div>
         <hr class="my-0"/>
-        <div class="ml-3 clearfix">
-            <div class="float-left pt-3">
+        <div class="ms-3 clearfix">
+            <div class="float-start pt-3">
                 <span t-if="sponsor.image_128" t-field="sponsor.image_128" class="o_wevent_online_page_avatar"
                     t-options="{'widget': 'image', 'filename-field': 'partner_name'}"/>
                 <span t-elif="sponsor.partner_id.image_128" t-field="sponsor.partner_id.image_128" class="o_wevent_online_page_avatar"
@@ -123,21 +123,21 @@
                         (<span t-out="sponsor.event_date_tz"/>)
                     </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
+                        <i class="fa fa-home me-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
                     </div>
                     <div t-elif="sponsor.partner_id.website" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-home mr-2"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
+                        <i class="fa fa-home me-2"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
                     </div>
                     <div t-if="sponsor.email" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-envelope mr-2"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
+                        <i class="fa fa-envelope me-2"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
                     </div>
                     <div t-if="sponsor.phone" class="d-flex text-break align-items-baseline">
-                        <i class="fa fa-phone mr-2"/><span t-field="sponsor.phone"/>
+                        <i class="fa fa-phone me-2"/><span t-field="sponsor.phone"/>
                     </div>
                 </div>
                 <a t-if="sponsor.partner_id.country_id"
                     t-att-href="'/event/%s/exhibitors?countries=%s' % (slug(sponsor.event_id), [sponsor.partner_id.country_id.id])"
-                    t-attf-class="text-right d-none d-md-block #{'mr-5' if sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon' else ''}">
+                    t-attf-class="text-end d-none d-md-block #{'me-5' if sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon' else ''}">
                     <img class="img"
                         style="max-height: 36px;"
                         t-att-src="sponsor.partner_id.country_id.image_url"
@@ -154,29 +154,29 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_aside" name="Exhibitor: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'col-12 ps-0 pe-0 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
         <div class="bg-white o_wevent_online_page_aside_content">
             <div class="d-flex align-items-center justify-content-between mx-2">
                 <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other exhibitors</span>
-                <a href="#collapse_exhibitor_aside" data-toggle="collapse"
+                <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
                    class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="fa fa-chevron-down d-lg-none"/>
                 </a>
             </div>
             <ul id="collapse_exhibitor_aside" class="list-unstyled collapse d-lg-block mb-0">
                 <li t-foreach="sponsors_other" t-as="sponsor_other">
-                    <a class="row no-gutters px-2 pt-2 pb-1 text-decoration-none"
+                    <a class="row g-0 px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="sponsor_other.website_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
                         <div class="col-3 d-flex flex-column align-items-center">
                             <img t-if="sponsor_other.partner_id.country_id"
-                            class="mr-2 mb-1 o_wesponsor_aside_logo"
+                            class="me-2 mb-1 o_wesponsor_aside_logo"
                             t-att-src="sponsor_other.partner_id.country_id.image_url"
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
                             <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
-                                t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
+                                t-att-class="'badge text-bg-light me-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
-                            <span t-else="" class="badge badge-light mr-2"
+                            <span t-else="" class="badge text-bg-light me-2"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
                         </div>
                         <div class="col flex-grow-1 overflow-auto">
@@ -185,8 +185,8 @@
 
                             </span>
                             <small class="text-muted" t-out="sponsor_other.subtitle"/>
-                            <div class="d-inline-block float-right" t-if="not sponsor_other.website_published">
-                                <small class="badge badge-danger">Unpublished</small>
+                            <div class="d-inline-block float-end" t-if="not sponsor_other.website_published">
+                                <small class="badge text-bg-danger">Unpublished</small>
                             </div>
                         </div>
                     </a>

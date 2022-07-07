@@ -50,7 +50,7 @@
             <div class="o_portal_chatter_messages_loading d-none">
                 <div class="d-flex justify-content-center">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             <button t-if="is_publisher"
                 t-attf-class="btn px-2 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
                 t-att-data-mes_index="rating.mes_index">
-                <i class="fa fa-comment text-muted mr-1"/>Comment
+                <i class="fa fa-comment text-muted me-1"/>Comment
             </button>
             <div class="o_wrating_publisher_comment mt-2 mb-2">
                 <t t-if="rating.publisher_comment" t-call="portal_rating.chatter_rating_publisher_comment"/>
@@ -74,23 +74,23 @@
     </t>
 
     <t t-name="portal_rating.chatter_rating_publisher_comment">
-        <div class="media o_portal_chatter_message">
+        <div class="d-flex o_portal_chatter_message">
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
-            <div class="media-body">
+            <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
                     <div class="d-inline-block">
                         <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
                     </div>
                     <div t-if="is_publisher" class="dropdown d-inline-block">
-                        <button class="btn py-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn py-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-ellipsis-v"/>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <button class="dropdown-item o_wrating_js_publisher_comment_edit" t-att-data-mes_index="rating.mes_index">
-                                <i class="fa fa-fw fa-pencil mr-1"/>Edit
+                                <i class="fa fa-fw fa-pencil me-1"/>Edit
                             </button>
                             <button class="dropdown-item o_wrating_js_publisher_comment_delete" t-att-data-mes_index="rating.mes_index">
-                                <i class="fa fa-fw fa-trash-o mr-1"/>Delete
+                                <i class="fa fa-fw fa-trash-o me-1"/>Delete
                             </button>
                         </div>
                     </div>
@@ -101,9 +101,9 @@
         </div>
     </t>
     <t t-name="portal_rating.chatter_rating_publisher_form">
-        <div t-if="is_publisher" class="media o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1">
+        <div t-if="is_publisher" class="d-flex o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1">
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
-            <div class="media-body">
+            <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
                     <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
                 </div>

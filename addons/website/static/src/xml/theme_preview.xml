@@ -14,7 +14,7 @@
     </t>
 
     <t t-name="website.ThemePreview.SwitchModeButton">
-        <div class="btn-group btn-group-toggle ml-1" data-toggle="buttons">
+        <div class="btn-group btn-group-toggle ms-1" data-bs-toggle="buttons">
             <label class="btn btn-secondary active">
                 <input type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked='checked'/> Desktop
             </label>
@@ -25,7 +25,7 @@
     </t>
     <t t-name="website.ThemePreview.Loader">
         <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left
-            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold text-center">
+            h-100 w-100 d-flex flex-column align-items-center text-white fw-bold text-center">
             <t t-if="showTips">Building your website...</t>
             <div class="o_theme_install_loader"></div>
             <p t-if="showTips" class="o_theme_install_loader_tip w-25">

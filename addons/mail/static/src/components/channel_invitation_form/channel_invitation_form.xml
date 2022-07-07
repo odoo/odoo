@@ -43,11 +43,9 @@
                     <div class="mx-3 mt-2 mb-3">
                         <div class="input-group">
                             <input class="form-control" type="text" t-att-value="channelInvitationForm.thread.invitationLink" readonly="" t-on-focus="channelInvitationForm.onFocusInvitationLinkInput" />
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" t-on-click="channelInvitationForm.onClickCopy">
-                                    <i class="fa fa-copy"/>
-                                </button>
-                            </div>
+                            <button class="btn btn-primary" t-on-click="channelInvitationForm.onClickCopy">
+                                <i class="fa fa-copy"/>
+                            </button>
                         </div>
                         <t t-if="channelInvitationForm.accessRestrictedToGroupText">
                             <div class="o_ChannelInvitationForm_accessRestrictedToGroup mt-2" t-esc="channelInvitationForm.accessRestrictedToGroupText"/>

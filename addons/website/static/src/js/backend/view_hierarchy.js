@@ -239,7 +239,7 @@ const Renderer = qweb.Renderer.extend({
                 }
                 const el = matches[this.cptFound];
                 $(el).children('p').addClass(foundClasses).append($('<span/>', {
-                    class: 'o_tab_hint text-info ml-auto small font-italic pr-2',
+                    class: 'o_tab_hint text-info ms-auto small fst-italic pe-2',
                     text: _.str.sprintf(_t("Press %s for next %s"), "<Tab>", `[${this.cptFound + 1}/${matches.length}]`),
                 }));
                 $('.o_content').scrollTo(el, 0, {offset: -200});

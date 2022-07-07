@@ -91,7 +91,7 @@
                                 <div class="col-6">
                                     <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
                                 </div>
-                                <div class="col-6 text-right">
+                                <div class="col-6 text-end">
                                     <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date"/>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <span class="float-right">
+                                    <span class="float-end">
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                     </span>
                                 </div>
@@ -215,10 +215,10 @@
                 <field name="order_deadline_passed" invisible="1"/>
                 <field name="available_today" invisible="1"/>
                 <div class="d-flex">
-                    <div class="flex-grow-0 pr-5">
+                    <div class="flex-grow-0 pe-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
                     </div>
-                    <div class="flex-grow-1 pr-5">
+                    <div class="flex-grow-1 pe-5">
                         <h2><field name="name"/></h2>
                         <h3 class="pt-3"><field name="price"/></h3>
                     </div>
@@ -226,7 +226,7 @@
                 <div class="o_lunch_wizard">
                     <div class="row">
                         <div class="col-2">
-                            <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="font-weight-bold"/>
+                            <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 1), ('supplier_id', '=', supplier_id)]"/>
@@ -234,7 +234,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="font-weight-bold"/>
+                            <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 2), ('supplier_id', '=', supplier_id)]"/>
@@ -242,7 +242,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="font-weight-bold"/>
+                            <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]"/>
@@ -250,7 +250,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <label for="product_description" class="font-weight-bold"/>
+                            <label for="product_description" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="product_description" nolabel="1"/>
@@ -258,7 +258,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <label for="note" class="font-weight-bold" />
+                            <label for="note" class="fw-bold" />
                         </div>
                         <div class="col-10">
                             <field name="note" nolabel="1" placeholder="Information, allergens, ..." />

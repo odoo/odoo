@@ -66,6 +66,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_common_styles'),
@@ -85,11 +86,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
 
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_bootstrap'),
-
-            'web/static/src/libs/bs5_utility_classes.scss',
 
             'base/static/src/css/modules.css',
             'base/static/src/js/res_config_settings.js',
@@ -204,6 +204,7 @@ This module provides the core of the Odoo Web Client.
         "web.assets_backend_legacy_lazy": [
             ("include", "web._assets_helpers"),
             ('include', 'web._assets_backend_helpers'),
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             # graph
             'web/static/src/legacy/js/views/graph/**/*',
@@ -219,6 +220,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
 
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/luxon/luxon.js',
 
@@ -272,6 +274,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
 
             'web/static/src/legacy/scss/bootstrap_overridden_report.scss',
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_bootstrap'),
@@ -320,6 +323,7 @@ This module provides the core of the Odoo Web Client.
         'web._assets_helpers': [
             'web/static/lib/bootstrap/scss/_functions.scss',
             'web/static/lib/bootstrap/scss/_mixins.scss',
+            'web/static/src/libs/bootstrap/mixins_forwardport.scss',
             'web/static/src/legacy/scss/bs_mixins_overrides.scss',
             'web/static/src/legacy/scss/utils.scss',
 
@@ -328,6 +332,9 @@ This module provides the core of the Odoo Web Client.
         ],
         'web._assets_bootstrap': [
             'web/static/src/legacy/scss/import_bootstrap.scss',
+            'web/static/src/libs/bootstrap/helpers_backport.scss',
+            'web/static/src/libs/bootstrap/utilities_custom.scss',
+            'web/static/lib/bootstrap/scss/utilities/_api.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
         ],
         'web._assets_backend_helpers': [
@@ -382,19 +389,23 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
             'web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js',
             'web/static/lib/popper/popper.js',
-            'web/static/lib/bootstrap/js/index.js',
-            'web/static/lib/bootstrap/js/util.js',
-            'web/static/lib/bootstrap/js/alert.js',
-            'web/static/lib/bootstrap/js/button.js',
-            'web/static/lib/bootstrap/js/carousel.js',
-            'web/static/lib/bootstrap/js/collapse.js',
-            'web/static/lib/bootstrap/js/dropdown.js',
-            'web/static/lib/bootstrap/js/modal.js',
-            'web/static/lib/bootstrap/js/tooltip.js',
-            'web/static/lib/bootstrap/js/popover.js',
-            'web/static/lib/bootstrap/js/scrollspy.js',
-            'web/static/lib/bootstrap/js/tab.js',
-            'web/static/lib/bootstrap/js/toast.js',
+            'web/static/lib/bootstrap/js/dist/dom/data.js',
+            'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
+            'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
+            'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
+            'web/static/lib/bootstrap/js/dist/base-component.js',
+            'web/static/lib/bootstrap/js/dist/alert.js',
+            'web/static/lib/bootstrap/js/dist/button.js',
+            'web/static/lib/bootstrap/js/dist/carousel.js',
+            'web/static/lib/bootstrap/js/dist/collapse.js',
+            'web/static/lib/bootstrap/js/dist/dropdown.js',
+            'web/static/lib/bootstrap/js/dist/modal.js',
+            'web/static/lib/bootstrap/js/dist/offcanvas.js',
+            'web/static/lib/bootstrap/js/dist/tooltip.js',
+            'web/static/lib/bootstrap/js/dist/popover.js',
+            'web/static/lib/bootstrap/js/dist/scrollspy.js',
+            'web/static/lib/bootstrap/js/dist/tab.js',
+            'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/lib/tempusdominus/tempusdominus.js',
             'web/static/lib/select2/select2.js',
             'web/static/lib/clipboard/clipboard.js',
@@ -408,7 +419,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/underscore.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
-            'web/static/src/legacy/js/libs/popper.js',
             'web/static/src/legacy/js/libs/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/abstract_service.js',
@@ -509,6 +519,7 @@ This module provides the core of the Odoo Web Client.
             # It is expected to add other lines coming from the web.assets_frontend
             # if we need to add more and more legacy stuff that would require other scss or js.
             ('include', 'web._assets_helpers'),
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),

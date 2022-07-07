@@ -22,7 +22,7 @@ options.registry.gallery = options.Class.extend({
         this.$target.on('image_changed', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-target]:eq(' + index + ')')
+            self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
 
@@ -338,7 +338,7 @@ options.registry.gallery = options.Class.extend({
                 $carousel.removeClass('slide');
                 $carousel.carousel(position);
                 this.$target.find('.carousel-indicators li').removeClass('active');
-                this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
+                this.$target.find('.carousel-indicators li[data-bs-slide-to="' + position + '"]').addClass('active');
                 this.trigger_up('activate_snippet', {
                     $snippet: this.$target.find('.carousel-item.active img'),
                     ifInactiveOptions: true,
@@ -363,10 +363,10 @@ options.registry.gallery = options.Class.extend({
     _adaptNavigationIDs: function () {
         var uuid = new Date().getTime();
         this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+        _.each(this.$target.find('[data-bs-slide], [data-bs-slide-to]'), function (el) {
             var $el = $(el);
-            if ($el.attr('data-target')) {
-                $el.attr('data-target', '#slideshow_' + uuid);
+            if ($el.attr('data-bs-target')) {
+                $el.attr('data-bs-target', '#slideshow_' + uuid);
             } else if ($el.attr('href')) {
                 $el.attr('href', '#slideshow_' + uuid);
             }

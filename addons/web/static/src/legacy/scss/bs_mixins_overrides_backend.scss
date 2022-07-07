@@ -22,7 +22,7 @@
 // It prioritizes the '$o-theme-text-colors' map and fallbacks to default.
 //------------------------------------------------------------------------------
 @mixin text-emphasis-variant($parent, $color) {
-  $-hover: $emphasized-link-hover-darken-percentage;
+  $-hover: $link-shade-percentage;
 
   // Check for the color name in '$theme-colors'.
   $color-name: null;
@@ -40,7 +40,7 @@
   }
 
   a#{$parent}, button#{$parent} {
-    @include hover-focus() {
+    &:hover, &:focus {
       color: darken($color-value, $-hover) !important;
     }
   }
@@ -55,7 +55,7 @@
     }
 
     a#{$parent}.fa-circle, button#{$parent}.fa-circle {
-      @include hover-focus() {
+      &:hover, &:focus {
         color: darken($color, $-hover) !important;
       }
     }

@@ -11,7 +11,7 @@
         <label class="o_switch" t-on-change="props.onChangeOption">
             <input type="checkbox" t-att-checked="props.value"/><span/>
             <span t-esc="props.label"/>
-            <span t-if="props.description" class="small text-muted ml-auto" t-esc="props.description"/>
+            <span t-if="props.description" class="small text-muted ms-auto" t-esc="props.description"/>
         </label>
     </div>
 </t>
@@ -23,7 +23,7 @@
                 <label class="col-form-label" for="o_video_text">
                     <b>Video code </b>(URL or Embed)
                 </label>
-                <div class="text-left">
+                <div class="text-start">
                     <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
                 </div>
                 <textarea t-model="state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="onChangeUrl" t-att-class="{ 'is-valid': state.urlInput and !this.state.errorMessage, 'is-invalid': state.urlInput and this.state.errorMessage }"/>
@@ -36,7 +36,7 @@
                     description="option.description"/>
             </div>
             <t t-if="state.vimeoPreviews.length">
-                <span class="font-weight-bold">Suggestions</span>
+                <span class="fw-bold">Suggestions</span>
                 <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
                     <t t-foreach="state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
                         <div class="o_sample_video w-25 mh-100" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">

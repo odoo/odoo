@@ -34,8 +34,8 @@
             <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
                 <ul class="o_weagenda_topbar_filters o_wevent_index_topbar_filters nav">
                 </ul>
-                <div class="form-inline pl-sm-3 pr-0">
-                    <label class="invisible text-muted mr-2" id="search_summary"><span id="search_number" class="mr-1">0</span>Results</label>
+                <div class="d-flex ps-sm-3 pe-0">
+                    <label class="invisible text-muted me-2" id="search_summary"><span id="search_number" class="me-1">0</span>Results</label>
                     <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
                 </div>
             </div>
@@ -75,21 +75,21 @@
         <!-- DAY HEADER -->
         <div class="o_we_track_day_header mt-3 w-100 d-flex justify-content-between align-items-center">
             <div class="d-flex">
-                <span class="h1 m-0 font-weight-bold" t-out="day"
+                <span class="h1 m-0 fw-bold" t-out="day"
                     t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
-                <div class="d-flex flex-column ml-2">
-                    <span class="font-weight-bold" t-out="day"
+                <div class="d-flex flex-column ms-2">
+                    <span class="fw-bold" t-out="day"
                         t-options="{'widget': 'date', 'format': 'MMMM'}"/>
-                    <span class="font-weight-bold" t-out="day"
+                    <span class="fw-bold" t-out="day"
                         t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
-                <div class="flex-column align-self-center ml-2">
-                    <span class="small font-weight-light">(<t t-out="event.date_tz"/>)</span>
+                <div class="flex-column align-self-center ms-2">
+                    <span class="small fw-light">(<t t-out="event.date_tz"/>)</span>
                 </div>
             </div>
-            <small class="float-right text-muted align-self-end"><t t-out="tracks_by_days[day]"/> tracks</small>
+            <small class="float-end text-muted align-self-end"><t t-out="tracks_by_days[day]"/> tracks</small>
         </div>
-        <hr class="mt-2 pb-1 mb-1"/>
+        <hr class="mt-2 mb-2"/>
 
         <!-- Day Agenda -->
         <div class="o_we_online_agenda">
@@ -161,11 +161,11 @@
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
         <div class="d-flex justify-content-end flex-wrap-reverse align-items-center o_weagenda_track_badges">
             <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-                class="mx-1 badge badge-danger rounded-sm">Live
+                class="mx-1 badge text-bg-danger rounded-1">Live
             </small>
             <small t-if="not track.website_published and is_event_user"
                    title="Unpublished"
-                   class="ml-1 mt-1 mt-md-0 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
+                   class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
             <span t-if="option_track_wishlist">
                 <t t-call="website_event_track.track_widget_reminder">
                     <t t-set="reminder_light" t-value="True"/>
@@ -194,7 +194,7 @@
             <div class="d-flex justify-content-center flex-wrap">
                 <t t-foreach="track.tag_ids" t-as="tag">
                     <span t-if="tag.color" t-att-title="tag.name"
-                          t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-out="tag.name"
+                          t-attf-class="me-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-out="tag.name"
                           t-attf-onclick="
                             var value = '#{tag.name}' ;
                             var target = $('#event_track_search');

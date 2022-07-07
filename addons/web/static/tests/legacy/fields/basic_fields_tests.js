@@ -321,51 +321,51 @@ QUnit.module('Legacy basic_fields', {
             arch: '<tree editable="bottom"><field name="bar"/></tree>',
         });
 
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input').length, 5,
             "should have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input:checked').length, 4,
             "should have 4 checked input");
 
         // Edit a line
-        var $cell = list.$('tr.o_data_row:has(.custom-checkbox input:checked) td:not(.o_list_record_selector)').first();
-        assert.ok($cell.find('.custom-checkbox input:checked').prop('disabled'),
+        var $cell = list.$('tr.o_data_row:has(.form-check input:checked) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.form-check input:checked').prop('disabled'),
             "input should be disabled in readonly mode");
         await testUtils.dom.click($cell);
-        assert.ok(!$cell.find('.custom-checkbox input:checked').prop('disabled'),
+        assert.ok(!$cell.find('.form-check input:checked').prop('disabled'),
             "input should not have the disabled property in edit mode");
-        await testUtils.dom.click($cell.find('.custom-checkbox input:checked'));
+        await testUtils.dom.click($cell.find('.form-check input:checked'));
 
         // save
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
-        $cell = list.$('tr.o_data_row:has(.custom-checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        assert.ok($cell.find('.custom-checkbox input:not(:checked)').prop('disabled'),
+        $cell = list.$('tr.o_data_row:has(.form-check input:not(:checked)) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.form-check input:not(:checked)').prop('disabled'),
             "input should be disabled again");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 3,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input:checked').length, 3,
             "should now have only 3 checked input");
 
         // Re-Edit the line and fake-check the checkbox
         await testUtils.dom.click($cell);
-        await testUtils.dom.click($cell.find('.custom-checkbox input'));
-        await testUtils.dom.click($cell.find('.custom-checkbox input'));
+        await testUtils.dom.click($cell.find('.form-check input'));
+        await testUtils.dom.click($cell.find('.form-check input'));
 
         // Save
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 3,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input:checked').length, 3,
             "should still have only 3 checked input");
 
         // Re-Edit the line to check the checkbox back but this time click on
         // the checkbox directly in readonly mode !
-        $cell = list.$('tr.o_data_row:has(.custom-checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        await testUtils.dom.click($cell.find('.custom-checkbox .custom-control-label'));
+        $cell = list.$('tr.o_data_row:has(.form-check input:not(:checked)) td:not(.o_list_record_selector)').first();
+        await testUtils.dom.click($cell.find('.form-check .form-check-label'));
         await testUtils.nextTick();
 
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .form-check input:checked').length, 4,
             "should now have 4 checked input back");
         list.destroy();
     });
@@ -408,7 +408,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
-        assert.expect(3);
+        assert.expect(7);
 
         var form = await createView({
             View: FormView,
@@ -417,14 +417,25 @@ QUnit.module('Legacy basic_fields', {
             arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
             res_id: 2,
         });
-
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-check-circle",
-            "Boolean toggle should have fa-check-circle icon");
+        // We don't check the exact value of the background as it change in community/enterprise,
+        // and it's difficult to check the value of an SVG
+        assert.containsOnce(form, ".form-check.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        let checkElement = document.querySelector('.form-check.o_boolean_toggle .form-check-input');
+        assert.ok(checkElement.matches(':checked'), "Boolean toggle should be checked");
+        let style = window.getComputedStyle(checkElement);
+        const backgroundImage = style.backgroundImage;
+        const backgroundColor = style.backgroundColor;
+        assert.ok(backgroundImage && backgroundColor, "Boolean toggle should have a background image and a background color");
 
         await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-times-circle",
-            "Boolean toggle should have fa-times-circle icon");
+        checkElement = document.querySelector('.form-check.o_boolean_toggle .form-check-input');
+        assert.notOk(checkElement.matches(':checked'), "Boolean toggle shouldn't be checked");
+        style = window.getComputedStyle(checkElement);
+        const newBackgroundImage = style.backgroundImage;
+        const newBackgroundColor = style.backgroundColor;
+        assert.ok(backgroundImage && backgroundColor, "Boolean toggle should have a background image and a background color");
+        assert.notEqual(backgroundImage, newBackgroundImage, "Background image should be different");
+        assert.notEqual(backgroundColor, newBackgroundColor, "Background color should be different");
 
         form.destroy();
     });
@@ -440,7 +451,7 @@ QUnit.module('Legacy basic_fields', {
             res_id: 5,
         });
 
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.containsOnce(form, ".form-check.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
         assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
         await testUtils.dom.click(form.$('.o_boolean_toggle'));
         assert.ok(form.$('.o_boolean_toggle input')[0].checked);
@@ -458,7 +469,7 @@ QUnit.module('Legacy basic_fields', {
             res_id: 5,
         });
 
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.containsOnce(form, ".form-check.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
         await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
         assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
         await testUtils.dom.click(form.$('.o_boolean_toggle'));
@@ -477,7 +488,7 @@ QUnit.module('Legacy basic_fields', {
             res_id: 5,
         });
 
-        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.containsOnce(form, ".form-check.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
         await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
 
         assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
@@ -5328,13 +5339,13 @@ QUnit.module('Legacy basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'font-weight-bold text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'font-weight-bold text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'font-weight-bold text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'font-weight-bold text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'fw-bold text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'fw-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'fw-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'fw-bold text-danger');
 
         list.destroy();
         unpatchDate();
@@ -5442,7 +5453,7 @@ QUnit.module('Legacy basic_fields', {
         });
 
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
-        assert.hasClass(form.$('.o_field_widget'), 'font-weight-bold text-warning');
+        assert.hasClass(form.$('.o_field_widget'), 'fw-bold text-warning');
 
         // in edit mode, this widget should be editable.
         await testUtils.form.clickEdit(form);
@@ -5543,13 +5554,13 @@ QUnit.module('Legacy basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'font-weight-bold text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'font-weight-bold text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'font-weight-bold text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'font-weight-bold text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'font-weight-bold text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'fw-bold text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'fw-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'fw-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'fw-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'fw-bold text-danger');
 
         list.destroy();
         unpatchDate();
@@ -7453,35 +7464,35 @@ QUnit.module('Legacy basic_fields', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(form, '.o_field_widget.badge.text-bg-warning',
             "should have a warning status label since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-secondary',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-secondary',
             "should not have a default status since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-success',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-success',
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // // switch to edit mode and check the result
         await testUtils.form.clickEdit(form);
-        assert.containsOnce(form, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(form, '.o_field_widget.badge.text-bg-warning',
             "should have a warning status label since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-secondary',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-secondary',
             "should not have a default status since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-success',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-success',
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // save
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(form, '.o_field_widget.badge.text-bg-warning',
             "should have a warning status label since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-secondary',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-secondary',
             "should not have a default status since selection is the second, blocked state");
-        assert.containsNone(form, '.o_field_widget.badge.badge-success',
+        assert.containsNone(form, '.o_field_widget.badge.text-bg-success',
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         form.destroy();
@@ -7503,51 +7514,51 @@ QUnit.module('Legacy basic_fields', {
 
         assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-warning',
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-secondary',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-secondary',
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-success',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-success',
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // switch to edit mode and check the result
         await testUtils.dom.clickFirst(list.$('tbody td:not(.o_list_record_selector)'));
         assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-warning',
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-secondary',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-secondary',
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-success',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-success',
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // save and check the result
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-warning',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-warning',
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-secondary',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-secondary',
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.containsOnce(list, '.o_field_widget.badge.badge-success',
+        assert.containsOnce(list, '.o_field_widget.badge.text-bg-success',
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.text-bg-success').text(), 'Done',
             "the success label should read 'Done'");
 
         list.destroy();

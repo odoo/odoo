@@ -1,3 +1,7 @@
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 3 !default;
+
 // Fonts
 //
 // Font, line-height, and color for body text, headings, and more.
@@ -8,6 +12,9 @@ $font-size-base: (14 / 16) * 1rem !default;
 // a muted one. This is defined here to be consistent in the whole frontend, as
 // when used with background classes, it should not be forced to a gray color.
 $blockquote-small-color: inherit !default;
+
+// Link
+$link-decoration: none !default;
 
 // Figures
 

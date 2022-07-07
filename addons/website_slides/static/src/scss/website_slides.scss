@@ -35,7 +35,8 @@ $truncate-limits: 2, 3, 10;
 // **************************************************
 
 .o_wslides_course_pict {
-    @include size(100%);
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 
     @include media-breakpoint-up(md)  {
@@ -95,7 +96,7 @@ $truncate-limits: 2, 3, 10;
             }
             @at-root a#{&} {
                 &:hover {
-                    color: color-yiq($background-color);
+                    color: color-contrast($background-color);
                     background-color: darken($background-color, 10%);
                 }
             }
@@ -187,7 +188,8 @@ $truncate-limits: 2, 3, 10;
 
         &:before, &:after {
             content: "";
-            @include size(6px);
+            width: 6px;
+            height: 6px;
             display: block;
             border-radius: 100%;
             background-color: inherit;
@@ -310,7 +312,7 @@ $truncate-limits: 2, 3, 10;
         }
 
         &.active {
-            color: color-yiq($tab-active-color);
+            color: color-contrast($tab-active-color);
             background: $tab-active-color;
             border-color: $tab-active-color;
         }
@@ -401,7 +403,7 @@ $truncate-limits: 2, 3, 10;
     }
 
     .o_wslides_tabs_content {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             background-color: $nav-tabs-link-active-bg;
             padding:0 ($grid-gutter-width * 0.5);
         }
@@ -473,7 +475,8 @@ $truncate-limits: 2, 3, 10;
 
             &:before, &:after {
                 content: "";
-                @include size(6px);
+                width: 6px;
+                height: 6px;
                 display: block;
                 border-radius: 100%;
                 background-color: inherit;
@@ -512,7 +515,7 @@ $truncate-limits: 2, 3, 10;
                 }
 
                 &.active {
-                    box-shadow:inset 2px 0 theme-color('primary');
+                    box-shadow:inset 2px 0 map-get($theme-colors, 'primary');
                 }
             }
             .o_wslides_button_complete {

@@ -106,7 +106,7 @@
                 <templates>
                     <t t-name="event_attendees_kanban_icons_desktop">
                         <div class="d-none d-md-block h-100">
-                            <div id="event_attendees_kanban_icons_desktop" class="h-100 float-right p-2 d-flex align-items-end flex-column">
+                            <div id="event_attendees_kanban_icons_desktop" class="h-100 float-end p-2 d-flex align-items-end flex-column">
                                 <t t-if="record.active.raw_value">
                                     <a class="btn btn-md btn-primary" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
                                         <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
@@ -121,7 +121,7 @@
                         </div>
                     </t>
                     <t t-name="event_attendees_kanban_icons_mobile">
-                        <div id="event_attendees_kanban_icons_mobile" class="d-md-none h-100 pl-4">
+                        <div id="event_attendees_kanban_icons_mobile" class="d-md-none h-100 ps-4">
                             <t t-if="record.active.raw_value">
                                 <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100"
                                     string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
@@ -144,15 +144,15 @@
                                 <span class="bg-danger">Archived</span>
                             </div>
                             <div class="row h-100">
-                                <div class="col-9 pr-0">
+                                <div class="col-9 pe-0">
                                     <div class="oe_kanban_content h-100">
-                                        <div class="o_kanban_record_body pt-1 pl-2 h-100 d-flex flex-column">
+                                        <div class="o_kanban_record_body pt-1 ps-2 h-100 d-flex flex-column">
                                             <b class="o_kanban_record_title"><field name="name"/></b>
                                             <field class="o_text_overflow" name="event_id" invisible="context.get('default_event_id')" />
                                             <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
                                             <div id="event_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
                                                 <t t-if="record.event_ticket_id.raw_value">
-                                                    <div t-attf-class="badge badge-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
+                                                    <div t-attf-class="badge rounded-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
                                                         <b><span class="o_badge_text o_text_overflow"><t t-out="record.event_ticket_id.value"/></span></b>
                                                     </div>
                                                 </t>
@@ -160,7 +160,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="event_attendees_kanban_icons" class="col-3 pl-0">
+                                <div id="event_attendees_kanban_icons" class="col-3 ps-0">
                                     <t t-call="event_attendees_kanban_icons_desktop"/>
                                     <t t-call="event_attendees_kanban_icons_mobile"/>
                                 </div>

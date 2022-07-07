@@ -11,7 +11,7 @@
                     <field name="parent_res_name" optional="show"/>
                     <field name="res_name" optional="show"/>
                     <field name="feedback" optional="hide"/>
-                    <field name="rating_text" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" class="font-weight-bold" widget="badge"/>
+                    <field name="rating_text" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" class="fw-bold" widget="badge"/>
                 </tree>
             </field>
         </record>
@@ -92,10 +92,10 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click d-flex align-items-center justify-content-center">
                                 <div class="row oe_kanban_details">
-                                    <div class="col-4 o_kanban_image my-auto">
+                                    <div class="col-4 my-auto">
                                         <field name="rating_image" widget="image"/>
                                     </div>
-                                    <div class="col-8 pl-1">
+                                    <div class="col-8 ps-1">
                                         <strong>
                                             <field name="rated_partner_name"/>
                                         </strong>
@@ -150,7 +150,7 @@
                             <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="d-flex flex-row">
-                                    <div class="o_rating_kanban_left mr-3">
+                                    <div class="o_rating_kanban_left me-3">
                                         <h1 class="o_rating_value text-center text-primary" t-esc="val_stars"/>
                                         <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
                                            class="fa fa-star"
@@ -168,17 +168,17 @@
                                     <div>
                                         <div class="o_kanban_card_header">
                                             <div class="o_kanban_card_header_title">
-                                                <span class="font-weight-bold"><field name="partner_id"/></span>
+                                                <span class="fw-bold"><field name="partner_id"/></span>
                                             </div>
                                         </div>
                                         <div class="o_kanban_card_content mt0 d-flex flex-column">
                                             <span>
-                                                <i class="fa fa-folder mr-2" aria-label="Open folder"></i>
+                                                <i class="fa fa-folder me-2" aria-label="Open folder"></i>
                                                 <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
                                                     <field name="res_name" />
                                                 </a>
                                             </span>
-                                            <span><i class="fa fa-clock-o mr-2" aria-label="Create date"/> <field name="create_date" /></span>
+                                            <span><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="create_date" /></span>
                                             <div class="d-flex mt-2">
                                                 <span t-esc="record.feedback.raw_value"/>
                                             </div>

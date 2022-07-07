@@ -10,7 +10,7 @@
     .modal-dialog {
         height: auto;
         min-height: 100%;
-        @include media-breakpoint-down(xs) {
+        @include media-breakpoint-down(sm) {
             min-height: calc(100% - 2 * #{$modal-dialog-margin});
         }
     }
@@ -22,7 +22,7 @@
         width: $font-size-lg * 2;
         height: $font-size-lg * 2;
         line-height: $font-size-lg * 2;
-        @include o-bg-color(color-yiq(o-color('primary')), o-color('primary'), $with-extras: false);
+        @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
         box-shadow: $box-shadow-sm;
         cursor: pointer;
         font-size: $font-size-lg;

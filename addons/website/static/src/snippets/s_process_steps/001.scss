@@ -28,7 +28,7 @@
             margin: $grid-gutter-width 0;
 
             path {
-                stroke: gray('600');
+                stroke: map-get($grays, '600');
                 stroke-width: 2;
                 fill: transparent;
             }
@@ -46,11 +46,11 @@
     }
 
     .s_process_steps_arrow_head path {
-        fill: gray('600');
+        fill: map-get($grays, '600');
         stroke: transparent;
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         .s_process_step_connector {
             display: none;
         }

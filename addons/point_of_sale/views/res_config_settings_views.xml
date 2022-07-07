@@ -18,15 +18,15 @@
                 <field name="group_cash_rounding" invisible="1"/>
 
                 <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
-                    <div id="pos_header" class="row o_settings_container mb-0 mt-0 ml-0 mw-100"
+                    <div id="pos_header" class="row o_settings_container mb-0 mt-0 ms-0 mw-100"
                         style="background-color: #FEF0D0; margin-bottom: 0px !important; margin-top: 0px !important;">
-                        <div class="col-xs-12 col-md-6 ml-0 o_setting_box">
-                            <div class="o_setting_right_pane border-left-0 ml-0 pl-0">
+                        <div class="col-xs-12 col-md-6 ms-0 o_setting_box">
+                            <div class="o_setting_right_pane border-start-0 ms-0 ps-0">
                                 <div class="content-group">
                                     <div class="row mt8">
-                                        <label class="col-lg-3 pl-0" string="Point of Sale" for="pos_config_id"/>
+                                        <label class="col-lg-3 ps-0" string="Point of Sale" for="pos_config_id"/>
                                         <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
-                                        <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn-link ml-2" style="line-height: 0.5;"/>
+                                        <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn-link ms-2" style="line-height: 0.5;"/>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                             <div class="o_setting_right_pane">
                                 <div>
                                     <label string="Default Sales Tax" for="sale_tax_id"/>
-                                    <i class="fa fa-info-circle mr-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
                                     <div class="text-muted">
                                         Default sales tax for products
                                     </div>
@@ -157,7 +157,7 @@
                             <div class="o_setting_right_pane">
                                 <div>
                                     <label string="Default Temporary Account" for="account_default_pos_receivable_account_id"/>
-                                    <i class="fa fa-info-circle mr-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
                                     <div class="text-muted">
                                         Intermediary account used for unidentified customers.
                                     </div>
@@ -422,7 +422,7 @@
                                     Set a maximum difference allowed between the expected and counted money during the closing of the session
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('pos_set_maximum_difference', '=', False)]}">
-                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>
+                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal"/>
                                     <field name="pos_amount_authorized_diff"/>
                                 </div>
                             </div>
@@ -461,7 +461,7 @@
 
                     <h2>
                         Payment Terminals
-                        <i class="fa fa-info-circle mr-1" title="Those settings are common to all PoS." pos-data-toggle="tooltip"/>
+                        <i class="fa fa-info-circle me-1" title="Those settings are common to all PoS." pos-data-toggle="tooltip"/>
                     </h2>
                     <div class="row mt16 o_settings_container" id="pos_payment_terminals_section">
                         <div class="col-12 col-lg-6 o_setting_box"
@@ -609,15 +609,15 @@
                                 </div>
                                 <div class="mt16" attrs="{'invisible' : [('pos_ship_later', '=', False)]}">
                                     <div>
-                                        <label for="pos_warehouse_id" string="Warehouse" class="font-weight-normal"/>
+                                        <label for="pos_warehouse_id" string="Warehouse" class="fw-normal"/>
                                         <field name="pos_warehouse_id" attrs="{'required': [('pos_ship_later', '=', True)]}"/>
                                     </div>
                                     <div groups="stock.group_adv_location">
-                                        <label for="pos_route_id" string="Specific route" class="font-weight-normal"/>
+                                        <label for="pos_route_id" string="Specific route" class="fw-normal"/>
                                         <field name="pos_route_id"/>
                                     </div>
                                     <div>
-                                        <label for="pos_picking_policy" class="font-weight-normal"/>
+                                        <label for="pos_picking_policy" class="fw-normal"/>
                                         <field name="pos_picking_policy" attrs="{'required': [('pos_ship_later', '=', True)]}"/>
                                     </div>
                                 </div>
@@ -628,7 +628,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Barcodes</span>
-                                <i class="fa fa-info-circle mr-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
                                 <div class="text-muted">
                                     Use barcodes to scan products, customer cards, etc.
                                 </div>

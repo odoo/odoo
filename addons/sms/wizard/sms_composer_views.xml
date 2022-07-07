@@ -20,8 +20,8 @@
                 <div colspan="2" class="alert alert-info text-center mb-0" role="alert"
                         attrs="{'invisible': ['|', ('comment_single_recipient', '=', True), ('recipient_invalid_count', '=', 0)]}">
                     <p class="my-0">
-                        <field class="oe_inline font-weight-bold" name="recipient_invalid_count"/> out of
-                        <field class="oe_inline font-weight-bold" name="res_ids_count"/> recipients have an invalid phone number and will not receive this text message.
+                        <field class="oe_inline fw-bold" name="recipient_invalid_count"/> out of
+                        <field class="oe_inline fw-bold" name="res_ids_count"/> recipients have an invalid phone number and will not receive this text message.
                     </p>
                 </div>
                 <sheet>
@@ -39,7 +39,7 @@
                         <field name="sanitized_numbers" invisible="1"/>
 
                         <label for="recipient_single_description" string="Recipient"
-                            class="font-weight-bold"
+                            class="fw-bold"
                             attrs="{'invisible': [('comment_single_recipient', '=', False)]}"/>
                         <div attrs="{'invisible': [('comment_single_recipient', '=', False)]}">
                             <field name="recipient_single_description" class="oe_inline"/>

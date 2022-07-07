@@ -110,13 +110,13 @@ list of filtered posts (by date or tag).
                                 <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
                             </t>
                             <t t-else="first_post">
-                                <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-sm d-inline-block mr-auto">Latest</div>
+                                <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-1 d-inline-block me-auto">Latest</div>
                                 <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}"
                                    t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                                 <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
 
                                 <div t-if="not blog" class="d-flex">
-                                    <div class="small mt-2 mb-3 mr-1">
+                                    <div class="small mt-2 mb-3 me-1">
                                         in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@ list of filtered posts (by date or tag).
 
             <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-sm">Latest</div>
+                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-1">Latest</div>
                     <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
                         <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                         <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
@@ -171,8 +171,8 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
     <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
-        <div t-if="opt_blog_list_view" class="border-right d-none d-lg-block" style="opacity: 0.5"/>
-        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ml-lg-5'}">
+        <div t-if="opt_blog_list_view" class="border-end d-none d-lg-block" style="opacity: 0.5"/>
+        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ms-lg-5'}">
             <t t-call="website_blog.sidebar_blog_index"/>
         </div>
     </xpath>
@@ -241,7 +241,7 @@ list of filtered posts (by date or tag).
                     <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-attf-class="pl-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
+                    <div id="o_wblog_post_sidebar_col" t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </div>
@@ -274,7 +274,7 @@ list of filtered posts (by date or tag).
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a class="badge border mr-1 post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                <a class="badge text-primary border me-1 post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </div>
     </div>
@@ -316,12 +316,12 @@ list of filtered posts (by date or tag).
                         <span t-field="blog_post.post_date" class="text-muted" t-options='{"format": "d MMMM, yyyy"}'/>
                         <span>by
                             <t t-call="website_blog.post_author">
-                                <t t-set="additionnal_classes" t-value="'d-inline-flex mr-2'"/>
+                                <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
                                 <t t-set="hide_date" t-value="True"/>
                             </t>
                         </span>
-                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap pl-2 o_not_editable">|
-                            <i class="fa fa-comment text-muted mr-1"/>
+                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap ps-2 o_not_editable">|
+                            <i class="fa fa-comment text-muted me-1"/>
                             <a href="#discussion">
                                 <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids)>1">Comments</t>
@@ -393,9 +393,9 @@ list of filtered posts (by date or tag).
                 <div class="container">
                     <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
                         <hr/>
-                        <div class="d-flex text-right py-4">
-                            <div class="flex-grow-1 pr-3">
-                                <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
+                        <div class="d-flex text-end py-4">
+                            <div class="flex-grow-1 pe-3">
+                                <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">Read Next</span>
                                 <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
                                     <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2"/>
                                     <div t-field="next_post.subtitle" id="o_wblog_post_subtitle" placeholder="Subtitle" class="lead"/>
@@ -433,7 +433,7 @@ list of filtered posts (by date or tag).
                             </div>
 
                             <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
-                                <span class="h4 d-inline-block py-1 px-2 rounded-sm text-white">
+                                <span class="h4 d-inline-block py-1 px-2 rounded-1 text-white">
                                     <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
                                 </span>
                             </div>

@@ -12,7 +12,7 @@
                         <a href="/" class="navbar-brand logo">
                             <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                         </a>
-                        <ul id="top_menu" class="nav navbar-nav ml-auto">
+                        <ul id="top_menu" class="nav navbar-nav ms-auto">
                             <t t-call="portal.placeholder_user_sign_in">
                                 <t t-set="_item_class" t-value="'nav-item'"/>
                                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -21,7 +21,7 @@
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-value="'nav-item dropdown'"/>
                                 <t t-set="_link_class" t-value="'nav-link'"/>
-                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
                             </t>
                         </ul>
                     </div>
@@ -55,7 +55,7 @@
             <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
             <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
-                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
                             class="align-middle"
                             t-esc="active_lang[2].split('/').pop()"/>
@@ -84,7 +84,7 @@
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="is_connected" t-value="not user_id._is_public()"/>
             <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
+                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
                         <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
@@ -93,12 +93,12 @@
                     <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                 </a>
                 <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
-                    <a groups="base.group_user" href="/web" role="menuitem" class="dropdown-item pl-3" id="o_backend_user_dropdown_link">
-                        <i class="fa fa-fw fa-th mr-1 small text-muted"/> Apps
+                    <a groups="base.group_user" href="/web" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
+                        <i class="fa fa-fw fa-th me-1 small text-muted"/> Apps
                     </a>
                     <div id="o_logout_divider" class="dropdown-divider"/>
-                    <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item pl-3">
-                        <i class="fa fa-fw fa-sign-out mr-1 small text-muted"/> Logout
+                    <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item ps-3">
+                        <i class="fa fa-fw fa-sign-out me-1 small text-muted"/> Logout
                     </a>
                 </div>
             </li>
@@ -106,8 +106,8 @@
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
-        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1 row">
-            <li class="breadcrumb-item ml-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
+            <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
             <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
@@ -116,9 +116,9 @@
         <div t-ignore="true" class="text-center">
             <t t-if="custom_html" t-out="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
-            <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
+            <a t-att-href="backend_url"><i class="fa fa-arrow-right me-1"/>Back to edit mode</a>
         </div>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </template>
 
     <template id="portal_layout" name="Portal Layout">
@@ -126,7 +126,7 @@
             <t t-set="is_portal" t-value="True"/>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
-                <div class="row align-items-center bg-white no-gutters border rounded">
+                <div class="row align-items-center bg-white g-0 border rounded">
                     <div class="col-10">
                         <t t-call="portal.portal_breadcrumbs"></t>
                     </div>
@@ -197,10 +197,10 @@
         <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
             <t t-esc="title"/>
             <t t-if='count'>
-                <span class="badge badge-secondary badge-pill" t-esc="count"/>
+                <span class="badge text-bg-secondary rounded-pill" t-esc="count"/>
             </t>
             <t t-elif="placeholder_count">
-                <span class="badge badge-secondary badge-pill" t-att-data-placeholder_count="placeholder_count">
+                <span class="badge text-bg-secondary rounded-pill" t-att-data-placeholder_count="placeholder_count">
                     <i class="fa fa-spin fa-circle-o-notch"></i>
                 </span>
             </t>
@@ -259,20 +259,20 @@
             <t t-if="breadcrumbs_searchbar">
                 <t t-call="portal.portal_breadcrumbs"/>
             </t>
-            <span t-else="" class="navbar-brand mb-0 h1 mr-auto" t-esc="title or 'No title'"/>
+            <span t-else="" class="navbar-brand mb-0 h1 me-auto" t-esc="title or 'No title'"/>
 
             <!--  Collapse button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
                 <span class="navbar-toggler-icon small"/>
             </button>
 
             <!--  Collapsable content  -->
             <div class="collapse navbar-collapse" id="o_portal_navbar_content">
-                <div class="nav flex-column flex-lg-row ml-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
+                <div class="nav flex-column flex-lg-row ms-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
                     <div t-if="searchbar_sortings" class="form-inline">
-                        <span class="small mr-1 navbar-text">Sort By:</span>
+                        <span class="small me-1 navbar-text">Sort By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
                                 <t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
@@ -285,10 +285,10 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="searchbar_filters" class="form-inline ml-lg-2">
-                        <span class="small mr-1 navbar-text">Filter By:</span>
+                    <div t-if="searchbar_filters" class="form-inline ms-lg-2">
+                        <span class="small me-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
                                 <t t-esc="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
@@ -301,10 +301,10 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="searchbar_groupby" class="form-inline ml-lg-2">
-                        <span class="small mr-1 navbar-text">Group By:</span>
+                    <div t-if="searchbar_groupby" class="form-inline ms-lg-2">
+                        <span class="small me-1 navbar-text">Group By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
                                 <t t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
@@ -319,25 +319,21 @@
                     </div>
                     <t t-out="0"/>
                 </div>
-                <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4 col-xl-4 col-md-5">
+                <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ms-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
-                        <div class="input-group-prepend">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
-                            <div class="dropdown-menu" role="menu">
-                                <t t-foreach='searchbar_inputs' t-as='input'>
-                                    <a t-att-href="'#' + input_value['input']"
-                                        t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
-                                        <span t-out="input_value['label']"/>
-                                    </a>
-                                </t>
-                            </div>
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"/>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach='searchbar_inputs' t-as='input'>
+                                <a t-att-href="'#' + input_value['input']"
+                                    t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
+                                    <span t-out="input_value['label']"/>
+                                </a>
+                            </t>
                         </div>
                         <input type="text" class="form-control form-control-sm" placeholder="Search" t-att-value='search' name="search"/>
-                        <span class="input-group-append">
-                            <button class="btn btn-secondary o_wait_lazy_js" type="submit">
-                                <span class="fa fa-search"/>
-                            </button>
-                        </span>
+                        <button class="btn btn-secondary o_wait_lazy_js" type="submit">
+                            <span class="fa fa-search"/>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -361,15 +357,15 @@
             <hr class="mt-1 mb0"/>
             <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
             <div class="d-flex align-items-center mb-1">
-                <div class="fa fa-envelope fa-fw mr-1"></div>
+                <div class="fa fa-envelope fa-fw me-1"></div>
                 <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-phone fa-fw mr-1"></div>
+                <div class="fa fa-phone fa-fw me-1"></div>
                 <span t-esc="sales_user.phone"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-map-marker fa-fw mr-1"></div>
+                <div class="fa fa-map-marker fa-fw me-1"></div>
                 <span t-esc="sales_user.city"/>
             </div>
         </div>
@@ -440,7 +436,7 @@
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label" for="country_id">Country</label>
-                                <select name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
+                                <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
                                         <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
@@ -451,7 +447,7 @@
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="state_id">State / Province</label>
-                                <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}">
+                                <select name="state_id" t-attf-class="form-select #{error.get('state_id') and 'is-invalid' or ''}">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
                                         <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
@@ -463,7 +459,7 @@
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
                         </div>
                         <div class="clearfix">
-                            <button type="submit" class="btn btn-primary float-right mb32 ">
+                            <button type="submit" class="btn btn-primary float-end mb32 ">
                                 Confirm
                                 <span class="fa fa-long-arrow-right" />
                             </button>
@@ -561,8 +557,8 @@
             <section name="portal_deactivate_account" groups="base.group_portal">
                 <h3>Delete Account</h3>
                 <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
-                <button class="btn btn-secondary" data-toggle="modal"
-                    data-target="#portal_deactivate_account_modal">
+                <button class="btn btn-secondary" data-bs-toggle="modal"
+                    data-bs-target="#portal_deactivate_account_modal">
                     Delete Account
                 </button>
                 <div t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"
@@ -571,9 +567,7 @@
                         <div class="modal-content">
                             <div class="modal-header bg-danger">
                                 <h5 class="modal-title">Are you sure you want to do this?</h5>
-                                <button type="button" class="close" data-dismiss="modal">
-                                    ×
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <form action="/my/deactivate_account" method="post" class="modal-body"
                                 id="portal_deactivate_account_form">
@@ -607,7 +601,7 @@
                                     </div>
                                     <div class="d-flex flex-row align-items-center">
                                         <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>
-                                        <label for="request_blacklist" class="ml-2 mw-100 font-weight-normal mt-3">
+                                        <label for="request_blacklist" class="ms-2 mw-100 fw-normal mt-3">
                                             Put my email and phone in a block list to make sure I'm never contacted again
                                         </label>
                                     </div>
@@ -617,7 +611,7 @@
                             <div class="modal-footer justify-content-start">
                                 <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"
                                     value="Delete Account"/>
-                                <button type="button" class="btn" data-dismiss="modal">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
                                     Cancel
                                 </button>
                             </div>
@@ -653,8 +647,8 @@
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
-            <a href="/my/home" role="menuitem" class="dropdown-item pl-3">
-                <i class="fa fa-fw fa-id-card-o mr-1 small text-muted"/> My Account
+            <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
+                <i class="fa fa-fw fa-id-card-o me-1 small text-muted"/> My Account
             </a>
         </xpath>
     </template>
@@ -720,7 +714,7 @@
 
     <template id="portal_sidebar" name="Sidebar">
         <t t-call="portal.portal_layout">
-            <body data-spy="scroll" data-target=".navspy" data-offset="50">
+            <body data-bs-spy="scroll" data-target=".navspy" data-offset="50">
                 <div class="container o_portal_sidebar"></div>
                 <div class="oe_structure mb32" id="oe_structure_portal_sidebar_1"/>
             </body>

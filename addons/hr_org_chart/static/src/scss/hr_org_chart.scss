@@ -1,5 +1,5 @@
 // MOBILE LAYOUT CUSTOMIZATIONS
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
     #o_employee_right {
         .o_org_chart_title {
             font-size: 20px;
@@ -25,7 +25,7 @@
         border-left: 1px solid $o-hr-org-chart-border-color;
 
         .o_org_chart_title {
-            color: gray('600')
+            color: map-get($grays, '600')
         }
     }
 }
@@ -67,7 +67,8 @@
             &:before {
                 @include o-hr-org-chart-line;
                 border-width: 0 0 $o-hr-org-chart-entry-line-w $o-hr-org-chart-entry-line-w;
-                @include size(($o-hr-org-chart-entry-pic-size*0.5) - ($o-hr-org-chart-entry-v-gap*2), $o-hr-org-chart-entry-pic-size*0.5 + $o-hr-org-chart-entry-v-gap*2 );
+                width: ($o-hr-org-chart-entry-pic-size*0.5) - ($o-hr-org-chart-entry-v-gap*2);
+                height: $o-hr-org-chart-entry-pic-size*0.5 + $o-hr-org-chart-entry-v-gap*2 ;
                 @include o-position-absolute(
                     $left: $o-hr-org-chart-entry-pic-size*0.5 - $o-hr-org-chart-entry-line-w*0.5,
                     $top: 100%
@@ -105,7 +106,8 @@
             &:before {
                 @include o-hr-org-chart-line;
                 border-top-width:  $o-hr-org-chart-entry-line-w;
-                @include size($tmp-gap-base, 0);
+                width: $tmp-gap-base;
+                height: 0;
                 @include o-position-absolute(
                     $left: $tmp-gap-base*-0.5 + $o-hr-org-chart-entry-pic-size*0.1 + $o-hr-org-chart-entry-line-w*0.5,
                     $top: $o-hr-org-chart-entry-pic-size*0.5
@@ -135,7 +137,7 @@
         overflow: visible;
         margin-top: 0;
 
-        &, .o_media_left, .media-body {
+        &, .o_media_left, .flex-grow-1 {
             position: relative;
         }
 
@@ -143,16 +145,16 @@
             padding-right: 10px;
         }
 
-        .media-body {
+        .flex-grow-1 {
             vertical-align: middle;
 
             .badge {
                 float: right;
                 cursor: pointer;
                 margin-right: 5px;
-                color: gray('600');
+                color: map-get($grays, '600');
                 background: $o-hr-org-chart-bg;
-                border: 1px solid gray('600');
+                border: 1px solid map-get($grays, '600');
                 &:hover {
                     color: $o-brand-primary;
                     border-color: $o-brand-primary;
@@ -166,7 +168,7 @@
                 display: block;
                 line-height: 1.2;
                 font-size: 11px;
-                color: lighten(gray('600'), 15%);
+                color: lighten(map-get($grays, '600'), 15%);
             }
         }
 
@@ -203,13 +205,13 @@
             .o_media_left {
                 padding-right: 0;
             }
-            .media-body > a {
+            .flex-grow-1 > a {
                 padding-left: 10px;
                 max-width: 100%;
                 display: block;
 
                 .o_media_heading {
-                    color: lighten(gray('600'), 5%);
+                    color: lighten(map-get($grays, '600'), 5%);
                     font-size: 13px;
                 }
             }
@@ -218,12 +220,12 @@
                 .o_media_object {
                     box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w*2 rgba($o-brand-primary, 0.6);
                 }
-                .media-body > a {
+                .flex-grow-1 > a {
                     .o_media_heading {
                         color: $o-brand-primary;
                     }
                     strong {
-                        color: lighten(gray('600'), 5%);
+                        color: lighten(map-get($grays, '600'), 5%);
                     }
                 }
             }
@@ -246,7 +248,7 @@
                 box-shadow: inset 0 0 0 $o-hr-org-chart-entry-line-w*2 white;
             }
 
-            .media-body {
+            .flex-grow-1 {
                 opacity: 1;
             }
         }
@@ -267,7 +269,8 @@
         }
 
         span {
-            @include size(30px, 30px);
+            width: 30px;
+            height: 30px;
             margin-right: 10px;
             border-radius: 100%;
             background-position: center;

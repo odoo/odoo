@@ -22,7 +22,7 @@
         }
     }
 
-    @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-down(sm, $o-extra-grid-breakpoints) {
         .o_form_image_controls {
             position: initial;
             opacity: 1;
@@ -35,7 +35,7 @@
                     background: $o-brand-primary;
                 }
                 &.o_clear_file_button{
-                    background: theme-color('danger');
+                    background: map-get($theme-colors, 'danger');
                 }
             }
         }
@@ -46,7 +46,7 @@
     }
 
     &.o_field_invalid img {
-        border: 1px solid theme-color('danger');
+        border: 1px solid map-get($theme-colors, 'danger');
     }
 }
 

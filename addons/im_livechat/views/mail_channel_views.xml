@@ -36,11 +36,11 @@
             <field name="arch" type="xml">
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
-                        <div style="width:50%" class="float-right">
-                            <field name="rating_last_image" widget="image" class="float-right" readonly="1" nolabel="1"/>
+                        <div style="width:50%" class="float-end">
+                            <field name="rating_last_image" widget="image" class="float-end" readonly="1" nolabel="1"/>
                             <field name="rating_last_feedback" nolabel="1"/>
                         </div>
-                        <div style="width:50%" class="float-left">
+                        <div style="width:50%" class="float-start">
                             <group>
                                 <field name="name" string="Attendees"/>
                                 <field name="create_date" readonly="1" string="Session Date"/>
@@ -69,7 +69,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="oe_module_desc">
-                                                            <div class="float-right"><p><field name="date"/></p></div>
+                                                            <div class="float-end"><p><field name="date"/></p></div>
                                                             <div>
                                                                 <p><strong>
                                                                     <t t-if="record.author_id.raw_value"><field name="author_id"/></t>

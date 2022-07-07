@@ -8,17 +8,13 @@
 
     <template id="product_quantity_config">
         <div class="css_quantity input-group">
-            <div class="input-group-prepend">
-                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
+            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                <i class="fa fa-minus"></i>
+            </button>
             <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-            <div class="input-group-append">
-                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
+            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                <i class="fa fa-plus"></i>
+            </button>
         </div>
     </template>
 
@@ -36,7 +32,7 @@
                    t-att-value="product_variant.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))"/>
             <div class="col-lg-12 text-center mt-5">
                 <t t-if="product._is_add_to_cart_possible()">
-                    <div class="col-lg-5 d-inline-block text-left">
+                    <div class="col-lg-5 d-inline-block text-start">
                         <t t-if="combination" t-call="sale.variants">
                             <t t-set="parent_combination" t-value="None"/>
                         </t>
@@ -61,13 +57,13 @@
                         <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                     </div>
                     <div class="col-lg-1 d-inline-block"></div>
-                    <div class="col-lg-5 d-inline-block align-top text-left">
+                    <div class="col-lg-5 d-inline-block align-top text-start">
                         <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_1024' % product_variant.id" class="d-block product_detail_img" alt="Product Image"/>
                         <img t-else="" t-att-src="'/web/image/product.template/%s/image_1024' % product.id" class="d-block product_detail_img" alt="Product Image"/>
                     </div>
                 </t>
                 <t t-else="">
-                    <div class="col-lg-5 d-inline-block text-left">
+                    <div class="col-lg-5 d-inline-block text-start">
                         <p class="alert alert-warning">This product has no valid combination.</p>
                     </div>
                 </t>
@@ -140,9 +136,9 @@
                 </td>
             </tr>
             <tr class="o_total_row">
-                <td colspan="4" class="text-right">
+                <td colspan="4" class="text-end">
                     <strong>Total:</strong>
-                    <span class="js_price_total font-weight-bold" style="white-space: nowrap;"
+                    <span class="js_price_total fw-bold" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
                         t-esc="combination_info['price'] * (add_qty or 1)"
                         t-options='{

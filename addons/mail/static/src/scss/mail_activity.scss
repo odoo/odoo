@@ -7,7 +7,7 @@
     .o_thread_date_separator.o_border_dashed {
         border-bottom-style: dashed;
 
-        &[data-toggle="collapse"] {
+        &[data-bs-toggle="collapse"] {
             cursor: pointer;
 
             .o_chatter_planned_activities_summary {
@@ -73,7 +73,7 @@
                 .o_activity_info {
                     vertical-align: baseline;
                     padding: 4px 6px;
-                    background: theme-color('light');
+                    background: map-get($theme-colors, 'light');
                     border-radius: 2px 2px 0 0;
                     @include o-hover-opacity(1, 1);
 
@@ -218,7 +218,7 @@
 
                     .o_activity_link_kanban {
                         font-size: 1.5em;
-                        @include o-hover-text-color($text-muted, theme-color('success'));
+                        @include o-hover-text-color($text-muted, map-get($theme-colors, 'success'));
                         @include o-hover-opacity(0.5, 1);
                     }
 

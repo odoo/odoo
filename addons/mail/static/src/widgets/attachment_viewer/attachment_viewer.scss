@@ -12,7 +12,7 @@
         flex: 1 0 auto;
         overflow: hidden;
         width: $o-chatter-min-width;
-        border-left: 1px solid gray('400');
+        border-left: 1px solid map-get($grays, '400');
 
         > .o_attachment_preview_container {
             position: relative;
@@ -51,7 +51,7 @@
     }
 }
 
-@include media-breakpoint-down(xl, $o-extra-grid-breakpoints) {
+@include media-breakpoint-down(xxl, $o-extra-grid-breakpoints) {
     .o_attachment_preview {
         display: none;
     }

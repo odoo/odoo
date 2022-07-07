@@ -20,7 +20,7 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     }, {
         trigger: '.o_control_panel button:contains("' + _t('Print') + '")',
     }, {
-        trigger: '.o_control_panel .dropdown-menu a:contains("' + _t('Invoices without Payment') + '")',
+        trigger: '.o_control_panel .o-dropdown-menu a:contains("' + _t('Invoices without Payment') + '")',
     }, {
         trigger: 'iframe .o_report_layout_standard h2',
         content: 'Primary color is correct',

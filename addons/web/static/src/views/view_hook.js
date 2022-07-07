@@ -64,7 +64,7 @@ export function useActionLinks({ resModel, reload }) {
         // the handler should have stopped the Event
         // But we still need to alert bootstrap if we need to
         // This function should be removed when we get rid of bootstrap as a JS framework
-        if (target.dataset.toggle === "collapse") {
+        if (target.dataset.bsToggle === "collapse") {
             $(target).trigger("click.bs.collapse.data-api");
         }
     }

@@ -17,7 +17,7 @@
             <!-- Content -->
             <div t-attf-class="o_wevent_events_list #{opt_events_list_cards and 'opt_event_list_cards_bg'}">
                 <div class="container">
-                    <div class="row">
+                    <div class="d-flex mx-n3">
                         <t t-call="website_event.searched_tags"/>
                     </div>
                     <div class="row">
@@ -48,11 +48,11 @@
     <nav class="navbar navbar-light border-top shadow-sm d-print-none">
         <div class="container">
             <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
-                <span class="navbar-brand h4 my-0 mr-auto">Events</span>
+                <span class="navbar-brand h4 my-0 me-auto">Events</span>
                 <ul class="o_wevent_index_topbar_filters nav">
                     <t t-foreach="categories" t-as="category">
-                        <li t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="nav-item dropdown mr-2 my-1">
-                            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                        <li t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="nav-item dropdown me-2 my-1">
+                            <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa fa-folder-open"/>
                                 <t t-out="category.name"/>
                             </a>
@@ -68,7 +68,7 @@
                         </li>
                     </t>
                 </ul>
-                <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
+                <div class="d-flex align-items-center flex-wrap ps-sm-3 pe-0">
                     <t t-call="website_event.events_search_box_input"/>
                 </div>
             </div>
@@ -79,8 +79,8 @@
 <template id="searched_tags" name="Searched tags">
     <div class="d-flex align-items-center mt16">
         <t t-foreach="search_tags" t-as="tag">
-            <span class="align-items-baseline border d-inline-flex pl-2 rounded ml16 mb-2 bg-white">
-                <i class="fa fa-tag mr-2 text-muted"/>
+            <span class="align-items-baseline border d-inline-flex ps-2 rounded ml16 mb-2 bg-white">
+                <i class="fa fa-tag me-2 text-muted"/>
                 <t t-out="tag.display_name"/>
                 <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
             </span>
@@ -91,8 +91,8 @@
 <!-- Filter - Date -->
 <template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
-        <li class="nav-item dropdown mr-2 my-1">
-            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+        <li class="nav-item dropdown me-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-calendar"/>
                 <t t-if="current_date" t-out="current_date"/>
                 <t t-else="">Upcoming Events</t>
@@ -102,7 +102,7 @@
                     <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
                         <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
                             <t t-out="date[1]"/>
-                            <span t-if="date[3]" t-out="date[3]" class="badge badge-pill badge-primary ml-3"/>
+                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill #{searches.get('date') == date[0] and 'bg-light text-primary' or 'bg-primary'} ms-3"/>
                         </a>
                     </t>
                 </t>
@@ -114,8 +114,8 @@
 <!-- Filter - Location -->
 <template id="event_location" inherit_id="website_event.index_topbar" active="False" name="Filter by Country">
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
-        <li class="nav-item dropdown mr-2 my-1">
-            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+        <li class="nav-item dropdown me-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-map-marker"/>
                 <t t-if="current_country" t-out="current_country.name"/>
                 <t t-else="">All countries</t>
@@ -125,13 +125,13 @@
                     <t t-if="country['country_id']">
                         <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active'}">
                             <t t-out="country['country_id'][1]"/>
-                            <span t-out="country['country_id_count']" class="badge badge-pill badge-primary ml-auto"/>
+                            <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-primary ms-auto"/>
                         </a>
                     </t>
                     <t t-else="">
                         <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == 'online' and 'active'}">
                             <span>Online Events</span>
-                            <span t-out="country['country_id_count']" class="badge badge-pill badge-primary ml-3"/>
+                            <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-primary ms-3"/>
                         </a>
                     </t>
                 </t>
@@ -163,7 +163,7 @@
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} mb-4">
         <a t-cache="event if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none" t-att-data-publish="event.website_published and 'on' or 'off'">
             <article t-attf-class="h-100 #{opt_events_list_cards and 'card border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
-                <div class="h-100 row no-gutters">
+                <div class="h-100 row g-0">
                     <!-- Header -->
                     <header t-attf-class="overflow-hidden bg-secondary #{opt_events_list_columns and 'col-12' or 'col-sm-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow'}">
                         <!-- Image + Link -->
@@ -177,12 +177,12 @@
                                     <span t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
                                 <!-- Participating -->
-                                <small t-if="event.is_participating" class="o_wevent_participating bg-success">
-                                    <i class="fa fa-check mr-2"/>Registered
+                                <small t-if="event.is_participating" class="o_wevent_participating text-bg-success">
+                                    <i class="fa fa-check me-2"/>Registered
                                 </small>
                                 <!-- Unpublished -->
-                                <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
-                                    <i class="fa fa-ban mr-2"/>Unpublished
+                                <small t-if="not event.website_published" class="o_wevent_unpublished text-bg-danger">
+                                    <i class="fa fa-ban me-2"/>Unpublished
                                 </small>
                             </t>
                         </div>
@@ -209,7 +209,7 @@
                             <div class="mt8">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.is_published)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge mr4 #{'badge-primary' if tag in search_tags else 'badge-light'} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+                                          t-attf-class="badge mr4 #{'bg-primary' if tag in search_tags else ''} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                                         <span t-out="tag.name"/>
                                     </span>
                                 </t>
@@ -250,13 +250,13 @@
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
     <xpath expr="//main/*" position="before">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'float-right'}" t-field="event.event_type_id"/>
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'float-end'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 
 <!-- Index - Sidebar -->
 <template id="index_sidebar" name="Sidebar">
-    <div id="o_wevent_index_sidebar" class="col-lg-4 ml-lg-3 ml-xl-5 my-5"/>
+    <div id="o_wevent_index_sidebar" class="col-lg-4 ms-lg-3 ms-xl-5 my-5"/>
 </template>
 
 <!-- Index - Sidebar - About us -->

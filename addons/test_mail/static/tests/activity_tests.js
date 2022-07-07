@@ -118,13 +118,13 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     var $th1 = $activity.find('table thead tr:first th:nth-child(2)');
     assert.containsOnce($th1, 'span:first:contains(Email)', 'should contain "Email" in header of first column');
     assert.containsOnce($th1, '.o_legacy_kanban_counter', 'should contain a progressbar in header of first column');
-    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-original-title', '1 Planned',
+    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-bs-original-title', '1 Planned',
         'the counter progressbars should be correctly displayed');
-    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-original-title', '1 Today',
+    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-bs-original-title', '1 Today',
         'the counter progressbars should be correctly displayed');
     var $th2 = $activity.find('table thead tr:first th:nth-child(3)');
     assert.containsOnce($th2, 'span:first:contains(Call)', 'should contain "Call" in header of second column');
-    assert.hasAttrValue($th2.find('.o_kanban_counter_progress .progress-bar:nth-child(3)'), 'data-original-title', '1 Overdue',
+    assert.hasAttrValue($th2.find('.o_kanban_counter_progress .progress-bar:nth-child(3)'), 'data-bs-original-title', '1 Overdue',
         'the counter progressbars should be correctly displayed');
     assert.containsNone($activity, 'table thead tr:first th:nth-child(4) .o_kanban_counter',
         'should not contain a progressbar in header of 3rd column');

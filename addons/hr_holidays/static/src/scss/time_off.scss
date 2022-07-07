@@ -53,7 +53,7 @@
 }
 
 .o_timeoff_calendar .o_cp_bottom {
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         position: relative;
         flex-direction: column;
         margin-left: -16px;
@@ -75,7 +75,7 @@
             }
         }
     }
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(sm) {
         .o_cp_bottom_left {
             button {
                 padding: 7px 6px;
@@ -137,16 +137,16 @@
             padding: 16px;
         }
         .col_right {
-            background-color: gray('200');
+            background-color: map-get($grays, '200');
             padding-top: 28px;
         }
         .o_hr_leave_date {
             display: flex;
             flex-direction: row;
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 flex-direction: column;
             }
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 flex-direction: row;
             }
         }

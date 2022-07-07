@@ -163,7 +163,7 @@ var ViewEditor = Widget.extend({
         'click button[data-action=reset]': '_onResetClick',
         'click button[data-action=format]': '_onFormatClick',
         'click button[data-action=close]': '_onCloseClick',
-        'click #ace-view-id > .alert-warning .close': '_onCloseWarningClick'
+        'click #ace-view-id > .alert-warning .btn-close': '_onCloseWarningClick'
     },
 
     /**
@@ -785,7 +785,7 @@ var ViewEditor = Widget.extend({
                 placement: 'left',
                 container: 'body',
                 trigger: 'manual',
-                template: '<div class="popover o_ace_error_popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+                template: '<div class="popover o_ace_error_popover" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
             });
             this.$errorLine.popover('show');
         }

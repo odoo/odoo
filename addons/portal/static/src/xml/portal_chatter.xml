@@ -31,10 +31,10 @@
                 <div class="alert alert-danger mb8 d-none o_portal_chatter_composer_error" role="alert">
                     Oops! Something went wrong. Try to reload the page and log in.
                 </div>
-                <div class="media">
-                    <img alt="Avatar" class="o_portal_chatter_avatar o_object_fit_cover" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
+                <div class="d-flex">
+                    <img alt="Avatar" class="o_portal_chatter_avatar o_object_fit_cover align-self-start" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
                          t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
-                    <div class="media-body">
+                    <div class="flex-grow-1">
                         <div class="o_portal_chatter_composer_input">
                             <div class="o_portal_chatter_composer_body mb32">
                                 <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
@@ -79,9 +79,9 @@
     <t t-name="portal.chatter_messages">
         <div class="o_portal_chatter_messages">
             <t t-foreach="widget.get('messages') || []" t-as="message">
-                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
+                <div class="d-flex o_portal_chatter_message" t-att-id="'message-' + message.id">
                     <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
-                    <div class="media-body">
+                    <div class="flex-grow-1">
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
@@ -103,10 +103,10 @@
 
     <!-- Chatter: internal toggle widget -->
     <t t-name="portal.chatter_internal_toggle">
-        <div t-if="message.is_message_subtype_note" class="float-right">
+        <div t-if="message.is_message_subtype_note" class="float-end">
             <button class="btn btn-secondary" title="Internal notes are only displayed to internal users." disabled="true">Internal Note</button>
         </div>
-        <div t-else="" t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
+        <div t-else="" t-attf-class="float-end o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
                 t-att-data-message-id="message.id"
                 t-att-data-is-internal="message.is_internal">
             <button class="btn btn-danger"

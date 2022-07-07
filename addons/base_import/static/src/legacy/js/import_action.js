@@ -608,7 +608,7 @@ var DataImport = AbstractAction.extend({
                 },
                 // For each choice, if field is required, make it bold in the list
                 formatResultCssClass: function (object) {
-                    if (object.required) { return "font-weight-bold text-decoration-underline"; }
+                    if (object.required) { return "fw-bold text-decoration-underline"; }
                     return "";
                 },
                 placeholder: _t('To import, select a field...'),

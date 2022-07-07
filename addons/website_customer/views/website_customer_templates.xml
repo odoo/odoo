@@ -20,9 +20,9 @@
                     <div class="col-lg-8 offset-lg-1" id="ref_content">
                         <div class='d-flex m-2'>
                             <t t-call="website.pager">
-                               <t t-set="classname" t-value="'float-left'"/>
+                               <t t-set="classname" t-value="'float-start'"/>
                             </t>
-                            <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
+                            <form action="" method="get" class="navbar-search ms-auto pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query form-control"
                                         placeholder="Search" t-att-value="post.get('search', '')"/>
@@ -34,18 +34,18 @@
 
                     <p t-if="not partners">No result found</p>
                     <t t-foreach="partners" t-as="partner">
-                        <div class="media mt-3">
+                        <div class="d-flex mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
                                t-field="partner.avatar_128"
-                               class="d-block mr-3 text-center o_width_128"
+                               class="d-block me-3 text-center o_width_128"
                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
                             ></a>
-                            <div class="media-body" style="min-height: 64px;">
+                            <div class="flex-grow-1" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <t t-if="partner.industry_id">
-                                    <a class="badge badge-secondary" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-esc="partner.industry_id.name"/>
+                                    <a class="badge text-bg-secondary" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-esc="partner.industry_id.name"/>
                                 </t>
                                 <div t-field="partner.website_short_description"/>
                             </div>
@@ -71,7 +71,7 @@
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </header>
                     <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
                     style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
@@ -79,7 +79,7 @@
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
+            <h3>World Map<button class="btn btn-link" data-bs-toggle="modal" data-bs-target=".customer_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
@@ -97,7 +97,7 @@
                     <li class="nav-item">
                         <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }"
                            t-attf-class="nav-link#{industry_dict['industry_id'][0] == current_industry_id and ' active' or ''}">
-                            <span class="badge badge-pill float-right" t-esc="industry_dict['industry_id_count'] or '0'"/>
+                            <span class="badge rounded-pill float-end" t-esc="industry_dict['industry_id_count'] or '0'"/>
                             <t t-esc="industry_dict['industry_id'][1]"/>
                         </a>
                     </li>
@@ -116,7 +116,7 @@
                     <li class="nav-item">
                         <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
                            t-attf-class="nav-link#{country_dict['country_id'][0] == current_country_id and ' active' or ''}">
-                            <span class="badge badge-pill float-right" t-esc="country_dict['country_id_count'] or '0'"/>
+                            <span class="badge rounded-pill float-end" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
                     </li>
@@ -135,7 +135,7 @@
             <li class="nav-item"><a class="nav-link mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All </a></li>
             <li t-foreach="tags" t-as="o_tag" class="nav-item">
-                <a t-attf-class="nav-link badge badge-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                <a t-attf-class="nav-link badge bg-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
             </li>
         </ul>
@@ -179,7 +179,7 @@
 <template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
     <xpath expr="//address" position="inside">
         <t t-if="partner.industry_id">
-            <span class="badge badge-secondary"><t t-esc="partner.industry_id.name"/></span>
+            <span class="badge text-bg-secondary"><t t-esc="partner.industry_id.name"/></span>
         </t>
     </xpath>
 </template>
@@ -203,7 +203,7 @@
                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
              />
         </div>
-        <address class="text-left">
+        <address class="text-start">
              <div t-field="partner.assigned_partner_id" t-options='{
                  "widget": "contact",
                  "fields": ["address", "website", "phone", "email"]
@@ -217,17 +217,17 @@
 <template id="references_block" name="Partner References Block">
         <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
             <h3 id="references">References</h3>
-            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
+            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="d-flex mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.avatar_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
+                    <span t-field="reference.avatar_128" class="d-block me-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
                 </a>
-                <div class="media-body" style="min-height: 64px;">
+                <div class="flex-grow-1" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">
                         <span t-field="reference.self"/>
                     </a>
                     <t t-if="reference.industry_id">
-                        <span class="badge badge-secondary"><t t-esc="reference.industry_id.name"/></span>
+                        <span class="badge text-bg-secondary"><t t-esc="reference.industry_id.name"/></span>
                     </t>
                     <div t-field='reference.website_short_description'/>
                 </div>
@@ -240,7 +240,7 @@
     <xpath expr="//div/span" position="replace">
         <a t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
-    <xpath expr="//div[hasclass('media-body')]/span" position="replace">
+    <xpath expr="//div[hasclass('flex-grow-1')]/span" position="replace">
         <a t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
 </template>

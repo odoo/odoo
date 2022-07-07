@@ -70,7 +70,7 @@
                 flex-flow: row wrap;
                 justify-content: flex-start;
                 > .o_inner_box {
-                    @include media-breakpoint-down(sm) {
+                    @include media-breakpoint-down(md) {
                         flex: 1 1 200px;
                         display: block !important;
                     }
@@ -166,7 +166,7 @@
                 position: relative;
                 float: right;
                 right: 10px;
-                border: 1px solid gray('200');
+                border: 1px solid map-get($grays, '200');
                 font-weight: 300;
                 white-space: nowrap;
                 padding: .5em 1.5em;
@@ -230,7 +230,7 @@
         justify-content: space-between;
         margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             padding-left: $o-horizontal-padding - $o-kanban-record-margin;
             padding-right: $o-horizontal-padding;
         }

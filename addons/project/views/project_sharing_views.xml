@@ -74,7 +74,7 @@
                                     <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                 </div>
                                 <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
@@ -98,7 +98,7 @@
                                     <field name="priority" widget="priority"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right" t-if="!selection_mode">
-                                    <span t-if="record.portal_user_names.raw_value.length > 0" class="pr-2" t-att-title="record.portal_user_names.raw_value">
+                                    <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2" t-att-title="record.portal_user_names.raw_value">
                                         <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
                                         <t t-out="user_count"/>
                                         <t t-if="user_count > 1"> assignees</t>
@@ -173,11 +173,11 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title pr-0">
+                    <div class="oe_title pe-0">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                            <field name="kanban_state" widget="state_selection" class="ms-auto"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>

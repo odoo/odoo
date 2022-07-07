@@ -23,7 +23,7 @@
         <t t-else="">
             <p class="text-warning">We found these ones:</p>
             <div t-foreach="dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
-                <a class="collapsed fa fa-caret-right" data-toggle="collapse"
+                <a class="collapsed fa fa-caret-right" data-bs-toggle="collapse"
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
                 t-attf-href="#collapseDependencies{{ dependency_index }}"
                 aria-expanded="false">

@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             backendEditButtonEl.title = _t("Edit this content");
             backendEditButtonEl.classList.add('o_frontend_to_backend_edit_btn', 'px-3', ...frontendToBackendBtnClasses);
             const backendEditButtonIconEl = document.createElement('i');
-            backendEditButtonIconEl.classList.add('fa', 'fa-pencil', 'mr-1');
+            backendEditButtonIconEl.classList.add('fa', 'fa-pencil', 'me-1');
             backendEditButtonEl.prepend(backendEditButtonIconEl);
             frontendToBackendNavEl.appendChild(backendEditButtonEl);
 

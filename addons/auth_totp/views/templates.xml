@@ -15,7 +15,7 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <div class="form-group">
-                        <label class="font-weight-bold" for="totp_token">Authentication Code</label>
+                        <label class="fw-bold" for="totp_token">Authentication Code</label>
                         <input id="totp_token" name="totp_token" class="form-control mb-2"
                                 autocomplete="off" inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"/>
                     </div>
@@ -27,8 +27,8 @@
                         <input type="checkbox" name="remember" id="switch-remember" value="1"/>
                         <label for="switch-remember">Don't ask again on this device</label>
                     </div>
-                        <div t-attf-class="clearfix oe_login_buttons text-center mb-1">
-                            <button type="submit" class="btn btn-primary btn-block">
+                        <div t-attf-class="clearfix oe_login_buttons text-center d-grid mb-1">
+                            <button type="submit" class="btn btn-primary">
                                 Login
                             </button>
                         </div>

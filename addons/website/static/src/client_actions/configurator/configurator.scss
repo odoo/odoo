@@ -109,8 +109,8 @@
                     position: absolute;
                     width: 100%;
                     border: none;
-                    border-bottom: 3px solid theme-color(primary);
-                    color: theme-color(primary);
+                    border-bottom: 3px solid map-get($theme-colors, primary);
+                    color: map-get($theme-colors, primary);
                     background-color: inherit;
 
                     &:focus {
@@ -128,7 +128,7 @@
             }
 
             .dropdown {
-                box-shadow: inset 0 -3px 0 theme-color(primary);
+                box-shadow: inset 0 -3px 0 map-get($theme-colors, primary);
 
                 &.o_step_todo .fa-angle-down {
                     transform: translateY(-0.26em);
@@ -180,7 +180,7 @@
 
                         &.o_no_result, &.o_no_result:hover {
                             background-color: transparent !important;
-                            color: gray('600') !important;
+                            color: map-get($grays, '600') !important;
                             cursor: default;
                             padding: $dropdown-item-padding-y*4 $dropdown-item-padding-x;
                             font-style: italic;
@@ -199,7 +199,7 @@
         }
 
         &.o_palette_selection_screen {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 .o_detect_logo {
                     width: 100% !important;
                 }
@@ -218,7 +218,7 @@
                 }
             }
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 .o_palette_card_container {
                     width: 50% !important;
                 }
@@ -226,14 +226,14 @@
 
             .palette_card {
                 cursor: pointer;
-                box-shadow: 0 0 0 1px gray('200');
+                box-shadow: 0 0 0 1px map-get($grays, '200');
 
                 .color_sample {
                     padding-top: 30%;
                 }
 
                 &:hover, &.selected {
-                    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px theme-color("primary")
+                    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px map-get($theme-colors, "primary")
                 }
             }
 
@@ -253,7 +253,7 @@
 
             .o_configurator_logo_upload {
                 cursor: pointer;
-                @include o-hover-text-color(gray('400'), gray('800'));
+                @include o-hover-text-color(map-get($grays, '400'), map-get($grays, '800'));
             }
 
             .palette_selection_or {
@@ -267,13 +267,13 @@
         }
 
         &.o_feature_selection_screen {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 .o_feature_card_container {
                     width: 50% !important;
                 }
             }
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 .o_feature_card_container {
                     width: 100% !important;
                 }
@@ -336,7 +336,7 @@
                 }
 
                 &:hover {
-                    border-color: theme-color(primary)!important;
+                    border-color: map-get($theme-colors, primary)!important;
                     box-shadow: $box-shadow;
 
                     .theme_preview_tip {

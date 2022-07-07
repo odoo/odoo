@@ -70,16 +70,16 @@
                                         <t t-esc="record.name.value"/>
                                     </div>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
-                                        <div class="badge badge-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opening_control'">
-                                        <div class="badge badge-info o_kanban_inline_block">Opening Control</div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opening Control</div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'closing_control'">
-                                        <div class="badge badge-info o_kanban_inline_block">Closing Control</div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Closing Control</div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
-                                        <div t-attf-class="badge badge-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                        <div t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
                                              title="The session has been opened for an unusually long period. Please consider closing.">
                                              To Close
                                         </div>

@@ -37,7 +37,7 @@
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
                                         <field name="group_stock_picking_wave" class="col-lg-1 ml16 mr0"/>
-                                        <div class="col pl-0">
+                                        <div class="col ps-0">
                                             <label for="group_stock_picking_wave"/>
                                             <div class="text-muted">Process operations in wave transfers</div>
                                         </div>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
                                         <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
-                                        <div class="col pl-0">
+                                        <div class="col ps-0">
                                             <label for="module_quality_control_worksheet"/>
                                             <div class="text-muted">
                                                 Create customizable worksheets for your quality checks
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" id="barcode_settings">
                                     <label for="module_stock_barcode"/>
-                                    <a href="https://www.odoo.com/documentation/master/applications/inventory_and_mrp/inventory/barcode/setup/software.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/inventory_and_mrp/inventory/barcode/setup/software.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted" name="stock_barcode">
                                         Process operations faster with barcodes
@@ -338,7 +338,7 @@
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
                                         <field name="group_stock_lot_print_gs1" class="col-lg-1 ml16 mr0"/>
-                                        <div class="col pl-0">
+                                        <div class="col ps-0">
                                             <label for="group_stock_lot_print_gs1"/>
                                             <div class="text-muted">Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and serial numbers. Printing datamatrix requires extra software. If software can't be found then 1D barcodes will be printed.</div>
                                         </div>

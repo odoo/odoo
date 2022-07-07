@@ -21,7 +21,7 @@
                 <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
             </t>
         </a>
-        <div class="pl-2">
+        <div class="ps-2">
             <a class="" t-att-title="'Read' + data['name']" t-att-href="data['call_to_action_url']">
                 <div class="s_blog_posts_post_title mb-1">
                     <span t-if="is_sample" class="bg-primary text-uppercase px-1">Sample</span>
@@ -57,7 +57,7 @@
 <template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal layout">
     <figure t-foreach="records" t-as="data" class="post s_blog_posts_post w-100">
         <t t-set="record" t-value="data['_record']"/>
-        <span t-if="is_sample" class="h5 float-right bg-primary text-uppercase rounded-circle px-2 py-2">Sample</span>
+        <span t-if="is_sample" class="h5 float-end bg-primary text-uppercase rounded-circle px-2 py-2">Sample</span>
         <figcaption>
             <h4 class="mb0">
                 <a t-att-href="data['call_to_action_url']" t-field="record.name"/>
@@ -93,8 +93,8 @@
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <span class="text-muted mb-0" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
-                <span class="text-muted mb-0">In <a class="font-weight-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
-                    <a t-if="is_sample" class="font-weight-bold" href="#">Sample</a>
+                <span class="text-muted mb-0">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                    <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
                 </span>
             </div>
         </div>

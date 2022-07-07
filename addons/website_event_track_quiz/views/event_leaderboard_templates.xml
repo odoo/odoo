@@ -27,13 +27,13 @@
             <div class='alert alert-warning mt32'>No user found for <strong><t t-out="search"/></strong>. Try another search.</div>
         </div>
         <div t-if="not visitors and not search" class="vh-100 bg-light d-flex justify-content-center align-items-center">
-            <h4 class="text-muted font-weight-bold">There is currently no leaderboard available</h4>
+            <h4 class="text-muted fw-bold">There is currently no leaderboard available</h4>
         </div>
     </t>
 </template>
 
 <template id="pager_nobox" name="Pager (not box display)">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager font-weight-bold pagination m-0">
+    <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager fw-bold pagination m-0">
         <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
             <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-step-backward"/></a>
         </li>
@@ -71,7 +71,7 @@
 </template>
 
 <template id="all_visitor_card" name="All VIsitor Card">
-    <td class="align-middle text-right text-muted" style="width: 0">
+    <td class="align-middle text-end text-muted" style="width: 0">
         <span t-out="visitor['position']"/>
     </td>
     <td class="align-middle d-none d-sm-table-cell">
@@ -81,11 +81,11 @@
         t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"/>
     </td>
     <td class="align-middle w-md-75">
-        <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].partner_id" class="font-weight-bold">You</span>
-        <span t-else="" class="font-weight-bold" t-out="visitor['visitor'].display_name"/><br/>
+        <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].partner_id" class="fw-bold">You</span>
+        <span t-else="" class="fw-bold" t-out="visitor['visitor'].display_name"/><br/>
     </td>
-    <td class="align-middle font-weight-bold text-right text-nowrap">
-        <b t-out="visitor['points']"/> <span class="text-muted small font-weight-bold">Points</span>
+    <td class="align-middle fw-bold text-end text-nowrap">
+        <b t-out="visitor['points']"/> <span class="text-muted small fw-bold">Points</span>
     </td>
 </template>
 
@@ -97,12 +97,10 @@
             <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
                 <!-- search -->
                 <form t-attf-action="#{'/event/%s/community/leaderboard/results' % (slug(event))}" role="search" method="get">
-                    <div class="input-group ml-1 position-relative">
-                        <span class="input-group-prepend">
-                            <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
+                    <div class="input-group ms-1 position-relative">
+                        <button class="btn btn-link text-white rounded-0 pe-1" type="submit" aria-label="Search" title="Search">
+                            <i class="fa fa-search"></i>
+                        </button>
                         <input type="text" class="form-control rounded-0" name="search" placeholder="Search Attendees" t-att-value="searched_name or ''"/>
                     </div>
                 </form>
@@ -112,17 +110,15 @@
             <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
                 <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
 
-                    <div class="btn-group ml-1 position-static mr-2">
-                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
-                        <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
+                    <div class="btn-group ms-1 position-static me-2">
+                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                             <form class="px-3" t-attf-action="#{'/event/%s/community/leaderboard' % (slug(event))}" role="search" method="get">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="search" placeholder="Search courses"/>
-                                    <span class="input-group-append">
-                                        <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                            <i class="fa fa-search"/>
-                                        </button>
-                                    </span>
+                                    <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
                                 </div>
                             </form>
                         </div>

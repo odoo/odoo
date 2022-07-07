@@ -100,9 +100,9 @@
                         <div class="col-lg-4 mb32">
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user">
-                                <div class="media mt-3">
+                                <div class="d-flex mt-3">
                                     <img t-att-src="image_data_uri(user.avatar_128)" class="o_image_64_cover rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username or user.name"/>
-                                    <div class="media-body">
+                                    <div class="flex-grow-1">
                                         <h5>
                                             <t t-if="user.livechat_username">
                                                 <t t-esc="user.livechat_username"/>
@@ -114,21 +114,21 @@
                                         <div class="col-lg-12">
                                             <div class="row">
                                                 <t t-if="user.partner_id.id in ratings_per_user">
-                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                    <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Great" width="16px" height="16px"/>
                                                         <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['great']"/>%</span>
                                                     </div>
-                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                    <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_3.png' alt="Okay" width="16px" height="16px"/>
                                                         <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
                                                     </div>
-                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                    <div class="col-lg-4 ps-0 pe-0">
                                                         <img t-attf-src='/rating/static/src/img/rating_1.png' alt="Bad" width="16px" height="16px"/>
                                                         <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['bad']"/>%</span>
                                                     </div>
                                                 </t>
                                                 <t t-else="">
-                                                    <div class="col-lg-12 pl-0 pr-0 o_livechat_no_rating">Not rated yet</div>
+                                                    <div class="col-lg-12 ps-0 pe-0 o_livechat_no_rating">Not rated yet</div>
                                                 </t>
                                             </div>
                                         </div>
@@ -158,11 +158,11 @@
                             <t t-if="len(channels)">
                                 <div class="col-lg-6">
                                     <t t-foreach="channels" t-as="channel">
-                                        <div t-attf-class="media#{' mt-3' if channel_index else ''}">
+                                        <div t-attf-class="d-flex#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
                                                 <img t-att-src="channel.image_128 and image_data_uri(channel.image_128) or '/web/static/img/placeholder.png'" t-att-alt="channel.name" class="o_image_64_cover"/>
                                             </a>
-                                            <div class="media-body h-100 my-auto">
+                                            <div class="flex-grow-1 h-100 my-auto">
                                                 <h4><t t-esc="channel.name"/></h4>
                                             </div>
                                         </div>

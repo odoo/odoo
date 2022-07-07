@@ -25,12 +25,13 @@ $bronze: #eea91e;
         }
 
         &.active {
-            background-color: rgba(theme-color('info'), 0.1);
-            color: darken(theme-color('info'), 15%)!important;
+            background-color: rgba(map-get($theme-colors, 'info'), 0.1);
+            color: darken(map-get($theme-colors, 'info'), 15%)!important;
         }
 
         img.o_forum_avatar {
-            @include size(30px);
+            width: 30px;
+            height: 30px;
         }
     }
 
@@ -39,23 +40,24 @@ $bronze: #eea91e;
         word-wrap: break-word;
 
         pre {
-            color: color-yiq(gray('100'));
+            color: color-contrast(map-get($grays, '100'));
             border-radius: $border-radius;
             padding: 1rem;
-            background-color: gray('100');
+            background-color: map-get($grays, '100');
             white-space: pre-wrap;
         }
 
         blockquote {
             position: relative;
             padding-left: 1em;
-            border-left: .25em solid gray('500');
-            color: gray('600');
+            border-left: .25em solid map-get($grays, '500');
+            color: map-get($grays, '600');
         }
 
         #post_reply {
             img.o_forum_avatar {
-                @include size(24px);
+                width: 24px;
+                height: 24px;
             }
         }
     }
@@ -101,7 +103,8 @@ $bronze: #eea91e;
         &.o_show_info {
             line-height: 1.2;
             img {
-                @include size(2em);
+                width: 2em;
+                height: 2em;
             }
         }
 
@@ -109,7 +112,8 @@ $bronze: #eea91e;
             line-height: 1;
 
             img {
-                @include size(1.4em);
+                width: 1.4em;
+                height: 1.4em;
             }
         }
 
@@ -121,7 +125,8 @@ $bronze: #eea91e;
         }
 
         .o_wforum_author_box_check {
-            @include size(1em);
+            width: 1em;
+            height: 1em;
             display: none;
             top: 0;
             right: -3px;
@@ -130,7 +135,7 @@ $bronze: #eea91e;
         }
 
         .o_wforum_validate_toggler {
-            @include o-hover-text-color(gray('400'), lighten(theme-color('success'), 20%));
+            @include o-hover-text-color(map-get($grays, '400'), lighten(map-get($theme-colors, 'success'), 20%));
         }
 
         &.o_wforum_answer_correct {
@@ -139,7 +144,7 @@ $bronze: #eea91e;
             }
 
             .o_wforum_validate_toggler {
-                @include o-hover-text-color(theme-color('success'), theme-color('warning'));
+                @include o-hover-text-color(map-get($theme-colors, 'success'), map-get($theme-colors, 'warning'));
 
                 &:hover .fa.fa-check:before {
                     content: '\f00d';
@@ -183,11 +188,11 @@ $bronze: #eea91e;
         .vote_down, .vote_up {
             line-height: 0.5;
             font-size: 1.1em;
-            @include o-hover-text-color(rgba($text-muted, 0.5), theme-color('success'));
+            @include o-hover-text-color(rgba($text-muted, 0.5), map-get($theme-colors, 'success'));
         }
 
         .vote_down {
-            @include o-hover-text-color(rgba($text-muted, 0.5), theme-color('danger'));
+            @include o-hover-text-color(rgba($text-muted, 0.5), map-get($theme-colors, 'danger'));
         }
 
         &.o_wforum_vote_vertical {
@@ -219,18 +224,21 @@ $bronze: #eea91e;
 }
 
 img.o_forum_avatar {
-    @include size(40px);
+    width: 40px;
+    height: 40px;
     object-fit: cover;
 }
 
 img.o_forum_avatar_big {
-    @include size(75px);
+    width: 75px;
+    height: 75px;
     object-fit: cover;
 }
 
 .o_wprofile_email_validation_container {
     img.o_forum_avatar {
-        @include size(16px);
+        width: 16px;
+        height: 16px;
     }
 }
 
@@ -257,7 +265,7 @@ img.o_forum_avatar_big {
 
 .o_wforum_elearning_navtabs_container {
     @include media-breakpoint-up(md) {
-        background-color: theme-color('secondary');
+        background-color: map-get($theme-colors, 'secondary');
     }
 }
 
@@ -270,7 +278,7 @@ img.o_forum_avatar_big {
 }
 
 .o_wforum_forum_card_bg {
-    background-image: linear-gradient(99deg, theme-color('secondary') 10%, darken(theme-color('secondary'), 10%) 90%);
+    background-image: linear-gradient(99deg, map-get($theme-colors, 'secondary') 10%, darken(map-get($theme-colors, 'secondary'), 10%) 90%);
 
     #o_wforum_forums_index_list & {
         min-height: 100px;

@@ -81,9 +81,9 @@ tour.register('project_update_tour', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks'
 }, {
-    trigger: '.o_kanban_header:eq(1)',
+    trigger: '.o_kanban_group:nth-child(2) .o_kanban_header',
     run: function () {
-        $('.o_kanban_config.dropdown .dropdown-toggle').eq(1).click();
+        document.querySelector('.o_kanban_group:nth-child(2) .o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'))
     }
 }, {
     trigger: ".dropdown-item.o_column_edit",

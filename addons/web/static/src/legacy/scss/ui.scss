@@ -38,20 +38,7 @@
     }
 }
 
-// == Opacity Utility Classes
-//
-// TODO: generate these classes with BTS5's API.
-@each $-opacity-level in (0, 25, 50, 75, 100) {
-    .opacity-#{$-opacity-level} {
-        opacity: $-opacity-level * 1%;
-    }
-
-    .opacity-#{$-opacity-level}-hover:hover {
-        opacity: $-opacity-level * 1%;
-    }
-}
-
-// Allow to change data-toggle="collapse" text according to status
+// Allow to change data-bs-toggle="collapse" text according to status
 :not(.collapsed) > .o-collapsed-label,
 .collapsed > .o-not-collapsed-label {
     display: none;

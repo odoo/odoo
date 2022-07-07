@@ -53,14 +53,16 @@ var EventRegistrationForm = Widget.extend({
             $button.attr('disabled', true);
             return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
                 var $modal = $(modal);
-                $modal.modal({backdrop: 'static', keyboard: false});
                 $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
-                $modal.appendTo('body').modal();
+                $modal.appendTo(document.body);
+                const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
+                modalBS.show();
+                $modal.appendTo('body').modal('show');
                 $modal.on('click', '.js_goto_event', function () {
                     $modal.modal('hide');
                     $button.prop('disabled', false);
                 });
-                $modal.on('click', '.close', function () {
+                $modal.on('click', '.btn-close', function () {
                     $button.prop('disabled', false);
                 });
             });

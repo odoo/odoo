@@ -13,7 +13,7 @@
             transition: opacity 0.3s ease;
         }
 
-        @include hover-focus () {
+        &:hover, &:focus {
             small {
                 transition-duration: 1s;
                 opacity: 1;
@@ -31,12 +31,12 @@
     }
 
     .js_unfollow_btn .fa:before {
-        color: theme-color('primary');
+        color: map-get($theme-colors, 'primary');
     }
 
     .js_unfollow_btn:hover .fa:before {
         content: "\f1f6";
-        color: theme-color('danger');
+        color: map-get($theme-colors, 'danger');
     }
 }
 

@@ -16,12 +16,12 @@
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Presence Control</span>
                                 <div class="content-group" name="hr_presence_options">
-                                    <div class="row">
-                                        <field name="module_hr_attendance" class="col-lg-1 ml16"/>
+                                    <div class="d-flex">
+                                        <field name="module_hr_attendance" class="ml16"/>
                                         <label for="module_hr_attendance" class="o_light_label"/>
                                     </div>
-                                    <div class="row">
-                                        <field name="hr_presence_control_login" class="col-lg-1 ml16"/>
+                                    <div class="d-flex">
+                                        <field name="hr_presence_control_login" class="ml16"/>
                                         <label for="hr_presence_control_login" class="o_light_label"/>
                                     </div>
                                 </div>
@@ -38,21 +38,21 @@
                                 <div class="text-muted" name="hr_presence_options_advanced">
                                     Presence reporting screen, email and IP address control.
                                 </div>
-                                <div class="row mt-1" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
-                                    <field name="hr_presence_control_email" class="col-lg-1 ml16"/>
+                                <div class="d-flex mt-1" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
+                                    <field name="hr_presence_control_email" class="ml16"/>
                                     <label for="hr_presence_control_email" class="o_light_label"/>
                                 </div>
-                                <div class="row ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_email', '=', False)]}">
-                                    <span class="ml8 mr-2">Minimum number of emails to sent </span>
-                                    <field name="hr_presence_control_email_amount" class="ml-2 oe_inline"/>
+                                <div class="d-flex ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_email', '=', False)]}">
+                                    <span class="flex-shrink-0 ml8 me-2">Minimum number of emails to sent </span>
+                                    <field name="hr_presence_control_email_amount" class="ms-2 oe_inline"/>
                                 </div>
-                                <div class="row" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
-                                    <field name="hr_presence_control_ip" class="col-lg-1 ml16"/>
+                                <div class="d-flex" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
+                                    <field name="hr_presence_control_ip" class="ml16"/>
                                     <label for="hr_presence_control_ip" class="o_light_label"/>
                                 </div>
-                                <div class="row ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_ip', '=', False)]}">
-                                    <span class="ml8 mr-2">IP Addresses (comma-separated)</span>
-                                    <field name="hr_presence_control_ip_list" class="ml-2 oe_inline"/>
+                                <div class="d-flex ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_ip', '=', False)]}">
+                                    <span class="flex-shrink-0 ml8 me-2">IP Addresses (comma-separated)</span>
+                                    <field name="hr_presence_control_ip_list" class="ms-2 oe_inline"/>
                                 </div>
                             </div>
                         </div>

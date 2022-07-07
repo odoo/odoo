@@ -8,6 +8,13 @@ html, body {
     height: 100%;
 }
 
+// Disable default border-style added by _reboot.scss
+tfoot {
+  tr, td, th {
+    border-style: none;
+  }
+}
+
 // ------------------------------------------------------------------
 //  General
 // ------------------------------------------------------------------
@@ -29,51 +36,8 @@ html, body {
   outline: none;
 }
 
-// Boolean Toggle widget
-div.o_boolean_toggle.custom-control.custom-checkbox {
-  $line-height-computed: $line-height-base * $font-size-base;
-  $slider-width: $line-height-computed * 1.5;
-  $font-size: $font-size-base * 1.2;
-
-  display: inline-block;
-  padding-left: $slider-width + 0.25rem;
-
-  > label.custom-control-label {
-    > i {
-      color: white;
-      cursor: pointer;
-      font-size: $font-size;
-      position: absolute;
-      top: 2px;
-      &.fa-times-circle {
-        right: 15px;
-      }
-      &.fa-check-circle {
-        right: 7px;
-      }
-    }
-    &::before,
-    &::after {
-      content: "";
-      top: 0;
-      left: -($slider-width + 0.25rem);
-    }
-    &::before {
-      width: $slider-width;
-      height: 100%;
-      background-color: #a0a0a0 !important;
-      border-radius: 100px;
-      outline: none !important;
-    }
-  }
-  > input.custom-control-input:checked + label.custom-control-label {
-    &::before {
-      background-color: $o-brand-primary !important;
-    }
-    &::after {
-      background-image: none;
-    }
-  }
+div.o_boolean_toggle.form-switch.form-check > input.form-check-input:not(:checked) {
+  background-color: $form-switch-color;
 }
 
 // User input typically entered via keyboard
@@ -84,8 +48,8 @@ kbd {
 
 //== Backgound light colors variations (bootstrap extensions)
 @each $-name, $-bg-color in $theme-colors {
-  $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));
-  @include bg-variant(".bg-#{$-name}-light", rgba(theme-color($-name), 0.5), $-safe-text-color);
+  $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
+  @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
 }
 
 .bg-muted {
@@ -103,31 +67,6 @@ kbd {
 
 .o_cursor_default {
   cursor: default;
-}
-
-// == Extend default border-radius utility classes
-//------------------------------------------------------------------------------
-// Allows to use small and large variations for directional border-radius
-// utility classes (eg. 'rounded-lg-left')
-
-.rounded {
-  $sizes: ('-sm': $border-radius-sm, '-lg': $border-radius-lg);
-
-  @each $size, $radius in $sizes {
-    @each $side in ('left', 'right') {
-      &#{$size}-#{$side} {
-        border-top-#{$side}-radius: $radius !important;
-        border-bottom-#{$side}-radius: $radius !important;
-      }
-    }
-
-    @each $direction in ('top', 'bottom') {
-      &#{$size}-#{$direction} {
-        border-#{$direction}-left-radius: $radius !important;
-        border-#{$direction}-right-radius: $radius !important;
-      }
-    }
-  }
 }
 
 //== Badges
@@ -154,6 +93,19 @@ kbd {
   // Specific behavieur for "secondary"
   &.btn-secondary {
     @include o-btn-link-variant($body-color, $headings-color);
+  }
+}
+
+// Set position of our custom o-dropdown-menu (not bootstrap)
+.o-dropdown-menu {
+  top: 100%;
+  &.dropdown-menu-start {
+    left: 0;
+    right: auto;
+  }
+  &.dropdown-menu-end {
+    left: auto;
+    right: 0;
   }
 }
 

@@ -280,11 +280,11 @@ QUnit.module("Fields", (hooks) => {
         await click(badgeElement);
         assert.containsOnce(
             target,
-            ".o_tag_popover .custom-checkbox input",
+            ".o_tag_popover .form-check input",
             "should have a checkbox in the colorpicker popover"
         );
 
-        let checkBox = target.querySelector(".o_tag_popover .custom-checkbox input");
+        let checkBox = target.querySelector(".o_tag_popover .form-check input");
         assert.notOk(checkBox.checked, "should have unticked checkbox in colorpicker popover");
 
         await click(target, ".o_tag_popover input[type='checkbox']");
@@ -296,7 +296,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(badgeElement);
-        checkBox = target.querySelector(".o_tag_popover .custom-checkbox input"); // refresh
+        checkBox = target.querySelector(".o_tag_popover .form-check input"); // refresh
 
         assert.ok(
             checkBox.checked,
@@ -312,7 +312,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(badgeElement);
-        checkBox = target.querySelector(".o_tag_popover .custom-checkbox input"); // refresh
+        checkBox = target.querySelector(".o_tag_popover .form-check input"); // refresh
 
         assert.notOk(
             checkBox.checked,

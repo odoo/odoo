@@ -25,7 +25,7 @@
             t-att-data-youtube-video-id="track.youtube_video_id">
             <div class="position-absolute o_wevent_event_track_live_loading w-100 d-flex align-items-center justify-content-center text-white h4">
                 <i class="fa fa-spin fa-circle-o-notch position-relative"/>
-                <span class="pl-2">Loading Video...</span>
+                <span class="ps-2">Loading Video...</span>
             </div>
             <div id="o_wevent_youtube_iframe_container" class="w-100"/>
         </div>
@@ -36,7 +36,7 @@
 <template id="event_track_aside" inherit_id="website_event_track.event_track_aside">
     <xpath expr="//ul[hasclass('o_wesession_track_aside_nav')]/li" position="before">
         <li t-if="track.is_youtube_chat_available and not is_mobile_chat_disabled" class="nav-item flex-grow-1">
-            <a href="#track_chat" aria-controls="track_chat" class="nav-link active" role="tab" data-toggle="tab">
+            <a href="#track_chat" aria-controls="track_chat" class="nav-link active" role="tab" data-bs-toggle="tab">
                 Chat
             </a>
         </li>

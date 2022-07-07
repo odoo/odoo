@@ -13,10 +13,10 @@
     }
     table td {
         padding: 8px;
-        border-left: 1px solid #f1f1f1;
+        border-start: 1px solid #f1f1f1;
     }
     table td:first-child {
-        border-left: 0;
+        border-start: 0;
     }
     td.heading {
         font-weight: bold;
@@ -88,11 +88,11 @@
     <table align="center" cellpadding="3">
         <tr>
             <td class="heading">Name</td>
-            <td> {{ hostname }} <a class="btn btn-sm float-right" href='/server'>configure</a></td>
+            <td> {{ hostname }} <a class="btn btn-sm float-end" href='/server'>configure</a></td>
         </tr>
         <tr>
             <td class="heading">Version</td>
-            <td> {{ version }} <a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a></td>
+            <td> {{ version }} <a class="btn btn-sm float-end" href='/hw_proxy/upgrade/'>update</a></td>
         </tr>
         <tr>
             <td class="heading">IP Address</td>
@@ -104,16 +104,16 @@
         </tr>
         <tr>
             <td class="heading">Network</td>
-            <td>{{ network_status }} <a class="btn btn-sm float-right" href='/wifi'>configure wifi</a></td>
+            <td>{{ network_status }} <a class="btn btn-sm float-end" href='/wifi'>configure wifi</a></td>
         </tr>
         <tr>
             <td class="heading">Server</td>
-            <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-right" href='/server'>configure</a></td>
+            <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-end" href='/server'>configure</a></td>
         </tr>
         {% if server_status != "Not Configured" %}
         <tr>
             <td class="heading">Six payment terminal</td>
-            <td>{{ six_terminal }} <a class="btn btn-sm float-right" href='/six_payment_terminal'>configure</a></td>
+            <td>{{ six_terminal }} <a class="btn btn-sm float-end" href='/six_payment_terminal'>configure</a></td>
         </tr>
         {% endif %}
         <tr>

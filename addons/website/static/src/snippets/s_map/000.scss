@@ -1,7 +1,7 @@
 
-$s-map-desc-bg: theme-color('primary') !default;
+$s-map-desc-bg: map-get($theme-colors, 'primary') !default;
 $s-map-desc-alpha: 0.80 !default;
-$s-map-desc-hover-bg: theme-color('primary') !default;
+$s-map-desc-hover-bg: map-get($theme-colors, 'primary') !default;
 $s-map-desc-hover-alpha: 0.55 !default;
 
 .s_map {
@@ -16,7 +16,7 @@ $s-map-desc-hover-alpha: 0.55 !default;
         z-index: 99;
         padding: 0 1em;
         background: rgba($s-map-desc-bg, $s-map-desc-alpha);
-        color: color-yiq(rgba($s-map-desc-bg, $s-map-desc-alpha));
+        color: color-contrast(rgba($s-map-desc-bg, $s-map-desc-alpha));
         transition: background-color 250ms ease;
 
         font {
@@ -37,7 +37,7 @@ $s-map-desc-hover-alpha: 0.55 !default;
     &:hover .description {
         background: $s-map-desc-hover-bg;
         background: rgba($s-map-desc-hover-bg, $s-map-desc-hover-alpha);
-        color: color-yiq(rgba($s-map-desc-hover-bg, $s-map-desc-hover-alpha));
+        color: color-contrast(rgba($s-map-desc-hover-bg, $s-map-desc-hover-alpha));
     }
     .s_map_color_filter {
         @include o-position-absolute(0, 0, 0, 0);

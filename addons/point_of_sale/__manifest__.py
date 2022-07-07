@@ -154,6 +154,7 @@
             # It is expected to add other lines coming from the web.assets_frontend
             # if we need to add more and more legacy stuff that would require other scss or js.
             ('include', 'web._assets_helpers'),
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),

@@ -222,7 +222,7 @@ $-seen-urls: ();
     @include o-apply-colors('menu');
     @include o-apply-colors('menu-custom');
     $-menu-color: o-color('menu-custom') or o-color('menu');
-    @if ($-menu-color and color-yiq($-menu-color) != $yiq-text-dark) {
+    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
         @extend .navbar-dark;
     }
     @include o-add-gradient('menu-gradient');
@@ -267,19 +267,19 @@ $-header-nav-link-height: $nav-link-height;
 }
 
 h2, h3, h4, h5, h6 {
-    color: color('o-cc1-h2');
+    color: map-get($colors, 'o-cc1-h2');
 }
 h3, h4, h5, h6 {
-    color: color('o-cc1-h3');
+    color: map-get($colors, 'o-cc1-h3');
 }
 h4, h5, h6 {
-    color: color('o-cc1-h4');
+    color: map-get($colors, 'o-cc1-h4');
 }
 h5, h6 {
-    color: color('o-cc1-h5');
+    color: map-get($colors, 'o-cc1-h5');
 }
 h6 {
-    color: color('o-cc1-h6');
+    color: map-get($colors, 'o-cc1-h6');
 }
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
@@ -308,11 +308,13 @@ font[class*='bg-'] {
         vertical-align: middle;
         text-align: center;
         // fa-1x is not ouput
-        @include size($size);
+        width: $size;
+        height: $size;
         line-height: $size;
         @for $i from 2 through 5 {
             &.fa-#{$i}x {
-                @include size($size + $i);
+                width: $size + $i;
+                height: $size + $i;
                 line-height: $size + $i;
             }
         }
@@ -347,17 +349,17 @@ font[class*='bg-'] {
         border: 0;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), $btn-line-height, 0);
-        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), $btn-line-height-lg, 0); }
-        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), $btn-line-height-sm, 0); }
-        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), $btn-line-height-sm, 0); }
+        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
     }
     &.rounded-circle {
         border-radius: 100px !important;
-        @include button-size(0.45rem, 1.35rem, $font-size-base, $btn-line-height, 30px);
-        &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, $btn-line-height-lg, 30px); }
-        &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, $btn-line-height-sm, 30px); }
-        &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), $btn-line-height-sm, 30px); }
+        @include button-size(0.45rem, 1.35rem, $font-size-base, 30px);
+        &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, 30px); }
+        &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, 30px); }
+        &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
     }
 }
 
@@ -494,7 +496,7 @@ table.table_desc tr td {
         width: 8%;
         opacity: 1;
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .carousel-control-prev,
         .carousel-control-next {
             display: none; // remove arrows on mobile
@@ -504,7 +506,8 @@ table.table_desc tr td {
     .carousel-control-next { justify-content: flex-end; }
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
-        @include size(auto);
+        width: auto;
+        height: auto;
         background-image: none;
         color: $body-color;
         &:before {
@@ -555,7 +558,7 @@ table.table_desc tr td {
     // Border
     &.s_carousel_bordered {
         border: 2rem solid rgba(0,0,0,0);
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             border: 0.5rem solid rgba(0,0,0,0);
         }
         // Controls - caret
@@ -563,13 +566,15 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f0da"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(2rem, 6rem);
+            width: 2rem;
+            height: 6rem;
             line-height: 6rem;
             font-size: 1.5rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(3rem, 1rem);
+            width: 3rem;
+            height: 1rem;
         }
     }
 
@@ -587,14 +592,16 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f061"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(4rem);
+            width: 4rem;
+            height: 4rem;
             line-height: 4rem;
             border-radius: 50%;
             font-size: 1.25rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(1rem);
+            width: 1rem;
+            height: 1rem;
             border-radius: 50%;
         }
     }
@@ -618,13 +625,15 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f105"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(2rem);
+            width: 2rem;
+            height: 2rem;
             line-height: 2rem;
             font-size: 1.25rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(1rem);
+            width: 1rem;
+            height: 1rem;
             &:hover:not(.active) {
                 background-color: rgba(255,255,255,.8);
             }
@@ -783,13 +792,13 @@ $-transition-duration: 200ms;
 }
 
 // Navbar
-.navbar .o_extra_menu_items.show > div {
+.navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid gray('200');
+            border-top: 1px solid map-get($grays, '200');
         }
         > a.dropdown-toggle {
-            background-color: gray('200');
+            background-color: map-get($grays, '200');
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
@@ -1310,7 +1319,7 @@ header {
     width: 1em;
     height: 1em;
     margin-right: 0.2em;
-    border-radius: $rounded-pill;
+    border-radius: $border-radius-pill;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1340,10 +1349,10 @@ span.list-inline-item.o_add_language:last-child {
         text-decoration: none;
 
         @if $-footer-color == $-copyright-color {
-            color: rgba(color-yiq($-footer-color), 0.5);
+            color: rgba(color-contrast($-footer-color), 0.5);
         }
 
-        @include hover-focus {
+        &:hover, &:focus {
             @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
             text-decoration: none;
         }
@@ -1359,7 +1368,7 @@ span.list-inline-item.o_add_language:last-child {
     }
     .figure-caption {
         @include o-position-absolute(auto, 0, 0, 0);
-        @include o-bg-color(rgba(theme-color('dark'), $o-theme-figcaption-opacity));
+        @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
         padding: $tooltip-padding-y $tooltip-padding-x;
         font-weight: $font-weight-bold;
         a {
@@ -1379,7 +1388,7 @@ span.list-inline-item.o_add_language:last-child {
 }
 
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
-.modal-footer > .float-left {
+.modal-footer > .float-start {
     margin-right: auto;
 }
 
@@ -1422,7 +1431,7 @@ span.list-inline-item.o_add_language:last-child {
     }
     7%, 21% {
         transform: scale(1.3);
-        background-color: rgba(theme-color('primary'), 0.8);
+        background-color: rgba(map-get($theme-colors, 'primary'), 0.8);
     }
 }
 
@@ -1465,7 +1474,7 @@ $ribbon-padding: 100px;
     }
     .o_cookies_discrete {
         .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 margin-bottom: 1rem;
             }
         }

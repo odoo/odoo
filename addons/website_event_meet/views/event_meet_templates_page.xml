@@ -34,12 +34,12 @@
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
-                The event <span t-out="meeting_room.event_id.name" class="font-weight-bold"/> is over.
+                The event <span t-out="meeting_room.event_id.name" class="fw-bold"/> is over.
                 <br/>
                 <span>Join us next time to chat about <b t-out="meeting_room.name"/>!</span>
             </div>
             <div t-else="" class="alert alert-warning text-center">
-                The event <span t-out="meeting_room.event_id.name" class="font-weight-bold"/>
+                The event <span t-out="meeting_room.event_id.name" class="fw-bold"/>
                 <span t-if="meeting_room.event_id.start_today">
                     starts in
                     <span t-if="meeting_room.event_id.start_remaining &gt;= 1" t-out="meeting_room.event_id.start_remaining"
@@ -65,7 +65,7 @@
             <div t-else="" class="d-flex flex-column">
                 <div id="o_wemeet_jitsi_iframe">
                     <div class="o_wjitsi_chat_room_loading position-absolute w-100 text-center text-muted">
-                        <i class="fa fa-spin fa-circle-o-notch mr-3"/>
+                        <i class="fa fa-spin fa-circle-o-notch me-3"/>
                         <span>Loading your room...</span>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
         <div class="mx-3">
             <div class="h5 my-3" t-out="meeting_room.name"/>
             <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
-                A chat among <t t-out="meeting_room.room_participant_count"/> <span class="font-weight-bold" t-out="meeting_room.target_audience"/>
+                A chat among <t t-out="meeting_room.room_participant_count"/> <span class="fw-bold" t-out="meeting_room.target_audience"/>
             </div>
         </div>
         <hr class="my-0"/>
@@ -101,11 +101,11 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_aside" name="Meeting Room: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'col-12 ps-0 pe-0 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
         <div class="bg-white o_wevent_online_page_aside_content">
             <div class="d-flex align-items-center justify-content-between mx-2">
                 <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other Rooms</span>
-                <a href="#collapse_meet_room_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
+                <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="fa fa-chevron-down d-lg-none"/>
                 </a>
             </div>

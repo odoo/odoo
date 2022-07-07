@@ -49,7 +49,7 @@ wTourUtils.registerEditionTour('shop_list_view_b2c', {
         },
         {
             context: "check variant price",
-            trigger: 'iframe .custom-radio:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("55.44")',
+            trigger: 'iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("55.44")',
             run: () => {}, // It's a check.
         },
         {

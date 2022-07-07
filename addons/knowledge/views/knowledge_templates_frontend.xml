@@ -14,7 +14,7 @@
             <div class="container-fluid h-100 o_knowledge_form_view" t-att-data-article-id="article.id if article else False">
                 <div class="row h-100">
                     <div t-att-class="'p-0 overflow-auto' + (' col-sm-2' if show_sidebar else ' d-none')">
-                        <div t-att-class="'o_knowledge_aside border-bottom border-right flex-column h-100 w-100' + (' d-flex' if show_sidebar else ' d-none')">
+                        <div t-att-class="'o_knowledge_aside border-bottom border-end flex-column h-100 w-100' + (' d-flex' if show_sidebar else ' d-none')">
                             <div class="p-3">
                                 <input type="text" class="form-control knowledge_search_bar" placeholder="Search an Article..."/>
                             </div>
@@ -40,7 +40,7 @@
                                 <div class="d-flex align-items-center p-3" t-else="">
                                     <!-- Title -->
                                     <span t-out="article.name" />
-                                    <a href="#" class="o_favorites_toggle_button pl-1" t-att-data-article-id="article.id">
+                                    <a href="#" class="o_favorites_toggle_button ps-1" t-att-data-article-id="article.id">
                                         <i t-if="article.is_user_favorite" class="fa fa-star" />
                                         <i t-else="" class="fa fa-star-o" />
                                     </a>
@@ -48,12 +48,12 @@
                                 <!-- Log In -->
                                 <t t-call="portal.placeholder_user_sign_in">
                                     <t t-set="_item_class" t-valuef="d-flex align-items-center p-2"/>
-                                    <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                                    <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                                 </t>
                                 <t t-call="portal.user_dropdown">
                                     <t t-set="_user_name" t-value="True"/>
                                     <t t-set="_item_class" t-valuef="d-flex align-items-center p-2"/>
-                                    <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                                    <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                                 </t>
                             </div>
                             <div class="p-3 text-center" t-if="not article">

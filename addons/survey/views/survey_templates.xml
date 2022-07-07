@@ -29,8 +29,8 @@
             <div id="wrap" class="oe_structure oe_empty"/>
         </xpath>
         <xpath expr="//footer" position="after">
-            <div class="py-3 m-0 p-0 text-right">
-                <div class="o_survey_progress_wrapper d-inline-block pr-1 text-left">
+            <div class="py-3 m-0 p-0 text-end">
+                <div class="o_survey_progress_wrapper d-inline-block pe-1 text-start">
                     <t t-call="survey.survey_progression"
                         t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page) and not survey_form_readonly">
                         <t t-if="survey.questions_layout == 'page_per_section'">
@@ -43,7 +43,7 @@
                         </t>
                     </t>
                 </div>
-                <div class="o_survey_brand_message float-right rounded mr-3 border">
+                <div class="o_survey_brand_message float-end rounded me-3 border">
                     <div class="px-2 py-2 d-inline-block" t-call="web.brand_promotion_message">
                         <t t-set="_message"></t>
                         <t t-set="_utm_medium" t-valuef="survey"/>
@@ -78,7 +78,7 @@
                             t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
                     </div>
                     <div class="o_survey_timer col-lg-2 pt-4">
-                        <h1 class="o_survey_timer_container timer text-right">
+                        <h1 class="o_survey_timer_container timer text-end">
                         </h1>
                     </div>
                 </div>
@@ -130,10 +130,10 @@
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">A problem has occurred</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </header>
                     <main class="modal-body"><p>To take this survey, please close all other tabs on <strong class="text-danger"></strong>.</p></main>
-                    <footer class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Continue here</button></footer>
+                    <footer class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continue here</button></footer>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
             <div class='mb32'>
                 <div t-field='survey.description' class="oe_no_empty pb-5"/>
                 <t t-if="answer.is_session_answer">
-                    <div class="font-weight-bold">
+                    <div class="fw-bold">
                         The session will begin automatically when the host starts.
                     </div>
                 </t>
@@ -153,7 +153,7 @@
                         <p>
                             <span t-if="not survey.certification">Time limit for this survey: </span>
                             <span t-else="">Time limit for this certification: </span>
-                            <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+                            <span class="fw-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
                         </p>
                     </div>
                     <button type="submit" value="start" class="btn btn-primary btn-lg">
@@ -164,7 +164,7 @@
                             Start Survey
                         </t>
                     </button>
-                    <span class="o_survey_enter font-weight-bold text-muted ml-2 d-none d-md-inline">or press Enter</span>
+                    <span class="o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline">or press Enter</span>
                 </t>
             </div>
         </div>
@@ -187,7 +187,7 @@
 
             <div class="text-center mt16 mb256">
                 <button type="submit" value="finish" class="btn btn-primary">Submit</button>
-                    <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">
+                    <span class="fw-bold text-muted ms-2 d-none d-md-inline">
                         <span id="enter-tooltip">or press Enter</span>
                     </span>
             </div>
@@ -208,7 +208,7 @@
                         <t t-if="not survey_last">Continue</t>
                         <t t-else="">Submit</t>
                     </button>
-                    <span class="font-weight-bold text-muted ml-2 d-none d-md-inline" id="enter-tooltip"> or press Enter</span>
+                    <span class="fw-bold text-muted ms-2 d-none d-md-inline" id="enter-tooltip"> or press Enter</span>
                 </div>
             </div>
         </t>
@@ -229,11 +229,11 @@
                         <t t-call="survey.question_container" />
                     </div>
                 </fieldset>
-                <div t-if="answer.question_time_limit_reached and not has_answered" class="font-weight-bold">Sorry, you have not been fast enough.</div>
-                <div t-else="" class="font-weight-bold">We have registered your answer! Please wait for the host to go to the next question.</div>
+                <div t-if="answer.question_time_limit_reached and not has_answered" class="fw-bold">Sorry, you have not been fast enough.</div>
+                <div t-else="" class="fw-bold">We have registered your answer! Please wait for the host to go to the next question.</div>
             </t>
             <t t-elif="answer.is_session_answer and question.is_page and not is_html_empty(question.description)">
-                <div class="font-weight-bold mt-5">Pay attention to the host screen until the next question.</div>
+                <div class="fw-bold mt-5">Pay attention to the host screen until the next question.</div>
             </t>
             <t t-else="">
                 <div class="mt-5">
@@ -246,7 +246,7 @@
                             <t t-if="answer.is_session_answer or survey_last">Submit</t>
                             <t t-else="">Continue</t>
                         </button>
-                        <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">
+                        <span class="fw-bold text-muted ms-2 d-none d-md-inline">
                             <span id="enter-tooltip">or press Enter</span>
                         </span>
                     </div>
@@ -288,7 +288,7 @@
                     </div>
                     <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
                         <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
-                        <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
+                        <div>You received the badge <span class="fw-bold" t-esc="survey.certification_badge_id.name"/>!</div>
                     </div>
                 </div>
             </div>
@@ -318,9 +318,9 @@
         <!--Use Key selection if number of choices is < 26 to keep Z for other choice if any-->
         <t t-set="letters" t-value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
         <t t-set="useKeySelection" t-value="len(question.suggested_answer_ids) &lt; len(letters) and survey.questions_layout == 'page_per_question'"/>
-        <!-- Extra 'right' margin is added on layouts that are not "page_per_question" to align with choices questions, since all choices have a mr-2 class (pixel perfect yay...) -->
+        <!-- Extra 'right' margin is added on layouts that are not "page_per_question" to align with choices questions, since all choices have a me-2 class (pixel perfect yay...) -->
         <t t-set="extra_right_margin" t-value="survey.questions_layout != 'page_per_question' and question.question_type not in ['simple_choice', 'multiple_choice']"/>
-        <div t-att-class="'js_question-wrapper pb-4 %s %s' % ('d-none' if not display_question else '', 'mr-2' if extra_right_margin else '')"
+        <div t-att-class="'js_question-wrapper pb-4 %s %s' % ('d-none' if not display_question else '', 'me-2' if extra_right_margin else '')"
              t-att-id="question.id" t-att-data-required="question.constr_mandatory"
              t-att-data-constr-error-msg="question.constr_error_msg"
              t-att-data-validation-error-msg="question.validation_error_msg">
@@ -381,9 +381,7 @@
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_date(answer_lines[0].value_date) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
-            <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
-            </div>
+            <div t-if="not survey_form_readonly" class="position-absolute input-group-text text-primary border-0 bg-transparent p-0" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
         </div>
     </template>
 
@@ -396,9 +394,7 @@
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_datetime(answer_lines[0].value_datetime) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
-            <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
-            </div>
+            <div t-if="not survey_form_readonly" class="position-absolute input-group-text text-primary border-0 bg-transparent p-0" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
         </div>
     </template>
 
@@ -435,11 +431,11 @@
                     <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'" />
 
                     <label t-att-for="str(question.id) + '_' + str(label.id)"
-                           t-att-class="'o_survey_choice_btn mr-2 mb-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_selected else '')">
+                           t-att-class="'o_survey_choice_btn me-2 mb-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_selected else '')">
                         <t t-call="survey.survey_selection_key">
-                            <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
+                            <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
                         </t>
-                        <span class="ml-2" t-field='label.value'/>
+                        <span class="ms-2" t-field='label.value'/>
                         <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
                                t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
                                t-att-name='question.id'
@@ -447,12 +443,12 @@
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <t t-if="has_correct_answer and answer_selected">
                             <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
-                            <i t-if="is_correct" class="float-right mt-1 position-relative d-inline fa fa-check-circle"/>
-                            <i t-else="" class="float-right mt-1 position-relative d-inline fa fa-times-circle"/>
+                            <i t-if="is_correct" class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                            <i t-else="" class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
                         </t>
                         <t t-else="">
-                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                            <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                         </t>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
@@ -460,18 +456,18 @@
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <div class="d-flex flex-wrap">
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
                         <t t-set="item_idx" t-value="item_idx + 1"/>
                         <t t-call="survey.survey_selection_key">
-                            <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
+                            <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
                         </t>
                         <input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute" value="-1"
                                t-att-name='question.id'
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ml-2" t-field="question.comments_message" />
-                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        <span class="ms-2" t-field="question.comments_message" />
+                        <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                        <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1  #{'d-none' if not comment_line else ''}">
@@ -479,7 +475,7 @@
                               t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 pl-3 pr-4">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 ps-3 pe-4">
                 <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
                           t-att-placeholder="question.comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
@@ -505,23 +501,23 @@
                     <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'" />
                     <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'" />
 
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
                         <t t-call="survey.survey_selection_key">
-                            <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
+                            <t t-set="selection_key_class" t-value="'position-relative float-start d-flex'"/>
                         </t>
                         <input type="checkbox" t-att-value='label.id' class="o_survey_form_choice_item invisible position-absolute"
                                t-att-name="question.id"
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ml-2" t-field='label.value'/>
+                        <span class="ms-2" t-field='label.value'/>
                         <t t-if="has_correct_answer and answer_selected">
                             <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
-                            <i t-if="is_correct" class="float-right mt-1 position-relative d-inline fa fa-check-circle"/>
-                            <i t-else="" class="float-right mt-1 position-relative d-inline fa fa-times-circle"/>
+                            <i t-if="is_correct" class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
+                            <i t-else="" class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
                         </t>
                         <t t-else="">
-                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                            <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                         </t>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
@@ -529,18 +525,18 @@
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <div class="d-flex flex-wrap">
-                    <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                    <label t-att-class="'o_survey_choice_btn form-label me-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
                         <t t-set="item_idx" t-value="item_idx + 1"/>
                         <t t-call="survey.survey_selection_key">
-                            <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
+                            <t t-set="selection_key_class" t-value="'position-relative float-start d-flex'"/>
                         </t>
                         <input type="checkbox" class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute" value="-1"
                                t-att-name="question.id"
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ml-2" t-field="question.comments_message" />
-                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        <span class="ms-2" t-field="question.comments_message" />
+                        <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
+                        <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
@@ -548,7 +544,7 @@
                               t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 pl-3 pr-4">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 ps-3 pe-4">
                 <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
                           t-att-placeholder="question.comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
@@ -557,14 +553,14 @@
 
     <template id="question_matrix" name="Question: matrix">
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <table class="table table-hover o_survey_question_matrix text-white text-center mb-0"
+        <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.question_type"
                t-att-data-sub-questions="question.matrix_row_ids.ids">
             <thead>
                 <tr>
-                    <th class="border-0"> </th>
-                    <th class="border-0 font-weight-normal" t-foreach="question.suggested_answer_ids" t-as="col_label"><span t-field="col_label.value" /></th>
+                    <th> </th>
+                    <th class="fw-normal" t-foreach="question.suggested_answer_ids" t-as="col_label"><span t-field="col_label.value" /></th>
                 </tr>
             </thead>
             <tbody>
@@ -572,10 +568,10 @@
                 <!-- For matrix, we have an extra check because we have rows * columns total options -->
                 <t t-set="useKeySelection" t-value="useKeySelection and (len(question.suggested_answer_ids) * len(question.matrix_row_ids)) &lt; len(letters)" />
                 <tr class="bg-white text-white" t-foreach="question.matrix_row_ids" t-as="row_label" t-att-id="row_label.id">
-                    <th class="border-0 font-weight-normal text-left"><span t-field="row_label.value" /></th>
+                    <th class="fw-normal text-start"><span t-field="row_label.value" /></th>
                     <t t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == col_label and line.matrix_row_id == row_label)"/>
-                        <td t-att-class="'o_survey_matrix_btn text-primary border-0 position-relative %s'
+                        <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'
                         % ('o_survey_selected' if answer else '')">
                             <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
                                    t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
@@ -589,7 +585,7 @@
                             % ('check-square' if question.matrix_subtype == 'multiple' else 'check-circle')"></i>
                             <t t-call="survey.survey_selection_key">
                                 <t t-set="selection_key_class"
-                                   t-value="'position-absolute float-right font-weight-bold %s' % ('o_survey_radio_btn' if question.matrix_subtype != 'multiple' else '')"/>
+                                   t-value="'position-absolute float-end fw-bold %s' % ('o_survey_radio_btn' if question.matrix_subtype != 'multiple' else '')"/>
                             </t>
                             <t t-set="item_idx" t-value="item_idx + 1"/>
                         </td>
@@ -606,7 +602,7 @@
 
     <template id="survey_selection_key">
         <div t-if="useKeySelection" t-att-class="'o_survey_choice_key bg-white rounded %s' % selection_key_class">
-             <span class="o_survey_key text-center position-absolute bg-white rounded-left py-0 pl-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
+             <span class="o_survey_key text-center position-absolute bg-white rounded-start py-0 ps-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
              <span class="text-primary text-center w-100 position-relative" t-esc="letters[item_idx]"/>
         </div>
     </template>

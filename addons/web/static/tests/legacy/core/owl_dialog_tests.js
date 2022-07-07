@@ -84,7 +84,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             // Basic layout with default properties
             assert.containsOnce(dialog, '.modal.o_technical_modal');
             assert.hasClass(dialog.querySelector('.modal .modal-dialog'), 'modal-lg');
-            assert.containsOnce(dialog, '.modal-header > button.close');
+            assert.containsOnce(dialog, '.modal-header > button.btn-close');
             assert.containsOnce(dialog, '.modal-footer > button.btn.btn-primary');
             assert.strictEqual(dialog.querySelector('.modal-body').innerText.trim(), "sup",
                 "Subcomponent should match with its given text");
@@ -261,7 +261,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             assert.containsOnce(document.body, '.o_dialog');
             assert.containsOnce(document.body, '.o_legacy_dialog');
 
-            await testUtils.dom.click(modals[modals.length - 1].querySelector('.close'));
+            await testUtils.dom.click(modals[modals.length - 1].querySelector('.btn-close'));
 
             modals = document.querySelectorAll('.modal');
             assert.notOk(modals[modals.length - 1].classList.contains('o_inactive_modal'),
@@ -355,7 +355,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                             </div>
                         </div>
                     </div>`
-                ).appendTo('body').modal();
+                ).appendTo('body').modal('show');
                 const modal = $modal[0];
                 modal.destroy = function () {
                     $modal.modal('hide');
@@ -514,12 +514,12 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 "wowl"
             );
 
-            await testUtils.dom.click(target.querySelector(`.o_dialog .modal-header .close`));
+            await testUtils.dom.click(target.querySelector(`.o_dialog .modal-header .btn-close`));
             assert.containsNone(target, ".o_dialog");
             assert.containsOnce(target, ".modal");
             assert.containsOnce(target, ".modal[tabindex='-1']");
 
-            await testUtils.dom.click(target.querySelector(`.modal-header .close`));
+            await testUtils.dom.click(target.querySelector(`.modal-header .btn-close`));
             assert.containsNone(target, ".o_dialog");
             assert.containsNone(target, ".modal");
         });

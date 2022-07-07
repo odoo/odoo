@@ -73,9 +73,9 @@ odoo.define('web.DropdownMenu', function (require) {
                 const threshold = document.documentElement.clientWidth / 2;
                 const { left, right } = this.el.getBoundingClientRect();
                 if (_t.database.parameters.direction === 'rtl') {
-                    return right > threshold ? 'dropdown-menu-left' : 'dropdown-menu-right';
+                    return right > threshold ? 'dropdown-menu-start' : 'dropdown-menu-end';
                 }
-                return left > threshold ? 'dropdown-menu-right' : 'dropdown-menu-left';
+                return left > threshold ? 'dropdown-menu-end' : 'dropdown-menu-start';
             }
             return '';
         }

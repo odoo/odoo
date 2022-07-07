@@ -16,7 +16,7 @@
 <template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
-            <i class="fa fa-download mr-1"/>
+            <i class="fa fa-download me-1"/>
             <t t-call="website_sale_slides.course_buy_course_link">
                 <t t-set="slide" t-value="aside_slide"/>
             </t>
@@ -26,7 +26,7 @@
 
 <template name="Buy Course To Download Resource Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
-        <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted mr-auto border-left pl-3">
+        <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted me-auto border-start ps-3">
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </span>
     </xpath>
@@ -61,7 +61,7 @@
 <template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
-            <i class="fa fa-download mr-1"/>
+            <i class="fa fa-download me-1"/>
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </li>
     </xpath>
@@ -100,7 +100,7 @@
         <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
             <div class="css_editable_mode_hidden">
                 <!-- real price -->
-                <div class="oe_price font-weight-bold text-nowrap h2 my-2"
+                <div class="oe_price fw-bold text-nowrap h2 my-2"
                      t-esc="product_info['price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
                 <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
@@ -110,7 +110,7 @@
                      t-esc="product_info['list_price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
             </div>
-            <div class="css_non_editable_mode_hidden decimal_precision oe_price font-weight-bold text-nowrap h2 my-2"
+            <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
                  t-att-data-precision="str(product_info['currency_id'].decimal_places)">
                 <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
             </div>
@@ -121,7 +121,7 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
                     <a id="add_to_cart" role="button" href="#"
-                       class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit"
+                       class="btn btn-primary d-block js_check_product o_js_add_to_cart a-submit"
                        data-animation-selector=".o_wslides_course_pict">
                         <i class="fa fa-shopping-cart"></i> Add to Cart
                     </a>

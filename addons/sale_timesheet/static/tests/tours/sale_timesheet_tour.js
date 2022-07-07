@@ -105,7 +105,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Timesheets page to log a timesheet',
     run: function (actions) {
         const notebookId = $('div[name="timesheet_ids"]').closest("div.tab-pane").attr('id');
-        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+        actions.click(this.$anchor.find(`a[data-bs-toggle="tab"][href="#${notebookId}"]`));
     },
 }, {
     trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
@@ -168,7 +168,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Settings page to check the allow_billable checkbox',
     run: function (actions) {
         const notebookId = $('div[name="allow_billable"]').closest("div.tab-pane").attr('id');
-        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+        actions.click(this.$anchor.find(`a[data-bs-toggle="tab"][href="#${notebookId}"]`));
     },
 }, {
     trigger: 'div[name="allow_billable"] > input',
@@ -193,7 +193,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: function (actions) {
         const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
-        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+        actions.click(this.$anchor.find(`a[data-bs-toggle="tab"][href="#${notebookId}"]`));
     },
 }, {
     trigger: 'div[name="sale_line_id"]',
@@ -258,7 +258,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: function (actions) {
         const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
-        actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
+        actions.click(this.$anchor.find(`a[data-bs-toggle="tab"][href="#${notebookId}"]`));
     },
 }, {
     trigger: 'div[name="sale_line_id"]',

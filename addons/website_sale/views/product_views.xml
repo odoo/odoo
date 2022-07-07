@@ -359,17 +359,17 @@
                             </div>
                             <!-- below 100 Kb: good -->
                             <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
-                                <t t-set="size_status" t-value="'badge-success'"/>
+                                <t t-set="size_status" t-value="'text-bg-success'"/>
                                 <t t-set="message">Acceptable file size</t>
                             </t>
                             <!-- below 1000 Kb: decent -->
                             <t t-elif="record.image_1920.raw_value.length &lt; 1000*1000">
-                                <t t-set="size_status" t-value="'badge-warning'" />
+                                <t t-set="size_status" t-value="'text-bg-warning'" />
                                 <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
                             </t>
                             <!-- above 1000 Kb: bad -->
                             <t t-else="1">
-                                <t t-set="size_status" t-value="'badge-danger'"/>
+                                <t t-set="size_status" t-value="'text-bg-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
                             <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_1920.value" t-att-title="message"/>

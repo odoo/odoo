@@ -4,7 +4,7 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div id="slideshow_sample" class="carousel slide" data-ride="carousel" data-interval="0" style="margin: 0 12px;">
+            <div id="slideshow_sample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="0" style="margin: 0 12px;">
                 <div class="carousel-inner" style="padding: 0;">
                     <div class="carousel-item active">
                         <img class="img img-fluid d-block" src="/web/image/website.library_image_08" data-name="Image" data-index="0"/>
@@ -20,20 +20,20 @@
                     <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
                         <i class="fa fa-chevron-left"/>
                     </li>
-                    <li data-target="#slideshow_sample" data-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
-                    <li data-target="#slideshow_sample" data-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
-                    <li data-target="#slideshow_sample" data-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
+                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
+                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
+                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
                     <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
                         <i class="fa fa-chevron-right"/>
                     </li>
                 </ul>
-                <a class="carousel-control-prev o_we_no_overlay" href="#slideshow_sample" data-slide="prev" aria-label="Previous" title="Previous">
+                <a class="carousel-control-prev o_we_no_overlay" href="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
                     <span class="fa fa-chevron-left fa-2x text-white"/>
-                    <span class="sr-only">Previous</span>
+                    <span class="visually-hidden">Previous</span>
                 </a>
-                <a class="carousel-control-next o_we_no_overlay" href="#slideshow_sample" data-slide="next" aria-label="Next" title="Next">
+                <a class="carousel-control-next o_we_no_overlay" href="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                     <span class="fa fa-chevron-right fa-2x text-white"/>
-                    <span class="sr-only">Next</span>
+                    <span class="visually-hidden">Next</span>
                 </a>
             </div>
         </div>

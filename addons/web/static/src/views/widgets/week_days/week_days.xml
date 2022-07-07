@@ -6,7 +6,7 @@
             <table class="table table-responsive mb-0">
                 <tr>
                     <t t-foreach="weekdays" t-as="day" t-key="day">
-                        <th class="text-center border font-weight-bold">
+                        <th class="text-center border fw-bold">
                             <div class="o_recurrent_weekday_label" t-att-data-tooltip="props.record.fields[day].string">
                                 <t t-esc="props.record.fields[day].string" />
                             </div>

@@ -35,9 +35,9 @@
                         <div class="o-dashboard-action mx-3 my-1" t-att-data-idx="action_index">
                             <h3 t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} p-2 m-2">
                                 <span> <t t-esc="action.title"/> </span>
-                                <span class="btn float-right p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
-                                <span class="btn float-right p-1 text-muted" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-minimize"/></span>
-                                <span class="btn float-right p-1 text-muted" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-maximize"/></span>
+                                <span class="btn float-end p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-minimize"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-maximize"/></span>
                             </h3>
                             <BoardAction t-if="!action.isFolded" action="action" />
                         </div>

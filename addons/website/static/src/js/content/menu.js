@@ -440,7 +440,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'right' : 'left';
         return this._super.apply(this, arguments);
     },
 
@@ -482,7 +482,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         var menuWidth = $menu.outerWidth();
         var pageWidth = $('#wrapwrap').outerWidth();
 
-        $menu.removeClass('dropdown-menu-left dropdown-menu-right');
+        $menu.removeClass('dropdown-menu-start dropdown-menu-end');
 
         var alignment = this.defaultAlignment;
         if ($li.nextAll(':visible').length === 0) {

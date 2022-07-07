@@ -3892,7 +3892,7 @@ QUnit.module("Fields", (hooks) => {
         assert.hasClass(document.body, "modal-open");
 
         // Close second modal
-        await click(nextModal, "button[class='close']");
+        await click(nextModal, "button[class='btn-close']");
 
         assert.containsOnce(target, ".modal");
         assert.strictEqual(
@@ -3904,7 +3904,7 @@ QUnit.module("Fields", (hooks) => {
         assert.hasClass(document.body, "modal-open");
 
         // Close first modal
-        await click(originalModal, "button[class='close']");
+        await click(originalModal, "button[class='btn-close']");
         assert.containsNone(target, ".modal");
         assert.doesNotHaveClass(document.body, "modal-open");
     });

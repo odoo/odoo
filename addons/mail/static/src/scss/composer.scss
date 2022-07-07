@@ -25,7 +25,7 @@
 
 @mixin o-viewer-black-btn {
     background-color: rgba(black, 0.4);
-    color: rgba(theme-color('light'), 0.7);
+    color: rgba(map-get($theme-colors, 'light'), 0.7);
 
     &:hover {
         background-color: rgba(black, 0.6);
@@ -33,7 +33,7 @@
     }
 
     &.disabled {
-        color: gray('600');
+        color: map-get($grays, '600');
         background: none;
     }
 }
@@ -47,6 +47,12 @@
         position: relative;
         width: 100%;
         height: 100%;
+        padding: 0;
+
+        /* Act as `modal-content` */
+        & > div {
+            pointer-events: auto;
+        }
 
         .o_viewer-header {
             display: flex;
@@ -57,7 +63,7 @@
             color: #FFFFFF;
 
             a {
-                @include o-hover-text-color(rgba(theme-color('light'), 0.6), white);
+                @include o-hover-text-color(rgba(map-get($theme-colors, 'light'), 0.6), white);
             }
 
             .o_image_caption {
@@ -122,9 +128,9 @@
                     height: 80%;
                 }
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     .o_viewer_pdf, .o_viewer_text {
-                        width: map-get($sizes, 100);
+                        width: 100%;
                     }
                 }
             }

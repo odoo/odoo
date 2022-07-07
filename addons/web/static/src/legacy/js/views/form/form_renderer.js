@@ -18,8 +18,8 @@ var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
-        'click .o_notification_box .close': '_onTranslateNotificationClose',
-        'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
+        'click .o_notification_box .btn-close': '_onTranslateNotificationClose',
+        'shown.bs.tab a[data-bs-toggle="tab"]': '_onNotebookTabChanged',
         'click .o_form_label': '_onFieldLabelClicked',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
@@ -568,7 +568,7 @@ var FormRenderer = BasicRenderer.extend({
                 $result.append(dom.renderButton({
                     attrs: {
                         'class': 'oe_stat_button o_button_more dropdown-toggle',
-                        'data-toggle': 'dropdown',
+                        'data-bs-toggle': 'dropdown',
                     },
                     text: _t("More"),
                 }));
@@ -875,7 +875,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTabHeader: function (page, page_id) {
         var $a = $('<a>', {
-            'data-toggle': 'tab',
+            'data-bs-toggle': 'tab',
             disable_anchor: 'true',
             href: '#' + page_id,
             class: 'nav-link',
@@ -1367,6 +1367,8 @@ var FormRenderer = BasicRenderer.extend({
      * @param {MouseEvent} ev
      */
     _onTranslateNotificationClose: function(ev) {
+        const notificationElement = this.el.querySelector('.o_notification_box');
+        Alert.getOrCreateInstance(notificationElement).close();
         delete this.alertFields[this.state.res_id];
     },
 });

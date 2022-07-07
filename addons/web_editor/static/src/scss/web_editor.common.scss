@@ -14,56 +14,56 @@
     // Most of the keys of the color combination color should be null. We have
     // to indicate their fallback values.
     @for $index from 1 through length($o-color-combinations) {
-        $-bg-color: o-color(color('o-cc#{$index}-bg'));
+        $-bg-color: o-color(map-get($colors, 'o-cc#{$index}-bg'));
 
-        $-text: color('o-cc#{$index}-text') or color-yiq(o-color('o-cc#{$index}-bg'));
-        $-headings: color('o-cc#{$index}-headings') or $-text;
-        $-h2: color('o-cc#{$index}-h2') or $-headings;
-        $-h3: color('o-cc#{$index}-h3') or $-h2;
-        $-h4: color('o-cc#{$index}-h4') or $-h3;
-        $-h5: color('o-cc#{$index}-h5') or $-h4;
-        $-h6: color('o-cc#{$index}-h6') or $-h5;
+        $-text: map-get($colors, 'o-cc#{$index}-text') or color-contrast(o-color('o-cc#{$index}-bg'));
+        $-headings: map-get($colors, 'o-cc#{$index}-headings') or $-text;
+        $-h2: map-get($colors, 'o-cc#{$index}-h2') or $-headings;
+        $-h3: map-get($colors, 'o-cc#{$index}-h3') or $-h2;
+        $-h4: map-get($colors, 'o-cc#{$index}-h4') or $-h3;
+        $-h5: map-get($colors, 'o-cc#{$index}-h5') or $-h4;
+        $-h6: map-get($colors, 'o-cc#{$index}-h6') or $-h5;
 
-        @if not color('o-cc#{$index}-text') {
+        @if not map-get($colors, 'o-cc#{$index}-text') {
             @include print-variable('o-cc#{$index}-text', $-text);
         }
-        @if not color('o-cc#{$index}-headings') {
+        @if not map-get($colors, 'o-cc#{$index}-headings') {
             @include print-variable('o-cc#{$index}-headings', $-headings);
         }
-        @if not color('o-cc#{$index}-h2') {
+        @if not map-get($colors, 'o-cc#{$index}-h2') {
             @include print-variable('o-cc#{$index}-h2', $-h2);
         }
-        @if not color('o-cc#{$index}-h3') {
+        @if not map-get($colors, 'o-cc#{$index}-h3') {
             @include print-variable('o-cc#{$index}-h3', $-h3);
         }
-        @if not color('o-cc#{$index}-h4') {
+        @if not map-get($colors, 'o-cc#{$index}-h4') {
             @include print-variable('o-cc#{$index}-h4', $-h4);
         }
-        @if not color('o-cc#{$index}-h5') {
+        @if not map-get($colors, 'o-cc#{$index}-h5') {
             @include print-variable('o-cc#{$index}-h5', $-h5);
         }
-        @if not color('o-cc#{$index}-h6') {
+        @if not map-get($colors, 'o-cc#{$index}-h6') {
             @include print-variable('o-cc#{$index}-h6', $-h6);
         }
 
-        $-link: color('o-cc#{$index}-link');
-        $-link-color: if($-link, o-color($-link), theme-color('primary'));
+        $-link: map-get($colors, 'o-cc#{$index}-link');
+        $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
         @include print-variable('o-cc#{$index}-link', auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link'));
 
-        $-btn-primary: color('o-cc#{$index}-btn-primary');
+        $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
         @if not $-btn-primary {
-            @include print-variable('o-cc#{$index}-btn-primary', theme-color('primary'));
+            @include print-variable('o-cc#{$index}-btn-primary', map-get($theme-colors, 'primary'));
         }
-        @if not color('o-cc#{$index}-btn-primary-border') {
-            @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or theme-color('primary'));
+        @if not map-get($colors, 'o-cc#{$index}-btn-primary-border') {
+            @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or map-get($theme-colors, 'primary'));
         }
 
-        $-btn-secondary: color('o-cc#{$index}-btn-secondary');
+        $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
         @if not $-btn-secondary {
-            @include print-variable('o-cc#{$index}-btn-secondary', theme-color('secondary'));
+            @include print-variable('o-cc#{$index}-btn-secondary', map-get($theme-colors, 'secondary'));
         }
-        @if not color('o-cc#{$index}-btn-secondary-border') {
-            @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or theme-color('secondary'));
+        @if not map-get($colors, 'o-cc#{$index}-btn-secondary-border') {
+            @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or map-get($theme-colors, 'secondary'));
         }
     }
 
@@ -118,7 +118,7 @@ html, body {
             min-width: 20px;
         }
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .table-responsive > table.table {
             table-layout: auto;
         }
@@ -194,7 +194,7 @@ img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-lar
 img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
     padding: 32px;
 }
-img.ml-auto, img.mx-auto {
+img.ms-auto, img.mx-auto {
     display: block;
 }
 
@@ -545,7 +545,7 @@ a.o_underline {
     }
 }
 
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
     odoo-wysiwyg-container {
         .panel-heading.note-toolbar {
             overflow-x: auto;
@@ -597,20 +597,8 @@ a.o_underline {
                         }
                     }
 
-                    > .input-group.ml-2 {
+                    > .input-group.ms-2 {
                         margin-left: 0 !important;
-
-                        > .input-group-append {
-                            width: 100%;
-
-                            > .btn {
-                                width: 100%;
-                            }
-
-                            > .ml-2 {
-                                margin-left: 0 !important;
-                            }
-                        }
                     }
                 }
 
@@ -648,7 +636,7 @@ a.o_underline {
 blockquote {
     padding: $spacer/2 $spacer;
     border-left: 5px solid;
-    border-color: gray('300');
+    border-color: map-get($grays, '300');
     font-style: italic;
 }
 
@@ -656,7 +644,7 @@ blockquote {
 // outside of the $theme-colors too (but not btn-, alert-, etc).
 @for $index from 1 through 5 {
     $-color-name: 'o-color-#{$index}';
-    $-color: color($-color-name);
+    $-color: map-get($colors, $-color-name);
     @include bg-variant(".bg-#{$-color-name}", $-color);
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
@@ -671,7 +659,7 @@ blockquote {
             &, h6 { // Quick fix: sometimes we use h6 in dropdowns
                 color: $dropdown-link-color !important;
 
-                @include hover-focus {
+                &:hover, &:focus {
                     color: $dropdown-link-hover-color !important;
                 }
             }
@@ -685,19 +673,19 @@ blockquote {
     }
 }
 @for $index from 1 through length($o-color-combinations) {
-    $-bg: color('o-cc#{$index}-bg');
-    $-text: color('o-cc#{$index}-text');
-    $-headings: color('o-cc#{$index}-headings');
-    $-h2: color('o-cc#{$index}-h2');
-    $-h3: color('o-cc#{$index}-h3');
-    $-h4: color('o-cc#{$index}-h4');
-    $-h5: color('o-cc#{$index}-h5');
-    $-h6: color('o-cc#{$index}-h6');
-    $-link: color('o-cc#{$index}-link');
-    $-btn-primary: color('o-cc#{$index}-btn-primary');
-    $-btn-primary-border: color('o-cc#{$index}-btn-primary-border');
-    $-btn-secondary: color('o-cc#{$index}-btn-secondary');
-    $-btn-secondary-border: color('o-cc#{$index}-btn-secondary-border');
+    $-bg: map-get($colors, 'o-cc#{$index}-bg');
+    $-text: map-get($colors, 'o-cc#{$index}-text');
+    $-headings: map-get($colors, 'o-cc#{$index}-headings');
+    $-h2: map-get($colors, 'o-cc#{$index}-h2');
+    $-h3: map-get($colors, 'o-cc#{$index}-h3');
+    $-h4: map-get($colors, 'o-cc#{$index}-h4');
+    $-h5: map-get($colors, 'o-cc#{$index}-h5');
+    $-h6: map-get($colors, 'o-cc#{$index}-h6');
+    $-link: map-get($colors, 'o-cc#{$index}-link');
+    $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
+    $-btn-primary-border: map-get($colors, 'o-cc#{$index}-btn-primary-border');
+    $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
+    $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
 
     // Those color classes color multiple elements when applied on a snippet.
     // Those rules are not important so that they can be overridden through
@@ -730,12 +718,12 @@ blockquote {
             }
 
             // Links
-            $-link-color: if($-link, o-color($-link), theme-color('primary'));
+            $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
             $-link-hover-color: darken($-link-color, 15%);
             a:not(.btn), .btn-link {
                 color: auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link');
 
-                @include hover {
+                &:hover {
                     color: auto-contrast($-link-hover-color, $-bg-color, 'o-cc#{$index}-link');
                 }
             }
@@ -743,7 +731,7 @@ blockquote {
             // Buttons
 
             // Primary
-            $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), theme-color('primary'));
+            $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
             $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
             .btn-fill-primary {
                 @include button-variant($-btn-primary-color, $-btn-primary-border-color);
@@ -753,7 +741,7 @@ blockquote {
             }
 
             // Secondary
-            $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), theme-color('secondary'));
+            $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
             $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
             .btn-fill-secondary {
                 @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
@@ -769,7 +757,7 @@ blockquote {
                 .nav-link.active,
                 .show > .nav-link {
                     background-color: $-btn-primary-color;
-                    color: color-yiq($-btn-primary-color);
+                    color: color-contrast($-btn-primary-color);
                 }
             }
             .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
@@ -778,10 +766,10 @@ blockquote {
                 &:active {
                     &, h6 { // Quick fix: sometimes we use h6 in dropdowns
                         @include gradient-bg($-btn-primary-color);
-                        color: color-yiq($-btn-primary-color) !important;
+                        color: color-contrast($-btn-primary-color) !important;
 
-                        @include hover-focus {
-                            color: color-yiq($-btn-primary-color) !important;
+                        &:hover, &:focus {
+                            color: color-contrast($-btn-primary-color) !important;
                         }
                     }
                 }
@@ -791,7 +779,7 @@ blockquote {
 
                 &.active {
                     background-color: $-btn-primary-color;
-                    color: color-yiq($-btn-primary-color);
+                    color: color-contrast($-btn-primary-color);
                     border-color: $-btn-primary-color;
                 }
             }

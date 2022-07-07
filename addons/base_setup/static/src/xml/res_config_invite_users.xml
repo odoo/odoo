@@ -10,7 +10,7 @@
         <t t-if="widget.pending_users.length">
             <p class="o_form_label pt-3">Pending Invitations:</p>
             <span t-foreach="widget.pending_users" t-as="pending">
-                <a href="#" class="badge badge-pill o_web_settings_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
+                <a href="#" class="badge rounded-pill text-primary o_web_settings_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
             </span>
             <t t-if="widget.pending_users.length &lt; widget.pending_count">
                 <br/>

@@ -28,7 +28,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         --o-wsale-card-border-width: 0;
         --o-wsale-card-info-padding: #{map-get($spacers, 3)} 0;
         --o-wsale-card-thumb-border-radius: #{$o-wsale-products-layout-grid-gutter-width * .5};
-        --o-wsale-card-thumb-shadow: 0 13px 27px -5px #{scale-color(theme-color('primary'), $alpha: -90%)},
+        --o-wsale-card-thumb-shadow: 0 13px 27px -5px #{scale-color(map-get($theme-colors, 'primary'), $alpha: -90%)},
                                      0 8px 16px -8px rgba(0, 0, 0, .28);
     }
     .o_wsale_design_grid {
@@ -84,7 +84,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         font-weight: $font-weight-bold;
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .td-img {
             display: none;
         }
@@ -104,12 +104,12 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     }
 
     .breadcrumb {
-        background-color: gray('100');
+        background-color: map-get($grays, '100');
         padding: 0.6rem 0.75rem;
         font-size: 0.9rem;
 
         a {
-            color: theme-color('primary');
+            color: map-get($theme-colors, 'primary');
             font-weight: bold;
         }
         .breadcrumb-item + .breadcrumb-item::before {
@@ -119,11 +119,11 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         }
     }
 
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: rgba(0, 0, 0, 0.025);
+    .table-striped tbody tr td:nth-of-type(even) {
+        --table-accent-bg: rgba(0, 0, 0, 0.025);
     }
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0);
+    .table-striped tbody tr td:nth-of-type(odd) {
+        --table-accent-bg: rgba(0, 0, 0, 0);
     }
     *:not(#product_attributes_simple) > .table-sm tbody td {
         padding-top: 0.75rem;
@@ -133,35 +133,35 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         #wsale_products_categories_collapse {
             label {
                 &:hover {
-                    color: theme-color('primary');
+                    color: map-get($theme-colors, 'primary');
                     cursor: pointer;
                 }
             }
             i.fa {
-                color: gray('500');
+                color: map-get($grays, '500');
             }
         }
         .o_categories_collapse_title, .o_products_attributes_title {
             font-size: 0.9rem;
         }
-        .custom-control.custom-checkbox {
-            .custom-control-input {
-                ~ .custom-control-label:before {
+        .custom-control.form-check {
+            .form-check-input {
+                ~ .form-check-label:before {
                     outline: none;
                     border: 0px;
-                    border: 2px solid gray('400');
+                    border: 2px solid map-get($grays, '400');
                     border-radius: 0px;
                     cursor: pointer;
                 }
                 &:checked {
-                    ~ .custom-control-label:before {
-                        background-color: theme-color('primary');
-                        border: 2px solid theme-color('primary');
+                    ~ .form-check-label:before {
+                        background-color: map-get($theme-colors, 'primary');
+                        border: 2px solid map-get($theme-colors, 'primary');
                     }
                 }
             }
             label:hover {
-                color: theme-color('primary');
+                color: map-get($theme-colors, 'primary');
                 cursor: pointer;
             }
         }
@@ -182,21 +182,23 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         }
     }
     .o_wsale_apply_layout > .btn {
-        color: gray('500');
+        color: map-get($grays, '500');
         background-color: transparent;
         border-radius: 0%;
+    }
 
-        &.active, &:focus {
-            color: gray('600');
-            background-color: gray('200');
-            box-shadow: none !important;
-        }
+    .o_wsale_apply_layout > .btn-check:checked + .btn,
+    .o_wsale_apply_layout > .btn:focus
+    {
+        color: map-get($grays, '600');
+        background-color: map-get($grays, '200');
+        box-shadow: none !important;
     }
 }
 
 #product_detail ~ .oe_structure.oe_empty > section:first-child,
 .o_shop_discussion_rating {
-    border-top: 1px solid gray('400');
+    border-top: 1px solid map-get($grays, '400');
 }
 
 .o_alternative_product {
@@ -293,7 +295,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 }
 
 #products_grid:not(.o_wsale_layout_list) {
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         @include wsale-break-table-to-list();
     }
 
@@ -392,7 +394,7 @@ ul.wizard {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065);
 
     li {
-        border: 1px solid gray('200');
+        border: 1px solid map-get($grays, '200');
         border-right-width: 0;
         position: relative;
         float: left;
@@ -409,7 +411,7 @@ ul.wizard {
             display: block;
             border: 20px solid transparent;
             border-right: 0;
-            border-left: 10px solid gray('200');
+            border-left: 10px solid map-get($grays, '200');
         }
 
         .chevron:before {
@@ -545,13 +547,13 @@ a.no-decoration {
             width: 2.5rem;
             height: 2.5rem;
             line-height: 2.5rem;
-            color: gray('900');
+            color: map-get($grays, '900');
             background: white;
             font-size: 1.15rem;
-            border: 1px solid gray('400');
+            border: 1px solid map-get($grays, '400');
             border-radius: 50%;
         }
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             > span {
                 width: 2rem;
                 height: 2rem;
@@ -589,7 +591,7 @@ a.no-decoration {
                     height: 64px;
                     text-indent: unset;
                     transition: none;
-                    border: 1px solid gray('400');
+                    border: 1px solid map-get($grays, '400');
 
                     .o_product_video_thumb {
                         @include o-position-absolute(0, 0, 0, 0);
@@ -597,7 +599,7 @@ a.no-decoration {
                     }
 
                     &.active {
-                        border-color: theme-color('primary');
+                        border-color: map-get($theme-colors, 'primary');
                     }
 
                     &:hover {
@@ -608,7 +610,7 @@ a.no-decoration {
         }
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         &.o_carousel_product_left_indicators {
             flex-direction: column-reverse;
         }
@@ -621,11 +623,11 @@ a.no-decoration {
                 height: 8px;
                 min-width: 8px;
                 border-radius: 50%;
-                border: 2px solid gray('400');
+                border: 2px solid map-get($grays, '400');
 
                 &.active {
-                    border-color: theme-color('primary');
-                    background-color: theme-color('primary');
+                    border-color: map-get($theme-colors, 'primary');
+                    background-color: map-get($theme-colors, 'primary');
                 }
                 > div {
                     display: none;
@@ -695,7 +697,7 @@ a.no-decoration {
 }
 
 .o_red_highlight {
-    background: theme-color('danger') !important;
+    background: map-get($theme-colors, 'danger') !important;
     box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
     transition: all 0.5s linear;
 }
@@ -714,7 +716,7 @@ a.no-decoration {
 .o_carousel_product_card {
     .o_carousel_product_card_img_top {
         object-fit: scale-down;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             height: 12rem;
         }
         @include media-breakpoint-up(md) {
@@ -759,7 +761,7 @@ a.no-decoration {
 .o_product_page_reviews_title {
     .fa {
         font-size: 1.4rem;
-        color: theme-color('primary');
+        color: map-get($theme-colors, 'primary');
 
         &:before {
             content: "\f067";

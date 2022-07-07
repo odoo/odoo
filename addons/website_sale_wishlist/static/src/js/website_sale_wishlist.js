@@ -194,7 +194,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                     $('.wishlist-section').prepend('<div class="mt16 alert alert-danger alert-dismissable" role="alert" id="data_warning"></div>');
                 }
                 var cart_alert = $('.wishlist-section').parent().find('#data_warning');
-                cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + resp.warning);
+                cart_alert.html('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">&times;</button> ' + resp.warning);
             }
             sessionStorage.setItem('website_sale_cart_quantity', resp.cart_quantity);
             $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');

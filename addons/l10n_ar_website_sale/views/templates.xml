@@ -7,7 +7,7 @@
         <div t-attf-class="form-group #{error.get('l10n_ar_afip_responsibility_type_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="l10n_ar_afip_responsibility_type_id">AFIP Responsibility</label>
             <t t-if="partner.can_edit_vat()">
-                <select name="l10n_ar_afip_responsibility_type_id" t-attf-class="form-control #{error.get('l10n_ar_afip_responsibility_type_id') and 'is-invalid' or ''}">
+                <select name="l10n_ar_afip_responsibility_type_id" t-attf-class="form-select #{error.get('l10n_ar_afip_responsibility_type_id') and 'is-invalid' or ''}">
                     <option value="">AFIP Responsibility...</option>
                     <t t-foreach="responsibility_types or []" t-as="resp_type">
                         <option t-att-value="resp_type.id" t-att-selected="resp_type.id == int(responsibility) if responsibility else resp_type.id == partner.l10n_ar_afip_responsibility_type_id.id">
@@ -26,7 +26,7 @@
         <div t-attf-class="form-group #{error.get('l10n_latam_identification_type_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="l10n_latam_identification_type_id">Identification Type</label>
             <t t-if="partner.can_edit_vat()">
-                <select name="l10n_latam_identification_type_id" t-attf-class="form-control #{error.get('l10n_latam_identification_type_id') and 'is-invalid' or ''}">
+                <select name="l10n_latam_identification_type_id" t-attf-class="form-select #{error.get('l10n_latam_identification_type_id') and 'is-invalid' or ''}">
                     <option value="">Identification Type...</option>
                     <t t-foreach="identification_types or []" t-as="id_type">
                         <option t-att-value="id_type.id" t-att-selected="id_type.id == int(identification) if identification else id_type.id == partner.l10n_latam_identification_type_id.id">

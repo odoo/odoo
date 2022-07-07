@@ -19,7 +19,7 @@
                 <t t-else="">
                     <i class="fa fa-star" role="img"></i>
                 </t>
-                <small class="text-muted ml-1">
+                <small class="text-muted ms-1">
                     <t t-esc="rating_avg"/>
                 </small>
             </t>
@@ -33,7 +33,7 @@
                 <t t-foreach="range(0, empty_star)" t-as="num">
                     <i class="fa fa-star-o" role="img"></i>
                 </t>
-                <small class="text-muted ml-1">
+                <small class="text-muted ms-1">
                     (<t t-esc="rating_count"/>)
                 </small>
             </t>
@@ -79,7 +79,7 @@
                 <div class="o_rating_popup_composer_stars text-nowrap"/>
                 <button t-if="display_composer" type="button"
                     t-att-class="'btn ' + _link_btn_classes or 'btn-primary'"
-                    data-toggle="modal" data-target="#ratingpopupcomposer">
+                    data-bs-toggle="modal" data-bs-target="#ratingpopupcomposer">
                     <i t-if="icon" t-att-class="icon"/>
                     <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
                         <t t-if="default_message_id">Modify your review</t>

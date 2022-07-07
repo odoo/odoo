@@ -7,13 +7,6 @@
 // otherwise we will have deprecation messages for assets_common generation
 $enable-deprecation-messages: false !default;
 
-// Override color-yiq function to handle the alpha component of colors and
-// automatic threshold
-@function color-yiq($color, $dark: $yiq-text-dark, $light: $yiq-text-light, $background: $body-bg, $cross-mix: true) {
-    $threshold: if($yiq-contrasted-threshold != false, $yiq-contrasted-threshold / 255 * 100%, false);
-    @return o-get-most-contrast($color, $light, $dark, $background, $threshold, $cross-mix);
-}
-
 @function mute-color($color) {
     @return scale-color($color, $alpha: -30%);
 }
@@ -34,7 +27,7 @@ $o-color-extras-nesting-selector: '&' !default;
     @if ($color) {
         $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
 
-        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-yiq($color, $background: $background), null));
+        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color), null));
         background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 
@@ -60,7 +53,7 @@ $o-color-extras-nesting-selector: '&' !default;
     }
     a#{$parent},
     button#{$parent} {
-        @include hover-focus {
+        &:hover, &:focus {
             @include o-bg-color(darken($color, 10%), $text-color, false);
         }
     }

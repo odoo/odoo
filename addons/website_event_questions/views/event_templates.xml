@@ -34,7 +34,7 @@
     <label t-out="question.title"/>
     <span t-if="question.is_mandatory_answer">*</span>
     <t t-if="question.question_type == 'simple_choice'">
-        <select t-attf-name="question_answer-#{registration_index}-#{question.id}" class="custom-select"
+        <select t-attf-name="question_answer-#{registration_index}-#{question.id}" class="form-select"
                 t-att-required="question.is_mandatory_answer">
             <option value=""/>
             <t t-foreach="question.answer_ids" t-as="answer">

@@ -2,8 +2,8 @@
 <templates>
     <t t-name="mail.MessageActionList" owl="1">
         <t t-if="messageActionList">
-            <div class="o_MessageActionList d-flex border rounded-sm bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
-                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'pl-3 py-3 pr-2' : 'pl-2 py-2 pr-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
+            <div class="o_MessageActionList d-flex border rounded-1 bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
+                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-3 py-3 pe-2' : 'ps-2 py-2 pe-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
                 <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar o_cursor_pointer"  t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" t-att-class="{
                         'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
                         'fa fa-lg fa-star': messageActionList.message.isStarred,
@@ -12,7 +12,7 @@
                 <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply fa fa-lg fa-reply o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Reply" role="button" tabindex="0" aria-label="Reply" t-on-click="messageActionList.onClickReplyTo"/>
                 <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead fa fa-lg fa-check o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Mark as Read" role="button" tabindex="0" aria-label="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit fa fa-lg fa-pencil o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Edit" role="button" tabindex="0" aria-label="Edit" t-on-click="messageActionList.onClickEdit"/>
-                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete fa fa-lg fa-trash o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'pl-2 py-3 pr-3' : 'pl-1 py-2 pr-2' }}" title="Delete" role="button" tabindex="0" aria-label="Delete" t-on-click="messageActionList.onClickDelete"/>
+                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete fa fa-lg fa-trash o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-2 py-3 pe-3' : 'ps-1 py-2 pe-2' }}" title="Delete" role="button" tabindex="0" aria-label="Delete" t-on-click="messageActionList.onClickDelete"/>
             </div>
         </t>
     </t>

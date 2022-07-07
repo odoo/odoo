@@ -6,20 +6,18 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Remove Configuration Tips</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-label="Close">×</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Do you want to remove this configuration panel?</p>
                     </div>
                     <div class="modal-footer">
-                        <a type="action" class="btn btn-primary" data-dismiss="modal"
-                        data-toggle="collapse" href=".o_onboarding_container"
+                        <a type="action" class="btn btn-primary" data-bs-dismiss="modal"
+                        data-o-hide-banner="true"
                         t-att-data-model="close_model" t-att-data-method="close_method">
                             Remove
                         </a>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
                     </div>
                 </div>
             </div>
@@ -30,19 +28,19 @@
                  t-att-style="'background-image:url(' + bg_image + ')'">
 
                 <div class="o_onboarding_wrap py-5">
-                    <a href="#" data-toggle="modal" data-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2 text-white" title="Close the onboarding panel"><i class="oi oi-close"/></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2 text-white" title="Close the onboarding panel"><i class="oi oi-close"/></a>
 
                     <div class="o_onboarding_steps d-flex" t-out="0"/>
 
                     <div t-if="state.get('onboarding_state') in ('done', 'just_done')"
                          t-att-state="state.get('onboarding_state')"
-                         class="o_onboarding_completed_message position-absolute end-0 bottom-0 left-0 border-bottom py-4 bg-white d-flex align-items-center justify-content-center">
+                         class="o_onboarding_completed_message position-absolute end-0 bottom-0 start-0 border-bottom py-4 bg-white d-flex align-items-center justify-content-center">
                         <span class="h3 m-0">
                             <i class="fa fa-check text-success me-3" />
                             <t t-if="text_completed" t-out="text_completed" />
                             <t t-else="">Nice work! Your configuration is done.</t>
                         </span>
-                        <a type="action" class="btn btn-primary ms-4" data-toggle="collapse" href=".o_onboarding_container" t-att-data-model="close_model" t-att-data-method="close_method">
+                        <a type="action" class="btn btn-primary ms-4" data-bs-toggle="collapse" href=".o_onboarding_container" t-att-data-model="close_model" t-att-data-method="close_method">
                             Close
                         </a>
                     </div>

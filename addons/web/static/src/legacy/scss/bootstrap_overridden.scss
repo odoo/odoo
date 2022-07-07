@@ -7,6 +7,13 @@
 // Color system
 //
 
+//Restore BS4 Colors
+$blue: #007bff !default;
+$pink: #e83e8c !default;
+$green: #28a745 !default;
+$cyan: #17a2b8 !default;
+//End Restore BS4 Colors
+
 // All of those are BS default
 $white:    #fff !default;
 $gray-100: $o-gray-100 !default;
@@ -38,9 +45,23 @@ $theme-colors: map-merge(
     $theme-colors
 );
 
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 3 !default;
+
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.
+$enable-smooth-scroll: false !default;
+
+// Prefix for :root CSS variables
+$variable-prefix: '' !default;
+
+// Restore negative margins disabled in BS5 by default
+$enable-negative-margins: true !default;
+
+// Spacing
+$spacer: 1rem !default;
 
 // Body
 //
@@ -54,7 +75,9 @@ $body-color: $o-main-text-color !default;
 // Style anchor elements.
 
 $link-color: $o-main-link-color !default;
+$link-decoration: none !default;
 $link-hover-decoration: none !default;
+$link-shade-percentage: 15% !default;
 
 // Muted
 //
@@ -73,6 +96,7 @@ $grid-gutter-width: $o-horizontal-padding * 2 !default;
 // Define common padding and border radius sizes and more.
 
 $border-radius: $o-border-radius !default;
+$border-radius-sm: $o-border-radius-sm !default;
 $border-radius-lg: $o-border-radius-lg !default;
 $border-color: $o-gray-300 !default;
 
@@ -103,9 +127,14 @@ $headings-color: $o-main-headings-color !default;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-accent-bg: rgba($black, .01) !default;
+$table-striped-bg-factor: .01 !default;
 $table-hover-bg: rgba($black, .04) !default;
 $table-border-color: $gray-200 !default;
+$table-group-separator-color: $gray-200 !default;
+$table-cell-padding-x: .75rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x-sm: .3rem !default;
+$table-cell-padding-y-sm: .3rem !default;
 
 // Buttons
 //
@@ -156,6 +185,9 @@ $custom-control-indicator-checked-disabled-bg: $gray-200 !default;
 //
 // $zindex-modal-backdrop: $zindex-modal;
 
+// Navbar
+$navbar-padding-x: $spacer !default;
+
 // Navs
 
 $nav-tabs-link-active-bg: $white !default;
@@ -181,6 +213,7 @@ $toast-header-background-color: $toast-background-color !default;
 
 // Padding applied to the modal body
 $modal-inner-padding: $o-horizontal-padding !default;
+$modal-footer-margin-between: 1px !default;
 
 $modal-lg: $o-modal-lg !default;
 $modal-md: $o-modal-md !default;
@@ -205,3 +238,25 @@ $code-color: $o-main-code-color!default;
 $kbd-color: $o-gray-700 !default;
 $kbd-bg: $o-gray-100 !default;
 $kbd-box-shadow: 0px 1px 1px rgba($o-black, 0.2), inset 0px -1px 1px 1px rgba($o-gray-200, 0.8), inset 0px 2px 0px 0px rgba($o-white, 0.8) !default;
+
+// Input
+
+$input-bg: $o-white !default;
+$form-check-input-border-radius: 0 !default;
+$form-check-input-checked-color: $o-brand-lightsecondary !default;
+$form-check-input-checked-border-color: $o-brand-primary !default;
+$form-check-input-checked-bg-color: $o-brand-primary !default;
+
+$form-switch-color: rgba($black, .25) !default;
+$form-switch-checked-color: $o-brand-primary !default;
+$form-switch-circle-bg-color: $input-bg !default;
+$form-switch-circle-checked-bg-color: $input-bg !default;
+$form-switch-icon-color: $form-switch-color !default;
+$form-switch-icon-checked-color: $form-switch-checked-color !default;
+$form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-circle-bg-color}'/><line x1='-1.5' y1='-1.5' x2='1.5' y2='1.5' stroke='#{$form-switch-icon-color}' stroke-width='0.75'/><line x1='1.5' y1='-1.5' x2='-1.5' y2='1.5' stroke='#{$form-switch-icon-color}' stroke-width='0.75'/></svg>") !default;
+$form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-circle-checked-bg-color}'/><path d='m-2.125,-0.5l1.75,1.75l2.5,-2.5' fill='none' stroke='#{$form-switch-icon-checked-color}' stroke-width='0.75'/></svg>") !default;
+
+// Badge
+$badge-color: inherit !default;
+$badge-padding-y: 0.25em !default;
+$badge-padding-x: 0.4em !default;

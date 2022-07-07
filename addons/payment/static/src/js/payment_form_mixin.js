@@ -18,7 +18,7 @@ odoo.define('payment.payment_form_mixin', require => {
                     window.location.reload();
                 }
             });
-            this.$('[data-toggle="tooltip"]').tooltip();
+            this.$('[data-bs-toggle="tooltip"]').tooltip();
             this.txContext = {};
             Object.assign(this.txContext, this.$el.data());
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');

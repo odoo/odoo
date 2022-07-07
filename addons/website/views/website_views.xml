@@ -34,7 +34,7 @@
                         </div>
                         <div name="logo">
                             <group name="logo">
-                                <field name="logo" widget="image" class="oe_avatar float-left"/>
+                                <field name="logo" widget="image" class="oe_avatar float-start"/>
                             </group>
                         </div>
                         <div name="other">
@@ -358,37 +358,35 @@
             <field name="arch" type="xml">
                 <qweb js_class="view_hierarchy">
                     <nav class="o_tree_nav navbar justify-content-start w-100 fixed-top bg-white shadow">
-                        <div class="dropdown ml-2 border border-info rounded">
-                            <a href="#" role="button" class="btn dropdown-toggle text-info" data-toggle="dropdown">
+                        <div class="dropdown ms-2 border border-info rounded">
+                            <a href="#" role="button" class="btn dropdown-toggle text-info" data-bs-toggle="dropdown">
                                 All Websites
                             </a>
                             <div class="dropdown-menu o_website_filter">
                                 <a href="#" class="dropdown-item active" data-website_name="*">All Websites</a>
                             </div>
                         </div>
-                        <div class="ml-2 custom-control custom-switch">
-                            <input id="o_show_inactive" class="custom-control-input" type="checkbox"/>
-                            <label class="custom-control-label" for="o_show_inactive">Show inactive views</label>
+                        <div class="ms-2 custom-control form-switch">
+                            <input id="o_show_inactive" class="form-check-input" type="checkbox"/>
+                            <label class="form-check-label" for="o_show_inactive">Show inactive views</label>
                         </div>
-                        <div class="o_search input-group ml-auto col-8 col-sm-6 col-md-4 col-xl-3" role="search">
+                        <div class="o_search input-group ms-auto col-8 col-sm-6 col-md-4 col-xl-3" role="search">
                             <input type="search" name="search" class="form-control border-info" placeholder="Name, id or key"/>
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-info" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"/>
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-info" aria-label="Search" title="Search">
+                                <i class="fa fa-search"/>
+                            </button>
                         </div>
                     </nav>
 
                     <t t-set="view" t-value="env['ir.ui.view'].browse(context['active_id']).with_context(active_test=False)"/>
                     <t t-set="requested_view" t-value="view"/>
                     <t t-set="view" t-value="view._get_top_level_view()"/>
-                    <div class="o_tree_container ml-2" t-att-data-requested-view-id="requested_view.id">
+                    <div class="o_tree_container ms-2" t-att-data-requested-view-id="requested_view.id">
                         <t t-set="sibling_views" t-value="view.search([('key', '=', view.key)]) - view"/>
                         <div t-if="sibling_views" class="alert alert-info m-1 p-1">
                             Multiple tree exists for this view
                             <a t-foreach="sibling_views" t-as="sibling_view" href="#" class="o_load_hierarchy" t-att-data-view_id="sibling_view.id">
-                                <i class="fa fa-arrow-right mr-1"/>
+                                <i class="fa fa-arrow-right me-1"/>
                                 <t t-esc="sibling_view.with_context(display_website=True, display_key=True).display_name"/>
                             </a>
                         </div>
@@ -399,18 +397,18 @@
         </record>
         <template id="report_viewhierarchy_children">
             <t t-set="classes_for_search" t-value="'d-flex align-items-center'"/>
-            <p t-attf-class="o_tree_entry mb-0 #{'text-muted font-weight-normal' if not view.active else ''} #{view.inherit_children_ids and 'o_has_child' or ''} #{classes_for_search}">
-                <i t-if="view.inherit_children_ids" class="js_fold o_fold_icon fa fa-minus-square-o mr-1"/>
-                <i t-if="view.arch_updated" class="fa fa-pencil-square mr-1 o_text_pink" title="This view arch has been modified"/>
+            <p t-attf-class="o_tree_entry mb-0 #{'text-muted fw-normal' if not view.active else ''} #{view.inherit_children_ids and 'o_has_child' or ''} #{classes_for_search}">
+                <i t-if="view.inherit_children_ids" class="js_fold o_fold_icon fa fa-minus-square-o me-1"/>
+                <i t-if="view.arch_updated" class="fa fa-pencil-square me-1 o_text_pink" title="This view arch has been modified"/>
                 <span class="js_fold">
-                    <t t-esc="view.name"/> (<span class="font-weight-bold" t-esc="view.key"/>)
+                    <t t-esc="view.name"/> (<span class="fw-bold" t-esc="view.key"/>)
                     <span class="o_text_orange" t-if="view.website_id" t-esc="' [%s]' % view.website_id.name"/>
                  </span>
                 <a type="action" data-model="ir.ui.view" t-att-data-res-id="view.id">
-                    <i class="fa fa-eye ml-2 text-muted" title="Go to View"/>
+                    <i class="fa fa-eye ms-2 text-muted" title="Go to View"/>
                 </a>
                 <a href="#" class="o_show_diff" t-att-data-view_id="view.id">
-                    <i class="fa fa-files-o ml-2 text-muted" title="Show Arch Diff"/>
+                    <i class="fa fa-files-o ms-2 text-muted" title="Show Arch Diff"/>
                 </a>
             </p>
             <ul t-if="view.inherit_children_ids">
@@ -514,10 +512,10 @@
                                 </div>
                             </div>
                             <div class="o_theme_preview_bottom clearfix">
-                                <h5 t-if="record.summary.value" class="text-uppercase float-left">
+                                <h5 t-if="record.summary.value" class="text-uppercase float-start">
                                     <b><t t-esc="record.summary.value.split(',')[0]"/></b>
                                 </h5>
-                                <h6 t-if="record.display_name.value" class="text-muted float-right">
+                                <h6 t-if="record.display_name.value" class="text-muted float-end">
                                     <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
                                 </h6>
                             </div>

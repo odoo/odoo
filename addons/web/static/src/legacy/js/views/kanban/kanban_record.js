@@ -412,6 +412,17 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
         // from the DOM at the next line
         _.invoke(this.subWidgets, 'on_detach_callback');
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        if (this.el) {
+            const dropdownToggle = this.el.querySelector('.o_dropdown_kanban .dropdown-toggle');
+            if (dropdownToggle) {
+                delete dropdownToggle.dataset['bsDisplay'];
+                dropdownToggle.dataset['bsOffset'] = '0,-2';
+            }
+            const dropdownMenu = this.el.querySelector('.o_dropdown_kanban .dropdown-menu');
+            if (dropdownMenu) {
+                dropdownMenu.classList.add('dropdown-menu-end');
+            }
+        }
         this.$el.addClass('o_kanban_record').attr("tabindex", 0);
         this.$el.attr('role', 'article');
         this.$el.data('record', this);
@@ -553,7 +564,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            $el.addClass('float-right');
+            $el.addClass('float-end');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
             $el.addClass('o_text_block');
         }

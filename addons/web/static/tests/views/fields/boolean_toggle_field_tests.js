@@ -38,19 +38,19 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".custom-checkbox.o_boolean_toggle",
+            ".form-check.o_boolean_toggle",
             "Boolean toggle widget applied to boolean field"
         );
         assert.containsOnce(
             target,
-            ".custom-checkbox.o_boolean_toggle .fa-check-circle",
+            ".form-check.o_boolean_toggle .fa-check-circle",
             "Boolean toggle should have fa-check-circle icon"
         );
 
         await click(target, ".o_field_widget[name='bar'] input");
         assert.containsOnce(
             target,
-            ".custom-checkbox.o_boolean_toggle .fa-times-circle",
+            ".form-check.o_boolean_toggle .fa-times-circle",
             "Boolean toggle should have fa-times-circle icon"
         );
     });
@@ -82,7 +82,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        assert.containsOnce(target, ".form-check.o_boolean_toggle");
         assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
         await click(target, ".o_field_widget[name='bar'] label");
         assert.ok(target.querySelector(".o_boolean_toggle input").checked);
@@ -97,7 +97,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        assert.containsOnce(target, ".form-check.o_boolean_toggle");
         await click(target.querySelector(".o_form_button_edit"));
         assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
         await click(target, ".o_field_widget[name='bar'] label");
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        assert.containsOnce(target, ".form-check.o_boolean_toggle");
         await click(target.querySelector(".o_form_button_edit"));
 
         assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
@@ -137,7 +137,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".custom-checkbox.o_boolean_toggle",
+            ".form-check.o_boolean_toggle",
             "Boolean toggle widget applied to boolean field"
         );
         assert.containsNone(target, ".o_boolean_toggle input:checked");
@@ -164,7 +164,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsOnce(
                 target,
-                ".custom-checkbox.o_boolean_toggle",
+                ".form-check.o_boolean_toggle",
                 "Boolean toggle widget applied to boolean field"
             );
 
@@ -192,7 +192,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".custom-checkbox.o_boolean_toggle",
+            ".form-check.o_boolean_toggle",
             "Boolean toggle widget applied to boolean field"
         );
 

@@ -4,7 +4,7 @@
     <t t-name="web.FavoriteMenu" owl="1">
         <Dropdown class="'o_favorite_menu btn-group'" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
-                <i class="mr-1" t-att-class="icon"/>
+                <i class="me-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Favorites</span>
             </t>
             <t t-set="currentGroup" t-value="null"/>
@@ -19,7 +19,7 @@
                         >
                         <span class="d-flex p-0 align-items-center justify-content-between">
                             <t t-esc="item.description"/>
-                            <i class="ml-1 o_icon_right fa fa-trash-o"
+                            <i class="ms-1 o_icon_right fa fa-trash-o"
                                 title="Delete item"
                                 t-on-click.stop="() => this.openConfirmationDialog(item.id)"
                             />

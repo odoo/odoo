@@ -230,7 +230,7 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
         }
 
         // Adjust dropdown-menu position, but not when already handled in js
-        .dropdown-menu:not([x-placement]) {
+        .o-dropdown-menu:not([x-placement]) {
             margin-left: $o-we-toolbar-entries-gap;
         }
     }
@@ -303,7 +303,6 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
 
         &.colorpicker-menu {
             margin-top: 0;
-            margin-bottom: 0.125rem;
             min-width: 222px !important;
         }
     }
@@ -377,7 +376,7 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
                 background: $o-brand-primary;
 
                 &, &:hover {
-                    color: color-yiq($o-brand-primary);
+                    color: color-contrast($o-brand-primary);
                 }
 
                 &:hover {
@@ -489,7 +488,7 @@ body .modal {
         }
 
         .o_link_dialog_preview {
-            border-left: 1px solid gray('200');
+            border-left: 1px solid map-get($grays, '200');
         }
     }
 }
@@ -527,7 +526,7 @@ img::selection {
     background-color: rgba(255, 255, 255, .7);
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
     #web_editor-top-edit {
         position: initial !important;
         height: initial !important;

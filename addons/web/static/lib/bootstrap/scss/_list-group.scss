@@ -9,6 +9,18 @@
   // No need to set list-style: none; since .list-group-item is block level
   padding-left: 0; // reset padding because ul and ol
   margin-bottom: 0;
+  @include border-radius($list-group-border-radius);
+}
+
+.list-group-numbered {
+  list-style-type: none;
+  counter-reset: section;
+
+  > li::before {
+    // Increments only this instance of the section counter
+    content: counters(section, ".") ". ";
+    counter-increment: section;
+  }
 }
 
 
@@ -23,7 +35,8 @@
   text-align: inherit; // For `<button>`s (anchors inherit)
 
   // Hover state
-  @include hover-focus {
+  &:hover,
+  &:focus {
     z-index: 1; // Place hover/focus items above their siblings for proper border styling
     color: $list-group-action-hover-color;
     text-decoration: none;
@@ -45,19 +58,17 @@
   position: relative;
   display: block;
   padding: $list-group-item-padding-y $list-group-item-padding-x;
-  // Place the border on the list items and negative margin up for better styling
-  margin-bottom: -$list-group-border-width;
   color: $list-group-color;
+  text-decoration: if($link-decoration == none, null, none);
   background-color: $list-group-bg;
   border: $list-group-border-width solid $list-group-border-color;
 
   &:first-child {
-    @include border-top-radius($list-group-border-radius);
+    @include border-top-radius(inherit);
   }
 
   &:last-child {
-    margin-bottom: 0;
-    @include border-bottom-radius($list-group-border-radius);
+    @include border-bottom-radius(inherit);
   }
 
   &.disabled,
@@ -74,6 +85,15 @@
     background-color: $list-group-active-bg;
     border-color: $list-group-active-border-color;
   }
+
+  & + & {
+    border-top-width: 0;
+
+    &.active {
+      margin-top: -$list-group-border-width;
+      border-top-width: $list-group-border-width;
+    }
+  }
 }
 
 
@@ -88,19 +108,29 @@
     .list-group-horizontal#{$infix} {
       flex-direction: row;
 
-      .list-group-item {
-        margin-right: -$list-group-border-width;
-        margin-bottom: 0;
-
+      > .list-group-item {
         &:first-child {
-          @include border-left-radius($list-group-border-radius);
-          @include border-top-right-radius(0);
+          @include border-bottom-start-radius($list-group-border-radius);
+          @include border-top-end-radius(0);
         }
 
         &:last-child {
-          margin-right: 0;
-          @include border-right-radius($list-group-border-radius);
-          @include border-bottom-left-radius(0);
+          @include border-top-end-radius($list-group-border-radius);
+          @include border-bottom-start-radius(0);
+        }
+
+        &.active {
+          margin-top: 0;
+        }
+
+        + .list-group-item {
+          border-top-width: $list-group-border-width;
+          border-left-width: 0;
+
+          &.active {
+            margin-left: -$list-group-border-width;
+            border-left-width: $list-group-border-width;
+          }
         }
       }
     }
@@ -114,36 +144,31 @@
 // useful within other components (e.g., cards).
 
 .list-group-flush {
-  .list-group-item {
-    border-right: 0;
-    border-left: 0;
-    @include border-radius(0);
+  @include border-radius(0);
+
+  > .list-group-item {
+    border-width: 0 0 $list-group-border-width;
 
     &:last-child {
-      margin-bottom: -$list-group-border-width;
-    }
-  }
-
-  &:first-child {
-    .list-group-item:first-child {
-      border-top: 0;
-    }
-  }
-
-  &:last-child {
-    .list-group-item:last-child {
-      margin-bottom: 0;
-      border-bottom: 0;
+      border-bottom-width: 0;
     }
   }
 }
 
 
-// Contextual variants
+// scss-docs-start list-group-modifiers
+// List group contextual variants
 //
 // Add modifier classes to change text and background color on individual items.
 // Organizationally, this must come after the `:hover` states.
 
-@each $color, $value in $theme-colors {
-  @include list-group-item-variant($color, theme-color-level($color, -9), theme-color-level($color, 6));
+@each $state, $value in $theme-colors {
+  $list-group-variant-bg: shift-color($value, $list-group-item-bg-scale);
+  $list-group-variant-color: shift-color($value, $list-group-item-color-scale);
+  @if (contrast-ratio($list-group-variant-bg, $list-group-variant-color) < $min-contrast-ratio) {
+    $list-group-variant-color: mix($value, color-contrast($list-group-variant-bg), abs($list-group-item-color-scale));
+  }
+
+  @include list-group-item-variant($state, $list-group-variant-bg, $list-group-variant-color);
 }
+// scss-docs-end list-group-modifiers

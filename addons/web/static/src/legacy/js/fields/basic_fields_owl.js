@@ -70,7 +70,7 @@ odoo.define('web.basic_fields_owl', function (require) {
             // The event might have been fired on the non field version of
             // this field, we can still test the presence of its custom class.
             if (activated && options && options.event && options.event.target
-                .closest('.custom-control.custom-checkbox')) {
+                .closest('.form-check')) {
                 this._setValue(!this.value);  // Toggle the checkbox
             }
             return activated;

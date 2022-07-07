@@ -8,7 +8,7 @@
                 <sheet>
                     <div class="o_auth_totp_enable_2FA container">
                         <div class="mb-3 w-100">
-                            <h3 class="font-weight-bold">Authenticator App Setup</h3>
+                            <h3 class="fw-bold">Authenticator App Setup</h3>
                             <ul>
                                 <div class="d-md-none d-block">
                                     <li>
@@ -42,24 +42,24 @@
                             <div class="text-center d-none d-md-block">
                                 <field name="qrcode" readonly="True" widget="image"/>
 
-                                <h3 class="font-weight-bold"><a data-toggle="collapse"
+                                <h3 class="fw-bold"><a data-bs-toggle="collapse"
                                    href="#collapseTotpSecret" role="button" aria-expanded="false"
                                    aria-controls="collapseTotpSecret">Cannot scan it?</a></h3>
                                 <div class="collapse" id="collapseTotpSecret">
-                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 pl-3"/>
+                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
                                 </div>
                             </div>
 
                             <!-- Mobile Version -->
                             <div class="text-center d-block d-md-none">
-                                <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 pl-3"/>
+                                <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
                             </div>
 
-                            <h3 class="font-weight-bold">Enter your six-digit code below</h3>
+                            <h3 class="fw-bold">Enter your six-digit code below</h3>
                             <div class="mt-2">
                                 <label for="code" class="px-0">Verification Code</label>
                                 <div class="d-flex align-items-center">
-                                    <field required="True" name="code" autocomplete="off" class="px-0 mr-2" placeholder="e.g. 123456"/>
+                                    <field required="True" name="code" autocomplete="off" class="px-0 me-2" placeholder="e.g. 123456"/>
                                 </div>
                             </div>
                         </div>

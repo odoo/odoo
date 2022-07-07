@@ -39,7 +39,7 @@ QUnit.module('ModelFieldSelector', {
         var $popoverButton = form.$('a.fa.fa-info-circle.text-danger');
         assert.strictEqual($popoverButton.length, 1, "Should have a popover icon/button in red");
         assert.strictEqual($popoverButton.prop('special_click'), true, "Special click properpy should be activated");
-        await testUtils.dom.triggerEvents($popoverButton, ['focus']);
+        await testUtils.dom.triggerEvent($popoverButton, 'focusin');
         $popover = $('div.popover');
         assert.strictEqual($popover.length, 1, "Should have a popover container in DOM");
         assert.strictEqual($popover.html().includes("var that = self // why not?"), true, "The message should be in DOM");

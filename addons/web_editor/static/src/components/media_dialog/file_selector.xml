@@ -4,22 +4,22 @@
     <div class="form-inline align-items-center py-4">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
 
-        <div class="d-flex justify-content-start align-items-center flex-grow-1 ml-2">
-            <div t-if="props.showOptimizedOption" class="custom-control custom-switch align-items-center mr-2" t-on-change="props.changeShowOptimized">
-                <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
-                <label class="custom-control-label" for="o_we_show_optimized_switch">
+        <div class="d-flex justify-content-start align-items-center flex-grow-1 ms-2">
+            <div t-if="props.showOptimizedOption" class="custom-control form-switch align-items-center me-2" t-on-change="props.changeShowOptimized">
+                <input class="o_we_show_optimized ms-2 form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
+                <label class="form-check-label" for="o_we_show_optimized_switch">
                     Show optimized images
                 </label>
             </div>
-            <select t-if="showSearchServiceSelect" class="custom-select o_we_search_select" t-on-change="ev => props.changeSearchService(ev.target.value)">
+            <select t-if="showSearchServiceSelect" class="form-select o_we_search_select" t-on-change="ev => props.changeSearchService(ev.target.value)">
                 <option t-att-selected="props.searchService === 'all'" value="all">All</option>
                 <option t-att-selected="props.searchService === 'database'" value="database">My Images</option>
                 <option t-if="props.useMediaLibrary" t-att-selected="props.searchService === 'media-library'" value="media-library">Illustrations</option>
             </select>
         </div>
 
-        <div class="input-group align-items-center ml-2">
-            <input type="text" class="form-control o_we_url_input o_we_transition_ease mr-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
+        <div class="input-group align-items-center ms-2">
+            <input type="text" class="form-control o_we_url_input o_we_transition_ease me-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
             <div class="input-group-append align-items-center">
                 <button type="button" class="btn o_upload_media_url_button" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>

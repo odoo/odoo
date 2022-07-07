@@ -77,7 +77,7 @@
                                                 <div>
                                                     <div class="o_kanban_record_title">
                                                         <field name="name"/>
-                                                        <div class="o_kanban_details float-right">
+                                                        <div class="o_kanban_details float-end">
                                                             <span class="text-muted">
                                                                 <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
                                                                 <t t-if="record.email.raw_value"><field name="email"/></t>
@@ -206,7 +206,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">

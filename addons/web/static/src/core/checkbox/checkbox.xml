@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="web.CheckBox" owl="1">
-    <div class="custom-control custom-checkbox" t-att-class="props.className" t-on-click.stop="onClick" t-ref="root">
+    <div class="custom-control form-check" t-att-class="props.className" t-on-click.stop="onClick" t-ref="root">
         <input
             t-att-id="props.id or id"
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             t-att-disabled="props.disabled"
             t-att-checked="props.value"
             t-att-name="props.name"
             t-on-change="onChange"
         />
-        <label t-att-for="props.id or id" class="custom-control-label">
+        <label t-att-for="props.id or id" class="form-check-label">
             <t t-slot="default"/>
         </label>
     </div>

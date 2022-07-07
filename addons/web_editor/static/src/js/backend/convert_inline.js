@@ -14,6 +14,7 @@ const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
+const RE_POSITIONAL_STYLE = /(margin|padding|border)-(top|right|bottom|left).*/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 // Attributes all tables should have in a mailing.
@@ -414,6 +415,19 @@ function classToStyle($editable, cssRules) {
         } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
         }
+
+        // Compute dynamic styles (var, calc).
+        writes.push(() => {
+            let computedStyle;
+            for (let styleName of node.style) {
+                styleName = styleName.replace(RE_POSITIONAL_STYLE, '$1');
+                const styleValue = node.style.getPropertyValue(styleName);
+                if (styleValue.includes('var(') || styleValue.includes('calc(')) {
+                    computedStyle = computedStyle || getComputedStyle(node);
+                    node.style.setProperty(styleName, computedStyle[styleName]);
+                }
+            }
+        });
     };
     writes.forEach(fn => fn());
 }
@@ -1173,7 +1187,7 @@ function _getMatchedCSSRules(node, cssRules) {
         }
     };
 
-    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
+    if (processedStyle.display === 'block') {
         delete processedStyle.display;
     }
     if (!processedStyle['box-sizing']) {

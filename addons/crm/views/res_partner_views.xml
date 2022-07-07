@@ -15,8 +15,8 @@
                 <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                     <a t-if="record.opportunity_count.value>0" href="#"
                        data-type="object" data-name="action_view_opportunity"
-                       class="oe_kanban_action oe_kanban_action_a mr-1">
-                        <span class="badge badge-pill">
+                       class="oe_kanban_action oe_kanban_action_a me-1">
+                        <span class="badge rounded-pill">
                             <i class="fa fa-fw fa-star" aria-label="Opportunities"
                                role="img" title="Opportunities"/>
                             <t t-out="record.opportunity_count.value"/>

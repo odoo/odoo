@@ -218,10 +218,10 @@
                         </div>
 
                         <div groups="account.group_account_manager" class="row o_kanban_card_manage_settings">
-                            <div class="col-6">
+                            <div class="col-6 position-relative">
                                 <field name="show_on_dashboard" widget="boolean_favorite" />
                             </div>
-                            <div class="col-6 text-right mt-1">
+                            <div class="col-6 text-end mt-1">
                                 <a class="dropdown-item" t-if="widget.editable" type="edit">Configuration</a>
                             </div>
                         </div>
@@ -237,10 +237,10 @@
                             <field name="json_activity_data" widget="kanban_vat_activity"/>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
-                                    <div class="col overflow-hidden text-left">
+                                    <div class="col overflow-hidden text-start">
                                         <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
                                     </div>
-                                    <div class="col-auto text-right">
+                                    <div class="col-auto text-end">
                                         <span><t t-esc="dashboard.to_check_balance"/></span>
                                     </div>
                                 </div>
@@ -272,27 +272,27 @@
                         <!-- On the right, show other common informations/actions -->
                         <div id="dashboard_bank_cash_right" class="col-12 col-sm-7 o_kanban_primary_right">
                             <div class="row" t-if="dashboard.nb_lines_bank_account_balance > 0">
-                                <div id="dashboard_bank_cash_balance" class="col overflow-hidden text-left">
+                                <div id="dashboard_bank_cash_balance" class="col overflow-hidden text-start">
                                     <span title="Balance in General Ledger">Balance in GL</span>
                                 </div>
-                                <div class="col-auto text-right">
+                                <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.account_balance"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.nb_lines_outstanding_pay_account_balance > 0">
-                                <div id="dashboard_bank_cash_outstanding_balance" class="col overflow-hidden text-left">
+                                <div id="dashboard_bank_cash_outstanding_balance" class="col overflow-hidden text-start">
                                     <span title="Outstanding Payments/Receipts">Outstanding Payments/Receipts</span>
                                 </div>
-                                <div class="col-auto text-right">
+                                <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.outstanding_pay_account_balance"/></span>
                                 </div>
                             </div>
                             <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance">
                                 <div class="row" name="latest_statement">
-                                    <div class="col overflow-hidden text-left">
+                                    <div class="col overflow-hidden text-start">
                                         <span title="Latest Statement">Latest Statement</span>
                                     </div>
-                                    <div class="col-auto text-right">
+                                    <div class="col-auto text-end">
                                         <span><t t-esc="dashboard.last_balance"/></span>
                                     </div>
                                 </div>
@@ -323,18 +323,18 @@
                         </div>
                         <div class="col-12 col-sm-7 o_kanban_primary_right">
                             <div class="row" t-if="dashboard.number_draft">
-                                <div class="col overflow-hidden text-left">
+                                <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
                                         <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
-                                <div class="col-auto text-right">
+                                <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.number_waiting">
-                                <div class="col overflow-hidden text-left">
+                                <div class="col overflow-hidden text-start">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_sale_pay_link">
                                         <t t-esc="dashboard.number_waiting"/> Unpaid Invoices
@@ -345,27 +345,27 @@
                                         <t t-esc="dashboard.number_waiting"/> Bills to Pay
                                     </a>
                                 </div>
-                                <div class="col-auto text-right">
+                                <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.number_late">
-                                <div class="col overflow-hidden text-left">
+                                <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_late': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-esc="dashboard.number_late"/> Late Invoices</span>
                                         <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-esc="dashboard.number_late"/> Late Bills</span>
                                     </a>
                                 </div>
-                                <div class="col-auto text-right">
+                                <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.sum_late"/></span>
                                 </div>
                             </div>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
-                                    <div class="col overflow-hidden text-left">
+                                    <div class="col overflow-hidden text-start">
                                         <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
                                     </div>
-                                    <div class="col-auto text-right">
+                                    <div class="col-auto text-end">
                                         <span><t t-esc="dashboard.to_check_balance"/></span>
                                     </div>
                                 </div>

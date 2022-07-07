@@ -27,7 +27,7 @@ body.editor_enable.editor_has_snippets {
 }
 
 // Mobile fix for mass mailing
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
     body.editor_enable.editor_has_snippets {
         #web_editor-top-edit {
             position: initial !important;
@@ -588,20 +588,20 @@ body.editor_enable.editor_has_snippets {
 
                 #oe-text-color {
                     border-right:0;
-                    @include border-right-radius(0);
+                    @include border-end-radius(0);
                 }
 
                 #oe-fore-color {
-                    @include border-left-radius(0);
+                    @include border-start-radius(0);
                 }
             }
 
             .btn + .btn {
-                @include border-left-radius(0);
+                @include border-start-radius(0);
             }
 
             .btn-group > .btn:not(:last-of-type) {
-                @include border-right-radius(0);
+                @include border-end-radius(0);
             }
 
             #list {
@@ -997,7 +997,6 @@ body.editor_enable.editor_has_snippets {
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
-                margin-top: $o-we-sidebar-content-field-dropdown-spacing !important;
 
                 &:not(.o_we_has_pager) {
                     max-height: 600px;
@@ -1142,10 +1141,10 @@ body.editor_enable.editor_has_snippets {
                         border-left: none;
                     }
                     &:first-child, .active:first-child {
-                        @include border-left-radius($o-we-sidebar-content-field-border-radius);
+                        @include border-start-radius($o-we-sidebar-content-field-border-radius);
                     }
                     &:last-child, .active:last-child {
-                        @include border-right-radius($o-we-sidebar-content-field-border-radius);
+                        @include border-end-radius($o-we-sidebar-content-field-border-radius);
                     }
                 }
             }
@@ -1371,7 +1370,7 @@ body.editor_enable.editor_has_snippets {
                 &::-ms-fill-lower {
                     background-color: $o-we-sidebar-content-field-progress-active-color;
                     border-radius: 10rem;
-                    @include border-radius($custom-range-track-border-radius);
+                    @include border-radius($form-range-track-border-radius);
                 }
                 &::-ms-fill-upper {
                     background-color: $o-we-sidebar-content-field-progress-color;

@@ -36,11 +36,11 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         const email = $email.val();
 
         if (!email.match(/.+@.+/)) {
-            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            this.$target.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             return false;
         }
 
-        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        this.$target.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
         const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 

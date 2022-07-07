@@ -16,7 +16,7 @@
         (submenu.clean_url() and submenu.clean_url() != '/' and any(request.httprequest.path == child.url for child in submenu.child_id if child.url) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         } #{submenu.is_mega_menu and 'position-static'}">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-toggle="dropdown" href="#">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-bs-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
         <div t-if="submenu.is_mega_menu"
@@ -221,7 +221,7 @@
 
 <!-- Navbar -->
 <template id="navbar_toggler" name="Navbar Toggler">
-    <button type="button" t-attf-class="navbar-toggler #{_toggler_class}" data-toggle="collapse" data-target="#top_menu_collapse">
+    <button type="button" t-attf-class="navbar-toggler #{_toggler_class}" data-bs-toggle="collapse" data-bs-target="#top_menu_collapse">
         <span class="navbar-toggler-icon o_not_editable"/>
     </button>
 </template>
@@ -249,7 +249,7 @@
             <div id="top_menu_container" class="container justify-content-start justify-content-lg-between">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="mr-4"/>
+                    <t t-set="_link_class" t-valuef="me-4"/>
                 </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse order-last order-lg-0">
@@ -264,29 +264,29 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
-                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                            <t t-set="_item_class" t-valuef="nav-item ms-lg-auto"/>
+                            <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
-                            <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
-                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                            <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
+                            <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                         </t>
                     </t>
 
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ml-lg-2"/>
+                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2"/>
                     </t>
                 </div>
                 <!-- Call To Action -->
                 <t t-call="website.placeholder_header_call_to_action">
-                    <t t-set="_div_classes" t-valuef="ml-lg-4"/>
+                    <t t-set="_div_classes" t-valuef="ms-lg-4"/>
                 </t>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler">
-                    <t t-set="_toggler_class" t-valuef="ml-auto"/>
+                    <t t-set="_toggler_class" t-valuef="ms-auto"/>
                 </t>
             </div>
         </t>
@@ -301,7 +301,7 @@
 
 <template id="template_header_default_align_right" inherit_id="website.template_header_default" active="False">
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
-        <t t-set="_nav_class" t-valuef="ml-auto"/>
+        <t t-set="_nav_class" t-valuef="ms-auto"/>
     </xpath>
 </template>
 
@@ -313,33 +313,33 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="mr-lg-auto mr-0"/>
+                    <t t-set="_link_class" t-valuef="me-lg-auto me-0"/>
                 </t>
                 <ul class="nav navbar-nav navbar-expand d-none d-sm-block">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item ml-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item ms-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ms-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-right"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-end"/>
                     </t>
                 </ul>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler">
-                    <t t-set="_toggler_class" t-valuef="order-first mr-auto"/>
+                    <t t-set="_toggler_class" t-valuef="order-first me-auto"/>
                 </t>
                 <!-- Language Selector -->
                 <t t-call="website.placeholder_header_language_selector">
-                    <t t-set="_div_classes" t-valuef="ml-2 d-none d-sm-block"/>
+                    <t t-set="_div_classes" t-valuef="ms-2 d-none d-sm-block"/>
                 </t>
                 <!-- Call To Action -->
                 <t t-call="website.placeholder_header_call_to_action">
-                    <t t-set="_div_classes" t-valuef="ml-3"/>
+                    <t t-set="_div_classes" t-valuef="ms-3"/>
                 </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
@@ -362,7 +362,7 @@
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown d-block d-sm-none"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
-                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-left"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-start"/>
                         </t>
                     </t>
                     <!-- Language Selector -->
@@ -381,7 +381,7 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="s_hr text-left pt16 pb16" data-name="Separator">
+                    <div class="s_hr text-start pt16 pb16" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--300);"/>
                     </div>
                 </div>
@@ -398,13 +398,13 @@
                     <div class="row align-items-center">
                         <!-- Separator -->
                         <div class="col-lg-12">
-                            <div class="s_hr text-left pt16 pb16" data-name="Separator">
+                            <div class="s_hr text-start pt16 pb16" data-name="Separator">
                                 <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--300);"/>
                             </div>
                         </div>
                         <!-- Social -->
                         <div class="col-lg-6 pb16">
-                            <div class="s_social_media text-left no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
                                     <i class="fa fa-facebook m-1"/>
@@ -421,11 +421,11 @@
                             </div>
                         </div>
                         <!-- Contact -->
-                        <div class="col-lg-4 text-lg-right pb16">
-                            <i class="fa fa-1x fa-fw fa-envelope mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
+                        <div class="col-lg-4 text-lg-end pb16">
+                            <i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                         </div>
-                        <div class="col-lg-2 text-lg-right pb16">
-                            <i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
+                        <div class="col-lg-2 text-lg-end pb16">
+                            <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
                         </div>
                     </div>
                 </div>
@@ -436,13 +436,13 @@
 
 <template id="template_header_hamburger_align_center" inherit_id="website.template_header_hamburger" active="False">
     <xpath expr="//t[@t-set='_toggler_class']" position="replace">
-        <t t-set="_toggler_class" t-valuef="ml-4 mr-auto"/>
+        <t t-set="_toggler_class" t-valuef="ms-4 me-auto"/>
     </xpath>
 </template>
 
 <template id="template_header_hamburger_align_right" inherit_id="website.template_header_hamburger" active="False">
     <xpath expr="//t[@t-set='_toggler_class']" position="replace">
-        <t t-set="_toggler_class" t-valuef="ml-4"/>
+        <t t-set="_toggler_class" t-valuef="ms-4"/>
     </xpath>
 </template>
 
@@ -462,12 +462,12 @@
                         <t t-set="_link_class" t-valuef="m-0"/>
                     </t>
                     <!-- Right -->
-                    <div class="o_header_centered_logo text-right">
+                    <div class="o_header_centered_logo text-end">
                         <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2"/>
                     </div>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ml-1 d-block d-lg-none ml-auto mr-4"/>
+                        <t t-set="_div_classes" t-valuef="ms-1 d-block d-lg-none ms-auto me-4"/>
                     </t>
                     <!-- Navbar Toggler -->
                     <t t-call="website.navbar_toggler">
@@ -495,20 +495,20 @@
                             </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_item_class" t-valuef="nav-item ml-lg-3"/>
+                                <t t-set="_item_class" t-valuef="nav-item ms-lg-3"/>
                                 <t t-set="_link_class" t-valuef="nav-link"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="True"/>
-                                <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-3"/>
-                                <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                                <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-3"/>
+                                <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                             </t>
                         </t>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
                             <t t-set="_div_classes" t-valuef="d-block d-lg-none mb-2"/>
-                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-static float-none"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
                         </t>
                         <!-- Call To Action -->
                         <t t-call="website.placeholder_header_call_to_action">
@@ -552,7 +552,7 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <small><i class="fa fa-1x fa-fw fa-phone mr-2"/><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></small>
+                    <small><i class="fa fa-1x fa-fw fa-phone me-2"/><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></small>
                 </div>
             </section>
         </div>
@@ -564,7 +564,7 @@
         <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_vertical_3">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="s_hr w-100 text-left pt0 pb0" data-name="Separator">
+                    <div class="s_hr w-100 text-start pt0 pb0" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--300);"/>
                     </div>
                 </div>
@@ -597,7 +597,7 @@
                             </t>
                         </t>
                         <!-- Language Selector -->
-                        <li class="nav-item ml-lg-1">
+                        <li class="nav-item ms-lg-1">
                             <t t-call="website.placeholder_header_language_selector">
                                 <t t-set="_div_classes" t-valuef="dropup"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-lg-left"/>
@@ -618,7 +618,7 @@
                                 <t t-call="portal.user_dropdown">
                                     <t t-set="_icon" t-value="true"/>
                                     <t t-set="_user_name" t-value="true"/>
-                                    <t t-set="_item_class" t-valuef="nav-item dropdown mr-auto"/>
+                                    <t t-set="_item_class" t-valuef="nav-item dropdown me-auto"/>
                                     <t t-set="_link_class" t-valuef="nav-link"/>
                                 </t>
                             </ul>
@@ -635,7 +635,7 @@
                         <t t-call="portal.user_dropdown">
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_user_name" t-value="true"/>
-                            <t t-set="_item_class" t-valuef="nav-item dropup mr-auto"/>
+                            <t t-set="_item_class" t-valuef="nav-item dropup me-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                             <t t-set="_dropdown_menu_class" t-valuef="position-absolute"/>
                         </t>
@@ -668,14 +668,14 @@
                         </a>
                     </div>
                     <!-- Separator -->
-                    <div class="s_hr text-left pt16 pb16" data-name="Separator">
+                    <div class="s_hr text-start pt16 pb16" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
                     </div>
                     <!-- Contact -->
-                    <small><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></small><br/>
-                    <small><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></small>
+                    <small><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></small><br/>
+                    <small><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></small>
                     <!-- Separator -->
-                    <div class="s_hr text-left pt16 pb16" data-name="Separator">
+                    <div class="s_hr text-start pt16 pb16" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
                     </div>
                 </div>
@@ -691,30 +691,30 @@
             <div id="top_menu_container" class="container flex-row flex-wrap">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="mr-4"/>
+                    <t t-set="_link_class" t-valuef="me-4"/>
                 </t>
                 <!-- Slogan -->
-                <div class="ml-lg-3 mr-auto">
+                <div class="ms-lg-3 me-auto">
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_1"/>
                 </div>
-                <ul class="nav navbar-nav navbar-expand ml-auto order-last order-lg-0">
+                <ul class="nav navbar-nav navbar-expand ms-auto order-last order-lg-0">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item ml-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item ms-3"/>
                         <t t-set="_link_class" t-valuef="btn btn-outline-primary"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_user_name" t-value="True"/>
-                        <t t-set="_user_name_class" t-valuef="font-weight-bold"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
+                        <t t-set="_user_name_class" t-valuef="fw-bold"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ms-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-absolute"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-absolute"/>
                     </t>
                     <li class="nav-item">
                         <!-- Call To Action -->
                         <t t-call="website.placeholder_header_call_to_action">
-                            <t t-set="_div_classes" t-valuef="ml-2"/>
+                            <t t-set="_div_classes" t-valuef="ms-2"/>
                         </t>
                     </li>
                 </ul>
@@ -738,8 +738,8 @@
                     </t>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="mb-4 mb-lg-0 align-self-lg-center ml-lg-auto"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="float-lg-right"/>
+                        <t t-set="_div_classes" t-valuef="mb-4 mb-lg-0 align-self-lg-center ms-lg-auto"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="float-lg-end"/>
                     </t>
                 </div>
             </div>
@@ -797,7 +797,7 @@
                     <t t-set="_div_classes" t-valuef="d-block d-lg-none"/>
                 </t>
                 <!-- Navbar Collapse -->
-                <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
+                <div id="top_menu_collapse" class="collapse navbar-collapse ms-lg-3">
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-valuef="flex-grow-1"/>
                         <!-- Menu -->
@@ -809,24 +809,24 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
+                            <t t-set="_item_class" t-valuef="nav-item ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_user_name" t-value="True"/>
-                            <t t-set="_user_name_class" t-valuef="font-weight-bold"/>
-                            <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
+                            <t t-set="_user_name_class" t-valuef="fw-bold"/>
+                            <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                     </t>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ml-lg-2 align-self-lg-center"/>
+                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2 align-self-lg-center"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ml-3"/>
+                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ms-3"/>
                     </t>
                 </div>
             </div>
@@ -842,11 +842,11 @@
                     <div class="row align-items-center">
                         <div class="col-lg-8">
                             <small>
-                                <i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="mr-3"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
-                                <i class="fa fa-1x fa-fw fa-envelope mr-2 d-inline"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
+                                <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="me-3"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
+                                <i class="fa fa-1x fa-fw fa-envelope me-2 d-inline"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                             </small>
                         </div>
-                        <div class="col-lg-4 text-lg-right">
+                        <div class="col-lg-4 text-lg-end">
                             <div class="s_social_media no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <small class="s_social_media_title text-muted d-none" contenteditable="true"><b>Follow us</b></small>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
@@ -882,29 +882,29 @@
             <div class="container d-flex align-items-center pb-4 flex-wrap">
                 <!-- Social Icons -->
                 <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1"/>
-                <ul class="nav ml-auto flex-nowrap" contenteditable="false">
+                <ul class="nav ms-auto flex-nowrap" contenteditable="false">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item ml-lg-3"/>
-                        <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                        <t t-set="_item_class" t-valuef="nav-item ms-lg-3"/>
+                        <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_avatar" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                 </ul>
                 <!-- Language Selector -->
                 <t t-call="website.placeholder_header_language_selector">
-                    <t t-set="_div_classes" t-valuef="ml-2 d-none d-sm-block"/>
+                    <t t-set="_div_classes" t-valuef="ms-2 d-none d-sm-block"/>
                 </t>
             </div>
         </div>
         <div id="top_menu_container" class="container mt-n4">
             <t t-call="website.navbar">
-                <t t-set="_navbar_classes" t-valuef="shadow-sm rounded pr-2"/>
+                <t t-set="_navbar_classes" t-valuef="shadow-sm rounded pe-2"/>
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
@@ -923,11 +923,11 @@
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
                         <t t-set="_div_classes" t-valuef="d-block d-sm-none mb-2"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-static float-none"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ml-lg-3"/>
+                        <t t-set="_div_classes" t-valuef="ms-lg-3"/>
                     </t>
                 </div>
             </t>
@@ -940,7 +940,7 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1">
             <section class="s_text_block" data-snippet="s_text_block" name="Text">
                 <div class="container">
-                    <div class="s_social_media text-left o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                    <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h6 class="s_social_media_title d-none" contenteditable="true">Follow us</h6>
                         <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
                             <i class="fa fa-facebook m-1"/>
@@ -970,19 +970,19 @@
                 <ul class="nav navbar-nav o_header_centered_logo justify-content-end flex-row">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item ml-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item ms-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ms-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-right"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-end"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ml-2"/>
+                        <t t-set="_div_classes" t-valuef="ms-2"/>
                     </t>
                 </ul>
                 <!-- Navbar Toggler -->
@@ -1001,7 +1001,7 @@
                     </t>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ml-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                        <t t-set="_div_classes" t-valuef="ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
                     </t>
                 </div>
             </div>
@@ -1019,14 +1019,14 @@
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Call To Action -->
                 <t t-call="website.placeholder_header_call_to_action">
-                    <t t-set="_div_classes" t-valuef="d-lg-none mr-3"/>
+                    <t t-set="_div_classes" t-valuef="d-lg-none me-3"/>
                 </t>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
                     <t t-call="website.navbar_nav">
-                        <t t-set="_nav_class" t-valuef="ml-lg-3 flex-grow-1"/>
+                        <t t-set="_nav_class" t-valuef="ms-lg-3 flex-grow-1"/>
                         <!-- Menu -->
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu">
@@ -1036,24 +1036,24 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
+                            <t t-set="_item_class" t-valuef="nav-item ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_icon" t-value="True"/>
                             <t t-set="_user_name" t-value="True"/>
-                            <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
+                            <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                     </t>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ml-lg-2"/>
+                        <t t-set="_div_classes" t-valuef="ms-lg-2"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ml-3"/>
+                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ms-3"/>
                     </t>
                 </div>
             </div>
@@ -1081,10 +1081,10 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
-                <div class="d-flex align-items-center ml-auto">
+                <div class="d-flex align-items-center ms-auto">
                     <!-- Navbar Toggler -->
                     <t t-call="website.navbar_toggler">
-                        <t t-set="_toggler_class" t-valuef="o_header_hamburger_full_toggler ml-2"/>
+                        <t t-set="_toggler_class" t-valuef="o_header_hamburger_full_toggler ms-2"/>
                     </t>
                 </div>
             </div>
@@ -1107,13 +1107,13 @@
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
-                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                            <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
-                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold ml-lg-3"/>
+                            <t t-set="_link_class" t-valuef="nav-link fw-bold ms-lg-3"/>
                         </t>
                     </t>
                     <!-- Call To Action -->
@@ -1168,15 +1168,15 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
-                <div class="d-flex align-items-center ml-auto">
+                <div class="d-flex align-items-center ms-auto">
                     <!-- Navbar Toggler -->
                     <t t-call="website.navbar_toggler">
-                        <t t-set="_toggler_class" t-valuef="ml-2"/>
+                        <t t-set="_toggler_class" t-valuef="ms-2"/>
                     </t>
                 </div>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
-                    <t t-set="_nav_class" t-valuef="text-right align-items-sm-end"/>
+                    <t t-set="_nav_class" t-valuef="text-end align-items-sm-end"/>
                     <t t-call="website.navbar_nav">
                         <!-- Menu -->
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
@@ -1218,11 +1218,11 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row align-items-center text-center text-md-left">
+                    <div class="row align-items-center text-center text-md-start">
                         <div class="col-lg-8 pt16">
                             <p class="mb-0"><small>We help you grow your business</small></p>
                         </div>
-                        <div class="col-lg-4 text-lg-right pt16">
+                        <div class="col-lg-4 text-lg-end pt16">
                             <div class="s_social_media no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <small class="s_social_media_title d-none" contenteditable="true"><b>Follow us</b></small>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
@@ -1243,7 +1243,7 @@
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
                                     <i class="fa fa-instagram m-1"/>
                                 </a>
-                                <a href="mailto:info@yourcompany.example.com" class="ml-3" target="_blank">
+                                <a href="mailto:info@yourcompany.example.com" class="ms-3" target="_blank">
                                     <i class="fa fa-1x fa-envelope"/>
                                 </a>
                             </div>
@@ -1266,11 +1266,11 @@
         <attribute name="class" separator=" " add="position-relative"/>
     </xpath>
     <xpath expr="//ul[@id='top_menu']" position="before">
-        <div class="o_offcanvas_menu_backdrop" data-toggle="collapse" data-target="#top_menu_collapse" aria-label="Toggle navigation"/>
+        <div class="o_offcanvas_menu_backdrop" data-bs-toggle="collapse" data-bs-target="#top_menu_collapse" aria-label="Toggle navigation"/>
     </xpath>
     <xpath expr="//ul[@id='top_menu']/t" position="before">
-        <li class="o_offcanvas_menu_toggler order-first navbar-toggler text-right border-0 o_not_editable">
-            <a href="#top_menu_collapse" class="nav-link px-3" data-toggle="collapse">
+        <li class="o_offcanvas_menu_toggler order-first navbar-toggler text-end border-0 o_not_editable">
+            <a href="#top_menu_collapse" class="nav-link px-3" data-bs-toggle="collapse">
                 <span class="fa-2x">&#215;</span>
             </a>
         </li>
@@ -1417,11 +1417,11 @@
                         <div id="connect" class="col-lg-4 offset-lg-1 pt24 pb24">
                             <h5 class="mb-3">Connect with us</h5>
                             <ul class="list-unstyled">
-                                <li><i class="fa fa-comment fa-fw mr-2"/><span><a href="/contactus">Contact us</a></span></li>
-                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-comment fa-fw me-2"/><span><a href="/contactus">Contact us</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                             </ul>
-                            <div class="s_social_media text-left o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
                                     <i class="fa fa-facebook rounded-circle shadow-sm"/>
@@ -1463,10 +1463,10 @@
                         </div>
                         <div class="col-lg-3">
                             <ul class="list-unstyled mb-2">
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
-                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
-                            <div class="s_social_media text-left no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
                                     <i class="fa fa-2x fa-github m-1"/>
@@ -1508,8 +1508,8 @@
                     </div>
                     <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                     <ul class="list-inline text-center">
-                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
-                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
                 </div>
             </section>
@@ -1559,17 +1559,17 @@
                         <div class="col-lg-2 pb16">
                             <h5>Follow us</h5>
                             <ul class="list-unstyled">
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-facebook-square mr-2"/><a href="/website/social/facebook" target="_blank">Facebook</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-twitter-square mr-2"/><a href="/website/social/twitter" target="_blank">Twitter</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-linkedin-square mr-2"/><a href="/website/social/linkedin" target="_blank">Linkedin</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-instagram mr-2"/><a href="/website/social/instagram" target="_blank">Instagram</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-facebook-square me-2"/><a href="/website/social/facebook" target="_blank">Facebook</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-twitter-square me-2"/><a href="/website/social/twitter" target="_blank">Twitter</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-linkedin-square me-2"/><a href="/website/social/linkedin" target="_blank">Linkedin</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-instagram me-2"/><a href="/website/social/instagram" target="_blank">Instagram</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb16">
                             <h5>Get in touch</h5>
                             <ul class="list-unstyled">
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb16">
@@ -1595,7 +1595,7 @@
                             </a>
                         </div>
                         <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
-                            <ul class="list-inline mb-0 ml-3">
+                            <ul class="list-inline mb-0 ms-3">
                                 <li class="list-inline-item"><a href="/">Home</a></li>
                                 <li class="list-inline-item"><a href="#">About us</a></li>
                                 <li class="list-inline-item"><a href="#">Products</a></li>
@@ -1607,7 +1607,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
-                            <div class="s_social_media text-right no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
                                     <i class="fa fa-2x fa-github m-1"/>
@@ -1649,7 +1649,7 @@
                             <h5><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></h5>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
-                            <div class="s_social_media text-right no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <p class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</p>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
                                     <i class="fa fa-twitter m-1"/>
@@ -1680,7 +1680,7 @@
                                 <img src="/website/static/src/img/website_logo.svg" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
                             </a>
                         </div>
-                        <div class="col-lg-10 pb16 text-right">
+                        <div class="col-lg-10 pb16 text-end">
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item"><a href="/">Home</a></li>
                                 <li class="list-inline-item">•</li>
@@ -1731,10 +1731,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-9">
-                            <p><i class="fa fa-1x fa-fw fa-map-marker mr-2"/>250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
+                            <p><i class="fa fa-1x fa-fw fa-map-marker me-2"/>250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                         </div>
                         <div class="col-lg-3">
-                            <p><i class="fa fa-1x fa-fw fa-envelope mr-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
+                            <p><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
                         </div>
                     </div>
                 </div>
@@ -1763,7 +1763,7 @@
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-3 pb24">
-                            <ul class="pl-3 mb-0">
+                            <ul class="ps-3 mb-0">
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/contactus">Contact us</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
@@ -1774,12 +1774,12 @@
                         </div>
                         <div class="col-lg-6 pb24">
                             <ul class="list-unstyled mb-0">
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
-                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb24">
-                            <div class="s_social_media text-right o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-end o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow Us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
                                     <i class="fa fa-1x fa-facebook rounded-circle shadow-sm"/>
@@ -1815,7 +1815,7 @@
 
 <template id="footer_copyright_company_name" inherit_id="website.layout">
     <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
-        <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
+        <span class="o_footer_copyright_name me-2">Copyright &amp;copy; Company name</span>
     </xpath>
 </template>
 
@@ -1843,7 +1843,7 @@
                  data-display="afterDelay"
                  data-consents-duration="999"
                  data-focus="false"
-                 data-backdrop="false"
+                 data-bs-backdrop="false"
                  data-keyboard="false"
                  tabindex="-1"
                  role="dialog">
@@ -1855,7 +1855,7 @@
                                     <div class="col-lg-8 pt16">
                                         <p>We use cookies to provide you a better user experience.</p>
                                     </div>
-                                    <div class="col-lg-4 pt16 text-right">
+                                    <div class="col-lg-4 pt16 text-end">
                                         <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
                                         <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
                                     </div>
@@ -2027,11 +2027,11 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_publisher" t-ignore="true" class="float-end css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
+            <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-bs-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-out="0"/>
                 <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration')}"
@@ -2080,7 +2080,7 @@
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
-                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                    <p>
                      Note: To hide this page, uncheck it from the Customize tab in edit mode.
                    </p>
@@ -2205,11 +2205,9 @@
                             <input type="hidden" name="url" t-att-value="path" />
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
-                            <div class="input-group-append">
-                              <button class="btn btn-secondary" type="button" id="showPass">
-                                <i class="fa fa-eye"></i>
-                              </button>
-                          </div>
+                          <button class="btn btn-secondary" type="button" id="showPass">
+                            <i class="fa fa-eye"></i>
+                          </button>
                         </div>
                     </div>
                     <button type="submit" class="h4 btn btn-primary btn-block">Access to this page</button>
@@ -2226,7 +2224,7 @@
     <!--    see test_05_reset_specific_view_controller_broken_request                                          -->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <xpath expr="//script[last()]" position="before">
-        <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/modal.js"/>
     </xpath>
     <xpath expr="//style" position="after">
         <t t-if='view'>
@@ -2262,7 +2260,7 @@
                     <div class="modal-content">
                         <header class="modal-header">
                             <h4 class="modal-title">Reset templates</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </header>
                         <main class="modal-body">
                             <div class="form-group row mb0">
@@ -2280,7 +2278,7 @@
                             </div>
                         </main>
                         <footer class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Cancel">Cancel</button>
                             <input type="submit" value="Confirm" class="btn btn-primary"/>
                         </footer>
                     </div>
@@ -2360,14 +2358,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
-        <div class="input-group-append">
-            <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
-                <i class="fa fa-search"/>
-                <span t-if="search" class="oe_search_found">
-                    <small>(<t t-out="search_count or 0"/> found)</small>
-                </span>
-            </button>
-        </div>
+        <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
+            <i class="fa fa-search"/>
+            <span t-if="search" class="oe_search_found">
+                <small>(<t t-out="search_count or 0"/> found)</small>
+            </span>
+        </button>
     </div>
 </template>
 
@@ -2380,7 +2376,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div id="wrap">
             <div class="container">
                 <t t-call="website.website_search_box_input">
-                    <t t-set="_form_classes" t-valuef="mt8 float-right"/>
+                    <t t-set="_form_classes" t-valuef="mt8 float-end"/>
                     <t t-set="search_type" t-valuef="pages"/>
                     <t t-set="action" t-valuef="/pages"/>
                     <t t-set="search" t-value="original_search or search"/>
@@ -2453,14 +2449,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
-        <div class="media align-items-center o_search_result_item">
+        <div class="d-flex align-items-center o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
-            <div class="media-body px-3">
+            <div class="flex-grow-1 px-3">
                 <t t-set="description" t-value="result.get('description')"/>
                 <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
                 <t t-set="extra_link_html" t-value="not result.get('extra_link_url') and result.get('extra_link')"/>
-                <div t-att-class="'h6 font-weight-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
+                <div t-att-class="'h6 fw-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
                 <p t-if="description" class="mb-0" t-out="description"/>
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>

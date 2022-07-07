@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr_org_chart_employee">
-    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} media">
+    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} d-flex">
         <t t-set="is_self" t-value="employee.id == view_employee_id"/>
 
         <div class="o_media_left">
@@ -19,17 +19,17 @@
                 t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
         </div>
 
-        <div class="media-body">
+        <div class="flex-grow-1">
             <span
                     t-if="employee.indirect_sub_count &gt; 0"
-                    class="badge badge-pill"
+                    class="badge rounded-pill"
                     tabindex="0"
                     data-trigger="focus"
                     t-att-data-emp-name="employee.name"
                     t-att-data-emp-id="employee.id"
                     t-att-data-emp-dir-subs="employee.direct_sub_count"
                     t-att-data-emp-ind-subs="employee.indirect_sub_count"
-                    data-toggle="popover">
+                    data-bs-toggle="popover">
                 <t t-esc="employee.indirect_sub_count"/>
             </span>
 
@@ -58,7 +58,7 @@
 
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
         <t t-if='managers_more'>
-            <div class="o_org_chart_entry o_org_chart_more media">
+            <div class="o_org_chart_entry o_org_chart_more d-flex">
                 <div class="o_media_left">
                     <a class="text-center o_employee_more_managers"
                             t-att-data-employee-id="managers[0].id">
@@ -100,7 +100,7 @@
         </t>
 
         <t t-if="(children.length + managers.length) &gt; 19">
-            <div class="o_org_chart_entry o_org_chart_more media">
+            <div class="o_org_chart_entry o_org_chart_more d-flex">
                 <div class="o_media_left">
                     <a href="#"
                         t-att-data-employee-id="self.id"
@@ -113,13 +113,13 @@
 </t>
 
 <t t-name="hr_orgchart_emp_popover">
-    <div class="popover o_org_chart_popup" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>
+    <div class="popover o_org_chart_popup" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>
 </t>
 
 <t t-name="hr_orgchart_emp_popover_content">
     <table class="table table-sm">
         <thead>
-            <td class="text-right"><t t-esc="employee.direct_sub_count"/></td>
+            <td class="text-end"><t t-esc="employee.direct_sub_count"/></td>
             <td>
                 <a href="#" class="o_employee_sub_redirect" data-type='direct'
                         t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
@@ -128,7 +128,7 @@
         </thead>
         <tbody>
             <tr>
-                <td class="text-right">
+                <td class="text-end">
                     <t t-esc="employee.indirect_sub_count - employee.direct_sub_count"/>
                 </td>
                 <td>
@@ -138,7 +138,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="text-right"><t t-esc="employee.indirect_sub_count"/></td>
+                <td class="text-end"><t t-esc="employee.indirect_sub_count"/></td>
                 <td>
                     <a href="#" class="o_employee_sub_redirect" data-type='total'
                             t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
@@ -153,7 +153,7 @@
     <div class="d-flex align-items-center">
         <span class="flex-shrink-0" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + employee.id + "/avatar_1024/\")"'/>
         <b class="flew-grow-1"><t t-esc="employee.name"/></b>
-        <a href="#" class="ml-auto o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
+        <a href="#" class="ms-auto o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
     </div>
 </t>
 

@@ -112,10 +112,10 @@
                                         <h3><t t-esc="record.name.value"/></h3>
                                     </div>
                                     <div class="col-5">
-                                        <span class="badge badge-pill"><t t-esc="record.symbol.value"/></span>
+                                        <span class="badge rounded-pill"><t t-esc="record.symbol.value"/></span>
                                     </div>
-                                    <div class="col-5 text-right">
-                                        <t t-if="! record.active.raw_value"><span class="badge badge-pill bg-light border">inactive</span></t>
+                                    <div class="col-5 text-end">
+                                        <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
                                     </div>
                                 </div>
                                 <div class="row">

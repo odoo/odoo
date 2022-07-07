@@ -19,7 +19,7 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
         // And add a button "Read more" to show the mention of the parent email
         const body = this.$el.find('.card-body').first();
         const quoted = body.find('*[data-o-mail-quote]');
-        const readMore = $('<button class="btn btn-light btn-sm ml-1"/>').text('. . .');
+        const readMore = $('<button class="btn btn-light btn-sm ms-1"/>').text('. . .');
         quoted.first().before(readMore);
         readMore.on('click', () => {
             quoted.toggleClass('visible');

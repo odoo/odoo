@@ -34,8 +34,8 @@
             left: 0%;
             margin-top: 28px;
             padding: 0.5rem 1rem;
-            color: color-yiq(o-color('primary'));
-            background: theme-color('primary');
+            color: color-contrast(o-color('primary'));
+            background: map-get($theme-colors, 'primary');
             font-size: 1.15rem;
             border-radius: 0.3rem;
             transform: translateX(-50%);
@@ -47,7 +47,7 @@
                 left: 50%;
                 width: 0;
                 border-style: solid;
-                border-color: theme-color('primary') transparent;
+                border-color: map-get($theme-colors, 'primary') transparent;
                 border-width: 0 5px 5px;
                 margin-left: -5px;
             }

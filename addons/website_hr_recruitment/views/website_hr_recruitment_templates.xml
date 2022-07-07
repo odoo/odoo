@@ -39,7 +39,7 @@
                         <a t-foreach="jobs" t-as="job" t-attf-href="/jobs/detail/#{ slug(job) }" t-attf-class="text-decoration-none#{' mt-3' if job_index else ''}">
                             <div class="card card-default mb32">
                                 <div class="card-body" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                    <span t-if="not job.website_published" class="badge badge-danger mb8 p-2">unpublished</span>
+                                    <span t-if="not job.website_published" class="badge text-bg-danger mb8 p-2">unpublished</span>
                                     <h3 class="text-secondary mt0 mb4">
                                         <span t-field="job.name"/>
                                     </h3>
@@ -80,8 +80,8 @@
             <section class="bg-200">
                 <div class="container">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb pl-0">
-                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary font-weight-bold">Jobs</a></li>
+                        <ol class="breadcrumb ps-0">
+                            <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
                         </ol>
                     </nav>
@@ -91,11 +91,11 @@
             <section class="pb32">
                 <div class="container">
                     <div class="mt32">
-                        <div class="float-right">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right">Apply Now!</a>
+                        <div class="float-end">
+                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
                         </div>
                         <h1 t-field="job.name"/>
-                        <h5 class="font-weight-light" t-field="job.address_id" t-options='{
+                        <h5 class="fw-light" t-field="job.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["city"],
                             "no_tag_br": True
@@ -320,7 +320,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
-                    <div class="card bg-primary">
+                    <div class="card text-bg-primary">
                         <h4 class="card-header">Responsibilities</h4>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Lead the entire sales cycle</li>
@@ -332,7 +332,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
-                    <div class="card bg-primary">
+                    <div class="card text-bg-primary">
                         <h4 class="card-header">Must Have</h4>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Bachelor Degree or Higher</li>
@@ -344,7 +344,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
-                    <div class="card bg-primary">
+                    <div class="card text-bg-primary">
                         <h4 class="card-header">Nice to have</h4>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Experience in writing online content</li>
@@ -397,22 +397,22 @@
             </p>
             <div class="row pt16">
                 <div class="col-lg-3 text-center pt16 pb32">
-                    <i class="fa fa-2x fa-gift rounded-circle bg-primary m-3"></i>
+                    <i class="fa fa-2x fa-gift rounded-circle text-bg-primary m-3"></i>
                     <h3>Perks</h3>
                     <p>A full-time position <br/>Attractive salary package.</p>
                 </div>
                 <div class="col-lg-3 text-center pt16 pb32">
-                    <i class="fa fa-2x fa-bar-chart rounded-circle bg-primary m-3"></i>
+                    <i class="fa fa-2x fa-bar-chart rounded-circle text-bg-primary m-3"></i>
                     <h3>Trainings</h3>
                     <p>12 days / year, including <br/>6 of your choice.</p>
                 </div>
                 <div class="col-lg-3 text-center pt16 pb32">
-                    <i class="fa fa-2x fa-futbol-o rounded-circle bg-primary m-3"></i>
+                    <i class="fa fa-2x fa-futbol-o rounded-circle text-bg-primary m-3"></i>
                     <h3>Sport Activity</h3>
                     <p>Play any sport with colleagues, <br/>the bill is covered.</p>
                 </div>
                 <div class="col-lg-3 text-center pt16 pb32">
-                    <i class="fa fa-2x fa-coffee rounded-circle bg-primary m-3"></i>
+                    <i class="fa fa-2x fa-coffee rounded-circle text-bg-primary m-3"></i>
                     <h3>Eat &amp; Drink</h3>
                     <p>Fruit, coffee and <br/>snacks provided.</p>
                 </div>

@@ -38,7 +38,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         position: "bottom",
     }, {
         extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.close",
+        trigger: ".modal-header button.btn-close",
         auto: true,
     },
     {
@@ -58,7 +58,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         position: "bottom",
     }, {
         extra_trigger: 'div.modal.modal_shown',
-        trigger: ".modal-header button.close",
+        trigger: ".modal-header button.btn-close",
         auto: true,
     }, {
         trigger: ".o_wforum_validate_toggler[data-karma]:first",

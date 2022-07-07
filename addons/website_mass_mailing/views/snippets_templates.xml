@@ -28,10 +28,8 @@
     <div class="s_newsletter_subscribe_form js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
         <div class="input-group">
             <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
-            <span class="input-group-append">
-                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
-                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
-            </span>
+            <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+            <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
         </div>
     </div>
 </template>
@@ -55,7 +53,7 @@
         <div class="modal fade s_popup_middle o_newsletter_modal"
              style="background-color: var(--black-50) !important;"
              data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
-             data-focus="false" data-backdrop="false" tabindex="-1" role="dialog">
+             data-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
                     <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
@@ -68,7 +66,7 @@
                     </section>
                     <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                         <div class="container">
-                            <div class="row s_nb_column_fixed no-gutters">
+                            <div class="row s_nb_column_fixed g-0">
                                 <div class="col-lg-8 offset-lg-2 pt32 pb32">
                                     <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
                                 </div>

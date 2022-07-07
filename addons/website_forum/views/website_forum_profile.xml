@@ -11,7 +11,7 @@
 
     <template id="user_profile_sub_nav" inherit_id="website_profile.user_profile_sub_nav">
         <xpath expr="//nav" position="before">
-            <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pr-0 flex-grow-0">
+            <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0">
                 <a t-att-href="(request.website.domain or '') + '/' + request.params.get('forum_origin').lstrip('/')"
                     class="o_wprofile_all_users_nav_btn btn text-nowrap">
                     <i class="fa fa-chevron-left small"/> Back
@@ -24,13 +24,13 @@
         <xpath expr="//table[@id='o_wprofile_sidebar_table']//tr[last()]" position="after">
             <t t-if="forum and (up_votes or down_votes)">
                 <tr id="profile_abstract_info_company">
-                    <th><small class="font-weight-bold">Votes</small></th>
+                    <th><small class="fw-bold">Votes</small></th>
                     <td>
                         <span>
                             <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
-                            <span class="font-weight-bold" t-esc="up_votes"/>
-                            <i class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
-                            <span class="font-weight-bold" t-esc="down_votes"/>
+                            <span class="fw-bold" t-esc="up_votes"/>
+                            <i class="fa fa-thumbs-down text-danger ms-3" role="img" aria-label="Negative votes" title="Negative votes"/>
+                            <span class="fw-bold" t-esc="down_votes"/>
                         </span>
                     </td>
                 </tr>
@@ -39,16 +39,16 @@
         <xpath expr="//ul[@id='profile_extra_info_tablist']" position="inside">
             <t t-if="forum">
                 <li class="nav-item">
-                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-esc="count_questions"/> Questions</a>
                 </li>
                 <li class="nav-item">
-                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-esc="count_answers"/> Answers</a>
                 </li>
                 <li t-if="uid == user.id" class="nav-item">
-                    <a role="tab" aria-controls="activity" href="#activity" class="nav-link o_wprofile_navlink" data-toggle="tab">Activity</a>
+                    <a role="tab" aria-controls="activity" href="#activity" class="nav-link o_wprofile_navlink" data-bs-toggle="tab">Activity</a>
                 </li>
                 <li t-if="uid == user.id" class="nav-item">
-                    <a role="tab" aria-controls="votes" href="#votes" class="nav-link o_wprofile_navlink" data-toggle="tab">Votes</a>
+                    <a role="tab" aria-controls="votes" href="#votes" class="nav-link o_wprofile_navlink" data-bs-toggle="tab">Votes</a>
                 </li>
             </t>
         </xpath>
@@ -66,7 +66,7 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <span class="font-weight-bold">No question posted yet.</span>
+                            <span class="fw-bold">No question posted yet.</span>
                         </t>
                     </div>
                     <t t-if="favourite">
@@ -101,7 +101,7 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <span class="font-weight-bold">No answer posted yet.</span>
+                            <span class="fw-bold">No answer posted yet.</span>
                         </t>
                     </div>
                 </div>
@@ -126,8 +126,8 @@
 
     <template id="forum_filter_tag" name="Filtering Forum Tag">
         <t t-if="forum_filtered">
-            <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-1 ml-4">
-                <i class="fa fa-filter mr-2 text-muted"/>
+            <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-1 ms-4">
+                <i class="fa fa-filter me-2 text-muted"/>
                 <t t-esc="forum_filtered"/>
                 <a t-attf-href="/profile/user/#{uid}" class="btn border-0 py-1">&#215;</a>
             </span>
@@ -138,8 +138,8 @@
         <t t-if="activities">
             <div t-foreach="activities" t-as="activity" class="card mb-2">
                 <div class="card-body">
-                    <span t-esc="activity.subtype_id.name" class="badge badge-info mr-2 mt-1"/>
-                    <span t-field="activity.date" t-options='{"format": "short"}' class="mr-2"/>
+                    <span t-esc="activity.subtype_id.name" class="badge text-bg-info me-2 mt-1"/>
+                    <span t-field="activity.date" t-options='{"format": "short"}' class="me-2"/>
                     <t t-set="post" t-value="posts[activity.res_id]"/>
                     <span t-if="post[1]">
                         <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">

@@ -140,7 +140,7 @@ const MoveArticleToDialog = Dialog.extend({
                 const markup = [];
                 if (data.id === 'private') {
                     const src = escapeMarkup(this.getLoggedUserPicture());
-                    markup.push(`<img src="${src}" class="rounded-circle mr-1"/>`);
+                    markup.push(`<img src="${src}" class="rounded-circle me-1"/>`);
                 }
                 markup.push(escapeMarkup(data.text));
                 return markup.join('');
@@ -157,7 +157,7 @@ const MoveArticleToDialog = Dialog.extend({
                 window.Select2.util.markMatch(text, query.term, markup, escapeMarkup);
                 if (result.id === 'private') {
                     const src = escapeMarkup(this.getLoggedUserPicture());
-                    markup.unshift(`<img src="${src}" class="rounded-circle mr-1"/>`);
+                    markup.unshift(`<img src="${src}" class="rounded-circle me-1"/>`);
                 }
                 if (subject && subject !== text) {
                     markup.push(`<span class="test-ellipsis small">  -  ${escapeMarkup(subject)}</span>`);

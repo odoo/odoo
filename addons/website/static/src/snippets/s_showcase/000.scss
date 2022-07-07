@@ -9,7 +9,7 @@
                 display: block;
                 @include o-position-absolute($left: 50%);
                 height: 100%;
-                border-right: 1px solid gray('200');
+                border-right: 1px solid map-get($grays, '200');
             }
         }
     }
@@ -18,7 +18,7 @@
         opacity: 0.5;
     }
 
-    .text-right{
+    .text-end{
         .fa {
             float: right;
             margin-left: .5em;
@@ -28,7 +28,7 @@
             display: block;
         }
     }
-    .text-left{
+    .text-start{
         .fa {
             float: left;
             margin-right: .5em;
@@ -47,9 +47,9 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
     #wrapwrap .s_showcase:not([data-vcss]) {
-        .text-right, .text-left {
+        .text-end, .text-start {
             text-align: center;
 
             .fa {

@@ -20,7 +20,7 @@
                             <h3 class="m-0">Specifications</h3>
                             <t t-if="is_view_active('website_sale_comparison.add_to_compare')">
                                 <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-                                <button t-if="product_variant" type="button" role="button" class="d-none d-md-block btn btn-link px-0 o_add_compare_dyn" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange mr-2"></span>Compare</button>
+                                <button t-if="product_variant" type="button" role="button" class="d-none d-md-block btn btn-link px-0 o_add_compare_dyn" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange me-2"></span>Compare</button>
                             </t>
                         </div>
                         <div id="product_specifications">
@@ -30,7 +30,7 @@
                                         <table class="table">
                                             <t t-if="len(categories) > 1">
                                                 <tr>
-                                                    <th class="text-left" t-att-colspan="2">
+                                                    <th class="text-start" t-att-colspan="2">
                                                         <span t-if="category" t-field="category.name"/>
                                                         <span t-else="">Uncategorized</span>
                                                     </th>
@@ -126,7 +126,7 @@
                                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                 <input name="product_id" t-att-value="product.id" type="hidden"
                                                        t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))"/>
-                                                <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</a>
+                                                <a role="button" class="btn btn-primary d-block a-submit" href="#"><i class="fa fa-shopping-cart me-2"></i>Add to Cart</a>
                                             </form>
                                         </div>
                                     </td>
@@ -135,8 +135,8 @@
                             <tbody>
                                 <t t-foreach="categories" t-as="category">
                                     <t t-if="len(categories) &gt; 1">
-                                        <tr class="clickable" data-toggle="collapse" t-att-data-target="'.o_ws_category_%d' % category.id">
-                                            <th class="text-left" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
+                                        <tr class="clickable" data-bs-toggle="collapse" t-att-data-bs-target="'.o_ws_category_%d' % category.id">
+                                            <th class="text-start" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
                                         </tr>
                                     </t>
                                     <tr t-foreach="categories[category]" t-as="attribute" t-att-class="'collapse show o_ws_category_%d' % category.id">
@@ -159,18 +159,18 @@
 
     <template id="product_product" name="Comparator - Product row in comparator popover">
         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-        <div class="row no-gutters align-items-center my-1 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
+        <div class="row g-0 align-items-center my-1 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
             <div class="col-3 text-center">
                 <img class="img o_image_64_max" t-att-src="website.image_url(product, 'image_128')" alt="Product image"/>
             </div>
-            <div class="col-8 pl-2">
+            <div class="col-8 ps-2">
                 <h6>
                     <a t-att-href="product.website_url"><t t-esc="combination_info['display_name']" /></a><br/>
                     <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                     <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
                 </h6>
             </div>
-            <div class="col-1 text-right">
+            <div class="col-1 text-end">
                 <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
                     <i class="fa fa-trash" role="img" aria-label="Remove"></i>
                 </a>

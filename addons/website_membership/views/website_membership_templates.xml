@@ -35,9 +35,9 @@
             <div class="col-lg-8" id="ref_content">
                 <div class='d-flex m-2'>
                     <t t-call="website.pager">
-                       <t t-set="classname" t-valuef="float-left"/>
+                       <t t-set="classname" t-valuef="float-start"/>
                     </t>
-                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
+                    <form action="" method="get" class="navbar-search ms-auto pagination form-inline">
                         <t t-call="website.website_search_box">
                             <t t-set="search" t-value="post.get('search', '')"/>
                         </t>
@@ -52,12 +52,12 @@
                             <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
                             <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
                                 <t t-set="partner" t-value="partners[partner_id]"/>
-                                <div class="media mt-3">
+                                <div class="d-flex mt-3">
                                     <a t-attf-href="/members/#{slug(partner)}"
                                        t-field="partner.avatar_128"
-                                       t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover mr-3"}'
+                                       t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover me-3"}'
                                     ></a>
-                                    <div class="media-body" style="min-height: 64px;">
+                                    <div class="flex-grow-1" style="min-height: 64px;">
                                         <a t-attf-href="/members/#{slug(partner)}">
                                             <span t-field="partner.display_name"/>
                                         </a>
@@ -86,7 +86,7 @@
                 <li t-if="country['country_id']" class="nav-item">
                     <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
                         t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
-                        <span class="badge badge-pill float-right"><t t-esc="country['country_id_count'] or '0'"/></span>
+                        <span class="badge rounded-pill float-end"><t t-esc="country['country_id_count'] or '0'"/></span>
                     </a>
                 </li>
             </t>
@@ -105,7 +105,7 @@
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </header>
                     <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
                     style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
@@ -113,7 +113,7 @@
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
+            <h3>World Map<button class="btn btn-link" data-bs-toggle="modal" data-bs-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>

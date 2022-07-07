@@ -56,11 +56,11 @@
                         <thead>
                             <tr>
                                 <th>Description</th>
-                                <th class="text-right">Quantity</th>
+                                <th class="text-end">Quantity</th>
                                 <t t-if="o.invoice_method != 'none'">
-                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-end">Unit Price</th>
                                     <th class="text-center">Tax</th>
-                                    <th class="text-right">Price</th>
+                                    <th class="text-end">Price</th>
                                 </t>
                             </tr>
                         </thead>
@@ -72,18 +72,18 @@
                                         <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
                                         <p t-if="line.type == 'remove'">(<i>Remove</i>) <span t-field="line.name"/></p>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="line.product_uom_qty"/>
                                         <span groups="uom.group_uom" t-field="line.product_uom.name"/>
                                     </td>
                                     <t t-if="(line.repair_id.invoice_method != 'none')">
-                                        <td class="text-right">
+                                        <td class="text-end">
                                             <span t-field="line.price_unit"/>
                                         </td>
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
                                         </td>
-                                        <td class="text-right o_price_total">
+                                        <td class="text-end o_price_total">
                                             <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
                                     </t>
@@ -95,18 +95,18 @@
                                     <td>
                                         <span t-field="fees.name"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         <span t-field="fees.product_uom_qty"/>
                                         <span groups="uom.group_uom" t-field="fees.product_uom.name"/>
                                     </td>
                                     <t t-if="(fees.repair_id.invoice_method != 'none')">
-                                        <td class="text-right">
+                                        <td class="text-end">
                                             <span t-field="fees.price_unit"/>
                                         </td>
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, fees.tax_id))"/>
                                         </td>
-                                        <td class="text-right o_price_total">
+                                        <td class="text-end o_price_total">
                                             <span t-field="fees.price_subtotal"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
@@ -122,21 +122,21 @@
                                 <t t-if="o.invoice_method !='none'">
                                     <tr class="border-black o_subtotal">
                                         <td><strong>Total Without Taxes</strong></td>
-                                        <td class="text-right">
+                                        <td class="text-end">
                                             <span t-field="o.amount_untaxed"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Taxes</td>
-                                        <td class="text-right o_price_total">
+                                        <td class="text-end o_price_total">
                                             <span t-field="o.amount_tax"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr class="border-black o_total">
                                         <td><strong>Total</strong></td>
-                                        <td class="text-right o_price_total">
+                                        <td class="text-end o_price_total">
                                             <span t-field="o.amount_total"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                         </td>

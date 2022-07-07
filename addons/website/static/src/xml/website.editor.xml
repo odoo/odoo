@@ -21,8 +21,8 @@
                     <div>
                         <div class="dropdown">
                             <button class="dropdown-toggle"
-                                data-toggle="dropdown" title="" tabindex="-1"
-                                data-original-title="Link Size" aria-expanded="false">
+                                data-bs-toggle="dropdown" title="" tabindex="-1"
+                                data-bs-original-title="Link Size" aria-expanded="false">
                                 <we-toggler>
                                     Loading...
                                 </we-toggler>
@@ -57,7 +57,7 @@
             <div class="col-md-9">
                 <textarea id="google_font_html" class="form-control o_input_google_font"
                     placeholder="https://fonts.google.com/specimen/Roboto" style="height: 100px;"/>
-                <span class="float-right text-muted">
+                <span class="float-end text-muted">
                     Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the address of the font page here.
                 </span>
             </div>
@@ -67,7 +67,7 @@
     <t t-name="website.delete_google_font_btn">
         <t t-set="delete_font_title">Delete this font</t>
         <i role="button"
-           class="text-danger ml-2 fa fa-trash-o o_we_delete_google_font_btn"
+           class="text-danger ms-2 fa fa-trash-o o_we_delete_google_font_btn"
            t-att-aria-label="delete_font_title"
            t-att-title="delete_font_title"
            t-att-data-font-index="index"/>
@@ -106,9 +106,7 @@
             <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
             <div class="col">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa fa-key"/></div>
-                    </div>
+                    <div class="input-group-text"><i class="fa fa-key"/></div>
                     <input type="text" class="form-control" id="api_key_input"
                            t-att-value="apiKey or ''"
                            placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
@@ -140,7 +138,7 @@
 
     <t t-name="website.new_content_loader">
         <div class="o_new_content_loader_container position-fixed fixed-top fixed-left
-            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            h-100 w-100 d-flex flex-column align-items-center text-white fw-bold">
             <p id="new_content_loader_text"/>
             <div class="o_new_content_loader"/>
         </div>

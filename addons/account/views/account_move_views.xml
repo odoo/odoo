@@ -101,7 +101,7 @@
                                     <div class="col-8">
                                         <field name="account_id"/>
                                     </div>
-                                    <strong t-if="record.date_maturity.raw_value" class="col-4 pl-0 text-right">
+                                    <strong t-if="record.date_maturity.raw_value" class="col-4 ps-0 text-end">
                                         <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <field name="date_maturity"/>
                                     </strong>
                                 </div>
@@ -109,7 +109,7 @@
                                     <em class="col-10">
                                         <field name="name"/>
                                     </em>
-                                    <div class="col-2 text-right">
+                                    <div class="col-2 text-end">
                                         <img t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_image_24_cover"/>
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@
                                     <div class="col-6">
                                         <field name="tax_ids" widget="many2many_tags"/>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-end">
                                         <t t-if="record.debit.raw_value > 0">
                                             <field name="debit"/><span> (DR)</span>
                                         </t>
@@ -530,7 +530,7 @@
                                             </span>
                                         </strong>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-end">
                                         <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
@@ -545,7 +545,7 @@
                                         <span><field name="currency_id" invisible="1"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="float-right">
+                                        <span class="float-end">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
                                         </span>
                                     </div>
@@ -922,10 +922,10 @@
                                         <field name="price_unit"/>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click pl-0 pr-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                                     <t t-if="!record.display_type.raw_value">
-                                                        <div class="row no-gutters">
-                                                            <div class="col-2 pr-3">
+                                                        <div class="row g-0">
+                                                            <div class="col-2 pe-3">
                                                                 <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
                                                             </div>
                                                             <div class="col-10">
@@ -934,7 +934,7 @@
                                                                         <strong t-esc="record.product_id.value"/>
                                                                     </div>
                                                                     <div class="col-auto">
-                                                                        <strong class="float-right text-right">
+                                                                        <strong class="float-end text-end">
                                                                             <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
                                                                             <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
                                                                         </strong>
@@ -1121,7 +1121,7 @@
                                                 icon="fa-calendar"
                                                 string="Cut-Off"
                                                 aria-label="Change Period"
-                                                class="float-right"
+                                                class="float-end"
                                                 attrs="{'invisible': [('account_internal_group', 'not in', ('income', 'expense'))], 'column_invisible': ['|', ('parent.move_type', '=', 'entry'), ('parent.state', '!=', 'posted')]}"
                                                 context="{'hide_automatic_options': 1, 'default_action': 'change_period'}"/>
 

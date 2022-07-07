@@ -42,7 +42,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             },
             container: 'body',
             placement: 'auto',
-            template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+            template: '<div class="popover mycart-popover" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
         });
         window.addEventListener('visibilitychange', this._onVisibilityChange);
         this._updateCartQuantityText();
@@ -380,10 +380,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 var cart_alert = $('.oe_cart').parent().find('#data_warning');
                 if (cart_alert.length === 0) {
                     $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button> ' + data.warning + '</div>');
                 }
                 else {
-                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
+                    cart_alert.html('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button> ' + data.warning);
                 }
                 $input.val(data.quantity);
             }
@@ -831,7 +831,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     disabledInEditableMode: false,
     events: {
-        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
     },
 
     //--------------------------------------------------------------------------
@@ -847,12 +847,13 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         if (wysiwyg) {
             wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
         }
-        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        var clickedValue = $(ev.target).val();
+        var isList = clickedValue === 'list';
         if (!this.editableMode) {
             this._rpc({
                 route: '/shop/save_shop_layout_mode',
                 params: {
-                    'layout_mode': switchToList ? 'list' : 'grid',
+                    'layout_mode': isList ? 'list' : 'grid',
                 },
             });
         }
@@ -862,7 +863,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         // TODO should probably be improved to allow disabling transitions
         // altogether with a class/option.
         $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        $grid.toggleClass('o_wsale_layout_list', isList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
         if (wysiwyg) {
@@ -976,7 +977,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         const $indicatorsDiv = isLeftIndicators ? this.$target.find('.o_carousel_product_indicators') : this.$target.find('.carousel-indicators');
         let indicatorIndex = $(ev.relatedTarget).index();
         indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$target.find('li.active').index();
-        const $indicator = $indicatorsDiv.find('[data-slide-to=' + indicatorIndex + ']');
+        const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
         const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
         const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
         const indicatorPosition = isLeftIndicators && !isReversed ? $indicator.position().top : $indicator.position().left;

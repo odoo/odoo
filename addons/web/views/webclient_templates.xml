@@ -65,11 +65,11 @@
                     <div t-if="not no_copyright" class="o_footer_copyright">
                         <div class="container py-3">
                             <div class="row">
-                                <div class="col-sm text-center text-sm-left text-muted">
+                                <div class="col-sm text-center text-sm-start text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
+                                    <span class="o_footer_copyright_name me-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
                                 </div>
-                                <div class="col-sm text-center text-sm-right">
+                                <div class="col-sm text-center text-sm-end">
                                     <t t-call="web.brand_promotion"/>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
         <t t-set="odoo_logo">
             <a target="_blank"
                 t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
-                class="badge badge-light">
+                class="badge text-bg-light">
                 <img alt="Odoo"
                         src="/web/static/img/odoo_logo_tiny.png"
                         style="height: 1em; vertical-align: baseline;"/>
@@ -118,7 +118,7 @@
                         <t t-out="0"/>
                         <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                             <t t-if="not disable_database_manager">
-                                <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
+                                <a class="border-end pe-2 me-1" href="/web/database/manager">Manage Databases</a>
                             </t>
                             <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
                         </div>
@@ -137,19 +137,17 @@
                     <label for="db" class="col-form-label">Database</label>
                     <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
                         <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
-                        <span class="input-group-append">
-                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
-                        </span>
+                        <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
                     </div>
                 </div>
 
-                <div class="form-group field-login">
-                    <label for="login">Email</label>
+                <div class="mb-3 field-login">
+                    <label for="login" class="form-label">Email</label>
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
-                <div class="form-group field-password">
-                    <label for="password">Password</label>
+                <div class="mb-3 form-group">
+                    <label for="password" class="form-label">Password</label>
                     <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
@@ -160,10 +158,10 @@
                     <t t-esc="message"/>
                 </p>
 
-                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
-                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                <div t-attf-class="clearfix oe_login_buttons text-center gap-1 d-grid mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button type="submit" class="btn btn-primary">Log in</button>
                     <t t-if="debug">
-                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm">Log in as superuser</button>
                     </t>
                     <div class="o_login_auth"/>
                 </div>

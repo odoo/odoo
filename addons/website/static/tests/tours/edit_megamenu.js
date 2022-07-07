@@ -10,7 +10,7 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
         // If the mega menu is displayed inside the extra menu items, it should
         // already be displayed.
         if (!this.$anchor[0].closest('.o_extra_menu_items')) {
-            this.$anchor[0].click();
+            this.$anchor[0].dispatchEvent(new Event('click'))
         }
     },
 }, stepOptions);

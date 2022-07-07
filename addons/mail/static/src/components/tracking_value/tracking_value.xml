@@ -2,10 +2,10 @@
 <templates>
     <t t-name="mail.TrackingValue" owl="1">
         <div class="o_TrackingValue d-inline-block d-flex align-items-center flex-wrap" t-attf-class="{{ className }}" role="group" t-ref="root">
-            <span class="o_TrackingValue_fieldName mr-1" t-esc="trackingValue.formattedChangedField"/>
-            <span class="o_TrackingValue_oldValue mr-1" t-esc="trackingValue.oldValue.formattedValueOrNone" t-att-class="{ 'font-italic': !trackingValue.oldValue.formattedValue }"/>
+            <span class="o_TrackingValue_fieldName me-1" t-esc="trackingValue.formattedChangedField"/>
+            <span class="o_TrackingValue_oldValue me-1" t-esc="trackingValue.oldValue.formattedValueOrNone" t-att-class="{ 'fst-italic': !trackingValue.oldValue.formattedValue }"/>
             <i class="o_TrackingValue_separator fa fa-long-arrow-right mx-1" title="Changed" role="img" aria-label="Changed"/>
-            <span class="o_TrackingValue_newValue mr-1" t-esc="trackingValue.newValue.formattedValueOrNone" t-att-class="{ 'font-italic': !trackingValue.newValue.formattedValue }"/>
+            <span class="o_TrackingValue_newValue me-1" t-esc="trackingValue.newValue.formattedValueOrNone" t-att-class="{ 'fst-italic': !trackingValue.newValue.formattedValue }"/>
         </div>
     </t>
 </templates>

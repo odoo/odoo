@@ -1,0 +1,89 @@
+// Extend utilities
+
+$rounded-sizes: () !default;
+$rounded-sizes: map-merge(
+    $rounded-sizes,
+    (
+        null: $border-radius,
+        0: 0,
+        1: $border-radius-sm,
+        2: $border-radius,
+        3: $border-radius-lg,
+        circle: 50%,
+        pill: $border-radius-pill,
+    )
+);
+
+$utilities: () !default;
+$utilities: map-merge(
+    $utilities,
+    (
+        "opacity": (
+            property: opacity,
+            class: opacity,
+            state: hover,
+            values: (
+                0: 0,
+                25: .25,
+                50: .5,
+                75: .75,
+                100: 1,
+            ),
+        ),
+        "rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: rounded-top,
+            values: $rounded-sizes,
+        ),
+        "rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: rounded-end,
+            values: $rounded-sizes,
+        ),
+        "rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: rounded-bottom,
+            values: $rounded-sizes,
+        ),
+        "rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: rounded-start,
+            values: $rounded-sizes,
+        ),
+        "width": map-merge(
+            map-get($utilities, "width"),
+            (
+                responsive: true,
+            ),
+        ),
+        "height": map-merge(
+            map-get($utilities, "height"),
+            (
+                responsive: true,
+            ),
+        ),
+    )
+);
+
+// Restore text-X from BS4 that use text-emphasis-variant
+// we don't merge $utilities-text-colors into $utilities
+// to avoid same utilises classes generated twice.
+// See bootstrap_review.scss
+$utilities: map-merge(
+    $utilities,
+    (
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                "muted": $text-muted,
+                "black-50": rgba($black, .5), // deprecated
+                "white-50": rgba($white, .5), // deprecated
+                "reset": inherit,
+            ),
+        ),
+    )
+);

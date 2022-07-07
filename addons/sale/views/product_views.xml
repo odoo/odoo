@@ -21,13 +21,13 @@
                 <label for="product_tooltip" string=""
                     attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/>
                 <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"
-                    class="font-italic text-muted">
+                    class="fst-italic text-muted">
                     You can invoice them before they are delivered.
                 </div>
                 <label for="product_tooltip" string=""
                     attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/>
                 <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"
-                    class="font-italic text-muted">
+                    class="fst-italic text-muted">
                     Invoice after delivery, based on quantities delivered, not ordered.
                 </div>
             </field>

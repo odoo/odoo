@@ -43,12 +43,14 @@
 
                 &.o_resume_timeline_cell {
                     div {
-                        @include size($o-hrs-timeline-dot-size);
+                        width: $o-hrs-timeline-dot-size;
+                        height: $o-hrs-timeline-dot-size;
                     }
 
                     &:before {
                         @include o-position-absolute(0, $left: ($o-hrs-timeline-dot-size * .5 + $o-hrs-timeline-entry-padding));
-                        @include size(1px, 100%);
+                        width: 1px;
+                        height: 100%;
                         margin-left: -.01rem;
                         background-color: $border-color;
                         content: "";
@@ -126,7 +128,7 @@
 .o_form_view.o_form_editable {
     .o_form_sheet .o_hr_skills_group {
         .o_group_name {
-            background-color: gray('200');
+            background-color: map-get($grays, '200');
         }
 
         .o_resume_group_header .btn {
@@ -144,7 +146,7 @@
         }
 
         &.o_group_skills .o_group_name > b, .o_horizontal_separator {
-            color: color-yiq(gray('200'));
+            color: color-contrast(map-get($grays, '200'));
             font-style: italic;
         }
     }

@@ -555,16 +555,18 @@ QUnit.module('convert_inline', {}, function () {
         assert.expect(1);
 
         const $editable = $(`<div><div class="container"><div class="row"><div class="col">Hello</div></div></div></div>`);
+        $(document.body).append($editable); // editable needs to be in the DOM to compute its dynamic styles.
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        const containerStyle = `padding:0 16px 0 16px;margin:0 auto 0 auto;box-sizing:border-box;max-width:1140px;width:100%;`;
-        const rowStyle = `margin:0 -16px 0 -16px;box-sizing:border-box;`;
-        const colStyle = `padding:0 16px 0 16px;box-sizing:border-box;max-width:100%;width:100%;position:relative;`;
+        const containerStyle = `padding: 0px 16px; margin: 0px auto; box-sizing: border-box; max-width: 1320px; width: 100%;`;
+        const rowStyle = `margin: 0px; box-sizing: border-box;`;
+        const colStyle = `padding: 0px 16px; margin: 0px; box-sizing: border-box; max-width: 100%; width: 100%;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
             `<div class="col" style="${colStyle}" width="100%">Hello</div></div></div>`,
             "should have converted the classes of a simple Bootstrap grid to inline styles"
         );
+        $editable.remove();
     });
     QUnit.test('simplify border/margin/padding styles', async function (assert) {
         assert.expect(12);
@@ -764,7 +766,7 @@ QUnit.module('convert_inline', {}, function () {
         $styleSheet.remove();
     });
     QUnit.test('remove unsupported styles', async function (assert) {
-        assert.expect(10);
+        assert.expect(9);
 
         const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
         document.head.appendChild($styleSheet[0])
@@ -802,7 +804,7 @@ QUnit.module('convert_inline', {}, function () {
             "should have removed border initial");
         styleSheet.deleteRule(0);
 
-        // display: block (except for .btn-block)
+        // display: block
         styleSheet.insertRule(`
             .test-block {
                 display: block;
@@ -813,11 +815,6 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             `<div class="test-block" style="box-sizing:border-box;"></div>`,
             "should have removed display block");
-        $editable = $(`<div>${`<div class="btn-block"></div>`}</div>`);
-        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        assert.strictEqual($editable.html(),
-            `<div class="btn-block" style="box-sizing:border-box;width:100%;display:block;" width="100%"></div>`,
-            "should not have removed display block for .btn-block");
         styleSheet.deleteRule(0);
 
         // !important

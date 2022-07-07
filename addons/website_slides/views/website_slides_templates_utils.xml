@@ -40,9 +40,7 @@
         <h5 class="modal-title" id="slideChannelShareModalLabel">
             Share
         </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span>×</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 </template>
 
@@ -64,11 +62,9 @@
     <div class="input-group">
         <input type="text" t-att-id="'wslides_share_link_id_%s' % record.id" class="form-control o_wslides_js_share_link" readonly="readonly" onclick="this.select();"
             t-att-value="website_share_url"/>
-        <div class="input-group-append">
-            <button t-att-id="'share_link_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_clipboard_button" >
-                <span class="fa fa-clipboard"> Copy Text</span>
-            </button>
-        </div>
+        <button t-att-id="'share_link_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_clipboard_button" >
+            <span class="fa fa-clipboard"> Copy Text</span>
+        </button>
     </div>
 </template>
 

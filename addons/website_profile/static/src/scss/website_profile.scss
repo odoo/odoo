@@ -14,7 +14,8 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 }
 
 .o_wprofile_pict {
-    @include size(100%);
+    width: 100%;
+    height: 100%;
     padding-top: 30%;
     background-size: cover;
     background-position: center;
@@ -66,7 +67,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             }
 
             &.active {
-                color: color-yiq($owprofile-color-bg);
+                color: color-contrast($owprofile-color-bg);
                 background: $owprofile-color-bg;
                 border-color: $owprofile-color-bg;
             }
@@ -84,7 +85,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 }
 
 .o_wprofile_tabs_content {
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         background-color: $nav-tabs-link-active-bg;
         padding:0 ($grid-gutter-width * 0.5);
     }
@@ -117,8 +118,8 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         }
 
         #gradient {
-            --o-pc-color-stop-1: #{lighten(theme-color('primary'), 10%)};
-            --o-pc-color-stop-2: #{theme-color('primary')};
+            --o-pc-color-stop-1: #{lighten(map-get($theme-colors, 'primary'), 10%)};
+            --o-pc-color-stop-2: #{map-get($theme-colors, 'primary')};
         }
     }
 
@@ -161,7 +162,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 
     .o_wprofile_all_users_nav_btn_container {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             ~ .o_wprofile_user_profile_sub_nav_mobile_col {
                 padding-left: 0;
             }
@@ -252,5 +253,5 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
 // Own profile border
 .o_wprofile_border_focus {
-    border-left: 4px solid theme-color('secondary');
+    border-left: 4px solid map-get($theme-colors, 'secondary');
 }
