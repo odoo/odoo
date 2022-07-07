@@ -28,7 +28,7 @@ from collections import OrderedDict, defaultdict, Counter
 from werkzeug.urls import url_encode, url_decode, iri_to_uri
 from lxml import etree
 import unicodedata
-
+import xlsxwriter
 
 import odoo
 import odoo.modules.registry
@@ -37,7 +37,7 @@ from odoo.modules import get_module_path, get_resource_path
 from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open, get_lang
+from odoo.tools.misc import str2bool, file_open, get_lang
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response

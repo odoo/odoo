@@ -8,7 +8,7 @@ import json
 from odoo import http
 from odoo.http import request
 from odoo.tools import ustr
-from odoo.tools.misc import xlsxwriter
+import xlsxwriter
 
 
 class TableExporter(http.Controller):
