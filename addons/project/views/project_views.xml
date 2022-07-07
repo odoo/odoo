@@ -28,7 +28,7 @@
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <separator/>
-                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
                     <separator/>
                     <filter string="Rated Tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <separator/>
