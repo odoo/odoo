@@ -69,8 +69,14 @@ $o-website-values-palettes: append($o-website-values-palettes, $-actual-user-web
 // Enable last website values palette, which is now the user customized one
 $o-website-values-palette-number: length($o-website-values-palettes);
 $o-website-values: $-actual-user-website-values-palette !default;
-@function o-website-value($key) {
-    @return map-get($o-website-values, $key);
+@function o-website-value($key, $fallback: null) {
+    @if map-get($o-website-values, $key) {
+        @return map-get($o-website-values, $key);
+    } @else if $fallback {
+        @return $fallback;
+    } @else {
+        @return null;
+    }
 }
 
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;

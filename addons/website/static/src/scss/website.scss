@@ -363,6 +363,19 @@ font[class*='bg-'] {
     }
 }
 
+// Forms
+.form-check, .form-select, .css_attribute_color {
+    &:not(:disabled):not(.disabled) {
+        &, input, label {
+            cursor: pointer;
+        }
+
+        &:hover, &:hover .form-check-input {
+            border-color: $form-check-input-checked-border-color;
+        }
+    }
+}
+
 // Background Images
 .oe_img_bg {
     background-size: cover;
