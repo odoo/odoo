@@ -74,7 +74,8 @@ export const emojiData = JSON.parse(`[
             ":grinning:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😃",
@@ -83,7 +84,8 @@ export const emojiData = JSON.parse(`[
             ":smiley:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😄",
@@ -92,7 +94,8 @@ export const emojiData = JSON.parse(`[
             ":smile:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😁",
@@ -101,7 +104,8 @@ export const emojiData = JSON.parse(`[
             ":grin:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😆",
@@ -110,7 +114,8 @@ export const emojiData = JSON.parse(`[
             ":laughing:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😅",
@@ -119,7 +124,8 @@ export const emojiData = JSON.parse(`[
             ":sweat_smile:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤣",
@@ -128,7 +134,8 @@ export const emojiData = JSON.parse(`[
             ":rofl:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😂",
@@ -138,7 +145,8 @@ export const emojiData = JSON.parse(`[
             ":jpp:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙂",
@@ -147,7 +155,8 @@ export const emojiData = JSON.parse(`[
             ":slight_smile:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙃",
@@ -156,7 +165,8 @@ export const emojiData = JSON.parse(`[
             ":upside_down:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫠",
@@ -165,7 +175,8 @@ export const emojiData = JSON.parse(`[
             ":melt:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😉",
@@ -174,7 +185,8 @@ export const emojiData = JSON.parse(`[
             ":wink:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😊",
@@ -183,7 +195,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face_with_smiling_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😇",
@@ -193,7 +206,8 @@ export const emojiData = JSON.parse(`[
             ":halo:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥰",
@@ -202,7 +216,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face_with_hearts:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😍",
@@ -211,7 +226,8 @@ export const emojiData = JSON.parse(`[
             ":heart_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤩",
@@ -220,7 +236,8 @@ export const emojiData = JSON.parse(`[
             ":star_struck:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😘",
@@ -229,7 +246,8 @@ export const emojiData = JSON.parse(`[
             ":kissing_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😗",
@@ -238,7 +256,8 @@ export const emojiData = JSON.parse(`[
             ":kissing:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☺️",
@@ -247,7 +266,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😚",
@@ -256,7 +276,8 @@ export const emojiData = JSON.parse(`[
             ":kissing_closed_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😙",
@@ -265,7 +286,8 @@ export const emojiData = JSON.parse(`[
             ":kissing_smiling_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥲",
@@ -274,7 +296,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face_with_tear:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😋",
@@ -283,7 +306,8 @@ export const emojiData = JSON.parse(`[
             ":yum:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😛",
@@ -294,7 +318,8 @@ export const emojiData = JSON.parse(`[
         "emoticons": [
             ":P"
         ],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😜",
@@ -303,7 +328,8 @@ export const emojiData = JSON.parse(`[
             ":stuck_out_tongue_winking_eye:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤪",
@@ -312,7 +338,8 @@ export const emojiData = JSON.parse(`[
             ":zany:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😝",
@@ -321,7 +348,8 @@ export const emojiData = JSON.parse(`[
             ":stuck_out_tongue_closed_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤑",
@@ -330,7 +358,8 @@ export const emojiData = JSON.parse(`[
             ":money_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤗",
@@ -339,7 +368,8 @@ export const emojiData = JSON.parse(`[
             ":hugging_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤭",
@@ -348,7 +378,8 @@ export const emojiData = JSON.parse(`[
             ":hand_over_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫢",
@@ -357,7 +388,8 @@ export const emojiData = JSON.parse(`[
             ":gasp:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫣",
@@ -366,7 +398,8 @@ export const emojiData = JSON.parse(`[
             ":peek:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤫",
@@ -375,7 +408,8 @@ export const emojiData = JSON.parse(`[
             ":shush:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤔",
@@ -384,7 +418,8 @@ export const emojiData = JSON.parse(`[
             ":thinking:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫡",
@@ -393,7 +428,8 @@ export const emojiData = JSON.parse(`[
             ":salute:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤐",
@@ -402,7 +438,8 @@ export const emojiData = JSON.parse(`[
             ":zipper_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤨",
@@ -412,7 +449,8 @@ export const emojiData = JSON.parse(`[
             ":skeptic:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😐",
@@ -424,7 +462,8 @@ export const emojiData = JSON.parse(`[
             ":|",
             ":-|"
         ],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😑",
@@ -433,7 +472,8 @@ export const emojiData = JSON.parse(`[
             ":expressionless:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😶",
@@ -442,7 +482,8 @@ export const emojiData = JSON.parse(`[
             ":no_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫥",
@@ -451,7 +492,8 @@ export const emojiData = JSON.parse(`[
             ":dotted_line_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😶‍🌫️",
@@ -460,7 +502,8 @@ export const emojiData = JSON.parse(`[
             ":face_in_clouds:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😏",
@@ -469,7 +512,8 @@ export const emojiData = JSON.parse(`[
             ":smirk:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😒",
@@ -478,7 +522,8 @@ export const emojiData = JSON.parse(`[
             ":unamused_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙄",
@@ -487,7 +532,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_rolling_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😬",
@@ -496,7 +542,8 @@ export const emojiData = JSON.parse(`[
             ":grimacing_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😮‍💨",
@@ -505,7 +552,8 @@ export const emojiData = JSON.parse(`[
             ":face_exhaling:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤥",
@@ -514,7 +562,8 @@ export const emojiData = JSON.parse(`[
             ":lying_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😌",
@@ -523,7 +572,8 @@ export const emojiData = JSON.parse(`[
             ":relieved_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😔",
@@ -532,7 +582,8 @@ export const emojiData = JSON.parse(`[
             ":pensive_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😪",
@@ -541,7 +592,8 @@ export const emojiData = JSON.parse(`[
             ":sleepy_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤤",
@@ -550,7 +602,8 @@ export const emojiData = JSON.parse(`[
             ":drooling_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😴",
@@ -559,7 +612,8 @@ export const emojiData = JSON.parse(`[
             ":sleeping_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😷",
@@ -568,7 +622,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_medical_mask:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤒",
@@ -577,7 +632,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_thermometer:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤕",
@@ -586,7 +642,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_head-bandage:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤢",
@@ -595,7 +652,8 @@ export const emojiData = JSON.parse(`[
             ":nauseated_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤮",
@@ -604,7 +662,8 @@ export const emojiData = JSON.parse(`[
             ":face_vomiting:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤧",
@@ -613,7 +672,8 @@ export const emojiData = JSON.parse(`[
             ":sneezing_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥵",
@@ -622,7 +682,8 @@ export const emojiData = JSON.parse(`[
             ":hot_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥶",
@@ -631,7 +692,8 @@ export const emojiData = JSON.parse(`[
             ":cold_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥴",
@@ -640,7 +702,8 @@ export const emojiData = JSON.parse(`[
             ":woozy_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😵",
@@ -649,7 +712,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_crossed-out_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😵‍💫",
@@ -658,7 +722,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_spiral_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤯",
@@ -667,7 +732,8 @@ export const emojiData = JSON.parse(`[
             ":exploding_head:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤠",
@@ -676,7 +742,8 @@ export const emojiData = JSON.parse(`[
             ":cowboy_hat_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥳",
@@ -685,7 +752,8 @@ export const emojiData = JSON.parse(`[
             ":partying_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥸",
@@ -694,7 +762,8 @@ export const emojiData = JSON.parse(`[
             ":disguised_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😎",
@@ -703,7 +772,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face_with_sunglasses:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤓",
@@ -712,7 +782,8 @@ export const emojiData = JSON.parse(`[
             ":nerd_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧐",
@@ -721,7 +792,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_monocle:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😕",
@@ -730,7 +802,8 @@ export const emojiData = JSON.parse(`[
             ":confused_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫤",
@@ -739,7 +812,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_diagonal_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😟",
@@ -748,7 +822,8 @@ export const emojiData = JSON.parse(`[
             ":worried_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙁",
@@ -757,7 +832,8 @@ export const emojiData = JSON.parse(`[
             ":slightly_frowning_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☹️",
@@ -766,7 +842,8 @@ export const emojiData = JSON.parse(`[
             ":frowning_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😮",
@@ -775,7 +852,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_open_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😯",
@@ -784,7 +862,8 @@ export const emojiData = JSON.parse(`[
             ":hushed_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😲",
@@ -793,7 +872,8 @@ export const emojiData = JSON.parse(`[
             ":astonished_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😳",
@@ -802,7 +882,8 @@ export const emojiData = JSON.parse(`[
             ":flushed_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥺",
@@ -811,7 +892,8 @@ export const emojiData = JSON.parse(`[
             ":pleading_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥹",
@@ -820,7 +902,8 @@ export const emojiData = JSON.parse(`[
             ":face_holding_back_tears:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😦",
@@ -829,7 +912,8 @@ export const emojiData = JSON.parse(`[
             ":frowning_face_with_open_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😧",
@@ -838,7 +922,8 @@ export const emojiData = JSON.parse(`[
             ":anguished_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😨",
@@ -847,7 +932,8 @@ export const emojiData = JSON.parse(`[
             ":fearful_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😰",
@@ -856,7 +942,8 @@ export const emojiData = JSON.parse(`[
             ":anxious_face_with_sweat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😥",
@@ -865,7 +952,8 @@ export const emojiData = JSON.parse(`[
             ":sad_but_relieved_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😢",
@@ -874,7 +962,8 @@ export const emojiData = JSON.parse(`[
             ":crying_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😭",
@@ -883,7 +972,8 @@ export const emojiData = JSON.parse(`[
             ":loudly_crying_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😱",
@@ -892,7 +982,8 @@ export const emojiData = JSON.parse(`[
             ":face_screaming_in_fear:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😖",
@@ -901,7 +992,8 @@ export const emojiData = JSON.parse(`[
             ":confounded_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😣",
@@ -910,7 +1002,8 @@ export const emojiData = JSON.parse(`[
             ":persevering_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😞",
@@ -919,7 +1012,8 @@ export const emojiData = JSON.parse(`[
             ":disappointed_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😓",
@@ -928,7 +1022,8 @@ export const emojiData = JSON.parse(`[
             ":downcast_face_with_sweat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😩",
@@ -937,7 +1032,8 @@ export const emojiData = JSON.parse(`[
             ":weary_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😫",
@@ -946,7 +1042,8 @@ export const emojiData = JSON.parse(`[
             ":tired_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥱",
@@ -955,7 +1052,8 @@ export const emojiData = JSON.parse(`[
             ":yawning_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😤",
@@ -964,7 +1062,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_steam_from_nose:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😡",
@@ -973,7 +1072,8 @@ export const emojiData = JSON.parse(`[
             ":enraged_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😠",
@@ -982,7 +1082,8 @@ export const emojiData = JSON.parse(`[
             ":angry_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤬",
@@ -991,7 +1092,8 @@ export const emojiData = JSON.parse(`[
             ":face_with_symbols_on_mouth:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😈",
@@ -1000,7 +1102,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_face_with_horns:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👿",
@@ -1009,7 +1112,8 @@ export const emojiData = JSON.parse(`[
             ":angry_face_with_horns:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💀",
@@ -1018,7 +1122,8 @@ export const emojiData = JSON.parse(`[
             ":skull:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☠️",
@@ -1027,7 +1132,8 @@ export const emojiData = JSON.parse(`[
             ":skull_and_crossbones:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💩",
@@ -1036,7 +1142,8 @@ export const emojiData = JSON.parse(`[
             ":pile_of_poo:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤡",
@@ -1045,7 +1152,8 @@ export const emojiData = JSON.parse(`[
             ":clown_face:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👹",
@@ -1054,7 +1162,8 @@ export const emojiData = JSON.parse(`[
             ":ogre:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👺",
@@ -1063,7 +1172,8 @@ export const emojiData = JSON.parse(`[
             ":goblin:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👻",
@@ -1072,7 +1182,8 @@ export const emojiData = JSON.parse(`[
             ":ghost:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👽",
@@ -1081,7 +1192,8 @@ export const emojiData = JSON.parse(`[
             ":alien:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👾",
@@ -1090,7 +1202,8 @@ export const emojiData = JSON.parse(`[
             ":alien_monster:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤖",
@@ -1099,7 +1212,8 @@ export const emojiData = JSON.parse(`[
             ":robot:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😺",
@@ -1108,7 +1222,8 @@ export const emojiData = JSON.parse(`[
             ":grinning_cat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😸",
@@ -1117,7 +1232,8 @@ export const emojiData = JSON.parse(`[
             ":grinning_cat_with_smiling_eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😹",
@@ -1126,7 +1242,8 @@ export const emojiData = JSON.parse(`[
             ":cat_with_tears_of_joy:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😻",
@@ -1135,7 +1252,8 @@ export const emojiData = JSON.parse(`[
             ":smiling_cat_with_heart-eyes:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😼",
@@ -1144,7 +1262,8 @@ export const emojiData = JSON.parse(`[
             ":cat_with_wry_smile:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😽",
@@ -1153,7 +1272,8 @@ export const emojiData = JSON.parse(`[
             ":kissing_cat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙀",
@@ -1162,7 +1282,8 @@ export const emojiData = JSON.parse(`[
             ":weary_cat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😿",
@@ -1171,7 +1292,8 @@ export const emojiData = JSON.parse(`[
             ":crying_cat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "😾",
@@ -1180,7 +1302,8 @@ export const emojiData = JSON.parse(`[
             ":pouting_cat:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙈",
@@ -1189,7 +1312,8 @@ export const emojiData = JSON.parse(`[
             ":see-no-evil_monkey:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙉",
@@ -1198,7 +1322,8 @@ export const emojiData = JSON.parse(`[
             ":hear-no-evil_monkey:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🙊",
@@ -1207,7 +1332,8 @@ export const emojiData = JSON.parse(`[
             ":speak-no-evil_monkey:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💋",
@@ -1216,7 +1342,8 @@ export const emojiData = JSON.parse(`[
             ":kiss_mark:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💌",
@@ -1225,7 +1352,8 @@ export const emojiData = JSON.parse(`[
             ":love_letter:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💘",
@@ -1234,7 +1362,8 @@ export const emojiData = JSON.parse(`[
             ":heart_with_arrow:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💝",
@@ -1243,7 +1372,8 @@ export const emojiData = JSON.parse(`[
             ":heart_with_ribbon:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💖",
@@ -1252,7 +1382,8 @@ export const emojiData = JSON.parse(`[
             ":sparkling_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💗",
@@ -1261,7 +1392,8 @@ export const emojiData = JSON.parse(`[
             ":growing_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💓",
@@ -1270,7 +1402,8 @@ export const emojiData = JSON.parse(`[
             ":beating_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💞",
@@ -1279,7 +1412,8 @@ export const emojiData = JSON.parse(`[
             ":revolving_hearts:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💕",
@@ -1288,7 +1422,8 @@ export const emojiData = JSON.parse(`[
             ":two_hearts:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💟",
@@ -1297,7 +1432,8 @@ export const emojiData = JSON.parse(`[
             ":heart_decoration:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❣️",
@@ -1306,7 +1442,8 @@ export const emojiData = JSON.parse(`[
             ":heart_exclamation:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💔",
@@ -1315,7 +1452,8 @@ export const emojiData = JSON.parse(`[
             ":broken_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❤️‍🔥",
@@ -1324,7 +1462,8 @@ export const emojiData = JSON.parse(`[
             ":heart_on_fire:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❤️‍🩹",
@@ -1333,7 +1472,8 @@ export const emojiData = JSON.parse(`[
             ":mending_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❤️",
@@ -1342,7 +1482,8 @@ export const emojiData = JSON.parse(`[
             ":red_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧡",
@@ -1351,7 +1492,8 @@ export const emojiData = JSON.parse(`[
             ":orange_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💛",
@@ -1360,7 +1502,8 @@ export const emojiData = JSON.parse(`[
             ":yellow_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💚",
@@ -1369,7 +1512,8 @@ export const emojiData = JSON.parse(`[
             ":green_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💙",
@@ -1378,7 +1522,8 @@ export const emojiData = JSON.parse(`[
             ":blue_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💜",
@@ -1387,7 +1532,8 @@ export const emojiData = JSON.parse(`[
             ":purple_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤎",
@@ -1396,7 +1542,8 @@ export const emojiData = JSON.parse(`[
             ":brown_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖤",
@@ -1405,7 +1552,8 @@ export const emojiData = JSON.parse(`[
             ":black_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤍",
@@ -1414,7 +1562,8 @@ export const emojiData = JSON.parse(`[
             ":white_heart:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💯",
@@ -1423,7 +1572,8 @@ export const emojiData = JSON.parse(`[
             ":hundred_points:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💢",
@@ -1432,7 +1582,8 @@ export const emojiData = JSON.parse(`[
             ":anger_symbol:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💥",
@@ -1441,7 +1592,8 @@ export const emojiData = JSON.parse(`[
             ":collision:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💫",
@@ -1450,7 +1602,8 @@ export const emojiData = JSON.parse(`[
             ":dizzy:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💦",
@@ -1459,7 +1612,8 @@ export const emojiData = JSON.parse(`[
             ":sweat_droplets:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💨",
@@ -1468,7 +1622,8 @@ export const emojiData = JSON.parse(`[
             ":dashing_away:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕳️",
@@ -1477,7 +1632,8 @@ export const emojiData = JSON.parse(`[
             ":hole:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💣",
@@ -1486,7 +1642,8 @@ export const emojiData = JSON.parse(`[
             ":bomb:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💬",
@@ -1495,7 +1652,8 @@ export const emojiData = JSON.parse(`[
             ":speech_balloon:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👁️‍🗨️",
@@ -1504,7 +1662,8 @@ export const emojiData = JSON.parse(`[
             ":eye_in_speech_bubble:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗨️",
@@ -1513,7 +1672,8 @@ export const emojiData = JSON.parse(`[
             ":left_speech_bubble:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗯️",
@@ -1522,7 +1682,8 @@ export const emojiData = JSON.parse(`[
             ":right_anger_bubble:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💭",
@@ -1531,7 +1692,8 @@ export const emojiData = JSON.parse(`[
             ":thought_balloon:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💤",
@@ -1540,7 +1702,8 @@ export const emojiData = JSON.parse(`[
             ":ZZZ:"
         ],
         "emoticons": [],
-        "category": "Smileys & Emotion"
+        "category": "Smileys & Emotion",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👋",
@@ -1549,7 +1712,8 @@ export const emojiData = JSON.parse(`[
             ":waving_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤚",
@@ -1558,7 +1722,8 @@ export const emojiData = JSON.parse(`[
             ":raised_back_of_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🖐️",
@@ -1567,7 +1732,8 @@ export const emojiData = JSON.parse(`[
             ":hand_with_fingers_splayed:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "✋",
@@ -1576,7 +1742,8 @@ export const emojiData = JSON.parse(`[
             ":raised_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🖖",
@@ -1585,7 +1752,8 @@ export const emojiData = JSON.parse(`[
             ":vulcan_salute:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫱",
@@ -1594,7 +1762,8 @@ export const emojiData = JSON.parse(`[
             ":rightwards_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫲",
@@ -1603,7 +1772,8 @@ export const emojiData = JSON.parse(`[
             ":leftwards_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫳",
@@ -1612,7 +1782,8 @@ export const emojiData = JSON.parse(`[
             ":palm_down_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫴",
@@ -1621,7 +1792,8 @@ export const emojiData = JSON.parse(`[
             ":palm_up_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👌",
@@ -1630,7 +1802,8 @@ export const emojiData = JSON.parse(`[
             ":OK_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤌",
@@ -1639,7 +1812,8 @@ export const emojiData = JSON.parse(`[
             ":pinched_fingers:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤏",
@@ -1648,7 +1822,8 @@ export const emojiData = JSON.parse(`[
             ":pinching_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "✌️",
@@ -1657,7 +1832,8 @@ export const emojiData = JSON.parse(`[
             ":victory_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤞",
@@ -1666,7 +1842,8 @@ export const emojiData = JSON.parse(`[
             ":crossed_fingers:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫰",
@@ -1675,7 +1852,8 @@ export const emojiData = JSON.parse(`[
             ":hand_with_index_finger_and_thumb_crossed:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤟",
@@ -1684,7 +1862,8 @@ export const emojiData = JSON.parse(`[
             ":love-you_gesture:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤘",
@@ -1693,7 +1872,8 @@ export const emojiData = JSON.parse(`[
             ":sign_of_the_horns:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤙",
@@ -1702,7 +1882,8 @@ export const emojiData = JSON.parse(`[
             ":call_me_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👈",
@@ -1711,7 +1892,8 @@ export const emojiData = JSON.parse(`[
             ":backhand_index_pointing_left:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👉",
@@ -1720,7 +1902,8 @@ export const emojiData = JSON.parse(`[
             ":backhand_index_pointing_right:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👆",
@@ -1729,7 +1912,8 @@ export const emojiData = JSON.parse(`[
             ":backhand_index_pointing_up:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🖕",
@@ -1738,7 +1922,8 @@ export const emojiData = JSON.parse(`[
             ":middle_finger:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👇",
@@ -1747,7 +1932,8 @@ export const emojiData = JSON.parse(`[
             ":backhand_index_pointing_down:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "☝️",
@@ -1756,7 +1942,8 @@ export const emojiData = JSON.parse(`[
             ":index_pointing_up:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫵",
@@ -1765,7 +1952,8 @@ export const emojiData = JSON.parse(`[
             ":index_pointing_at_the_viewer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👍",
@@ -1774,7 +1962,8 @@ export const emojiData = JSON.parse(`[
             ":thumbs_up:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👎",
@@ -1783,7 +1972,8 @@ export const emojiData = JSON.parse(`[
             ":thumbs_down:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "✊",
@@ -1792,7 +1982,8 @@ export const emojiData = JSON.parse(`[
             ":raised_fist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👊",
@@ -1801,7 +1992,8 @@ export const emojiData = JSON.parse(`[
             ":oncoming_fist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤛",
@@ -1810,7 +2002,8 @@ export const emojiData = JSON.parse(`[
             ":left-facing_fist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤜",
@@ -1819,7 +2012,8 @@ export const emojiData = JSON.parse(`[
             ":right-facing_fist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👏",
@@ -1828,7 +2022,8 @@ export const emojiData = JSON.parse(`[
             ":clapping_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙌",
@@ -1837,7 +2032,8 @@ export const emojiData = JSON.parse(`[
             ":raising_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫶",
@@ -1846,7 +2042,8 @@ export const emojiData = JSON.parse(`[
             ":heart_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👐",
@@ -1855,7 +2052,8 @@ export const emojiData = JSON.parse(`[
             ":open_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤲",
@@ -1864,7 +2062,8 @@ export const emojiData = JSON.parse(`[
             ":palms_up_together:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤝",
@@ -1873,7 +2072,8 @@ export const emojiData = JSON.parse(`[
             ":handshake:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙏",
@@ -1882,7 +2082,8 @@ export const emojiData = JSON.parse(`[
             ":folded_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "✍️",
@@ -1891,7 +2092,8 @@ export const emojiData = JSON.parse(`[
             ":writing_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💅",
@@ -1900,7 +2102,8 @@ export const emojiData = JSON.parse(`[
             ":nail_polish:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤳",
@@ -1909,7 +2112,8 @@ export const emojiData = JSON.parse(`[
             ":selfie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💪",
@@ -1918,7 +2122,8 @@ export const emojiData = JSON.parse(`[
             ":flexed_biceps:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦾",
@@ -1927,7 +2132,8 @@ export const emojiData = JSON.parse(`[
             ":mechanical_arm:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦿",
@@ -1936,7 +2142,8 @@ export const emojiData = JSON.parse(`[
             ":mechanical_leg:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦵",
@@ -1945,7 +2152,8 @@ export const emojiData = JSON.parse(`[
             ":leg:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦶",
@@ -1954,7 +2162,8 @@ export const emojiData = JSON.parse(`[
             ":foot:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👂",
@@ -1963,7 +2172,8 @@ export const emojiData = JSON.parse(`[
             ":ear:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦻",
@@ -1972,7 +2182,8 @@ export const emojiData = JSON.parse(`[
             ":ear_with_hearing_aid:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👃",
@@ -1981,7 +2192,8 @@ export const emojiData = JSON.parse(`[
             ":nose:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧠",
@@ -1990,7 +2202,8 @@ export const emojiData = JSON.parse(`[
             ":brain:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫀",
@@ -1999,7 +2212,8 @@ export const emojiData = JSON.parse(`[
             ":anatomical_heart:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫁",
@@ -2008,7 +2222,8 @@ export const emojiData = JSON.parse(`[
             ":lungs:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦷",
@@ -2017,7 +2232,8 @@ export const emojiData = JSON.parse(`[
             ":tooth:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦴",
@@ -2026,7 +2242,8 @@ export const emojiData = JSON.parse(`[
             ":bone:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👀",
@@ -2035,7 +2252,8 @@ export const emojiData = JSON.parse(`[
             ":eyes:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👁️",
@@ -2044,7 +2262,8 @@ export const emojiData = JSON.parse(`[
             ":eye:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👅",
@@ -2053,7 +2272,8 @@ export const emojiData = JSON.parse(`[
             ":tongue:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👄",
@@ -2062,7 +2282,8 @@ export const emojiData = JSON.parse(`[
             ":mouth:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫦",
@@ -2071,7 +2292,8 @@ export const emojiData = JSON.parse(`[
             ":biting_lip:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👶",
@@ -2080,7 +2302,8 @@ export const emojiData = JSON.parse(`[
             ":baby:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧒",
@@ -2089,7 +2312,8 @@ export const emojiData = JSON.parse(`[
             ":child:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👦",
@@ -2098,7 +2322,8 @@ export const emojiData = JSON.parse(`[
             ":boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👧",
@@ -2107,7 +2332,8 @@ export const emojiData = JSON.parse(`[
             ":girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑",
@@ -2116,7 +2342,8 @@ export const emojiData = JSON.parse(`[
             ":person:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👱",
@@ -2125,7 +2352,8 @@ export const emojiData = JSON.parse(`[
             ":person:_blond_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨",
@@ -2134,7 +2362,8 @@ export const emojiData = JSON.parse(`[
             ":man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧔",
@@ -2143,7 +2372,8 @@ export const emojiData = JSON.parse(`[
             ":person:_beard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧔‍♂️",
@@ -2152,7 +2382,8 @@ export const emojiData = JSON.parse(`[
             ":man:_beard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧔‍♀️",
@@ -2161,7 +2392,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_beard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍🦰",
@@ -2170,7 +2402,8 @@ export const emojiData = JSON.parse(`[
             ":man:_red_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍🦱",
@@ -2179,7 +2412,8 @@ export const emojiData = JSON.parse(`[
             ":man:_curly_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍🦳",
@@ -2188,7 +2422,8 @@ export const emojiData = JSON.parse(`[
             ":man:_white_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍🦲",
@@ -2197,7 +2432,8 @@ export const emojiData = JSON.parse(`[
             ":man:_bald:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩",
@@ -2206,7 +2442,8 @@ export const emojiData = JSON.parse(`[
             ":woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🦰",
@@ -2215,7 +2452,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_red_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧑‍🦰",
@@ -2224,7 +2462,8 @@ export const emojiData = JSON.parse(`[
             ":person:_red_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍🦱",
@@ -2233,7 +2472,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_curly_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧑‍🦱",
@@ -2242,7 +2482,8 @@ export const emojiData = JSON.parse(`[
             ":person:_curly_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍🦳",
@@ -2251,7 +2492,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_white_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧑‍🦳",
@@ -2260,7 +2502,8 @@ export const emojiData = JSON.parse(`[
             ":person:_white_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍🦲",
@@ -2269,7 +2512,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_bald:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧑‍🦲",
@@ -2278,7 +2522,8 @@ export const emojiData = JSON.parse(`[
             ":person:_bald:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👱‍♀️",
@@ -2287,7 +2532,8 @@ export const emojiData = JSON.parse(`[
             ":woman:_blond_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👱‍♂️",
@@ -2296,7 +2542,8 @@ export const emojiData = JSON.parse(`[
             ":man:_blond_hair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧓",
@@ -2305,7 +2552,8 @@ export const emojiData = JSON.parse(`[
             ":older_person:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👴",
@@ -2314,7 +2562,8 @@ export const emojiData = JSON.parse(`[
             ":old_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👵",
@@ -2323,7 +2572,8 @@ export const emojiData = JSON.parse(`[
             ":old_woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙍",
@@ -2332,7 +2582,8 @@ export const emojiData = JSON.parse(`[
             ":person_frowning:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙍‍♂️",
@@ -2341,7 +2592,8 @@ export const emojiData = JSON.parse(`[
             ":man_frowning:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙍‍♀️",
@@ -2350,7 +2602,8 @@ export const emojiData = JSON.parse(`[
             ":woman_frowning:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙎",
@@ -2359,7 +2612,8 @@ export const emojiData = JSON.parse(`[
             ":person_pouting:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙎‍♂️",
@@ -2368,7 +2622,8 @@ export const emojiData = JSON.parse(`[
             ":man_pouting:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙎‍♀️",
@@ -2377,7 +2632,8 @@ export const emojiData = JSON.parse(`[
             ":woman_pouting:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙅",
@@ -2386,7 +2642,8 @@ export const emojiData = JSON.parse(`[
             ":person_gesturing_NO:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙅‍♂️",
@@ -2395,7 +2652,8 @@ export const emojiData = JSON.parse(`[
             ":man_gesturing_NO:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙅‍♀️",
@@ -2404,7 +2662,8 @@ export const emojiData = JSON.parse(`[
             ":woman_gesturing_NO:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙆",
@@ -2413,7 +2672,8 @@ export const emojiData = JSON.parse(`[
             ":person_gesturing_OK:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙆‍♂️",
@@ -2422,7 +2682,8 @@ export const emojiData = JSON.parse(`[
             ":man_gesturing_OK:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙆‍♀️",
@@ -2431,7 +2692,8 @@ export const emojiData = JSON.parse(`[
             ":woman_gesturing_OK:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💁",
@@ -2440,7 +2702,8 @@ export const emojiData = JSON.parse(`[
             ":person_tipping_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💁‍♂️",
@@ -2449,7 +2712,8 @@ export const emojiData = JSON.parse(`[
             ":man_tipping_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💁‍♀️",
@@ -2458,7 +2722,8 @@ export const emojiData = JSON.parse(`[
             ":woman_tipping_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙋",
@@ -2467,7 +2732,8 @@ export const emojiData = JSON.parse(`[
             ":person_raising_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙋‍♂️",
@@ -2476,7 +2742,8 @@ export const emojiData = JSON.parse(`[
             ":man_raising_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙋‍♀️",
@@ -2485,7 +2752,8 @@ export const emojiData = JSON.parse(`[
             ":woman_raising_hand:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧏",
@@ -2494,7 +2762,8 @@ export const emojiData = JSON.parse(`[
             ":deaf_person:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧏‍♂️",
@@ -2503,7 +2772,8 @@ export const emojiData = JSON.parse(`[
             ":deaf_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧏‍♀️",
@@ -2512,7 +2782,8 @@ export const emojiData = JSON.parse(`[
             ":deaf_woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙇",
@@ -2521,7 +2792,8 @@ export const emojiData = JSON.parse(`[
             ":person_bowing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙇‍♂️",
@@ -2530,7 +2802,8 @@ export const emojiData = JSON.parse(`[
             ":man_bowing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🙇‍♀️",
@@ -2539,7 +2812,8 @@ export const emojiData = JSON.parse(`[
             ":woman_bowing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤦",
@@ -2548,7 +2822,8 @@ export const emojiData = JSON.parse(`[
             ":person_facepalming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤦‍♂️",
@@ -2557,7 +2832,8 @@ export const emojiData = JSON.parse(`[
             ":man_facepalming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤦‍♀️",
@@ -2566,7 +2842,8 @@ export const emojiData = JSON.parse(`[
             ":woman_facepalming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤷",
@@ -2575,7 +2852,8 @@ export const emojiData = JSON.parse(`[
             ":person_shrugging:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤷‍♂️",
@@ -2584,7 +2862,8 @@ export const emojiData = JSON.parse(`[
             ":man_shrugging:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤷‍♀️",
@@ -2593,7 +2872,8 @@ export const emojiData = JSON.parse(`[
             ":woman_shrugging:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍⚕️",
@@ -2602,7 +2882,8 @@ export const emojiData = JSON.parse(`[
             ":health_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍⚕️",
@@ -2611,7 +2892,8 @@ export const emojiData = JSON.parse(`[
             ":man_health_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍⚕️",
@@ -2620,7 +2902,8 @@ export const emojiData = JSON.parse(`[
             ":woman_health_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🎓",
@@ -2629,7 +2912,8 @@ export const emojiData = JSON.parse(`[
             ":student:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🎓",
@@ -2638,7 +2922,8 @@ export const emojiData = JSON.parse(`[
             ":man_student:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🎓",
@@ -2647,7 +2932,8 @@ export const emojiData = JSON.parse(`[
             ":woman_student:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🏫",
@@ -2656,7 +2942,8 @@ export const emojiData = JSON.parse(`[
             ":teacher:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🏫",
@@ -2665,7 +2952,8 @@ export const emojiData = JSON.parse(`[
             ":man_teacher:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🏫",
@@ -2674,7 +2962,8 @@ export const emojiData = JSON.parse(`[
             ":woman_teacher:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍⚖️",
@@ -2683,7 +2972,8 @@ export const emojiData = JSON.parse(`[
             ":judge:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍⚖️",
@@ -2692,7 +2982,8 @@ export const emojiData = JSON.parse(`[
             ":man_judge:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍⚖️",
@@ -2701,7 +2992,8 @@ export const emojiData = JSON.parse(`[
             ":woman_judge:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🌾",
@@ -2710,7 +3002,8 @@ export const emojiData = JSON.parse(`[
             ":farmer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🌾",
@@ -2719,7 +3012,8 @@ export const emojiData = JSON.parse(`[
             ":man_farmer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🌾",
@@ -2728,7 +3022,8 @@ export const emojiData = JSON.parse(`[
             ":woman_farmer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🍳",
@@ -2737,7 +3032,8 @@ export const emojiData = JSON.parse(`[
             ":cook:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🍳",
@@ -2746,7 +3042,8 @@ export const emojiData = JSON.parse(`[
             ":man_cook:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🍳",
@@ -2755,7 +3052,8 @@ export const emojiData = JSON.parse(`[
             ":woman_cook:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🔧",
@@ -2764,7 +3062,8 @@ export const emojiData = JSON.parse(`[
             ":mechanic:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🔧",
@@ -2773,7 +3072,8 @@ export const emojiData = JSON.parse(`[
             ":man_mechanic:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🔧",
@@ -2782,7 +3082,8 @@ export const emojiData = JSON.parse(`[
             ":woman_mechanic:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🏭",
@@ -2791,7 +3092,8 @@ export const emojiData = JSON.parse(`[
             ":factory_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🏭",
@@ -2800,7 +3102,8 @@ export const emojiData = JSON.parse(`[
             ":man_factory_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🏭",
@@ -2809,7 +3112,8 @@ export const emojiData = JSON.parse(`[
             ":woman_factory_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍💼",
@@ -2818,7 +3122,8 @@ export const emojiData = JSON.parse(`[
             ":office_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍💼",
@@ -2827,7 +3132,8 @@ export const emojiData = JSON.parse(`[
             ":man_office_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍💼",
@@ -2836,7 +3142,8 @@ export const emojiData = JSON.parse(`[
             ":woman_office_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🔬",
@@ -2845,7 +3152,8 @@ export const emojiData = JSON.parse(`[
             ":scientist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🔬",
@@ -2854,7 +3162,8 @@ export const emojiData = JSON.parse(`[
             ":man_scientist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🔬",
@@ -2863,7 +3172,8 @@ export const emojiData = JSON.parse(`[
             ":woman_scientist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍💻",
@@ -2872,7 +3182,8 @@ export const emojiData = JSON.parse(`[
             ":technologist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍💻",
@@ -2881,7 +3192,8 @@ export const emojiData = JSON.parse(`[
             ":man_technologist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍💻",
@@ -2890,7 +3202,8 @@ export const emojiData = JSON.parse(`[
             ":woman_technologist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🎤",
@@ -2899,7 +3212,8 @@ export const emojiData = JSON.parse(`[
             ":singer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🎤",
@@ -2908,7 +3222,8 @@ export const emojiData = JSON.parse(`[
             ":man_singer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🎤",
@@ -2917,7 +3232,8 @@ export const emojiData = JSON.parse(`[
             ":woman_singer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🎨",
@@ -2926,7 +3242,8 @@ export const emojiData = JSON.parse(`[
             ":artist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🎨",
@@ -2935,7 +3252,8 @@ export const emojiData = JSON.parse(`[
             ":man_artist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🎨",
@@ -2944,7 +3262,8 @@ export const emojiData = JSON.parse(`[
             ":woman_artist:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍✈️",
@@ -2953,7 +3272,8 @@ export const emojiData = JSON.parse(`[
             ":pilot:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍✈️",
@@ -2962,7 +3282,8 @@ export const emojiData = JSON.parse(`[
             ":man_pilot:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍✈️",
@@ -2971,7 +3292,8 @@ export const emojiData = JSON.parse(`[
             ":woman_pilot:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🚀",
@@ -2980,7 +3302,8 @@ export const emojiData = JSON.parse(`[
             ":astronaut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🚀",
@@ -2989,7 +3312,8 @@ export const emojiData = JSON.parse(`[
             ":man_astronaut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🚀",
@@ -2998,7 +3322,8 @@ export const emojiData = JSON.parse(`[
             ":woman_astronaut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🚒",
@@ -3007,7 +3332,8 @@ export const emojiData = JSON.parse(`[
             ":firefighter:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🚒",
@@ -3016,7 +3342,8 @@ export const emojiData = JSON.parse(`[
             ":man_firefighter:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🚒",
@@ -3025,7 +3352,8 @@ export const emojiData = JSON.parse(`[
             ":woman_firefighter:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👮",
@@ -3034,7 +3362,8 @@ export const emojiData = JSON.parse(`[
             ":police_officer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👮‍♂️",
@@ -3043,7 +3372,8 @@ export const emojiData = JSON.parse(`[
             ":man_police_officer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👮‍♀️",
@@ -3052,7 +3382,8 @@ export const emojiData = JSON.parse(`[
             ":woman_police_officer:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🕵️",
@@ -3061,7 +3392,8 @@ export const emojiData = JSON.parse(`[
             ":detective:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🕵️‍♂️",
@@ -3070,7 +3402,8 @@ export const emojiData = JSON.parse(`[
             ":man_detective:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🕵️‍♀️",
@@ -3079,7 +3412,8 @@ export const emojiData = JSON.parse(`[
             ":woman_detective:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💂",
@@ -3088,7 +3422,8 @@ export const emojiData = JSON.parse(`[
             ":guard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💂‍♂️",
@@ -3097,7 +3432,8 @@ export const emojiData = JSON.parse(`[
             ":man_guard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💂‍♀️",
@@ -3106,7 +3442,8 @@ export const emojiData = JSON.parse(`[
             ":woman_guard:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🥷",
@@ -3115,7 +3452,8 @@ export const emojiData = JSON.parse(`[
             ":ninja:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👷",
@@ -3124,7 +3462,8 @@ export const emojiData = JSON.parse(`[
             ":construction_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👷‍♂️",
@@ -3133,7 +3472,8 @@ export const emojiData = JSON.parse(`[
             ":man_construction_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👷‍♀️",
@@ -3142,7 +3482,8 @@ export const emojiData = JSON.parse(`[
             ":woman_construction_worker:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫅",
@@ -3151,7 +3492,8 @@ export const emojiData = JSON.parse(`[
             ":person_with_crown:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤴",
@@ -3160,7 +3502,8 @@ export const emojiData = JSON.parse(`[
             ":prince:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👸",
@@ -3169,7 +3512,8 @@ export const emojiData = JSON.parse(`[
             ":princess:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👳",
@@ -3178,7 +3522,8 @@ export const emojiData = JSON.parse(`[
             ":person_wearing_turban:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👳‍♂️",
@@ -3187,7 +3532,8 @@ export const emojiData = JSON.parse(`[
             ":man_wearing_turban:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👳‍♀️",
@@ -3196,7 +3542,8 @@ export const emojiData = JSON.parse(`[
             ":woman_wearing_turban:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👲",
@@ -3205,7 +3552,8 @@ export const emojiData = JSON.parse(`[
             ":person_with_skullcap:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧕",
@@ -3214,7 +3562,8 @@ export const emojiData = JSON.parse(`[
             ":woman_with_headscarf:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤵",
@@ -3223,7 +3572,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_tuxedo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤵‍♂️",
@@ -3232,7 +3582,8 @@ export const emojiData = JSON.parse(`[
             ":man_in_tuxedo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤵‍♀️",
@@ -3241,7 +3592,8 @@ export const emojiData = JSON.parse(`[
             ":woman_in_tuxedo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👰",
@@ -3250,7 +3602,8 @@ export const emojiData = JSON.parse(`[
             ":person_with_veil:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👰‍♂️",
@@ -3259,7 +3612,8 @@ export const emojiData = JSON.parse(`[
             ":man_with_veil:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👰‍♀️",
@@ -3268,7 +3622,8 @@ export const emojiData = JSON.parse(`[
             ":woman_with_veil:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤰",
@@ -3277,7 +3632,8 @@ export const emojiData = JSON.parse(`[
             ":pregnant_woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫃",
@@ -3286,7 +3642,8 @@ export const emojiData = JSON.parse(`[
             ":pregnant_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🫄",
@@ -3295,7 +3652,8 @@ export const emojiData = JSON.parse(`[
             ":pregnant_person:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤱",
@@ -3304,7 +3662,8 @@ export const emojiData = JSON.parse(`[
             ":breast-feeding:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🍼",
@@ -3313,7 +3672,8 @@ export const emojiData = JSON.parse(`[
             ":woman_feeding_baby:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🍼",
@@ -3322,7 +3682,8 @@ export const emojiData = JSON.parse(`[
             ":man_feeding_baby:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🍼",
@@ -3331,7 +3692,8 @@ export const emojiData = JSON.parse(`[
             ":person_feeding_baby:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👼",
@@ -3340,7 +3702,8 @@ export const emojiData = JSON.parse(`[
             ":baby_angel:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🎅",
@@ -3349,7 +3712,8 @@ export const emojiData = JSON.parse(`[
             ":Santa_Claus:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤶",
@@ -3358,7 +3722,8 @@ export const emojiData = JSON.parse(`[
             ":Mrs._Claus:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🎄",
@@ -3367,7 +3732,8 @@ export const emojiData = JSON.parse(`[
             ":mx_claus:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦸",
@@ -3376,7 +3742,8 @@ export const emojiData = JSON.parse(`[
             ":superhero:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦸‍♂️",
@@ -3385,7 +3752,8 @@ export const emojiData = JSON.parse(`[
             ":man_superhero:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦸‍♀️",
@@ -3394,7 +3762,8 @@ export const emojiData = JSON.parse(`[
             ":woman_superhero:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦹",
@@ -3403,7 +3772,8 @@ export const emojiData = JSON.parse(`[
             ":supervillain:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦹‍♂️",
@@ -3412,7 +3782,8 @@ export const emojiData = JSON.parse(`[
             ":man_supervillain:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🦹‍♀️",
@@ -3421,7 +3792,8 @@ export const emojiData = JSON.parse(`[
             ":woman_supervillain:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧙",
@@ -3430,7 +3802,8 @@ export const emojiData = JSON.parse(`[
             ":mage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧙‍♂️",
@@ -3439,7 +3812,8 @@ export const emojiData = JSON.parse(`[
             ":man_mage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧙‍♀️",
@@ -3448,7 +3822,8 @@ export const emojiData = JSON.parse(`[
             ":woman_mage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧚",
@@ -3457,7 +3832,8 @@ export const emojiData = JSON.parse(`[
             ":fairy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧚‍♂️",
@@ -3466,7 +3842,8 @@ export const emojiData = JSON.parse(`[
             ":man_fairy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧚‍♀️",
@@ -3475,7 +3852,8 @@ export const emojiData = JSON.parse(`[
             ":woman_fairy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧛",
@@ -3484,7 +3862,8 @@ export const emojiData = JSON.parse(`[
             ":vampire:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧛‍♂️",
@@ -3493,7 +3872,8 @@ export const emojiData = JSON.parse(`[
             ":man_vampire:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧛‍♀️",
@@ -3502,7 +3882,8 @@ export const emojiData = JSON.parse(`[
             ":woman_vampire:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧜",
@@ -3511,7 +3892,8 @@ export const emojiData = JSON.parse(`[
             ":merperson:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧜‍♂️",
@@ -3520,7 +3902,8 @@ export const emojiData = JSON.parse(`[
             ":merman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧜‍♀️",
@@ -3529,7 +3912,8 @@ export const emojiData = JSON.parse(`[
             ":mermaid:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧝",
@@ -3538,7 +3922,8 @@ export const emojiData = JSON.parse(`[
             ":elf:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧝‍♂️",
@@ -3547,7 +3932,8 @@ export const emojiData = JSON.parse(`[
             ":man_elf:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧝‍♀️",
@@ -3556,7 +3942,8 @@ export const emojiData = JSON.parse(`[
             ":woman_elf:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧞",
@@ -3565,7 +3952,8 @@ export const emojiData = JSON.parse(`[
             ":genie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧞‍♂️",
@@ -3574,7 +3962,8 @@ export const emojiData = JSON.parse(`[
             ":man_genie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧞‍♀️",
@@ -3583,7 +3972,8 @@ export const emojiData = JSON.parse(`[
             ":woman_genie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧟",
@@ -3592,7 +3982,8 @@ export const emojiData = JSON.parse(`[
             ":zombie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧟‍♂️",
@@ -3601,7 +3992,8 @@ export const emojiData = JSON.parse(`[
             ":man_zombie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧟‍♀️",
@@ -3610,7 +4002,8 @@ export const emojiData = JSON.parse(`[
             ":woman_zombie:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧌",
@@ -3619,7 +4012,8 @@ export const emojiData = JSON.parse(`[
             ":troll:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💆",
@@ -3628,7 +4022,8 @@ export const emojiData = JSON.parse(`[
             ":person_getting_massage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💆‍♂️",
@@ -3637,7 +4032,8 @@ export const emojiData = JSON.parse(`[
             ":man_getting_massage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💆‍♀️",
@@ -3646,7 +4042,8 @@ export const emojiData = JSON.parse(`[
             ":woman_getting_massage:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💇",
@@ -3655,7 +4052,8 @@ export const emojiData = JSON.parse(`[
             ":person_getting_haircut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💇‍♂️",
@@ -3664,7 +4062,8 @@ export const emojiData = JSON.parse(`[
             ":man_getting_haircut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💇‍♀️",
@@ -3673,7 +4072,8 @@ export const emojiData = JSON.parse(`[
             ":woman_getting_haircut:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚶",
@@ -3682,7 +4082,8 @@ export const emojiData = JSON.parse(`[
             ":person_walking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚶‍♂️",
@@ -3691,7 +4092,8 @@ export const emojiData = JSON.parse(`[
             ":man_walking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚶‍♀️",
@@ -3700,7 +4102,8 @@ export const emojiData = JSON.parse(`[
             ":woman_walking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧍",
@@ -3709,7 +4112,8 @@ export const emojiData = JSON.parse(`[
             ":person_standing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧍‍♂️",
@@ -3718,7 +4122,8 @@ export const emojiData = JSON.parse(`[
             ":man_standing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧍‍♀️",
@@ -3727,7 +4132,8 @@ export const emojiData = JSON.parse(`[
             ":woman_standing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧎",
@@ -3736,7 +4142,8 @@ export const emojiData = JSON.parse(`[
             ":person_kneeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧎‍♂️",
@@ -3745,7 +4152,8 @@ export const emojiData = JSON.parse(`[
             ":man_kneeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧎‍♀️",
@@ -3754,7 +4162,8 @@ export const emojiData = JSON.parse(`[
             ":woman_kneeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🦯",
@@ -3763,7 +4172,8 @@ export const emojiData = JSON.parse(`[
             ":person_with_white_cane:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🦯",
@@ -3772,7 +4182,8 @@ export const emojiData = JSON.parse(`[
             ":man_with_white_cane:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🦯",
@@ -3781,7 +4192,8 @@ export const emojiData = JSON.parse(`[
             ":woman_with_white_cane:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🦼",
@@ -3790,7 +4202,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_motorized_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🦼",
@@ -3799,7 +4212,8 @@ export const emojiData = JSON.parse(`[
             ":man_in_motorized_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🦼",
@@ -3808,7 +4222,8 @@ export const emojiData = JSON.parse(`[
             ":woman_in_motorized_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🦽",
@@ -3817,7 +4232,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_manual_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👨‍🦽",
@@ -3826,7 +4242,8 @@ export const emojiData = JSON.parse(`[
             ":man_in_manual_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍🦽",
@@ -3835,7 +4252,8 @@ export const emojiData = JSON.parse(`[
             ":woman_in_manual_wheelchair:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏃",
@@ -3844,7 +4262,8 @@ export const emojiData = JSON.parse(`[
             ":person_running:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏃‍♂️",
@@ -3853,7 +4272,8 @@ export const emojiData = JSON.parse(`[
             ":man_running:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏃‍♀️",
@@ -3862,7 +4282,8 @@ export const emojiData = JSON.parse(`[
             ":woman_running:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💃",
@@ -3871,7 +4292,8 @@ export const emojiData = JSON.parse(`[
             ":woman_dancing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🕺",
@@ -3880,7 +4302,8 @@ export const emojiData = JSON.parse(`[
             ":man_dancing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🕴️",
@@ -3889,7 +4312,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_suit_levitating:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👯",
@@ -3898,7 +4322,8 @@ export const emojiData = JSON.parse(`[
             ":people_with_bunny_ears:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👯‍♂️",
@@ -3907,7 +4332,8 @@ export const emojiData = JSON.parse(`[
             ":men_with_bunny_ears:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👯‍♀️",
@@ -3916,7 +4342,8 @@ export const emojiData = JSON.parse(`[
             ":women_with_bunny_ears:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧖",
@@ -3925,7 +4352,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_steamy_room:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧖‍♂️",
@@ -3934,7 +4362,8 @@ export const emojiData = JSON.parse(`[
             ":man_in_steamy_room:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧖‍♀️",
@@ -3943,7 +4372,8 @@ export const emojiData = JSON.parse(`[
             ":woman_in_steamy_room:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧗",
@@ -3952,7 +4382,8 @@ export const emojiData = JSON.parse(`[
             ":person_climbing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧗‍♂️",
@@ -3961,7 +4392,8 @@ export const emojiData = JSON.parse(`[
             ":man_climbing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧗‍♀️",
@@ -3970,7 +4402,8 @@ export const emojiData = JSON.parse(`[
             ":woman_climbing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤺",
@@ -3979,7 +4412,8 @@ export const emojiData = JSON.parse(`[
             ":person_fencing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏇",
@@ -3988,7 +4422,8 @@ export const emojiData = JSON.parse(`[
             ":horse_racing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "⛷️",
@@ -3997,7 +4432,8 @@ export const emojiData = JSON.parse(`[
             ":skier:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏂",
@@ -4006,7 +4442,8 @@ export const emojiData = JSON.parse(`[
             ":snowboarder:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏌️",
@@ -4015,7 +4452,8 @@ export const emojiData = JSON.parse(`[
             ":person_golfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏌️‍♂️",
@@ -4024,7 +4462,8 @@ export const emojiData = JSON.parse(`[
             ":man_golfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏌️‍♀️",
@@ -4033,7 +4472,8 @@ export const emojiData = JSON.parse(`[
             ":woman_golfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏄",
@@ -4042,7 +4482,8 @@ export const emojiData = JSON.parse(`[
             ":person_surfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏄‍♂️",
@@ -4051,7 +4492,8 @@ export const emojiData = JSON.parse(`[
             ":man_surfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏄‍♀️",
@@ -4060,7 +4502,8 @@ export const emojiData = JSON.parse(`[
             ":woman_surfing:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚣",
@@ -4069,7 +4512,8 @@ export const emojiData = JSON.parse(`[
             ":person_rowing_boat:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚣‍♂️",
@@ -4078,7 +4522,8 @@ export const emojiData = JSON.parse(`[
             ":man_rowing_boat:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚣‍♀️",
@@ -4087,7 +4532,8 @@ export const emojiData = JSON.parse(`[
             ":woman_rowing_boat:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏊",
@@ -4096,7 +4542,8 @@ export const emojiData = JSON.parse(`[
             ":person_swimming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏊‍♂️",
@@ -4105,7 +4552,8 @@ export const emojiData = JSON.parse(`[
             ":man_swimming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏊‍♀️",
@@ -4114,7 +4562,8 @@ export const emojiData = JSON.parse(`[
             ":woman_swimming:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "⛹️",
@@ -4123,7 +4572,8 @@ export const emojiData = JSON.parse(`[
             ":person_bouncing_ball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "⛹️‍♂️",
@@ -4132,7 +4582,8 @@ export const emojiData = JSON.parse(`[
             ":man_bouncing_ball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "⛹️‍♀️",
@@ -4141,7 +4592,8 @@ export const emojiData = JSON.parse(`[
             ":woman_bouncing_ball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏋️",
@@ -4150,7 +4602,8 @@ export const emojiData = JSON.parse(`[
             ":person_lifting_weights:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏋️‍♂️",
@@ -4159,7 +4612,8 @@ export const emojiData = JSON.parse(`[
             ":man_lifting_weights:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🏋️‍♀️",
@@ -4168,7 +4622,8 @@ export const emojiData = JSON.parse(`[
             ":woman_lifting_weights:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚴",
@@ -4177,7 +4632,8 @@ export const emojiData = JSON.parse(`[
             ":person_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚴‍♂️",
@@ -4186,7 +4642,8 @@ export const emojiData = JSON.parse(`[
             ":man_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚴‍♀️",
@@ -4195,7 +4652,8 @@ export const emojiData = JSON.parse(`[
             ":woman_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚵",
@@ -4204,7 +4662,8 @@ export const emojiData = JSON.parse(`[
             ":person_mountain_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚵‍♂️",
@@ -4213,7 +4672,8 @@ export const emojiData = JSON.parse(`[
             ":man_mountain_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🚵‍♀️",
@@ -4222,7 +4682,8 @@ export const emojiData = JSON.parse(`[
             ":woman_mountain_biking:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤸",
@@ -4231,7 +4692,8 @@ export const emojiData = JSON.parse(`[
             ":person_cartwheeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤸‍♂️",
@@ -4240,7 +4702,8 @@ export const emojiData = JSON.parse(`[
             ":man_cartwheeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤸‍♀️",
@@ -4249,7 +4712,8 @@ export const emojiData = JSON.parse(`[
             ":woman_cartwheeling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤼",
@@ -4258,7 +4722,8 @@ export const emojiData = JSON.parse(`[
             ":people_wrestling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤼‍♂️",
@@ -4267,7 +4732,8 @@ export const emojiData = JSON.parse(`[
             ":men_wrestling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤼‍♀️",
@@ -4276,7 +4742,8 @@ export const emojiData = JSON.parse(`[
             ":women_wrestling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤽",
@@ -4285,7 +4752,8 @@ export const emojiData = JSON.parse(`[
             ":person_playing_water_polo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤽‍♂️",
@@ -4294,7 +4762,8 @@ export const emojiData = JSON.parse(`[
             ":man_playing_water_polo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤽‍♀️",
@@ -4303,7 +4772,8 @@ export const emojiData = JSON.parse(`[
             ":woman_playing_water_polo:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤾",
@@ -4312,7 +4782,8 @@ export const emojiData = JSON.parse(`[
             ":person_playing_handball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤾‍♂️",
@@ -4321,7 +4792,8 @@ export const emojiData = JSON.parse(`[
             ":man_playing_handball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤾‍♀️",
@@ -4330,7 +4802,8 @@ export const emojiData = JSON.parse(`[
             ":woman_playing_handball:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤹",
@@ -4339,7 +4812,8 @@ export const emojiData = JSON.parse(`[
             ":person_juggling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤹‍♂️",
@@ -4348,7 +4822,8 @@ export const emojiData = JSON.parse(`[
             ":man_juggling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🤹‍♀️",
@@ -4357,7 +4832,8 @@ export const emojiData = JSON.parse(`[
             ":woman_juggling:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧘",
@@ -4366,7 +4842,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_lotus_position:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧘‍♂️",
@@ -4375,7 +4852,8 @@ export const emojiData = JSON.parse(`[
             ":man_in_lotus_position:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧘‍♀️",
@@ -4384,7 +4862,8 @@ export const emojiData = JSON.parse(`[
             ":woman_in_lotus_position:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🛀",
@@ -4393,7 +4872,8 @@ export const emojiData = JSON.parse(`[
             ":person_taking_bath:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🛌",
@@ -4402,7 +4882,8 @@ export const emojiData = JSON.parse(`[
             ":person_in_bed:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "🧑‍🤝‍🧑",
@@ -4411,7 +4892,8 @@ export const emojiData = JSON.parse(`[
             ":people_holding_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👭",
@@ -4420,7 +4902,8 @@ export const emojiData = JSON.parse(`[
             ":women_holding_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👫",
@@ -4429,7 +4912,8 @@ export const emojiData = JSON.parse(`[
             ":woman_and_man_holding_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👬",
@@ -4438,7 +4922,8 @@ export const emojiData = JSON.parse(`[
             ":men_holding_hands:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "💏",
@@ -4447,7 +4932,8 @@ export const emojiData = JSON.parse(`[
             ":kiss:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍❤️‍💋‍👨",
@@ -4456,7 +4942,8 @@ export const emojiData = JSON.parse(`[
             ":kiss:_woman,_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍❤️‍💋‍👨",
@@ -4465,7 +4952,8 @@ export const emojiData = JSON.parse(`[
             ":kiss:_man,_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍❤️‍💋‍👩",
@@ -4474,7 +4962,8 @@ export const emojiData = JSON.parse(`[
             ":kiss:_woman,_woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💑",
@@ -4483,7 +4972,8 @@ export const emojiData = JSON.parse(`[
             ":couple_with_heart:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": true
     },
     {
         "codepoints": "👩‍❤️‍👨",
@@ -4492,7 +4982,8 @@ export const emojiData = JSON.parse(`[
             ":couple_with_heart:_woman,_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍❤️‍👨",
@@ -4501,7 +4992,8 @@ export const emojiData = JSON.parse(`[
             ":couple_with_heart:_man,_man:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍❤️‍👩",
@@ -4510,7 +5002,8 @@ export const emojiData = JSON.parse(`[
             ":couple_with_heart:_woman,_woman:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👪",
@@ -4519,7 +5012,8 @@ export const emojiData = JSON.parse(`[
             ":family:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👩‍👦",
@@ -4528,7 +5022,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_woman,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👩‍👧",
@@ -4537,7 +5032,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_woman,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👩‍👧‍👦",
@@ -4546,7 +5042,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_woman,_girl,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👩‍👦‍👦",
@@ -4555,7 +5052,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_woman,_boy,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👩‍👧‍👧",
@@ -4564,7 +5062,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_woman,_girl,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👨‍👦",
@@ -4573,7 +5072,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_man,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👨‍👧",
@@ -4582,7 +5082,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_man,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👨‍👧‍👦",
@@ -4591,7 +5092,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_man,_girl,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👨‍👦‍👦",
@@ -4600,7 +5102,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_man,_boy,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👨‍👧‍👧",
@@ -4609,7 +5112,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_man,_girl,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👩‍👦",
@@ -4618,7 +5122,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_woman,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👩‍👧",
@@ -4627,7 +5132,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_woman,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👩‍👧‍👦",
@@ -4636,7 +5142,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_woman,_girl,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👩‍👦‍👦",
@@ -4645,7 +5152,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_woman,_boy,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👩‍👧‍👧",
@@ -4654,7 +5162,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_woman,_girl,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👦",
@@ -4663,7 +5172,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👦‍👦",
@@ -4672,7 +5182,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_boy,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👧",
@@ -4681,7 +5192,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👧‍👦",
@@ -4690,7 +5202,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_girl,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👨‍👧‍👧",
@@ -4699,7 +5212,8 @@ export const emojiData = JSON.parse(`[
             ":family:_man,_girl,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👦",
@@ -4708,7 +5222,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👦‍👦",
@@ -4717,7 +5232,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_boy,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👧",
@@ -4726,7 +5242,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👧‍👦",
@@ -4735,7 +5252,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_girl,_boy:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👩‍👧‍👧",
@@ -4744,7 +5262,8 @@ export const emojiData = JSON.parse(`[
             ":family:_woman,_girl,_girl:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗣️",
@@ -4753,7 +5272,8 @@ export const emojiData = JSON.parse(`[
             ":speaking_head:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👤",
@@ -4762,7 +5282,8 @@ export const emojiData = JSON.parse(`[
             ":bust_in_silhouette:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👥",
@@ -4771,7 +5292,8 @@ export const emojiData = JSON.parse(`[
             ":busts_in_silhouette:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫂",
@@ -4780,7 +5302,8 @@ export const emojiData = JSON.parse(`[
             ":people_hugging:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👣",
@@ -4789,7 +5312,8 @@ export const emojiData = JSON.parse(`[
             ":footprints:"
         ],
         "emoticons": [],
-        "category": "People & Body"
+        "category": "People & Body",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐵",
@@ -4798,7 +5322,8 @@ export const emojiData = JSON.parse(`[
             ":monkey_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐒",
@@ -4807,7 +5332,8 @@ export const emojiData = JSON.parse(`[
             ":monkey:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦍",
@@ -4816,7 +5342,8 @@ export const emojiData = JSON.parse(`[
             ":gorilla:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦧",
@@ -4825,7 +5352,8 @@ export const emojiData = JSON.parse(`[
             ":orangutan:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐶",
@@ -4834,7 +5362,8 @@ export const emojiData = JSON.parse(`[
             ":dog_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐕",
@@ -4843,7 +5372,8 @@ export const emojiData = JSON.parse(`[
             ":dog:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦮",
@@ -4852,7 +5382,8 @@ export const emojiData = JSON.parse(`[
             ":guide_dog:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐕‍🦺",
@@ -4861,7 +5392,8 @@ export const emojiData = JSON.parse(`[
             ":service_dog:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐩",
@@ -4870,7 +5402,8 @@ export const emojiData = JSON.parse(`[
             ":poodle:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐺",
@@ -4879,7 +5412,8 @@ export const emojiData = JSON.parse(`[
             ":wolf:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦊",
@@ -4888,7 +5422,8 @@ export const emojiData = JSON.parse(`[
             ":fox:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦝",
@@ -4897,7 +5432,8 @@ export const emojiData = JSON.parse(`[
             ":raccoon:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐱",
@@ -4906,7 +5442,8 @@ export const emojiData = JSON.parse(`[
             ":cat_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐈",
@@ -4915,7 +5452,8 @@ export const emojiData = JSON.parse(`[
             ":cat:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐈‍⬛",
@@ -4924,7 +5462,8 @@ export const emojiData = JSON.parse(`[
             ":black_cat:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦁",
@@ -4933,7 +5472,8 @@ export const emojiData = JSON.parse(`[
             ":lion:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐯",
@@ -4942,7 +5482,8 @@ export const emojiData = JSON.parse(`[
             ":tiger_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐅",
@@ -4951,7 +5492,8 @@ export const emojiData = JSON.parse(`[
             ":tiger:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐆",
@@ -4960,7 +5502,8 @@ export const emojiData = JSON.parse(`[
             ":leopard:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐴",
@@ -4969,7 +5512,8 @@ export const emojiData = JSON.parse(`[
             ":horse_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐎",
@@ -4978,7 +5522,8 @@ export const emojiData = JSON.parse(`[
             ":horse:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦄",
@@ -4987,7 +5532,8 @@ export const emojiData = JSON.parse(`[
             ":unicorn:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦓",
@@ -4996,7 +5542,8 @@ export const emojiData = JSON.parse(`[
             ":zebra:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦌",
@@ -5005,7 +5552,8 @@ export const emojiData = JSON.parse(`[
             ":deer:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦬",
@@ -5014,7 +5562,8 @@ export const emojiData = JSON.parse(`[
             ":bison:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐮",
@@ -5023,7 +5572,8 @@ export const emojiData = JSON.parse(`[
             ":cow_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐂",
@@ -5032,7 +5582,8 @@ export const emojiData = JSON.parse(`[
             ":ox:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐃",
@@ -5041,7 +5592,8 @@ export const emojiData = JSON.parse(`[
             ":water_buffalo:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐄",
@@ -5050,7 +5602,8 @@ export const emojiData = JSON.parse(`[
             ":cow:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐷",
@@ -5059,7 +5612,8 @@ export const emojiData = JSON.parse(`[
             ":pig_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐖",
@@ -5068,7 +5622,8 @@ export const emojiData = JSON.parse(`[
             ":pig:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐗",
@@ -5077,7 +5632,8 @@ export const emojiData = JSON.parse(`[
             ":boar:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐽",
@@ -5086,7 +5642,8 @@ export const emojiData = JSON.parse(`[
             ":pig_nose:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐏",
@@ -5095,7 +5652,8 @@ export const emojiData = JSON.parse(`[
             ":ram:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐑",
@@ -5104,7 +5662,8 @@ export const emojiData = JSON.parse(`[
             ":ewe:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐐",
@@ -5113,7 +5672,8 @@ export const emojiData = JSON.parse(`[
             ":goat:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐪",
@@ -5122,7 +5682,8 @@ export const emojiData = JSON.parse(`[
             ":camel:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐫",
@@ -5131,7 +5692,8 @@ export const emojiData = JSON.parse(`[
             ":two-hump_camel:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦙",
@@ -5140,7 +5702,8 @@ export const emojiData = JSON.parse(`[
             ":llama:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦒",
@@ -5149,7 +5712,8 @@ export const emojiData = JSON.parse(`[
             ":giraffe:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐘",
@@ -5158,7 +5722,8 @@ export const emojiData = JSON.parse(`[
             ":elephant:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦣",
@@ -5167,7 +5732,8 @@ export const emojiData = JSON.parse(`[
             ":mammoth:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦏",
@@ -5176,7 +5742,8 @@ export const emojiData = JSON.parse(`[
             ":rhinoceros:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦛",
@@ -5185,7 +5752,8 @@ export const emojiData = JSON.parse(`[
             ":hippopotamus:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐭",
@@ -5194,7 +5762,8 @@ export const emojiData = JSON.parse(`[
             ":mouse_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐁",
@@ -5203,7 +5772,8 @@ export const emojiData = JSON.parse(`[
             ":mouse:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐀",
@@ -5212,7 +5782,8 @@ export const emojiData = JSON.parse(`[
             ":rat:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐹",
@@ -5221,7 +5792,8 @@ export const emojiData = JSON.parse(`[
             ":hamster:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐰",
@@ -5230,7 +5802,8 @@ export const emojiData = JSON.parse(`[
             ":rabbit_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐇",
@@ -5239,7 +5812,8 @@ export const emojiData = JSON.parse(`[
             ":rabbit:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐿️",
@@ -5248,7 +5822,8 @@ export const emojiData = JSON.parse(`[
             ":chipmunk:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦫",
@@ -5257,7 +5832,8 @@ export const emojiData = JSON.parse(`[
             ":beaver:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦔",
@@ -5266,7 +5842,8 @@ export const emojiData = JSON.parse(`[
             ":hedgehog:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦇",
@@ -5275,7 +5852,8 @@ export const emojiData = JSON.parse(`[
             ":bat:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐻",
@@ -5284,7 +5862,8 @@ export const emojiData = JSON.parse(`[
             ":bear:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐻‍❄️",
@@ -5293,7 +5872,8 @@ export const emojiData = JSON.parse(`[
             ":polar_bear:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐨",
@@ -5302,7 +5882,8 @@ export const emojiData = JSON.parse(`[
             ":koala:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐼",
@@ -5311,7 +5892,8 @@ export const emojiData = JSON.parse(`[
             ":panda:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦥",
@@ -5320,7 +5902,8 @@ export const emojiData = JSON.parse(`[
             ":sloth:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦦",
@@ -5329,7 +5912,8 @@ export const emojiData = JSON.parse(`[
             ":otter:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦨",
@@ -5338,7 +5922,8 @@ export const emojiData = JSON.parse(`[
             ":skunk:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦘",
@@ -5347,7 +5932,8 @@ export const emojiData = JSON.parse(`[
             ":kangaroo:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦡",
@@ -5356,7 +5942,8 @@ export const emojiData = JSON.parse(`[
             ":badger:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐾",
@@ -5365,7 +5952,8 @@ export const emojiData = JSON.parse(`[
             ":paw_prints:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦃",
@@ -5374,7 +5962,8 @@ export const emojiData = JSON.parse(`[
             ":turkey:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐔",
@@ -5383,7 +5972,8 @@ export const emojiData = JSON.parse(`[
             ":chicken:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐓",
@@ -5392,7 +5982,8 @@ export const emojiData = JSON.parse(`[
             ":rooster:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐣",
@@ -5401,7 +5992,8 @@ export const emojiData = JSON.parse(`[
             ":hatching_chick:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐤",
@@ -5410,7 +6002,8 @@ export const emojiData = JSON.parse(`[
             ":baby_chick:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐥",
@@ -5419,7 +6012,8 @@ export const emojiData = JSON.parse(`[
             ":front-facing_baby_chick:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐦",
@@ -5428,7 +6022,8 @@ export const emojiData = JSON.parse(`[
             ":bird:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐧",
@@ -5437,7 +6032,8 @@ export const emojiData = JSON.parse(`[
             ":penguin:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕊️",
@@ -5446,7 +6042,8 @@ export const emojiData = JSON.parse(`[
             ":dove:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦅",
@@ -5455,7 +6052,8 @@ export const emojiData = JSON.parse(`[
             ":eagle:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦆",
@@ -5464,7 +6062,8 @@ export const emojiData = JSON.parse(`[
             ":duck:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦢",
@@ -5473,7 +6072,8 @@ export const emojiData = JSON.parse(`[
             ":swan:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦉",
@@ -5482,7 +6082,8 @@ export const emojiData = JSON.parse(`[
             ":owl:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦤",
@@ -5491,7 +6092,8 @@ export const emojiData = JSON.parse(`[
             ":dodo:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪶",
@@ -5500,7 +6102,8 @@ export const emojiData = JSON.parse(`[
             ":feather:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦩",
@@ -5509,7 +6112,8 @@ export const emojiData = JSON.parse(`[
             ":flamingo:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦚",
@@ -5518,7 +6122,8 @@ export const emojiData = JSON.parse(`[
             ":peacock:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦜",
@@ -5527,7 +6132,8 @@ export const emojiData = JSON.parse(`[
             ":parrot:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐸",
@@ -5536,7 +6142,8 @@ export const emojiData = JSON.parse(`[
             ":frog:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐊",
@@ -5545,7 +6152,8 @@ export const emojiData = JSON.parse(`[
             ":crocodile:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐢",
@@ -5554,7 +6162,8 @@ export const emojiData = JSON.parse(`[
             ":turtle:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦎",
@@ -5563,7 +6172,8 @@ export const emojiData = JSON.parse(`[
             ":lizard:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐍",
@@ -5572,7 +6182,8 @@ export const emojiData = JSON.parse(`[
             ":snake:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐲",
@@ -5581,7 +6192,8 @@ export const emojiData = JSON.parse(`[
             ":dragon_face:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐉",
@@ -5590,7 +6202,8 @@ export const emojiData = JSON.parse(`[
             ":dragon:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦕",
@@ -5599,7 +6212,8 @@ export const emojiData = JSON.parse(`[
             ":sauropod:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦖",
@@ -5608,7 +6222,8 @@ export const emojiData = JSON.parse(`[
             ":T-Rex:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐳",
@@ -5617,7 +6232,8 @@ export const emojiData = JSON.parse(`[
             ":spouting_whale:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐋",
@@ -5626,7 +6242,8 @@ export const emojiData = JSON.parse(`[
             ":whale:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐬",
@@ -5635,7 +6252,8 @@ export const emojiData = JSON.parse(`[
             ":dolphin:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦭",
@@ -5644,7 +6262,8 @@ export const emojiData = JSON.parse(`[
             ":seal:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐟",
@@ -5653,7 +6272,8 @@ export const emojiData = JSON.parse(`[
             ":fish:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐠",
@@ -5662,7 +6282,8 @@ export const emojiData = JSON.parse(`[
             ":tropical_fish:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐡",
@@ -5671,7 +6292,8 @@ export const emojiData = JSON.parse(`[
             ":blowfish:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦈",
@@ -5680,7 +6302,8 @@ export const emojiData = JSON.parse(`[
             ":shark:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐙",
@@ -5689,7 +6312,8 @@ export const emojiData = JSON.parse(`[
             ":octopus:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐚",
@@ -5698,7 +6322,8 @@ export const emojiData = JSON.parse(`[
             ":spiral_shell:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪸",
@@ -5707,7 +6332,8 @@ export const emojiData = JSON.parse(`[
             ":coral:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐌",
@@ -5716,7 +6342,8 @@ export const emojiData = JSON.parse(`[
             ":snail:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦋",
@@ -5725,7 +6352,8 @@ export const emojiData = JSON.parse(`[
             ":butterfly:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐛",
@@ -5734,7 +6362,8 @@ export const emojiData = JSON.parse(`[
             ":bug:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐜",
@@ -5743,7 +6372,8 @@ export const emojiData = JSON.parse(`[
             ":ant:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐝",
@@ -5752,7 +6382,8 @@ export const emojiData = JSON.parse(`[
             ":honeybee:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪲",
@@ -5761,7 +6392,8 @@ export const emojiData = JSON.parse(`[
             ":beetle:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🐞",
@@ -5770,7 +6402,8 @@ export const emojiData = JSON.parse(`[
             ":lady_beetle:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦗",
@@ -5779,7 +6412,8 @@ export const emojiData = JSON.parse(`[
             ":cricket:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪳",
@@ -5788,7 +6422,8 @@ export const emojiData = JSON.parse(`[
             ":cockroach:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕷️",
@@ -5797,7 +6432,8 @@ export const emojiData = JSON.parse(`[
             ":spider:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕸️",
@@ -5806,7 +6442,8 @@ export const emojiData = JSON.parse(`[
             ":spider_web:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦂",
@@ -5815,7 +6452,8 @@ export const emojiData = JSON.parse(`[
             ":scorpion:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦟",
@@ -5824,7 +6462,8 @@ export const emojiData = JSON.parse(`[
             ":mosquito:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪰",
@@ -5833,7 +6472,8 @@ export const emojiData = JSON.parse(`[
             ":fly:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪱",
@@ -5842,7 +6482,8 @@ export const emojiData = JSON.parse(`[
             ":worm:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦠",
@@ -5851,7 +6492,8 @@ export const emojiData = JSON.parse(`[
             ":microbe:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💐",
@@ -5860,7 +6502,8 @@ export const emojiData = JSON.parse(`[
             ":bouquet:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌸",
@@ -5869,7 +6512,8 @@ export const emojiData = JSON.parse(`[
             ":cherry_blossom:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💮",
@@ -5878,7 +6522,8 @@ export const emojiData = JSON.parse(`[
             ":white_flower:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪷",
@@ -5887,7 +6532,8 @@ export const emojiData = JSON.parse(`[
             ":lotus:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏵️",
@@ -5896,7 +6542,8 @@ export const emojiData = JSON.parse(`[
             ":rosette:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌹",
@@ -5905,7 +6552,8 @@ export const emojiData = JSON.parse(`[
             ":rose:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥀",
@@ -5914,7 +6562,8 @@ export const emojiData = JSON.parse(`[
             ":wilted_flower:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌺",
@@ -5923,7 +6572,8 @@ export const emojiData = JSON.parse(`[
             ":hibiscus:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌻",
@@ -5932,7 +6582,8 @@ export const emojiData = JSON.parse(`[
             ":sunflower:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌼",
@@ -5941,7 +6592,8 @@ export const emojiData = JSON.parse(`[
             ":blossom:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌷",
@@ -5950,7 +6602,8 @@ export const emojiData = JSON.parse(`[
             ":tulip:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌱",
@@ -5959,7 +6612,8 @@ export const emojiData = JSON.parse(`[
             ":seedling:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪴",
@@ -5968,7 +6622,8 @@ export const emojiData = JSON.parse(`[
             ":potted_plant:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌲",
@@ -5977,7 +6632,8 @@ export const emojiData = JSON.parse(`[
             ":evergreen_tree:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌳",
@@ -5986,7 +6642,8 @@ export const emojiData = JSON.parse(`[
             ":deciduous_tree:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌴",
@@ -5995,7 +6652,8 @@ export const emojiData = JSON.parse(`[
             ":palm_tree:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌵",
@@ -6004,7 +6662,8 @@ export const emojiData = JSON.parse(`[
             ":cactus:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌾",
@@ -6013,7 +6672,8 @@ export const emojiData = JSON.parse(`[
             ":sheaf_of_rice:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌿",
@@ -6022,7 +6682,8 @@ export const emojiData = JSON.parse(`[
             ":herb:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☘️",
@@ -6031,7 +6692,8 @@ export const emojiData = JSON.parse(`[
             ":shamrock:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍀",
@@ -6040,7 +6702,8 @@ export const emojiData = JSON.parse(`[
             ":four_leaf_clover:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍁",
@@ -6049,7 +6712,8 @@ export const emojiData = JSON.parse(`[
             ":maple_leaf:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍂",
@@ -6058,7 +6722,8 @@ export const emojiData = JSON.parse(`[
             ":fallen_leaf:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍃",
@@ -6067,7 +6732,8 @@ export const emojiData = JSON.parse(`[
             ":leaf_fluttering_in_wind:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪹",
@@ -6076,7 +6742,8 @@ export const emojiData = JSON.parse(`[
             ":empty_nest:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪺",
@@ -6085,7 +6752,8 @@ export const emojiData = JSON.parse(`[
             ":nest_with_eggs:"
         ],
         "emoticons": [],
-        "category": "Animals & Nature"
+        "category": "Animals & Nature",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍇",
@@ -6094,7 +6762,8 @@ export const emojiData = JSON.parse(`[
             ":grapes:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍈",
@@ -6103,7 +6772,8 @@ export const emojiData = JSON.parse(`[
             ":melon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍉",
@@ -6112,7 +6782,8 @@ export const emojiData = JSON.parse(`[
             ":watermelon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍊",
@@ -6121,7 +6792,8 @@ export const emojiData = JSON.parse(`[
             ":tangerine:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍋",
@@ -6130,7 +6802,8 @@ export const emojiData = JSON.parse(`[
             ":lemon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍌",
@@ -6139,7 +6812,8 @@ export const emojiData = JSON.parse(`[
             ":banana:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍍",
@@ -6148,7 +6822,8 @@ export const emojiData = JSON.parse(`[
             ":pineapple:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥭",
@@ -6157,7 +6832,8 @@ export const emojiData = JSON.parse(`[
             ":mango:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍎",
@@ -6166,7 +6842,8 @@ export const emojiData = JSON.parse(`[
             ":red_apple:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍏",
@@ -6175,7 +6852,8 @@ export const emojiData = JSON.parse(`[
             ":green_apple:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍐",
@@ -6184,7 +6862,8 @@ export const emojiData = JSON.parse(`[
             ":pear:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍑",
@@ -6193,7 +6872,8 @@ export const emojiData = JSON.parse(`[
             ":peach:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍒",
@@ -6202,7 +6882,8 @@ export const emojiData = JSON.parse(`[
             ":cherries:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍓",
@@ -6211,7 +6892,8 @@ export const emojiData = JSON.parse(`[
             ":strawberry:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫐",
@@ -6220,7 +6902,8 @@ export const emojiData = JSON.parse(`[
             ":blueberries:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥝",
@@ -6229,7 +6912,8 @@ export const emojiData = JSON.parse(`[
             ":kiwi_fruit:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍅",
@@ -6238,7 +6922,8 @@ export const emojiData = JSON.parse(`[
             ":tomato:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫒",
@@ -6247,7 +6932,8 @@ export const emojiData = JSON.parse(`[
             ":olive:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥥",
@@ -6256,7 +6942,8 @@ export const emojiData = JSON.parse(`[
             ":coconut:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥑",
@@ -6265,7 +6952,8 @@ export const emojiData = JSON.parse(`[
             ":avocado:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍆",
@@ -6274,7 +6962,8 @@ export const emojiData = JSON.parse(`[
             ":eggplant:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥔",
@@ -6283,7 +6972,8 @@ export const emojiData = JSON.parse(`[
             ":potato:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥕",
@@ -6292,7 +6982,8 @@ export const emojiData = JSON.parse(`[
             ":carrot:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌽",
@@ -6301,7 +6992,8 @@ export const emojiData = JSON.parse(`[
             ":ear_of_corn:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌶️",
@@ -6310,7 +7002,8 @@ export const emojiData = JSON.parse(`[
             ":hot_pepper:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫑",
@@ -6319,7 +7012,8 @@ export const emojiData = JSON.parse(`[
             ":bell_pepper:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥒",
@@ -6328,7 +7022,8 @@ export const emojiData = JSON.parse(`[
             ":cucumber:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥬",
@@ -6337,7 +7032,8 @@ export const emojiData = JSON.parse(`[
             ":leafy_green:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥦",
@@ -6346,7 +7042,8 @@ export const emojiData = JSON.parse(`[
             ":broccoli:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧄",
@@ -6355,7 +7052,8 @@ export const emojiData = JSON.parse(`[
             ":garlic:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧅",
@@ -6364,7 +7062,8 @@ export const emojiData = JSON.parse(`[
             ":onion:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍄",
@@ -6373,7 +7072,8 @@ export const emojiData = JSON.parse(`[
             ":mushroom:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥜",
@@ -6382,7 +7082,8 @@ export const emojiData = JSON.parse(`[
             ":peanuts:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫘",
@@ -6391,7 +7092,8 @@ export const emojiData = JSON.parse(`[
             ":beans:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌰",
@@ -6400,7 +7102,8 @@ export const emojiData = JSON.parse(`[
             ":chestnut:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍞",
@@ -6409,7 +7112,8 @@ export const emojiData = JSON.parse(`[
             ":bread:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥐",
@@ -6418,7 +7122,8 @@ export const emojiData = JSON.parse(`[
             ":croissant:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥖",
@@ -6427,7 +7132,8 @@ export const emojiData = JSON.parse(`[
             ":baguette_bread:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫓",
@@ -6436,7 +7142,8 @@ export const emojiData = JSON.parse(`[
             ":flatbread:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥨",
@@ -6445,7 +7152,8 @@ export const emojiData = JSON.parse(`[
             ":pretzel:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥯",
@@ -6454,7 +7162,8 @@ export const emojiData = JSON.parse(`[
             ":bagel:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥞",
@@ -6463,7 +7172,8 @@ export const emojiData = JSON.parse(`[
             ":pancakes:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧇",
@@ -6472,7 +7182,8 @@ export const emojiData = JSON.parse(`[
             ":waffle:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧀",
@@ -6481,7 +7192,8 @@ export const emojiData = JSON.parse(`[
             ":cheese_wedge:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍖",
@@ -6490,7 +7202,8 @@ export const emojiData = JSON.parse(`[
             ":meat_on_bone:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍗",
@@ -6499,7 +7212,8 @@ export const emojiData = JSON.parse(`[
             ":poultry_leg:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥩",
@@ -6508,7 +7222,8 @@ export const emojiData = JSON.parse(`[
             ":cut_of_meat:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥓",
@@ -6517,7 +7232,8 @@ export const emojiData = JSON.parse(`[
             ":bacon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍔",
@@ -6526,7 +7242,8 @@ export const emojiData = JSON.parse(`[
             ":hamburger:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍟",
@@ -6535,7 +7252,8 @@ export const emojiData = JSON.parse(`[
             ":french_fries:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍕",
@@ -6544,7 +7262,8 @@ export const emojiData = JSON.parse(`[
             ":pizza:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌭",
@@ -6553,7 +7272,8 @@ export const emojiData = JSON.parse(`[
             ":hot_dog:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥪",
@@ -6562,7 +7282,8 @@ export const emojiData = JSON.parse(`[
             ":sandwich:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌮",
@@ -6571,7 +7292,8 @@ export const emojiData = JSON.parse(`[
             ":taco:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌯",
@@ -6580,7 +7302,8 @@ export const emojiData = JSON.parse(`[
             ":burrito:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫔",
@@ -6589,7 +7312,8 @@ export const emojiData = JSON.parse(`[
             ":tamale:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥙",
@@ -6598,7 +7322,8 @@ export const emojiData = JSON.parse(`[
             ":stuffed_flatbread:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧆",
@@ -6607,7 +7332,8 @@ export const emojiData = JSON.parse(`[
             ":falafel:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥚",
@@ -6616,7 +7342,8 @@ export const emojiData = JSON.parse(`[
             ":egg:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍳",
@@ -6625,7 +7352,8 @@ export const emojiData = JSON.parse(`[
             ":cooking:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥘",
@@ -6634,7 +7362,8 @@ export const emojiData = JSON.parse(`[
             ":shallow_pan_of_food:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍲",
@@ -6643,7 +7372,8 @@ export const emojiData = JSON.parse(`[
             ":pot_of_food:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫕",
@@ -6652,7 +7382,8 @@ export const emojiData = JSON.parse(`[
             ":fondue:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥣",
@@ -6661,7 +7392,8 @@ export const emojiData = JSON.parse(`[
             ":bowl_with_spoon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥗",
@@ -6670,7 +7402,8 @@ export const emojiData = JSON.parse(`[
             ":green_salad:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍿",
@@ -6679,7 +7412,8 @@ export const emojiData = JSON.parse(`[
             ":popcorn:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧈",
@@ -6688,7 +7422,8 @@ export const emojiData = JSON.parse(`[
             ":butter:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧂",
@@ -6697,7 +7432,8 @@ export const emojiData = JSON.parse(`[
             ":salt:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥫",
@@ -6706,7 +7442,8 @@ export const emojiData = JSON.parse(`[
             ":canned_food:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍱",
@@ -6715,7 +7452,8 @@ export const emojiData = JSON.parse(`[
             ":bento_box:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍘",
@@ -6724,7 +7462,8 @@ export const emojiData = JSON.parse(`[
             ":rice_cracker:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍙",
@@ -6733,7 +7472,8 @@ export const emojiData = JSON.parse(`[
             ":rice_ball:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍚",
@@ -6742,7 +7482,8 @@ export const emojiData = JSON.parse(`[
             ":cooked_rice:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍛",
@@ -6751,7 +7492,8 @@ export const emojiData = JSON.parse(`[
             ":curry_rice:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍜",
@@ -6760,7 +7502,8 @@ export const emojiData = JSON.parse(`[
             ":steaming_bowl:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍝",
@@ -6769,7 +7512,8 @@ export const emojiData = JSON.parse(`[
             ":spaghetti:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍠",
@@ -6778,7 +7522,8 @@ export const emojiData = JSON.parse(`[
             ":roasted_sweet_potato:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍢",
@@ -6787,7 +7532,8 @@ export const emojiData = JSON.parse(`[
             ":oden:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍣",
@@ -6796,7 +7542,8 @@ export const emojiData = JSON.parse(`[
             ":sushi:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍤",
@@ -6805,7 +7552,8 @@ export const emojiData = JSON.parse(`[
             ":fried_shrimp:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍥",
@@ -6814,7 +7562,8 @@ export const emojiData = JSON.parse(`[
             ":fish_cake_with_swirl:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥮",
@@ -6823,7 +7572,8 @@ export const emojiData = JSON.parse(`[
             ":moon_cake:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍡",
@@ -6832,7 +7582,8 @@ export const emojiData = JSON.parse(`[
             ":dango:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥟",
@@ -6841,7 +7592,8 @@ export const emojiData = JSON.parse(`[
             ":dumpling:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥠",
@@ -6850,7 +7602,8 @@ export const emojiData = JSON.parse(`[
             ":fortune_cookie:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥡",
@@ -6859,7 +7612,8 @@ export const emojiData = JSON.parse(`[
             ":takeout_box:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦀",
@@ -6868,7 +7622,8 @@ export const emojiData = JSON.parse(`[
             ":crab:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦞",
@@ -6877,7 +7632,8 @@ export const emojiData = JSON.parse(`[
             ":lobster:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦐",
@@ -6886,7 +7642,8 @@ export const emojiData = JSON.parse(`[
             ":shrimp:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦑",
@@ -6895,7 +7652,8 @@ export const emojiData = JSON.parse(`[
             ":squid:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦪",
@@ -6904,7 +7662,8 @@ export const emojiData = JSON.parse(`[
             ":oyster:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍦",
@@ -6913,7 +7672,8 @@ export const emojiData = JSON.parse(`[
             ":soft_ice_cream:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍧",
@@ -6922,7 +7682,8 @@ export const emojiData = JSON.parse(`[
             ":shaved_ice:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍨",
@@ -6931,7 +7692,8 @@ export const emojiData = JSON.parse(`[
             ":ice_cream:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍩",
@@ -6940,7 +7702,8 @@ export const emojiData = JSON.parse(`[
             ":doughnut:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍪",
@@ -6949,7 +7712,8 @@ export const emojiData = JSON.parse(`[
             ":cookie:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎂",
@@ -6958,7 +7722,8 @@ export const emojiData = JSON.parse(`[
             ":birthday_cake:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍰",
@@ -6967,7 +7732,8 @@ export const emojiData = JSON.parse(`[
             ":shortcake:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧁",
@@ -6976,7 +7742,8 @@ export const emojiData = JSON.parse(`[
             ":cupcake:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥧",
@@ -6985,7 +7752,8 @@ export const emojiData = JSON.parse(`[
             ":pie:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍫",
@@ -6994,7 +7762,8 @@ export const emojiData = JSON.parse(`[
             ":chocolate_bar:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍬",
@@ -7003,7 +7772,8 @@ export const emojiData = JSON.parse(`[
             ":candy:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍭",
@@ -7012,7 +7782,8 @@ export const emojiData = JSON.parse(`[
             ":lollipop:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍮",
@@ -7021,7 +7792,8 @@ export const emojiData = JSON.parse(`[
             ":custard:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍯",
@@ -7030,7 +7802,8 @@ export const emojiData = JSON.parse(`[
             ":honey_pot:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍼",
@@ -7039,7 +7812,8 @@ export const emojiData = JSON.parse(`[
             ":baby_bottle:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥛",
@@ -7048,7 +7822,8 @@ export const emojiData = JSON.parse(`[
             ":glass_of_milk:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☕",
@@ -7057,7 +7832,8 @@ export const emojiData = JSON.parse(`[
             ":hot_beverage:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫖",
@@ -7066,7 +7842,8 @@ export const emojiData = JSON.parse(`[
             ":teapot:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍵",
@@ -7075,7 +7852,8 @@ export const emojiData = JSON.parse(`[
             ":teacup_without_handle:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍶",
@@ -7084,7 +7862,8 @@ export const emojiData = JSON.parse(`[
             ":sake:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍾",
@@ -7093,7 +7872,8 @@ export const emojiData = JSON.parse(`[
             ":bottle_with_popping_cork:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍷",
@@ -7102,7 +7882,8 @@ export const emojiData = JSON.parse(`[
             ":wine_glass:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍸",
@@ -7111,7 +7892,8 @@ export const emojiData = JSON.parse(`[
             ":cocktail_glass:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍹",
@@ -7120,7 +7902,8 @@ export const emojiData = JSON.parse(`[
             ":tropical_drink:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍺",
@@ -7129,7 +7912,8 @@ export const emojiData = JSON.parse(`[
             ":beer_mug:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍻",
@@ -7138,7 +7922,8 @@ export const emojiData = JSON.parse(`[
             ":clinking_beer_mugs:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥂",
@@ -7147,7 +7932,8 @@ export const emojiData = JSON.parse(`[
             ":clinking_glasses:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥃",
@@ -7156,7 +7942,8 @@ export const emojiData = JSON.parse(`[
             ":tumbler_glass:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫗",
@@ -7165,7 +7952,8 @@ export const emojiData = JSON.parse(`[
             ":pouring_liquid:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥤",
@@ -7174,7 +7962,8 @@ export const emojiData = JSON.parse(`[
             ":cup_with_straw:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧋",
@@ -7183,7 +7972,8 @@ export const emojiData = JSON.parse(`[
             ":bubble_tea:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧃",
@@ -7192,7 +7982,8 @@ export const emojiData = JSON.parse(`[
             ":beverage_box:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧉",
@@ -7201,7 +7992,8 @@ export const emojiData = JSON.parse(`[
             ":mate:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧊",
@@ -7210,7 +8002,8 @@ export const emojiData = JSON.parse(`[
             ":ice:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥢",
@@ -7219,7 +8012,8 @@ export const emojiData = JSON.parse(`[
             ":chopsticks:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍽️",
@@ -7228,7 +8022,8 @@ export const emojiData = JSON.parse(`[
             ":fork_and_knife_with_plate:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🍴",
@@ -7237,7 +8032,8 @@ export const emojiData = JSON.parse(`[
             ":fork_and_knife:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥄",
@@ -7246,7 +8042,8 @@ export const emojiData = JSON.parse(`[
             ":spoon:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔪",
@@ -7255,7 +8052,8 @@ export const emojiData = JSON.parse(`[
             ":kitchen_knife:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫙",
@@ -7264,7 +8062,8 @@ export const emojiData = JSON.parse(`[
             ":jar:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏺",
@@ -7273,7 +8072,8 @@ export const emojiData = JSON.parse(`[
             ":amphora:"
         ],
         "emoticons": [],
-        "category": "Food & Drink"
+        "category": "Food & Drink",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌍",
@@ -7282,7 +8082,8 @@ export const emojiData = JSON.parse(`[
             ":globe_showing_Europe-Africa:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌎",
@@ -7291,7 +8092,8 @@ export const emojiData = JSON.parse(`[
             ":globe_showing_Americas:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌏",
@@ -7300,7 +8102,8 @@ export const emojiData = JSON.parse(`[
             ":globe_showing_Asia-Australia:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌐",
@@ -7309,7 +8112,8 @@ export const emojiData = JSON.parse(`[
             ":globe_with_meridians:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗺️",
@@ -7318,7 +8122,8 @@ export const emojiData = JSON.parse(`[
             ":world_map:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗾",
@@ -7327,7 +8132,8 @@ export const emojiData = JSON.parse(`[
             ":map_of_Japan:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧭",
@@ -7336,7 +8142,8 @@ export const emojiData = JSON.parse(`[
             ":compass:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏔️",
@@ -7345,7 +8152,8 @@ export const emojiData = JSON.parse(`[
             ":snow-capped_mountain:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛰️",
@@ -7354,7 +8162,8 @@ export const emojiData = JSON.parse(`[
             ":mountain:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌋",
@@ -7363,7 +8172,8 @@ export const emojiData = JSON.parse(`[
             ":volcano:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗻",
@@ -7372,7 +8182,8 @@ export const emojiData = JSON.parse(`[
             ":mount_fuji:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏕️",
@@ -7381,7 +8192,8 @@ export const emojiData = JSON.parse(`[
             ":camping:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏖️",
@@ -7390,7 +8202,8 @@ export const emojiData = JSON.parse(`[
             ":beach_with_umbrella:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏜️",
@@ -7399,7 +8212,8 @@ export const emojiData = JSON.parse(`[
             ":desert:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏝️",
@@ -7408,7 +8222,8 @@ export const emojiData = JSON.parse(`[
             ":desert_island:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏞️",
@@ -7417,7 +8232,8 @@ export const emojiData = JSON.parse(`[
             ":national_park:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏟️",
@@ -7426,7 +8242,8 @@ export const emojiData = JSON.parse(`[
             ":stadium:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏛️",
@@ -7435,7 +8252,8 @@ export const emojiData = JSON.parse(`[
             ":classical_building:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏗️",
@@ -7444,7 +8262,8 @@ export const emojiData = JSON.parse(`[
             ":building_construction:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧱",
@@ -7453,7 +8272,8 @@ export const emojiData = JSON.parse(`[
             ":brick:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪨",
@@ -7462,7 +8282,8 @@ export const emojiData = JSON.parse(`[
             ":rock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪵",
@@ -7471,7 +8292,8 @@ export const emojiData = JSON.parse(`[
             ":wood:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛖",
@@ -7480,7 +8302,8 @@ export const emojiData = JSON.parse(`[
             ":hut:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏘️",
@@ -7489,7 +8312,8 @@ export const emojiData = JSON.parse(`[
             ":houses:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏚️",
@@ -7498,7 +8322,8 @@ export const emojiData = JSON.parse(`[
             ":derelict_house:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏠",
@@ -7507,7 +8332,8 @@ export const emojiData = JSON.parse(`[
             ":house:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏡",
@@ -7516,7 +8342,8 @@ export const emojiData = JSON.parse(`[
             ":house_with_garden:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏢",
@@ -7525,7 +8352,8 @@ export const emojiData = JSON.parse(`[
             ":office_building:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏣",
@@ -7534,7 +8362,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_post_office:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏤",
@@ -7543,7 +8372,8 @@ export const emojiData = JSON.parse(`[
             ":post_office:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏥",
@@ -7552,7 +8382,8 @@ export const emojiData = JSON.parse(`[
             ":hospital:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏦",
@@ -7561,7 +8392,8 @@ export const emojiData = JSON.parse(`[
             ":bank:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏨",
@@ -7570,7 +8402,8 @@ export const emojiData = JSON.parse(`[
             ":hotel:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏩",
@@ -7579,7 +8412,8 @@ export const emojiData = JSON.parse(`[
             ":love_hotel:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏪",
@@ -7588,7 +8422,8 @@ export const emojiData = JSON.parse(`[
             ":convenience_store:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏫",
@@ -7597,7 +8432,8 @@ export const emojiData = JSON.parse(`[
             ":school:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏬",
@@ -7606,7 +8442,8 @@ export const emojiData = JSON.parse(`[
             ":department_store:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏭",
@@ -7615,7 +8452,8 @@ export const emojiData = JSON.parse(`[
             ":factory:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏯",
@@ -7624,7 +8462,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_castle:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏰",
@@ -7633,7 +8472,8 @@ export const emojiData = JSON.parse(`[
             ":castle:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💒",
@@ -7642,7 +8482,8 @@ export const emojiData = JSON.parse(`[
             ":wedding:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗼",
@@ -7651,7 +8492,8 @@ export const emojiData = JSON.parse(`[
             ":Tokyo_tower:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗽",
@@ -7660,7 +8502,8 @@ export const emojiData = JSON.parse(`[
             ":Statue_of_Liberty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛪",
@@ -7669,7 +8512,8 @@ export const emojiData = JSON.parse(`[
             ":church:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕌",
@@ -7678,7 +8522,8 @@ export const emojiData = JSON.parse(`[
             ":mosque:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛕",
@@ -7687,7 +8532,8 @@ export const emojiData = JSON.parse(`[
             ":hindu_temple:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕍",
@@ -7696,7 +8542,8 @@ export const emojiData = JSON.parse(`[
             ":synagogue:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛩️",
@@ -7705,7 +8552,8 @@ export const emojiData = JSON.parse(`[
             ":shinto_shrine:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕋",
@@ -7714,7 +8562,8 @@ export const emojiData = JSON.parse(`[
             ":kaaba:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛲",
@@ -7723,7 +8572,8 @@ export const emojiData = JSON.parse(`[
             ":fountain:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛺",
@@ -7732,7 +8582,8 @@ export const emojiData = JSON.parse(`[
             ":tent:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌁",
@@ -7741,7 +8592,8 @@ export const emojiData = JSON.parse(`[
             ":foggy:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌃",
@@ -7750,7 +8602,8 @@ export const emojiData = JSON.parse(`[
             ":night_with_stars:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏙️",
@@ -7759,7 +8612,8 @@ export const emojiData = JSON.parse(`[
             ":cityscape:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌄",
@@ -7768,7 +8622,8 @@ export const emojiData = JSON.parse(`[
             ":sunrise_over_mountains:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌅",
@@ -7777,7 +8632,8 @@ export const emojiData = JSON.parse(`[
             ":sunrise:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌆",
@@ -7786,7 +8642,8 @@ export const emojiData = JSON.parse(`[
             ":cityscape_at_dusk:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌇",
@@ -7795,7 +8652,8 @@ export const emojiData = JSON.parse(`[
             ":sunset:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌉",
@@ -7804,7 +8662,8 @@ export const emojiData = JSON.parse(`[
             ":bridge_at_night:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♨️",
@@ -7813,7 +8672,8 @@ export const emojiData = JSON.parse(`[
             ":hot_springs:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎠",
@@ -7822,7 +8682,8 @@ export const emojiData = JSON.parse(`[
             ":carousel_horse:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛝",
@@ -7831,7 +8692,8 @@ export const emojiData = JSON.parse(`[
             ":playground_slide:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎡",
@@ -7840,7 +8702,8 @@ export const emojiData = JSON.parse(`[
             ":ferris_wheel:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎢",
@@ -7849,7 +8712,8 @@ export const emojiData = JSON.parse(`[
             ":roller_coaster:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💈",
@@ -7858,7 +8722,8 @@ export const emojiData = JSON.parse(`[
             ":barber_pole:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎪",
@@ -7867,7 +8732,8 @@ export const emojiData = JSON.parse(`[
             ":circus_tent:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚂",
@@ -7876,7 +8742,8 @@ export const emojiData = JSON.parse(`[
             ":locomotive:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚃",
@@ -7885,7 +8752,8 @@ export const emojiData = JSON.parse(`[
             ":railway_car:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚄",
@@ -7894,7 +8762,8 @@ export const emojiData = JSON.parse(`[
             ":high-speed_train:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚅",
@@ -7903,7 +8772,8 @@ export const emojiData = JSON.parse(`[
             ":bullet_train:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚆",
@@ -7912,7 +8782,8 @@ export const emojiData = JSON.parse(`[
             ":train:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚇",
@@ -7921,7 +8792,8 @@ export const emojiData = JSON.parse(`[
             ":metro:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚈",
@@ -7930,7 +8802,8 @@ export const emojiData = JSON.parse(`[
             ":light_rail:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚉",
@@ -7939,7 +8812,8 @@ export const emojiData = JSON.parse(`[
             ":station:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚊",
@@ -7948,7 +8822,8 @@ export const emojiData = JSON.parse(`[
             ":tram:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚝",
@@ -7957,7 +8832,8 @@ export const emojiData = JSON.parse(`[
             ":monorail:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚞",
@@ -7966,7 +8842,8 @@ export const emojiData = JSON.parse(`[
             ":mountain_railway:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚋",
@@ -7975,7 +8852,8 @@ export const emojiData = JSON.parse(`[
             ":tram_car:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚌",
@@ -7984,7 +8862,8 @@ export const emojiData = JSON.parse(`[
             ":bus:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚍",
@@ -7993,7 +8872,8 @@ export const emojiData = JSON.parse(`[
             ":oncoming_bus:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚎",
@@ -8002,7 +8882,8 @@ export const emojiData = JSON.parse(`[
             ":trolleybus:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚐",
@@ -8011,7 +8892,8 @@ export const emojiData = JSON.parse(`[
             ":minibus:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚑",
@@ -8020,7 +8902,8 @@ export const emojiData = JSON.parse(`[
             ":ambulance:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚒",
@@ -8029,7 +8912,8 @@ export const emojiData = JSON.parse(`[
             ":fire_engine:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚓",
@@ -8038,7 +8922,8 @@ export const emojiData = JSON.parse(`[
             ":police_car:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚔",
@@ -8047,7 +8932,8 @@ export const emojiData = JSON.parse(`[
             ":oncoming_police_car:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚕",
@@ -8056,7 +8942,8 @@ export const emojiData = JSON.parse(`[
             ":taxi:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚖",
@@ -8065,7 +8952,8 @@ export const emojiData = JSON.parse(`[
             ":oncoming_taxi:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚗",
@@ -8074,7 +8962,8 @@ export const emojiData = JSON.parse(`[
             ":automobile:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚘",
@@ -8083,7 +8972,8 @@ export const emojiData = JSON.parse(`[
             ":oncoming_automobile:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚙",
@@ -8092,7 +8982,8 @@ export const emojiData = JSON.parse(`[
             ":sport_utility_vehicle:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛻",
@@ -8101,7 +8992,8 @@ export const emojiData = JSON.parse(`[
             ":pickup_truck:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚚",
@@ -8110,7 +9002,8 @@ export const emojiData = JSON.parse(`[
             ":delivery_truck:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚛",
@@ -8119,7 +9012,8 @@ export const emojiData = JSON.parse(`[
             ":articulated_lorry:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚜",
@@ -8128,7 +9022,8 @@ export const emojiData = JSON.parse(`[
             ":tractor:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏎️",
@@ -8137,7 +9032,8 @@ export const emojiData = JSON.parse(`[
             ":racing_car:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏍️",
@@ -8146,7 +9042,8 @@ export const emojiData = JSON.parse(`[
             ":motorcycle:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛵",
@@ -8155,7 +9052,8 @@ export const emojiData = JSON.parse(`[
             ":motor_scooter:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦽",
@@ -8164,7 +9062,8 @@ export const emojiData = JSON.parse(`[
             ":manual_wheelchair:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦼",
@@ -8173,7 +9072,8 @@ export const emojiData = JSON.parse(`[
             ":motorized_wheelchair:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛺",
@@ -8182,7 +9082,8 @@ export const emojiData = JSON.parse(`[
             ":auto_rickshaw:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚲",
@@ -8191,7 +9092,8 @@ export const emojiData = JSON.parse(`[
             ":bicycle:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛴",
@@ -8200,7 +9102,8 @@ export const emojiData = JSON.parse(`[
             ":kick_scooter:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛹",
@@ -8209,7 +9112,8 @@ export const emojiData = JSON.parse(`[
             ":skateboard:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛼",
@@ -8218,7 +9122,8 @@ export const emojiData = JSON.parse(`[
             ":roller_skate:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚏",
@@ -8227,7 +9132,8 @@ export const emojiData = JSON.parse(`[
             ":bus_stop:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛣️",
@@ -8236,7 +9142,8 @@ export const emojiData = JSON.parse(`[
             ":motorway:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛤️",
@@ -8245,7 +9152,8 @@ export const emojiData = JSON.parse(`[
             ":railway_track:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛢️",
@@ -8254,7 +9162,8 @@ export const emojiData = JSON.parse(`[
             ":oil_drum:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛽",
@@ -8263,7 +9172,8 @@ export const emojiData = JSON.parse(`[
             ":fuel_pump:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛞",
@@ -8272,7 +9182,8 @@ export const emojiData = JSON.parse(`[
             ":wheel:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚨",
@@ -8281,7 +9192,8 @@ export const emojiData = JSON.parse(`[
             ":police_car_light:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚥",
@@ -8290,7 +9202,8 @@ export const emojiData = JSON.parse(`[
             ":horizontal_traffic_light:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚦",
@@ -8299,7 +9212,8 @@ export const emojiData = JSON.parse(`[
             ":vertical_traffic_light:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛑",
@@ -8308,7 +9222,8 @@ export const emojiData = JSON.parse(`[
             ":stop_sign:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚧",
@@ -8317,7 +9232,8 @@ export const emojiData = JSON.parse(`[
             ":construction:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚓",
@@ -8326,7 +9242,8 @@ export const emojiData = JSON.parse(`[
             ":anchor:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛟",
@@ -8335,7 +9252,8 @@ export const emojiData = JSON.parse(`[
             ":ring_buoy:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛵",
@@ -8344,7 +9262,8 @@ export const emojiData = JSON.parse(`[
             ":sailboat:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛶",
@@ -8353,7 +9272,8 @@ export const emojiData = JSON.parse(`[
             ":canoe:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚤",
@@ -8362,7 +9282,8 @@ export const emojiData = JSON.parse(`[
             ":speedboat:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛳️",
@@ -8371,7 +9292,8 @@ export const emojiData = JSON.parse(`[
             ":passenger_ship:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛴️",
@@ -8380,7 +9302,8 @@ export const emojiData = JSON.parse(`[
             ":ferry:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛥️",
@@ -8389,7 +9312,8 @@ export const emojiData = JSON.parse(`[
             ":motor_boat:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚢",
@@ -8398,7 +9322,8 @@ export const emojiData = JSON.parse(`[
             ":ship:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✈️",
@@ -8407,7 +9332,8 @@ export const emojiData = JSON.parse(`[
             ":airplane:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛩️",
@@ -8416,7 +9342,8 @@ export const emojiData = JSON.parse(`[
             ":small_airplane:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛫",
@@ -8425,7 +9352,8 @@ export const emojiData = JSON.parse(`[
             ":airplane_departure:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛬",
@@ -8434,7 +9362,8 @@ export const emojiData = JSON.parse(`[
             ":airplane_arrival:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪂",
@@ -8443,7 +9372,8 @@ export const emojiData = JSON.parse(`[
             ":parachute:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💺",
@@ -8452,7 +9382,8 @@ export const emojiData = JSON.parse(`[
             ":seat:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚁",
@@ -8461,7 +9392,8 @@ export const emojiData = JSON.parse(`[
             ":helicopter:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚟",
@@ -8470,7 +9402,8 @@ export const emojiData = JSON.parse(`[
             ":suspension_railway:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚠",
@@ -8479,7 +9412,8 @@ export const emojiData = JSON.parse(`[
             ":mountain_cableway:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚡",
@@ -8488,7 +9422,8 @@ export const emojiData = JSON.parse(`[
             ":aerial_tramway:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛰️",
@@ -8497,7 +9432,8 @@ export const emojiData = JSON.parse(`[
             ":satellite:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚀",
@@ -8506,7 +9442,8 @@ export const emojiData = JSON.parse(`[
             ":rocket:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛸",
@@ -8515,7 +9452,8 @@ export const emojiData = JSON.parse(`[
             ":flying_saucer:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛎️",
@@ -8524,7 +9462,8 @@ export const emojiData = JSON.parse(`[
             ":bellhop_bell:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧳",
@@ -8533,7 +9472,8 @@ export const emojiData = JSON.parse(`[
             ":luggage:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⌛",
@@ -8542,7 +9482,8 @@ export const emojiData = JSON.parse(`[
             ":hourglass_done:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏳",
@@ -8551,7 +9492,8 @@ export const emojiData = JSON.parse(`[
             ":hourglass_not_done:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⌚",
@@ -8560,7 +9502,8 @@ export const emojiData = JSON.parse(`[
             ":watch:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏰",
@@ -8569,7 +9512,8 @@ export const emojiData = JSON.parse(`[
             ":alarm_clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏱️",
@@ -8578,7 +9522,8 @@ export const emojiData = JSON.parse(`[
             ":stopwatch:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏲️",
@@ -8587,7 +9532,8 @@ export const emojiData = JSON.parse(`[
             ":timer_clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕰️",
@@ -8596,7 +9542,8 @@ export const emojiData = JSON.parse(`[
             ":mantelpiece_clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕛",
@@ -8605,7 +9552,8 @@ export const emojiData = JSON.parse(`[
             ":twelve_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕧",
@@ -8614,7 +9562,8 @@ export const emojiData = JSON.parse(`[
             ":twelve-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕐",
@@ -8623,7 +9572,8 @@ export const emojiData = JSON.parse(`[
             ":one_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕜",
@@ -8632,7 +9582,8 @@ export const emojiData = JSON.parse(`[
             ":one-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕑",
@@ -8641,7 +9592,8 @@ export const emojiData = JSON.parse(`[
             ":two_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕝",
@@ -8650,7 +9602,8 @@ export const emojiData = JSON.parse(`[
             ":two-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕒",
@@ -8659,7 +9612,8 @@ export const emojiData = JSON.parse(`[
             ":three_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕞",
@@ -8668,7 +9622,8 @@ export const emojiData = JSON.parse(`[
             ":three-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕓",
@@ -8677,7 +9632,8 @@ export const emojiData = JSON.parse(`[
             ":four_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕟",
@@ -8686,7 +9642,8 @@ export const emojiData = JSON.parse(`[
             ":four-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕔",
@@ -8695,7 +9652,8 @@ export const emojiData = JSON.parse(`[
             ":five_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕠",
@@ -8704,7 +9662,8 @@ export const emojiData = JSON.parse(`[
             ":five-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕕",
@@ -8713,7 +9672,8 @@ export const emojiData = JSON.parse(`[
             ":six_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕡",
@@ -8722,7 +9682,8 @@ export const emojiData = JSON.parse(`[
             ":six-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕖",
@@ -8731,7 +9692,8 @@ export const emojiData = JSON.parse(`[
             ":seven_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕢",
@@ -8740,7 +9702,8 @@ export const emojiData = JSON.parse(`[
             ":seven-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕗",
@@ -8749,7 +9712,8 @@ export const emojiData = JSON.parse(`[
             ":eight_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕣",
@@ -8758,7 +9722,8 @@ export const emojiData = JSON.parse(`[
             ":eight-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕘",
@@ -8767,7 +9732,8 @@ export const emojiData = JSON.parse(`[
             ":nine_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕤",
@@ -8776,7 +9742,8 @@ export const emojiData = JSON.parse(`[
             ":nine-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕙",
@@ -8785,7 +9752,8 @@ export const emojiData = JSON.parse(`[
             ":ten_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕥",
@@ -8794,7 +9762,8 @@ export const emojiData = JSON.parse(`[
             ":ten-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕚",
@@ -8803,7 +9772,8 @@ export const emojiData = JSON.parse(`[
             ":eleven_o’clock:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕦",
@@ -8812,7 +9782,8 @@ export const emojiData = JSON.parse(`[
             ":eleven-thirty:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌑",
@@ -8821,7 +9792,8 @@ export const emojiData = JSON.parse(`[
             ":new_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌒",
@@ -8830,7 +9802,8 @@ export const emojiData = JSON.parse(`[
             ":waxing_crescent_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌓",
@@ -8839,7 +9812,8 @@ export const emojiData = JSON.parse(`[
             ":first_quarter_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌔",
@@ -8848,7 +9822,8 @@ export const emojiData = JSON.parse(`[
             ":waxing_gibbous_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌕",
@@ -8857,7 +9832,8 @@ export const emojiData = JSON.parse(`[
             ":full_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌖",
@@ -8866,7 +9842,8 @@ export const emojiData = JSON.parse(`[
             ":waning_gibbous_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌗",
@@ -8875,7 +9852,8 @@ export const emojiData = JSON.parse(`[
             ":last_quarter_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌘",
@@ -8884,7 +9862,8 @@ export const emojiData = JSON.parse(`[
             ":waning_crescent_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌙",
@@ -8893,7 +9872,8 @@ export const emojiData = JSON.parse(`[
             ":crescent_moon:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌚",
@@ -8902,7 +9882,8 @@ export const emojiData = JSON.parse(`[
             ":new_moon_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌛",
@@ -8911,7 +9892,8 @@ export const emojiData = JSON.parse(`[
             ":first_quarter_moon_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌜",
@@ -8920,7 +9902,8 @@ export const emojiData = JSON.parse(`[
             ":last_quarter_moon_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌡️",
@@ -8929,7 +9912,8 @@ export const emojiData = JSON.parse(`[
             ":thermometer:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☀️",
@@ -8938,7 +9922,8 @@ export const emojiData = JSON.parse(`[
             ":sun:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌝",
@@ -8947,7 +9932,8 @@ export const emojiData = JSON.parse(`[
             ":full_moon_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌞",
@@ -8956,7 +9942,8 @@ export const emojiData = JSON.parse(`[
             ":sun_with_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪐",
@@ -8965,7 +9952,8 @@ export const emojiData = JSON.parse(`[
             ":ringed_planet:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⭐",
@@ -8974,7 +9962,8 @@ export const emojiData = JSON.parse(`[
             ":star:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌟",
@@ -8983,7 +9972,8 @@ export const emojiData = JSON.parse(`[
             ":glowing_star:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌠",
@@ -8992,7 +9982,8 @@ export const emojiData = JSON.parse(`[
             ":shooting_star:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌌",
@@ -9001,7 +9992,8 @@ export const emojiData = JSON.parse(`[
             ":milky_way:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☁️",
@@ -9010,7 +10002,8 @@ export const emojiData = JSON.parse(`[
             ":cloud:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛅",
@@ -9019,7 +10012,8 @@ export const emojiData = JSON.parse(`[
             ":sun_behind_cloud:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛈️",
@@ -9028,7 +10022,8 @@ export const emojiData = JSON.parse(`[
             ":cloud_with_lightning_and_rain:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌤️",
@@ -9037,7 +10032,8 @@ export const emojiData = JSON.parse(`[
             ":sun_behind_small_cloud:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌥️",
@@ -9046,7 +10042,8 @@ export const emojiData = JSON.parse(`[
             ":sun_behind_large_cloud:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌦️",
@@ -9055,7 +10052,8 @@ export const emojiData = JSON.parse(`[
             ":sun_behind_rain_cloud:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌧️",
@@ -9064,7 +10062,8 @@ export const emojiData = JSON.parse(`[
             ":cloud_with_rain:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌨️",
@@ -9073,7 +10072,8 @@ export const emojiData = JSON.parse(`[
             ":cloud_with_snow:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌩️",
@@ -9082,7 +10082,8 @@ export const emojiData = JSON.parse(`[
             ":cloud_with_lightning:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌪️",
@@ -9091,7 +10092,8 @@ export const emojiData = JSON.parse(`[
             ":tornado:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌫️",
@@ -9100,7 +10102,8 @@ export const emojiData = JSON.parse(`[
             ":fog:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌬️",
@@ -9109,7 +10112,8 @@ export const emojiData = JSON.parse(`[
             ":wind_face:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌀",
@@ -9118,7 +10122,8 @@ export const emojiData = JSON.parse(`[
             ":cyclone:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌈",
@@ -9127,7 +10132,8 @@ export const emojiData = JSON.parse(`[
             ":rainbow:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌂",
@@ -9136,7 +10142,8 @@ export const emojiData = JSON.parse(`[
             ":closed_umbrella:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☂️",
@@ -9145,7 +10152,8 @@ export const emojiData = JSON.parse(`[
             ":umbrella:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☔",
@@ -9154,7 +10162,8 @@ export const emojiData = JSON.parse(`[
             ":umbrella_with_rain_drops:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛱️",
@@ -9163,7 +10172,8 @@ export const emojiData = JSON.parse(`[
             ":umbrella_on_ground:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚡",
@@ -9172,7 +10182,8 @@ export const emojiData = JSON.parse(`[
             ":high_voltage:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❄️",
@@ -9181,7 +10192,8 @@ export const emojiData = JSON.parse(`[
             ":snowflake:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☃️",
@@ -9190,7 +10202,8 @@ export const emojiData = JSON.parse(`[
             ":snowman:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛄",
@@ -9199,7 +10212,8 @@ export const emojiData = JSON.parse(`[
             ":snowman_without_snow:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☄️",
@@ -9208,7 +10222,8 @@ export const emojiData = JSON.parse(`[
             ":comet:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔥",
@@ -9217,7 +10232,8 @@ export const emojiData = JSON.parse(`[
             ":fire:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💧",
@@ -9226,7 +10242,8 @@ export const emojiData = JSON.parse(`[
             ":droplet:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🌊",
@@ -9235,7 +10252,8 @@ export const emojiData = JSON.parse(`[
             ":water_wave:"
         ],
         "emoticons": [],
-        "category": "Travel & Places"
+        "category": "Travel & Places",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎃",
@@ -9244,7 +10262,8 @@ export const emojiData = JSON.parse(`[
             ":jack-o-lantern:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎄",
@@ -9253,7 +10272,8 @@ export const emojiData = JSON.parse(`[
             ":Christmas_tree:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎆",
@@ -9262,7 +10282,8 @@ export const emojiData = JSON.parse(`[
             ":fireworks:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎇",
@@ -9271,7 +10292,8 @@ export const emojiData = JSON.parse(`[
             ":sparkler:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧨",
@@ -9280,7 +10302,8 @@ export const emojiData = JSON.parse(`[
             ":firecracker:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✨",
@@ -9289,7 +10312,8 @@ export const emojiData = JSON.parse(`[
             ":sparkles:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎈",
@@ -9298,7 +10322,8 @@ export const emojiData = JSON.parse(`[
             ":balloon:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎉",
@@ -9307,7 +10332,8 @@ export const emojiData = JSON.parse(`[
             ":party_popper:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎊",
@@ -9316,7 +10342,8 @@ export const emojiData = JSON.parse(`[
             ":confetti_ball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎋",
@@ -9325,7 +10352,8 @@ export const emojiData = JSON.parse(`[
             ":tanabata_tree:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎍",
@@ -9334,7 +10362,8 @@ export const emojiData = JSON.parse(`[
             ":pine_decoration:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎎",
@@ -9343,7 +10372,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_dolls:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎏",
@@ -9352,7 +10382,8 @@ export const emojiData = JSON.parse(`[
             ":carp_streamer:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎐",
@@ -9361,7 +10392,8 @@ export const emojiData = JSON.parse(`[
             ":wind_chime:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎑",
@@ -9370,7 +10402,8 @@ export const emojiData = JSON.parse(`[
             ":moon_viewing_ceremony:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧧",
@@ -9379,7 +10412,8 @@ export const emojiData = JSON.parse(`[
             ":red_envelope:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎀",
@@ -9388,7 +10422,8 @@ export const emojiData = JSON.parse(`[
             ":ribbon:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎁",
@@ -9397,7 +10432,8 @@ export const emojiData = JSON.parse(`[
             ":wrapped_gift:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎗️",
@@ -9406,7 +10442,8 @@ export const emojiData = JSON.parse(`[
             ":reminder_ribbon:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎟️",
@@ -9415,7 +10452,8 @@ export const emojiData = JSON.parse(`[
             ":admission_tickets:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎫",
@@ -9424,7 +10462,8 @@ export const emojiData = JSON.parse(`[
             ":ticket:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎖️",
@@ -9433,7 +10472,8 @@ export const emojiData = JSON.parse(`[
             ":military_medal:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏆",
@@ -9442,7 +10482,8 @@ export const emojiData = JSON.parse(`[
             ":trophy:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏅",
@@ -9451,7 +10492,8 @@ export const emojiData = JSON.parse(`[
             ":sports_medal:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥇",
@@ -9460,7 +10502,8 @@ export const emojiData = JSON.parse(`[
             ":1st_place_medal:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥈",
@@ -9469,7 +10512,8 @@ export const emojiData = JSON.parse(`[
             ":2nd_place_medal:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥉",
@@ -9478,7 +10522,8 @@ export const emojiData = JSON.parse(`[
             ":3rd_place_medal:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚽",
@@ -9487,7 +10532,8 @@ export const emojiData = JSON.parse(`[
             ":soccer_ball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚾",
@@ -9496,7 +10542,8 @@ export const emojiData = JSON.parse(`[
             ":baseball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥎",
@@ -9505,7 +10552,8 @@ export const emojiData = JSON.parse(`[
             ":softball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏀",
@@ -9514,7 +10562,8 @@ export const emojiData = JSON.parse(`[
             ":basketball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏐",
@@ -9523,7 +10572,8 @@ export const emojiData = JSON.parse(`[
             ":volleyball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏈",
@@ -9532,7 +10582,8 @@ export const emojiData = JSON.parse(`[
             ":american_football:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏉",
@@ -9541,7 +10592,8 @@ export const emojiData = JSON.parse(`[
             ":rugby_football:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎾",
@@ -9550,7 +10602,8 @@ export const emojiData = JSON.parse(`[
             ":tennis:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥏",
@@ -9559,7 +10612,8 @@ export const emojiData = JSON.parse(`[
             ":flying_disc:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎳",
@@ -9568,7 +10622,8 @@ export const emojiData = JSON.parse(`[
             ":bowling:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏏",
@@ -9577,7 +10632,8 @@ export const emojiData = JSON.parse(`[
             ":cricket_game:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏑",
@@ -9586,7 +10642,8 @@ export const emojiData = JSON.parse(`[
             ":field_hockey:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏒",
@@ -9595,7 +10652,8 @@ export const emojiData = JSON.parse(`[
             ":ice_hockey:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥍",
@@ -9604,7 +10662,8 @@ export const emojiData = JSON.parse(`[
             ":lacrosse:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏓",
@@ -9613,7 +10672,8 @@ export const emojiData = JSON.parse(`[
             ":ping_pong:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏸",
@@ -9622,7 +10682,8 @@ export const emojiData = JSON.parse(`[
             ":badminton:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥊",
@@ -9631,7 +10692,8 @@ export const emojiData = JSON.parse(`[
             ":boxing_glove:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥋",
@@ -9640,7 +10702,8 @@ export const emojiData = JSON.parse(`[
             ":martial_arts_uniform:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥅",
@@ -9649,7 +10712,8 @@ export const emojiData = JSON.parse(`[
             ":goal_net:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛳",
@@ -9658,7 +10722,8 @@ export const emojiData = JSON.parse(`[
             ":flag_in_hole:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛸️",
@@ -9667,7 +10732,8 @@ export const emojiData = JSON.parse(`[
             ":ice_skate:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎣",
@@ -9676,7 +10742,8 @@ export const emojiData = JSON.parse(`[
             ":fishing_pole:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🤿",
@@ -9685,7 +10752,8 @@ export const emojiData = JSON.parse(`[
             ":diving_mask:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎽",
@@ -9694,7 +10762,8 @@ export const emojiData = JSON.parse(`[
             ":running_shirt:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎿",
@@ -9703,7 +10772,8 @@ export const emojiData = JSON.parse(`[
             ":skis:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛷",
@@ -9712,7 +10782,8 @@ export const emojiData = JSON.parse(`[
             ":sled:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥌",
@@ -9721,7 +10792,8 @@ export const emojiData = JSON.parse(`[
             ":curling_stone:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎯",
@@ -9730,7 +10802,8 @@ export const emojiData = JSON.parse(`[
             ":bullseye:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪀",
@@ -9739,7 +10812,8 @@ export const emojiData = JSON.parse(`[
             ":yo-yo:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪁",
@@ -9748,7 +10822,8 @@ export const emojiData = JSON.parse(`[
             ":kite:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎱",
@@ -9757,7 +10832,8 @@ export const emojiData = JSON.parse(`[
             ":pool_8_ball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔮",
@@ -9766,7 +10842,8 @@ export const emojiData = JSON.parse(`[
             ":crystal_ball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪄",
@@ -9775,7 +10852,8 @@ export const emojiData = JSON.parse(`[
             ":magic_wand:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧿",
@@ -9784,7 +10862,8 @@ export const emojiData = JSON.parse(`[
             ":nazar_amulet:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪬",
@@ -9793,7 +10872,8 @@ export const emojiData = JSON.parse(`[
             ":hamsa:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎮",
@@ -9802,7 +10882,8 @@ export const emojiData = JSON.parse(`[
             ":video_game:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕹️",
@@ -9811,7 +10892,8 @@ export const emojiData = JSON.parse(`[
             ":joystick:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎰",
@@ -9820,7 +10902,8 @@ export const emojiData = JSON.parse(`[
             ":slot_machine:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎲",
@@ -9829,7 +10912,8 @@ export const emojiData = JSON.parse(`[
             ":game_die:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧩",
@@ -9838,7 +10922,8 @@ export const emojiData = JSON.parse(`[
             ":puzzle_piece:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧸",
@@ -9847,7 +10932,8 @@ export const emojiData = JSON.parse(`[
             ":teddy_bear:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪅",
@@ -9856,7 +10942,8 @@ export const emojiData = JSON.parse(`[
             ":piñata:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪩",
@@ -9865,7 +10952,8 @@ export const emojiData = JSON.parse(`[
             ":mirror_ball:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪆",
@@ -9874,7 +10962,8 @@ export const emojiData = JSON.parse(`[
             ":nesting_dolls:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♠️",
@@ -9883,7 +10972,8 @@ export const emojiData = JSON.parse(`[
             ":spade_suit:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♥️",
@@ -9892,7 +10982,8 @@ export const emojiData = JSON.parse(`[
             ":heart_suit:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♦️",
@@ -9901,7 +10992,8 @@ export const emojiData = JSON.parse(`[
             ":diamond_suit:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♣️",
@@ -9910,7 +11002,8 @@ export const emojiData = JSON.parse(`[
             ":club_suit:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♟️",
@@ -9919,7 +11012,8 @@ export const emojiData = JSON.parse(`[
             ":chess_pawn:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🃏",
@@ -9928,7 +11022,8 @@ export const emojiData = JSON.parse(`[
             ":joker:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🀄",
@@ -9937,7 +11032,8 @@ export const emojiData = JSON.parse(`[
             ":mahjong_red_dragon:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎴",
@@ -9946,7 +11042,8 @@ export const emojiData = JSON.parse(`[
             ":flower_playing_cards:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎭",
@@ -9955,7 +11052,8 @@ export const emojiData = JSON.parse(`[
             ":performing_arts:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖼️",
@@ -9964,7 +11062,8 @@ export const emojiData = JSON.parse(`[
             ":framed_picture:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎨",
@@ -9973,7 +11072,8 @@ export const emojiData = JSON.parse(`[
             ":artist_palette:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧵",
@@ -9982,7 +11082,8 @@ export const emojiData = JSON.parse(`[
             ":thread:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪡",
@@ -9991,7 +11092,8 @@ export const emojiData = JSON.parse(`[
             ":sewing_needle:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧶",
@@ -10000,7 +11102,8 @@ export const emojiData = JSON.parse(`[
             ":yarn:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪢",
@@ -10009,7 +11112,8 @@ export const emojiData = JSON.parse(`[
             ":knot:"
         ],
         "emoticons": [],
-        "category": "Activities"
+        "category": "Activities",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👓",
@@ -10018,7 +11122,8 @@ export const emojiData = JSON.parse(`[
             ":glasses:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕶️",
@@ -10027,7 +11132,8 @@ export const emojiData = JSON.parse(`[
             ":sunglasses:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥽",
@@ -10036,7 +11142,8 @@ export const emojiData = JSON.parse(`[
             ":goggles:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥼",
@@ -10045,7 +11152,8 @@ export const emojiData = JSON.parse(`[
             ":lab_coat:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦺",
@@ -10054,7 +11162,8 @@ export const emojiData = JSON.parse(`[
             ":safety_vest:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👔",
@@ -10063,7 +11172,8 @@ export const emojiData = JSON.parse(`[
             ":necktie:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👕",
@@ -10072,7 +11182,8 @@ export const emojiData = JSON.parse(`[
             ":t-shirt:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👖",
@@ -10081,7 +11192,8 @@ export const emojiData = JSON.parse(`[
             ":jeans:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧣",
@@ -10090,7 +11202,8 @@ export const emojiData = JSON.parse(`[
             ":scarf:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧤",
@@ -10099,7 +11212,8 @@ export const emojiData = JSON.parse(`[
             ":gloves:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧥",
@@ -10108,7 +11222,8 @@ export const emojiData = JSON.parse(`[
             ":coat:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧦",
@@ -10117,7 +11232,8 @@ export const emojiData = JSON.parse(`[
             ":socks:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👗",
@@ -10126,7 +11242,8 @@ export const emojiData = JSON.parse(`[
             ":dress:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👘",
@@ -10135,7 +11252,8 @@ export const emojiData = JSON.parse(`[
             ":kimono:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥻",
@@ -10144,7 +11262,8 @@ export const emojiData = JSON.parse(`[
             ":sari:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩱",
@@ -10153,7 +11272,8 @@ export const emojiData = JSON.parse(`[
             ":one-piece_swimsuit:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩲",
@@ -10162,7 +11282,8 @@ export const emojiData = JSON.parse(`[
             ":briefs:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩳",
@@ -10171,7 +11292,8 @@ export const emojiData = JSON.parse(`[
             ":shorts:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👙",
@@ -10180,7 +11302,8 @@ export const emojiData = JSON.parse(`[
             ":bikini:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👚",
@@ -10189,7 +11312,8 @@ export const emojiData = JSON.parse(`[
             ":woman’s_clothes:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👛",
@@ -10198,7 +11322,8 @@ export const emojiData = JSON.parse(`[
             ":purse:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👜",
@@ -10207,7 +11332,8 @@ export const emojiData = JSON.parse(`[
             ":handbag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👝",
@@ -10216,7 +11342,8 @@ export const emojiData = JSON.parse(`[
             ":clutch_bag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛍️",
@@ -10225,7 +11352,8 @@ export const emojiData = JSON.parse(`[
             ":shopping_bags:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎒",
@@ -10234,7 +11362,8 @@ export const emojiData = JSON.parse(`[
             ":backpack:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩴",
@@ -10243,7 +11372,8 @@ export const emojiData = JSON.parse(`[
             ":thong_sandal:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👞",
@@ -10252,7 +11382,8 @@ export const emojiData = JSON.parse(`[
             ":man’s_shoe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👟",
@@ -10261,7 +11392,8 @@ export const emojiData = JSON.parse(`[
             ":running_shoe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥾",
@@ -10270,7 +11402,8 @@ export const emojiData = JSON.parse(`[
             ":hiking_boot:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥿",
@@ -10279,7 +11412,8 @@ export const emojiData = JSON.parse(`[
             ":flat_shoe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👠",
@@ -10288,7 +11422,8 @@ export const emojiData = JSON.parse(`[
             ":high-heeled_shoe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👡",
@@ -10297,7 +11432,8 @@ export const emojiData = JSON.parse(`[
             ":woman’s_sandal:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩰",
@@ -10306,7 +11442,8 @@ export const emojiData = JSON.parse(`[
             ":ballet_shoes:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👢",
@@ -10315,7 +11452,8 @@ export const emojiData = JSON.parse(`[
             ":woman’s_boot:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👑",
@@ -10324,7 +11462,8 @@ export const emojiData = JSON.parse(`[
             ":crown:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "👒",
@@ -10333,7 +11472,8 @@ export const emojiData = JSON.parse(`[
             ":woman’s_hat:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎩",
@@ -10342,7 +11482,8 @@ export const emojiData = JSON.parse(`[
             ":top_hat:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎓",
@@ -10351,7 +11492,8 @@ export const emojiData = JSON.parse(`[
             ":graduation_cap:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧢",
@@ -10360,7 +11502,8 @@ export const emojiData = JSON.parse(`[
             ":billed_cap:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪖",
@@ -10369,7 +11512,8 @@ export const emojiData = JSON.parse(`[
             ":military_helmet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛑️",
@@ -10378,7 +11522,8 @@ export const emojiData = JSON.parse(`[
             ":rescue_worker’s_helmet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📿",
@@ -10387,7 +11532,8 @@ export const emojiData = JSON.parse(`[
             ":prayer_beads:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💄",
@@ -10396,7 +11542,8 @@ export const emojiData = JSON.parse(`[
             ":lipstick:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💍",
@@ -10405,7 +11552,8 @@ export const emojiData = JSON.parse(`[
             ":ring:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💎",
@@ -10414,7 +11562,8 @@ export const emojiData = JSON.parse(`[
             ":gem_stone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔇",
@@ -10423,7 +11572,8 @@ export const emojiData = JSON.parse(`[
             ":muted_speaker:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔈",
@@ -10432,7 +11582,8 @@ export const emojiData = JSON.parse(`[
             ":speaker_low_volume:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔉",
@@ -10441,7 +11592,8 @@ export const emojiData = JSON.parse(`[
             ":speaker_medium_volume:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔊",
@@ -10450,7 +11602,8 @@ export const emojiData = JSON.parse(`[
             ":speaker_high_volume:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📢",
@@ -10459,7 +11612,8 @@ export const emojiData = JSON.parse(`[
             ":loudspeaker:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📣",
@@ -10468,7 +11622,8 @@ export const emojiData = JSON.parse(`[
             ":megaphone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📯",
@@ -10477,7 +11632,8 @@ export const emojiData = JSON.parse(`[
             ":postal_horn:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔔",
@@ -10486,7 +11642,8 @@ export const emojiData = JSON.parse(`[
             ":bell:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔕",
@@ -10495,7 +11652,8 @@ export const emojiData = JSON.parse(`[
             ":bell_with_slash:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎼",
@@ -10504,7 +11662,8 @@ export const emojiData = JSON.parse(`[
             ":musical_score:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎵",
@@ -10513,7 +11672,8 @@ export const emojiData = JSON.parse(`[
             ":musical_note:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎶",
@@ -10522,7 +11682,8 @@ export const emojiData = JSON.parse(`[
             ":musical_notes:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎙️",
@@ -10531,7 +11692,8 @@ export const emojiData = JSON.parse(`[
             ":studio_microphone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎚️",
@@ -10540,7 +11702,8 @@ export const emojiData = JSON.parse(`[
             ":level_slider:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎛️",
@@ -10549,7 +11712,8 @@ export const emojiData = JSON.parse(`[
             ":control_knobs:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎤",
@@ -10558,7 +11722,8 @@ export const emojiData = JSON.parse(`[
             ":microphone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎧",
@@ -10567,7 +11732,8 @@ export const emojiData = JSON.parse(`[
             ":headphone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📻",
@@ -10576,7 +11742,8 @@ export const emojiData = JSON.parse(`[
             ":radio:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎷",
@@ -10585,7 +11752,8 @@ export const emojiData = JSON.parse(`[
             ":saxophone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪗",
@@ -10594,7 +11762,8 @@ export const emojiData = JSON.parse(`[
             ":accordion:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎸",
@@ -10603,7 +11772,8 @@ export const emojiData = JSON.parse(`[
             ":guitar:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎹",
@@ -10612,7 +11782,8 @@ export const emojiData = JSON.parse(`[
             ":musical_keyboard:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎺",
@@ -10621,7 +11792,8 @@ export const emojiData = JSON.parse(`[
             ":trumpet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎻",
@@ -10630,7 +11802,8 @@ export const emojiData = JSON.parse(`[
             ":violin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪕",
@@ -10639,7 +11812,8 @@ export const emojiData = JSON.parse(`[
             ":banjo:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🥁",
@@ -10648,7 +11822,8 @@ export const emojiData = JSON.parse(`[
             ":drum:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪘",
@@ -10657,7 +11832,8 @@ export const emojiData = JSON.parse(`[
             ":long_drum:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📱",
@@ -10666,7 +11842,8 @@ export const emojiData = JSON.parse(`[
             ":mobile_phone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📲",
@@ -10675,7 +11852,8 @@ export const emojiData = JSON.parse(`[
             ":mobile_phone_with_arrow:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☎️",
@@ -10684,7 +11862,8 @@ export const emojiData = JSON.parse(`[
             ":telephone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📞",
@@ -10693,7 +11872,8 @@ export const emojiData = JSON.parse(`[
             ":telephone_receiver:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📟",
@@ -10702,7 +11882,8 @@ export const emojiData = JSON.parse(`[
             ":pager:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📠",
@@ -10711,7 +11892,8 @@ export const emojiData = JSON.parse(`[
             ":fax_machine:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔋",
@@ -10720,7 +11902,8 @@ export const emojiData = JSON.parse(`[
             ":battery:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪫",
@@ -10729,7 +11912,8 @@ export const emojiData = JSON.parse(`[
             ":low_battery:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔌",
@@ -10738,7 +11922,8 @@ export const emojiData = JSON.parse(`[
             ":electric_plug:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💻",
@@ -10747,7 +11932,8 @@ export const emojiData = JSON.parse(`[
             ":laptop:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖥️",
@@ -10756,7 +11942,8 @@ export const emojiData = JSON.parse(`[
             ":desktop_computer:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖨️",
@@ -10765,7 +11952,8 @@ export const emojiData = JSON.parse(`[
             ":printer:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⌨️",
@@ -10774,7 +11962,8 @@ export const emojiData = JSON.parse(`[
             ":keyboard:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖱️",
@@ -10783,7 +11972,8 @@ export const emojiData = JSON.parse(`[
             ":computer_mouse:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖲️",
@@ -10792,7 +11982,8 @@ export const emojiData = JSON.parse(`[
             ":trackball:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💽",
@@ -10801,7 +11992,8 @@ export const emojiData = JSON.parse(`[
             ":computer_disk:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💾",
@@ -10810,7 +12002,8 @@ export const emojiData = JSON.parse(`[
             ":floppy_disk:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💿",
@@ -10819,7 +12012,8 @@ export const emojiData = JSON.parse(`[
             ":optical_disk:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📀",
@@ -10828,7 +12022,8 @@ export const emojiData = JSON.parse(`[
             ":dvd:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧮",
@@ -10837,7 +12032,8 @@ export const emojiData = JSON.parse(`[
             ":abacus:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎥",
@@ -10846,7 +12042,8 @@ export const emojiData = JSON.parse(`[
             ":movie_camera:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎞️",
@@ -10855,7 +12052,8 @@ export const emojiData = JSON.parse(`[
             ":film_frames:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📽️",
@@ -10864,7 +12062,8 @@ export const emojiData = JSON.parse(`[
             ":film_projector:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎬",
@@ -10873,7 +12072,8 @@ export const emojiData = JSON.parse(`[
             ":clapper_board:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📺",
@@ -10882,7 +12082,8 @@ export const emojiData = JSON.parse(`[
             ":television:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📷",
@@ -10891,7 +12092,8 @@ export const emojiData = JSON.parse(`[
             ":camera:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📸",
@@ -10900,7 +12102,8 @@ export const emojiData = JSON.parse(`[
             ":camera_with_flash:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📹",
@@ -10909,7 +12112,8 @@ export const emojiData = JSON.parse(`[
             ":video_camera:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📼",
@@ -10918,7 +12122,8 @@ export const emojiData = JSON.parse(`[
             ":videocassette:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔍",
@@ -10927,7 +12132,8 @@ export const emojiData = JSON.parse(`[
             ":magnifying_glass_tilted_left:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔎",
@@ -10936,7 +12142,8 @@ export const emojiData = JSON.parse(`[
             ":magnifying_glass_tilted_right:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕯️",
@@ -10945,7 +12152,8 @@ export const emojiData = JSON.parse(`[
             ":candle:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💡",
@@ -10954,7 +12162,8 @@ export const emojiData = JSON.parse(`[
             ":light_bulb:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔦",
@@ -10963,7 +12172,8 @@ export const emojiData = JSON.parse(`[
             ":flashlight:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏮",
@@ -10972,7 +12182,8 @@ export const emojiData = JSON.parse(`[
             ":red_paper_lantern:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪔",
@@ -10981,7 +12192,8 @@ export const emojiData = JSON.parse(`[
             ":diya_lamp:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📔",
@@ -10990,7 +12202,8 @@ export const emojiData = JSON.parse(`[
             ":notebook_with_decorative_cover:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📕",
@@ -10999,7 +12212,8 @@ export const emojiData = JSON.parse(`[
             ":closed_book:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📖",
@@ -11008,7 +12222,8 @@ export const emojiData = JSON.parse(`[
             ":open_book:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📗",
@@ -11017,7 +12232,8 @@ export const emojiData = JSON.parse(`[
             ":green_book:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📘",
@@ -11026,7 +12242,8 @@ export const emojiData = JSON.parse(`[
             ":blue_book:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📙",
@@ -11035,7 +12252,8 @@ export const emojiData = JSON.parse(`[
             ":orange_book:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📚",
@@ -11044,7 +12262,8 @@ export const emojiData = JSON.parse(`[
             ":books:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📓",
@@ -11053,7 +12272,8 @@ export const emojiData = JSON.parse(`[
             ":notebook:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📒",
@@ -11062,7 +12282,8 @@ export const emojiData = JSON.parse(`[
             ":ledger:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📃",
@@ -11071,7 +12292,8 @@ export const emojiData = JSON.parse(`[
             ":page_with_curl:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📜",
@@ -11080,7 +12302,8 @@ export const emojiData = JSON.parse(`[
             ":scroll:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📄",
@@ -11089,7 +12312,8 @@ export const emojiData = JSON.parse(`[
             ":page_facing_up:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📰",
@@ -11098,7 +12322,8 @@ export const emojiData = JSON.parse(`[
             ":newspaper:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗞️",
@@ -11107,7 +12332,8 @@ export const emojiData = JSON.parse(`[
             ":rolled-up_newspaper:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📑",
@@ -11116,7 +12342,8 @@ export const emojiData = JSON.parse(`[
             ":bookmark_tabs:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔖",
@@ -11125,7 +12352,8 @@ export const emojiData = JSON.parse(`[
             ":bookmark:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏷️",
@@ -11134,7 +12362,8 @@ export const emojiData = JSON.parse(`[
             ":label:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💰",
@@ -11143,7 +12372,8 @@ export const emojiData = JSON.parse(`[
             ":money_bag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪙",
@@ -11152,7 +12382,8 @@ export const emojiData = JSON.parse(`[
             ":coin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💴",
@@ -11161,7 +12392,8 @@ export const emojiData = JSON.parse(`[
             ":yen_banknote:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💵",
@@ -11170,7 +12402,8 @@ export const emojiData = JSON.parse(`[
             ":dollar_banknote:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💶",
@@ -11179,7 +12412,8 @@ export const emojiData = JSON.parse(`[
             ":euro_banknote:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💷",
@@ -11188,7 +12422,8 @@ export const emojiData = JSON.parse(`[
             ":pound_banknote:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💸",
@@ -11197,7 +12432,8 @@ export const emojiData = JSON.parse(`[
             ":money_with_wings:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💳",
@@ -11206,7 +12442,8 @@ export const emojiData = JSON.parse(`[
             ":credit_card:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧾",
@@ -11215,7 +12452,8 @@ export const emojiData = JSON.parse(`[
             ":receipt:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💹",
@@ -11224,7 +12462,8 @@ export const emojiData = JSON.parse(`[
             ":chart_increasing_with_yen:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✉️",
@@ -11233,7 +12472,8 @@ export const emojiData = JSON.parse(`[
             ":envelope:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📧",
@@ -11242,7 +12482,8 @@ export const emojiData = JSON.parse(`[
             ":e-mail:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📨",
@@ -11251,7 +12492,8 @@ export const emojiData = JSON.parse(`[
             ":incoming_envelope:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📩",
@@ -11260,7 +12502,8 @@ export const emojiData = JSON.parse(`[
             ":envelope_with_arrow:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📤",
@@ -11269,7 +12512,8 @@ export const emojiData = JSON.parse(`[
             ":outbox_tray:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📥",
@@ -11278,7 +12522,8 @@ export const emojiData = JSON.parse(`[
             ":inbox_tray:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📦",
@@ -11287,7 +12532,8 @@ export const emojiData = JSON.parse(`[
             ":package:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📫",
@@ -11296,7 +12542,8 @@ export const emojiData = JSON.parse(`[
             ":closed_mailbox_with_raised_flag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📪",
@@ -11305,7 +12552,8 @@ export const emojiData = JSON.parse(`[
             ":closed_mailbox_with_lowered_flag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📬",
@@ -11314,7 +12562,8 @@ export const emojiData = JSON.parse(`[
             ":open_mailbox_with_raised_flag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📭",
@@ -11323,7 +12572,8 @@ export const emojiData = JSON.parse(`[
             ":open_mailbox_with_lowered_flag:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📮",
@@ -11332,7 +12582,8 @@ export const emojiData = JSON.parse(`[
             ":postbox:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗳️",
@@ -11341,7 +12592,8 @@ export const emojiData = JSON.parse(`[
             ":ballot_box_with_ballot:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✏️",
@@ -11350,7 +12602,8 @@ export const emojiData = JSON.parse(`[
             ":pencil:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✒️",
@@ -11359,7 +12612,8 @@ export const emojiData = JSON.parse(`[
             ":black_nib:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖋️",
@@ -11368,7 +12622,8 @@ export const emojiData = JSON.parse(`[
             ":fountain_pen:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖊️",
@@ -11377,7 +12632,8 @@ export const emojiData = JSON.parse(`[
             ":pen:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖌️",
@@ -11386,7 +12642,8 @@ export const emojiData = JSON.parse(`[
             ":paintbrush:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖍️",
@@ -11395,7 +12652,8 @@ export const emojiData = JSON.parse(`[
             ":crayon:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📝",
@@ -11404,7 +12662,8 @@ export const emojiData = JSON.parse(`[
             ":memo:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💼",
@@ -11413,7 +12672,8 @@ export const emojiData = JSON.parse(`[
             ":briefcase:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📁",
@@ -11422,7 +12682,8 @@ export const emojiData = JSON.parse(`[
             ":file_folder:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📂",
@@ -11431,7 +12692,8 @@ export const emojiData = JSON.parse(`[
             ":open_file_folder:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗂️",
@@ -11440,7 +12702,8 @@ export const emojiData = JSON.parse(`[
             ":card_index_dividers:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📅",
@@ -11449,7 +12712,8 @@ export const emojiData = JSON.parse(`[
             ":calendar:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📆",
@@ -11458,7 +12722,8 @@ export const emojiData = JSON.parse(`[
             ":tear-off_calendar:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗒️",
@@ -11467,7 +12732,8 @@ export const emojiData = JSON.parse(`[
             ":spiral_notepad:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗓️",
@@ -11476,7 +12742,8 @@ export const emojiData = JSON.parse(`[
             ":spiral_calendar:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📇",
@@ -11485,7 +12752,8 @@ export const emojiData = JSON.parse(`[
             ":card_index:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📈",
@@ -11494,7 +12762,8 @@ export const emojiData = JSON.parse(`[
             ":chart_increasing:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📉",
@@ -11503,7 +12772,8 @@ export const emojiData = JSON.parse(`[
             ":chart_decreasing:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📊",
@@ -11512,7 +12782,8 @@ export const emojiData = JSON.parse(`[
             ":bar_chart:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📋",
@@ -11521,7 +12792,8 @@ export const emojiData = JSON.parse(`[
             ":clipboard:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📌",
@@ -11530,7 +12802,8 @@ export const emojiData = JSON.parse(`[
             ":pushpin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📍",
@@ -11539,7 +12812,8 @@ export const emojiData = JSON.parse(`[
             ":round_pushpin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📎",
@@ -11548,7 +12822,8 @@ export const emojiData = JSON.parse(`[
             ":paperclip:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🖇️",
@@ -11557,7 +12832,8 @@ export const emojiData = JSON.parse(`[
             ":linked_paperclips:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📏",
@@ -11566,7 +12842,8 @@ export const emojiData = JSON.parse(`[
             ":straight_ruler:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📐",
@@ -11575,7 +12852,8 @@ export const emojiData = JSON.parse(`[
             ":triangular_ruler:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✂️",
@@ -11584,7 +12862,8 @@ export const emojiData = JSON.parse(`[
             ":scissors:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗃️",
@@ -11593,7 +12872,8 @@ export const emojiData = JSON.parse(`[
             ":card_file_box:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗄️",
@@ -11602,7 +12882,8 @@ export const emojiData = JSON.parse(`[
             ":file_cabinet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗑️",
@@ -11611,7 +12892,8 @@ export const emojiData = JSON.parse(`[
             ":wastebasket:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔒",
@@ -11620,7 +12902,8 @@ export const emojiData = JSON.parse(`[
             ":locked:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔓",
@@ -11629,7 +12912,8 @@ export const emojiData = JSON.parse(`[
             ":unlocked:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔏",
@@ -11638,7 +12922,8 @@ export const emojiData = JSON.parse(`[
             ":locked_with_pen:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔐",
@@ -11647,7 +12932,8 @@ export const emojiData = JSON.parse(`[
             ":locked_with_key:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔑",
@@ -11656,7 +12942,8 @@ export const emojiData = JSON.parse(`[
             ":key:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗝️",
@@ -11665,7 +12952,8 @@ export const emojiData = JSON.parse(`[
             ":old_key:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔨",
@@ -11674,7 +12962,8 @@ export const emojiData = JSON.parse(`[
             ":hammer:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪓",
@@ -11683,7 +12972,8 @@ export const emojiData = JSON.parse(`[
             ":axe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛏️",
@@ -11692,7 +12982,8 @@ export const emojiData = JSON.parse(`[
             ":pick:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚒️",
@@ -11701,7 +12992,8 @@ export const emojiData = JSON.parse(`[
             ":hammer_and_pick:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛠️",
@@ -11710,7 +13002,8 @@ export const emojiData = JSON.parse(`[
             ":hammer_and_wrench:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗡️",
@@ -11719,7 +13012,8 @@ export const emojiData = JSON.parse(`[
             ":dagger:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚔️",
@@ -11728,7 +13022,8 @@ export const emojiData = JSON.parse(`[
             ":crossed_swords:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔫",
@@ -11737,7 +13032,8 @@ export const emojiData = JSON.parse(`[
             ":water_pistol:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪃",
@@ -11746,7 +13042,8 @@ export const emojiData = JSON.parse(`[
             ":boomerang:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏹",
@@ -11755,7 +13052,8 @@ export const emojiData = JSON.parse(`[
             ":bow_and_arrow:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛡️",
@@ -11764,7 +13062,8 @@ export const emojiData = JSON.parse(`[
             ":shield:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪚",
@@ -11773,7 +13072,8 @@ export const emojiData = JSON.parse(`[
             ":carpentry_saw:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔧",
@@ -11782,7 +13082,8 @@ export const emojiData = JSON.parse(`[
             ":wrench:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪛",
@@ -11791,7 +13092,8 @@ export const emojiData = JSON.parse(`[
             ":screwdriver:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔩",
@@ -11800,7 +13102,8 @@ export const emojiData = JSON.parse(`[
             ":nut_and_bolt:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚙️",
@@ -11809,7 +13112,8 @@ export const emojiData = JSON.parse(`[
             ":gear:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗜️",
@@ -11818,7 +13122,8 @@ export const emojiData = JSON.parse(`[
             ":clamp:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚖️",
@@ -11827,7 +13132,8 @@ export const emojiData = JSON.parse(`[
             ":balance_scale:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🦯",
@@ -11836,7 +13142,8 @@ export const emojiData = JSON.parse(`[
             ":white_cane:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔗",
@@ -11845,7 +13152,8 @@ export const emojiData = JSON.parse(`[
             ":link:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛓️",
@@ -11854,7 +13162,8 @@ export const emojiData = JSON.parse(`[
             ":chains:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪝",
@@ -11863,7 +13172,8 @@ export const emojiData = JSON.parse(`[
             ":hook:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧰",
@@ -11872,7 +13182,8 @@ export const emojiData = JSON.parse(`[
             ":toolbox:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧲",
@@ -11881,7 +13192,8 @@ export const emojiData = JSON.parse(`[
             ":magnet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪜",
@@ -11890,7 +13202,8 @@ export const emojiData = JSON.parse(`[
             ":ladder:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚗️",
@@ -11899,7 +13212,8 @@ export const emojiData = JSON.parse(`[
             ":alembic:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧪",
@@ -11908,7 +13222,8 @@ export const emojiData = JSON.parse(`[
             ":test_tube:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧫",
@@ -11917,7 +13232,8 @@ export const emojiData = JSON.parse(`[
             ":petri_dish:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧬",
@@ -11926,7 +13242,8 @@ export const emojiData = JSON.parse(`[
             ":dna:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔬",
@@ -11935,7 +13252,8 @@ export const emojiData = JSON.parse(`[
             ":microscope:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔭",
@@ -11944,7 +13262,8 @@ export const emojiData = JSON.parse(`[
             ":telescope:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📡",
@@ -11953,7 +13272,8 @@ export const emojiData = JSON.parse(`[
             ":satellite_antenna:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💉",
@@ -11962,7 +13282,8 @@ export const emojiData = JSON.parse(`[
             ":syringe:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩸",
@@ -11971,7 +13292,8 @@ export const emojiData = JSON.parse(`[
             ":drop_of_blood:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💊",
@@ -11980,7 +13302,8 @@ export const emojiData = JSON.parse(`[
             ":pill:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩹",
@@ -11989,7 +13312,8 @@ export const emojiData = JSON.parse(`[
             ":adhesive_bandage:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩼",
@@ -11998,7 +13322,8 @@ export const emojiData = JSON.parse(`[
             ":crutch:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩺",
@@ -12007,7 +13332,8 @@ export const emojiData = JSON.parse(`[
             ":stethoscope:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🩻",
@@ -12016,7 +13342,8 @@ export const emojiData = JSON.parse(`[
             ":x-ray:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚪",
@@ -12025,7 +13352,8 @@ export const emojiData = JSON.parse(`[
             ":door:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛗",
@@ -12034,7 +13362,8 @@ export const emojiData = JSON.parse(`[
             ":elevator:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪞",
@@ -12043,7 +13372,8 @@ export const emojiData = JSON.parse(`[
             ":mirror:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪟",
@@ -12052,7 +13382,8 @@ export const emojiData = JSON.parse(`[
             ":window:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛏️",
@@ -12061,7 +13392,8 @@ export const emojiData = JSON.parse(`[
             ":bed:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛋️",
@@ -12070,7 +13402,8 @@ export const emojiData = JSON.parse(`[
             ":couch_and_lamp:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪑",
@@ -12079,7 +13412,8 @@ export const emojiData = JSON.parse(`[
             ":chair:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚽",
@@ -12088,7 +13422,8 @@ export const emojiData = JSON.parse(`[
             ":toilet:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪠",
@@ -12097,7 +13432,8 @@ export const emojiData = JSON.parse(`[
             ":plunger:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚿",
@@ -12106,7 +13442,8 @@ export const emojiData = JSON.parse(`[
             ":shower:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛁",
@@ -12115,7 +13452,8 @@ export const emojiData = JSON.parse(`[
             ":bathtub:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪤",
@@ -12124,7 +13462,8 @@ export const emojiData = JSON.parse(`[
             ":mouse_trap:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪒",
@@ -12133,7 +13472,8 @@ export const emojiData = JSON.parse(`[
             ":razor:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧴",
@@ -12142,7 +13482,8 @@ export const emojiData = JSON.parse(`[
             ":lotion_bottle:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧷",
@@ -12151,7 +13492,8 @@ export const emojiData = JSON.parse(`[
             ":safety_pin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧹",
@@ -12160,7 +13502,8 @@ export const emojiData = JSON.parse(`[
             ":broom:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧺",
@@ -12169,7 +13512,8 @@ export const emojiData = JSON.parse(`[
             ":basket:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧻",
@@ -12178,7 +13522,8 @@ export const emojiData = JSON.parse(`[
             ":roll_of_paper:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪣",
@@ -12187,7 +13532,8 @@ export const emojiData = JSON.parse(`[
             ":bucket:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧼",
@@ -12196,7 +13542,8 @@ export const emojiData = JSON.parse(`[
             ":soap:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🫧",
@@ -12205,7 +13552,8 @@ export const emojiData = JSON.parse(`[
             ":bubbles:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪥",
@@ -12214,7 +13562,8 @@ export const emojiData = JSON.parse(`[
             ":toothbrush:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧽",
@@ -12223,7 +13572,8 @@ export const emojiData = JSON.parse(`[
             ":sponge:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🧯",
@@ -12232,7 +13582,8 @@ export const emojiData = JSON.parse(`[
             ":fire_extinguisher:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛒",
@@ -12241,7 +13592,8 @@ export const emojiData = JSON.parse(`[
             ":shopping_cart:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚬",
@@ -12250,7 +13602,8 @@ export const emojiData = JSON.parse(`[
             ":cigarette:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚰️",
@@ -12259,7 +13612,8 @@ export const emojiData = JSON.parse(`[
             ":coffin:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪦",
@@ -12268,7 +13622,8 @@ export const emojiData = JSON.parse(`[
             ":headstone:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚱️",
@@ -12277,7 +13632,8 @@ export const emojiData = JSON.parse(`[
             ":funeral_urn:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🗿",
@@ -12286,7 +13642,8 @@ export const emojiData = JSON.parse(`[
             ":moai:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪧",
@@ -12295,7 +13652,8 @@ export const emojiData = JSON.parse(`[
             ":placard:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🪪",
@@ -12304,7 +13662,8 @@ export const emojiData = JSON.parse(`[
             ":identification_card:"
         ],
         "emoticons": [],
-        "category": "Objects"
+        "category": "Objects",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏧",
@@ -12313,7 +13672,8 @@ export const emojiData = JSON.parse(`[
             ":ATM_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚮",
@@ -12322,7 +13682,8 @@ export const emojiData = JSON.parse(`[
             ":litter_in_bin_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚰",
@@ -12331,7 +13692,8 @@ export const emojiData = JSON.parse(`[
             ":potable_water:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♿",
@@ -12340,7 +13702,8 @@ export const emojiData = JSON.parse(`[
             ":wheelchair_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚹",
@@ -12349,7 +13712,8 @@ export const emojiData = JSON.parse(`[
             ":men’s_room:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚺",
@@ -12358,7 +13722,8 @@ export const emojiData = JSON.parse(`[
             ":women’s_room:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚻",
@@ -12367,7 +13732,8 @@ export const emojiData = JSON.parse(`[
             ":restroom:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚼",
@@ -12376,7 +13742,8 @@ export const emojiData = JSON.parse(`[
             ":baby_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚾",
@@ -12385,7 +13752,8 @@ export const emojiData = JSON.parse(`[
             ":water_closet:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛂",
@@ -12394,7 +13762,8 @@ export const emojiData = JSON.parse(`[
             ":passport_control:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛃",
@@ -12403,7 +13772,8 @@ export const emojiData = JSON.parse(`[
             ":customs:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛄",
@@ -12412,7 +13782,8 @@ export const emojiData = JSON.parse(`[
             ":baggage_claim:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛅",
@@ -12421,7 +13792,8 @@ export const emojiData = JSON.parse(`[
             ":left_luggage:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚠️",
@@ -12430,7 +13802,8 @@ export const emojiData = JSON.parse(`[
             ":warning:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚸",
@@ -12439,7 +13812,8 @@ export const emojiData = JSON.parse(`[
             ":children_crossing:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛔",
@@ -12448,7 +13822,8 @@ export const emojiData = JSON.parse(`[
             ":no_entry:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚫",
@@ -12457,7 +13832,8 @@ export const emojiData = JSON.parse(`[
             ":prohibited:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚳",
@@ -12466,7 +13842,8 @@ export const emojiData = JSON.parse(`[
             ":no_bicycles:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚭",
@@ -12475,7 +13852,8 @@ export const emojiData = JSON.parse(`[
             ":no_smoking:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚯",
@@ -12484,7 +13862,8 @@ export const emojiData = JSON.parse(`[
             ":no_littering:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚱",
@@ -12493,7 +13872,8 @@ export const emojiData = JSON.parse(`[
             ":non-potable_water:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚷",
@@ -12502,7 +13882,8 @@ export const emojiData = JSON.parse(`[
             ":no_pedestrians:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📵",
@@ -12511,7 +13892,8 @@ export const emojiData = JSON.parse(`[
             ":no_mobile_phones:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔞",
@@ -12520,7 +13902,8 @@ export const emojiData = JSON.parse(`[
             ":no_one_under_eighteen:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☢️",
@@ -12529,7 +13912,8 @@ export const emojiData = JSON.parse(`[
             ":radioactive:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☣️",
@@ -12538,7 +13922,8 @@ export const emojiData = JSON.parse(`[
             ":biohazard:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⬆️",
@@ -12547,7 +13932,8 @@ export const emojiData = JSON.parse(`[
             ":up_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↗️",
@@ -12556,7 +13942,8 @@ export const emojiData = JSON.parse(`[
             ":up-right_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➡️",
@@ -12565,7 +13952,8 @@ export const emojiData = JSON.parse(`[
             ":right_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↘️",
@@ -12574,7 +13962,8 @@ export const emojiData = JSON.parse(`[
             ":down-right_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⬇️",
@@ -12583,7 +13972,8 @@ export const emojiData = JSON.parse(`[
             ":down_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↙️",
@@ -12592,7 +13982,8 @@ export const emojiData = JSON.parse(`[
             ":down-left_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⬅️",
@@ -12601,7 +13992,8 @@ export const emojiData = JSON.parse(`[
             ":left_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↖️",
@@ -12610,7 +14002,8 @@ export const emojiData = JSON.parse(`[
             ":up-left_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↕️",
@@ -12619,7 +14012,8 @@ export const emojiData = JSON.parse(`[
             ":up-down_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↔️",
@@ -12628,7 +14022,8 @@ export const emojiData = JSON.parse(`[
             ":left-right_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↩️",
@@ -12637,7 +14032,8 @@ export const emojiData = JSON.parse(`[
             ":right_arrow_curving_left:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "↪️",
@@ -12646,7 +14042,8 @@ export const emojiData = JSON.parse(`[
             ":left_arrow_curving_right:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⤴️",
@@ -12655,7 +14052,8 @@ export const emojiData = JSON.parse(`[
             ":right_arrow_curving_up:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⤵️",
@@ -12664,7 +14062,8 @@ export const emojiData = JSON.parse(`[
             ":right_arrow_curving_down:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔃",
@@ -12673,7 +14072,8 @@ export const emojiData = JSON.parse(`[
             ":clockwise_vertical_arrows:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔄",
@@ -12682,7 +14082,8 @@ export const emojiData = JSON.parse(`[
             ":counterclockwise_arrows_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔙",
@@ -12691,7 +14092,8 @@ export const emojiData = JSON.parse(`[
             ":BACK_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔚",
@@ -12700,7 +14102,8 @@ export const emojiData = JSON.parse(`[
             ":END_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔛",
@@ -12709,7 +14112,8 @@ export const emojiData = JSON.parse(`[
             ":ON!_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔜",
@@ -12718,7 +14122,8 @@ export const emojiData = JSON.parse(`[
             ":SOON_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔝",
@@ -12727,7 +14132,8 @@ export const emojiData = JSON.parse(`[
             ":TOP_arrow:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🛐",
@@ -12736,7 +14142,8 @@ export const emojiData = JSON.parse(`[
             ":place_of_worship:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚛️",
@@ -12745,7 +14152,8 @@ export const emojiData = JSON.parse(`[
             ":atom_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕉️",
@@ -12754,7 +14162,8 @@ export const emojiData = JSON.parse(`[
             ":om:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✡️",
@@ -12763,7 +14172,8 @@ export const emojiData = JSON.parse(`[
             ":star_of_David:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☸️",
@@ -12772,7 +14182,8 @@ export const emojiData = JSON.parse(`[
             ":wheel_of_dharma:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☯️",
@@ -12781,7 +14192,8 @@ export const emojiData = JSON.parse(`[
             ":yin_yang:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✝️",
@@ -12790,7 +14202,8 @@ export const emojiData = JSON.parse(`[
             ":latin_cross:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☦️",
@@ -12799,7 +14212,8 @@ export const emojiData = JSON.parse(`[
             ":orthodox_cross:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☪️",
@@ -12808,7 +14222,8 @@ export const emojiData = JSON.parse(`[
             ":star_and_crescent:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☮️",
@@ -12817,7 +14232,8 @@ export const emojiData = JSON.parse(`[
             ":peace_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🕎",
@@ -12826,7 +14242,8 @@ export const emojiData = JSON.parse(`[
             ":menorah:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔯",
@@ -12835,7 +14252,8 @@ export const emojiData = JSON.parse(`[
             ":dotted_six-pointed_star:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♈",
@@ -12844,7 +14262,8 @@ export const emojiData = JSON.parse(`[
             ":Aries:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♉",
@@ -12853,7 +14272,8 @@ export const emojiData = JSON.parse(`[
             ":Taurus:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♊",
@@ -12862,7 +14282,8 @@ export const emojiData = JSON.parse(`[
             ":Gemini:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♋",
@@ -12871,7 +14292,8 @@ export const emojiData = JSON.parse(`[
             ":Cancer:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♌",
@@ -12880,7 +14302,8 @@ export const emojiData = JSON.parse(`[
             ":Leo:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♍",
@@ -12889,7 +14312,8 @@ export const emojiData = JSON.parse(`[
             ":Virgo:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♎",
@@ -12898,7 +14322,8 @@ export const emojiData = JSON.parse(`[
             ":Libra:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♏",
@@ -12907,7 +14332,8 @@ export const emojiData = JSON.parse(`[
             ":Scorpio:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♐",
@@ -12916,7 +14342,8 @@ export const emojiData = JSON.parse(`[
             ":Sagittarius:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♑",
@@ -12925,7 +14352,8 @@ export const emojiData = JSON.parse(`[
             ":Capricorn:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♒",
@@ -12934,7 +14362,8 @@ export const emojiData = JSON.parse(`[
             ":Aquarius:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♓",
@@ -12943,7 +14372,8 @@ export const emojiData = JSON.parse(`[
             ":Pisces:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⛎",
@@ -12952,7 +14382,8 @@ export const emojiData = JSON.parse(`[
             ":Ophiuchus:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔀",
@@ -12961,7 +14392,8 @@ export const emojiData = JSON.parse(`[
             ":shuffle_tracks_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔁",
@@ -12970,7 +14402,8 @@ export const emojiData = JSON.parse(`[
             ":repeat_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔂",
@@ -12979,7 +14412,8 @@ export const emojiData = JSON.parse(`[
             ":repeat_single_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "▶️",
@@ -12988,7 +14422,8 @@ export const emojiData = JSON.parse(`[
             ":play_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏩",
@@ -12997,7 +14432,8 @@ export const emojiData = JSON.parse(`[
             ":fast-forward_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏭️",
@@ -13006,7 +14442,8 @@ export const emojiData = JSON.parse(`[
             ":next_track_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏯️",
@@ -13015,7 +14452,8 @@ export const emojiData = JSON.parse(`[
             ":play_or_pause_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "◀️",
@@ -13024,7 +14462,8 @@ export const emojiData = JSON.parse(`[
             ":reverse_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏪",
@@ -13033,7 +14472,8 @@ export const emojiData = JSON.parse(`[
             ":fast_reverse_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏮️",
@@ -13042,7 +14482,8 @@ export const emojiData = JSON.parse(`[
             ":last_track_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔼",
@@ -13051,7 +14492,8 @@ export const emojiData = JSON.parse(`[
             ":upwards_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏫",
@@ -13060,7 +14502,8 @@ export const emojiData = JSON.parse(`[
             ":fast_up_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔽",
@@ -13069,7 +14512,8 @@ export const emojiData = JSON.parse(`[
             ":downwards_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏬",
@@ -13078,7 +14522,8 @@ export const emojiData = JSON.parse(`[
             ":fast_down_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏸️",
@@ -13087,7 +14532,8 @@ export const emojiData = JSON.parse(`[
             ":pause_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏹️",
@@ -13096,7 +14542,8 @@ export const emojiData = JSON.parse(`[
             ":stop_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏺️",
@@ -13105,7 +14552,8 @@ export const emojiData = JSON.parse(`[
             ":record_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⏏️",
@@ -13114,7 +14562,8 @@ export const emojiData = JSON.parse(`[
             ":eject_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎦",
@@ -13123,7 +14572,8 @@ export const emojiData = JSON.parse(`[
             ":cinema:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔅",
@@ -13132,7 +14582,8 @@ export const emojiData = JSON.parse(`[
             ":dim_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔆",
@@ -13141,7 +14592,8 @@ export const emojiData = JSON.parse(`[
             ":bright_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📶",
@@ -13150,7 +14602,8 @@ export const emojiData = JSON.parse(`[
             ":antenna_bars:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📳",
@@ -13159,7 +14612,8 @@ export const emojiData = JSON.parse(`[
             ":vibration_mode:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📴",
@@ -13168,7 +14622,8 @@ export const emojiData = JSON.parse(`[
             ":mobile_phone_off:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♀️",
@@ -13177,7 +14632,8 @@ export const emojiData = JSON.parse(`[
             ":female_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♂️",
@@ -13186,7 +14642,8 @@ export const emojiData = JSON.parse(`[
             ":male_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚧️",
@@ -13195,7 +14652,8 @@ export const emojiData = JSON.parse(`[
             ":transgender_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✖️",
@@ -13204,7 +14662,8 @@ export const emojiData = JSON.parse(`[
             ":multiply:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➕",
@@ -13213,7 +14672,8 @@ export const emojiData = JSON.parse(`[
             ":plus:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➖",
@@ -13222,7 +14682,8 @@ export const emojiData = JSON.parse(`[
             ":minus:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➗",
@@ -13231,7 +14692,8 @@ export const emojiData = JSON.parse(`[
             ":divide:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟰",
@@ -13240,7 +14702,8 @@ export const emojiData = JSON.parse(`[
             ":heavy_equals_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♾️",
@@ -13249,7 +14712,8 @@ export const emojiData = JSON.parse(`[
             ":infinity:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "‼️",
@@ -13258,7 +14722,8 @@ export const emojiData = JSON.parse(`[
             ":double_exclamation_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⁉️",
@@ -13267,7 +14732,8 @@ export const emojiData = JSON.parse(`[
             ":exclamation_question_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❓",
@@ -13276,7 +14742,8 @@ export const emojiData = JSON.parse(`[
             ":red_question_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❔",
@@ -13285,7 +14752,8 @@ export const emojiData = JSON.parse(`[
             ":white_question_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❕",
@@ -13294,7 +14762,8 @@ export const emojiData = JSON.parse(`[
             ":white_exclamation_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❗",
@@ -13303,7 +14772,8 @@ export const emojiData = JSON.parse(`[
             ":red_exclamation_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "〰️",
@@ -13312,7 +14782,8 @@ export const emojiData = JSON.parse(`[
             ":wavy_dash:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💱",
@@ -13321,7 +14792,8 @@ export const emojiData = JSON.parse(`[
             ":currency_exchange:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💲",
@@ -13330,7 +14802,8 @@ export const emojiData = JSON.parse(`[
             ":heavy_dollar_sign:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚕️",
@@ -13339,7 +14812,8 @@ export const emojiData = JSON.parse(`[
             ":medical_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "♻️",
@@ -13348,7 +14822,8 @@ export const emojiData = JSON.parse(`[
             ":recycling_symbol:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚜️",
@@ -13357,7 +14832,8 @@ export const emojiData = JSON.parse(`[
             ":fleur-de-lis:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔱",
@@ -13366,7 +14842,8 @@ export const emojiData = JSON.parse(`[
             ":trident_emblem:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "📛",
@@ -13375,7 +14852,8 @@ export const emojiData = JSON.parse(`[
             ":name_badge:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔰",
@@ -13384,7 +14862,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_symbol_for_beginner:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⭕",
@@ -13393,7 +14872,8 @@ export const emojiData = JSON.parse(`[
             ":hollow_red_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✅",
@@ -13402,7 +14882,8 @@ export const emojiData = JSON.parse(`[
             ":check_mark_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "☑️",
@@ -13411,7 +14892,8 @@ export const emojiData = JSON.parse(`[
             ":check_box_with_check:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✔️",
@@ -13420,7 +14902,8 @@ export const emojiData = JSON.parse(`[
             ":check_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❌",
@@ -13429,7 +14912,8 @@ export const emojiData = JSON.parse(`[
             ":cross_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❎",
@@ -13438,7 +14922,8 @@ export const emojiData = JSON.parse(`[
             ":cross_mark_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➰",
@@ -13447,7 +14932,8 @@ export const emojiData = JSON.parse(`[
             ":curly_loop:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "➿",
@@ -13456,7 +14942,8 @@ export const emojiData = JSON.parse(`[
             ":double_curly_loop:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "〽️",
@@ -13465,7 +14952,8 @@ export const emojiData = JSON.parse(`[
             ":part_alternation_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✳️",
@@ -13474,7 +14962,8 @@ export const emojiData = JSON.parse(`[
             ":eight-spoked_asterisk:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "✴️",
@@ -13483,7 +14972,8 @@ export const emojiData = JSON.parse(`[
             ":eight-pointed_star:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "❇️",
@@ -13492,7 +14982,8 @@ export const emojiData = JSON.parse(`[
             ":sparkle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "©️",
@@ -13501,7 +14992,8 @@ export const emojiData = JSON.parse(`[
             ":copyright:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "®️",
@@ -13510,7 +15002,8 @@ export const emojiData = JSON.parse(`[
             ":registered:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "™️",
@@ -13519,7 +15012,8 @@ export const emojiData = JSON.parse(`[
             ":trade_mark:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "#️⃣",
@@ -13528,7 +15022,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_#:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "*️⃣",
@@ -13537,7 +15032,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_*:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "0️⃣",
@@ -13546,7 +15042,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_0:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "1️⃣",
@@ -13555,7 +15052,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_1:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "2️⃣",
@@ -13564,7 +15062,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_2:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "3️⃣",
@@ -13573,7 +15072,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_3:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "4️⃣",
@@ -13582,7 +15082,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_4:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "5️⃣",
@@ -13591,7 +15092,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_5:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "6️⃣",
@@ -13600,7 +15102,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_6:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "7️⃣",
@@ -13609,7 +15112,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_7:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "8️⃣",
@@ -13618,7 +15122,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_8:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "9️⃣",
@@ -13627,7 +15132,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_9:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔟",
@@ -13636,7 +15142,8 @@ export const emojiData = JSON.parse(`[
             ":keycap:_10:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔠",
@@ -13645,7 +15152,8 @@ export const emojiData = JSON.parse(`[
             ":input_latin_uppercase:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔡",
@@ -13654,7 +15162,8 @@ export const emojiData = JSON.parse(`[
             ":input_latin_lowercase:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔢",
@@ -13663,7 +15172,8 @@ export const emojiData = JSON.parse(`[
             ":input_numbers:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔣",
@@ -13672,7 +15182,8 @@ export const emojiData = JSON.parse(`[
             ":input_symbols:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔤",
@@ -13681,7 +15192,8 @@ export const emojiData = JSON.parse(`[
             ":input_latin_letters:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🅰️",
@@ -13690,7 +15202,8 @@ export const emojiData = JSON.parse(`[
             ":A_button_(blood_type):"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆎",
@@ -13699,7 +15212,8 @@ export const emojiData = JSON.parse(`[
             ":AB_button_(blood_type):"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🅱️",
@@ -13708,7 +15222,8 @@ export const emojiData = JSON.parse(`[
             ":B_button_(blood_type):"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆑",
@@ -13717,7 +15232,8 @@ export const emojiData = JSON.parse(`[
             ":CL_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆒",
@@ -13726,7 +15242,8 @@ export const emojiData = JSON.parse(`[
             ":COOL_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆓",
@@ -13735,7 +15252,8 @@ export const emojiData = JSON.parse(`[
             ":FREE_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "ℹ️",
@@ -13744,7 +15262,8 @@ export const emojiData = JSON.parse(`[
             ":information:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆔",
@@ -13753,7 +15272,8 @@ export const emojiData = JSON.parse(`[
             ":ID_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "Ⓜ️",
@@ -13762,7 +15282,8 @@ export const emojiData = JSON.parse(`[
             ":circled_M:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆕",
@@ -13771,7 +15292,8 @@ export const emojiData = JSON.parse(`[
             ":NEW_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆖",
@@ -13780,7 +15302,8 @@ export const emojiData = JSON.parse(`[
             ":NG_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🅾️",
@@ -13789,7 +15312,8 @@ export const emojiData = JSON.parse(`[
             ":O_button_(blood_type):"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆗",
@@ -13798,7 +15322,8 @@ export const emojiData = JSON.parse(`[
             ":OK_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🅿️",
@@ -13807,7 +15332,8 @@ export const emojiData = JSON.parse(`[
             ":P_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆘",
@@ -13816,7 +15342,8 @@ export const emojiData = JSON.parse(`[
             ":SOS_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆙",
@@ -13825,7 +15352,8 @@ export const emojiData = JSON.parse(`[
             ":UP!_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🆚",
@@ -13834,7 +15362,8 @@ export const emojiData = JSON.parse(`[
             ":VS_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈁",
@@ -13843,7 +15372,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“here”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈂️",
@@ -13852,7 +15382,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“service_charge”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈷️",
@@ -13861,7 +15392,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“monthly_amount”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈶",
@@ -13870,7 +15402,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“not_free_of_charge”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈯",
@@ -13879,7 +15412,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“reserved”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🉐",
@@ -13888,7 +15422,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“bargain”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈹",
@@ -13897,7 +15432,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“discount”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈚",
@@ -13906,7 +15442,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“free_of_charge”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈲",
@@ -13915,7 +15452,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“prohibited”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🉑",
@@ -13924,7 +15462,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“acceptable”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈸",
@@ -13933,7 +15472,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“application”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈴",
@@ -13942,7 +15482,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“passing_grade”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈳",
@@ -13951,7 +15492,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“vacancy”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "㊗️",
@@ -13960,7 +15502,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“congratulations”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "㊙️",
@@ -13969,7 +15512,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“secret”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈺",
@@ -13978,7 +15522,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“open_for_business”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🈵",
@@ -13987,7 +15532,8 @@ export const emojiData = JSON.parse(`[
             ":Japanese_“no_vacancy”_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔴",
@@ -13996,7 +15542,8 @@ export const emojiData = JSON.parse(`[
             ":red_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟠",
@@ -14005,7 +15552,8 @@ export const emojiData = JSON.parse(`[
             ":orange_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟡",
@@ -14014,7 +15562,8 @@ export const emojiData = JSON.parse(`[
             ":yellow_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟢",
@@ -14023,7 +15572,8 @@ export const emojiData = JSON.parse(`[
             ":green_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔵",
@@ -14032,7 +15582,8 @@ export const emojiData = JSON.parse(`[
             ":blue_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟣",
@@ -14041,7 +15592,8 @@ export const emojiData = JSON.parse(`[
             ":purple_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟤",
@@ -14050,7 +15602,8 @@ export const emojiData = JSON.parse(`[
             ":brown_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚫",
@@ -14059,7 +15612,8 @@ export const emojiData = JSON.parse(`[
             ":black_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⚪",
@@ -14068,7 +15622,8 @@ export const emojiData = JSON.parse(`[
             ":white_circle:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟥",
@@ -14077,7 +15632,8 @@ export const emojiData = JSON.parse(`[
             ":red_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟧",
@@ -14086,7 +15642,8 @@ export const emojiData = JSON.parse(`[
             ":orange_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟨",
@@ -14095,7 +15652,8 @@ export const emojiData = JSON.parse(`[
             ":yellow_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟩",
@@ -14104,7 +15662,8 @@ export const emojiData = JSON.parse(`[
             ":green_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟦",
@@ -14113,7 +15672,8 @@ export const emojiData = JSON.parse(`[
             ":blue_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟪",
@@ -14122,7 +15682,8 @@ export const emojiData = JSON.parse(`[
             ":purple_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🟫",
@@ -14131,7 +15692,8 @@ export const emojiData = JSON.parse(`[
             ":brown_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⬛",
@@ -14140,7 +15702,8 @@ export const emojiData = JSON.parse(`[
             ":black_large_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "⬜",
@@ -14149,7 +15712,8 @@ export const emojiData = JSON.parse(`[
             ":white_large_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "◼️",
@@ -14158,7 +15722,8 @@ export const emojiData = JSON.parse(`[
             ":black_medium_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "◻️",
@@ -14167,7 +15732,8 @@ export const emojiData = JSON.parse(`[
             ":white_medium_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "◾",
@@ -14176,7 +15742,8 @@ export const emojiData = JSON.parse(`[
             ":black_medium-small_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "◽",
@@ -14185,7 +15752,8 @@ export const emojiData = JSON.parse(`[
             ":white_medium-small_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "▪️",
@@ -14194,7 +15762,8 @@ export const emojiData = JSON.parse(`[
             ":black_small_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "▫️",
@@ -14203,7 +15772,8 @@ export const emojiData = JSON.parse(`[
             ":white_small_square:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔶",
@@ -14212,7 +15782,8 @@ export const emojiData = JSON.parse(`[
             ":large_orange_diamond:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔷",
@@ -14221,7 +15792,8 @@ export const emojiData = JSON.parse(`[
             ":large_blue_diamond:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔸",
@@ -14230,7 +15802,8 @@ export const emojiData = JSON.parse(`[
             ":small_orange_diamond:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔹",
@@ -14239,7 +15812,8 @@ export const emojiData = JSON.parse(`[
             ":small_blue_diamond:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔺",
@@ -14248,7 +15822,8 @@ export const emojiData = JSON.parse(`[
             ":red_triangle_pointed_up:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔻",
@@ -14257,7 +15832,8 @@ export const emojiData = JSON.parse(`[
             ":red_triangle_pointed_down:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "💠",
@@ -14266,7 +15842,8 @@ export const emojiData = JSON.parse(`[
             ":diamond_with_a_dot:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔘",
@@ -14275,7 +15852,8 @@ export const emojiData = JSON.parse(`[
             ":radio_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔳",
@@ -14284,7 +15862,8 @@ export const emojiData = JSON.parse(`[
             ":white_square_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🔲",
@@ -14293,7 +15872,8 @@ export const emojiData = JSON.parse(`[
             ":black_square_button:"
         ],
         "emoticons": [],
-        "category": "Symbols"
+        "category": "Symbols",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏁",
@@ -14302,7 +15882,8 @@ export const emojiData = JSON.parse(`[
             ":chequered_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🚩",
@@ -14311,7 +15892,8 @@ export const emojiData = JSON.parse(`[
             ":triangular_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🎌",
@@ -14320,7 +15902,8 @@ export const emojiData = JSON.parse(`[
             ":crossed_flags:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏴",
@@ -14329,7 +15912,8 @@ export const emojiData = JSON.parse(`[
             ":black_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏳️",
@@ -14338,7 +15922,8 @@ export const emojiData = JSON.parse(`[
             ":white_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏳️‍🌈",
@@ -14347,7 +15932,8 @@ export const emojiData = JSON.parse(`[
             ":rainbow_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏳️‍⚧️",
@@ -14356,7 +15942,8 @@ export const emojiData = JSON.parse(`[
             ":transgender_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏴‍☠️",
@@ -14365,7 +15952,8 @@ export const emojiData = JSON.parse(`[
             ":pirate_flag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇨",
@@ -14374,7 +15962,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ac:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇩",
@@ -14383,7 +15972,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ad:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇪",
@@ -14392,7 +15982,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ae:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇫",
@@ -14401,7 +15992,8 @@ export const emojiData = JSON.parse(`[
             ":flag_af:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇬",
@@ -14410,7 +16002,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ag:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇮",
@@ -14419,7 +16012,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ai:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇱",
@@ -14428,7 +16022,8 @@ export const emojiData = JSON.parse(`[
             ":flag_al:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇲",
@@ -14437,7 +16032,8 @@ export const emojiData = JSON.parse(`[
             ":flag_am:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇴",
@@ -14446,7 +16042,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ao:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇶",
@@ -14455,7 +16052,8 @@ export const emojiData = JSON.parse(`[
             ":flag_aq:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇷",
@@ -14464,7 +16062,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ar:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇸",
@@ -14473,7 +16072,8 @@ export const emojiData = JSON.parse(`[
             ":flag_as:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇹",
@@ -14482,7 +16082,8 @@ export const emojiData = JSON.parse(`[
             ":flag_at:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇺",
@@ -14491,7 +16092,8 @@ export const emojiData = JSON.parse(`[
             ":flag_au:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇼",
@@ -14500,7 +16102,8 @@ export const emojiData = JSON.parse(`[
             ":flag_aw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇽",
@@ -14509,7 +16112,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ax:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇦🇿",
@@ -14518,7 +16122,8 @@ export const emojiData = JSON.parse(`[
             ":flag_az:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇦",
@@ -14527,7 +16132,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ba:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇧",
@@ -14536,7 +16142,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bb:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇩",
@@ -14545,7 +16152,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bd:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇪",
@@ -14554,7 +16162,8 @@ export const emojiData = JSON.parse(`[
             ":flag_be:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇫",
@@ -14563,7 +16172,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇬",
@@ -14572,7 +16182,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇭",
@@ -14581,7 +16192,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇮",
@@ -14590,7 +16202,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bi:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇯",
@@ -14599,7 +16212,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bj:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇱",
@@ -14608,7 +16222,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇲",
@@ -14617,7 +16232,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇳",
@@ -14626,7 +16242,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇴",
@@ -14635,7 +16252,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bo:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇶",
@@ -14644,7 +16262,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bq:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇷",
@@ -14653,7 +16272,8 @@ export const emojiData = JSON.parse(`[
             ":flag_br:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇸",
@@ -14662,7 +16282,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bs:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇹",
@@ -14671,7 +16292,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇻",
@@ -14680,7 +16302,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇼",
@@ -14689,7 +16312,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇾",
@@ -14698,7 +16322,8 @@ export const emojiData = JSON.parse(`[
             ":flag_by:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇧🇿",
@@ -14707,7 +16332,8 @@ export const emojiData = JSON.parse(`[
             ":flag_bz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇦",
@@ -14716,7 +16342,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ca:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇨",
@@ -14725,7 +16352,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇩",
@@ -14734,7 +16362,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cd:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇫",
@@ -14743,7 +16372,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇬",
@@ -14752,7 +16382,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇭",
@@ -14761,7 +16392,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ch:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇮",
@@ -14770,7 +16402,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ci:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇰",
@@ -14779,7 +16412,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ck:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇱",
@@ -14788,7 +16422,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇲",
@@ -14797,7 +16432,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇳",
@@ -14806,7 +16442,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇴",
@@ -14815,7 +16452,8 @@ export const emojiData = JSON.parse(`[
             ":flag_co:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇵",
@@ -14824,7 +16462,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cp:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇷",
@@ -14833,7 +16472,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇺",
@@ -14842,7 +16482,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇻",
@@ -14851,7 +16492,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇼",
@@ -14860,7 +16502,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇽",
@@ -14869,7 +16512,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cx:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇾",
@@ -14878,7 +16522,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cy:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇨🇿",
@@ -14887,7 +16532,8 @@ export const emojiData = JSON.parse(`[
             ":flag_cz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇪",
@@ -14896,7 +16542,8 @@ export const emojiData = JSON.parse(`[
             ":flag_de:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇬",
@@ -14905,7 +16552,8 @@ export const emojiData = JSON.parse(`[
             ":flag_dg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇯",
@@ -14914,7 +16562,8 @@ export const emojiData = JSON.parse(`[
             ":flag_dj:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇰",
@@ -14923,7 +16572,8 @@ export const emojiData = JSON.parse(`[
             ":flag_dk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇲",
@@ -14932,7 +16582,8 @@ export const emojiData = JSON.parse(`[
             ":flag_dm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇴",
@@ -14941,7 +16592,8 @@ export const emojiData = JSON.parse(`[
             ":flag_do:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇩🇿",
@@ -14950,7 +16602,8 @@ export const emojiData = JSON.parse(`[
             ":flag_dz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇦",
@@ -14959,7 +16612,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ea:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇨",
@@ -14968,7 +16622,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ec:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇪",
@@ -14977,7 +16632,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ee:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇬",
@@ -14986,7 +16642,8 @@ export const emojiData = JSON.parse(`[
             ":flag_eg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇭",
@@ -14995,7 +16652,8 @@ export const emojiData = JSON.parse(`[
             ":flag_eh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇷",
@@ -15004,7 +16662,8 @@ export const emojiData = JSON.parse(`[
             ":flag_er:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇸",
@@ -15013,7 +16672,8 @@ export const emojiData = JSON.parse(`[
             ":flag_es:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇹",
@@ -15022,7 +16682,8 @@ export const emojiData = JSON.parse(`[
             ":flag_et:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇪🇺",
@@ -15031,7 +16692,8 @@ export const emojiData = JSON.parse(`[
             ":flag_eu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇮",
@@ -15040,7 +16702,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fi:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇯",
@@ -15049,7 +16712,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fj:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇰",
@@ -15058,7 +16722,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇲",
@@ -15067,7 +16732,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇴",
@@ -15076,7 +16742,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fo:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇫🇷",
@@ -15085,7 +16752,8 @@ export const emojiData = JSON.parse(`[
             ":flag_fr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇦",
@@ -15094,7 +16762,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ga:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇧",
@@ -15103,7 +16772,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gb:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇩",
@@ -15112,7 +16782,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gd:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇪",
@@ -15121,7 +16792,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ge:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇫",
@@ -15130,7 +16802,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇬",
@@ -15139,7 +16812,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇭",
@@ -15148,7 +16822,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇮",
@@ -15157,7 +16832,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gi:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇱",
@@ -15166,7 +16842,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇲",
@@ -15175,7 +16852,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇳",
@@ -15184,7 +16862,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇵",
@@ -15193,7 +16872,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gp:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇶",
@@ -15202,7 +16882,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gq:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇷",
@@ -15211,7 +16892,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇸",
@@ -15220,7 +16902,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gs:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇹",
@@ -15229,7 +16912,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇺",
@@ -15238,7 +16922,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇼",
@@ -15247,7 +16932,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇬🇾",
@@ -15256,7 +16942,8 @@ export const emojiData = JSON.parse(`[
             ":flag_gy:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇰",
@@ -15265,7 +16952,8 @@ export const emojiData = JSON.parse(`[
             ":flag_hk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇲",
@@ -15274,7 +16962,8 @@ export const emojiData = JSON.parse(`[
             ":flag_hm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇳",
@@ -15283,7 +16972,8 @@ export const emojiData = JSON.parse(`[
             ":flag_hn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇷",
@@ -15292,7 +16982,8 @@ export const emojiData = JSON.parse(`[
             ":flag_hr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇹",
@@ -15301,7 +16992,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ht:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇭🇺",
@@ -15310,7 +17002,8 @@ export const emojiData = JSON.parse(`[
             ":flag_hu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇨",
@@ -15319,7 +17012,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ic:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇩",
@@ -15328,7 +17022,8 @@ export const emojiData = JSON.parse(`[
             ":flag_id:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇪",
@@ -15337,7 +17032,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ie:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇱",
@@ -15346,7 +17042,8 @@ export const emojiData = JSON.parse(`[
             ":flag_il:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇲",
@@ -15355,7 +17052,8 @@ export const emojiData = JSON.parse(`[
             ":flag_im:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇳",
@@ -15364,7 +17062,8 @@ export const emojiData = JSON.parse(`[
             ":flag_in:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇴",
@@ -15373,7 +17072,8 @@ export const emojiData = JSON.parse(`[
             ":flag_io:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇶",
@@ -15382,7 +17082,8 @@ export const emojiData = JSON.parse(`[
             ":flag_iq:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇷",
@@ -15391,7 +17092,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ir:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇸",
@@ -15400,7 +17102,8 @@ export const emojiData = JSON.parse(`[
             ":flag_is:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇮🇹",
@@ -15409,7 +17112,8 @@ export const emojiData = JSON.parse(`[
             ":flag_it:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇯🇪",
@@ -15418,7 +17122,8 @@ export const emojiData = JSON.parse(`[
             ":flag_je:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇯🇲",
@@ -15427,7 +17132,8 @@ export const emojiData = JSON.parse(`[
             ":flag_jm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇯🇴",
@@ -15436,7 +17142,8 @@ export const emojiData = JSON.parse(`[
             ":flag_jo:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇯🇵",
@@ -15445,7 +17152,8 @@ export const emojiData = JSON.parse(`[
             ":flag_jp:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇪",
@@ -15454,7 +17162,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ke:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇬",
@@ -15463,7 +17172,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇭",
@@ -15472,7 +17182,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇮",
@@ -15481,7 +17192,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ki:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇲",
@@ -15490,7 +17202,8 @@ export const emojiData = JSON.parse(`[
             ":flag_km:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇳",
@@ -15499,7 +17212,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇵",
@@ -15508,7 +17222,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kp:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇷",
@@ -15517,7 +17232,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇼",
@@ -15526,7 +17242,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇾",
@@ -15535,7 +17252,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ky:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇰🇿",
@@ -15544,7 +17262,8 @@ export const emojiData = JSON.parse(`[
             ":flag_kz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇦",
@@ -15553,7 +17272,8 @@ export const emojiData = JSON.parse(`[
             ":flag_la:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇧",
@@ -15562,7 +17282,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lb:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇨",
@@ -15571,7 +17292,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇮",
@@ -15580,7 +17302,8 @@ export const emojiData = JSON.parse(`[
             ":flag_li:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇰",
@@ -15589,7 +17312,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇷",
@@ -15598,7 +17322,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇸",
@@ -15607,7 +17332,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ls:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇹",
@@ -15616,7 +17342,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇺",
@@ -15625,7 +17352,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇻",
@@ -15634,7 +17362,8 @@ export const emojiData = JSON.parse(`[
             ":flag_lv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇱🇾",
@@ -15643,7 +17372,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ly:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇦",
@@ -15652,7 +17382,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ma:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇨",
@@ -15661,7 +17392,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇩",
@@ -15670,7 +17402,8 @@ export const emojiData = JSON.parse(`[
             ":flag_md:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇪",
@@ -15679,7 +17412,8 @@ export const emojiData = JSON.parse(`[
             ":flag_me:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇫",
@@ -15688,7 +17422,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇬",
@@ -15697,7 +17432,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇭",
@@ -15706,7 +17442,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇰",
@@ -15715,7 +17452,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇱",
@@ -15724,7 +17462,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ml:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇲",
@@ -15733,7 +17472,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇳",
@@ -15742,7 +17482,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇴",
@@ -15751,7 +17492,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mo:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇵",
@@ -15760,7 +17502,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mp:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇶",
@@ -15769,7 +17512,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mq:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇷",
@@ -15778,7 +17522,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇸",
@@ -15787,7 +17532,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ms:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇹",
@@ -15796,7 +17542,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇺",
@@ -15805,7 +17552,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇻",
@@ -15814,7 +17562,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇼",
@@ -15823,7 +17572,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇽",
@@ -15832,7 +17582,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mx:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇾",
@@ -15841,7 +17592,8 @@ export const emojiData = JSON.parse(`[
             ":flag_my:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇲🇿",
@@ -15850,7 +17602,8 @@ export const emojiData = JSON.parse(`[
             ":flag_mz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇦",
@@ -15859,7 +17612,8 @@ export const emojiData = JSON.parse(`[
             ":flag_na:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇨",
@@ -15868,7 +17622,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇪",
@@ -15877,7 +17632,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ne:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇫",
@@ -15886,7 +17642,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇬",
@@ -15895,7 +17652,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ng:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇮",
@@ -15904,7 +17662,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ni:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇱",
@@ -15913,7 +17672,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇴",
@@ -15922,7 +17682,8 @@ export const emojiData = JSON.parse(`[
             ":flag_no:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇵",
@@ -15931,7 +17692,8 @@ export const emojiData = JSON.parse(`[
             ":flag_np:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇷",
@@ -15940,7 +17702,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇺",
@@ -15949,7 +17712,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇳🇿",
@@ -15958,7 +17722,8 @@ export const emojiData = JSON.parse(`[
             ":flag_nz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇴🇲",
@@ -15967,7 +17732,8 @@ export const emojiData = JSON.parse(`[
             ":flag_om:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇦",
@@ -15976,7 +17742,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pa:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇪",
@@ -15985,7 +17752,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pe:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇫",
@@ -15994,7 +17762,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇬",
@@ -16003,7 +17772,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇭",
@@ -16012,7 +17782,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ph:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇰",
@@ -16021,7 +17792,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇱",
@@ -16030,7 +17802,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇲",
@@ -16039,7 +17812,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇳",
@@ -16048,7 +17822,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇷",
@@ -16057,7 +17832,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇸",
@@ -16066,7 +17842,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ps:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇹",
@@ -16075,7 +17852,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇼",
@@ -16084,7 +17862,8 @@ export const emojiData = JSON.parse(`[
             ":flag_pw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇵🇾",
@@ -16093,7 +17872,8 @@ export const emojiData = JSON.parse(`[
             ":flag_py:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇶🇦",
@@ -16102,7 +17882,8 @@ export const emojiData = JSON.parse(`[
             ":flag_qa:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇷🇪",
@@ -16111,7 +17892,8 @@ export const emojiData = JSON.parse(`[
             ":flag_re:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇷🇴",
@@ -16120,7 +17902,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ro:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇷🇸",
@@ -16129,7 +17912,8 @@ export const emojiData = JSON.parse(`[
             ":flag_rs:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇷🇺",
@@ -16138,7 +17922,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ru:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇷🇼",
@@ -16147,7 +17932,8 @@ export const emojiData = JSON.parse(`[
             ":flag_rw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇦",
@@ -16156,7 +17942,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sa:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇧",
@@ -16165,7 +17952,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sb:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇨",
@@ -16174,7 +17962,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇩",
@@ -16183,7 +17972,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sd:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇪",
@@ -16192,7 +17982,8 @@ export const emojiData = JSON.parse(`[
             ":flag_se:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇬",
@@ -16201,7 +17992,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇭",
@@ -16210,7 +18002,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sh:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇮",
@@ -16219,7 +18012,8 @@ export const emojiData = JSON.parse(`[
             ":flag_si:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇯",
@@ -16228,7 +18022,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sj:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇰",
@@ -16237,7 +18032,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇱",
@@ -16246,7 +18042,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇲",
@@ -16255,7 +18052,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇳",
@@ -16264,7 +18062,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇴",
@@ -16273,7 +18072,8 @@ export const emojiData = JSON.parse(`[
             ":flag_so:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇷",
@@ -16282,7 +18082,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇸",
@@ -16291,7 +18092,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ss:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇹",
@@ -16300,7 +18102,8 @@ export const emojiData = JSON.parse(`[
             ":flag_st:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇻",
@@ -16309,7 +18112,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇽",
@@ -16318,7 +18122,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sx:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇾",
@@ -16327,7 +18132,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sy:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇸🇿",
@@ -16336,7 +18142,8 @@ export const emojiData = JSON.parse(`[
             ":flag_sz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇦",
@@ -16345,7 +18152,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ta:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇨",
@@ -16354,7 +18162,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇩",
@@ -16363,7 +18172,8 @@ export const emojiData = JSON.parse(`[
             ":flag_td:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇫",
@@ -16372,7 +18182,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇬",
@@ -16381,7 +18192,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇭",
@@ -16390,7 +18202,8 @@ export const emojiData = JSON.parse(`[
             ":flag_th:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇯",
@@ -16399,7 +18212,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tj:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇰",
@@ -16408,7 +18222,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇱",
@@ -16417,7 +18232,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tl:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇲",
@@ -16426,7 +18242,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇳",
@@ -16435,7 +18252,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇴",
@@ -16444,7 +18262,8 @@ export const emojiData = JSON.parse(`[
             ":flag_to:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇷",
@@ -16453,7 +18272,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tr:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇹",
@@ -16462,7 +18282,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇻",
@@ -16471,7 +18292,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tv:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇼",
@@ -16480,7 +18302,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇹🇿",
@@ -16489,7 +18312,8 @@ export const emojiData = JSON.parse(`[
             ":flag_tz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇦",
@@ -16498,7 +18322,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ua:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇬",
@@ -16507,7 +18332,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ug:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇲",
@@ -16516,7 +18342,8 @@ export const emojiData = JSON.parse(`[
             ":flag_um:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇳",
@@ -16526,7 +18353,8 @@ export const emojiData = JSON.parse(`[
             ":united_nations:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇸",
@@ -16535,7 +18363,8 @@ export const emojiData = JSON.parse(`[
             ":flag_us:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇾",
@@ -16544,7 +18373,8 @@ export const emojiData = JSON.parse(`[
             ":flag_uy:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇺🇿",
@@ -16553,7 +18383,8 @@ export const emojiData = JSON.parse(`[
             ":flag_uz:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇦",
@@ -16562,7 +18393,8 @@ export const emojiData = JSON.parse(`[
             ":flag_va:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇨",
@@ -16571,7 +18403,8 @@ export const emojiData = JSON.parse(`[
             ":flag_vc:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇪",
@@ -16580,7 +18413,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ve:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇬",
@@ -16589,7 +18423,8 @@ export const emojiData = JSON.parse(`[
             ":flag_vg:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇮",
@@ -16598,7 +18433,8 @@ export const emojiData = JSON.parse(`[
             ":flag_vi:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇳",
@@ -16607,7 +18443,8 @@ export const emojiData = JSON.parse(`[
             ":flag_vn:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇻🇺",
@@ -16616,7 +18453,8 @@ export const emojiData = JSON.parse(`[
             ":flag_vu:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇼🇫",
@@ -16625,7 +18463,8 @@ export const emojiData = JSON.parse(`[
             ":flag_wf:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇼🇸",
@@ -16634,7 +18473,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ws:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇽🇰",
@@ -16643,7 +18483,8 @@ export const emojiData = JSON.parse(`[
             ":flag_xk:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇾🇪",
@@ -16652,7 +18493,8 @@ export const emojiData = JSON.parse(`[
             ":flag_ye:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇾🇹",
@@ -16661,7 +18503,8 @@ export const emojiData = JSON.parse(`[
             ":flag_yt:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇿🇦",
@@ -16670,7 +18513,8 @@ export const emojiData = JSON.parse(`[
             ":flag_za:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇿🇲",
@@ -16679,7 +18523,8 @@ export const emojiData = JSON.parse(`[
             ":flag_zm:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🇿🇼",
@@ -16688,7 +18533,8 @@ export const emojiData = JSON.parse(`[
             ":flag_zw:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
@@ -16697,7 +18543,8 @@ export const emojiData = JSON.parse(`[
             ":england:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
@@ -16706,7 +18553,8 @@ export const emojiData = JSON.parse(`[
             ":scotland:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     },
     {
         "codepoints": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
@@ -16715,6 +18563,7 @@ export const emojiData = JSON.parse(`[
             ":wales:"
         ],
         "emoticons": [],
-        "category": "Flags"
+        "category": "Flags",
+        "hasSkinToneVariations": false
     }
-]`);
+]`),

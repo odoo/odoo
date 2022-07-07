@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
 import { emojiData } from '@mail/models_data/emoji_data';
 
@@ -24,6 +24,7 @@ registerModel({
                         { categoryName: "all" },
                         { categoryName: emoji.category },
                     ]),
+                    hasSkinToneVariations: emoji.hasSkinToneVariations,
                 };
             }));
         },
@@ -34,6 +35,9 @@ registerModel({
         }),
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',
+        }),
+        skinTone: attr({
+            default: 0,
         }),
     },
 });
