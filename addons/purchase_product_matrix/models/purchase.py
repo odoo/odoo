@@ -115,6 +115,7 @@ class PurchaseOrder(models.Model):
                 # Recompute prices for new/modified lines:
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
+                    line._onchange_suggest_packaging()
                     res = line.onchange_product_id_warning() or res
                 return res
 
