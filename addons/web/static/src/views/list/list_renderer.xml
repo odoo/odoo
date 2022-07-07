@@ -5,6 +5,7 @@
         <div
             class="o_list_renderer"
             t-att-class="{'table-responsive': showTable}"
+            t-attf-class="{{ props.archInfo.className or '' }}"
             t-on-focusin="onFocusIn"
             tabindex="-1"
             t-ref="root"
