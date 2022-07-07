@@ -149,6 +149,63 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(pack.quant_ids[0].location_id.id, picking.location_dest_id.id,
                           'The quant must be in the destination location')
 
+    def test_pick_a_pack_cancel(self):
+        """Cancel a reserved operation with a not-done package level (is_done=False)."""
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        picking.picking_type_id.show_entire_packs = True
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(package_level.state, 'assigned')
+        self.assertTrue(package_level.move_line_ids)
+        picking.action_cancel()
+        self.assertEqual(package_level.state, 'cancel')
+        self.assertFalse(package_level.move_line_ids)
+
+    def test_pick_a_pack_cancel_is_done(self):
+        """Cancel a reserved operation with a package level that is done (is_done=True)."""
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        picking.picking_type_id.show_entire_packs = True
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(package_level.state, 'assigned')
+        self.assertTrue(package_level.move_line_ids)
+        # By setting the package_level as 'done', all related lines will be kept
+        # when cancelling the transfer
+        package_level.is_done = True
+        picking.action_cancel()
+        self.assertEqual(picking.state, 'cancel')
+        self.assertEqual(package_level.state, 'cancel')
+        self.assertTrue(package_level.move_line_ids)
+        self.assertTrue(
+            all(package_level.move_line_ids.mapped(lambda l: l.state == 'cancel'))
+        )
+
     def test_multi_pack_reservation(self):
         """ When we move entire packages, it is possible to have a multiple times
             the same package in package level list, we make sure that only one is reserved,
