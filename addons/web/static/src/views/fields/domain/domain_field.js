@@ -40,10 +40,21 @@ export class DomainField extends Component {
                 ev.detail.proms.push(prom);
                 await prom;
                 if (!this.state.isValid) {
-                    this.props.invalidate();
+                    this.props.record.setInvalidField(this.props.name);
                 }
             }
         });
+    }
+
+    getContext(p) {
+        return p.record.getFieldContext(p.name);
+    }
+    getResModel(p) {
+        let resModel = p.resModel;
+        if (p.record.fieldNames.includes(resModel)) {
+            resModel = p.record.data[resModel];
+        }
+        return resModel;
     }
 
     onButtonClick() {
@@ -51,9 +62,9 @@ export class DomainField extends Component {
             title: this.env._t("Selected records"),
             noCreate: true,
             multiSelect: false,
-            resModel: this.props.resModel,
-            domain: this.getDomain(this.props.value).toList(this.props.context) || [],
-            context: this.props.context || {},
+            resModel: this.getResModel(this.props),
+            domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
+            context: this.getContext(this.props) || {},
         });
     }
     get isValidDomain() {
@@ -70,16 +81,19 @@ export class DomainField extends Component {
         return new Domain(value || "[]");
     }
     async loadCount(props) {
-        if (!props.resModel) {
+        if (!this.getResModel(props)) {
             Object.assign(this.state, { recordCount: 0, isValid: true });
         }
 
         let recordCount;
         try {
-            const domain = this.getDomain(props.value).toList(props.context);
-            recordCount = await this.orm.silent.call(props.resModel, "search_count", [domain], {
-                context: props.context,
-            });
+            const domain = this.getDomain(props.value).toList(this.getContext(props));
+            recordCount = await this.orm.silent.call(
+                this.getResModel(props),
+                "search_count",
+                [domain],
+                { context: this.getContext(props) }
+            );
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             Object.assign(this.state, { recordCount: 0, isValid: false });
@@ -100,29 +114,16 @@ DomainField.components = {
 };
 DomainField.props = {
     ...standardFieldProps,
-    context: { type: Object, optional: true },
-    invalidate: { type: Function, optional: true },
     resModel: { type: String, optional: true },
-};
-DomainField.defaultProps = {
-    context: {},
-    invalidate: () => {},
 };
 
 DomainField.displayName = _lt("Domain");
 DomainField.supportedTypes = ["char"];
 
 DomainField.isEmpty = () => false;
-DomainField.extractProps = (fieldName, record, attrs) => {
-    let resModel = attrs.options.model;
-    if (record.fieldNames.includes(resModel)) {
-        resModel = record.data[resModel];
-    }
-
+DomainField.extractProps = ({ attrs }) => {
     return {
-        context: record.getFieldContext(fieldName),
-        invalidate: () => record.setInvalidField(fieldName),
-        resModel,
+        resModel: attrs.options.model,
     };
 };
 

@@ -4,6 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
+import { standardFieldProps } from "../standard_field_props";
 
 const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
 const formatters = registry.category("formatters");
@@ -61,13 +62,22 @@ export class DateRangeField extends Component {
     get formattedValue() {
         return this.formatValue(this.props.formatType, this.props.value);
     }
-
     get formattedEndDate() {
-        return this.formatValue(this.props.formatType, this.props.endDate);
+        return this.formatValue(this.props.formatType, this.endDate);
     }
-
     get formattedStartDate() {
-        return this.formatValue(this.props.formatType, this.props.startDate);
+        return this.formatValue(this.props.formatType, this.startDate);
+    }
+    get startDate() {
+        return this.props.record.data[this.props.relatedStartDateField || this.props.name];
+    }
+    get endDate() {
+        return this.props.record.data[this.props.relatedEndDateField || this.props.name];
+    }
+    get relatedDateRangeField() {
+        return this.props.relatedStartDateField
+            ? this.props.relatedStartDateField
+            : this.props.relatedEndDateField;
     }
 
     formatValue(format, value) {
@@ -76,9 +86,16 @@ export class DateRangeField extends Component {
         try {
             formattedValue = formatter(value, { timezone: this.isDateTime });
         } catch {
-            this.props.invalidate();
+            this.props.record.setInvalidField(this.props.name);
         }
         return formattedValue;
+    }
+
+    updateRange(start, end) {
+        return this.props.record.update({
+            [this.props.relatedStartDateField || this.props.name]: start,
+            [this.props.relatedEndDateField || this.props.name]: end,
+        });
     }
 
     onChangeInput(ev) {
@@ -87,7 +104,7 @@ export class DateRangeField extends Component {
         try {
             value = parse(ev.target.value, { timezone: this.isDateTime });
         } catch {
-            this.props.invalidate();
+            this.props.record.setInvalidField(this.props.name);
             return;
         }
         this.props.update(value);
@@ -114,9 +131,9 @@ export class DateRangeField extends Component {
                 timezone: this.isDateTime,
             });
         });
-        await this.props.updateRange(dates[0], dates[1]);
+        await this.updateRange(dates[0], dates[1]);
         const input = document.querySelector(
-            `.o_field_daterange[name='${this.props.relatedDateRange}'] input`
+            `.o_field_daterange[name='${this.relatedDateRangeField}'] input`
         );
         const target = window.$(input).data("daterangepicker");
         target.setStartDate(picker.startDate);
@@ -130,25 +147,22 @@ export class DateRangeField extends Component {
     }
 }
 DateRangeField.template = "web.DateRangeField";
+DateRangeField.props = {
+    ...standardFieldProps,
+    relatedEndDateField: { type: String, optional: true },
+    relatedStartDateField: { type: String, optional: true },
+    formatType: { type: String, optional: true },
+    placeholder: { type: String, optional: true },
+};
 
 DateRangeField.supportedTypes = ["date", "datetime"];
 
-DateRangeField.extractProps = (fieldName, record, attrs) => {
-    const relatedEndDate = attrs.options.related_end_date;
-    const relatedStartDate = attrs.options.related_start_date;
-
+DateRangeField.extractProps = ({ attrs, field }) => {
     return {
-        relatedDateRange: relatedEndDate ? relatedEndDate : relatedStartDate,
-        endDate: record.data[relatedEndDate || fieldName],
-        formatType: attrs.options.format_type || record.fields[fieldName].type,
-        invalidate: () => record.setInvalidField(fieldName),
-        startDate: record.data[relatedStartDate || fieldName],
-        async updateRange(start, end) {
-            await record.update({
-                [relatedStartDate || fieldName]: start,
-                [relatedEndDate || fieldName]: end,
-            });
-        },
+        relatedEndDateField: attrs.options.related_end_date,
+        relatedStartDateField: attrs.options.related_start_date,
+        formatType: attrs.options.format_type || field.type,
+        placeholder: attrs.placeholder,
     };
 };
 

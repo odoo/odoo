@@ -390,7 +390,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
-            "99 / 0",
+            "99 / 100",
             "Initial value should be correct"
         );
 
@@ -406,7 +406,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_progressbar_value.o_input", "69");
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
-            "69 / 0",
+            "69 / 100",
             "New value should be different than initial after click"
         );
     });
@@ -472,7 +472,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_field_progressbar[name='int_field3'] .o_progressbar_value")
                     .textContent,
-                "69 / 0",
+                "69 / 100",
                 "New value should be different than initial after click"
             );
         }

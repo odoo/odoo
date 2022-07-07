@@ -17,7 +17,7 @@ export class BinaryField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            fileName: this.props.fileName || "",
+            fileName: this.fileName || "",
             isValid: true,
         });
         onWillUpdateProps((nextProps) => {
@@ -26,34 +26,52 @@ export class BinaryField extends Component {
             }
         });
     }
+
+    get fileName() {
+        return this.props.record.data[this.props.fileNameField];
+    }
     get file() {
         return {
-            data: this.props.fileData,
-            name: this.state.fileName || this.props.fileData || null,
+            data: this.props.value,
+            name: this.state.fileName || this.props.value || null,
         };
     }
+    get isDownloadable() {
+        return !(
+            this.props.record.isReadonly(this.props.name) && this.props.record.mode === "edit"
+        );
+    }
+
+    update(file) {
+        const changes = { [this.props.name]: file.data || false };
+        if (this.props.fileNameField && this.props.fileNameField !== this.props.name) {
+            changes[this.props.fileNameField] = file.name || false;
+        }
+        return this.props.record.update(changes);
+    }
+
     async onFileDownload() {
         await download({
             data: {
-                model: this.props.resModel,
-                id: this.props.resId,
+                model: this.props.record.resModel,
+                id: this.props.record.resId,
                 field: this.props.name,
                 filename_field: this.file.name,
                 filename: this.file.name || "",
                 download: true,
-                data: isBinarySize(this.props.fileData) ? null : this.props.fileData,
+                data: isBinarySize(this.props.value) ? null : this.props.value,
             },
             url: "/web/content",
         });
     }
     onFileRemove() {
         this.state.isValid = true;
-        this.props.update(false);
+        this.update(false);
     }
     onFileUploaded(file) {
         this.state.fileName = file.name;
         this.state.isValid = true;
-        this.props.update(file);
+        this.update(file);
     }
     onLoadFailed() {
         this.state.isValid = false;
@@ -71,36 +89,19 @@ BinaryField.components = {
 BinaryField.props = {
     ...standardFieldProps,
     acceptedFileExtensions: { type: String, optional: true },
-    fileData: { type: String, optional: true },
-    fileName: { type: String, optional: true },
-    isDownloadable: { type: Boolean, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
+    fileNameField: { type: String, optional: true },
 };
 BinaryField.defaultProps = {
     acceptedFileExtensions: "*",
-    fileData: "",
-    isDownloadable: true,
 };
 
 BinaryField.displayName = _lt("File");
 BinaryField.supportedTypes = ["binary"];
 
-BinaryField.extractProps = (fieldName, record, attrs) => {
+BinaryField.extractProps = ({ attrs }) => {
     return {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
-        fileData: record.data[fieldName] || "",
-        fileName: record.data[attrs.filename] || "",
-        isDownloadable: !(record.isReadonly(fieldName) && record.mode === "edit"),
-        resId: record.resId,
-        resModel: record.resModel,
-        update: (file) => {
-            const changes = { [fieldName]: file.data || false };
-            if (attrs.filename && attrs.filename !== fieldName) {
-                changes[attrs.filename] = file.name || false;
-            }
-            return record.update(changes);
-        },
+        fileNameField: attrs.filename,
     };
 };
 

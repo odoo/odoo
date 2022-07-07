@@ -22,7 +22,7 @@ PhoneField.props = {
 PhoneField.displayName = _lt("Phone");
 PhoneField.supportedTypes = ["char"];
 
-PhoneField.extractProps = (fieldName, record, attrs) => {
+PhoneField.extractProps = ({ attrs }) => {
     return {
         placeholder: attrs.placeholder,
     };

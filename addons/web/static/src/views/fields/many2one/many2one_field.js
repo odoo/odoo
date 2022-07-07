@@ -6,7 +6,6 @@ import { _lt } from "@web/core/l10n/translation";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
-import { Domain } from "@web/core/domain";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 
 const { Component, onWillUpdateProps, useState } = owl;
@@ -62,7 +61,7 @@ export class Many2OneField extends Component {
         computeActiveActions(this.props);
 
         this.openMany2X = useOpenMany2XRecord({
-            resModel: this.props.relation,
+            resModel: this.relation,
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {
@@ -106,6 +105,16 @@ export class Many2OneField extends Component {
         });
     }
 
+    get relation() {
+        return this.props.relation || this.props.record.fields[this.props.name].relation;
+    }
+
+    get context() {
+        return this.props.record.getFieldContext(this.props.name);
+    }
+    get domain() {
+        return this.props.record.getFieldDomain(this.props.name);
+    }
     get hasExternalButton() {
         return this.props.canOpen && !!this.props.value && !this.state.isFloating;
     }
@@ -128,19 +137,16 @@ export class Many2OneField extends Component {
     }
 
     getDomain() {
-        return this.props.getDomain().toList(this.props.getContext());
+        return this.domain.toList(this.context);
     }
     async openAction() {
-        const action = await this.orm.call(
-            this.props.relation,
-            "get_formview_action",
-            [[this.resId]],
-            { context: this.props.getContext() }
-        );
+        const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
+            context: this.context,
+        });
         await this.action.doAction(action);
     }
     async openDialog(resId) {
-        return this.openMany2X({ resId, context: this.props.getContext() });
+        return this.openMany2X({ resId, context: this.context });
     }
 
     async openConfirmationDialog(request) {
@@ -187,10 +193,8 @@ Many2OneField.props = {
     canCreateEdit: { type: Boolean, optional: true },
     createNameField: { type: String, optional: true },
     searchLimit: { type: Number, optional: true },
-    relation: String,
+    relation: { type: String, optional: true },
     string: { type: String, optional: true },
-    getContext: { type: Function, optional: true },
-    getDomain: { type: Function, optional: true },
 };
 Many2OneField.defaultProps = {
     canOpen: true,
@@ -201,14 +205,12 @@ Many2OneField.defaultProps = {
     createNameField: "name",
     searchLimit: 7,
     string: "",
-    getContext: () => ({}),
-    getDomain: () => new Domain(),
 };
 
 Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
 
-Many2OneField.extractProps = (fieldName, record, attrs) => {
+Many2OneField.extractProps = ({ attrs, field }) => {
     const noOpen = Boolean(attrs.options.no_open);
     const noCreate = Boolean(attrs.options.no_create);
     const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
@@ -223,10 +225,8 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
         canWrite,
         canQuickCreate: canCreate && !noQuickCreate,
         canCreateEdit: canCreate && !noCreateEdit,
-        relation: record.fields[fieldName].relation,
-        string: attrs.string || record.fields[fieldName].string,
-        getContext: () => record.getFieldContext(fieldName),
-        getDomain: () => record.getFieldDomain(fieldName),
+        relation: field.relation,
+        string: attrs.string || field.string,
         createNameField: attrs.options.create_name_field,
     };
 };

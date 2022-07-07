@@ -22,7 +22,7 @@ BooleanFavoriteField.displayName = _lt("Favorite");
 BooleanFavoriteField.supportedTypes = ["boolean"];
 
 BooleanFavoriteField.isEmpty = () => false;
-BooleanFavoriteField.extractProps = (fieldName, record, attrs) => {
+BooleanFavoriteField.extractProps = ({ attrs }) => {
     return {
         noLabel: archParseBoolean(attrs.nolabel),
     };

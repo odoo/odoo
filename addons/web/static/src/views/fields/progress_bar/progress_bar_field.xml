@@ -8,10 +8,10 @@
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
                 <t t-if="props.isPercentage">
-                    <span class="o_progressbar_value" t-esc="getFormattedValue('currentValue', true) + '%'"/>
+                    <span class="o_progressbar_value" t-esc="formatCurrentValue(true) + '%'"/>
                 </t>
                 <t t-else="">
-                    <div class="o_progressbar_value" t-esc="getFormattedValue('currentValue', true) + ' / ' + getFormattedValue('maxValue', true)"/>
+                    <div class="o_progressbar_value" t-esc="formatCurrentValue(true) + ' / ' + formatMaxValue(true)"/>
                 </t>
             </div>
         </t>
@@ -26,11 +26,11 @@
                             class="o_input o_progressbar_value"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getFormattedValue('currentValue') or ''"
+                            t-att-value="formatCurrentValue() or ''"
                             t-att-required="props.required"
-                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-input="(ev) => this.onInput(ev, 'currentValue')"
-                            t-on-blur="(ev) => this.onBlur(ev.target.value, 'currentValue')"
+                            t-on-change="(ev) => this.onCurrentValueChange(ev.target.value)"
+                            t-on-input="(ev) => this.onCurrentValueInput(ev)"
+                            t-on-blur="onBlur"
                         />
                         <span>%</span>
                     </div>
@@ -41,10 +41,10 @@
                         class="o_progressbar_value o_input"
                         type="text"
                         inputmode="numeric"
-                        t-att-value="getFormattedValue('currentValue')"
-                        t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                        t-on-input="(ev) => this.onInput(ev, 'currentValue')"
-                        t-on-blur="(ev) => this.onBlur(ev.target.value, 'currentValue')"
+                        t-att-value="formatCurrentValue()"
+                        t-on-change="(ev) => this.onCurrentValueChange(ev.target.value)"
+                        t-on-input="(ev) => this.onCurrentValueInput(ev)"
+                        t-on-blur="onBlur"
                     />
                     <span t-if="props.isCurrentValueEditable and props.isMaxValueEditable" t-esc="'/'" />
                     <input
@@ -52,9 +52,9 @@
                         class="o_progressbar_value o_input"
                         type="text"
                         inputmode="numeric"
-                        t-att-value="getFormattedValue('maxValue')"
-                        t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
-                        t-on-input="(ev) => this.onInput(ev, 'maxValue')"
+                        t-att-value="formatMaxValue()"
+                        t-on-change="(ev) => this.onMaxValueChange(ev.target.value)"
+                        t-on-input="(ev) => this.onMaxValueInput(ev)"
                         t-on-blur="onBlur"
                     />
                 </t>

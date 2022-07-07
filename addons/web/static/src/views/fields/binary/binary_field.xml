@@ -38,7 +38,7 @@
                 </label>
             </t>
         </t>
-        <t t-elif="file.data and props.isDownloadable">
+        <t t-elif="file.data and isDownloadable">
             <FileDownloader file="file" onDownload.bind="onFileDownload"/>
         </t>
     </t>

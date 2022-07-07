@@ -39,20 +39,16 @@ CharField.props = {
     shouldTrim: { type: Boolean, optional: true },
     maxLength: { type: Number, optional: true },
     isTranslatable: { type: Boolean, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    resModel: { type: String, optional: true },
 };
 
 CharField.displayName = _lt("Text");
 CharField.supportedTypes = ["char"];
 
-CharField.extractProps = (fieldName, record, attrs) => {
+CharField.extractProps = ({ attrs, field }) => {
     return {
-        shouldTrim: record.fields[fieldName].trim,
-        maxLength: record.fields[fieldName].size,
-        isTranslatable: record.fields[fieldName].translate,
-        resId: record.resId,
-        resModel: record.resModel,
+        shouldTrim: field.trim,
+        maxLength: field.size,
+        isTranslatable: field.translate,
         autocomplete: attrs.autocomplete,
         isPassword: archParseBoolean(attrs.password),
         placeholder: attrs.placeholder,

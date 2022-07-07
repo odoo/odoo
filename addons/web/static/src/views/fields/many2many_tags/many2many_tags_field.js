@@ -45,7 +45,7 @@ export class Many2ManyTagsField extends Component {
             },
             getEvalParams: (props) => {
                 return {
-                    evalContext: props.evalContext,
+                    evalContext: this.evalContext,
                     readonly: props.readonly,
                 };
             },
@@ -62,11 +62,27 @@ export class Many2ManyTagsField extends Component {
         if (this.props.canQuickCreate) {
             this.quickCreate = async (name) => {
                 const created = await this.orm.call(this.props.relation, "name_create", [name], {
-                    context: this.props.context,
+                    context: this.context,
                 });
                 return saveRecord([created[0]]);
             };
         }
+    }
+
+    get domain() {
+        return this.props.record.getFieldDomain(this.props.name);
+    }
+    get context() {
+        return this.props.record.getFieldContext(this.props.name);
+    }
+    get evalContext() {
+        return this.props.record.evalContext;
+    }
+    get canEditColor() {
+        return this.props.canEditColor && this.props.record.viewType !== "list";
+    }
+    get string() {
+        return this.props.record.activeFields[this.props.name].string;
     }
 
     get tags() {
@@ -80,7 +96,7 @@ export class Many2ManyTagsField extends Component {
     }
 
     get canOpenColorDropdown() {
-        return this.handlesColor() && this.props.canEditColor;
+        return this.handlesColor() && this.canEditColor;
     }
 
     get showM2OSelectionField() {
@@ -123,9 +139,9 @@ export class Many2ManyTagsField extends Component {
 
     getDomain() {
         return Domain.and([
-            this.props.domain,
+            this.domain,
             Domain.not([["id", "in", this.props.value.currentIds]]),
-        ]).toList(this.props.context);
+        ]).toList(this.context);
     }
 
     onBadgeClick(ev, record) {
@@ -271,12 +287,7 @@ Many2ManyTagsField.props = {
     createDomain: { type: Array, optional: true },
     placeholder: { type: String, optional: true },
     relation: { type: String },
-    domain: { type: Domain },
-    context: { type: Object },
-    evalContext: { type: Object },
     nameCreateField: { type: String, optional: true },
-    itemsVisible: { type: Number, optional: true },
-    string: { type: String },
 };
 Many2ManyTagsField.defaultProps = {
     canEditColor: true,
@@ -290,19 +301,15 @@ Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
 
-Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
-    const activeField = record.activeFields[fieldName];
+Many2ManyTagsField.extractProps = ({ attrs, field }) => {
     return {
         colorField: attrs.options.color_field,
         nameCreateField: attrs.options.create_name_field,
-        canEditColor: !attrs.options.no_edit_color && activeField.viewType !== "list",
-        relation: activeField.relation,
-        domain: record.getFieldDomain(fieldName),
-        context: record.getFieldContext(fieldName),
+        canEditColor: !attrs.options.no_edit_color,
+        relation: field.relation,
         canQuickCreate: !attrs.options.no_quick_create,
         createDomain: attrs.options.create,
-        evalContext: record.evalContext,
-        string: activeField.string,
+        placeholder: attrs.placeholder,
     };
 };
 

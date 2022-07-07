@@ -123,14 +123,12 @@ export function copyAttributes(el, compiled) {
         }
     }
 
-    for (const attName of ["style", "placeholder"]) {
-        let att = el.getAttribute(attName);
-        if (att) {
-            if (isComponent) {
-                att = toStringExpression(att);
-            }
-            compiled.setAttribute(attName, att);
+    let att = el.getAttribute("style");
+    if (att) {
+        if (isComponent) {
+            att = toStringExpression(att);
         }
+        compiled.setAttribute("style", att);
     }
 }
 

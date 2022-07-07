@@ -136,13 +136,12 @@ export class JournalDashboardGraphField extends Component {
 JournalDashboardGraphField.template = "web.JournalDashboardGraphField";
 JournalDashboardGraphField.props = {
     ...standardFieldProps,
-    className: { type: String, optional: true },
     graphType: String,
 };
 
 JournalDashboardGraphField.supportedTypes = ["text"];
 
-JournalDashboardGraphField.extractProps = (fieldName, record, attrs) => {
+JournalDashboardGraphField.extractProps = ({ attrs }) => {
     return {
         graphType: attrs.graph_type,
     };

@@ -30,23 +30,16 @@ export class PercentageField extends Component {
 PercentageField.template = "web.PercentageField";
 PercentageField.props = {
     ...standardFieldProps,
-    invalidate: { type: Function, optional: true },
     digits: { type: Array, optional: true },
     placeholder: { type: String, optional: true },
-};
-PercentageField.defaultProps = {
-    invalidate: () => {},
 };
 
 PercentageField.displayName = _lt("Percentage");
 PercentageField.supportedTypes = ["integer", "float"];
 
-PercentageField.extractProps = (fieldName, record, attrs) => {
+PercentageField.extractProps = ({ attrs, field }) => {
     return {
-        invalidate: () => record.setInvalidField(fieldName),
-        digits:
-            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
-            record.fields[fieldName].digits,
+        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
         placeholder: attrs.placeholder,
     };
 };

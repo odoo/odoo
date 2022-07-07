@@ -101,7 +101,7 @@ AceField.defaultProps = {
 AceField.displayName = _lt("Ace Editor");
 AceField.supportedTypes = ["text"];
 
-AceField.extractProps = (fieldName, record, attrs) => {
+AceField.extractProps = ({ attrs }) => {
     return {
         mode: attrs.options.mode,
     };
