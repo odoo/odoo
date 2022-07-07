@@ -503,8 +503,12 @@ class Environment(Mapping):
 
         # determine transaction object
         transaction = cr.transaction
+
         if transaction is None:
-            transaction = cr.transaction = Transaction(Registry(cr.dbname))
+            transaction = cr.transaction = Transaction(Registry(cr.dbname), cr)
+
+        if transaction.uid is None:
+            transaction.uid = uid
 
         # if env already exists, return it
         for env in transaction.envs:
@@ -834,7 +838,7 @@ class Environment(Mapping):
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
-    def __init__(self, registry):
+    def __init__(self, registry, cr):
         self.registry = registry
         # weak set of environments
         self.envs = WeakSet()
@@ -847,16 +851,12 @@ class Transaction:
         # pending updates {model: {id: {field: value}}}
         self.towrite = defaultdict(lambda: defaultdict(dict))
 
+        self.uid = None
+        self.cr = cr
+
     def flush(self):
         """ Flush pending computations and updates in the transaction. """
-        env_to_flush = None
-        for env in self.envs:
-            if isinstance(env.uid, int) or env.uid is None:
-                env_to_flush = env
-                if env.uid is not None:
-                    break
-        if env_to_flush is not None:
-            env_to_flush.flush_all()
+        Environment(self.cr, self.uid, {}, su=False).flush_all()
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the translations. """
