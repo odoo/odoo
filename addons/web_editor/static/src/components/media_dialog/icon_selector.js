@@ -64,7 +64,7 @@ export class IconSelector extends Component {
 }
 IconSelector.mediaSpecificClasses = ['fa'];
 IconSelector.mediaExtraClasses = [
-    'rounded-circle', 'rounded', 'thumbnail', 'shadow',
+    'rounded-circle', 'rounded', 'img-thumbnail', 'shadow',
     /^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/,
 ];
 IconSelector.tagNames = ['SPAN', 'I'];
