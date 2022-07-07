@@ -14,5 +14,4 @@ class TestProjectUpdateUi(HttpCase):
             .execute()
 
     def test_01_project_tour(self):
-        import unittest; raise unittest.SkipTest("skipWOWL")
         self.start_tour("/web", 'project_update_tour', login="admin")

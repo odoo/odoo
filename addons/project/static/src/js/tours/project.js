@@ -26,7 +26,7 @@ tour.register('project_tour', {
     position: 'bottom',
     width: 200,
 }, {
-    trigger: 'input.o_project_name',
+    trigger: '.o_project_name input',
     content: Markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\
      of a product, of a team, of a construction site, etc.</i>')),
     position: 'right',

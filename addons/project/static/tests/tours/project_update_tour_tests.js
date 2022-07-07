@@ -3,10 +3,11 @@
 import tour from 'web_tour.tour';
 
 function openProjectUpdateAndReturnToTasks(view, viewClass) {
+    const legacyViewClass = viewClass.replace("o_", "o_legacy_");
     return [{
             trigger: '.o_project_updates_breadcrumb',
             content: 'Open Project Update from view : ' + view,
-            extra_trigger: "." + viewClass,
+            extra_trigger: `.${viewClass}, .${legacyViewClass}`,
         }, {
             trigger: ".o-kanban-button-new",
             content: "Create a new update from project task view : " + view,
@@ -20,7 +21,7 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
         }, {
             trigger: '.o_back_button',
             content: 'Go back to the task view : ' + view,
-            extra_trigger: '.o_list_view',
+            extra_trigger: '.o_list_view, .o_legacy_list_view',
         },
     ];
 }
@@ -36,7 +37,7 @@ tour.register('project_update_tour', {
     extra_trigger: '.o_project_kanban',
     width: 200,
 }, {
-    trigger: 'input.o_project_name',
+    trigger: '.o_project_name input',
     run: 'text New Project'
 }, {
     trigger: '.o_open_tasks',
@@ -164,7 +165,7 @@ tour.register('project_update_tour', {
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
-    extra_trigger: '.o_list_view',
+    extra_trigger: '.o_list_view, .o_legacy_list_view',
 }, {
     trigger: '.o_switch_view.o_graph',
     content: 'Open Graph View of Tasks',
