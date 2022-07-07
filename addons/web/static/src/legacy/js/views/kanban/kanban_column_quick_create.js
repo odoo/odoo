@@ -38,6 +38,7 @@ var ColumnQuickCreate = Widget.extend({
         this.folded = true;
         this.isMobile = config.device.isMobile;
         this.isFirstColumn = options.isFirstColumn;
+        this.groupByFieldString = options.groupByFieldString;
     },
     /**
      * @override

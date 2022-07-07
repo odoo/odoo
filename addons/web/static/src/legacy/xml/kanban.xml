@@ -46,14 +46,13 @@
     <div class="o_column_quick_create">
         <div class="o_quick_create_folded">
             <button class="o_kanban_add_column btn btn-outline-secondary w-100">
-                <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/>
-                Add a Column
+                <i class="fa fa-plus me-2" role="img" aria-label="Add column" title="Add column"/><t t-out="widget.groupByFieldString"/>
             </button>
         </div>
         <div class="o_quick_create_unfolded">
             <div class="o_kanban_header">
                 <div class="input-group">
-                    <input type="text" class="form-control o_input" placeholder="Column title"/>
+                    <input type="text" class="form-control o_input" t-attf-placeholder="{{ widget.groupByFieldString }}..."/>
                     <button class="btn btn-primary o_kanban_add" type="button">Add</button>
                 </div>
                 <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-end">Esc to discard</span>

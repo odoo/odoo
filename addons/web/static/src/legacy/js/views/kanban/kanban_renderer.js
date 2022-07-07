@@ -377,6 +377,7 @@ var KanbanRenderer = BasicRenderer.extend({
                     applyExamplesText: this.examples && this.examples.applyExamplesText,
                     examples: this.examples && this.examples.examples,
                     isFirstColumn: !self.state.data.length,
+                    groupByFieldString: this.state.fields[this.state.groupedBy].string,
                 });
                 this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet
