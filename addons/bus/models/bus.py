@@ -110,7 +110,7 @@ class ImDispatch(object):
             current = threading.current_thread()
             current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
-            current.setName("openerp.longpolling.request.%s" % current.ident)
+            current.name = f"openerp.longpolling.request.{current.ident}"
 
         registry = odoo.registry(dbname)
 
