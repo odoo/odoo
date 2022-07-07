@@ -302,4 +302,37 @@ class WithContext(HttpCase):
                          "There should be no crash when a public user is accessing `/` which is rerouting to another page with a different URL.")
         root_html = html.fromstring(r.content)
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
-        self.assertEqual(canonical_url, website.domain + "/")
+        self.assertIn(canonical_url, [f"{website.domain}/", f"{website.domain}/page_1"])
+
+    def test_06_alternatives(self):
+        website = self.env.ref('website.default_website')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        lang_fr.write({'url_code': 'fr'})
+        website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        website.default_lang_id = self.env.ref('base.lang_en')
+
+        with self.subTest(url='/page_1'):
+            res = self.url_open('/page_1')
+            res.raise_for_status()
+
+            root_html = html.fromstring(res.content)
+            canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
+            alternate_en_url = root_html.xpath('//link[@rel="alternate"][@hreflang="en"]')[0].attrib['href']
+            alternate_fr_url = root_html.xpath('//link[@rel="alternate"][@hreflang="fr"]')[0].attrib['href']
+
+            self.assertEqual(canonical_url, f'{self.base_url()}/page_1')
+            self.assertEqual(alternate_en_url, f'{self.base_url()}/page_1')
+            self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
+
+        with self.subTest(url='/fr/page_1'):
+            res = self.url_open('/fr/page_1')
+            res.raise_for_status()
+
+            root_html = html.fromstring(res.content)
+            canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
+            alternate_en_url = root_html.xpath('//link[@rel="alternate"][@hreflang="en"]')[0].attrib['href']
+            alternate_fr_url = root_html.xpath('//link[@rel="alternate"][@hreflang="fr"]')[0].attrib['href']
+
+            self.assertEqual(canonical_url, f'{self.base_url()}/fr/page_1')
+            self.assertEqual(alternate_en_url, f'{self.base_url()}/page_1')
+            self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
