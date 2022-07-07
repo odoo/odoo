@@ -335,17 +335,11 @@
                                 </div>
                             </div>
 
-                            <!-- When the user is leave manager, he should always see `number_of_days` to allow
-                            him to edit the value. `number_of_hours_display` is only an informative field -->
-                            <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
+                            <label for="number_of_days_display" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
                             <div name="duration_display">
                                 <div class="o_row">
-                                    <div groups="!hr_holidays.group_hr_holidays_manager" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
-                                        <field name="number_of_days_display" nolabel="1" readonly="1" class="oe_inline"/>
-                                        <span>Days</span>
-                                    </div>
-                                    <div groups="hr_holidays.group_hr_holidays_manager" class="o_row" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
-                                        <field name="number_of_days" nolabel="1" class="oe_inline"/>
+                                    <div attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
+                                        <field name="number_of_days_display" nolabel="1" class="oe_inline"/>
                                         <span>Days</span>
                                     </div>
                                     <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
