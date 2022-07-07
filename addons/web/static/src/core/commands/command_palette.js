@@ -10,7 +10,15 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { escapeRegExp } from "../utils/strings";
 
-const { Component, onWillStart, useRef, useState, markRaw, useExternalListener } = owl;
+const {
+    Component,
+    onWillStart,
+    onWillDestroy,
+    useRef,
+    useState,
+    markRaw,
+    useExternalListener,
+} = owl;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -81,6 +89,12 @@ DefaultCommandItem.template = "web.DefaultCommandItem";
 
 export class CommandPalette extends Component {
     setup() {
+        if (this.props.bus) {
+            const setConfig = ({ detail }) => this.setCommandPaletteConfig(detail);
+            this.props.bus.addEventListener(`SET-CONFIG`, setConfig);
+            onWillDestroy(() => this.props.bus.removeEventListener(`SET-CONFIG`, setConfig));
+        }
+
         this.keyId = 1;
         this.keepLast = new KeepLast();
         this._sessionId = CommandPalette.lastSessionId++;

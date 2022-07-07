@@ -50,7 +50,7 @@ export class DebugMenu extends DebugMenuBasic {
                     configByNamespace,
                     providers: [provider],
                 };
-                return this.command.openPalette(commandPaletteConfig);
+                return commandPaletteConfig;
             },
             {
                 category: "debug",

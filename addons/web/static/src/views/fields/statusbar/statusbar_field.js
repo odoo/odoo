@@ -128,10 +128,10 @@ export class StatusBarField extends Component {
             };
             const name = sprintf(this.env._t(`Move to %s...`), escape(this.props.displayName));
             const action = () => {
-                return commandService.openPalette({
+                return {
                     placeholder: name,
                     providers: [{ provide }],
-                });
+                };
             };
             const options = {
                 category: "smart_action",
