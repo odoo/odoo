@@ -60,7 +60,7 @@
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <separator/>
-                    <filter string="Tasks Late" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tasks Late" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
                     <separator/>
                     <filter string="Unassigned Tasks" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>
