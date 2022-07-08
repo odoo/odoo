@@ -546,7 +546,7 @@
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('access_instruction_message', '=', '')]}">
-                                        <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field name="access_instruction_message" nolabel="1"/>  
+                                        <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field name="access_instruction_message" nolabel="1"/>
                                     </span>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('privacy_visibility_warning', '=', '')]}">
                                         <i class="fa fa-warning">&amp;nbsp;</i>
@@ -1849,7 +1849,7 @@
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" groups="project.group_project_user">
-                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
+                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Project Updates</a>
                     </div>
                 </xpath>
             </field>

@@ -10,6 +10,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     setup() {
         super.setup();
         this.userService = useService('user');
+        this.action = useService('action');
 
         this.isProjectManager = false;
         onWillStart(async () => {

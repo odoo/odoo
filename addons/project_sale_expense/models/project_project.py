@@ -72,9 +72,10 @@ class Project(models.Model):
             }
         if can_see_expense:
             def get_action(res_ids):
-                action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', res_ids)])}
+                action = {'name': 'action_profitability_items', 'type': 'object', 'args': [section_id, [('id', 'in', res_ids)]]}
                 if len(res_ids) == 1:
-                    action['res_id'] = res_ids[0]
+                    action['args'].append(res_ids[0])
+                action['args'] = json.dumps(action['args'])
                 return action
 
             if reinvoice_expense_ids:

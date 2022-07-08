@@ -1,4 +1,3 @@
-// ------- View with rightpanel -------
 $o-rightpanel-p: $o-horizontal-padding;
 $o-rightpanel-p-small: $o-horizontal-padding*0.5;
 $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
@@ -6,30 +5,36 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
 $o-rightpanel-category-default-color: $o-brand-primary;
 $o-rightpanel-filter-default-color: #D59244;
 
-.o_controller_with_rightpanel {
+.o_controller_with_rightpanel .o_content {
+    overflow: hidden;
     display: flex;
-    align-items: flex-start;
+    justify-content: space-between;
 
-    .o_renderer_with_rightpanel {
+    .o_renderer {
         flex: 1 1 100%;
-        overflow: auto; // make the renderer and search panel scroll individually
+        overflow-x: hidden;
+        overflow-y: auto; // make the renderer and search panel scroll individually
         max-height: 100%;
         position: relative;
+        padding: 0;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
+            border-top: 0;
+            border-right: 0;
+        }
     }
 }
 
-html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_with_rightpanel {
-    overflow: hidden;
-}
-
 .o_rightpanel {
-    flex: 0 0 25%;
+    flex: 0 0 30%;
     overflow: auto;
     height: 100%;
     padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
     border-left: 1px solid $gray-300;
     background-color: white;
-    min-width: 380px;
+    min-width: 400px;
 
     .o_rightpanel_section {
         padding-bottom: $o-rightpanel-p;
@@ -118,7 +123,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                 align-items: center;
             }
 
-            .o_open_milestone {
+            .o_rightpanel_milestone {
                 margin-bottom: $o-rightpanel-p-small;
                 display: flex;
                 &.o_milestone_danger {

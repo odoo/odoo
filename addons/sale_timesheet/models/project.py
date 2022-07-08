@@ -450,9 +450,10 @@ class Project(models.Model):
             action_name = 'action_profitability_items'
 
         def get_timesheets_action(invoice_type, record_ids):
-            action_params = {'name': action_name, 'type': 'object', 'section': invoice_type, 'domain': json.dumps([('id', 'in', record_ids)])}
+            action_params = {'name': action_name, 'type': 'object', 'args': [invoice_type, [('id', 'in', record_ids)]]}
             if len(record_ids) == 1:
-                action_params['res_id'] = record_ids[0]
+                action_params['args'].append(record_ids[0])
+            action_params['args'] = json.dumps(action_params['args'])
             return action_params
 
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()

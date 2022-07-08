@@ -281,45 +281,46 @@ tour.register('sale_timesheet_tour', {
     trigger: ".o_project_updates_breadcrumb",
     content: 'Open Updates',
 }, {
-    trigger: ".o_rightpanel_title:eq(0):contains('Sales')",
+    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_title:contains('Sales')",
     content: 'Check the user sees Sales section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_data:eq(0):contains('Prepaid Hours')",
+    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_data:contains('Prepaid Hours')",
     content: 'Check the user sees a line in the Sales section',
+    timer: 300,
     run: function () {},
 }, {
-    trigger: ".oe_button_box .o_stat_text:contains('Sales Orders')",
+    trigger: ".o_rightpanel_section .oe_button_box .o_stat_text:contains('Sales Orders')",
     content: 'Check the user sees Sales Orders Stat Button',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_title:eq(1):contains('Profitability')",
+    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_title:contains('Profitability')",
     content: 'Check the user sees Profitability section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
+    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
+    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Margin')",
+    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Margin')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section .o_rightpanel_title:contains('Milestones')",
+    trigger: ".o_rightpanel_section[name='milestones'] .o_rightpanel_title:contains('Milestones')",
     content: 'Check the user sees Milestones section',
 }, {
     trigger: ".o_add_milestone a",
     content: "Add a first milestone",
 }, {
-    trigger: "input.o_field_widget[name=name]",
+    trigger: "div.o_field_widget[name=name] input",
     content: "Edit new Milestone",
     run: 'text New milestone',
 }, {
-    trigger: "input.datetimepicker-input[name=deadline]",
+    trigger: "div[name=deadline] input.datetimepicker-input",
     content: "Edit new Milestone",
     run: 'text 12/12/2099',
 }, {

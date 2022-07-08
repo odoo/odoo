@@ -850,6 +850,11 @@ class Project(models.Model):
             panel_data['profitability_labels'] = self._get_profitability_labels()
         return panel_data
 
+    def get_milestones(self):
+        if self.user_has_groups('project.group_project_user'):
+            return self._get_milestones()
+        return {}
+
     def _get_profitability_labels(self):
         return {}
 
