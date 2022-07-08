@@ -16,7 +16,7 @@ from odoo.tools.misc import babel_locale_parse
 
 class WebsiteEventTrackController(http.Controller):
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
+    #@http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
     def event_track_view(self, event, track, **post):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -27,7 +27,6 @@ class WebsiteEventTrackController(http.Controller):
 
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object
-
             :param dt_time: datetime object
             :param lang_code: language code (eg. en_US)
         """
