@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { insertAndReplace, replace, link, unlink } from '@mail/model/model_field_command';
+import { insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 const { EventBus } = owl.core;
@@ -103,6 +103,8 @@ function factory(dependencies) {
                 },
             });
             if (this.messaging.device.isMobile) {
+                // When opening documents chat windows need to be closed
+                this.messaging.chatWindowManager.closeAll();
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
                 this.messaging.messagingMenu.close();
