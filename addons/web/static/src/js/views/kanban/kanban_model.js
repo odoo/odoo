@@ -349,8 +349,14 @@ var KanbanModel = BasicModel.extend({
             var data = results[1];
             _.each(list.data, function (groupID) {
                 var group = self.localData[groupID];
+                var value = group.value;
+                if (value === true) {
+                    value = "True";
+                } else if (value === false) {
+                    value = "False";
+                }
                 group.progressBarValues = _.extend({
-                    counts: data[group.value] || {},
+                    counts: data[value] || {},
                 }, list.progressBar);
             });
             return list;
