@@ -1144,11 +1144,24 @@ class TestQueries(TransactionCase):
         Model.search([('name', 'like', 'foo')])
 
         with self.assertQueries(['''
-            SELECT count(*)
+            SELECT COUNT(*)
             FROM "res_partner"
             WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
         ''']):
             Model.search_count([('name', 'like', 'foo')])
+
+    def test_count_limit(self):
+        Model = self.env['res.partner']
+        Model.search([('name', 'like', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT COUNT(*) FROM (
+                SELECT FROM "res_partner"
+                WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+                LIMIT 1
+            ) t
+        ''']):
+            Model.search_count([('name', 'like', 'foo')], limit=1)
 
     def test_translated_field(self):
         self.env['res.lang']._activate_lang('fr_FR')
