@@ -127,9 +127,9 @@ class TestRatingFlow(TestRatingCommon):
             partners = self.env['res.partner'].create([
                 {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
             # 3713 requests if only test_mail_full is installed
-            # 4511 runbot community
-            # 4911 runbot enterprise
-            with self.assertQueryCount(__system__=4912):
+            # 4510 runbot community
+            # 4910 runbot enterprise
+            with self.assertQueryCount(__system__=4910):
                 record_ratings = self.env['mail.test.rating'].create([{
                     'customer_id': partners[idx].id,
                     'name': 'Test Rating',
