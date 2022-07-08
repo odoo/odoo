@@ -14,7 +14,7 @@ tour.register('configurator_flow', {
         trigger: 'button[name="action_website_create_new"]',
     }, {
         content: "insert website name",
-        trigger: 'input[name="name"]',
+        trigger: '[name="name"] input',
         run: 'text Website Test',
     }, {
         content: "validate the website creation modal",
