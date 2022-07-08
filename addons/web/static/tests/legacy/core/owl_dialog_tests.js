@@ -469,6 +469,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     `,
                     "event,2,form": `<form><sheet><field name="display_name" /></sheet></form>`,
                 },
+                activateMockServer: true,
             };
 
             const target = getFixture();

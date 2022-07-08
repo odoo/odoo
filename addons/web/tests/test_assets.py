@@ -39,20 +39,19 @@ class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
                         _logger.info('Error detected while generating bundle %r %s', bundle, assets_type)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
 class TestLogsAssetsGenerateTime(TestAssetsGenerateTimeCommon):
 
     def test_logs_assets_generate_time(self):
         """
         The purpose of this test is to monitor the time of assets bundle generation.
         This is not meant to test the generation failure, hence the try/except and the mute logger.
-        For example, 'web.assets_qweb' is contains only static xml.
         """
         for bundle, duration in self.generate_bundles():
             _logger.info('Bundle %r generated in %.2fs', bundle, duration)
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'bundle_generation')
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'assets_bundle')
 class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
     """
     This test is meant to be run nightly to ensure bundle generation does not exceed
