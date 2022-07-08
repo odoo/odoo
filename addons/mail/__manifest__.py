@@ -73,6 +73,8 @@
             'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/src/legacy/scss/import_bootstrap.scss',
+            'web/static/src/libs/bootstrap/utilities_custom.scss',
+            'web/static/lib/bootstrap/scss/utilities/_api.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/webclient/webclient_extra.scss',
