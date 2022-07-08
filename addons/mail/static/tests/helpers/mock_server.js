@@ -125,6 +125,10 @@ patch(MockServer.prototype, 'mail', {
         if (new RegExp('/mail/channel/\\d+/partner/\\d+/avatar_128').test(route)) {
             return;
         }
+        if (args.model === 'ir.attachment' && args.method === 'register_as_main_attachment') {
+            const ids = args.args[0];
+            return this._mockIrAttachmentRegisterAsMainAttachment(ids);
+        }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'action_feedback') {
             const ids = args.args[0];
@@ -528,7 +532,7 @@ patch(MockServer.prototype, 'mail', {
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
-            res['mainAttachment'] = thread.message_main_attachment_id ? [['insert-and-replace', { 'id': thread.message_main_attachment_id }]] : [['clear']];
+            res['mainAttachment'] = thread.message_main_attachment_id ? [['insert-and-replace', { 'id': thread.message_main_attachment_id[0] }]] : [['clear']];
         }
         if (request_list.includes('followers')) {
             const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
@@ -612,6 +616,31 @@ patch(MockServer.prototype, 'mail', {
             }]];
             return res;
         });
+    },
+    /**
+     * Simulates `register_as_main_attachment` on `ir.attachment`.
+     *
+     * @private
+     * @param {integer} ids
+     * @param {boolean} [force=true]
+     * @returns {boolean} dummy value for mock server
+     */
+    _mockIrAttachmentRegisterAsMainAttachment(ids, force = true) {
+        const [attachment] = this.getRecords('ir.attachment', [['id', 'in', ids]]);
+        if (!attachment.res_model) {
+            return true; // dummy value for mock server
+        }
+        if (!this.models[attachment.res_model].fields['message_main_attachment_id']) {
+            return true; // dummy value for mock server
+        }
+        const [record] = this.pyEnv[attachment.res_model].searchRead([['id', '=', attachment.res_id]]);
+        if (force || !record.message_main_attachment_id) {
+            this.pyEnv[attachment.res_model].write(
+                [record.id],
+                { message_main_attachment_id: attachment.id },
+            );
+        }
+        return true; // dummy value for mock server
     },
     /**
      * Simulates `_action_done` on `mail.activity`.
