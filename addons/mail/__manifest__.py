@@ -77,6 +77,9 @@
             'web/static/src/webclient/webclient.scss',
             'web/static/src/webclient/webclient_extra.scss',
             'web/static/src/core/utils/*.scss',
+            # depends on BS variables, can't be loaded in assets_primary or assets_secondary
+            'mail/static/src/scss/variables/derived_variables.scss',
+            'mail/static/src/scss/composer.scss',
             # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/component_hooks/*.js',
@@ -162,7 +165,6 @@
         'web.assets_qweb': [
             'mail/static/src/xml/*.xml',
             'mail/static/src/components/*/*.xml',
-            'mail/static/src/widgets/*/*.xml',
         ],
     },
     'license': 'LGPL-3',
