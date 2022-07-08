@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.WebClientViewAttachmentViewContainer" owl="1">
+        <t t-if="webClientViewAttachmentView and webClientViewAttachmentView.thread.attachmentsInWebClientView.length > 0">
+            <div class="o_attachment_preview_container">
+                <WebClientViewAttachmentView record="webClientViewAttachmentView"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

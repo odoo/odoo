@@ -579,6 +579,7 @@ registerModel({
                 });
             }
             this.update(values);
+            this.messaging.messagingBus.trigger('o-thread-loaded-data', { thread: this });
         },
         /**
          * Add current user to provided thread's followers.
@@ -947,6 +948,17 @@ registerModel({
                 method: 'channel_set_custom_name',
                 args: [this.id],
                 kwargs: { name: newName },
+            });
+        },
+        /**
+         * @param {Attachment} attachment
+         */
+        async setMainAttachment(attachment) {
+            this.update({ mainAttachment: replace(attachment) });
+            await this.messaging.rpc({
+                model: 'ir.attachment',
+                method: 'register_as_main_attachment',
+                args: [[this.mainAttachment.id]],
             });
         },
         /**

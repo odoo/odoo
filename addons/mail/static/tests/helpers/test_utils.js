@@ -446,25 +446,44 @@ function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props 
 }
 
 function getOpenFormView(afterEvent, openView) {
-    return async function openFormView(action, { props, waitUntilMessagesLoaded = true } = {}) {
+    return async function openFormView(action, { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}) {
         action['views'] = [[false, 'form']];
-        if (waitUntilMessagesLoaded) {
-            return afterNextRender(() => afterEvent({
-                eventName: 'o-thread-view-hint-processed',
-                func: () => openView(action, props),
-                message: "should wait until chatter loaded its messages",
-                predicate: ({ hint, threadViewer }) => {
-                    return (
-                        hint.type === 'messages-loaded' &&
-                        threadViewer &&
-                        threadViewer.thread.model === action.res_model &&
-                        threadViewer.thread.id === action.res_id
-                    )
-                },
-            }));
+        const func = () => openView(action, props);
+        const waitData = func => afterNextRender(() => afterEvent({
+            eventName: 'o-thread-loaded-data',
+            func,
+            message: "should wait until chatter loaded its data",
+            predicate: ({ thread }) => {
+                return (
+                    thread.model === action.res_model &&
+                    thread.id === action.res_id
+                );
+            },
+        }));
+        const waitMessages = func => afterNextRender(() => afterEvent({
+            eventName: 'o-thread-view-hint-processed',
+            func,
+            message: "should wait until chatter loaded its messages",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer &&
+                    threadViewer.thread.model === action.res_model &&
+                    threadViewer.thread.id === action.res_id
+                );
+            },
+        }));
+        if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
+            return waitData(() => waitMessages(func));
         }
-        return openView(action, props);
-    }
+        if (waitUntilDataLoaded) {
+            return waitData(func);
+        }
+        if (waitUntilMessagesLoaded) {
+            return waitMessages(func);
+        }
+        return func();
+    };
 }
 
 //------------------------------------------------------------------------------
