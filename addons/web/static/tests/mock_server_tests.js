@@ -1138,8 +1138,8 @@ QUnit.module("MockServer", (hooks) => {
         });
 
         assert.deepEqual(result, {
-            false: { new: 0, dev: 0, done: 2 },
-            true: { new: 3, dev: 1, done: 0 },
+            False: { new: 0, dev: 0, done: 2 },
+            True: { new: 3, dev: 1, done: 0 },
         });
     });
 
