@@ -69,7 +69,6 @@
             <div style="text-align: center">
                 <h2>Congratulations!</h2>
                 <div style="color:grey;">Your resume has been positively reviewed.</div>
-                <img src="/hr_recruitment/static/src/img/congratulations.png" alt="Congratulations!" style="width:175px;margin:20px 0;"/>
             </div>
             <div style="font-size: 13px; margin: 0px; padding: 0px;">
                 We just reviewed your resume, and it caught our
@@ -83,19 +82,10 @@
                 </div>
 
                 <t t-if="object.user_id">
-                    You will soon be contacted by:
-                    <table>
-                        <tr>
-                            <td width="75">
-                                <img t-attf-src="/web/image/res.users/{{ object.user_id.id }}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
-                            </td>
-                            <td>
-                                <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
-                                <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
-                                <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
-                            </td>
-                        </tr>
-                    </table>
+                    You will soon be contacted by:<br/>
+                    <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                    <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
+                    <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
                     <br/><br/>
                 </t>
                 See you soon,
@@ -183,18 +173,11 @@
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
                 <t t-if="object.user_id">
                     <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
-                    <table>
-                        <tr>
-                            <td width="75">
-                                <img t-attf-src="/web/image/res.users/{{ object.user_id.id }}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
-                            </td>
-                            <td>
-                                <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
-                                <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
-                                <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
-                            </td>
-                        </tr>
-                    </table>
+                    <p>
+                        <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                        <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
+                        <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
+                    </p>
                     <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
                 </t>
 
