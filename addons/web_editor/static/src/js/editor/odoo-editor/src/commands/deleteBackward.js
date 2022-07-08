@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { UNREMOVABLE_ROLLBACK_CODE } from '../utils/constants.js';
+import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE, REGEX_BOOTSTRAP_COLUMN } from '../utils/constants.js';
 import {
     boundariesOut,
     childNodeIndex,
@@ -10,7 +10,9 @@ import {
     fillEmpty,
     getState,
     isBlock,
+    isEmptyBlock,
     isInPre,
+    isUnbreakable,
     isUnremovable,
     isVisible,
     isVisibleStr,
@@ -111,6 +113,11 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
     } else {
         if (isUnremovable(this)) {
             throw UNREMOVABLE_ROLLBACK_CODE;
+        }
+        // Empty unbreakable blocks should be removed with backspace, with the
+        // notable exception of Bootstrap columns.
+        if (isUnbreakable(this) && (REGEX_BOOTSTRAP_COLUMN.test(this.className) || !isEmptyBlock(this))) {
+            throw UNBREAKABLE_ROLLBACK_CODE;
         }
         const parentEl = this.parentNode;
 

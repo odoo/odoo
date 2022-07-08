@@ -264,13 +264,42 @@ describe('Editor', () => {
                 });
                 it('should remove empty unbreakable', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore: '<div><div><p>ABC</p></div><div>X[]</div></div>',
+                        contentBefore: '<div class="accolade"><div><p>ABC</p></div><div class="colibri">X[]</div></div>',
                         stepFunction: async editor => {
                             await deleteBackward(editor);
                             await deleteBackward(editor);
                             await deleteBackward(editor);
                         },
-                        contentAfter: '<div><div><p>AB[]</p></div></div>',
+                        contentAfter: '<div class="accolade"><div><p>AB[]</p></div></div>',
+                    });
+                });
+                it('should not remove empty Bootstrap column', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><div><p>ABC</p></div><div class="col">X[]</div></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<div><div><p>ABC</p></div><div class="col">[]<br></div></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><div><p>ABC</p></div><div class="col-12">X[]</div></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<div><div><p>ABC</p></div><div class="col-12">[]<br></div></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><div><p>ABC</p></div><div class="col-lg-3">X[]</div></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<div><div><p>ABC</p></div><div class="col-lg-3">[]<br></div></div>',
                     });
                 });
                 it('should remove empty unbreakable  (formated 1)', async () => {
@@ -3593,6 +3622,262 @@ X[]
                     },
                     contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
                 });
+            });
+        });
+    });
+
+    describe('columnize', () => {
+        const columnsContainer = contents => `<div class="container o_text_columns"><div class="row">${contents}</div></div>`;
+        const column = (size, contents) => `<div class="col-lg-${size}">${contents}</div>`;
+        describe('2 columns', () => {
+            it('should do nothing', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>[]ef</h1><ul><li>gh</li></ul>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 2),
+                    contentAfter: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>[]ef</h1><ul><li>gh</li></ul>')
+                    ),
+                });
+            });
+            it('should turn text into 2 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]abcd</p>',
+                    stepFunction: editor => editor.execCommand('columnize', 2),
+                    contentAfter: columnsContainer(
+                        column(6, '<p>[]abcd</p>') +
+                        column(6, '<p><br></p>')
+                    ) + '<p><br></p>',
+                });
+            });
+            it('should turn 3 columns into 2 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<h1>e[]f</h1>') +
+                        column(4, '<ul><li>gh</li></ul>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 2),
+                    contentAfter: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>e[]f</h1><ul><li>gh</li></ul>')
+                    ),
+                });
+            });
+            it('should turn 4 columns into 2 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<h1>ef</h1>') +
+                        column(3, '<ul><li>gh</li></ul>') +
+                        column(3, '<p>i[]j</p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 2),
+                    contentAfter: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>ef</h1><ul><li>gh</li></ul><p>i[]j</p>')
+                    ),
+                });
+            });
+        });
+        describe('3 columns', () => {
+            it('should do nothing', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<p><br></p>') +
+                        column(4, '<p>[]<br></p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 3),
+                    contentAfter: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<p><br></p>') +
+                        column(4, '<p>[]<br></p>')
+                    ),
+                });
+            });
+            it('should turn text into 3 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd</p>',
+                    stepFunction: editor => editor.execCommand('columnize', 3),
+                    contentAfter: columnsContainer(
+                        column(4, '<p>ab[]cd</p>') +
+                        column(4, '<p><br></p>') +
+                        column(4, '<p><br></p>')
+                    ) + '<p><br></p>',
+                });
+            });
+            it('should turn 2 columns into 3 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>ef</h1><ul><li>g[]h</li></ul>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 3),
+                    contentAfter: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<h1>ef</h1><ul><li>g[]h</li></ul>') +
+                        column(4, '<p><br></p>')
+                    ),
+                });
+            });
+            it('should turn 4 columns into 3 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<h1>e[]f</h1>') +
+                        column(3, '<ul><li>gh</li></ul>') +
+                        column(3, '<p>ij</p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 3),
+                    contentAfter: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<h1>e[]f</h1>') +
+                        column(4, '<ul><li>gh</li></ul><p>ij</p>')
+                    ),
+                });
+            });
+        });
+        describe('4 columns', () => {
+            it('should do nothing', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p>[]<br></p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 4),
+                    contentAfter: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p>[]<br></p>')
+                    ),
+                });
+            });
+            it('should turn text into 4 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abcd[]</p>',
+                    stepFunction: editor => editor.execCommand('columnize', 4),
+                    contentAfter: columnsContainer(
+                        column(3, '<p>abcd[]</p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p><br></p>')
+                    ) + '<p><br></p>',
+                });
+            });
+            it('should turn 2 columns into 4 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>[]ef</h1><ul><li>gh</li></ul>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 4),
+                    contentAfter: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<h1>[]ef</h1><ul><li>gh</li></ul>') +
+                        column(3, '<p><br></p>') +
+                        column(3, '<p><br></p>')
+                    ),
+                });
+            });
+            it('should turn 3 columns into 4 columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<h1>ef[]</h1>') +
+                        column(4, '<ul><li>gh</li></ul><p>ij</p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 4),
+                    contentAfter: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<h1>ef[]</h1>') +
+                        column(3, '<ul><li>gh</li></ul><p>ij</p>') +
+                        column(3, '<p><br></p>')
+                    ),
+                });
+            });
+        });
+        describe('remove columns', () => {
+            it('should do nothing', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd</p>',
+                    stepFunction: editor => editor.execCommand('columnize', 0),
+                    contentAfter: '<p>ab[]cd</p>',
+                });
+            });
+            it('should turn 2 columns into text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(6, '<p>abcd</p>') +
+                        column(6, '<h1>[]ef</h1><ul><li>gh</li></ul>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 0),
+                    contentAfter: '<p>abcd</p><h1>[]ef</h1><ul><li>gh</li></ul>',
+                });
+            });
+            it('should turn 3 columns into text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(4, '<p>abcd</p>') +
+                        column(4, '<h1>ef[]</h1>') +
+                        column(4, '<ul><li>gh</li></ul><p>ij</p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 0),
+                    contentAfter: '<p>abcd</p><h1>ef[]</h1><ul><li>gh</li></ul><p>ij</p>',
+                });
+            });
+            it('should turn 4 columns into text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: columnsContainer(
+                        column(3, '<p>abcd</p>') +
+                        column(3, '<h1>ef</h1>') +
+                        column(3, '<ul><li>gh</li></ul><p>ij</p>') +
+                        column(3, '<p>[]<br></p>')
+                    ),
+                    stepFunction: editor => editor.execCommand('columnize', 0),
+                    contentAfter: '<p>abcd</p><h1>ef</h1><ul><li>gh</li></ul><p>ij</p><p>[]<br></p>',
+                });
+            });
+        });
+        describe('complex', () => {
+            it('should turn text into 2 columns, then 3, 4, 3, 2 and text again', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd</p>',
+                    stepFunction: editor => {
+                        editor.execCommand('columnize', 2);
+                        editor.execCommand('columnize', 3);
+                        editor.execCommand('columnize', 4);
+                        editor.execCommand('columnize', 3);
+                        editor.execCommand('columnize', 2);
+                        editor.execCommand('columnize', 0);
+                    },
+                    // A paragraph was created for each column + after them and
+                    // they were all kept.
+                    contentAfter: '<p>ab[]cd</p><p><br></p><p><br></p><p><br></p><p><br></p>',
+                });
+            });
+            it('should not add a container when one already exists', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div class="container"><div class="row"><div class="col">' +
+                                       '<p>ab[]cd</p>' +
+                                   '</div></div></div>',
+                    stepFunction: editor => editor.execCommand('columnize', 2),
+                    contentAfter: '<div class="container"><div class="row"><div class="col">' +
+                                      '<div class="o_text_columns"><div class="row">' + // no "container" class
+                                          '<div class="col-lg-6">' +
+                                              '<p>ab[]cd</p>' +
+                                          '</div>' +
+                                          '<div class="col-lg-6"><p><br></p></div>' +
+                                      '</div></div>' +
+                                      '<p><br></p>' +
+                                  '</div></div></div>',
+                })
             });
         });
     });
