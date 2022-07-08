@@ -167,6 +167,16 @@ export const CLIPBOARD_WHITELISTS = {
     }
 };
 
+// Commands that don't require a DOM selection but take an argument instead.
+const SELECTIONLESS_COMMANDS = [
+    'addRowAbove',
+    'addRowBelow',
+    'addColumnLeft',
+    'addColumnRight',
+    'removeRow',
+    'removeColumn',
+];
+
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
     for (const [key, value] of Object.entries(object)) {
@@ -316,7 +326,11 @@ export class OdooEditor extends EventTarget {
 
         this._pluginCall('sanitizeElement', [editable]);
 
-        // Create the Powerbox's table picker.
+        // ------
+        // Tables
+        // ------
+
+        // Create the table picker for the Powerbox.
         this.powerboxTablePicker = new TablePicker({
             document: this.document,
             floating: true,
@@ -328,7 +342,78 @@ export class OdooEditor extends EventTarget {
                 colNumber: ev.detail.colNumber,
             });
         });
-        // Initialize the Powerbox.
+        // Create the table picker for the toolbar.
+        this.toolbarTablePicker = new TablePicker({ document: this.document });
+        this.toolbarTablePicker.addEventListener('cell-selected', ev => {
+            this.execCommand('insertTable', {
+                rowNumber: ev.detail.rowNumber,
+                colNumber: ev.detail.colNumber,
+            });
+        });
+        // Create the table UI.
+        const parser = new DOMParser();
+        for (const direction of ['row', 'column']) {
+            // Create the containers and the menu toggler.
+            const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui">
+                <div>
+                    <span class="o_table_ui_menu_toggler fa fa-bars"></span>
+                    <div class="o_table_ui_menu"></div>
+                </div>
+            </div>`, 'text/html').body.firstElementChild;
+            const uiMenu = ui.querySelector('.o_table_ui_menu');
+
+            // Create the move buttons.
+            if (direction === 'column') {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_move_left"><span class="fa fa-chevron-left"></span>Move left</div>
+                    <div class="o_move_right"><span class="fa fa-chevron-right"></span>Move right</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_move_left'), 'click', this._onTableMoveLeftClick);
+                this.addDomListener(uiMenu.querySelector('.o_move_right'), 'click', this._onTableMoveRightClick);
+            } else {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_move_up"><span class="fa fa-chevron-left" style="transform: rotate(90deg);"></span>Move up</div>
+                    <div class="o_move_down"><span class="fa fa-chevron-right" style="transform: rotate(90deg);"></span>Move down</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_move_up'), 'click', this._onTableMoveUpClick);
+                this.addDomListener(uiMenu.querySelector('.o_move_down'), 'click', this._onTableMoveDownClick);
+            }
+
+            // Create the add buttons.
+            if (direction === 'column') {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_insert_left"><span class="fa fa-plus"></span>Insert left</div>
+                    <div class="o_insert_right"><span class="fa fa-plus"></span>Insert right</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumnLeft', this._columnUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumnRight', this._columnUiTarget));
+            } else {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_insert_above"><span class="fa fa-plus"></span>Insert above</div>
+                    <div class="o_insert_below"><span class="fa fa-plus"></span>Insert below</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_insert_above'), 'click', () => this.execCommand('addRowAbove', this._rowUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_below'), 'click', () => this.execCommand('addRowBelow', this._rowUiTarget));
+            }
+
+            // Add the delete button.
+            if (direction === 'column') {
+                uiMenu.append(parser.parseFromString(`<div class="o_delete_column"><span class="fa fa-trash"></span>Delete</div>`, 'text/html').body.firstChild)
+                this.addDomListener(uiMenu.querySelector('.o_delete_column'), 'click', this._onTableDeleteColumnClick);
+            } else {
+                uiMenu.append(parser.parseFromString(`<div class="o_delete_row"><span class="fa fa-trash"></span>Delete</div>`, 'text/html').body.firstChild)
+                this.addDomListener(uiMenu.querySelector('.o_delete_row'), 'click', this._onTableDeleteRowClick);
+            }
+
+            this[`_${direction}Ui`] = ui;
+            this.document.body.append(ui);
+            this.addDomListener(ui.querySelector('.o_table_ui_menu_toggler'), 'click', this._onTableMenuTogglerClick);
+        }
+
+        // --------
+        // Powerbox
+        // --------
+
         let beforeStepIndex;
         this.powerbox = new Powerbox({
             editable: this.editable,
@@ -493,14 +578,6 @@ export class OdooEditor extends EventTarget {
             ],
         });
 
-        this.toolbarTablePicker = new TablePicker({ document: this.document });
-        this.toolbarTablePicker.addEventListener('cell-selected', ev => {
-            this.execCommand('insertTable', {
-                rowNumber: ev.detail.rowNumber,
-                colNumber: ev.detail.colNumber,
-            });
-        });
-
         // -----------
         // Bind events
         // -----------
@@ -522,6 +599,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'mousedown', this._onDocumentMousedown);
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'mousemove', this._onDocumentMousemove);
+        this.addDomListener(this.document, 'click', this._onDocumentClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -593,6 +671,9 @@ export class OdooEditor extends EventTarget {
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
         this.isDestroyed = true;
+        // Remove table UI
+        this._rowUi.remove();
+        this._columnUi.remove();
     }
 
     sanitize() {
@@ -1764,8 +1845,10 @@ export class OdooEditor extends EventTarget {
     _applyRawCommand(method, ...args) {
         const sel = this.document.getSelection();
         if (
-            !this.editable.contains(sel.anchorNode) ||
-            (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
+            !(SELECTIONLESS_COMMANDS.includes(method) && args.length) && (
+                !this.editable.contains(sel.anchorNode) ||
+                (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
+            )
         ) {
             // Do not apply commands out of the editable area.
             return false;
@@ -2153,6 +2236,58 @@ export class OdooEditor extends EventTarget {
                 break;
             }
         }
+    }
+    /**
+     * Show/hide and position the table row/column manipulation UI.
+     *
+     * @private
+     * @param {HTMLTableRowElement} [row=false]
+     * @param {HTMLTableCellElement} [column=false]
+     */
+    _toggleTableUi(row=false, column=false) {
+        if (row) {
+            this._rowUi.style.visibility = 'visible';
+            this._rowUiTarget = row;
+            this._positionTableUi(row);
+        } else {
+            this._rowUi.style.visibility = 'hidden';
+        }
+        if (column) {
+            this._columnUi.style.visibility = 'visible';
+            this._columnUiTarget = column;
+            this._positionTableUi(column);
+        } else {
+            this._columnUi.style.visibility = 'hidden';
+        }
+    }
+    /**
+     * Position the table row/column tools (depending on whether a row or a cell
+     * is passed as argument).
+     *
+     * @private
+     * @param {HTMLTableRowElement|HTMLTableCellElement} element
+     */
+    _positionTableUi(element) {
+        const isRow = element.nodeName === 'TR';
+        const ui = isRow ? this._rowUi : this._columnUi;
+        const elementRect = element.getBoundingClientRect();
+        const tableRect = closestElement(element, 'table').getBoundingClientRect();
+        const wrappedUi = ui.firstElementChild;
+        const togglerRect = ui.querySelector('.o_table_ui_menu_toggler').getBoundingClientRect();
+        const props = {
+            xy: {left: 'x', top: 'y'},
+            size: {left: 'width', top: 'height'}
+        };
+
+        const side1 = isRow ? 'left' : 'top';
+        ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
+        wrappedUi.style[side1] = (togglerRect[props.size[side1]] / 2) + 'px';
+        ui.style[props.size[side1]] = togglerRect[props.size[side1]] + 'px';
+
+        const side2 = isRow ? 'top' : 'left';
+        ui.style[side2] = elementRect[props.xy[side2]] + 'px';
+        wrappedUi.style[side2] = (elementRect[props.size[side2]] / 2) - (togglerRect[props.size[side2]] / 2) + 'px';
+        ui.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -3509,10 +3644,27 @@ export class OdooEditor extends EventTarget {
         if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
             this._handleSelectionInTable(ev);
         }
+        if (!this._rowUi.classList.contains('o_open') && !this._columnUi.classList.contains('o_open')) {
+            const column = closestElement(ev.target, 'td');
+            if (this._isResizingTable || !column || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
+                this._toggleTableUi(false, false);
+            } else {
+                const row = closestElement(column, 'tr');
+                const isFirstColumn = column === row.querySelector('td');
+                const isFirstRow = row === closestElement(column, 'table').querySelector('tr');
+                this._toggleTableUi(isFirstColumn && row, isFirstRow && column);
+            }
+        }
         const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[this._isHoveringTdBorder(ev)] || false;
         if (direction || !this._isResizingTable) {
             this._toggleTableResizeCursor(direction);
         }
+    }
+
+    _onDocumentClick(ev) {
+        // Close Table UI.
+        this._rowUi.classList.remove('o_open');
+        this._columnUi.classList.remove('o_open');
     }
 
     /**
@@ -3786,6 +3938,70 @@ export class OdooEditor extends EventTarget {
             this.execCommand('addRowBelow');
             this._onTabulationInTable(ev);
         }
+    }
+    _onTableMenuTogglerClick(ev) {
+        const uiWrapper = closestElement(ev.target, '.o_table_ui');
+        uiWrapper.classList.toggle('o_open');
+        if (uiWrapper.classList.contains('o_column_ui')) {
+            const columnIndex = getColumnIndex(this._columnUiTarget);
+            uiWrapper.querySelector('.o_move_left').classList.toggle('o_hide', columnIndex === 0);
+            const shouldHideRight = columnIndex === [...this._columnUiTarget.parentElement.children].filter(child => child.nodeName === 'TD').length - 1;
+            uiWrapper.querySelector('.o_move_right').classList.toggle('o_hide', shouldHideRight);
+        } else {
+            const rowIndex = getRowIndex(this._rowUiTarget);
+            uiWrapper.querySelector('.o_move_up').classList.toggle('o_hide', rowIndex === 0);
+            const shouldHideDown = rowIndex === [...this._rowUiTarget.parentElement.children].filter(child => child.nodeName === 'TR').length - 1;
+            uiWrapper.querySelector('.o_move_down').classList.toggle('o_hide', shouldHideDown);
+        }
+        ev.stopPropagation();
+    }
+    _onTableMoveUpClick() {
+        if (this._rowUiTarget.previousSibling) {
+            this._rowUiTarget.previousSibling.before(this._rowUiTarget);
+        }
+    }
+    _onTableMoveDownClick() {
+        if (this._rowUiTarget.nextSibling) {
+            this._rowUiTarget.nextSibling.after(this._rowUiTarget);
+        }
+    }
+    _onTableMoveRightClick() {
+        const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
+        const columnIndex = getColumnIndex(this._columnUiTarget);
+        const tdsToMove = trs.map(tr => [...tr.children].filter(child => child.nodeName === 'TD')[columnIndex]);
+        for (const tdToMove of tdsToMove) {
+            const target = [...tdToMove.parentElement.children].filter(child => child.nodeName === 'TD')[columnIndex + 1];
+            target.after(tdToMove);
+        }
+    }
+    _onTableMoveLeftClick() {
+        const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
+        const columnIndex = getColumnIndex(this._columnUiTarget);
+        const tdsToMove = trs.map(tr => [...tr.children].filter(child => child.nodeName === 'TD')[columnIndex]);
+        for (const tdToMove of tdsToMove) {
+            const target = [...tdToMove.parentElement.children].filter(child => child.nodeName === 'TD')[columnIndex - 1];
+            target.before(tdToMove);
+        }
+    }
+    _onTableDeleteColumnClick() {
+        this.historyPauseSteps();
+        const rows = [...closestElement(this._columnUiTarget, 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
+        this.execCommand('removeColumn', this._columnUiTarget);
+        if (rows.every(row => !row.parentElement)) {
+            this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+        }
+        this.historyUnpauseSteps();
+        this.historyStep();
+    }
+    _onTableDeleteRowClick() {
+        this.historyPauseSteps();
+        const rows = [...this._rowUiTarget.parentElement.children].filter(child => child.nodeName === 'TR');
+        this.execCommand('removeRow', this._rowUiTarget);
+        if (rows.every(row => !row.parentElement)) {
+            this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+        }
+        this.historyUnpauseSteps();
+        this.historyStep();
     }
 
     /**

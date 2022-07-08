@@ -3920,12 +3920,259 @@ X[]
     });
 
     describe('tables', () => {
+        describe('add children', () => {
+            describe('row', () => {
+                describe('above', async () => {
+                    it('should add a row above the top row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRowAbove'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;"><br></td>' +
+                                            '<td style="width: 25px;"><br></td>' +
+                                            '<td style="width: 30px;"><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td style="">ab</td>' +
+                                            '<td style="">cd</td>' +
+                                            '<td style="">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a row above the middle row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRowAbove'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef[]</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+                describe('below', () => {
+                    it('should add a row below the bottom row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRowBelow'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a row below the middle row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRowBelow'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+            });
+            describe('column', () => {
+                describe('left', () => {
+                    it('should add a column left of the leftmost column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 40px;">ab[]</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 60px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumnLeft'),
+                            contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 32px;"><br></td>' +
+                                            '<td style="width: 32px;">ab[]</td>' +
+                                            '<td style="width: 40px;">cd</td>' +
+                                            '<td style="width: 45px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td><br></td>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a column left of the middle column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 50px;">ab</td>' +
+                                            '<td style="width: 65px;">cd</td>' +
+                                            '<td style="width: 85px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumnLeft'),
+                            contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 38px;">ab</td>' +
+                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 61px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td><br></td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td><br></td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+                describe('right', () => {
+                    it('should add a column right of the rightmost column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 40px;">ab</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 60px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumnRight'),
+                            contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 29px;">ab</td>' +
+                                            '<td style="width: 36px;">cd</td>' +
+                                            '<td style="width: 41px;">ef[]</td>' +
+                                            // size was slightly adjusted to
+                                            // preserve table width in view on
+                                            // fractional division results
+                                            '<td style="width: 43px;"><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                            '<td><br></td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a column right of the middle column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 50px;">ab</td>' +
+                                            '<td style="width: 65px;">cd</td>' +
+                                            '<td style="width: 85px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumnRight'),
+                            contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 38px;">ab</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 61px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td><br></td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td><br></td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+            });
+        });
         describe('tab', () => {
             it('should add a new row on press tab at the end of a table', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                    contentBefore: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
                     stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
-                    contentAfter: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr><tr><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
+                    contentAfter: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef</td></tr><tr style="height: 20px;"><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
                 });
             });
         });
