@@ -45,17 +45,6 @@ export class SettingsFormController extends formView.Controller {
         this.searchState = useState({ value: "" });
         this.rootRef = useRef("root");
         useSubEnv({ searchState: this.searchState });
-        useSubEnv({
-            config: {
-                ...this.env.config,
-                breadcrumbs: [
-                    {
-                        jsId: "js_id_settings",
-                        name: "Settings",
-                    },
-                ],
-            },
-        });
         useEffect(
             () => {
                 if (this.rootRef.el.querySelector(".settings .o_setting_box")) {
@@ -76,6 +65,10 @@ export class SettingsFormController extends formView.Controller {
         });
 
         this.initialApp = "module" in this.props.context && this.props.context.module;
+    }
+
+    displayName() {
+        return this.env._t("Settings");
     }
 
     //This is needed to avoid the auto save when unload

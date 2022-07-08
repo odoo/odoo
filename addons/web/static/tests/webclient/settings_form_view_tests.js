@@ -307,7 +307,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "settings views does not read existing id when coming back in breadcrumbs",
         async function (assert) {
-            assert.expect(8);
+            assert.expect(9);
 
             serverData.actions = {
                 1: {
@@ -365,6 +365,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             await doAction(webClient, 1);
             assert.notOk(target.querySelector(".custom-control input").disabled);
             await click(target.querySelector("button[name='4']"));
+            assert.strictEqual(
+                target.querySelector(".breadcrumb").textContent,
+                "SettingsOther action"
+            );
             await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
             assert.notOk(target.querySelector(".custom-control input").disabled);
             assert.verifySteps([
@@ -820,15 +824,18 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.strictEqual($(target).find(".breadcrumb").text(), "First action");
 
             await doAction(webClient, 2);
-            assert.strictEqual($(target).find(".breadcrumb").text(), "Settings");
+            assert.strictEqual($(target).find(".breadcrumb").text(), "First actionSettings");
 
             def = makeDeferred();
             await click(target.querySelector('button[name="3"]'));
-            assert.strictEqual($(target).find(".breadcrumb").text(), "Settings");
+            assert.strictEqual($(target).find(".breadcrumb").text(), "First actionSettings");
 
             def.resolve();
             await nextTick();
-            assert.strictEqual($(target).find(".breadcrumb").text(), "First actionNewOther action");
+            assert.strictEqual(
+                $(target).find(".breadcrumb").text(),
+                "First actionSettingsOther action"
+            );
         }
     );
 
