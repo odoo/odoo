@@ -13,7 +13,10 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _add_pdf_into_invoice_xml(self, invoice, stream_data):
-        for edi_attachment in invoice.edi_document_ids.attachment_id:
+        # exclude efff because it's handled by l10n_be_edi
+        format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1']
+        edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).attachment_id
+        for edi_attachment in edi_attachments:
             old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
             tree = etree.fromstring(old_xml)
             anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
