@@ -2274,12 +2274,18 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
         let min = this.el.dataset.min && parseFloat(this.el.dataset.min) || 0;
         let max = this.el.dataset.max && parseFloat(this.el.dataset.max) || 100;
         const step = this.el.dataset.step && parseFloat(this.el.dataset.step) || 1;
+        this.displayValue = this.el.dataset.displayRangeValue;
         if (min > max) {
             [min, max] = [max, min];
             this.input.classList.add('o_we_inverted_range');
         }
         this._setInputAttributes(min, max, step);
         this.containerEl.appendChild(this.input);
+        if (this.displayValue) {
+            this.outputEl = document.createElement('output');
+            this.outputEl.classList.add('ms-2');
+            this.containerEl.appendChild(this.outputEl);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2305,7 +2311,11 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     async setValue(value, methodName) {
         await this._super(...arguments);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        this.input.value = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
+        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
+        this.input.value = inputValue;
+        if (this.displayValue) {
+            this.outputEl.value = inputValue;
+        }
     },
     /**
      * @override
@@ -2333,6 +2343,9 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      */
     _onInputInput(ev) {
         this._value = ev.target.value;
+        if (this.displayValue) {
+            this.outputEl.value = this._value;
+        }
         this._onUserValuePreview(ev);
     },
     /**
