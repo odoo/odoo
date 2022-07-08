@@ -38,11 +38,11 @@
             t-att-id="props.id"
             class="o_input"
             readonly=""
-            t-att-value="state.autocompleteValue"
+            t-att-value="props.value"
             t-on-click="onSearchMore"
         />
         <AutoComplete t-else=""
-            value="state.autocompleteValue"
+            value="props.value"
             id="props.id"
             placeholder="props.placeholder"
             sources="sources"
@@ -50,7 +50,6 @@
             onSelect.bind="onSelect"
             onInput.bind="onInput"
             onChange.bind="onChange"
-            forceClose="forceClose"
         />
         <a role="button" class="o_dropdown_button" draggable="false" />
     </div>

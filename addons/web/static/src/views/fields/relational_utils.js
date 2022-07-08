@@ -156,11 +156,6 @@ export class Many2XAutocomplete extends owl.Component {
         this.orm = useService("orm");
 
         const autoCompleteContainer = useForwardRefToParent("autocomplete_container");
-
-        this.state = owl.useState({
-            autocompleteValue: this.props.value,
-        });
-
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
         this.openMany2X = useOpenMany2XRecord({
@@ -186,19 +181,6 @@ export class Many2XAutocomplete extends owl.Component {
             },
             onCreateEdit: ({ context }) => this.openMany2X({ context }),
         });
-
-        this.forceClose = false;
-        owl.onWillUpdateProps((nextProps) => {
-            this.state.autocompleteValue = nextProps.value;
-            if (this.preventClose) {
-                return;
-            }
-            this.forceClose = true;
-        });
-        owl.useEffect(() => {
-            this.forceClose = false;
-            this.preventClose = false;
-        });
     }
 
     get sources() {
@@ -223,7 +205,6 @@ export class Many2XAutocomplete extends owl.Component {
     }
     onInput({ inputValue }) {
         if (!this.props.value || this.props.value !== inputValue) {
-            this.preventClose = true;
             this.props.setInputFloats(true);
         }
     }
@@ -232,7 +213,6 @@ export class Many2XAutocomplete extends owl.Component {
         if (option.action) {
             return option.action(params);
         }
-        this.state.autocompleteValue = "";
         const record = {
             id: option.value,
             name: option.label,
