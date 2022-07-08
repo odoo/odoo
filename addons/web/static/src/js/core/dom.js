@@ -583,12 +583,13 @@ var dom = {
                     options.progress.apply(this, ...arguments);
                 }
                 const newScrollTop = _computeScrollTop();
-                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0) {
+                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0 && !(el.classList.contains('o_transitioning'))) {
                     return;
                 }
                 $scrollable.stop();
                 dom.scrollTo(el, Object.assign({}, options, {
                     duration: remainingMs,
+                    easing: 'linear',
                 })).then(() => resolve());
             };
 
