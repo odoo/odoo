@@ -1872,6 +1872,10 @@ class BaseModel(metaclass=MetaModel):
 
         Returns the number of records in the current model matching :ref:`the
         provided domain <reference/orm/domains>`.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
+                     list to match all records.
+        :param limit: maximum number of record to count (upperbound) (default: all)
         """
         res = self.search(domain, limit=limit, count=True)
         return res if isinstance(res, int) else len(res)
@@ -4888,14 +4892,18 @@ class BaseModel(metaclass=MetaModel):
         query.limit = limit
 
         if count:
-            # Ignore order, limit and offset when just counting, they don't make sense and could
+            # Ignore order and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str, params = query.select(limit and "1" or "count(*)")
             if limit:
-                query_str = "select count(*) from (" + query_str + ") t"
+                # Special case to avoid counting every record in DB (which can be really slow).
+                # The result will be between 0 and limit.
+                query_str, params = query.select("")  # generates a `SELECT FROM` (faster)
+                query_str = f"SELECT COUNT(*) FROM ({query_str}) t"
+            else:
+                query_str, params = query.select("COUNT(*)")
+
             self._cr.execute(query_str, params)
-            res = self._cr.fetchone()
-            return res[0]
+            return self._cr.fetchone()[0]
 
         query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
         query.offset = offset
