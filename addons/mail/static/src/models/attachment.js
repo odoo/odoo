@@ -77,7 +77,11 @@ registerModel({
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
+<<<<<<< HEAD:addons/mail/static/src/models/attachment.js
                     await this.messaging.rpc({
+=======
+                    await this.env.services.rpc({
+>>>>>>> 6c9306cc1c2... temp:addons/mail/static/src/models/attachment/attachment.js
                         route: `/mail/attachment/delete`,
                         params: {
                             access_token: this.accessToken,
@@ -92,10 +96,16 @@ registerModel({
             } else if (this.uploadingAbortController) {
                 this.uploadingAbortController.abort();
             }
+<<<<<<< HEAD:addons/mail/static/src/models/attachment.js
             if (!this.exists()) {
                 return;
             }
             this.delete();
+=======
+            if (this.exists()) {
+                this.delete();
+            }
+>>>>>>> 6c9306cc1c2... temp:addons/mail/static/src/models/attachment/attachment.js
         },
         /**
          * @private
