@@ -115,6 +115,12 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickEdit(target);
+
+        assert.containsOnce(
+            target,
+            ".o_field_monetary > div.text-nowrap",
+            "should have o_horizontal class"
+        );
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "9.10",
