@@ -88,6 +88,8 @@ registerModel({
                 },
             });
             if (this.messaging.device.isMobile) {
+                // When opening documents chat windows need to be closed
+                this.messaging.chatWindowManager.closeAll();
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
                 this.messaging.messagingMenu.close();
