@@ -48,9 +48,9 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     run() {},
 }, {
     content: "Check subject is autofilled",
-    trigger: 'input[name="subject"]',
+    trigger: '[name="subject"] input',
     run() {
-        const subjectValue = document.querySelector('input[name="subject"]').value;
+        const subjectValue = document.querySelector('[name="subject"] input').value;
         if (subjectValue !== "Re: Test User") {
             console.error(
                 `Full composer should have "Re: Test User" in subject input (actual: ${subjectValue})`
