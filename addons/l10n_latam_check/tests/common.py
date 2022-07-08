@@ -17,6 +17,8 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
             'company_3_data', chart_template=chart_template, **{'country_id': cls.env.ref('base.ar').id})
 
         cls.bank_journal = cls.company_data_3['default_journal_bank']
+        # enable checkbooks on bank journal
+        cls.bank_journal.l10n_latam_use_checkbooks = True
         cls.deferred_checkbook = cls.env['l10n_latam.checkbook'].create({
             'journal_id': cls.bank_journal.id,
             'next_number': 50,

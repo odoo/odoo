@@ -2,7 +2,6 @@ from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 from odoo.osv import expression
-import markupsafe
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -78,10 +77,7 @@ class AccountPayment(models.Model):
     @api.depends('payment_method_line_id.code', 'journal_id.l10n_latam_use_checkbooks')
     def _compute_l10n_latam_checkbook(self):
         for payment in self:
-            if (
-                payment.payment_method_line_id.code == 'check_printing'
-                and payment.journal_id.l10n_latam_use_checkbooks
-            ):
+            if payment.payment_method_line_id.code == 'check_printing' and payment.journal_id.l10n_latam_use_checkbooks:
                 checkbooks = payment.journal_id.l10n_latam_checkbook_ids
                 if payment.l10n_latam_checkbook_id and payment.l10n_latam_checkbook_id in checkbooks:
                     continue
@@ -133,7 +129,8 @@ class AccountPayment(models.Model):
                 last_operation = rec.env['account.payment'].search([
                     ('state', '=', 'posted'),
                     '|', ('l10n_latam_check_id', '=', rec.l10n_latam_check_id.id),
-                    ('id', '=', rec.l10n_latam_check_id.id)], order="date desc, id desc", limit=1)
+                    ('id', '=', rec.l10n_latam_check_id.id),
+                ], order="date desc, id desc", limit=1)
                 if last_operation and last_operation[0].date > date:
                     rec.l10n_latam_check_warning_msg = _(
                         "It seems you're trying to move a check with a date (%s) prior to last operation done with "
@@ -159,7 +156,9 @@ class AccountPayment(models.Model):
                     rec.l10n_latam_check_warning_msg = _(
                         "Other checks were found with same number, issuer and bank. Please double check you are not "
                         "encoding the same check more than once.\n"
-                        "List of other payments/checks: %s", ", ".join(same_checks.mapped('display_name')))
+                        "List of other payments/checks: %s",
+                        ", ".join(same_checks.mapped('display_name'))
+                    )
             # own check with checkbooks
             elif rec.l10n_latam_checkbook_id.range_to and rec.check_number.isdecimal() and \
                     int(rec.check_number) > rec.l10n_latam_checkbook_id.range_to:
@@ -223,8 +222,8 @@ class AccountPayment(models.Model):
     @api.onchange('l10n_latam_check_number')
     def _onchange_check_number(self):
         for rec in self.filtered(
-                lambda x: x.journal_id.company_id.country_id.code == "AR" and
-                x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
+            lambda x: x.journal_id.company_id.country_id.code == "AR" and
+            x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
             rec.l10n_latam_check_number = '%08d' % int(rec.l10n_latam_check_number)
 
     def _get_payment_method_codes_to_exclude(self):
@@ -246,24 +245,23 @@ class AccountPayment(models.Model):
             if rec.l10n_latam_check_id and not rec.currency_id.is_zero(rec.l10n_latam_check_id.amount - rec.amount):
                 raise UserError(_(
                     'The amount of the payment (%s) does not match the amount of the selected check (%s).\n'
-                    'Please try to deselect and select check again.') % (rec.amount, rec.l10n_latam_check_id.amount))
+                    'Please try to deselect and select check again.', rec.amount, rec.l10n_latam_check_id.amount))
             elif rec.payment_method_line_id.code in ['in_third_party_checks', 'out_third_party_checks']:
                 if rec.l10n_latam_check_id.state != 'posted':
-                    raise ValidationError(_('Selected check "%s" is not posted') % rec.l10n_latam_check_id.display_name)
-                elif (
-                        rec.payment_type == 'outbound' and
-                        rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.journal_id) or (
+                    raise ValidationError(_('Selected check "%s" is not posted', rec.l10n_latam_check_id.display_name))
+                elif (rec.payment_type == 'outbound' and
+                      rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.journal_id) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.destination_journal_id):
                     # check outbound payment and transfer or inbound transfer
                     raise ValidationError(_(
-                        'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.') % (
-                            rec.l10n_latam_check_id.display_name, rec.journal_id.name
-                            if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
+                        'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.',
+                        rec.l10n_latam_check_id.display_name, rec.journal_id.name
+                        if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id:
-                    raise ValidationError(_("Check '%s' is on journal '%s', we can't receive it again") % (
-                        rec.l10n_latam_check_id.display_name, rec.journal_id.name))
+                    raise ValidationError(_("Check '%s' is on journal '%s', we can't receive it again",
+                                            rec.l10n_latam_check_id.display_name, rec.journal_id.name))
 
         res = super().action_post()
 
@@ -339,12 +337,13 @@ class AccountPayment(models.Model):
         """
         Two modifications when only when transferring from a third party checks journal:
         1. When a paired transfer is created, the default odoo behavior is to use on the paired transfer the first
-        available payment method. If we are transferring to another third party checks journal, then set as payment method
-        on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
+        available payment method. If we are transferring to another third party checks journal, then set as payment
+        method on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
         2. On the paired transfer set the l10n_latam_check_id field, this field is needed for the
         l10n_latam_check_operation_ids and also for some warnings and constrains.
         """
-        for rec in self.filtered(lambda x: x.payment_method_line_id.code in ['in_third_party_checks', 'out_third_party_checks']):
+        for rec in self.filtered(
+            lambda x: x.payment_method_line_id.code in ['in_third_party_checks', 'out_third_party_checks']):
             dest_payment_method_code = 'in_third_party_checks' if rec.payment_type == 'outbound' else 'out_third_party_checks'
             dest_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(
                 lambda x: x.code == dest_payment_method_code)

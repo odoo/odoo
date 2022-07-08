@@ -40,10 +40,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_method_line_id.code', 'journal_id.l10n_latam_use_checkbooks')
     def _compute_l10n_latam_checkbook(self):
         for payment in self:
-            if (
-                payment.payment_method_line_id.code == 'check_printing'
-                and payment.journal_id.l10n_latam_use_checkbooks
-            ):
+            if payment.payment_method_line_id.code == 'check_printing' and payment.journal_id.l10n_latam_use_checkbooks:
                 checkbooks = payment.journal_id.l10n_latam_checkbook_ids
                 if payment.l10n_latam_checkbook_id and payment.l10n_latam_checkbook_id in checkbooks:
                     continue
@@ -66,8 +63,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_method_line_id.code', 'partner_id')
     def _compute_l10n_latam_check_data(self):
         new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-        (self - new_third_party_checks).update(
-            {'l10n_latam_check_bank_id': False, 'l10n_latam_check_issuer_vat': False})
+        (self - new_third_party_checks).update({'l10n_latam_check_bank_id': False, 'l10n_latam_check_issuer_vat': False})
         for rec in new_third_party_checks:
             rec.update({
                 'l10n_latam_check_bank_id': rec.partner_id.bank_ids and rec.partner_id.bank_ids[0].bank_id or False,
@@ -93,9 +89,8 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.onchange('l10n_latam_check_number')
     def _onchange_l10n_latam_check_number(self):
-        for rec in self.filtered(
-                lambda x: x.journal_id.company_id.country_id.code == "AR" and
-                x.l10n_latam_check_number and x.l10n_latam_check_number.isdecimal()):
+        for rec in self.filtered(lambda x: x.journal_id.company_id.country_id.code == "AR" and x.l10n_latam_check_number
+                                 and x.l10n_latam_check_number.isdecimal()):
             rec.l10n_latam_check_number = '%08d' % int(rec.l10n_latam_check_number)
 
     @api.onchange('payment_method_line_id', 'journal_id')

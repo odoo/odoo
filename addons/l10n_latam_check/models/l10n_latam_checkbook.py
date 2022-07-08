@@ -67,8 +67,9 @@ class L10nLatamCheckbook(models.Model):
             name = {
                 'deferred': _('Deferred Checks'),
                 'currents': _('Currents Checks'),
-                'electronic': _('Electronic Checks')}.get(rec.type, '')
+                'electronic': _('Electronic Checks')
+            }.get(rec.type, '')
             if rec.range_to:
-                name += _(' up to %s') % rec.range_to
+                name += _(' up to %s', rec.range_to)
             result.append((rec.id, name))
         return result

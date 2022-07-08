@@ -7,10 +7,6 @@ from odoo.tests.common import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestOwnChecks(L10nLatamCheckTest):
 
-    def test_01_journals_creation(self):
-        """ Verify journals for own checks are being created"""
-        self.assertTrue(self.bank_journal.l10n_latam_use_checkbooks, "Bank journal should use checkbooks")
-
     def test_01_pay_with_multiple_checks(self):
         """ Create one check with each checkbook, first check should choose deferred check by default. On current
         check force a different number than next one"""
