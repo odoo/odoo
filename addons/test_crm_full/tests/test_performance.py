@@ -42,7 +42,7 @@ class TestCrmPerformance(CrmPerformanceCase):
         country_be = self.env.ref('base.be')
         lang_be_id = self.env['res.lang']._lang_get_id('fr_BE')
 
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=241):  # 235, sometimes +6
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=194):
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             crm_values = [
                 {'country_id': country_be.id,
@@ -70,7 +70,7 @@ class TestCrmPerformance(CrmPerformanceCase):
         country_be = self.env.ref('base.be')
         lang_be = self.env['res.lang']._lang_get('fr_BE')
 
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=184):  # tcf only: 175 - com runbot: 167
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=177):  # com 166
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['crm.lead']) as lead_form:
                 lead_form.country_id = country_be
@@ -89,7 +89,7 @@ class TestCrmPerformance(CrmPerformanceCase):
     @warmup
     def test_lead_create_form_partner(self):
         """ Test a single lead creation using Form with a partner """
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=189):  # tcf only: 180 - com runbot: 172
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=186):  # com 175
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with self.debug_mode():
                 # {'invisible': ['|', ('type', '=', 'opportunity'), ('is_partner_visible', '=', False)]}
@@ -107,7 +107,7 @@ class TestCrmPerformance(CrmPerformanceCase):
         country_be = self.env.ref('base.be')
         lang_be_id = self.env['res.lang']._lang_get_id('fr_BE')
 
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=41):
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=31):
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             crm_values = [
                 {'country_id': country_be.id,
@@ -127,7 +127,7 @@ class TestCrmPerformance(CrmPerformanceCase):
     @warmup
     def test_lead_create_single_partner(self):
         """ Test multiple lead creation (import) """
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=47):
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=32):
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             crm_values = [
                 {'partner_id': self.partners[0].id,
