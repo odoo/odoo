@@ -3,6 +3,7 @@
 import logging
 import requests
 import werkzeug
+import json
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessError
@@ -83,6 +84,8 @@ class PosPaymentMethod(models.Model):
 
         if resp.ok:
             return resp.json()
+        else:
+            return json.loads(resp.text)
 
         _logger.error("Unexpected stripe_payment_intent response: %s", resp.status_code)
         raise UserError(_("Unexpected error between us and Stripe."))

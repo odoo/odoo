@@ -95,27 +95,29 @@ let PaymentStripe = PaymentInterface.extend({
     collectPayment: async function (amount) {
         let line = this.pos.get_order().selected_paymentline;
         let clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
-        line.set_payment_status('waitingCard');
-        let collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
-        if (collectPaymentMethod.error) {
-            this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
-            line.set_payment_status('retry');
-            return false;
-        } else {
-            line.set_payment_status('waitingCapture');
-            let processPayment = await this.terminal.processPayment(collectPaymentMethod.paymentIntent);
-            if (processPayment.error) {
-                this._showError(processPayment.error.message, processPayment.error.code);
+        if (clientSecret) {
+            line.set_payment_status('waitingCard');
+            let collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
+            if (collectPaymentMethod.error) {
+                this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
                 line.set_payment_status('retry');
                 return false;
-            } else if (processPayment.paymentIntent) {
+            } else {
                 line.set_payment_status('waitingCapture');
-                let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
-                line.set_payment_status('done');
-                line.transaction_id = (capturePayment.id);
-                return true;
+                let processPayment = await this.terminal.processPayment(collectPaymentMethod.paymentIntent);
+                if (processPayment.error) {
+                    this._showError(processPayment.error.message, processPayment.error.code);
+                    line.set_payment_status('retry');
+                    return false;
+                } else if (processPayment.paymentIntent) {
+                    line.set_payment_status('waitingCapture');
+                    let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+                    line.set_payment_status('done');
+                    line.transaction_id = (capturePayment.id);
+                    return true;
+                }
             }
-        }
+        } else {return false;}
     },
 
     capturePayment: function (paymentIntentId) {
@@ -142,7 +144,12 @@ let PaymentStripe = PaymentInterface.extend({
         }).catch(function (error) {
             self._showError(_t('error'));
         }).then(function (data) {
-            return data.client_secret;
+            if (data.secret) {
+                return data.secret;
+            } else {
+                self._showError(data.error.message);
+                return false;
+            }
         });
     },
 
