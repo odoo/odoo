@@ -214,7 +214,7 @@ class AccrualPlanLevel(models.Model):
             else:
                 return last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'monthly':
-            date = last_call + relativedelta(self.first_day)
+            date = last_call + relativedelta(day=self.first_day)
             if last_call < date:
                 return date
             else:
