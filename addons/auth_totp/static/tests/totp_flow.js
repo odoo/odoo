@@ -59,14 +59,14 @@ tour.register('totp_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     run(helpers) {
-        const $secret = this.$anchor.closest('div').find('span[name=secret]');
+        const $secret = this.$anchor.closest('div').find('[name=secret] span');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
         const secret = $secret.text();
         ajax.jsonRpc('/totphook', 'call', {
             secret
         }).then((token) => {
-            helpers._text(helpers._get_action_values('input[name=code]'), token);
+            helpers._text(helpers._get_action_values('[name=code] input'), token);
             helpers._click(helpers._get_action_values('button.btn-primary:contains(Activate)'));
             $('body').addClass('got-token')
         });
