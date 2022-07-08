@@ -7,7 +7,7 @@ from odoo import api, models, fields, _
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False)
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False, index=True)
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
     name_short = fields.Char(compute="_compute_name_short")
