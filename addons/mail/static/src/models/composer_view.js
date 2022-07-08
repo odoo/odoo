@@ -884,11 +884,21 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeExtraSuggestionViews() {
+        _computeExtraSuggestions() {
             if (this.suggestionDelimiterPosition === undefined) {
                 return clear();
             }
-            return unlink(this.mainSuggestionViews);
+            return unlink(this.mainSuggestions);
+        },
+        /**
+         * @returns {FieldCommand}
+         */
+        _computeExtraSuggestionViews() {
+            return insertAndReplace(this.extraSuggestions.map(suggestable => {
+                return {
+                    suggestable: replace(suggestable),
+                };
+            }));
         },
         /**
          * @private
@@ -960,7 +970,7 @@ registerModel({
          * @return {boolean}
          */
         _computeHasSuggestions() {
-            return this.mainSuggestionViews.length > 0 || this.extraSuggestionViews.length > 0;
+            return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
         },
         /**
          * @private
@@ -1024,10 +1034,20 @@ registerModel({
          * @private
          * @returns {Record[]}
          */
-        _computeMainSuggestionViews() {
+        _computeMainSuggestions() {
             if (this.suggestionDelimiterPosition === undefined) {
                 return clear();
             }
+        },
+        /**
+         * @returns {FieldCommand}
+         */
+        _computeMainSuggestionViews() {
+            return insertAndReplace(this.mainSuggestions.map(suggestable => {
+                return {
+                    suggestable: replace(suggestable),
+                };
+            }));
         },
         /**
          * @private
@@ -1389,21 +1409,9 @@ registerModel({
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
             extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
             this.update({
-                extraSuggestionViews: insertAndReplace(
-                    extraSuggestedRecords.map(record => {
-                        return {
-                            suggestable: replace(record.suggestable),
-                        };
-                    }),
-                ),
+                extraSuggestions: replace(extraSuggestedRecords.map(record => record.suggestable)),
                 hasToScrollToActiveSuggestionView: true,
-                mainSuggestionViews: insertAndReplace(
-                    mainSuggestedRecords.map(record => {
-                        return {
-                            suggestable: replace(record.suggestable),
-                        };
-                    }),
-                ),
+                mainSuggestions: replace(mainSuggestedRecords.map(record => record.suggestable)),
             });
         },
         /**
@@ -1489,6 +1497,9 @@ registerModel({
         emojisPopoverView: one('PopoverView', {
             inverse: 'composerViewOwnerAsEmoji',
             isCausal: true,
+        }),
+        extraSuggestions: many('ComposerSuggestable', {
+            compute: '_computeExtraSuggestions',
         }),
         /**
          * Determines the extra suggestions.
@@ -1594,6 +1605,9 @@ registerModel({
          */
         textareaLastInputValue: attr({
             default: "",
+        }),
+        mainSuggestions: many('ComposerSuggestable', {
+            compute: '_computeMainSuggestions',
         }),
         /**
          * Determines the main suggestions.
