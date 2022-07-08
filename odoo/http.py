@@ -534,7 +534,7 @@ class Stream:
             'conditional': self.conditional,
             'etag': self.etag,
             'last_modified': self.last_modified,
-            'max_age': self.max_age,
+            'max_age': STATIC_CACHE_LONG if immutable else self.max_age,
             'environ': request.httprequest.environ,
             'response_class': Response,
             **send_file_kwargs,

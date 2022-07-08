@@ -15,6 +15,7 @@ import * as AbstractService from "web.AbstractService";
 import legacyEnv from "web.env";
 import * as session from "web.session";
 import * as makeLegacyWebClientService from "web.pseudo_web_client";
+import { templates } from "@web/core/assets";
 
 const { Component, whenReady } = owl;
 
@@ -51,6 +52,6 @@ export const legacySetupProm = new Promise((resolve) => {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
     }
     await Promise.all([whenReady(), session.is_bound]);
-    legacyEnv.templates = session.owlTemplates;
+    legacyEnv.templates = templates;
     legacySetupResolver(legacyEnv);
 })();

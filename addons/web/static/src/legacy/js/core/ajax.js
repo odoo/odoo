@@ -2,7 +2,6 @@ odoo.define('web.ajax', function (require) {
 "use strict";
 
 var config = require('web.config');
-var concurrency = require('web.concurrency');
 var core = require('web.core');
 const {Markup} = require('web.utils');
 var time = require('web.time');
@@ -137,90 +136,6 @@ function rpc(url, params, settings) {
     return jsonRpc(url, 'call', params, settings);
 }
 
-
-/**
- * Load css asynchronously: fetch it from the url parameter and add a link tag
- * to <head>.
- * If the url has already been requested and loaded, the promise will resolve
- * immediately.
- *
- * @param {String} url of the css to be fetched
- * @returns {Promise} resolved when the css has been loaded.
- */
-var loadCSS = (function () {
-    var urlDefs = {};
-
-    return function loadCSS(url) {
-        if (url in urlDefs) {
-            // nothing to do here
-        } else if ($('link[href="' + url + '"]').length) {
-            // the link is already in the DOM, the promise can be resolved
-            urlDefs[url] = Promise.resolve();
-        } else {
-            var $link = $('<link>', {
-                'href': url,
-                'rel': 'stylesheet',
-                'type': 'text/css'
-            });
-            urlDefs[url] = new Promise(function (resolve, reject) {
-                $link.on('load', function () {
-                    resolve();
-                }).on('error', function () {
-                    reject(new Error("Couldn't load css dependency: " + $link[0].href));
-                });
-            });
-            $('head').append($link);
-        }
-        return urlDefs[url];
-    };
-})();
-
-var loadJS = (function () {
-    var dependenciesPromise = {};
-
-    var load = function loadJS(url) {
-        // Check the DOM to see if a script with the specified url is already there
-        var alreadyRequired = ($('script[src="' + url + '"]').length > 0);
-
-        // If loadJS was already called with the same URL, it will have a registered promise indicating if
-        // the script has been fully loaded. If not, the promise has to be initialized.
-        // This is initialized as already resolved if the script was already there without the need of loadJS.
-        if (url in dependenciesPromise) {
-            return dependenciesPromise[url];
-        }
-        var scriptLoadedPromise = new Promise(function (resolve, reject) {
-            if (alreadyRequired) {
-                resolve();
-            } else {
-                // Get the script associated promise and returns it after initializing the script if needed. The
-                // promise is marked to be resolved on script load and rejected on script error.
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = url;
-                script.onload = script.onreadystatechange = function() {
-                    if ((script.readyState && script.readyState !== "loaded" && script.readyState !== "complete") || script.onload_done) {
-                        return;
-                    }
-                    script.onload_done = true;
-                    resolve(url);
-                };
-                script.onerror = function () {
-                    console.error("Error loading file", script.src);
-                    reject(url);
-                };
-                var head = document.head || document.getElementsByTagName('head')[0];
-                head.appendChild(script);
-            }
-        });
-
-        dependenciesPromise[url] = scriptLoadedPromise;
-        return scriptLoadedPromise;
-    };
-
-    return load;
-})();
-
-
 /**
  * Cooperative file download implementation, for ajaxy APIs.
  *
@@ -335,87 +250,6 @@ function post (controller_url, data) {
     });
 }
 
-/**
- * Loads an XML file according to the given URL and adds its associated qweb
- * templates to the given qweb engine. The function can also be used to get
- * the promise which indicates when all the calls to the function are finished.
- *
- * Note: "all the calls" = the calls that happened before the current no-args
- * one + the calls that will happen after but when the previous ones are not
- * finished yet.
- *
- * @param {string} [url] - an URL where to find qweb templates
- * @param {QWeb} [qweb] - the engine to which the templates need to be added
- * @returns {Promise}
- *          If no argument is given to the function, the promise's state
- *          indicates if "all the calls" are finished (see main description).
- *          Otherwise, it indicates when the templates associated to the given
- *          url have been loaded.
- */
-var loadXML = (function () {
-    // Some "static" variables associated to the loadXML function
-    var isLoading = false;
-    var loadingsData = [];
-    var seenURLs = [];
-
-    return function (url, qweb) {
-        function _load() {
-            isLoading = true;
-            if (loadingsData.length) {
-                // There is something to load, load it, resolve the associated
-                // promise then start loading the next one
-                var loadingData = loadingsData[0];
-                loadingData.qweb.add_template(loadingData.url, function () {
-                    // Remove from array only now so that multiple calls to
-                    // loadXML with the same URL returns the right promise
-                    loadingsData.shift();
-                    loadingData.resolve();
-                    _load();
-                });
-            } else {
-                // There is nothing to load anymore, so resolve the
-                // "all the calls" promise
-                isLoading = false;
-            }
-        }
-
-        // If no argument, simply returns the promise which indicates when
-        // "all the calls" are finished
-        if (!url || !qweb) {
-            return Promise.resolve();
-        }
-
-        // If the given URL has already been seen, do nothing but returning the
-        // associated promise
-        if (_.contains(seenURLs, url)) {
-            var oldLoadingData = _.findWhere(loadingsData, {url: url});
-            return oldLoadingData ? oldLoadingData.def : Promise.resolve();
-        }
-        seenURLs.push(url);
-
-
-        // Add the information about the new data to load: the url, the qweb
-        // engine and the associated promise
-        var newLoadingData = {
-            url: url,
-            qweb: qweb,
-        };
-        newLoadingData.def = new Promise(function (resolve, reject) {
-            newLoadingData.resolve = resolve;
-            newLoadingData.reject = reject;
-        });
-        loadingsData.push(newLoadingData);
-
-        // If not already started, start the loading loop (reinitialize the
-        // "all the calls" promise to an unresolved state)
-        if (!isLoading) {
-            _load();
-        }
-
-        // Return the promise associated to the new given URL
-        return newLoadingData.def;
-    };
-})();
 
 /**
  * Loads a template file according to the given xmlId.
@@ -478,92 +312,10 @@ var loadAsset = (function () {
     return load;
 })();
 
-/**
- * Loads the given js/css libraries and asset bundles. Note that no library or
- * asset will be loaded if it was already done before.
- *
- * @param {Object} libs
- * @param {Array<string|string[]>} [libs.assetLibs=[]]
- *      The list of assets to load. Each list item may be a string (the xmlID
- *      of the asset to load) or a list of strings. The first level is loaded
- *      sequentially (so use this if the order matters) while the assets in
- *      inner lists are loaded in parallel (use this for efficiency but only
- *      if the order does not matter, should rarely be the case for assets).
- * @param {string[]} [libs.cssLibs=[]]
- *      The list of CSS files to load. They will all be loaded in parallel but
- *      put in the DOM in the given order (only the order in the DOM is used
- *      to determine priority of CSS rules, not loaded time).
- * @param {Array<string|string[]>} [libs.jsLibs=[]]
- *      The list of JS files to load. Each list item may be a string (the URL
- *      of the file to load) or a list of strings. The first level is loaded
- *      sequentially (so use this if the order matters) while the files in inner
- *      lists are loaded in parallel (use this for efficiency but only
- *      if the order does not matter).
- * @param {string[]} [libs.cssContents=[]]
- *      List of inline styles to add after loading the CSS files.
- * @param {string[]} [libs.jsContents=[]]
- *      List of inline scripts to add after loading the JS files.
- * @param {Object} [context]
- *        additionnal rpc context to be merged with the default one
- * @param {string} [tplRoute]
- *      Custom route to use for template rendering of the potential assets
- *      to load (see libs.assetLibs).
- *
- * @returns {Promise}
- */
-function loadLibs(libs, context, tplRoute) {
-    var mutex = new concurrency.Mutex();
-    mutex.exec(function () {
-        var defs = [];
-        var cssLibs = [libs.cssLibs || []];  // Force loading in parallel
-        defs.push(_loadArray(cssLibs, ajax.loadCSS).then(function () {
-            if (libs.cssContents && libs.cssContents.length) {
-                $('head').append($('<style/>', {
-                    html: libs.cssContents.join('\n'),
-                }));
-            }
-        }));
-        defs.push(_loadArray(libs.jsLibs || [], ajax.loadJS).then(function () {
-            if (libs.jsContents && libs.jsContents.length) {
-                $('head').append($('<script/>', {
-                    html: libs.jsContents.join('\n'),
-                }));
-            }
-        }));
-        return Promise.all(defs);
-    });
-    mutex.exec(function () {
-        return _loadArray(libs.assetLibs || [], function (xmlID) {
-            return ajax.loadAsset(xmlID, context, tplRoute).then(function (asset) {
-                return ajax.loadLibs(asset);
-            });
-        });
-    });
-
-    function _loadArray(array, loadCallback) {
-        var _mutex = new concurrency.Mutex();
-        array.forEach(function (urlData) {
-            _mutex.exec(function () {
-                if (typeof urlData === 'string') {
-                    return loadCallback(urlData);
-                }
-                return Promise.all(urlData.map(loadCallback));
-            });
-        });
-        return _mutex.getUnlockedDef();
-    }
-
-    return mutex.getUnlockedDef();
-}
-
 _.extend(ajax, {
     jsonRpc: jsonRpc,
     rpc: rpc,
-    loadCSS: loadCSS,
-    loadJS: loadJS,
-    loadXML: loadXML,
     loadAsset: loadAsset,
-    loadLibs: loadLibs,
     get_file: get_file,
     post: post,
 });

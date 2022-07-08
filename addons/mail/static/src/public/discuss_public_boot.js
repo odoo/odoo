@@ -8,7 +8,6 @@ import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view
 import { PopoverManagerContainer } from '@mail/components/popover_manager_container/popover_manager_container';
 import { messagingService } from '@mail/services/messaging_service';
 
-import { processTemplates } from '@web/core/assets';
 import { MainComponentsContainer } from '@web/core/main_components_container';
 import { registry } from '@web/core/registry';
 import { makeEnv, startServices } from '@web/env';
@@ -21,6 +20,7 @@ import {
     mapLegacyEnvToWowlEnv,
 } from '@web/legacy/utils';
 import { session } from '@web/session';
+import { templates } from '@web/core/assets';
 
 import * as AbstractService from 'web.AbstractService';
 import * as legacyEnv from 'web.env';
@@ -69,10 +69,7 @@ Component.env = legacyEnv;
         isReady: false,
     });
     const env = makeEnv();
-    const [, templates] = await Promise.all([
-        startServices(env),
-        odoo.loadTemplatesPromise.then(processTemplates),
-    ]);
+    await startServices(env);
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });

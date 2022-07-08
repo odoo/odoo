@@ -385,12 +385,12 @@ from odoo.tools.json import scriptsafe
 from odoo.tools.misc import str2bool
 from odoo.tools.image import image_data_uri
 from odoo.http import request
-from odoo.modules.module import get_resource_path
+from odoo.modules.module import get_resource_path, get_module_path
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS
+from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS, TEMPLATE_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -2446,13 +2446,13 @@ class IrQWeb(models.AbstractModel):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id", "lang")),
+        tools.ormcache('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
     )
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
-    @tools.ormcache_context('bundle', 'nodeAttrs and nodeAttrs.get("media")', 'defer_load', 'lazy_load', keys=("website_id", "lang"))
-    def _get_asset_content(self, bundle, nodeAttrs=None, defer_load=False, lazy_load=False):
+    @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
+    def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []
@@ -2460,11 +2460,24 @@ class IrQWeb(models.AbstractModel):
         for path, *_ in asset_paths:
             ext = path.split('.')[-1]
             is_js = ext in SCRIPT_EXTENSIONS
+            is_xml = ext in TEMPLATE_EXTENSIONS
             is_css = ext in STYLE_EXTENSIONS
-            if not is_js and not is_css:
+            if not is_js and not is_xml and not is_css:
                 continue
 
-            mimetype = 'text/javascript' if is_js else f'text/{ext}'
+            if is_xml:
+                base = get_module_path(bundle.split('.')[0]).rsplit('/', 1)[0]
+                if path.startswith(base):
+                    path = path[len(base):]
+
+            mimetype = None
+            if is_js:
+                mimetype = 'text/javascript'
+            elif is_css:
+                mimetype = f'text/{ext}'
+            elif is_xml:
+                mimetype = 'text/xml'
+
             if can_aggregate(path):
                 segments = [segment for segment in path.split('/') if segment]
                 files.append({
@@ -2472,7 +2485,7 @@ class IrQWeb(models.AbstractModel):
                     'url': path,
                     'filename': get_resource_path(*segments) if segments else None,
                     'content': '',
-                    'media': nodeAttrs and nodeAttrs.get('media'),
+                    'media': media,
                 })
             else:
                 if is_js:
@@ -2483,15 +2496,23 @@ class IrQWeb(models.AbstractModel):
                     attributes["data-src" if lazy_load else "src"] = path
                     if defer_load or lazy_load:
                         attributes["defer"] = "defer"
-                else:
+                elif is_css:
                     tag = 'link'
                     attributes = {
                         "type": mimetype,
                         "rel": "stylesheet",
                         "href": path,
-                        'media': nodeAttrs and nodeAttrs.get('media'),
+                        'media': media,
                     }
-                remains.append((tag, attributes, ''))
+                elif is_xml:
+                    tag = 'script'
+                    attributes = {
+                        "type": mimetype,
+                        "async": "async",
+                        "rel": "prefetch",
+                        "data-src": path,
+                    }
+                remains.append((tag, attributes, None))
 
         return (files, remains)
 
@@ -2499,8 +2520,7 @@ class IrQWeb(models.AbstractModel):
         return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
 
     def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        nodeAttrs = {'media': media} if css and media else None
-        files, remains = self._get_asset_content(bundle, nodeAttrs, defer_load=defer_load, lazy_load=lazy_load)
+        files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
         asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
