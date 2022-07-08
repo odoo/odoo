@@ -103,7 +103,7 @@ class ProjectCustomerPortal(CustomerPortal):
                  '/my/project/<int:project_id>/project_sharing'], type='http', auth="public")
     def portal_project_routes_outdated(self, **kwargs):
         """ Redirect the outdated routes to the new routes. """
-        return request.redirect(request.httprequest.path.replace('/my/project/', '/my/projects/'))
+        return request.redirect(request.httprequest.full_path.replace('/my/project/', '/my/projects/'))
 
     @http.route(['/my/task', '/my/task/page/<int:page>'], type='http', auth='public')
     def portal_my_task_routes_outdated(self, **kwargs):
