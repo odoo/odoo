@@ -10,8 +10,6 @@ from odoo.tests import HttpCase, tagged
 class TestUi(HttpCase):
 
     def test_event_configurator(self):
-        import unittest; raise unittest.SkipTest("skipWOWL")
-
         event = self.env['event.event'].create({
             'name': 'Design Fair Los Angeles',
             'date_begin': Datetime.now() + timedelta(days=1),
