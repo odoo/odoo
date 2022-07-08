@@ -188,16 +188,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         return this._rpc({
             route: "/shop/cart/update_json",
             params: this._getCartUpdateJsonParams(productID, qty),
-        }).then(function (resp) {
-            if (resp.warning) {
-                if (! $('#data_warning').length) {
-                    $('.wishlist-section').prepend('<div class="mt16 alert alert-danger alert-dismissable" role="alert" id="data_warning"></div>');
-                }
-                var cart_alert = $('.wishlist-section').parent().find('#data_warning');
-                cart_alert.html('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">&times;</button> ' + resp.warning);
-            }
-            sessionStorage.setItem('website_sale_cart_quantity', resp.cart_quantity);
-            $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');
+        }).then(function (data) {
+            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showWarning(data.warning);
         });
     },
     /**
