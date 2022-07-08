@@ -192,3 +192,18 @@ class test_search(TransactionCase):
         })
         cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
         self.assertNotIn(bank_credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")
+
+    def test_21_search_count(self):
+        Partner = self.env['res.partner']
+        count_partner_before = Partner.search_count([])
+        partners = Partner.create([
+            {'name': 'abc'},
+            {'name': 'zer'},
+            {'name': 'christope'},
+            {'name': 'runbot'},
+        ])
+        self.assertEqual(len(partners) + count_partner_before, Partner.search_count([]))
+        self.assertEqual(len(partners) + count_partner_before, Partner.search([], count=True))
+
+        self.assertEqual(3, Partner.search_count([], limit=3))
+        self.assertEqual(3, Partner.search([], count=True, limit=3))
