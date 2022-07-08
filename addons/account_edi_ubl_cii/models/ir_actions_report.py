@@ -21,7 +21,8 @@ class IrActionsReport(models.Model):
 
         if record._name == 'account.move':
             # exclude efff because it's handled by l10n_be_edi
-            edi_attachments = record.edi_document_ids.filtered(lambda d: d.edi_format_id.code != 'efff_1').attachment_id
+            format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1']
+            edi_attachments = record.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).attachment_id
             for edi_attachment in edi_attachments:
                 old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
                 tree = etree.fromstring(old_xml)
