@@ -831,4 +831,4 @@
 
     export var Quiz = Quiz;
     export var ConfirmationDialog = ConfirmationDialog;
-    export const websiteSlidesQuizNoFullscree = publicWidget.registry.websiteSlidesQuizNoFullscreen;
+    export const websiteSlidesQuizNoFullscreen = publicWidget.registry.websiteSlidesQuizNoFullscreen;
