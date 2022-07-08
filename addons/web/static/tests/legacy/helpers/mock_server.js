@@ -1706,6 +1706,15 @@ var MockServer = Class.extend({
         _.each(records, function (record) {
             var groupByValue = record[groupBy]; // always technical value here
 
+            // special case for bool values: rpc call response with capitalized strings
+            if (!(groupByValue in data)) {
+                if (groupByValue === true) {
+                    groupByValue = "True";
+                } else if (groupByValue === false) {
+                    groupByValue = "False";
+                }
+            }
+
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
                 _.each(progress_bar.colors, function (val, key) {
