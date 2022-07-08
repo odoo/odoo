@@ -764,6 +764,11 @@ class MailActivityMixin(models.AbstractModel):
         ]
         from_clause, where_clause, where_params = query.get_sql()
         tz = self._context.get('tz') or self.env.user.tz or 'UTC'
+        if "," in from_clause:
+            # Grouping by inherited fields is not supported in v13
+            # See https://github.com/odoo/odoo/issues/92731
+            return []
+
         select_query = """
             SELECT 1 AS id, count(*) AS "__count", {fields}
             FROM {from_clause}
