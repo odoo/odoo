@@ -13129,7 +13129,7 @@ QUnit.module("Views", (hooks) => {
         // Target handle
         const th = target.querySelector("th:nth-child(2)");
         const optionalDropdown = target.querySelector(".o_optional_columns_dropdown");
-        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const optionalInitialX = Math.floor(optionalDropdown.getBoundingClientRect().x);
         const resizeHandle = th.querySelector(".o_resize");
         const originalWidth = th.offsetWidth;
         const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
