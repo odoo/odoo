@@ -124,7 +124,7 @@ class SurveyQuestion(models.Model):
     validation_max_date = fields.Date('Maximum Date')
     validation_min_datetime = fields.Datetime('Minimum Datetime')
     validation_max_datetime = fields.Datetime('Maximum Datetime')
-    validation_error_msg = fields.Char('Validation Error message', translate=True)
+    validation_error_msg = fields.Char('Validation Error', translate=True)
     constr_mandatory = fields.Boolean('Mandatory Answer')
     constr_error_msg = fields.Char('Error message', translate=True)
     # answers
@@ -311,6 +311,20 @@ class SurveyQuestion(models.Model):
                 question.is_scored_question = True
             else:
                 question.is_scored_question = False
+
+    @api.onchange('question_type', 'validation_required')
+    def _onchange_validation_parameters(self):
+        """Ensure no value stays set but not visible on form,
+        preventing saving (+consistency with question type)."""
+        self.validation_email = False
+        self.validation_length_min = 0
+        self.validation_length_max = 0
+        self.validation_min_date = False
+        self.validation_max_date = False
+        self.validation_min_datetime = False
+        self.validation_max_datetime = False
+        self.validation_min_float_value = 0
+        self.validation_max_float_value = 0
 
     # ------------------------------------------------------------
     # VALIDATION
