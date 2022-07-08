@@ -26,7 +26,9 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 });
             }
             getTable(order) {
-                return `${order.table.floor.name} (${order.table.name})`;
+                if(order.table)
+                    return `${order.table.floor.name} (${order.table.name})`;
+                return null;
             }
             //@override
             _getSearchFields() {
