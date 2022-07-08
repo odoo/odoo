@@ -12,7 +12,7 @@
                 </t>
                 <span> / </span>
                 <t t-if="state.total == 10000">
-                    <span class="o_pager_limit" t-on-click.stop="() => this.updateCounter()">10000+</span>
+                    <span class="o_pager_limit o_pager_limit_fetch" t-on-click.stop="() => this.updateCounter()">10000+</span>
                 </t>
                 <t t-else="">
                     <span class="o_pager_limit" t-esc="state.total"/>
