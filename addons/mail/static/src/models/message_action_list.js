@@ -69,8 +69,33 @@ registerModel({
          * @private
          * @param {MouseEvent} ev
          */
+        onClickToggleCompact(ev) {
+            this.update({ isCompact: !this.isCompact });
+        },
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
         onClickToggleStar(ev) {
             this.message.toggleStar();
+        },
+        /**
+         * @private
+         * @returns {integer|FieldCommand}
+         */
+        _computeActionsCount() {
+            if (this.message){
+                const actions = [
+                    this.hasMarkAsReadIcon,
+                    this.hasReplyIcon,
+                    this.message.canBeDeleted,
+                    this.message.canBeDeleted,
+                    this.message.canStarBeToggled,
+                    this.message.hasReactionIcon,
+                ]
+                return actions.filter(Boolean).length;
+            }
+            return clear();
         },
         /**
          * @private
@@ -78,6 +103,17 @@ registerModel({
          */
         _computeAddReactionText() {
             return this.env._t("Add a Reaction");
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasCompactIcon() {
+            const COMPACT_THRESHOLD = 2;
+            const viewer = this.messageView && this.messageView.messageListViewMessageViewItemOwner && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer;
+            if (viewer && viewer.chatWindow) {
+                return this.actionsCount > COMPACT_THRESHOLD;
+            }
         },
         /**
          * @private
@@ -110,12 +146,20 @@ registerModel({
          * States the reference to the reaction action in the component.
          */
         actionReactionRef: attr(),
+        actionsCount: attr({
+            compute: '_computeActionsCount',
+            readonly: true,
+        }),
         addReactionText: attr({
             compute: '_computeAddReactionText',
         }),
         deleteConfirmDialog: one('Dialog', {
             inverse: 'messageActionListOwnerAsDeleteConfirm',
             isCausal: true,
+        }),
+        hasCompactIcon: attr({
+            compute: '_computeHasCompactIcon',
+            readonly: true,
         }),
         /**
          * Determines whether this message action list has mark as read icon.
@@ -128,6 +172,9 @@ registerModel({
          */
         hasReplyIcon: attr({
             compute: '_computeHasReplyIcon',
+        }),
+        isCompact: attr({
+            default: true,
         }),
         /**
          * States the message on which this action message list operates.
