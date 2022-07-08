@@ -69,6 +69,7 @@ const Wysiwyg = Widget.extend({
         recordInfo: {context: {}},
         document: document,
         allowCommandVideo: true,
+        insertParagraphAfterColumns: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -1915,9 +1916,61 @@ const Wysiwyg = Widget.extend({
                     }
                 },
             },
+            {
+                category: _t('Structure'),
+                name: _t('2 columns'),
+                priority: 13,
+                description: _t('Convert into 2 columns.'),
+                fontawesome: 'fa-columns',
+                callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
+                isDisabled: () => {
+                    const anchor = this.odooEditor.document.getSelection().anchorNode;
+                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    return row && row.childElementCount === 2;
+                },
+            },
+            {
+                category: _t('Structure'),
+                name: _t('3 columns'),
+                priority: 12,
+                description: _t('Convert into 3 columns.'),
+                fontawesome: 'fa-columns',
+                callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
+                isDisabled: () => {
+                    const anchor = this.odooEditor.document.getSelection().anchorNode;
+                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    return row && row.childElementCount === 3;
+                },
+            },
+            {
+                category: _t('Structure'),
+                name: _t('4 columns'),
+                priority: 11,
+                description: _t('Convert into 4 columns.'),
+                fontawesome: 'fa-columns',
+                callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
+                isDisabled: () => {
+                    const anchor = this.odooEditor.document.getSelection().anchorNode;
+                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    return row && row.childElementCount === 4;
+                },
+            },
+            {
+                category: _t('Structure'),
+                name: _t('Remove columns'),
+                priority: 10,
+                description: _t('Back to one column.'),
+                fontawesome: 'fa-columns',
+                callback: () => this.odooEditor.execCommand('columnize', 0),
+                isDisabled: () => {
+                    const anchor = this.odooEditor.document.getSelection().anchorNode;
+                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    return !row;
+                },
+            },
         ];
         if (editorOptions.allowCommandLink) {
-            categories.push({ name: 'Navigation', priority: 40 });
+            categories.push({ name: _t('Navigation'), priority: 40 });
             commands.push(
                 {
                     category: _t('Navigation'),
@@ -1946,7 +1999,7 @@ const Wysiwyg = Widget.extend({
             );
         }
         if (editorOptions.allowCommandImage || editorOptions.allowCommandVideo) {
-            categories.push({ name: 'Media', priority: 50 });
+            categories.push({ name: _t('Media'), priority: 50 });
         }
         if (editorOptions.allowCommandImage) {
             commands.push({
