@@ -55,7 +55,7 @@ class PurchaseOrder(models.Model):
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
         if self.picking_type_id.default_location_dest_id.usage != 'customer':
-            self.dest_address_id = False
+            self.dest_address_id = self.picking_type_id.warehouse_id.partner_id
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -182,7 +182,7 @@ class PurchaseOrder(models.Model):
 
     def _get_destination_location(self):
         self.ensure_one()
-        if self.dest_address_id:
+        if self.dest_address_id and self.dest_address_id != self.picking_type_id.warehouse_id.partner_id:
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
