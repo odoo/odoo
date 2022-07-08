@@ -372,21 +372,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
-            wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
-            if (data.warning) {
-                var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                if (cart_alert.length === 0) {
-                    $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button> ' + data.warning + '</div>');
-                }
-                else {
-                    cart_alert.html('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button> ' + data.warning);
-                }
-                $input.val(data.quantity);
-            }
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showWarning(data.warning);
         });
     },
     /**
