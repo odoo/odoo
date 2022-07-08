@@ -77,20 +77,24 @@ registerModel({
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.async(() => this.env.services.rpc({
+                    await this.env.services.rpc({
                         route: `/mail/attachment/delete`,
                         params: {
                             access_token: this.accessToken,
                             attachment_id: this.id,
                         },
-                    }, { shadow: true }));
+                    }, { shadow: true });
                 } finally {
-                    this.update({ isUnlinkPending: false });
+                    if (this.exists()) {
+                        this.update({ isUnlinkPending: false });
+                    }
                 }
             } else if (this.uploadingAbortController) {
                 this.uploadingAbortController.abort();
             }
-            this.delete();
+            if (this.exists()) {
+                this.delete();
+            }
         },
         /**
          * @private
