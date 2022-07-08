@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { REGEX_BOOTSTRAP_COLUMN } from '../utils/constants.js';
 import {
     ancestors,
     descendants,
@@ -40,6 +41,7 @@ import {
     allowsParagraphRelatedElements,
     isUnbreakable,
     makeContentsInline,
+    unwrapContents,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -884,6 +886,115 @@ export const editorCommands = {
         siblingRow ? setSelection(...startPos(siblingRow)) : deleteTable(editor, table);
     },
     deleteTable: (editor, table) => deleteTable(editor, table),
+    // Structure
+    columnize: (editor, numberOfColumns, addParagraphAfter=true) => {
+        const sel = editor.document.getSelection();
+        const anchor = sel.anchorNode;
+        const hasColumns = !!closestElement(anchor, '.o_text_columns', true);
+        if (!numberOfColumns && hasColumns) {
+            // Remove columns.
+            const restore = preserveCursor(editor.document);
+            const container = closestElement(anchor, '.o_text_columns');
+            const rows = unwrapContents(container);
+            for (const row of rows) {
+                const columns = unwrapContents(row);
+                for (const column of columns) {
+                    const columnContents = unwrapContents(column);
+                    for (const node of columnContents) {
+                        node.ouid = undefined; // Allow move out of unbreakable
+                        for (const descendant of descendants(node)) {
+                            descendant.ouid = undefined; // Allow move out of unbreakable
+                        }
+                    }
+                }
+            }
+            restore();
+        } else if (numberOfColumns && !hasColumns) {
+            // Create columns.
+            const restore = preserveCursor(editor.document);
+            const container = document.createElement('div');
+            if (!closestElement(anchor, '.container')) {
+                container.classList.add('container');
+            }
+            container.classList.add('o_text_columns');
+            const row = document.createElement('div');
+            row.classList.add('row');
+            container.append(row);
+            const block = closestBlock(anchor);
+            block.ouid = undefined; // Allow move out of unbreakable
+            for (const descendant of descendants(block)) {
+                descendant.ouid = undefined; // Allow move out of unbreakable
+            }
+            const columnSize = Math.floor(12 / numberOfColumns);
+            const columns = [];
+            for (let i = 0; i < numberOfColumns; i++) {
+                const column = document.createElement('div');
+                column.classList.add(`col-lg-${columnSize}`);
+                row.append(column);
+                columns.push(column);
+            }
+            block.before(container);
+            columns.shift().append(block);
+            for (const column of columns) {
+                const p = document.createElement('p');
+                p.append(document.createElement('br'));
+                p.classList.add('oe-hint');
+                p.setAttribute('placeholder', 'New column...');
+                column.append(p);
+            }
+            restore();
+            if (addParagraphAfter) {
+                const p = document.createElement('p');
+                p.append(document.createElement('br'));
+                container.after(p);
+            }
+        } else if (numberOfColumns && hasColumns) {
+            const row = closestElement(anchor, '.row');
+            const columns = [...row.children];
+            const columnSize = Math.floor(12 / numberOfColumns);
+            const diff = numberOfColumns - columns.length;
+            if (diff > 0) {
+                // Add extra columns.
+                const restore = preserveCursor(editor.document);
+                for (const column of columns) {
+                    column.className = column.className.replace(REGEX_BOOTSTRAP_COLUMN, `col$1-${columnSize}`);
+                }
+                let lastColumn = columns[columns.length - 1];
+                for (let i = 0; i < diff; i++) {
+                    const column = document.createElement('div');
+                    column.classList.add(`col-lg-${columnSize}`);
+                    const p = document.createElement('p');
+                    p.append(document.createElement('br'));
+                    p.classList.add('oe-hint');
+                    p.setAttribute('placeholder', 'New column...');
+                    column.append(p);
+                    lastColumn.after(column);
+                    lastColumn = column;
+                }
+                restore();
+            } else if (diff < 0) {
+                // Remove superfluous columns.
+                const restore = preserveCursor(editor.document);
+                for (const column of columns) {
+                    column.className = column.className.replace(REGEX_BOOTSTRAP_COLUMN, `col$1-${columnSize}`);
+                }
+                const contents = [];
+                for (let i = diff; i < 0; i++) {
+                    const column = columns.pop();
+                    const columnContents = unwrapContents(column);
+                    for (const node of columnContents) {
+                        node.ouid = undefined; // Allow move out of unbreakable
+                        for (const descendant of descendants(node)) {
+                            descendant.ouid = undefined; // Allow move out of unbreakable
+                        }
+                    }
+                    contents.unshift(...columnContents);
+                }
+                columns[columns.length - 1].append(...contents);
+                restore();
+            }
+        }
+    },
     insertHorizontalRule(editor) {
         const selection = editor.document.getSelection();
         const range = selection.getRangeAt(0);
