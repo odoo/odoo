@@ -9,7 +9,6 @@ from odoo import api, http, models
 from odoo.http import request
 from odoo.tools import file_open, image_process, ustr
 from odoo.tools.misc import str2bool
-from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 _logger = logging.getLogger(__name__)
@@ -110,7 +109,12 @@ class Http(models.AbstractModel):
                 ) if session_uid else None,
             },
             "currencies": self.sudo().get_currencies(),
+            'bundle_params': {
+                'lang': request.session.context['lang'],
+            },
         }
+        if request.session.debug:
+            session_info['bundle_params']['debug'] = request.session.debug
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
             # but is still included in some other calls (e.g. '/web/session/authenticate')
@@ -118,13 +122,11 @@ class Http(models.AbstractModel):
             # with access to the backend ('internal'-type users)
             if request.db:
                 mods = list(request.registry._init_modules) + mods
-            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
             menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             session_info['cache_hashes'].update({
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
-                "qweb": qweb_checksum,
             })
             session_info.update({
                 # current_company should be default_company
@@ -157,7 +159,12 @@ class Http(models.AbstractModel):
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
             'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'bundle_params': {
+                'lang': request.session.context['lang'],
+            },
         }
+        if request.session.debug:
+            session_info['bundle_params']['debug'] = request.session.debug
         if session_uid:
             version_info = odoo.service.common.exp_version()
             session_info.update({

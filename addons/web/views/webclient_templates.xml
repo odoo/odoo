@@ -297,7 +297,6 @@
                     odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
                     odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.__session_info__.cache_hashes.load_menus}`).then(res => res.json());
                     odoo.loadMenusPromise = odoo.reloadMenus();
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
                     // Block to avoid leaking variables in the script scope
                     {
                         const { user_context,  cache_hashes } = odoo.__session_info__;

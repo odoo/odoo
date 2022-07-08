@@ -41,13 +41,6 @@ QUnit.module('LegacyViews', {
         var prom = testUtils.makeTestPromise();
         var loadJS = ajax.loadJS;
         const libraryLoadingStartedPromise = testUtils.makeTestPromise();
-        ajax.loadJS = function (url) {
-            libraryLoadingStartedPromise.resolve();
-            assert.step(url);
-            return prom.then(function () {
-                assert.step(url + ' loaded');
-            });
-        };
 
         var View = AbstractView.extend({
             jsLibs: [['a', 'b']],
@@ -57,6 +50,14 @@ QUnit.module('LegacyViews', {
             arch: '<fake/>',
             data: this.data,
             model: 'fake_model',
+            mockFetch: function (url) {
+                libraryLoadingStartedPromise.resolve();
+                assert.step(url);
+                return prom.then(function () {
+                    assert.step(url + ' loaded');
+                    return true;
+                });
+            },
         }).then(function (view) {
             assert.verifySteps(['a loaded', 'b loaded'],
                 "should wait for both libs to be loaded");
@@ -81,13 +82,6 @@ QUnit.module('LegacyViews', {
         };
         var loadJS = ajax.loadJS;
         const libraryLoadingStartedPromise = testUtils.makeTestPromise();
-        ajax.loadJS = function (url) {
-            libraryLoadingStartedPromise.resolve();
-            assert.step(url);
-            return proms[url].then(function () {
-                assert.step(url + ' loaded');
-            });
-        };
 
         var View = AbstractView.extend({
             jsLibs: [
@@ -100,6 +94,14 @@ QUnit.module('LegacyViews', {
             arch: '<fake/>',
             data: this.data,
             model: 'fake_model',
+            mockFetch: function (url) {
+                libraryLoadingStartedPromise.resolve();
+                assert.step(url);
+                return proms[url].then(function () {
+                    assert.step(url + ' loaded');
+                    return true;
+                });
+            },
         }).then(function (view) {
             assert.verifySteps(['c loaded'], "should wait for all libs to be loaded");
             ajax.loadJS = loadJS;

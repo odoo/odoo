@@ -1955,6 +1955,14 @@ var MockServer = Class.extend({
      * @returns {any}
      */
     _performFetch(resource, init) {
+        if (resource.match(/\/static(\/\S+\/|\/)libs?/)) {
+            // every lib must be includes into the test bundle.
+            return true;
+        }
+        if (resource.match(/\/web\/bundle\/[^.]+\.[^.]+/)) {
+            // every asset must be includes into the test bundle.
+            return true;
+        }
         throw new Error("Unimplemented resource: " + resource);
     },
     /**

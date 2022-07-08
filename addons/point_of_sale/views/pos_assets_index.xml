@@ -36,7 +36,6 @@
             // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
             // what is genuinely necessary, and not the whole backend.
             odoo.loadMenusPromise = Promise.resolve();
-            odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
         </script>
 
         <t t-call="point_of_sale.assets_common"/>
