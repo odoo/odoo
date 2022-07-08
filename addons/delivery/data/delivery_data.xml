@@ -24,5 +24,12 @@
             <field name="delivery_type">fixed</field>
             <field name="product_id" ref="delivery.product_product_delivery"/>
         </record>
+        <record id="print_shipping_label" model="ir.actions.server">
+            <field name="name">Print Shipping Labels</field>
+            <field name="model_id" ref="delivery.model_stock_picking"/>
+            <field name="binding_model_id" ref="delivery.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">action = records.print_shipping_labels()</field>
+        </record>
     </data>
 </odoo>

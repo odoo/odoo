@@ -99,6 +99,7 @@ class StockPicking(models.Model):
         help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
+    picking_label_ids = fields.One2many('ir.attachment', compute='_compute_picking_label_ids')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
@@ -120,6 +121,13 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
+
+    def _compute_picking_label_ids(self):
+        for picking in self:
+            if picking.carrier_id:
+                picking.picking_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'ilike', '%s%%' % picking.carrier_id.get_label_prefix())])
+            else:
+                picking.picking_label_ids = False
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
@@ -211,6 +219,15 @@ class StockPicking(models.Model):
     def print_return_label(self):
         self.ensure_one()
         self.carrier_id.get_return_label(self)
+
+    def print_shipping_labels(self):
+        if self.picking_label_ids:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/print/shipping/%s' % ', '.join(str(id) for id in self.ids),
+            }
+        else:
+            raise UserError(_("No shipping labels to print"))
 
     def _add_delivery_cost_to_so(self):
         self.ensure_one()

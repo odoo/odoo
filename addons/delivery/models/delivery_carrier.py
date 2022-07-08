@@ -213,6 +213,9 @@ class DeliveryCarrier(models.Model):
         if self.can_generate_return:
             return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings, tracking_number, origin_date)
 
+    def get_label_prefix(self):
+        return "Label"
+
     def get_return_label_prefix(self):
         return 'ReturnLabel-%s' % self.delivery_type
 
