@@ -11,7 +11,12 @@
                     <span class="o_pager_value d-inline-block border-bottom border-white" t-esc="value" t-on-click="onValueClick" />
                 </t>
                 <span> / </span>
-                <span class="o_pager_limit" t-esc="props.total" />
+                <t t-if="state.total == 10000">
+                    <span class="o_pager_limit" t-on-click.stop="() => this.updateCounter()">10000+</span>
+                </t>
+                <t t-else="">
+                    <span class="o_pager_limit" t-esc="state.total"/>
+                </t>
             </span>
             <span class="btn-group" aria-atomic="true">
                 <!-- accesskeys not wanted in X2Many widgets -->

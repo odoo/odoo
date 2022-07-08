@@ -22,6 +22,7 @@ export class Pager extends Component {
         this.state = useState({
             isEditing: false,
             isDisabled: false,
+            total: this.props.total,
         });
         this.inputRef = useAutofocus();
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
@@ -37,7 +38,7 @@ export class Pager extends Component {
      * @returns {number}
      */
     get maximum() {
-        return Math.min(this.props.offset + this.props.limit, this.props.total);
+        return Math.min(this.props.offset + this.props.limit, this.state.total);
     }
     /**
      * @returns {string}
@@ -53,20 +54,30 @@ export class Pager extends Component {
      * @returns {boolean} true if there is only one page
      */
     get isSinglePage() {
-        return this.minimum === 1 && this.maximum === this.props.total;
+        return this.minimum === 1 && this.maximum === this.state.total;
     }
-
+    /**
+     * Recompute total number of records, if we were at the limit of 10000
+     */
+    async updateCounter() {
+        if (this.state.total == 10000) {
+            this.state.total = await this.env.searchModel.getSearchCount();
+        }
+    }
     /**
      * @param {-1 | 1} direction
      */
     navigate(direction) {
         let minimum = this.props.offset + this.props.limit * direction;
-        if (minimum >= this.props.total) {
+        if ((minimum+this.props.limit) >= this.state.total) {
+            this.updateCounter();
+        }
+        if (minimum >= this.state.total) {
             minimum = 0;
         } else if (minimum < 0 && this.props.limit === 1) {
-            minimum = this.props.total - 1;
+            minimum = this.state.total - 1;
         } else if (minimum < 0 && this.props.limit > 1) {
-            minimum = this.props.total - (this.props.total % this.props.limit || this.props.limit);
+            minimum = this.state.total - (this.state.total % this.props.limit || this.props.limit);
         }
         this.update(minimum, this.props.limit, true);
     }
@@ -76,7 +87,8 @@ export class Pager extends Component {
      */
     parse(value) {
         let [minimum, maximum] = value.trim().split(/\s*[-\s,;]\s*/);
-        const clamp = (value) => Math.min(Math.max(value, 1), this.props.total);
+        this.updateCounter();
+        const clamp = (value) => Math.min(Math.max(value, 1), this.state.total);
         return {
             minimum: clamp(parseInt(minimum, 10)) - 1,
             maximum: clamp(maximum ? parseInt(maximum, 10) : minimum),

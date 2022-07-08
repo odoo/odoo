@@ -779,7 +779,12 @@ export class SearchModel extends EventBus {
         }
         return searchItems;
     }
-
+    /**
+     * Returns the total (unbounded) number of records in the domain
+     */
+    async getSearchCount() {
+        return await this.orm.call(this.resModel, "search_count", [this._getDomain()]);
+    }
     /**
      * Returns a sorted list of a copy of all sections. This list can be
      * filtered by a given predicate.
