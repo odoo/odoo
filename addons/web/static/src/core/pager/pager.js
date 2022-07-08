@@ -60,7 +60,7 @@ export class Pager extends Component {
      * Recompute total number of records, if we were at the limit of 10000
      */
     async updateCounter() {
-        if (this.state.total == 10000) {
+        if (this.state.total === 10000) {
             this.state.total = await this.env.searchModel.getSearchCount();
         }
     }
