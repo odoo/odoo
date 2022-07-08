@@ -3171,7 +3171,7 @@ class MailThread(models.AbstractModel):
         return True
 
     def _message_update_content(self, message, body, attachment_ids=None,
-                                strict=True):
+                                strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
         specific code (see ``_message_post_process_attachments``), to be added
         when necessary.
@@ -3189,6 +3189,9 @@ class MailThread(models.AbstractModel):
           content. This should be skipped only when really necessary as it
           creates issues with already-sent notifications, lack of content
           tracking, ...
+
+        Kwargs are supported, notably to match mail.message fields to update.
+        See content of this method for more details about supported keys.
         """
         self.ensure_one()
         if strict:
@@ -3207,6 +3210,17 @@ class MailThread(models.AbstractModel):
             message.attachment_ids._delete_and_notify()
         if msg_values:
             message.write(msg_values)
+
+        if 'scheduled_date' in kwargs:
+            # update scheduled datetime
+            if kwargs['scheduled_date']:
+                self.env['mail.message.schedule'].sudo()._update_message_scheduled_datetime(
+                    message,
+                    kwargs['scheduled_date']
+                )
+            # (re)send notifications
+            else:
+                self.env['mail.message.schedule'].sudo()._send_message_notifications(message)
 
         # cleanup related message data if the message is empty
         message.sudo()._filter_empty()._cleanup_side_records()
