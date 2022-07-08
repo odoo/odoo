@@ -1272,7 +1272,15 @@ body.editor_enable.editor_has_snippets {
 
         // Progress bar widget
         we-range.o_we_user_value_widget {
-
+            &[data-display-range-value] {
+                input[type="range"] {
+                    // Needed because without it the output overflows to the right
+                    // and makes a horizontal scrollbar appear on
+                    // 'o_we_customize_panel' if 'o_we_customize_panel' already has
+                    // a vertical scrollbar.
+                    min-width: 0;
+                }
+            }
             input[type="range"] {
                 @include large-component();
                 height: $o-we-sidebar-content-field-height;
