@@ -56,7 +56,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Add a new project.',
     run: 'click',
 }, {
-    trigger: 'input.o_field_widget.o_project_name',
+    trigger: '.o_field_widget.o_project_name input',
     content: 'Select your project name (e.g. Project for Freeman)',
     run: function (actions) {
         actions.text('Project for Freeman', this.$anchor);
