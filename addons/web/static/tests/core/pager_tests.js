@@ -261,4 +261,92 @@ QUnit.module("Components", ({ beforeEach }) => {
         await triggerEvent(target, null, "mousedown");
         assert.containsNone(target, "input", "the pager should not contain an input");
     });
+
+    QUnit.test("updateTotal props: click on total", async function (assert) {
+        const pager = await makePager({
+            offset: 0,
+            limit: 5,
+            total: 10,
+            onUpdate() {},
+            updateTotal() {
+                pager.updateProps({ total: 25, updateTotal: undefined });
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_limit_fetch");
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "25");
+        assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+    });
+
+    QUnit.test("updateTotal props: click next", async function (assert) {
+        const pager = await makePager({
+            offset: 0,
+            limit: 5,
+            total: 10,
+            onUpdate(data) {
+                pager.updateProps(Object.assign({}, data));
+            },
+            async updateTotal() {
+                const total = 25;
+                pager.updateProps({ total, updateTotal: undefined });
+                return total;
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_next");
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "6-10");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_next");
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "11-15");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "25");
+        assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+    });
+
+    QUnit.test("updateTotal props: edit input", async function (assert) {
+        const pager = await makePager({
+            offset: 0,
+            limit: 5,
+            total: 10,
+            onUpdate(data) {
+                pager.updateProps(Object.assign({}, data));
+            },
+            async updateTotal() {
+                const total = 25;
+                pager.updateProps({ total, updateTotal: undefined });
+                return total;
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_value");
+        let input = target.querySelector(".o_pager_counter input.o_pager_value");
+        input.value = "3-8";
+        await triggerEvents(input, null, ["change", "blur"]);
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-8");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_value");
+        input = target.querySelector(".o_pager_counter input.o_pager_value");
+        input.value = "3-20";
+        await triggerEvents(input, null, ["change", "blur"]);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-20");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "25");
+        assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+    });
 });

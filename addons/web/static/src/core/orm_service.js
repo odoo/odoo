@@ -178,11 +178,11 @@ export class ORM {
     }
 
     searchCount(model, domain, ctx = {}) {
-        validateArray('domain', domain);
+        validateArray("domain", domain);
         const kwargs = {
             context: ctx,
         };
-        return this.call(model, 'search_count', [domain], kwargs);
+        return this.call(model, "search_count", [domain], kwargs);
     }
 
     unlink(model, ids, ctx) {
@@ -211,7 +211,7 @@ export class ORM {
         validateArray("domain", domain);
         validatePrimitiveList("fields", "string", fields);
         const kwargs = { context: ctx, domain, fields };
-        assignOptions(kwargs, options, ["offset", "limit", "order"]);
+        assignOptions(kwargs, options, ["offset", "limit", "order", "count_limit"]);
         return this.call(model, "web_search_read", [], kwargs);
     }
 

@@ -111,10 +111,11 @@ export class ListController extends Component {
 
         usePager(() => {
             const list = this.model.root;
+            const { count, hasLimitedCount, isGrouped, limit, offset } = list;
             return {
-                offset: list.offset,
-                limit: list.limit,
-                total: list.count,
+                offset: offset,
+                limit: limit,
+                total: count,
                 onUpdate: async ({ offset, limit }, hasNavigated) => {
                     if (this.model.root.editedRecord) {
                         if (!(await this.model.root.editedRecord.save())) {
@@ -127,6 +128,7 @@ export class ListController extends Component {
                         this.onPageChangeScroll();
                     }
                 },
+                updateTotal: !isGrouped && hasLimitedCount ? () => list.fetchCount() : undefined,
             };
         });
 

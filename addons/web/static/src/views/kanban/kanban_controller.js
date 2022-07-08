@@ -50,17 +50,20 @@ export class KanbanController extends Component {
             },
         });
         usePager(() => {
-            if (!this.model.root.isGrouped) {
+            const root = this.model.root;
+            const { count, hasLimitedCount, isGrouped, limit, offset } = root;
+            if (!isGrouped) {
                 return {
-                    offset: this.model.root.offset,
-                    limit: this.model.root.limit,
-                    total: this.model.root.count,
+                    offset: offset,
+                    limit: limit,
+                    total: count,
                     onUpdate: async ({ offset, limit }) => {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
                         this.render(true); // FIXME WOWL reactivity
                     },
+                    updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
                 };
             }
         });

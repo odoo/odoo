@@ -11,7 +11,12 @@
                     <span class="o_pager_value d-inline-block border-bottom border-white" t-esc="value" t-on-click="onValueClick" />
                 </t>
                 <span> / </span>
-                <span class="o_pager_limit" t-esc="props.total" />
+                <t t-if="props.updateTotal">
+                    <span class="o_pager_limit o_pager_limit_fetch" t-on-click.stop="props.updateTotal"><t t-esc="props.total"/>+</span>
+                </t>
+                <t t-else="">
+                    <span class="o_pager_limit" t-esc="props.total"/>
+                </t>
             </span>
             <span class="btn-group" aria-atomic="true">
                 <!-- accesskeys not wanted in X2Many widgets -->

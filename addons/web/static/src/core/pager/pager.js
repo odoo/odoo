@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useAutofocus } from "../utils/hooks";
+import { clamp } from "../utils/numbers";
 
 const { Component, useExternalListener, useState } = owl;
 
@@ -55,18 +56,21 @@ export class Pager extends Component {
     get isSinglePage() {
         return this.minimum === 1 && this.maximum === this.props.total;
     }
-
     /**
      * @param {-1 | 1} direction
      */
-    navigate(direction) {
+    async navigate(direction) {
         let minimum = this.props.offset + this.props.limit * direction;
-        if (minimum >= this.props.total) {
+        let total = this.props.total;
+        if (this.props.updateTotal && minimum + this.props.limit > total) {
+            total = await this.props.updateTotal();
+        }
+        if (minimum >= total) {
             minimum = 0;
         } else if (minimum < 0 && this.props.limit === 1) {
-            minimum = this.props.total - 1;
+            minimum = total - 1;
         } else if (minimum < 0 && this.props.limit > 1) {
-            minimum = this.props.total - (this.props.total % this.props.limit || this.props.limit);
+            minimum = total - (total % this.props.limit || this.props.limit);
         }
         this.update(minimum, this.props.limit, true);
     }
@@ -74,19 +78,24 @@ export class Pager extends Component {
      * @param {string} value
      * @returns {{ minimum: number, maximum: number }}
      */
-    parse(value) {
+    async parse(value) {
         let [minimum, maximum] = value.trim().split(/\s*[-\s,;]\s*/);
-        const clamp = (value) => Math.min(Math.max(value, 1), this.props.total);
+        minimum = parseInt(minimum, 10);
+        maximum = maximum ? parseInt(maximum, 10) : minimum;
+        let total = this.props.total;
+        if (this.props.updateTotal && maximum > total) {
+            total = await this.props.updateTotal();
+        }
         return {
-            minimum: clamp(parseInt(minimum, 10)) - 1,
-            maximum: clamp(maximum ? parseInt(maximum, 10) : minimum),
+            minimum: clamp(minimum, 1, total) - 1,
+            maximum: clamp(maximum, 1, total),
         };
     }
     /**
      * @param {string} value
      */
-    setValue(value) {
-        const { minimum, maximum } = this.parse(value);
+    async setValue(value) {
+        const { minimum, maximum } = await this.parse(value);
 
         if (!isNaN(minimum) && !isNaN(maximum) && minimum < maximum) {
             this.update(minimum, maximum - minimum);
@@ -163,4 +172,5 @@ Pager.props = {
     onUpdate: Function,
     isEditable: { type: Boolean, optional: true },
     withAccessKey: { type: Boolean, optional: true },
+    updateTotal: { type: Function, optional: true },
 };

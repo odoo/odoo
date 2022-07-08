@@ -1719,6 +1719,10 @@ export class MockServer {
             sort: kwargs.order || args[4],
             context: kwargs.context,
         });
+        const countLimit = kwargs.count_limit || args[5];
+        if (countLimit) {
+            result.length = Math.min(result.length, countLimit);
+        }
         return result;
     }
 
