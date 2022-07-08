@@ -1085,6 +1085,30 @@ QUnit.module("utils", () => {
             assert.verifySteps(["base.fn", "extension.fn"]);
         });
 
+        QUnit.test("keep original descriptor details", async function (assert) {
+            class BaseClass {
+                // getter declared in classes are not enumerable
+                get getter() {
+                    return false;
+                }
+            }
+            let descriptor = Object.getOwnPropertyDescriptor(BaseClass.prototype, "getter");
+            let getterFn = descriptor.get;
+            assert.strictEqual(descriptor.configurable, true);
+            assert.strictEqual(descriptor.enumerable, false);
+
+            patch(BaseClass.prototype, "patch", {
+                // getter declared in object are enumerable
+                get getter() {
+                    return true;
+                },
+            });
+            descriptor = Object.getOwnPropertyDescriptor(BaseClass.prototype, "getter");
+            assert.strictEqual(descriptor.configurable, true);
+            assert.strictEqual(descriptor.enumerable, false);
+            assert.notStrictEqual(getterFn, descriptor.get);
+        });
+
         QUnit.module("other");
 
         QUnit.test("patch an object", async function (assert) {
