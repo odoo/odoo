@@ -6,15 +6,16 @@ from lxml import etree
 
 from odoo import fields
 from odoo.tests import tagged
-from odoo.addons.l10n_it_edi_sdicoop.tests.test_edi_xml import TestItEdiCommon
+from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdiReverseCharge(TestItEdiCommon):
+class TestItEdiReverseCharge(TestItEdi):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
+        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
+                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
 
         # Helper functions -----------
         def get_tag_ids(tag_codes):
@@ -180,7 +181,7 @@ class TestItEdiReverseCharge(TestItEdiCommon):
         )
 
     def _test_invoice_with_sample_file(self, invoice, filename, xpaths_file=None, xpaths_result=None):
-        result = self._cleanup_etree(invoice._export_as_xml(), xpaths_result)
+        result = self._cleanup_etree(self.edi_format._export_as_xml(invoice), xpaths_result)
         expected = self._cleanup_etree(self._get_test_file_content(filename), xpaths_file)
         self.assertXmlTreeEqual(result, expected)
 

@@ -8,34 +8,18 @@ from freezegun import freeze_time
 
 from odoo import tools
 from odoo.tests import tagged
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-class TestItEdiCommon(AccountEdiTestCommon):
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestItEdiExport(TestItEdi):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
                            edi_format_ref='l10n_it_edi.edi_fatturaPA')
-
-        # Use the company_data_2 to test that the e-invoice is imported for the right company
-        cls.company = cls.company_data_2['company']
-
-        cls.company.l10n_it_codice_fiscale = '01234560157'
-        cls.company.vat = 'IT01234560157'
-        cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
-                'partner_id': cls.company.partner_id.id,
-                'acc_number': 'IT1212341234123412341234123',
-                'bank_name': 'BIG BANK',
-                'bank_bic': 'BIGGBANQ',
-        })
-        cls.company.l10n_it_tax_system = "RF01"
-        cls.company.street = "1234 Test Street"
-        cls.company.zip = "12345"
-        cls.company.city = "Prova"
-        cls.company.country_id = cls.env.ref('base.it')
 
         cls.price_included_tax = cls.env['account.tax'].create({
             'name': '22% price included tax',
@@ -118,13 +102,6 @@ class TestItEdiCommon(AccountEdiTestCommon):
             'country_id': cls.env.ref('base.us').id,
             'is_company': True,
         })
-
-        cls.standard_line = {
-            'name': 'standard_line',
-            'quantity': 1,
-            'price_unit': 800.40,
-            'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
-        }
 
         cls.standard_line_below_400 = {
             'name': 'cheap_line',
@@ -290,15 +267,6 @@ class TestItEdiCommon(AccountEdiTestCommon):
             ],
         })
 
-        # We create this because we are unable to post without a proxy user existing
-        cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
-            'id_client': 'l10n_it_edi_sdicoop_test',
-            'company_id': cls.company.id,
-            'edi_format_id': cls.edi_format.id,
-            'edi_identification': 'l10n_it_edi_sdicoop_test',
-            'private_key': 'l10n_it_edi_sdicoop_test',
-        })
-
         cls.zero_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
@@ -335,13 +303,10 @@ class TestItEdiCommon(AccountEdiTestCommon):
     @classmethod
     def _get_test_file_content(cls, filename):
         """ Get the content of a test file inside this module """
-        path = 'l10n_it_edi_sdicoop/tests/expected_xmls/' + filename
+        path = 'l10n_it_edi/tests/expected_xmls/' + filename
         with tools.file_open(path, mode='rb') as test_file:
             return test_file.read()
 
-
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdi(TestItEdiCommon):
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
             equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
@@ -415,7 +380,7 @@ class TestItEdi(TestItEdiCommon):
                     2577.29
                 </xpath>
             ''')
-        invoice_etree = etree.fromstring(self.price_included_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.price_included_invoice))
         # Remove the attachment and its details
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
@@ -424,7 +389,7 @@ class TestItEdi(TestItEdiCommon):
         # The EDI can account for discounts, but a line with, for example, a 100% discount should still have
         # a corresponding tax with a base amount of 0
 
-        invoice_etree = etree.fromstring(self.partial_discount_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.partial_discount_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -481,7 +446,7 @@ class TestItEdi(TestItEdiCommon):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_fully_discounted_inovice(self):
-        invoice_etree = etree.fromstring(self.full_discount_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.full_discount_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -518,7 +483,7 @@ class TestItEdi(TestItEdiCommon):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_non_latin_and_latin_invoice(self):
-        invoice_etree = etree.fromstring(self.non_latin_and_latin_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.non_latin_and_latin_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -567,7 +532,7 @@ class TestItEdi(TestItEdiCommon):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_below_400_codice_simplified_invoice(self):
-        invoice_etree = etree.fromstring(self.below_400_codice_simplified_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.below_400_codice_simplified_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_simplified_basis_xml),
             '''
@@ -597,7 +562,7 @@ class TestItEdi(TestItEdiCommon):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_total_400_VAT_simplified_invoice(self):
-        invoice_etree = etree.fromstring(self.total_400_VAT_simplified_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.total_400_VAT_simplified_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_simplified_basis_xml),
             '''
@@ -635,7 +600,7 @@ class TestItEdi(TestItEdiCommon):
         self.assertEqual(res[self.pa_partner_invoice], {'attachment': self.pa_partner_invoice.l10n_it_edi_attachment_id, 'success': True})
 
     def test_zero_percent_taxes(self):
-        invoice_etree = etree.fromstring(self.zero_tax_invoice._export_as_xml())
+        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.zero_tax_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''

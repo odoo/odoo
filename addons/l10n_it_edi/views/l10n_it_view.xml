@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="fetchmail_server_form_l10n_it" model="ir.ui.view">
-        <field name="name">fetchmail.server.form.l10n.it</field>
-        <field name="model">fetchmail.server</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="mail.view_email_server_form"/>
-        <field name="arch" type="xml">
-        <data>
-            <xpath expr="//field[@name='date']" position="after">
-                <field name="l10n_it_is_pec"/>
-            </xpath>
-        </data>
-        </field>
-    </record>
-
     <record id="account_tax_form_l10n_it" model="ir.ui.view">
         <field name="name">account.tax.form.l10n.it</field>
         <field name="model">account.tax</field>
@@ -58,11 +44,6 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//div[hasclass('o_address_format')]" position="after">
-                <field name="l10n_it_mail_pec_server_id" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
-                <field name="l10n_it_address_send_fatturapa" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
-                <field name="l10n_it_address_recipient_fatturapa" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
-            </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
                 <field name="l10n_it_tax_system" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
@@ -102,46 +83,6 @@
         </field>
     </record>
 
-    <record id="invoice_supplier_tree_l10n_it" model="ir.ui.view">
-        <field name="name">account.invoice.supplier.tree.l10n.it</field>
-        <field name="model">account.move</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="account.view_move_tree"/>
-        <field name="arch" type="xml">
-        <data>
-            <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="l10n_it_send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
-                                            'delivered': 'success', 'delivered_accepted': 'success', 'delivered_refused': 'success', 'delivered_expired': 'success', 'failed_delivery': 'success'}}"/>
-
-                <button icon="fa-paper-plane-o" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}"/>
-                <button icon="fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}"/>
-                <button icon="fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
-            </xpath>
-        </data>
-        </field>
-    </record>
-
-    <record id="invoice_kanban_l10n_it" model="ir.ui.view">
-        <field name="name">account.invoice.kanban.l10n.it</field>
-        <field name="model">account.move</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="account.view_account_move_kanban"/>
-        <field name="arch" type="xml">
-        <data>
-            <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="l10n_it_send_state"/>
-            </xpath>
-
-            <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="inside">
-                <i class="text-success fa fa-plus-circle" aria-label="New" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
-                <i class="text-warning fa fa-paper-plane-o" aria-label="Sent, waiting for response" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
-                <i class="text-danger fa fa-exclamation-triangle" aria-label="Sent, but invalid" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
-                <i class="text-success fa fa-check" aria-label="Delivered Invoice" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
-            </xpath>
-        </data>
-        </field>
-    </record>
-
     <record id="account_invoice_form_l10n_it" model="ir.ui.view">
         <field name="name">account.move.form.l10n.it</field>
         <field name="model">account.move</field>
@@ -149,20 +90,6 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='move_type']" position="before">
-                <div class="alert alert-success" role="alert"
-                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
-                    <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
-                </div>
-                <div class="alert alert-warning" role="alert"
-                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'sent')]}">
-                    <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}">
-                    <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
-                </div>
-            </xpath>
             <xpath expr="//page[@name='other_info']" position="after">
                 <page string="Electronic Invoicing"
                     name="electronic_invoicing"
@@ -177,24 +104,6 @@
                 </page>
             </xpath>
         </data>
-        </field>
-    </record>
-
-    <record id="view_account_invoice_filter_l10n_it" model="ir.ui.view">
-        <field name="name">account.invoice.select.l10n.it</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='late']" position="after">
-                <separator/>
-                <filter name="error" string="E-invoice error" domain="[('l10n_it_send_state', '=', 'invalid')]"/>
-                <filter name="sent" string="E-invoice sent" domain="[('l10n_it_send_state', '=', 'sent')]"/>
-                <filter name="no_sent" string="E-invoice to send" domain="[('l10n_it_send_state', 'in', ['to_send',False])]"/>
-                <filter name="delivered" string="E-invoice delivered" domain="[('l10n_it_send_state', 'in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]"/>
-            </xpath>
-            <xpath expr="//filter[@name='status']" position="after">
-                <filter name="send_status" string="Send status" context="{'group_by':'l10n_it_send_state'}"/>
-            </xpath>
         </field>
     </record>
 
