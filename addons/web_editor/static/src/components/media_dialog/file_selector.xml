@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.FileSelectorControlPanel" owl="1">
-    <div class="form-inline align-items-center py-4">
+    <div class="row align-items-center py-4">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
 
-        <div class="d-flex justify-content-start align-items-center flex-grow-1 ms-2">
-            <div t-if="props.showOptimizedOption" class="custom-control form-switch align-items-center me-2" t-on-change="props.changeShowOptimized">
-                <input class="o_we_show_optimized ms-2 form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
+        <div class="col">
+            <div t-if="props.showOptimizedOption" class="form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
+                <input class="o_we_show_optimized form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
                 <label class="form-check-label" for="o_we_show_optimized_switch">
                     Show optimized images
                 </label>
@@ -18,22 +18,20 @@
             </select>
         </div>
 
-        <div class="input-group align-items-center ms-2">
-            <input type="text" class="form-control o_we_url_input o_we_transition_ease me-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
-            <div class="input-group-append align-items-center">
-                <button type="button" class="btn o_upload_media_url_button" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
+        <div class="col input-group">
+            <input type="text" class="form-control flex-grow-0 o_we_url_input o_we_transition_ease me-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
+            <button type="button" class="btn o_upload_media_url_button" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>
-                </button>
-                <div class="mx-2">
-                    <span t-if="state.urlInput and state.isValidUrl and state.isValidFileFormat" class="o_we_url_success text-success fa fa-lg fa-check" title="The URL seems valid."/>
-                    <span t-if="state.urlInput and !state.isValidUrl" class="o_we_url_error text-danger fa fa-lg fa-times" title="The URL does not seem to work."/>
-                    <span t-if="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
-                </div>
+            </button>
+            <div>
+                <span t-if="state.urlInput and state.isValidUrl and state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
+                <span t-if="state.urlInput and !state.isValidUrl" class="o_we_url_error text-danger mx-2 fa fa-lg fa-times" title="The URL does not seem to work."/>
+                <span t-if="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
             </div>
         </div>
 
         <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
-        <div class="btn-group">
+        <div class="col-auto btn-group">
             <button type="button" class="btn btn-primary o_upload_media_button" t-on-click="onClickUpload">
                 <t t-esc="props.uploadText"/>
             </button>
