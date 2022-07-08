@@ -45,7 +45,7 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
         """
         Performs a search_read and a search_count.
 
@@ -66,7 +66,7 @@ class Base(models.AbstractModel):
                 'records': []
             }
         if limit and (len(records) == limit or self.env.context.get('force_search_count')):
-            length = self.search_count(domain)
+            length = self.search_count(domain, limit=count_limit)
         else:
             length = len(records) + offset
         return {
