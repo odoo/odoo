@@ -3,7 +3,7 @@
     <t t-name="web.SettingsPage" owl="1">
         <div class="settings_tab">
             <t t-foreach="props.modules" t-as="module" t-key="module.key">
-                <div class="tab" t-att-class="(state.selectedTab === module.key and state.search.value.length === 0) ? 'selected': ''" t-att-data-key="module.key" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
+                <div class="tab" t-if="!module.isVisible" t-att-class="(state.selectedTab === module.key and state.search.value.length === 0) ? 'selected': ''" t-att-data-key="module.key" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
                     <div class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="module.string"/></span>
                 </div>
             </t>

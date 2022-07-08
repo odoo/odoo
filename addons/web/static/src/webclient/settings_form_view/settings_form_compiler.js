@@ -2,6 +2,7 @@
 
 import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
+import { getModifier } from "@web/views/view_compiler";
 
 function compileSettingsPage(el, params) {
     const settings = createElement("SettingsPage");
@@ -14,16 +15,15 @@ function compileSettingsPage(el, params) {
 
     for (const child of el.children) {
         if (child.nodeName === "div" && child.classList.value.includes("app_settings_block")) {
-            const module = {
+            params.module = {
                 key: child.getAttribute("data-key"),
                 string: child.getAttribute("string"),
                 imgurl: getAppIconUrl(child.getAttribute("data-key")),
-                notApp: child.classList.value.includes("o_not_app"),
+                isVisible: getModifier(child, "invisible"),
             };
-            params.module = module;
             params.config = {};
             if (!child.classList.value.includes("o_not_app")) {
-                modules.push(module);
+                modules.push(params.module);
                 append(settings, this.compileNode(child, params));
             }
         }
