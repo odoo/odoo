@@ -523,14 +523,19 @@ class StockMove(models.Model):
                     move_line.qty_done = 1
             move.write({'move_line_ids': move_lines_commands})
 
-    @api.depends('picking_type_id', 'date', 'priority')
+    @api.depends('picking_type_id', 'picking_type_id.reservation_method', 'picking_type_id.reservation_days_before', 'picking_type_id.reservation_days_before_priority', 'date', 'state', 'priority')
     def _compute_reservation_date(self):
         for move in self:
-            if move.picking_type_id.reservation_method == 'by_date' and move.state in ['draft', 'confirmed', 'waiting', 'partially_available']:
-                days = move.picking_type_id.reservation_days_before
-                if move.priority == '1':
-                    days = move.picking_type_id.reservation_days_before_priority
-                move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
+            reservation_date = False
+            if move.state in ['confirmed', 'partially_available']:
+                if move.picking_type_id.reservation_method == 'at_confirm':
+                    reservation_date = fields.Date.today()
+                elif move.picking_type_id.reservation_method == 'by_date':
+                    days = move.picking_type_id.reservation_days_before
+                    if move.priority == '1':
+                        days = move.picking_type_id.reservation_days_before_priority
+                    reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
+            move.reservation_date = reservation_date
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -1259,16 +1264,23 @@ class StockMove(models.Model):
         neg_r_moves._assign_picking()
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
-        moves.filtered(lambda move: not move.picking_id.immediate_transfer
-                       and move.state in ('confirmed', 'partially_available')
-                       and (move._should_bypass_reservation()
-                            or move.picking_type_id.reservation_method == 'at_confirm'
-                            or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
-             ._action_assign()
+        moves._get_moves_to_assign()._action_assign()
         if new_push_moves:
             new_push_moves._action_confirm()
 
         return moves
+
+    def _get_moves_to_assign(self):
+        return self.filtered(
+            lambda move:
+                not move.picking_id.immediate_transfer
+                and move.state in ('confirmed', 'partially_available')
+                and (
+                    move._should_bypass_reservation()
+                    or move.picking_type_id.reservation_method == 'at_confirm'
+                    or move.reservation_date and move.reservation_date <= fields.Date.today()
+                )
+        )
 
     def _prepare_procurement_origin(self):
         self.ensure_one()

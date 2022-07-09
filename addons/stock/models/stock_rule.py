@@ -516,6 +516,7 @@ class ProcurementGroup(models.Model):
         moves_domain = [
             ('state', 'in', ['confirmed', 'partially_available']),
             ('product_uom_qty', '!=', 0.0),
+            ('picking_type_id.reservation_method', '!=', 'manual'),
             ('reservation_date', '<=', fields.Date.today())
         ]
         if company_id:
