@@ -173,7 +173,10 @@ def redirect_with_hash(url, code=303):
     # so we don't need any special handling anymore. This function could be dropped in the future.
     # seealso : http://www.rfc-editor.org/info/rfc7231
     #           https://tools.ietf.org/html/rfc7231#section-7.1.2
-    return werkzeug.utils.redirect(url, code)
+    if isinstance(url, str):
+        return werkzeug.utils.redirect(url, code)
+    else:
+        return werkzeug.utils.redirect(url.decode(), code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
