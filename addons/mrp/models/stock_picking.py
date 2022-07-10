@@ -48,7 +48,7 @@ class StockPickingType(models.Model):
             remaining.count_mo_late = False
 
     def get_mrp_stock_picking_action_picking_type(self):
-        action = self.env.ref('mrp.mrp_production_action_picking_deshboard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id('mrp.mrp_production_action_picking_deshboard')
         if self:
             action['display_name'] = self.display_name
         return action

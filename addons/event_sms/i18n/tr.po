@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,11 @@ msgid ""
 "object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
 " We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name veya object.event_id.company_id.name "
+"veya user.env.company.name }}: {{ object.event_id.name }} etkinliğinin {{ "
+"object.event_id.name }} başladığını hatırlatmaktan heyecan duyuyoruz. "
+"object.get_date_range_str() }}. Kaydınızı onaylıyoruz ve sizinle orada "
+"buluşmayı umuyoruz."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -85,3 +90,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name veya object.event_id.company_id.name "
+"veya user.env.company.name }}: {{ object.event_id.name }} etkinliğine "
+"kaydınızı onaylamaktan mutluluk duyuyoruz."

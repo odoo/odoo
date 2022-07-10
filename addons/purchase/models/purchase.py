@@ -509,6 +509,7 @@ class PurchaseOrder(models.Model):
 
         # 1) Prepare invoice vals and clean-up the section lines
         invoice_vals_list = []
+        sequence = 10
         for order in self:
             if order.invoice_status != 'to invoice':
                 continue
@@ -524,9 +525,15 @@ class PurchaseOrder(models.Model):
                     continue
                 if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_account_move_line()))
+                        line_vals = pending_section._prepare_account_move_line()
+                        line_vals.update({'sequence': sequence})
+                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                        sequence += 1
                         pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
+                    line_vals = line._prepare_account_move_line()
+                    line_vals.update({'sequence': sequence})
+                    invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                    sequence += 1
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:

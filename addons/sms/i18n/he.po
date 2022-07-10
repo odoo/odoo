@@ -14,6 +14,7 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Amit Spilman <amit@laylinetech.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: Netta Waizer, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -381,7 +382,7 @@ msgstr "שדה המשמש לאחסון מספר טלפון מאומת. עוזר 
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr ""
+msgstr "ביטוי מציין מיקום סופי, להעתק-הדבק בשדה התבנית הרצוי."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
@@ -658,6 +659,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"סוג הודעה: אימייל להודעת דואר אלקטרוני, התראה על הודעת מערכת, הערה להודעות "
+"אחרות כגון תשובות משתמשים"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -761,11 +764,14 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"שפת תרגום אופציונלית (קוד ISO) לבחירה בעת שליחת אימייל. אם לא מוגדר, הגרסה "
+"האנגלית תשמש. בדרך כלל זה צריך להיות ביטוי מציין מיקום המספק את השפה "
+"המתאימה, למשל. {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "ערך אופציונלי לשימוש אם שדה היעד ריק"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -795,7 +801,7 @@ msgstr "נייד"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "ביטוי מציין מקום"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -867,7 +873,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "דגם עיבוד"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1027,6 +1033,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"בחר שדה יעד ממודל המסמך הקשור.\n"
+"אם זה שדה קשר תוכל לבחור שדה יעד ביעד הקשר."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1149,12 +1157,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "שדה משנה"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "תת דגם"
 
 #. module: sms
 #: code:addons/sms/models/sms_sms.py:0
@@ -1301,6 +1309,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"כאשר שדה קשר נבחר כשדה ראשון, שדה זה מאפשר לך לבחור את שדה היעד בתוך מודל "
+"מסמך היעד (תת-מודל)."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object
@@ -1308,6 +1318,7 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"כאשר שדה קשר נבחר כשדה ראשון, שדה זה מציג את מודל המסמך שאליו עובר הקשר."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms

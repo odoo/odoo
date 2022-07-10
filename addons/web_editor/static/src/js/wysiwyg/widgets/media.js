@@ -1033,7 +1033,7 @@ var ImageWidget = FileWidget.extend({
      */
     _clear: function (type) {
         // Not calling _super: we don't want to call the document widget's _clear method on images
-        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow|w-25|w-50|w-75|w-100|o_modified_image_to_save)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
     },
 });
@@ -1118,12 +1118,27 @@ var IconWidget = SearchableMediaWidget.extend({
     /**
      * @override
      */
-    save: function () {
+    save: async function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
         if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
-            $span.data(this.$media.data());
+            if (this.$media.length) {
+                // Make sure jquery data() is clean by signaling the removal
+                // (e.g. website wants to remove SnippetEditor references from
+                // the data).
+                // TODO make sure copying the data is in fact useful at all, but
+                // in stable it did not feel safe to remove anyway.
+                //
+                // Note: done with an array of promises filled by the event
+                // handler instead of a Promise created here to be resolved by
+                // the event handler as the event handler does not necessarily
+                // exists (in simple HTML fields for example).
+                const data = { proms: [] };
+                this.$media.trigger('before_replace_target', data);
+                await Promise.all(data.proms);
+                $span.data(this.$media.data());
+            }
             this.$media = $span;
             this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
@@ -1167,7 +1182,7 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|img-thumbnail|shadow)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**

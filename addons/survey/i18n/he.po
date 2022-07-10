@@ -1056,7 +1056,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "ניתן לערוך גוף"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
@@ -1735,7 +1735,7 @@ msgstr ""
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr ""
+msgstr "ביטוי מציין מיקום סופי, להעתק-הדבק בשדה התבנית הרצוי."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -2221,7 +2221,7 @@ msgstr "אנשים שהוזמנו בלבד"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "האם עורך"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
@@ -2844,11 +2844,14 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"שפת תרגום אופציונלית (קוד ISO) לבחירה בעת שליחת אימייל. אם לא מוגדר, הגרסה "
+"האנגלית תשמש. בדרך כלל זה צריך להיות ביטוי מציין מיקום המספק את השפה "
+"המתאימה, למשל. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "ערך אופציונלי לשימוש אם שדה היעד ריק"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2983,7 +2986,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "ביטוי מציין מקום"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:0
@@ -3139,7 +3142,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "דגם עיבוד"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -3358,6 +3361,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"בחר שדה יעד ממודל המסמך הקשור.\n"
+"אם זה שדה קשר תוכל לבחור שדה יעד ביעד הקשר."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q3
@@ -3527,12 +3532,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "שדה משנה"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "תת דגם"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__subject
@@ -4412,6 +4417,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"כאשר שדה קשר נבחר כשדה ראשון, שדה זה מאפשר לך לבחור את שדה היעד בתוך מודל "
+"מסמך היעד (תת-מודל)."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__sub_object
@@ -4419,6 +4426,7 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"כאשר שדה קשר נבחר כשדה ראשון, שדה זה מציג את מודל המסמך שאליו עובר הקשר."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q1
