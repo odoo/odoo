@@ -36,9 +36,24 @@ Integrator at Agrolait"""
 class TestProjectFlow(TestProjectCommon, MockEmail):
 
     def test_project_process_project_manager_duplicate(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
         pigs = self.project_pigs.with_user(self.user_projectmanager)
+        root_task = self.task_1
+        sub_task = Task.create({
+            'name': 'Sub Task',
+            'parent_id': root_task.id,
+            'project_id': self.project_pigs.id,
+        })
+        Task.create({
+            'name': 'Sub Sub Task',
+            'parent_id': sub_task.id,
+            'project_id': self.project_pigs.id,
+        })
         dogs = pigs.copy()
-        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
+        self.assertEqual(len(dogs.tasks), 4, 'project: duplicating a project must duplicate its tasks')
+        self.assertEqual(dogs.task_count, 2, 'project: duplicating a project must not change the original project')
+        self.assertEqual(pigs.task_count, 2, 'project: duplicating a project must duplicate its displayed tasks')
+        self.assertEqual(dogs.task_count_with_subtasks, 4, 'project: duplicating a project must duplicate its subtasks')
 
     @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_without_stage(self):

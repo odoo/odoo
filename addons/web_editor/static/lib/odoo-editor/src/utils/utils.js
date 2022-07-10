@@ -557,9 +557,8 @@ export function getCursorDirection(anchorNode, anchorOffset, focusNode, focusOff
  * @param {Node} editable
  * @returns {Node[]}
  */
-export function getTraversedNodes(editable) {
+export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     const document = editable.ownerDocument;
-    const range = getDeepRange(editable);
     if (!range) return [];
     const iterator = document.createNodeIterator(range.commonAncestorContainer);
     let node;

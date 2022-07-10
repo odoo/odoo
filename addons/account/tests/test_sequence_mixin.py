@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tests.common import Form
+from odoo.tests.common import Form, TransactionCase
 from odoo import fields, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from functools import reduce
 import json
 import psycopg2
@@ -348,53 +349,6 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         reset_never = set_sequence(self.test_move.date + relativedelta(years=2), 'MISC/00100')
         test_date(reset_never.date, 'MISC/00101')  # Keep the new prefix in 2018
 
-    def test_sequence_concurency(self):
-        """Computing the same name in concurent transactions is not allowed."""
-        with self.env.registry.cursor() as cr0,\
-                self.env.registry.cursor() as cr1,\
-                self.env.registry.cursor() as cr2:
-            env0 = api.Environment(cr0, SUPERUSER_ID, {})
-            env1 = api.Environment(cr1, SUPERUSER_ID, {})
-            env2 = api.Environment(cr2, SUPERUSER_ID, {})
-
-            journal = env0['account.journal'].create({
-                'name': 'concurency_test',
-                'code': 'CT',
-                'type': 'general',
-            })
-            account = env0['account.account'].create({
-                'code': 'CT',
-                'name': 'CT',
-                'user_type_id': env0.ref('account.data_account_type_fixed_assets').id,
-            })
-            moves = env0['account.move'].create([{
-                'journal_id': journal.id,
-                'date': fields.Date.from_string('2016-01-01'),
-                'line_ids': [(0, 0, {'name': 'name', 'account_id': account.id})]
-            }] * 3)
-            moves.name = '/'
-            moves[0].action_post()
-            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', '/'])
-            env0.cr.commit()
-
-            # start the transactions here on cr2 to simulate concurency with cr1
-            env2.cr.execute('SELECT 1')
-
-            move = env1['account.move'].browse(moves[1].id)
-            move.action_post()
-            env1.cr.commit()
-
-            move = env2['account.move'].browse(moves[2].id)
-            with self.assertRaises(psycopg2.OperationalError), env2.cr.savepoint(), mute_logger('odoo.sql_db'):
-                move.action_post()
-
-            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
-            moves.button_draft()
-            moves.with_context(force_delete=True).unlink()
-            journal.unlink()
-            account.unlink()
-            env0.cr.commit()
-
     def test_resequence_clash(self):
         """Resequence doesn't clash when it uses a name set in the same batch
         but that will be overriden later."""
@@ -413,6 +367,20 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             'move_ids': moves.ids,
             'first_name': '2',
         }).resequence()
+
+    @freeze_time('2021-10-01 00:00:00')
+    def test_change_journal_on_first_account_move(self):
+        """Changing the journal on the first move is allowed"""
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        move = self.env['account.move'].create({})
+        self.assertEqual(move.name, 'MISC/2021/10/0001')
+        with Form(move) as move_form:
+            move_form.journal_id = journal
+        self.assertEqual(move.name, 'AJ/2021/10/0001')
 
 
 @tagged('post_install', '-at_install')
@@ -474,3 +442,98 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         all_moves.button_draft()
         with self.assertRaises(UserError):
             all_moves.unlink()
+
+
+@tagged('post_install', '-at_install')
+class TestSequenceMixinConcurrency(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        with self.env.registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            journal = env['account.journal'].create({
+                'name': 'concurency_test',
+                'code': 'CT',
+                'type': 'general',
+            })
+            account = env['account.account'].create({
+                'code': 'CT',
+                'name': 'CT',
+                'user_type_id': env.ref('account.data_account_type_fixed_assets').id,
+            })
+            moves = env['account.move'].create([{
+                'journal_id': journal.id,
+                'date': fields.Date.from_string('2016-01-01'),
+                'line_ids': [(0, 0, {'name': 'name', 'account_id': account.id})]
+            }] * 3)
+            moves.name = '/'
+            moves[0].action_post()
+            self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', '/'])
+            env.cr.commit()
+        self.data = {
+            'move_ids': moves.ids,
+            'account_id': account.id,
+            'journal_id': journal.id,
+            'envs': [
+                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
+                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
+                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
+            ],
+        }
+        self.addCleanup(self.cleanUp)
+
+    def cleanUp(self):
+        with self.env.registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            moves = env['account.move'].browse(self.data['move_ids'])
+            moves.button_draft()
+            moves.posted_before = False
+            moves.unlink()
+            journal = env['account.journal'].browse(self.data['journal_id'])
+            journal.unlink()
+            account = env['account.account'].browse(self.data['account_id'])
+            account.unlink()
+            env.cr.commit()
+        for env in self.data['envs']:
+            env.cr.close()
+
+    def test_sequence_concurency(self):
+        """Computing the same name in concurent transactions is not allowed."""
+        env0, env1, env2 = self.data['envs']
+
+        # start the transactions here on cr1 to simulate concurency with cr2
+        env1.cr.execute('SELECT 1')
+
+        # post in cr2
+        move = env2['account.move'].browse(self.data['move_ids'][1])
+        move.action_post()
+        env2.cr.commit()
+
+        # try to post in cr1, should fail because this transaction started before the post in cr2
+        move = env1['account.move'].browse(self.data['move_ids'][2])
+        with self.assertRaises(psycopg2.OperationalError), mute_logger('odoo.sql_db'):
+            move.action_post()
+
+        # check the values
+        moves = env0['account.move'].browse(self.data['move_ids'])
+        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+
+    def test_sequence_concurency_no_useless_lock(self):
+        """Do not lock needlessly when the sequence is not computed"""
+        env0, env1, env2 = self.data['envs']
+
+        # start the transactions here on cr1 to simulate concurency with cr2
+        env1.cr.execute('SELECT 1')
+
+        # get the last sequence in cr1 (for instance opening a form view)
+        move = env2['account.move'].browse(self.data['move_ids'][1])
+        move.highest_name
+        env2.cr.commit()
+
+        # post in cr1, should work even though cr2 read values
+        move = env1['account.move'].browse(self.data['move_ids'][2])
+        move.action_post()
+        env1.cr.commit()
+
+        # check the values
+        moves = env0['account.move'].browse(self.data['move_ids'])
+        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', 'CT/2016/01/0002'])

@@ -174,7 +174,7 @@ msgstr "- Nur gebuchte Einträge"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted and Draft Entries"
-msgstr "- Entwurfs und Gebuchte Posten"
+msgstr "- Gebuchte und Entwurfsbuchungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -1150,7 +1150,7 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
-"<strong>Diese Währung wurde bereits von Buchungseinträgen verwendet.</strong> <br/>\n"
+"<strong>Diese Währung wurde bereits in Buchungen verwendet.</strong> <br/>\n"
 "                        Wenn Sie jetzt den Rundungsfaktor ändern, werden die Rundungen, die bei früheren Einträgen vorgenommen wurden, nicht geändert, was möglicherweise zu einer Inkonsistenz mit den neuen Einträgen führt."
 
 #. module: account
@@ -1290,14 +1290,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
-msgstr "Eine zweite Zahlung wird automatisch in das Ziel-Journal erstellt."
+msgstr "Eine zweite Zahlung wird automatisch im Journal erstellt."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Eine steuerliche Position kann nur einmalig für gleiche Steuern definiert "
-"werden."
+"Eine Steuerposition kann nur einmalig für eine Steuer definiert werden."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -1307,7 +1306,7 @@ msgid ""
 "a fiscal position if you wish to uses the tags from foreign tax reports."
 msgstr ""
 "Eine Steuer sollte nur Tags aus ihrem Land verwenden. Sie sollten eine "
-"andere Steuer und eine Steuerposition verwenden, wenn Sie die Kennzeichen "
+"andere Steuer und eine andere Steuerposition verwenden, wenn Sie die Tags "
 "von ausländischen Steuerberichten verwenden möchten."
 
 #. module: account
