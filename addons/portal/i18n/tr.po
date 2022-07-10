@@ -17,9 +17,9 @@
 # abc Def <hdogan1974@gmail.com>, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "%1d gün gecikmiş"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -89,6 +89,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Hesabınız için belge(ler) "
+"düzenlendikten sonra şirket adının veya vergi numarasının değiştirilmesine "
+"izin verilmez. <br/>Bu işlem için lütfen doğrudan bizimle iletişime "
+"geçin.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -192,13 +196,78 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\"><tbody><!-- BAŞLIK --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"middle\"><span style=\"font-size: "
+"10px;\">Hesabınız</span><br/> <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.user_id.name or ''\">Marc Demo</span></td><td "
+"valign=\"middle\" align=\"right\"><img t-attf-src=\"/logo.png?company={{ "
+"object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height:"
+" auto; width: 80px;\" t-att-"
+"alt=\"object.user_id.company_id.name\"/></td></tr><tr><td colspan=\"2\" "
+"style=\"text-align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px "
+"0px;\"/></td></tr></table></td></tr><!-- İÇERİK --><tr><td align=\"center\" "
+"style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
+"white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
+"valign=\"top\" style=\"font-size: 13px;\"><div> Sayın<t "
+"t-out=\"object.user_id.name or ''\"> Marc Demo</t> ,<br/><br/> Hoşgeldiniz<t"
+" t-out=\"object.user_id.company_id.name\"> Şirketin</t> Portalı!<br/><br/> "
+"Aşağıdaki giriş bilgileriyle sizin için bir hesap oluşturuldu:<t "
+"t-out=\"object.user_id.login\"> demo</t><br/><br/> Bir şifre seçmek ve "
+"hesabınızı etkinleştirmek için aşağıdaki düğmeyi tıklayın.<div "
+"style=\"margin: 16px 0px 16px 0px; text-align: center;\"> <a t-att-"
+"href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: "
+"10px; text-decoration: none; font-size: 12px; background-color: #875A7B; "
+"color: #fff; border-radius: 5px;\"><strong>Hesap</strong></a> <a "
+"href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-"
+"decoration: none; font-size: 12px;\"><strong>Girişini</strong></a> "
+"Etkinleştir</div><t t-out=\"object.wizard_id.welcome_message or ''\"> "
+"Şirketimizin portalına hoş geldiniz. </t></div></td></tr><tr><td "
+"style=\"text-align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
+"0px;\"/></td></tr></table></td></tr><!-- ALT BİLGİ --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"middle\" align=\"left\"><t "
+"t-out=\"object.user_id.company_id.name or ''\"> "
+"Şirketin</t></td></tr><tr><td valign=\"middle\" align=\"left\" "
+"style=\"opacity: 0.7;\"><t t-out=\"object.user_id.company_id.phone or ''\"> "
+"+1 650-123-4567</t><t t-if=\"object.user_id.company_id.email\"> | <a t-attf-"
+"href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email "
+"or ''\">info@sirketiniz.com</a></t><t "
+"t-if=\"object.user_id.company_id.website\"> | <a t-attf-href=\"'%s' % {{ "
+"object.user_id.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.user_id.company_id.website or "
+"''\">http://www.example.com</a> "
+"</t></td></tr></table></td></tr></tbody></table></td></tr><!-- DESTEKLEYEN "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: #F1F1F1; color: #454748; padding: 8px; border-"
+"collapse:separate;\"><tr><td style=\"text-align: center; font-size: "
+"13px;\"><a target=\"_blank\" "
+"href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" "
+"style=\"color: #875A7B;\">Odoo</a> tarafından "
+"desteklenmektedir</td></tr></table></td></tr></table> "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "API Anahtarı Hazır"
 
 #. module: portal
 #. openerp-web
@@ -425,7 +494,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Müşteri API Anahtarları"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -484,7 +553,7 @@ msgstr "Belgeler"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "%1d gün içinde teslim edilecek"
 
 #. module: portal
 #. openerp-web
@@ -528,7 +597,7 @@ msgstr "Forgot password?"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "Erişim Ver"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -554,6 +623,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"İşte yeni API anahtarınız, RPC erişimi için parola yerine kullanın.\n"
+"                 İnteraktif kullanım için oturum açmanız hala gereklidir."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -572,7 +643,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Önemli:"
 
 #. module: portal
 #. openerp-web
@@ -591,7 +662,7 @@ msgstr "İç Kullanıcılar"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Dahili notlar yalnızca dahili kullanıcılara gösterilir."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -613,12 +684,12 @@ msgstr "Davet İletisi"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "İç"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Portal"
 
 #. module: portal
 #. openerp-web
@@ -628,6 +699,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Bu açıklamanın açık olması çok önemlidir.\n"
+"                ve eksiksiz,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -653,7 +726,7 @@ msgstr "Son Güncelleme"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "En Son Kimlik Doğrulama"
 
 #. module: portal
 #. openerp-web
@@ -665,7 +738,7 @@ msgstr "Bir yorum yazın"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Let your customers create developer API keys"
-msgstr ""
+msgstr "Müşterilerinizin geliştirici API anahtarları oluşturmasına izin verin"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -751,7 +824,7 @@ msgstr "Odoo Logo"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "Yalnızca iç ve portal kullanıcıları API anahtarları oluşturabilir"
 
 #. module: portal
 #. openerp-web
@@ -787,7 +860,7 @@ msgstr "Telefon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Bu hesabın sahibi olduğunuzu onaylamak için lütfen şifrenizi girin"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -819,7 +892,7 @@ msgstr "Portal Kullanıcı Ayarları"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Portal: Kullanıcı Daveti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -854,7 +927,7 @@ msgstr "Qweb"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Yeniden Davet Et"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -879,7 +952,7 @@ msgstr "İlgili Döküman Modeli"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Erişimi Kaldır"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -951,6 +1024,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Bazı alanlar zorunludur. Lütfen bir mesaj yazdığınızdan veya bir belge "
+"eklediğinizden emin olun."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1006,13 +1081,13 @@ msgstr "Ek mevcut değil veya eke erişim haklarınız yok."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "\"%s\" kişisinin geçerli bir e-posta adresi yok."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
-msgstr ""
+msgstr "\"%s\" kişisi aynı e-postaya sahip (%s) mevcut bir kullanıcıya sahip."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1026,7 +1101,7 @@ msgstr "Doküman mevcut değil veya dokümana erişim haklarınız yok."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Anahtar daha sonra alınamaz ve"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1045,13 +1120,13 @@ msgstr "Eski şifrenizi yanlış girdiniz, şifreniz değiştirilemedi."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "İş ortağı \"%s\" zaten portal erişimine sahip."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access."
-msgstr ""
+msgstr "\"%s\" iş ortağının portal erişimi yok."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1060,6 +1135,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Portal kullanıcısına e-posta göndermek için \"Portal: yeni kullanıcı\" "
+"şablonu bulunamadı."
 
 #. module: portal
 #. openerp-web
@@ -1085,12 +1162,16 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Bu iş ortağı dahili bir Kullanıcıya bağlıdır ve Portal'a zaten erişimi "
+"vardır."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Bu metin, yeni portal kullanıcılarına gönderilen e-postanın sonunda yer "
+"almaktadır."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1262,12 +1343,12 @@ msgstr "Olmalısın"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Önce portala \"%s\" iş ortağına erişim izni vermelisiniz."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "{{ object.user_id.company_id.name }} adresindeki hesabınız"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1305,7 +1386,7 @@ msgstr "Yorumlar"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "tam erişim"
 
 #. module: portal
 #. openerp-web
@@ -1315,6 +1396,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"tek yolu bu olacak\n"
+"                 bir kez oluşturulduktan sonra anahtarı tanımlayın"
 
 #. module: portal
 #. openerp-web
@@ -1356,3 +1439,4 @@ msgstr "bir yorum gönder"
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"kullanıcı hesabınız için güvenli bir şekilde saklamanız çok önemlidir."

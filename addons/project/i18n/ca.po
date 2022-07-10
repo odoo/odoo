@@ -20,6 +20,8 @@
 # Quim - eccit <quim@eccit.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Harcogourmet, 2022
+# oscaryuu, 2022
+# CristianCruzParra, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Harcogourmet, 2022\n"
+"Last-Translator: CristianCruzParra, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,6 +393,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Benvolgut<t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"   Gràcies per la vostra consulta.<br/>\n"
+"    Si teniu cap pregunta, feu-nos-ho saber.\n"
+"    <br/><br/>\n"
+"    Gràcies,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -754,6 +768,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Afegiu columnes per organitzar les vostres tasques <b>etapes</b> <i>p.e. Nou"
+" - En curs - Fet</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1075,6 +1091,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+"* Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+"* Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
@@ -1219,6 +1238,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"Tria a <b>nom</b> per al teu projecte. <i>Pot ser qualsevol cosa que vulguis: el nom d'un client,\n"
+"    d'un producte, d'un equip, d'una obra, etc.</i>"
 
 #. module: project
 #. openerp-web
@@ -1554,6 +1575,10 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the %s column. %s"
 msgstr ""
+"Els clients proposen comentaris per correu electrònic; Odoo crea tasques "
+"automàticament i us podeu comunicar directament sobre la tasca. Els vostres "
+"gestors decideixen quin comentari s'accepta %s i quin feedback es trasllada "
+"a la %s columna. %s"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1562,6 +1587,9 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"Personalitzeu com s'anomenen les tasques segons el projecte i creeu "
+"missatges d'estat personalitzats per a cada pas del flux de treball. Ajuda a"
+" documentar el vostre flux de treball: què s'ha de fer en quin pas."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1702,6 +1730,19 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Persones a les quals serà visible aquest projecte i les seves tasques.\n"
+"- Usuaris interns convidats: quan segueixen un projecte, els usuaris interns tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
+" Un usuari amb el nivell de dret d'accés de projecte > administrador encara pot accedir a aquest projecte i a les seves tasques, fins i tot si no formen part explícitament dels seguidors.\n"
+"\n"
+"- Tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
+"- Usuaris del portal convidats i tots els usuaris interns: tots els usuaris interns poden accedir al projecte i a totes les seves tasques sense distinció.\n"
+"\n"
+"Quan segueixen un projecte, els usuaris del portal tindran accés a totes les seves tasques sense distinció. En cas contrari, només tindran accés a les tasques específiques que estan seguint.\n"
+"\n"
+"Quan un projecte es comparteix en només lectura, l'usuari del portal es redirigeix ​​al seu portal. Poden veure les tasques, però no editar-les.\n"
+"Quan un projecte es comparteix en edició, l'usuari del portal es redirigeix ​​a les vistes de kanban i de llista de les tasques. Poden modificar un nombre seleccionat de camps de les tasques.\n"
+"\n"
+"En qualsevol cas, un usuari intern sense drets d'accés al projecte encara pot accedir a una tasca, sempre que se li indiqui l'URL corresponent (i que formi part dels seguidors si el projecte és privat)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1902,7 +1943,7 @@ msgstr "Editar"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "modificar l'etapa personal"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2122,18 +2163,20 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
+"Obteniu una instantània de l'estat del vostre projecte i compartiu-ne el "
+"progrés amb les parts interessades clau."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Obteniu comentaris dels clients"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Fes les coses (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -2191,13 +2234,16 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
+"Maneja les teves idees reunint amb les tasques dels teus nous projectes i "
+"discuteix-ho en la xerrada de tasques. usa el%sy%sper a senyalitzar com és "
+"l'estatus actual de la teva idea.%s"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "Entrega"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2237,11 +2283,16 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
+"Com obtenir comentaris dels clients?\n"
+"- Valoració en canviar d'etapa: s'enviarà un correu electrònic quan una tasca es traslladi a una altra fase.\n"
+"- Valoració periòdica: s'enviarà un correu electrònic periòdicament.\n"
+"\n"
+"No us oblideu de configurar les plantilles de correu electrònic a les etapes per a les quals voleu rebre comentaris dels clients."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
+msgstr "Com va aquest projecte?"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2327,6 +2378,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Si s'estableix i si la configuració de qualificació del projecte és "
+"\"Valoració en canviar d'etapa\", s'enviarà un correu electrònic al client "
+"quan la tasca arribi a aquest pas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2334,6 +2388,8 @@ msgid ""
 "If set, an email will be sent to the customer when the project reaches this "
 "step."
 msgstr ""
+"Si s'estableix, s'enviarà un correu electrònic al client quan el projecte "
+"arribi a aquest pas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2341,6 +2397,8 @@ msgid ""
 "If set, an email will be sent to the customer when the task or issue reaches"
 " this step."
 msgstr ""
+"Si s'estableix, s'enviarà un correu electrònic al client quan la tasca o "
+"problema arribi a aquest pas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2797,6 +2855,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"Gestioneu el cicle de vida del vostre projecte mitjançant la vista kanban. "
+"Afegiu projectes recentment adquirits, assigneu-los i utilitzeu %s i%s per "
+"definir si el projecte està preparat per al següent pas. %s"
 
 #. module: project
 #. openerp-web
@@ -2871,12 +2932,12 @@ msgstr "Missatges"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Fita"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Recompte de fites"
 
 #. module: project
 #. openerp-web
@@ -2884,7 +2945,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Fita"
 
 #. module: project
 #. openerp-web
@@ -2988,7 +3049,7 @@ msgstr "Nou"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Nova Fita"
 
 #. module: project
 #. openerp-web
@@ -3341,6 +3402,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban selection"
 " when the task or issue is in that stage."
 msgstr ""
+"Substituïu el valor predeterminat que es mostra per a l'estat fet per a la "
+"selecció de kanban quan la tasca o problema es troba en aquesta etapa."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -3415,17 +3478,17 @@ msgstr "Etapa personal"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "Estat de l'etapa personal"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr ""
+msgstr "Etapa de la tasca personal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
 msgid "Personal User Stage"
-msgstr ""
+msgstr "Etapa d'usuari personal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -3495,6 +3558,9 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"prioritza tasques usant la%s icona.%s Usa el%s botó per a informar els teus "
+"col·legues que la tasca ja aquesta llest per al següent etapa.%s Usa el%s "
+"per a indicar un problema o necessitar una discussió en la tasca.%s"
 
 #. module: project
 #. openerp-web
@@ -3505,6 +3571,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
+"Prioritzeu les tasques utilitzant el %s icona.%s Utilitzar el %s botó per "
+"indicar als vostres companys que una tasca està preparada per a la següent "
+"etapa.%s Utilitzar el %s per indicar un problema o una necessitat de "
+"discussió sobre una tasca.%s"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3651,24 +3721,24 @@ msgstr "Projecte Compartició: tasca"
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Etapa del projecte"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr ""
+msgstr "Fase del projecte canviada"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "Assistent de supressió de l'etapa del projecte"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "Etapes del projecte"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3692,12 +3762,12 @@ msgstr "Actualització del projecte"
 #: model:ir.ui.menu,name:project.project_update_menu_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Actualitzacions del projecte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "Visibilitat del projecte"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3709,14 +3779,14 @@ msgstr "Tasques de projecte"
 #: model:ir.cron,cron_name:project.ir_cron_recurring_tasks
 #: model:ir.cron,name:project.ir_cron_recurring_tasks
 msgid "Project: Create Recurring Tasks"
-msgstr ""
+msgstr "Projecte: Crear tasques recurrents"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projecte: Enviar qualificació"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3740,7 +3810,7 @@ msgstr "Projectes"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
 msgid "Projects Archived"
-msgstr ""
+msgstr "Projectes arxivats"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3762,7 +3832,7 @@ msgstr "Publicat"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "Publicació"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -3815,7 +3885,7 @@ msgstr "Classificar últim valor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Termini de sol·licitud de qualificació"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -3846,7 +3916,7 @@ msgstr "Classificar recompte"
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 #: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Valoració en canviar d'etapa"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3892,7 +3962,7 @@ msgstr "Raó de la valoració"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "Recepció de {{ object.name }}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -4009,17 +4079,17 @@ msgstr "Repetir el dia de l'espectacle"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_dow
 msgid "Repeat Show Dow"
-msgstr ""
+msgstr "Repetiu Mostra Dow"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_month
 msgid "Repeat Show Month"
-msgstr ""
+msgstr "Repetiu Mostra el mes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_week
 msgid "Repeat Show Week"
-msgstr ""
+msgstr "R"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
@@ -4193,13 +4263,13 @@ msgstr "Cerca a Ref"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Buscar en seccions"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "Buscar en estatus"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -4217,7 +4287,7 @@ msgstr "Token de Seguretat"
 #: model:ir.actions.act_window,name:project.project_burndown_chart_report_action
 #: model:ir.actions.act_window,name:project.project_update_all_report_action
 msgid "Select a Project"
-msgstr ""
+msgstr "Seleccioneu un projecte"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -4255,6 +4325,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
 msgstr ""
+"Estableix una plantilla de correu electrònic de valoració a les etapes"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4273,7 +4344,7 @@ msgstr "Comparteix"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr ""
+msgstr "Compartir editable"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -4284,7 +4355,7 @@ msgstr "Comparteix el projecte"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
-msgstr ""
+msgstr "Comparteix només lectura"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4313,7 +4384,7 @@ msgstr "Desenvolupament de programari"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
+msgstr "Ho sento. No podeu establir una tasca com a tasca principal."
 
 #. module: project
 #. openerp-web
@@ -4335,7 +4406,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "Sprint Backlog"
 
 #. module: project
 #. openerp-web
@@ -4387,7 +4458,7 @@ msgstr "Descripció de l'etapa i informació sobre eines"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Propietari de l'escenari"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4397,12 +4468,12 @@ msgstr "Canvi de fase"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "Etapes actives"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "Etapes per esborrar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -4494,6 +4565,8 @@ msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
 "less than or equal to the initially planned time of this task."
 msgstr ""
+"Suma del temps previst de totes les subtasques vinculades a aquesta tasca. "
+"Normalment és inferior o igual al temps previst inicialment d'aquesta tasca."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -4512,7 +4585,7 @@ msgstr "Diumenge"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Impressió de samarretes"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -4567,7 +4640,7 @@ msgstr "Comptador de tasques"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count_with_subtasks
 msgid "Task Count With Subtasks"
-msgstr ""
+msgstr "Tasca comptada amb subtascas"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4587,7 +4660,7 @@ msgstr "Dependències de la tasca"
 #: model:mail.message.subtype,name:project.mt_project_task_dependency_change
 #: model:mail.message.subtype,name:project.mt_task_dependency_change
 msgid "Task Dependency Changes"
-msgstr ""
+msgstr "Canvis en la tasca dependent"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4598,7 +4671,7 @@ msgstr "Registres de tasques"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Qualificació de tasca"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -4677,12 +4750,12 @@ msgstr "Tasca:"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Tasca: comanda de qualificació"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Task: Reception Acknowledgment"
-msgstr ""
+msgstr "Tasca: Confirmació de recepció"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4728,12 +4801,12 @@ msgstr "Anàlisi de tasques"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
-msgstr ""
+msgstr "Tasca en progrés"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Late"
-msgstr ""
+msgstr "Tasques tard"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4766,7 +4839,7 @@ msgstr "L'etapa personal de l'usuari actual."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "Fase de tasca personal de l'usuari actual."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_deadline
@@ -4776,12 +4849,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "S'ha afegit la següent fita:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "S'han afegit les fites següents:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4825,6 +4898,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"El projecte no es pot compartir amb els destinataris perquè la privadesa del"
+" projecte està massa restringida. Establiu la privadesa a \"Visible per "
+"seguir els clients\" per tal de fer-la accessible pel destinatari."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4839,6 +4915,10 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"La tasca no es pot compartir amb els destinataris perquè la privadesa del "
+"projecte està massa restringida. Estableix la privadesa del projecte a "
+"\"Visible per seguir els clients\" per tal de fer-lo accessible per als "
+"destinataris."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4854,7 +4934,7 @@ msgstr "No hi ha projectes."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "Encara no hi ha qualificacions per a aquest projecte de moment"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -4912,7 +4992,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
 msgid "This stage is folded in the kanban view."
-msgstr ""
+msgstr "Aquesta etapa es plega a la vista kanban."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4960,7 +5040,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "Consell: personalitzeu les tasques i les etapes segons el projecte"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -5150,7 +5230,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use %s and %s bullets to indicate the status of a task. %s"
-msgstr ""
+msgstr "Ús %s i %s pics per indicar l'estat d'una tasca.%s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
@@ -5207,6 +5287,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Utilitza la xerrada per <b>enviar correus electrònics</b> i comunicar-se de manera eficient amb els seus clients.\n"
+"   Afegiu persones noves a la llista de seguidors per fer-los conèixer els principals canvis d'aquesta tasca."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5292,7 +5374,7 @@ msgstr "Setmanes"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Ja sigui qualsevol projecte hauria de ser projectat en el teu tauler."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5394,6 +5476,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"No pots esborrar un projecte que conté tasques. pots o arxivar-ho o primer "
+"esborrar totes les tasques."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5410,6 +5494,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"No pots eliminar els fases que conté tasques. Pots ja sigui arxivar-los o "
+"primer esborrar tots les tasques."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5417,6 +5503,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"No pots esborrar les fases que conté tasques. Primer hauries d'esborrar "
+"totes les tasques."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5442,6 +5530,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Hauríeu de tenir almenys una etapa personal. Creeu una nova etapa a la qual "
+"es puguin transferir les tasques després de suprimir aquesta."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5478,12 +5568,12 @@ msgstr "tasca"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline of the following milestone has been updated:"
-msgstr ""
+msgstr "La data limiti del següent objectiu ha estat actualitzat."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline of the following milestones has been updated:"
-msgstr ""
+msgstr "s'ha actualitzat el termini de les fites següents:"
 
 #. module: project
 #. openerp-web
@@ -5495,4 +5585,4 @@ msgstr "cert"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: enquesta de satisfacció"

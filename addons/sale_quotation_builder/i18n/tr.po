@@ -3,21 +3,21 @@
 # 	* sale_quotation_builder
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Saban Yildiz <sabany@projetgrup.com>, 2019
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
-# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Murat Durmuş <muratd@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,17 +26,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
-msgid "&amp;times;"
-msgstr "&amp;kere;"
-
-#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 ":\n"
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is put on the quote."
 msgstr ""
+":\n"
+"                                        bu içerik teklifte ancak bu ürün teklife\n"
+"                                        dahil edildiğinde görünecektir."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -45,14 +43,19 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
 msgstr ""
+":\n"
+"                                        bu içerik teklifte yalnızca\n"
+"                                       bu içerik teklifte yalnızca bu ürün fiyat teklifinde kullanılıyorsa görünür."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid ""
 ":\n"
-"                        this content will appear on the quotation only if this\n"
-"                        product is not removed."
+"                        the content below will disappear if this\n"
+"                        product is removed from the quote."
 msgstr ""
+":\n"
+"Bu ürün tekliften çıkarılırsa aşağıdaki içerik kaybolacaktır."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -61,6 +64,9 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>Şablon Başlığı:</strong> bu içerik\n"
+"                                    bu şablonu kullanan tüm tekliflerde\n"
+"                                    görünecektir."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -70,7 +76,7 @@ msgstr "Hakkımızda"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "An awesome"
-msgstr ""
+msgstr "Müthiş bir"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -79,6 +85,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"Lider profesyonel hizmetler firması olarak,\n"
+"                                 başarının,\n"
+"                                güçlü hizmetlere verdiğimiz taahhütle ilgili olduğunu biliyoruz."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -86,14 +95,14 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: sale_quotation_builder
-#: model:ir.model,name:sale_quotation_builder.model_res_config_settings
-msgid "Config Settings"
-msgstr "Konfigürasyon Ayarları"
+#: model:ir.model,name:sale_quotation_builder.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Design Template"
-msgstr ""
+msgstr "Tasarım Şablonu"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -104,6 +113,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Harika teklif şablonları \n"
+"                                <strong>başarı oranınızı önemli ölçüde</strong>artıracaktır.İlk\n"
+"                                bölüm genellikle şirketiniz hakkında,\n"
+"                                referanslarınız, metodolojiniz veya\n"
+"                                garantiler, ekibiniz, SLA, şartlar ve koşullar vb."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -113,6 +127,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Bir teklifi bir teklifin 'Önizlemesinden' düzenlerseniz,\n"
+"                         yalnızca bu teklifi güncelleyeceksiniz. Teklifi düzenlerseniz\n"
+"                        şablonu (Yapılandırma menüsünden), gelecekteki tüm teklifler \n"
+"                        bu değiştirilmiş şablonu kullanın."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
@@ -132,12 +150,12 @@ msgstr "Tekliflerimiz"
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Kalite Politikamız"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Hizmetlerimiz"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -156,6 +174,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"Ürün kalitesi üzerinde durduğumuz\n"
+"                               temeldir; kumaş, performans ve işçiliğe  \n"
+"                                amansız bir odaklanma ile inşa ediyoruz."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -173,7 +194,7 @@ msgstr "Teklif Açıklaması"
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr ""
+msgstr "Sadece Teklif Açıklama"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
@@ -188,7 +209,7 @@ msgstr "Teklif Şablon Satırı"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Teklif Şablonu Seçeneği"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
@@ -215,7 +236,7 @@ msgstr "Şartlar &amp; Koşullar"
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr ""
+msgstr "Teklif açıklaması (e-Ticarette kullanılmaz)"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
@@ -224,6 +245,8 @@ msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "
 "it will try to read the eCommerce Description."
 msgstr ""
+"Bu alan tanımlanmışsa Yalnızca Teklif Açıklaması kullanır, aksi takdirde "
+"e-Ticaret açıklamasını okumaya çalışır."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -233,19 +256,25 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Bu <strong>örnek bir alıntı şablonu</strong>.  Kendi\n"
+"                                ihtiyaçlarınıza göre özelleştirmelisiniz <i>Satış</i>\n"
+"                                menüsünü kullanarak: Konfigürasyon/\n"
+"                                 Teklif Şablonları."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr ""
+msgstr "Bu, satış siparişi şablonunun bir önizlemesidir."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
-"Titles with style <i>Heading 1</i> and\n"
-"                                    <i>Heading 2</i> will be used to generate the\n"
+"Titles with style <i>Heading 2</i> and\n"
+"                                    <i>Heading 3</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"<i>Başlık 2</i> ve <i>Başlık 3</i> stiline sahip başlıklar, içerik tablosunu"
+" otomatik olarak oluşturmak için kullanılacaktır."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -254,6 +283,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"Ürünlerimizi her zaman adil bir fiyata ayarlamanızı sağlıyoruz\n"
+"                               böylece onları satın almaktan\n"
+"                               mutluluk duyacaksınız."
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -275,8 +307,8 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "portal"
-msgstr ""
+" <strong>Ürün başına bir açıklama ayarlayabilirsiniz.</strong> Odoo\n"
+"                        teklifteki tüm ürünlerin açıklamalarını kullanarak otomatik \n"
+"                        olarak bir teklif oluşturur. Soldaki içerik tablosu,\n"
+"                        açıklamanızda kullandığınız stiller kullanılarak otomatik\n"
+"                        olarak oluşturulur (başlık 1, başlık 2, ...)"
