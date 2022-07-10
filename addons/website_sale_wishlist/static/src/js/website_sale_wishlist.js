@@ -75,11 +75,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var self = this;
         var productID = $el.data('product-product-id');
         if ($el.hasClass('o_add_wishlist_dyn')) {
-            productID = $el.parent().find('.product_id').val();
-            if (!productID) { // case List View Variants
-                productID = $el.parent().find('input:checked').first().val();
-            }
-            productID = parseInt(productID, 10);
+            productID = parseInt($el.closest('.js_product').find('.product_id:checked').val());;
         }
         var $form = $el.closest('form');
         var templateId = $form.find('.product_template_id').val();

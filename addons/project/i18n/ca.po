@@ -17,6 +17,8 @@
 # jabelchi, 2022
 # marcescu, 2022
 # Harcogourmet, 2022
+# oscaryuu, 2022
+# CristianCruzParra, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Harcogourmet, 2022\n"
+"Last-Translator: CristianCruzParra, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1270,14 +1272,14 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Obteniu comentaris dels clients"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Fes les coses (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1431,6 +1433,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Si s'estableix i si la configuració de qualificació del projecte és "
+"\"Valoració en canviar d'etapa\", s'enviarà un correu electrònic al client "
+"quan la tasca arribi a aquest pas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2228,7 +2233,7 @@ msgstr "Projecte: Activar projecte d'exemple"
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projecte: Enviar qualificació"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2307,7 +2312,7 @@ msgstr "Classificar últim valor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Termini de sol·licitud de qualificació"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -2327,7 +2332,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Valoració en canviar d'etapa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
@@ -2510,7 +2515,7 @@ msgstr "Cerca als missatges"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Buscar en seccions"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2676,7 +2681,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Impressió de samarretes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__name
@@ -2747,7 +2752,7 @@ msgstr "Canonada de tasques"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Qualificació de tasca"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -2897,6 +2902,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"El projecte no es pot compartir amb els destinataris perquè la privadesa del"
+" projecte està massa restringida. Establiu la privadesa a \"Visible per "
+"seguir els clients\" per tal de fer-la accessible pel destinatari."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2906,6 +2914,10 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"La tasca no es pot compartir amb els destinataris perquè la privadesa del "
+"projecte està massa restringida. Estableix la privadesa del projecte a "
+"\"Visible per seguir els clients\" per tal de fer-lo accessible per als "
+"destinataris."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -3164,7 +3176,7 @@ msgstr "Setmanalment"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Ja sigui qualsevol projecte hauria de ser projectat en el teu tauler."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3242,6 +3254,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"No pots esborrar un projecte que conté tasques. pots o arxivar-ho o primer "
+"esborrar totes les tasques."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
