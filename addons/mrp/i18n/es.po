@@ -3,71 +3,15 @@
 # 	* mrp
 # 
 # Translators:
-# David Sanchez <david.sanchez@jarsa.com.mx>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Luis Pomar <luis.pomar@gmail.com>, 2016
-# David Arnold <blaggacao@users.noreply.github.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Kiko <kiko@comunitea.com>, 2017
-# b9b2db555321dc69d8faed263d46c5b6, 2017
-# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
-# Julio Fiallos <jfiallos@vision-estrategica.com>, 2017
-# ced903afe967c2a46d1036224972db9d, 2018
-# e2f <projects@e2f.com>, 2018
-# Miguel Orueta <mo@landoo.es>, 2018
-# Ana Juaristi <ajuaristio@gmail.com>, 2018
-# Manuel Vázquez Acosta <mva.led@gmail.com>, 2018
-# oihane <oihanecruce@gmail.com>, 2018
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Mariela Moreno <mam@odoo.com>, 2019
-# gabriumaa <gabriel.umana@delfixcr.com>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
-# 2ce5c0f90a7530708d68bb8c6ad9a772_9dbda0e <234f5478d2e8ef72de316673811c6a08_768192>, 2019
-# Mariana Santos Romo <msn@odoo.com>, 2019
-# Miguel Ruiz <lmiguel.gruiz@gmail.com>, 2020
-# VivianMontana23 <vivianpvm@gmail.com>, 2020
-# Antonio Trueba, 2020
-# Nicolás Broggi <rnbroggi@gmail.com>, 2020
-# Cristopher Cravioto <ccr@odoo.com>, 2020
-# fr33co <fr33codev@gmail.com>, 2020
-# Jon Perez <jop@odoo.com>, 2020
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
-# Miquel Torner <miq@odoo.com>, 2020
-# Jesse Garza <jga@odoo.com>, 2020
-# Jorge Luis Alfonso <jlalfonso21@gmail.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Daniela Cervantes <dace@odoo.com>, 2021
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2021
-# sakodoo <sak@odoo.com>, 2021
-# Alejandro Concepción <alconor23@hotmail.com>, 2021
-# jabelchi, 2021
-# juankfj, 2022
-# Nelson Ramírez <info@konos.cl>, 2022
 # Martin Trigaux, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Marian Cuadra, 2022
-# marcescu, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
-"PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3137,14 +3081,20 @@ msgstr "Número de mensajes con error de envío"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once. "
 msgstr ""
-"Número de piezas que se pueden producir en paralelo. En caso de que el "
-"centro de trabajo tenga una capacidad de 5 y tenga que producir 10 unidades "
-"en su orden de trabajo, el tiempo de operación habitual se multiplicará por "
-"2."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate. "
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
