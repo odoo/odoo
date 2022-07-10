@@ -11,7 +11,7 @@
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2019
 # Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6118,6 +6118,16 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"Перерозподіл рахунків-фактур та сторно має мати принаймні один рядок "
+"перерозподілу податків."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
 "Invoice and credit note repartition should have the same number of lines."
 msgstr "Переділ рахунка та сторно має містити ту саму кількість рядків."
 
@@ -8965,6 +8975,12 @@ msgstr "Частки узгодження"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Узгодження банківської виписки"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr "Неможливо видалити запис. Партнер використовується у Бухобліку"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

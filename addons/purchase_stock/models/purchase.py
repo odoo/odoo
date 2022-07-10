@@ -274,12 +274,29 @@ class PurchaseOrderLine(models.Model):
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line.qty_received = total
 
-    @api.model
-    def create(self, values):
-        line = super(PurchaseOrderLine, self).create(values)
-        if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
-        return line
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(PurchaseOrderLine, self).create(vals_list)
+
+        # when no "propagate_date", find if the product has a route with a buy rule,
+        # if yes, use the setting on the rule, if no, set "True" as default.
+        for line, vals in zip(lines, vals_list):
+            if 'propagate_date' not in vals:
+                buy_rules = line.product_id.route_ids.rule_ids.filtered(lambda r: r.action == "buy")
+                if buy_rules:
+                    rule = min(buy_rules, key=lambda r: (r.route_id.sequence, r.sequence))
+                    line.write({
+                        'propagate_date': rule.propagate_date,
+                        'propagate_date_minimum_delta': rule.propagate_date_minimum_delta,
+                    })
+                else:
+                    line.write({
+                        'propagate_date': True,
+                        'propagate_date_minimum_delta': 0,
+                    })
+
+        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        return lines
 
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):

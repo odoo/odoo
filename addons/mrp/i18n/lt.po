@@ -20,8 +20,8 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
 # Denis Knotko <denis_knotko@yahoo.com>, 2020
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2020
-# Jonas Zinkevicius <jozi@odoo.com>, 2021
 # Arunas V. <arunas@devoro.com>, 2021
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Arunas V. <arunas@devoro.com>, 2021\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -873,7 +873,7 @@ msgstr "Atšauktas"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
-msgstr ""
+msgstr "Negalima ištrinti gamybos užsakymo, kai jis yra etape 'Atlikta'"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
@@ -1893,6 +1893,14 @@ msgstr "Ar esamas vartotojas dirba"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Jau buvo atblokuota."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3177,7 +3185,7 @@ msgstr "Kiekis, kuris bus pagamintas"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity To Consume"
-msgstr ""
+msgstr "Kiekis, skirtas sunaudoti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -3927,6 +3935,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -3958,6 +3975,14 @@ msgid ""
 msgstr ""
 "Technologinėje kortelėje yra visi darbo centrai ir kiek laiko jie naudoti. "
 "Tai vėliau sukurs darbo užsakymą, kuris pakeičia gaminimo užsakymo vykdymą."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4164,7 +4189,7 @@ msgstr "Medžio plokštės viršutinis sluoksnis."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
-msgstr ""
+msgstr "Visa trukmė"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
