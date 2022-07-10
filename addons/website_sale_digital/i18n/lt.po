@@ -6,20 +6,29 @@
 # Martin Trigaux, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # Denis Knotko <denis_knotko@yahoo.com>, 2020
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2022-01-27 16:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Denis Knotko <denis_knotko@yahoo.com>, 2020\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: website_sale_digital
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid "Add attachments for this digital product"
+msgstr "Pridėti prisegtukus šiam skaitmeniniui produktui"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_ir_attachment
@@ -41,7 +50,6 @@ msgstr "Skaitmeniniai failai"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
-#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document__product_downloadable
 msgid "Downloadable from product portal"
 msgstr "Galima atsisiųsti iš produktų portalo"
 
@@ -70,6 +78,21 @@ msgstr "Produktas"
 #: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product Template"
 msgstr "Produkto šablonas"
+
+#. module: website_sale_digital
+#: code:addons/website_sale_digital/models/ir_attachment.py:0
+#, python-format
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Atsiprašome, Jums nėra suteikta prieiga prie šio dokumento."
+
+#. module: website_sale_digital
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid ""
+"The attached files are the ones that will be purchased and sent to the "
+"customer."
+msgstr ""
 
 #. module: website_sale_digital
 #: model:product.template,uom_name:website_sale_digital.product_1
