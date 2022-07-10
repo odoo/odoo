@@ -194,7 +194,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 403)
-        self.assertIn("You are not allowed to access 'Journal Entry' (account.move) records.", res.text)
+        self.assertIn("You are not allowed to access &#39;Journal Entry&#39; (account.move) records.", res.text)
 
         # Test attachment can't be associated if not "pending" state
         self.assertFalse(self.out_invoice.message_ids)
