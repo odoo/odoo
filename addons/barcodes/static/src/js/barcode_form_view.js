@@ -25,13 +25,6 @@ FormController.include({
         this.activeBarcode = {
             form_view: {
                 commands: {
-                    'O-CMD.EDIT': this._barcodeEdit.bind(this),
-                    'O-CMD.DISCARD': this._barcodeDiscard.bind(this),
-                    'O-CMD.SAVE': this._barcodeSave.bind(this),
-                    'O-CMD.PREV': this._barcodePagerPrevious.bind(this),
-                    'O-CMD.NEXT': this._barcodePagerNext.bind(this),
-                    'O-CMD.PAGER-FIRST': this._barcodePagerFirst.bind(this),
-                    'O-CMD.PAGER-LAST': this._barcodePagerLast.bind(this),
                 },
             },
         };
@@ -72,84 +65,6 @@ FormController.include({
         }
     },
     /**
-     * @private
-     */
-    _barcodeDiscard: function () {
-        return this.discardChanges();
-    },
-    /**
-     * @private
-     */
-    _barcodeEdit: function () {
-        return this._setMode('edit');
-    },
-    /**
-     * @private
-     */
-    _barcodePagerFirst: async function () {
-        return this._updatePage(() => 1);
-    },
-    /**
-     * @private
-     */
-    _barcodePagerLast: async function () {
-        return this._updatePage((min, state) => state.count);
-    },
-    /**
-     * @private
-     */
-    _barcodePagerNext: function () {
-        return this._updatePage((min, state) => {
-            min += 1;
-            if (min > state.count) {
-                min = 1;
-            }
-            return min;
-        });
-    },
-    /**
-     * @private
-     */
-    _barcodePagerPrevious: function () {
-        return this._updatePage((min, state) => {
-            min -= 1;
-            if (min < 1) {
-                min = state.count;
-            }
-            return min;
-        });
-    },
-    /**
-     * Change the current minimum value of the pager using provided function.
-     * This function will be given the current minimum and state and must return
-     * the updated value.
-     *
-     * @private
-     * @param {Function(currentMin: Number, state: Object)} updater
-     */
-    _updatePage: async function (updater) {
-        await this.mutex.exec(() => {});
-        const state = this.model.get(this.handle, { raw: true });
-        const pagingInfo = this._getPagingInfo(state);
-        if (!pagingInfo) {
-            return this.displayNotification({ message: _t('Pager unavailable'), type: 'danger' });
-        }
-        const currentMinimum = updater(pagingInfo.currentMinimum, state);
-        const limit = pagingInfo.limit;
-        const reloadParams = state.groupedBy && state.groupedBy.length ? {
-                groupsLimit: limit,
-                groupsOffset: currentMinimum - 1,
-            } : {
-                limit,
-                offset: currentMinimum - 1,
-            };
-        await this.reload(reloadParams);
-        // reset the scroll position to the top on page changed only
-        if (state.limit === limit) {
-            this.trigger_up('scrollTo', { top: 0 });
-        }
-    },
-    /**
      * Returns true iff the given barcode matches the given record (candidate).
      *
      * @private
@@ -160,12 +75,6 @@ FormController.include({
      */
     _barcodeRecordFilter: function (candidate, barcode, activeBarcode) {
         return candidate.data.product_barcode === barcode;
-    },
-    /**
-     * @private
-     */
-    _barcodeSave: function () {
-        return this.saveRecord();
     },
     /**
      * @private
