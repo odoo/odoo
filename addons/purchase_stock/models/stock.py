@@ -257,7 +257,7 @@ class Orderpoint(models.Model):
     def _get_replenishment_order_notification(self):
         self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
-        if self.env.context.get('written_date'):
+        if self.env.context.get('written_after'):
             domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
         order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
