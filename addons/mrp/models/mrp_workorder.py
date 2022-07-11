@@ -91,7 +91,7 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     duration_expected = fields.Float(
-        'Expected Duration', digits=(16, 2), default=60.0, compute='_compute_duration_expected',
+        'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         readonly=False, store=True, help="Expected duration (in minutes)")
     duration = fields.Float(

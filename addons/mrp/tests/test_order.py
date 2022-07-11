@@ -5,7 +5,7 @@ from odoo.tests import Form
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools.misc import format_date
@@ -337,6 +337,17 @@ class TestMrpOrder(TestMrpCommon):
         production = mo_form.save()
         self.assertEqual(production.workorder_ids.duration_expected, 165)
 
+        # The same test than above but without form
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+        })
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+        production.product_qty = 3
+        self.assertEqual(production.workorder_ids.duration_expected, 165)
+
     def test_update_quantity_4(self):
         """ Workcenter 1 has 10' start time and 5' stop time """
         # Required for `workerorder_ids` to be visible in the view
@@ -368,6 +379,31 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(production)
         mo_form.product_qty = 3
         production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 40)
+
+        production.action_confirm()
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': production.id,
+            'product_qty': 9,
+        })
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+
+        # The same test than above but without form
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'workorder_ids': [Command.create({
+                'name': 'OP1',
+                'product_uom_id': self.product_6.uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+                'duration_expected': 40,
+            })],
+        })
+        self.assertEqual(production.workorder_ids.duration_expected, 40)
+        production.product_qty = 3
         self.assertEqual(production.workorder_ids.duration_expected, 40)
 
         production.action_confirm()
