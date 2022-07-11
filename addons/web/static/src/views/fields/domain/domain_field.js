@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
@@ -17,7 +18,7 @@ export class DomainField extends Component {
             recordCount: null,
             isValid: true,
         });
-        this.dialog = useService("dialog");
+        this.addDialog = useOwnedDialogs();
 
         this.displayedDomain = null;
         this.isDebugEdited = false;
@@ -58,7 +59,7 @@ export class DomainField extends Component {
     }
 
     onButtonClick() {
-        this.dialog.add(SelectCreateDialog, {
+        this.addDialog(SelectCreateDialog, {
             title: this.env._t("Selected records"),
             noCreate: true,
             multiSelect: false,
@@ -106,6 +107,16 @@ export class DomainField extends Component {
         this.isDebugEdited = isDebugEdited;
         return this.props.update(domain);
     }
+
+    onEditDialogBtnClick() {
+        this.addDialog(DomainSelectorDialog, {
+            resModel: this.getResModel(this.props),
+            initialValue: this.props.value || "[]",
+            readonly: this.props.readonly,
+            isDebugMode: !!this.env.debug,
+            onSelected: this.props.update,
+        });
+    }
 }
 
 DomainField.template = "web.DomainField";
@@ -114,7 +125,11 @@ DomainField.components = {
 };
 DomainField.props = {
     ...standardFieldProps,
+    editInDialog: { type: Boolean, optional: true },
     resModel: { type: String, optional: true },
+};
+DomainField.defaultProps = {
+    editInDialog: false,
 };
 
 DomainField.displayName = _lt("Domain");
@@ -123,6 +138,7 @@ DomainField.supportedTypes = ["char"];
 DomainField.isEmpty = () => false;
 DomainField.extractProps = ({ attrs }) => {
     return {
+        editInDialog: attrs.options.in_dialog,
         resModel: attrs.options.model,
     };
 };
