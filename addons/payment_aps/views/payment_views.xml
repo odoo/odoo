@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">APS Acquirer Form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <group name="acquirer" position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'aps')]}">
+                    <field name="aps_merchant_identifier"
+                           string="Merchant Identifier"
+                           attrs="{'required': [('provider', '=', 'aps'), ('state', '!=', 'disabled')]}"/>
+                    <field name="aps_access_code"
+                           string="Access Code"
+                           attrs="{'required': [('provider', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                    <field name="aps_sha_request"
+                           string="SHA Request Phrase"
+                           attrs="{'required': [('provider', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                    <field name="aps_sha_response"
+                           string="SHA Response Phrase"
+                           attrs="{'required': [('provider', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>
