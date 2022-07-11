@@ -204,6 +204,12 @@ class MailTemplate(models.Model):
                 values = results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
+                scheduled_date = values.pop('scheduled_date', None)
+                if 'scheduled_date' in fields and scheduled_date:
+                    parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+                    values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+
                 # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
