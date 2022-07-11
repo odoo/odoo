@@ -1542,9 +1542,9 @@
                     </t>
                 </ul>
             </t>
-            <div t-else="" class="form-inline" role="toolbar" aria-label="Toolbar with button groups">
-                <label for="filter" class="my-1 me-2">Show Tags Starting By</label>
-                <select name="filter" class="form-select" onchange="location = this.value;">
+            <div t-else="" class="d-flex align-items-center" role="toolbar" aria-label="Toolbar with button groups">
+                <label for="filter" class="me-2">Show Tags Starting By</label>
+                <select name="filter" class="form-select w-auto" onchange="location = this.value;">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-esc="tuple_char[0]"/>
                         <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" t-esc="tuple_char[0]"/>

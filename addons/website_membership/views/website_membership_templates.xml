@@ -37,7 +37,7 @@
                     <t t-call="website.pager">
                        <t t-set="classname" t-valuef="float-start"/>
                     </t>
-                    <form action="" method="get" class="navbar-search ms-auto pagination form-inline">
+                    <form action="" method="get" class="navbar-search ms-auto pagination">
                         <t t-call="website.website_search_box">
                             <t t-set="search" t-value="post.get('search', '')"/>
                         </t>

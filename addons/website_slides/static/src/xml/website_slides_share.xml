@@ -33,11 +33,11 @@
 
     <t t-name="website.slide.share.email">
         <h5 class="mt-4">Share by mail</h5>
-        <div t-if="!widget.session.is_website_user" class="form-inline">
+        <div t-if="!widget.session.is_website_user">
             <form class="form-group o_wslides_js_share_email" role="form">
                 <div class="input-group">
                     <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
-                    <button class="btn btn-primary" type="button"
+                    <button class="btn btn-sm btn-primary" type="button"
                         data-loading-text="Sending..."
                         t-attf-data-slide-id="#{widget.slide.id}"
                         style="border-top-end-radius: 4px;border-bottom-end-radius: 4px;">
