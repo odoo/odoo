@@ -2021,12 +2021,17 @@ var SnippetsMenu = Widget.extend({
             this._defLoadSnippets = cacheSnippetTemplate[this.options.snippets];
             return this._defLoadSnippets;
         }
+        let context = Object.assign({}, this.options.context);
+        if (context.user_lang) {
+            context.lang = this.options.context.user_lang;
+            context.snippet_lang = this.options.context.lang;
+        }
         this._defLoadSnippets = this._rpc({
             model: 'ir.ui.view',
             method: 'render_public_asset',
             args: [this.options.snippets, {}],
             kwargs: {
-                context: this.options.context,
+                context: context,
             },
         }, { shadow: true });
         cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
