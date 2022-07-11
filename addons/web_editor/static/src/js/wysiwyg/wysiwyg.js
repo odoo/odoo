@@ -1292,7 +1292,7 @@ const Wysiwyg = Widget.extend({
                     break;
                 case 'media-insert':
                 case 'media-replace':
-                    this.openMediaDialog();
+                    this.openMediaDialog({ node: this.lastMediaClicked });
                     break;
                 case 'media-description':
                     new weWidgets.AltDialog(this, {}, this.lastMediaClicked).open();
