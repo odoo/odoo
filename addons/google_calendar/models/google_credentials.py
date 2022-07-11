@@ -17,7 +17,7 @@ class GoogleCredentials(models.Model):
     _name = 'google.calendar.credentials'
     _description = 'Google Calendar Account Data'
 
-    user_ids = fields.One2many('res.users', 'google_cal_account_id', required=True)
+    user_ids = fields.One2many('res.users', 'google_calendar_account_id', required=True)
     calendar_rtoken = fields.Char('Refresh Token', copy=False)
     calendar_token = fields.Char('User token', copy=False)
     calendar_token_validity = fields.Datetime('Token Validity', copy=False)

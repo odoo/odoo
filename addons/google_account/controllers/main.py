@@ -13,14 +13,21 @@ class GoogleAuth(http.Controller):
     def oauth2callback(self, **kw):
         """ This route/function is called by Google when user Accept/Refuse the consent of Google """
         state = json.loads(kw['state'])
-        dbname = state.get('d')
         service = state.get('s')
         url_return = state.get('f')
 
         if kw.get('code'):
-            access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(kw['code'], service)
-            # LUL TODO only defined in google_calendar
-            request.env.user.google_cal_account_id._set_auth_tokens(access_token, refresh_token, ttl)
+            base_url = request.env.user.get_base_url()
+            access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(
+                kw['code'],
+                service,
+                redirect_uri=f'{base_url}/google_account/authentication'
+            )
+            service_field = f'google_{service}_account_id'
+            if service_field in request.env.user:
+                getattr(request.env.user, service_field)._set_auth_tokens(access_token, refresh_token, ttl)
+            else:
+                raise Warning('No callback field for service <%s>' % service)
             return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
