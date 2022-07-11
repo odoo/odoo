@@ -13,6 +13,11 @@ odoo.define("fg_custom.is_non_zero_vat", function (require) {
 //            var taxes_ids = this.tax_ids || product.taxes_id;
 //            taxes_ids = _.filter(taxes, t => t in this.pos.taxes_by_id);
             result.is_non_zero_vat_taxes_ids = taxes;
+            result.is_program_reward = this.is_program_reward;
+            result.program_id = this.program_id;
+            result.coupon_id = this.coupon_id;
+//            console.log('------Orderline-----result---', result)
+//            console.log('------Orderline-----this---', this.is_program_reward, this.program_id, this.coupon_id)
             return result;
         },
      });
