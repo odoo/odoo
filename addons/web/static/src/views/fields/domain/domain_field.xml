@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainField" owl="1">
-        <div t-att-class="{ o_inline_mode: !env.inDialog }">
+        <div t-att-class="{ o_inline_mode: !props.editInDialog }">
             <t t-if="getResModel(props)">
                 <DomainSelector
                     resModel="getResModel(props)"
                     value="displayedDomain || '[]'"
-                    readonly="props.readonly"
+                    readonly="props.readonly or props.editInDialog"
                     update.bind="update"
                     isDebugMode="!!env.debug"
                     className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
@@ -37,6 +37,10 @@
                     </t>
                     <t t-else="">
                         <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading" />
+                    </t>
+
+                    <t t-if="props.editInDialog and !props.readonly">
+                        <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
                     </t>
                 </div>
             </t>
