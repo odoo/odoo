@@ -8,8 +8,6 @@ from datetime import timedelta
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
-from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +22,7 @@ class GoogleCredentials(models.Model):
     calendar_token = fields.Char('User token', copy=False)
     calendar_token_validity = fields.Datetime('Token Validity', copy=False)
     calendar_sync_token = fields.Char('Next Sync Token', copy=False)
+
     calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
 
