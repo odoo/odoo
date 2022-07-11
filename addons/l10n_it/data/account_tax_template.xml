@@ -563,6 +563,41 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="00ex" model="account.tax.template">
+        <field name="description">00exp</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">0% EX</field>
+        <field name="sequence">17</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp2')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -576,7 +611,7 @@
         <field name="description">00art15v</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">0% Art.15</field>
-        <field name="sequence">17</field>
+        <field name="sequence">18</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -608,7 +643,7 @@
         <field name="description">00art15a</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">0% Art.15</field>
-        <field name="sequence">18</field>
+        <field name="sequence">19</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -642,7 +677,7 @@
         <field name="description">22rcs</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">22% S RC</field>
-        <field name="sequence">19</field>
+        <field name="sequence">20</field>
         <field name="amount">22</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -690,7 +725,7 @@
         <field name="description">10rcs</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">10% S RC</field>
-        <field name="sequence">20</field>
+        <field name="sequence">21</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -738,7 +773,7 @@
         <field name="description">5rcs</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">5% S RC</field>
-        <field name="sequence">21</field>
+        <field name="sequence">22</field>
         <field name="active">False</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
@@ -787,7 +822,7 @@
         <field name="description">4rcs</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">4% S RC</field>
-        <field name="sequence">22</field>
+        <field name="sequence">23</field>
         <field name="active">False</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
@@ -836,7 +871,7 @@
         <field name="description">00rcs</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">0% S RC</field>
-        <field name="sequence">23</field>
+        <field name="sequence">24</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -886,7 +921,7 @@
         <field name="description">22rcm</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">22% G RC</field>
-        <field name="sequence">24</field>
+        <field name="sequence">25</field>
         <field name="amount">22</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -934,7 +969,7 @@
         <field name="description">10rcm</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">10% G RC</field>
-        <field name="sequence">25</field>
+        <field name="sequence">26</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -982,7 +1017,7 @@
         <field name="description">5rcm</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">5% G RC</field>
-        <field name="sequence">26</field>
+        <field name="sequence">27</field>
         <field name="active">False</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
@@ -1031,7 +1066,7 @@
         <field name="description">4rcm</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">4% G RC</field>
-        <field name="sequence">27</field>
+        <field name="sequence">28</field>
         <field name="active">False</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
@@ -1080,7 +1115,7 @@
         <field name="description">00rcm</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">0% G RC</field>
-        <field name="sequence">28</field>
+        <field name="sequence">29</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1130,7 +1165,7 @@
         <field name="description">22rcd</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">22% G Deposit</field>
-        <field name="sequence">29</field>
+        <field name="sequence">30</field>
         <field name="amount">22</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1178,7 +1213,7 @@
         <field name="description">10rcd</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">10% G Deposit</field>
-        <field name="sequence">30</field>
+        <field name="sequence">31</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1226,7 +1261,7 @@
         <field name="description">5rcd</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">5% G Deposit</field>
-        <field name="sequence">31</field>
+        <field name="sequence">32</field>
         <field name="active">False</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
@@ -1275,7 +1310,7 @@
         <field name="description">4rcd</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">4% G Deposit</field>
-        <field name="sequence">32</field>
+        <field name="sequence">33</field>
         <field name="active">False</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
@@ -1324,7 +1359,7 @@
         <field name="description">00rcd</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">0% G Deposit</field>
-        <field name="sequence">33</field>
+        <field name="sequence">34</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>

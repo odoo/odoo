@@ -134,9 +134,13 @@
                 </DatiBollo>
                 <ImportoTotaleDocumento t-esc="format_monetary(record.amount_total, currency)"/>
             </DatiGeneraliDocumento>
-            <DatiOrdineAcquisto t-if="record.ref">
+            <DatiOrdineAcquisto t-if="not is_self_invoice and record.ref">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
             </DatiOrdineAcquisto>
+            <DatiFattureCollegate t-if="is_self_invoice and record.ref">
+                <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
+                <Data t-esc="format_date(record.invoice_date)"/>
+            </DatiFattureCollegate>
             <DatiDDT t-if="record.l10n_it_ddt_id">
                 <NumeroDDT t-esc="format_alphanumeric(record.l10n_it_ddt_id.name[-20:])"/>
                 <DataDDT t-esc="format_date(record.l10n_it_ddt_id.date)"/>
