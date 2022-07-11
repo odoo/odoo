@@ -47,6 +47,36 @@ class TestItEdi(AccountEdiTestCommon):
             'company_id': cls.company.id,
         })
 
+        cls.tax_zero_percent_hundred_percent_repartition = cls.env['account.tax'].create({
+            'name': 'all of nothing',
+            'amount': 0,
+            'amount_type': 'percent',
+            'company_id': cls.company.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'tax'}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'tax'}),
+            ],
+        })
+
+        cls.tax_zero_percent_zero_percent_repartition = cls.env['account.tax'].create({
+            'name': 'none of nothing',
+            'amount': 0,
+            'amount_type': 'percent',
+            'company_id': cls.company.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {'factor_percent': 0, 'repartition_type': 'tax'}),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
+                (0, 0, {'factor_percent': 0, 'repartition_type': 'tax'}),
+            ],
+        })
+
         cls.italian_partner_a = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
@@ -261,6 +291,25 @@ class TestItEdi(AccountEdiTestCommon):
             'private_key': 'l10n_it_edi_sdicoop_test',
         })
 
+        cls.zero_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'line with tax of 0% with repartition line of 100% ',
+                    'tax_ids': [(6, 0, [cls.tax_zero_percent_hundred_percent_repartition.id])],
+                }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'line with tax of 0% with repartition line of 0% ',
+                    'tax_ids': [(6, 0, [cls.tax_zero_percent_zero_percent_repartition.id])],
+                }),
+            ],
+        })
+
         # post the invoices
         cls.price_included_invoice._post()
         cls.partial_discount_invoice._post()
@@ -269,6 +318,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.below_400_codice_simplified_invoice._post()
         cls.total_400_VAT_simplified_invoice._post()
         cls.pa_partner_invoice._post()
+        cls.zero_tax_invoice._post()
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
         cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
@@ -571,3 +621,51 @@ class TestItEdi(AccountEdiTestCommon):
     def test_send_pa_partner(self):
         res = self.edi_format._l10n_it_post_invoices_step_1(self.pa_partner_invoice)
         self.assertEqual(res[self.pa_partner_invoice], {'attachment': self.pa_partner_invoice.l10n_it_edi_attachment_id, 'success': True})
+
+    def test_zero_percent_taxes(self):
+        invoice_etree = etree.fromstring(self.zero_tax_invoice._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_basis_xml),
+            '''
+            <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+                <DatiBeniServizi>
+                  <DettaglioLinee>
+                    <NumeroLinea>1</NumeroLinea>
+                    <Descrizione>line with tax of 0% with repartition line of 100%</Descrizione>
+                    <Quantita>1.00</Quantita>
+                    <PrezzoUnitario>800.400000</PrezzoUnitario>
+                    <PrezzoTotale>800.40</PrezzoTotale>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                  </DettaglioLinee>
+                  <DettaglioLinee>
+                    <NumeroLinea>2</NumeroLinea>
+                    <Descrizione>line with tax of 0% with repartition line of 0%</Descrizione>
+                    <Quantita>1.00</Quantita>
+                    <PrezzoUnitario>800.400000</PrezzoUnitario>
+                    <PrezzoTotale>800.40</PrezzoTotale>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                  </DettaglioLinee>
+                  <DatiRiepilogo>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                    <ImponibileImporto>800.40</ImponibileImporto>
+                    <Imposta>0.00</Imposta>
+                    <EsigibilitaIVA>I</EsigibilitaIVA>
+                  </DatiRiepilogo>
+                  <DatiRiepilogo>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                    <ImponibileImporto>800.40</ImponibileImporto>
+                    <Imposta>0.00</Imposta>
+                    <EsigibilitaIVA>I</EsigibilitaIVA>
+                  </DatiRiepilogo>
+                </DatiBeniServizi>
+            </xpath>
+            <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+                1600.80
+            </xpath>
+            <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                1600.80
+            </xpath>
+            '''
+        )
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
