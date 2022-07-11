@@ -2,10 +2,11 @@ odoo.define('barcodes.tests', function (require) {
 "use strict";
 
 const {barcodeService} = require("@barcodes/barcode_service");
-const {barcodeAutoClick} = require("@barcodes/barcode_handlers");
+const {barcodeGenericHandlers} = require("@barcodes/barcode_handlers");
 const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const { registry } = require("@web/core/registry");
+const { mockTimeout } = require("@web/../tests/helpers/utils");
 
 var AbstractField = require('web.AbstractField');
 var fieldRegistry = require('web.field_registry');
@@ -40,7 +41,7 @@ QUnit.module('Barcodes', {
     before() {
         barcodeService.maxTimeBetweenKeysInMs = 0;
         registry.category("services").add("barcode", barcodeService, { force: true});
-        registry.category("services").add("barcode_autoclick", barcodeAutoClick, { force: true});
+        registry.category("services").add("barcode_autoclick", barcodeGenericHandlers, { force: true});
         // remove this one later
         registry.category("services").add("barcode_remapper", barcodeRemapperService);
         this.env = makeTestEnv();
@@ -172,10 +173,12 @@ QUnit.test('edit, save and cancel buttons', async function (assert) {
 });
 
 QUnit.test('pager buttons', async function (assert) {
+    const mock = mockTimeout();
     assert.expect(5);
 
     var form = await createView({
         View: FormView,
+        debug: true,
         model: 'product',
         data: this.data,
         arch: '<form><field name="display_name"/></form>',
@@ -197,11 +200,15 @@ QUnit.test('pager buttons', async function (assert) {
     assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-LAST
     simulateBarCode(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"]);
-    await testUtils.nextTick();
+    // need to await 2 macro steps
+    await mock.advanceTime(20);
+    await mock.advanceTime(20);
     assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-FIRST
     simulateBarCode(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"]);
-    await testUtils.nextTick();
+    // need to await 2 macro steps
+    await mock.advanceTime(20);
+    await mock.advanceTime(20);
     assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
 
     form.destroy();
