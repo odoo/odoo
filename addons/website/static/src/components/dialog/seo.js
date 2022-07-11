@@ -433,7 +433,9 @@ export class OptimizeSEODialog extends Component {
             }
         }
         data.website_meta_og_img = seoContext.metaImage;
-        await this.orm.write(this.object.model, [this.object.id], data);
+        await this.orm.write(this.object.model, [this.object.id], data, {
+            context: {lang: this.website.currentWebsite.metadata.lang},
+        });
         this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
     }
 }
