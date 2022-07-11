@@ -10,7 +10,7 @@ from PIL import Image
 
 from . import common
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests.common import TransactionCase, Form, users
 
 
 class TestVariantsSearch(TransactionCase):
@@ -603,6 +603,27 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
         self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
         self.assertEqual(len(toto.product_variant_ids), 0)
+
+    @users('admin')
+    def test_08_create_unreable_multi_company_attribute(self):
+        attribute = self.attributes[0]
+        attribute.write({'create_variant': 'always'})
+        self.env['product.template'].create({
+            'name': 'Toto',
+            'company_id': self.env.company.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            })]
+        })
+        other_company = self.env['res.company'].create({'name': 'other'})
+        self.env['product.template'].with_context(allowed_company_ids=other_company.ids).create({
+            'name': 'Tarte',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            })]
+        })
 
 
 class TestVariantsImages(common.TestProductCommon):
