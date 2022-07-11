@@ -19,6 +19,7 @@ registerModel({
                 return {
                     unicode: emoji.codepoints,
                     sources: [...emoji.shortcodes, ...emoji.emoticons],
+                    keywords: [...emoji.shortcodes, ...emoji.emoticons, ...emoji.name, ...emoji.keywords],
                     description: emoji.name,
                     emojiCategories: insert([
                         { categoryName: "all" },

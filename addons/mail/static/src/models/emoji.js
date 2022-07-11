@@ -38,6 +38,37 @@ registerModel({
         _computeEmojiRegistry() {
             return replace(this.messaging.emojiRegistry);
         },
+        /**
+         * @private
+         * @returns {boolean}
+         * Compares two strings
+         */
+        _fuzzySearch(string, search) {
+            let i = 0;
+            let j = 0;
+            while (i < string.length) {
+                if (string[i] === search[j]) {
+                    j += 1;
+                }
+                if (j === search.length) {
+                    return true;
+                }
+                i += 1;
+            }
+            return false;
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _isStringInEmojiKeywords(string) {
+            for (let index in this.keywords) {
+                if (this._fuzzySearch(this.keywords[index], string)) { //If at least one correspondence is found, return true.
+                    return true;
+                }
+            }
+            return false;
+        },
     },
     fields: {
         description: attr({
@@ -62,6 +93,9 @@ registerModel({
         }),
         hasSkinToneVariations: attr(),
         sources: attr({
+            readonly: true,
+        }),
+        keywords: attr({
             readonly: true,
         }),
         unicode: attr({

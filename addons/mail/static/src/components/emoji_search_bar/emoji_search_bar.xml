@@ -1,0 +1,10 @@
+
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiSearchBar" owl="1">
+        <div class="o_EmojiSearchBar px-1 overflow-auto d-flex flex-shrink-0" t-attf-class="{{ className }}" t-ref="root">
+            <input class="o_EmojiSearchBar_searchInput border-0 overflow-auto flex-fill" t-att-placeholder="props.record.placeholder" t-on-input="props.record.onInput" t-ref="input"/>
+        </div>
+    </t>
+
+</templates>
