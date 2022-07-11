@@ -2091,4 +2091,14 @@
                 t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
         </t>
     </template>
+    <template id="sale_order_order_again_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
+        <xpath expr="//t[@t-set='entries']/ul/li" position="after">
+            <li class="list-group-item flex-grow-1">
+                <button class="order_again_btn btn btn-primary" t-att-data-sale-order-id="sale_order.id">
+                    <i class="fa fa-rotate-right"/>
+                    Order Again
+                </button>
+            </li>
+        </xpath>
+    </template>
 </odoo>
