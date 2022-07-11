@@ -402,15 +402,20 @@ class Task(models.Model):
         In this case, a warning message is displayed through a RedirectWarning
         and allows the user to see timesheets entries to unlink.
         """
-        tasks_with_timesheets = self.filtered(lambda t: t.timesheet_ids)
-        if tasks_with_timesheets:
-            if len(tasks_with_timesheets) > 1:
+        timesheet_data = self.env['account.analytic.line'].sudo().read_group(
+            [('task_id', 'in', self.ids)],
+            ['task_id'],
+            ['task_id'],
+        )
+        task_with_timesheets_ids = [res['task_id'][0] for res in timesheet_data]
+        if task_with_timesheets_ids:
+            if len(task_with_timesheets_ids) > 1:
                 warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
             else:
                 warning_msg = _("This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries.")
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
-                _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
+                _('See timesheet entries'), {'active_ids': task_with_timesheets_ids})
 
     @api.model
     def _convert_hours_to_days(self, time):
