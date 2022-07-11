@@ -632,7 +632,7 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
-        if self.order_id.analytic_account_id:
+        if self.order_id.analytic_account_id and not self.display_type:
             res['analytic_account_id'] = self.order_id.analytic_account_id.id
         if optional_values:
             res.update(optional_values)
