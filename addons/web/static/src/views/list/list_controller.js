@@ -279,6 +279,10 @@ export class ListController extends Component {
         }
     }
 
+    get className() {
+        return this.props.className;
+    }
+
     get nbSelected() {
         return this.model.root.selection.length;
     }
