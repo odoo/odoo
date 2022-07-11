@@ -341,14 +341,16 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
-                (0, 0, {'name': kit.name, 'product_id': kit.id, 'product_uom_qty': 1}),
+                (0, 0, {'name': kit.name, 'product_id': kit.id, 'product_uom_qty': 2}),
             ],
         })
         sale_order.action_confirm()
         self.env['purchase.order'].search([], order='id desc', limit=1).button_confirm()
 
         sale_order.picking_ids.move_lines.quantity_done = 1
-        sale_order.picking_ids[0].button_validate()
-        sale_order.picking_ids[1].button_validate()
+        for pick in sale_order.picking_ids:
+            backorder_action = pick.button_validate()
+            backorder_wiz = self.env[backorder_action.get("res_model")].browse(backorder_action.get("res_id"))
+            backorder_wiz.process()
 
         self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
