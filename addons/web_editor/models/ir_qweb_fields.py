@@ -71,6 +71,10 @@ class IrQWeb(models.AbstractModel):
     def _compile_directive_snippet(self, el, compile_context, indent):
         key = el.attrib.pop('t-snippet')
         el.set('t-call', key)
+        snippet_lang = self._context.get('snippet_lang')
+        if snippet_lang:
+            el.set('t-lang', f"'{snippet_lang}'")
+
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
         view = self.env['ir.ui.view']._get(key).sudo()
         name = view.name
