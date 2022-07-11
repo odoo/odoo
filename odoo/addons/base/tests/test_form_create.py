@@ -13,7 +13,9 @@ class TestFormCreate(TransactionCase):
 
     def test_create_res_partner(self):
         # Required for `property_account_payable_id`, `property_account_receivable_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+        group_account_readonly = self.env.ref('account.group_account_readonly', raise_if_not_found=False)
+        if group_account_readonly:
+            self.env.user.groups_id += self.env.ref('account.group_account_readonly')
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'a partner'
         # YTI: Clean that brol
