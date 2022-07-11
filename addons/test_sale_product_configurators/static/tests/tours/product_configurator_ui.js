@@ -31,15 +31,19 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'input[data-value_name="Black"]'
 }, {
-    trigger: '.btn-primary.disabled',
-    extra_trigger: '.show .modal-footer'
+    trigger: '.btn-primary.disabled span:contains("Confirm")',
+    extra_trigger: '.show .modal-footer' // check confirm is disable and try to do it anyway
 }, {
     trigger: 'input[data-value_name="White"]'
 }, {
-    trigger: '.btn-primary:not(.disabled)',
-    extra_trigger: '.show .modal-footer'
+    trigger: '.btn-primary:not(.disabled)  span:contains("Confirm")',
+    extra_trigger: '.show .modal-footer',
+    run: function (){} // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
+    extra_trigger: '.oe_advanced_configurator_modal',
+}, {
+    trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
     extra_trigger: '.oe_advanced_configurator_modal',
 }, {
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
