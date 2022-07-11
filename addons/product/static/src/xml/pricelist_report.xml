@@ -3,8 +3,8 @@
 
     <t t-name="product.report_pricelist_qty">
         <span>
-            <div class="input-group">
-                <input type="number" name="qty_to_add" class="o_input o_product_qty form-control text-end" value="1" min="1"/>
+            <div class="input-group flex-nowrap w-75">
+                <input type="number" name="qty_to_add" class="o_input o_product_qty form-control text-end w-auto" value="1" min="1"/>
                 <button class="btn btn-secondary o_add_qty text-end form-control" type="submit" title="Add a quantity">
                     <i class="fa fa-plus"/>
                 </button>
@@ -17,28 +17,18 @@
     </t>
 
     <t t-name="product.report_pricelist_search">
-        <form class="form-inline ms-4 o_pricelist_report_form">
-            <div class="form-group">
+        <form class="d-flex justify-content-around align-items-center o_pricelist_report_form">
+            <div>
                 <label class="fw-bold">Pricelist:</label>
-                <div class="row">
-                    <div class="col me-4">
-                        <span class="o_pricelist"/>
-                    </div>
-                </div>
+                <span class="o_pricelist"/>
             </div>
-            <div class="form-group">
+            <div class="d-flex align-items-center">
                 <label class="fw-bold mb-4" for="qty_to_add">Quantities:</label>
-                <div class="row">
-                    <div class="col">
-                        <span class="o_product_qty"/>
-                    </div>
-                </div>
+                <div class="o_product_qty"/>
             </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input o_is_visible_title ms-2" type="checkbox"/>
-                    <label class="form-check-label">Display Pricelist</label>
-                </div>
+            <div class="form-check">
+                <input class="form-check-input o_is_visible_title ms-2" type="checkbox"/>
+                <label class="form-check-label">Display Pricelist</label>
             </div>
         </form>
     </t>

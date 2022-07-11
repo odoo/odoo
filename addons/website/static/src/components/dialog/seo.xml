@@ -63,19 +63,16 @@
         <label for="website_meta_keywords">
             Keywords
         </label>
-        <div class="form-inline" role="form">
-            <div class="input-group">
+        <div class="d-flex" role="form">
+            <div class="input-group w-auto">
                 <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
-                <span title="The language of the keyword and related keywords." class="input-group-append">
-                    <select t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
-                        <t t-foreach="languages" t-as="lang" t-key="lang[0]">
-                            <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
-                        </t>
-                    </select>
-                </span>
-                <span class="input-group-append">
-                    <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary btn-sm" type="button">Add</button>
-                </span>
+                <select title="The language of the keyword and related keywords."
+                        t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
+                    <t t-foreach="languages" t-as="lang" t-key="lang[0]">
+                        <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                    </t>
+                </select>
+                <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
             </div>
         </div>
         <div t-if="seoContext.keywords.length" class="table-responsive mt16">

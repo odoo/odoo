@@ -36,7 +36,7 @@
                     </div>
                 </form>
 
-                <form method="POST" action="/web/session/logout" class="form-inline">
+                <form method="POST" action="/web/session/logout">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="w-100 text-center">
                         <button type="submit" class="btn btn-link btn-sm mb-2">

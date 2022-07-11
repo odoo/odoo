@@ -9,33 +9,27 @@
 </t>
 
 <t t-name="web_unsplash.UnsplashCredentials" owl="1">
-    <div class="form-inline">
-        <div class="form-group">
-            <span>
-                <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-access-key" target="_blank">Get an Access key</a>
-                and paste it here:
-                <input type="text"
-                    class="form-control w-auto"
-                    id="accessKeyInput"
-                    placeholder="Paste your access key here"
-                    t-model="state.key"
-                    t-on-input="() => this.state.hasKeyError = false"
-                    t-att-class="{ 'is-invalid': state.hasKeyError }"/>
-            </span>
-        </div>
-        <div class="form-group my-md-3">
-            <span class="ms-xl-1">
-                and paste
-                <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-application-id" target="_blank">Application ID</a>
-                here:
-                <input type="text"
-                class="form-control w-auto"
-                placeholder="Paste your application ID here"
-                t-model="state.appId"
-                t-on-input="() => this.state.hasAppIdError = false"
-                t-att-class="{ 'is-invalid': state.hasAppIdError }"/>
-            </span>
-        </div>
+    <div class="d-flex align-items-center flex-wrap">
+        <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-access-key"
+           class="mx-2" target="_blank">Get an Access key</a>
+        and paste it here:
+        <input type="text"
+            class="form-control w-auto mx-2"
+            id="accessKeyInput"
+            placeholder="Paste your access key here"
+            t-model="state.key"
+            t-on-input="() => this.state.hasKeyError = false"
+            t-att-class="{ 'is-invalid': state.hasKeyError }"/>
+        and paste
+        <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/unsplash.html#generate-an-unsplash-application-id"
+           class="mx-2" target="_blank">Application ID</a>
+        here:
+        <input type="text"
+            class="form-control w-auto mx-2"
+            placeholder="Paste your application ID here"
+            t-model="state.appId"
+            t-on-input="() => this.state.hasAppIdError = false"
+            t-att-class="{ 'is-invalid': state.hasAppIdError }"/>
         <button type="button" class="btn btn-primary btn-block w-auto ms-2 save_unsplash" t-on-click="() => this.submitCredentials()">Apply</button>
     </div>
 </t>

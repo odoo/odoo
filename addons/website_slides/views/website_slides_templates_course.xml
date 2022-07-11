@@ -592,7 +592,7 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-transparent col">
                     <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
 
-                    <div class="form-inline ms-auto d-lg-none" t-if="search_slide_category or search">
+                    <div class="ms-auto d-lg-none" t-if="search_slide_category or search">
                         <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info me-3">
                             <i class="fa fa-eraser me-1"/>Clear filters
                         </a>
@@ -654,13 +654,13 @@
                                 </li>
                             </ul>
 
-                            <div class="form-inline me-3 d-none d-lg-inline-block">
+                            <div class="me-3 d-none d-lg-inline-block">
                                 <a t-if="search_slide_category or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ms-1">
                                     <i class="fa fa-eraser me-1"/>Clear filters
                                 </a>
                             </div>
 
-                            <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="form-inline my-2 my-lg-0">
+                            <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="my-2 my-lg-0">
                                 <div class="input-group position-relative">
                                     <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
                                     <button class="btn border" type="submit" aria-label="Search" title="Search">
@@ -752,7 +752,7 @@
         </div>
     </div>
     <t t-if="search_category or search_uncategorized">
-        <div class="form-inline justify-content-center pb-5">
+        <div class="d-flex justify-content-center pb-5">
             <t t-call="website_profile.pager_nobox"></t>
         </div>
     </t>
