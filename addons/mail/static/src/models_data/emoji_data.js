@@ -111,6 +111,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "grin",
+            "grinning face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -121,6 +126,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "grinning face with big eyes",
+            "mouth",
+            "open",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -131,6 +143,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "face",
+            "grinning face with smiling eyes",
+            "mouth",
+            "open",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -141,6 +161,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "beaming face with smiling eyes",
+            "eye",
+            "face",
+            "grin",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -151,6 +178,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "grinning squinting face",
+            "laugh",
+            "mouth",
+            "satisfied",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -161,6 +196,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cold",
+            "face",
+            "grinning face with sweat",
+            "open",
+            "smile",
+            "sweat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -171,6 +214,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "floor",
+            "laugh",
+            "rofl",
+            "rolling",
+            "rolling on the floor laughing",
+            "rotfl"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -182,6 +234,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with tears of joy",
+            "joy",
+            "laugh",
+            "tear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -192,6 +251,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "slightly smiling face",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -202,6 +266,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "upside-down",
+            "upside down",
+            "upside-down face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -212,6 +282,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "disappear",
+            "dissolve",
+            "liquid",
+            "melt",
+            "melting face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -222,6 +299,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "wink",
+            "winking face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -232,6 +314,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "blush",
+            "eye",
+            "face",
+            "smile",
+            "smiling face with smiling eyes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -243,6 +332,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "angel",
+            "face",
+            "fantasy",
+            "halo",
+            "innocent",
+            "smiling face with halo"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -253,6 +350,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "adore",
+            "crush",
+            "hearts",
+            "in love",
+            "smiling face with hearts"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -263,6 +367,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "face",
+            "love",
+            "smile",
+            "smiling face with heart-eyes",
+            "smiling face with heart eyes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -273,6 +385,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eyes",
+            "face",
+            "grinning",
+            "star",
+            "star-struck"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -283,6 +402,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face blowing a kiss",
+            "kiss"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -293,6 +417,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "kiss",
+            "kissing face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -303,6 +432,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "outlined",
+            "relaxed",
+            "smile",
+            "smiling face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -313,6 +449,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "closed",
+            "eye",
+            "face",
+            "kiss",
+            "kissing face with closed eyes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -323,6 +466,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "face",
+            "kiss",
+            "kissing face with smiling eyes",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -333,6 +483,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "grateful",
+            "proud",
+            "relieved",
+            "smiling",
+            "smiling face with tear",
+            "tear",
+            "touched"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -343,6 +502,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "delicious",
+            "face",
+            "face savoring food",
+            "savouring",
+            "smile",
+            "yum",
+            "face savouring food",
+            "savoring"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -355,6 +524,11 @@ export const emojisData = JSON.parse(`[
             ":P"
         ],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with tongue",
+            "tongue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -365,6 +539,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "face",
+            "joke",
+            "tongue",
+            "wink",
+            "winking face with tongue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -375,6 +557,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "goofy",
+            "large",
+            "small",
+            "zany face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -385,6 +574,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eye",
+            "face",
+            "horrible",
+            "squinting face with tongue",
+            "taste",
+            "tongue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -395,6 +592,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "money",
+            "money-mouth face",
+            "mouth"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -405,6 +608,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "hug",
+            "hugging",
+            "open hands",
+            "smiling face",
+            "smiling face with open hands"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -415,6 +626,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face with hand over mouth",
+            "whoops",
+            "oops",
+            "embarrassed"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -425,6 +642,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "amazement",
+            "awe",
+            "disbelief",
+            "embarrass",
+            "face with open eyes and hand over mouth",
+            "scared",
+            "surprise"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -435,6 +661,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "captivated",
+            "face with peeking eye",
+            "peep",
+            "stare"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -445,6 +677,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "quiet",
+            "shooshing face",
+            "shush",
+            "shushing face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -455,6 +693,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "thinking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -465,6 +707,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "OK",
+            "salute",
+            "saluting face",
+            "sunny",
+            "troops",
+            "yes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -475,6 +725,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "mouth",
+            "zipper",
+            "zipper-mouth face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -486,6 +742,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "distrust",
+            "face with raised eyebrow",
+            "skeptic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -499,6 +760,12 @@ export const emojisData = JSON.parse(`[
             ":-|"
         ],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "deadpan",
+            "face",
+            "meh",
+            "neutral"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -509,6 +776,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "expressionless",
+            "face",
+            "inexpressive",
+            "meh",
+            "unexpressive"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -519,6 +793,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face without mouth",
+            "mouth",
+            "quiet",
+            "silent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -529,6 +810,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "depressed",
+            "disappear",
+            "dotted line face",
+            "hide",
+            "introvert",
+            "invisible"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -539,6 +828,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "absentminded",
+            "face in clouds",
+            "face in the fog",
+            "head in clouds",
+            "absent-minded"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -549,6 +845,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "smirk",
+            "smirking face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -559,6 +860,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "unamused",
+            "unhappy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -569,6 +875,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "eyeroll",
+            "eyes",
+            "face",
+            "face with rolling eyes",
+            "rolling"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -579,6 +892,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "grimace",
+            "grimacing face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -589,6 +907,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "exhale",
+            "face exhaling",
+            "gasp",
+            "groan",
+            "relief",
+            "whisper",
+            "whistle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -599,6 +926,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "lie",
+            "lying face",
+            "pinocchio"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -609,6 +942,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "relieved"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -619,6 +956,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "dejected",
+            "face",
+            "pensive"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -629,6 +971,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "good night",
+            "sleep",
+            "sleepy face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -639,6 +987,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "drooling",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -649,6 +1001,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "good night",
+            "sleep",
+            "sleeping face",
+            "ZZZ"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -659,6 +1018,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cold",
+            "doctor",
+            "face",
+            "face with medical mask",
+            "mask",
+            "sick",
+            "ill",
+            "medicine",
+            "poorly"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -669,6 +1039,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with thermometer",
+            "ill",
+            "sick",
+            "thermometer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -679,6 +1056,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "bandage",
+            "face",
+            "face with head-bandage",
+            "hurt",
+            "injury",
+            "face with head bandage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -689,6 +1074,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "nauseated",
+            "vomit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -699,6 +1089,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face vomiting",
+            "puke",
+            "sick",
+            "vomit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -709,6 +1105,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "gesundheit",
+            "sneeze",
+            "sneezing face",
+            "bless you"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -719,6 +1122,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "feverish",
+            "flushed",
+            "heat stroke",
+            "hot",
+            "hot face",
+            "red-faced",
+            "sweating"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -729,6 +1141,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "blue-faced",
+            "cold",
+            "cold face",
+            "freezing",
+            "frostbite",
+            "icicles"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -739,6 +1159,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "dizzy",
+            "intoxicated",
+            "tipsy",
+            "uneven eyes",
+            "wavy mouth",
+            "woozy face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -749,6 +1177,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "crossed-out eyes",
+            "dead",
+            "face",
+            "face with crossed-out eyes",
+            "knocked out"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -759,6 +1194,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "dizzy",
+            "face with spiral eyes",
+            "hypnotized",
+            "spiral",
+            "trouble",
+            "whoa",
+            "hypnotised"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -769,6 +1213,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "exploding head",
+            "mind blown",
+            "shocked"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -779,6 +1228,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cowboy",
+            "cowgirl",
+            "face",
+            "hat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -789,6 +1244,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "celebration",
+            "hat",
+            "horn",
+            "party",
+            "partying face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -799,6 +1261,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "disguise",
+            "disguised face",
+            "face",
+            "glasses",
+            "incognito",
+            "nose"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -809,6 +1279,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "bright",
+            "cool",
+            "face",
+            "smiling face with sunglasses",
+            "sun",
+            "sunglasses"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -819,6 +1297,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "geek",
+            "nerd"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -829,6 +1312,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with monocle",
+            "monocle",
+            "stuffy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -839,6 +1328,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "confused",
+            "face",
+            "meh"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -849,6 +1343,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "disappointed",
+            "face with diagonal mouth",
+            "meh",
+            "skeptical",
+            "unsure",
+            "sceptical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -859,6 +1361,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "worried"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -869,6 +1375,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "frown",
+            "slightly frowning face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -879,6 +1390,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "frown",
+            "frowning face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -889,6 +1405,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with open mouth",
+            "mouth",
+            "open",
+            "sympathy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -899,6 +1422,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "hushed",
+            "stunned",
+            "surprised"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -909,6 +1438,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "astonished",
+            "face",
+            "shocked",
+            "totally"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -919,6 +1454,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "dazed",
+            "face",
+            "flushed"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -929,6 +1469,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "begging",
+            "mercy",
+            "pleading face",
+            "puppy eyes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -939,6 +1485,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "angry",
+            "cry",
+            "face holding back tears",
+            "proud",
+            "resist",
+            "sad"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -949,6 +1503,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "frown",
+            "frowning face with open mouth",
+            "mouth",
+            "open"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -959,6 +1520,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "anguished",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -969,6 +1534,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "fear",
+            "fearful",
+            "scared"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -979,6 +1550,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "anxious face with sweat",
+            "blue",
+            "cold",
+            "face",
+            "rushed",
+            "sweat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -989,6 +1568,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "disappointed",
+            "face",
+            "relieved",
+            "sad but relieved face",
+            "whew"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -999,6 +1585,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cry",
+            "crying face",
+            "face",
+            "sad",
+            "tear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1009,6 +1602,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cry",
+            "face",
+            "loudly crying face",
+            "sad",
+            "sob",
+            "tear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1019,6 +1620,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face screaming in fear",
+            "fear",
+            "Munch",
+            "scared",
+            "scream",
+            "munch"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1029,6 +1639,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "confounded",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1039,6 +1653,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "persevere",
+            "persevering face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1049,6 +1668,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "disappointed",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1059,6 +1682,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cold",
+            "downcast face with sweat",
+            "face",
+            "sweat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1069,6 +1698,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "tired",
+            "weary"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1079,6 +1713,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "tired"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1089,6 +1727,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "bored",
+            "tired",
+            "yawn",
+            "yawning face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1099,6 +1743,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "face with steam from nose",
+            "triumph",
+            "won",
+            "angry",
+            "frustration"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1109,6 +1761,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "angry",
+            "enraged",
+            "face",
+            "mad",
+            "pouting",
+            "rage",
+            "red"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1119,6 +1780,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "anger",
+            "angry",
+            "face",
+            "mad"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1129,6 +1796,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face with symbols on mouth",
+            "swearing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1139,6 +1810,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "devil",
+            "face",
+            "fantasy",
+            "horns",
+            "smile",
+            "smiling face with horns",
+            "fairy tale"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1149,6 +1829,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "angry face with horns",
+            "demon",
+            "devil",
+            "face",
+            "fantasy",
+            "imp"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1159,6 +1847,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "death",
+            "face",
+            "fairy tale",
+            "monster",
+            "skull"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1169,6 +1864,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "crossbones",
+            "death",
+            "face",
+            "monster",
+            "skull",
+            "skull and crossbones"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1179,6 +1882,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "dung",
+            "face",
+            "monster",
+            "pile of poo",
+            "poo",
+            "poop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1189,6 +1900,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "clown",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1199,6 +1914,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "creature",
+            "face",
+            "fairy tale",
+            "fantasy",
+            "monster",
+            "ogre"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1209,6 +1932,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "creature",
+            "face",
+            "fairy tale",
+            "fantasy",
+            "goblin",
+            "monster"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1219,6 +1950,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "creature",
+            "face",
+            "fairy tale",
+            "fantasy",
+            "ghost",
+            "monster"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1229,6 +1968,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "alien",
+            "creature",
+            "extraterrestrial",
+            "face",
+            "fantasy",
+            "ufo"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1239,6 +1986,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "alien",
+            "creature",
+            "extraterrestrial",
+            "face",
+            "monster",
+            "ufo"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1249,6 +2004,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "face",
+            "monster",
+            "robot"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1259,6 +2019,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "face",
+            "grinning",
+            "mouth",
+            "open",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1269,6 +2037,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "eye",
+            "face",
+            "grin",
+            "grinning cat with smiling eyes",
+            "smile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1279,6 +2055,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "cat with tears of joy",
+            "face",
+            "joy",
+            "tear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1289,6 +2072,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "eye",
+            "face",
+            "heart",
+            "love",
+            "smile",
+            "smiling cat with heart-eyes",
+            "smiling cat face with heart eyes",
+            "smiling cat face with heart-eyes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1299,6 +2093,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "cat with wry smile",
+            "face",
+            "ironic",
+            "smile",
+            "wry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1309,6 +2111,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "eye",
+            "face",
+            "kiss",
+            "kissing cat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1319,6 +2128,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "face",
+            "oh",
+            "surprised",
+            "weary"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1329,6 +2145,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "cry",
+            "crying cat",
+            "face",
+            "sad",
+            "tear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1339,6 +2163,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "cat",
+            "face",
+            "pouting"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1349,6 +2178,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "evil",
+            "face",
+            "forbidden",
+            "monkey",
+            "see",
+            "see-no-evil monkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1359,6 +2196,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "evil",
+            "face",
+            "forbidden",
+            "hear",
+            "hear-no-evil monkey",
+            "monkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1369,6 +2214,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "evil",
+            "face",
+            "forbidden",
+            "monkey",
+            "speak",
+            "speak-no-evil monkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1379,6 +2232,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "kiss",
+            "kiss mark",
+            "lips"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1389,6 +2247,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "heart",
+            "letter",
+            "love",
+            "mail"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1399,6 +2263,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "arrow",
+            "cupid",
+            "heart with arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1409,6 +2278,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "heart with ribbon",
+            "ribbon",
+            "valentine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1419,6 +2293,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "excited",
+            "sparkle",
+            "sparkling heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1429,6 +2308,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "excited",
+            "growing",
+            "growing heart",
+            "nervous",
+            "pulse"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1439,6 +2325,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "beating",
+            "beating heart",
+            "heartbeat",
+            "pulsating"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1449,6 +2341,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "revolving",
+            "revolving hearts"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1459,6 +2355,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "love",
+            "two hearts"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1469,6 +2369,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "heart",
+            "heart decoration"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1479,6 +2383,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "exclamation",
+            "heart exclamation",
+            "mark",
+            "punctuation"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1489,6 +2399,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "break",
+            "broken",
+            "broken heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1499,6 +2414,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "burn",
+            "heart",
+            "heart on fire",
+            "love",
+            "lust",
+            "sacred heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1509,6 +2432,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "healthier",
+            "improving",
+            "mending",
+            "mending heart",
+            "recovering",
+            "recuperating",
+            "well"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1519,6 +2451,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "heart",
+            "red heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1529,6 +2465,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "orange",
+            "orange heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1539,6 +2479,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "yellow",
+            "yellow heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1549,6 +2493,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "green",
+            "green heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1559,6 +2507,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "blue",
+            "blue heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1569,6 +2521,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "purple",
+            "purple heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1579,6 +2535,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "brown",
+            "heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1589,6 +2549,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "black",
+            "black heart",
+            "evil",
+            "wicked"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1599,6 +2565,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "heart",
+            "white"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1609,6 +2579,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "100",
+            "full",
+            "hundred",
+            "hundred points",
+            "score"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1619,6 +2596,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "anger symbol",
+            "angry",
+            "comic",
+            "mad"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1629,6 +2612,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "boom",
+            "collision",
+            "comic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1639,6 +2627,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "comic",
+            "dizzy",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1649,6 +2642,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "comic",
+            "splashing",
+            "sweat",
+            "sweat droplets"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1659,6 +2658,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "comic",
+            "dash",
+            "dashing away",
+            "running"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1669,6 +2674,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "hole"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1679,6 +2687,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "bomb",
+            "comic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1689,6 +2701,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "balloon",
+            "bubble",
+            "comic",
+            "dialog",
+            "speech"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1699,6 +2718,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [],
         "hasSkinToneVariations": false
     },
     {
@@ -1709,6 +2729,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "balloon",
+            "bubble",
+            "dialog",
+            "left speech bubble",
+            "speech",
+            "dialogue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1719,6 +2747,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "angry",
+            "balloon",
+            "bubble",
+            "mad",
+            "right anger bubble"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1729,6 +2764,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "balloon",
+            "bubble",
+            "comic",
+            "thought"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1739,6 +2780,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Smileys & Emotion",
+        "keywords": [
+            "comic",
+            "good night",
+            "sleep",
+            "ZZZ"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -1749,6 +2796,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "wave",
+            "waving"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1759,6 +2811,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "backhand",
+            "raised",
+            "raised back of hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1769,6 +2826,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "finger",
+            "hand",
+            "hand with fingers splayed",
+            "splayed"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1779,6 +2842,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "high 5",
+            "high five",
+            "raised hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1789,6 +2858,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "finger",
+            "hand",
+            "spock",
+            "vulcan",
+            "Vulcan salute",
+            "vulcan salute"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1799,6 +2876,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "right",
+            "rightward",
+            "rightwards hand",
+            "rightwards"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1809,6 +2893,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "left",
+            "leftward",
+            "leftwards hand",
+            "leftwards"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1819,6 +2910,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "dismiss",
+            "drop",
+            "palm down hand",
+            "shoo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1829,6 +2926,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "beckon",
+            "catch",
+            "come",
+            "offer",
+            "palm up hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1839,6 +2943,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "OK",
+            "perfect"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1849,6 +2958,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fingers",
+            "hand gesture",
+            "interrogation",
+            "pinched",
+            "sarcastic"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1859,6 +2975,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "pinching hand",
+            "small amount"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1869,6 +2989,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "v",
+            "victory"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1879,6 +3004,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cross",
+            "crossed fingers",
+            "finger",
+            "hand",
+            "luck",
+            "good luck"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1889,6 +3022,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "expensive",
+            "hand with index finger and thumb crossed",
+            "heart",
+            "love",
+            "money",
+            "snap"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1899,6 +3040,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "ILY",
+            "love-you gesture",
+            "love you gesture"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1909,6 +3056,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "finger",
+            "hand",
+            "horns",
+            "rock-on",
+            "sign of the horns",
+            "rock on"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1919,6 +3074,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "call",
+            "call me hand",
+            "call-me hand",
+            "hand",
+            "shaka",
+            "hang loose",
+            "Shaka"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1929,6 +3093,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "backhand",
+            "backhand index pointing left",
+            "finger",
+            "hand",
+            "index",
+            "point"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1939,6 +3111,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "backhand",
+            "backhand index pointing right",
+            "finger",
+            "hand",
+            "index",
+            "point"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1949,6 +3129,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "backhand",
+            "backhand index pointing up",
+            "finger",
+            "hand",
+            "point",
+            "up"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1959,6 +3147,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "finger",
+            "hand",
+            "middle finger"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1969,6 +3162,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "backhand",
+            "backhand index pointing down",
+            "down",
+            "finger",
+            "hand",
+            "point"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1979,6 +3180,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "finger",
+            "hand",
+            "index",
+            "index pointing up",
+            "point",
+            "up"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1989,6 +3198,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "index pointing at the viewer",
+            "point",
+            "you"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -1999,6 +3213,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "+1",
+            "hand",
+            "thumb",
+            "thumbs up",
+            "up"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2009,6 +3230,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "-1",
+            "down",
+            "hand",
+            "thumb",
+            "thumbs down"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2019,6 +3247,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "clenched",
+            "fist",
+            "hand",
+            "punch",
+            "raised fist"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2029,6 +3264,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "clenched",
+            "fist",
+            "hand",
+            "oncoming fist",
+            "punch"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2039,6 +3281,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fist",
+            "left-facing fist",
+            "leftwards",
+            "leftward"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2049,6 +3297,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fist",
+            "right-facing fist",
+            "rightwards",
+            "rightward"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2059,6 +3313,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "clap",
+            "clapping hands",
+            "hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2069,6 +3328,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "celebration",
+            "gesture",
+            "hand",
+            "hooray",
+            "raised",
+            "raising hands",
+            "woo hoo",
+            "yay"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2079,6 +3348,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "heart hands",
+            "love"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2089,6 +3362,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "open",
+            "open hands"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2099,6 +3377,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "palms up together",
+            "prayer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2109,6 +3391,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "agreement",
+            "hand",
+            "handshake",
+            "meeting",
+            "shake"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2119,6 +3408,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ask",
+            "folded hands",
+            "hand",
+            "high 5",
+            "high five",
+            "please",
+            "pray",
+            "thanks"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2129,6 +3428,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "write",
+            "writing hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2139,6 +3443,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "care",
+            "cosmetics",
+            "manicure",
+            "nail",
+            "polish"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2149,6 +3460,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "camera",
+            "phone",
+            "selfie"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2159,6 +3475,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "biceps",
+            "comic",
+            "flex",
+            "flexed biceps",
+            "muscle"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2169,6 +3492,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "mechanical arm",
+            "prosthetic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2179,6 +3507,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "mechanical leg",
+            "prosthetic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2189,6 +3522,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "kick",
+            "leg",
+            "limb"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2199,6 +3537,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "foot",
+            "kick",
+            "stomp"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2209,6 +3552,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "body",
+            "ear"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2219,6 +3566,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "ear with hearing aid",
+            "hard of hearing",
+            "hearing impaired"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2229,6 +3582,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "body",
+            "nose"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2239,6 +3596,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "brain",
+            "intelligent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2249,6 +3610,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "anatomical",
+            "cardiology",
+            "heart",
+            "organ",
+            "pulse",
+            "anatomical heart"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2259,6 +3628,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "breath",
+            "exhalation",
+            "inhalation",
+            "lungs",
+            "organ",
+            "respiration"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2269,6 +3646,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "dentist",
+            "tooth"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2279,6 +3660,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bone",
+            "skeleton"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2289,6 +3674,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "eye",
+            "eyes",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2299,6 +3689,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "body",
+            "eye"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2309,6 +3703,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "body",
+            "tongue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2319,6 +3717,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "lips",
+            "mouth"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2329,6 +3731,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "anxious",
+            "biting lip",
+            "fear",
+            "flirting",
+            "nervous",
+            "uncomfortable",
+            "worried"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2339,6 +3750,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "baby",
+            "young"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2349,6 +3764,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "child",
+            "gender-neutral",
+            "unspecified gender",
+            "young"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2359,6 +3780,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "young",
+            "young person"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2369,6 +3795,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "girl",
+            "Virgo",
+            "young person",
+            "zodiac",
+            "young"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2379,6 +3812,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "gender-neutral",
+            "person",
+            "unspecified gender"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2389,6 +3828,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "blond",
+            "blond-haired person",
+            "hair",
+            "person: blond hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2399,6 +3844,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2409,6 +3858,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "beard",
+            "person",
+            "person: beard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2419,6 +3873,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "beard",
+            "man",
+            "man: beard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2429,6 +3888,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "beard",
+            "woman",
+            "woman: beard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2439,6 +3903,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "man",
+            "red hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2449,6 +3918,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "curly hair",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2459,6 +3933,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "man",
+            "white hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2469,6 +3948,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "bald",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2479,6 +3963,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2489,6 +3977,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "red hair",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2499,6 +3992,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "gender-neutral",
+            "person",
+            "red hair",
+            "unspecified gender"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2509,6 +4009,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "curly hair",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2519,6 +4024,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "curly hair",
+            "gender-neutral",
+            "person",
+            "unspecified gender"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2529,6 +4041,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "white hair",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2539,6 +4056,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "gender-neutral",
+            "person",
+            "unspecified gender",
+            "white hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2549,6 +4073,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "bald",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2559,6 +4088,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "bald",
+            "gender-neutral",
+            "person",
+            "unspecified gender"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2569,6 +4105,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "blond-haired woman",
+            "blonde",
+            "hair",
+            "woman",
+            "woman: blond hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2579,6 +4122,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "blond",
+            "blond-haired man",
+            "hair",
+            "man",
+            "man: blond hair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -2589,6 +4139,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "gender-neutral",
+            "old",
+            "older person",
+            "unspecified gender"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2599,6 +4156,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "man",
+            "old"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2609,6 +4171,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "adult",
+            "old",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2619,6 +4186,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "frown",
+            "gesture",
+            "person frowning"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2629,6 +4201,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "frowning",
+            "gesture",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2639,6 +4216,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "frowning",
+            "gesture",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2649,6 +4231,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "person pouting",
+            "pouting"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2659,6 +4246,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "man",
+            "pouting"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2669,6 +4261,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "pouting",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2679,6 +4276,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "forbidden",
+            "gesture",
+            "hand",
+            "person gesturing NO",
+            "prohibited"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2689,6 +4293,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "forbidden",
+            "gesture",
+            "hand",
+            "man",
+            "man gesturing NO",
+            "prohibited"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2699,6 +4311,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "forbidden",
+            "gesture",
+            "hand",
+            "prohibited",
+            "woman",
+            "woman gesturing NO"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2709,6 +4329,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "hand",
+            "OK",
+            "person gesturing OK"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2719,6 +4345,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "hand",
+            "man",
+            "man gesturing OK",
+            "OK"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2729,6 +4362,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "hand",
+            "OK",
+            "woman",
+            "woman gesturing OK"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2739,6 +4379,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hand",
+            "help",
+            "information",
+            "person tipping hand",
+            "sassy",
+            "tipping"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2749,6 +4397,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man tipping hand",
+            "sassy",
+            "tipping hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2759,6 +4413,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "sassy",
+            "tipping hand",
+            "woman",
+            "woman tipping hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2769,6 +4429,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "hand",
+            "happy",
+            "person raising hand",
+            "raised"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2779,6 +4446,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "man",
+            "man raising hand",
+            "raising hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2789,6 +4462,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "gesture",
+            "raising hand",
+            "woman",
+            "woman raising hand"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2799,6 +4478,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "deaf",
+            "deaf person",
+            "ear",
+            "hear",
+            "hearing impaired"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2809,6 +4496,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "deaf",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2819,6 +4510,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "deaf",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2829,6 +4524,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "apology",
+            "bow",
+            "gesture",
+            "person bowing",
+            "sorry"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2839,6 +4541,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "apology",
+            "bowing",
+            "favor",
+            "gesture",
+            "man",
+            "sorry"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2849,6 +4559,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "apology",
+            "bowing",
+            "favor",
+            "gesture",
+            "sorry",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2859,6 +4577,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "disbelief",
+            "exasperation",
+            "face",
+            "palm",
+            "person facepalming"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2869,6 +4594,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "disbelief",
+            "exasperation",
+            "facepalm",
+            "man",
+            "man facepalming"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2879,6 +4611,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "disbelief",
+            "exasperation",
+            "facepalm",
+            "woman",
+            "woman facepalming"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2889,6 +4628,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doubt",
+            "ignorance",
+            "indifference",
+            "person shrugging",
+            "shrug"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2899,6 +4645,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doubt",
+            "ignorance",
+            "indifference",
+            "man",
+            "man shrugging",
+            "shrug"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2909,6 +4663,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doubt",
+            "ignorance",
+            "indifference",
+            "shrug",
+            "woman",
+            "woman shrugging"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2919,6 +4681,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doctor",
+            "health worker",
+            "healthcare",
+            "nurse",
+            "therapist",
+            "care",
+            "health"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2929,6 +4700,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doctor",
+            "healthcare",
+            "man",
+            "man health worker",
+            "nurse",
+            "therapist",
+            "health care"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2939,6 +4719,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "doctor",
+            "healthcare",
+            "nurse",
+            "therapist",
+            "woman",
+            "woman health worker",
+            "health care"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2949,6 +4738,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "graduate",
+            "student"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2959,6 +4752,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "graduate",
+            "man",
+            "student"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2969,6 +4767,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "graduate",
+            "student",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2979,6 +4782,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "instructor",
+            "professor",
+            "teacher",
+            "lecturer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2989,6 +4798,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "instructor",
+            "man",
+            "professor",
+            "teacher"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -2999,6 +4814,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "instructor",
+            "professor",
+            "teacher",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3009,6 +4830,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "judge",
+            "justice",
+            "scales",
+            "law"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3019,6 +4846,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "judge",
+            "justice",
+            "man",
+            "scales"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3029,6 +4862,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "judge",
+            "justice",
+            "scales",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3039,6 +4878,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "farmer",
+            "gardener",
+            "rancher"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3049,6 +4893,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "farmer",
+            "gardener",
+            "man",
+            "rancher"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3059,6 +4909,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "farmer",
+            "gardener",
+            "rancher",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3069,6 +4925,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "chef",
+            "cook"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3079,6 +4939,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "chef",
+            "cook",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3089,6 +4954,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "chef",
+            "cook",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3099,6 +4969,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "electrician",
+            "mechanic",
+            "plumber",
+            "tradesperson",
+            "tradie"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3109,6 +4986,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "electrician",
+            "man",
+            "mechanic",
+            "plumber",
+            "tradesperson"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3119,6 +5003,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "electrician",
+            "mechanic",
+            "plumber",
+            "tradesperson",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3129,6 +5020,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "assembly",
+            "factory",
+            "industrial",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3139,6 +5036,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "assembly",
+            "factory",
+            "industrial",
+            "man",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3149,6 +5053,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "assembly",
+            "factory",
+            "industrial",
+            "woman",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3159,6 +5070,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "architect",
+            "business",
+            "manager",
+            "office worker",
+            "white-collar"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3169,6 +5087,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "business man",
+            "man office worker",
+            "manager",
+            "office worker",
+            "white collar",
+            "architect",
+            "business",
+            "man",
+            "white-collar"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3179,6 +5108,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "business woman",
+            "manager",
+            "office worker",
+            "white collar",
+            "woman office worker",
+            "architect",
+            "business",
+            "white-collar",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3189,6 +5129,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "biologist",
+            "chemist",
+            "engineer",
+            "physicist",
+            "scientist"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3199,6 +5146,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "biologist",
+            "chemist",
+            "engineer",
+            "man",
+            "physicist",
+            "scientist"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3209,6 +5164,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "biologist",
+            "chemist",
+            "engineer",
+            "physicist",
+            "scientist",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3219,6 +5182,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "coder",
+            "developer",
+            "inventor",
+            "software",
+            "technologist"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3229,6 +5199,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "coder",
+            "developer",
+            "inventor",
+            "man",
+            "software",
+            "technologist"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3239,6 +5217,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "coder",
+            "developer",
+            "inventor",
+            "software",
+            "technologist",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3249,6 +5235,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "actor",
+            "entertainer",
+            "rock",
+            "singer",
+            "star"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3259,6 +5252,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "entertainer",
+            "man",
+            "man singer",
+            "performer",
+            "rock singer",
+            "star",
+            "actor",
+            "rock",
+            "singer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3269,6 +5273,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "entertainer",
+            "performer",
+            "rock singer",
+            "star",
+            "woman",
+            "woman singer",
+            "actor",
+            "rock",
+            "singer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3279,6 +5294,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "artist",
+            "palette"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3289,6 +5308,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "artist",
+            "man",
+            "painter",
+            "palette"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3299,6 +5324,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "artist",
+            "painter",
+            "palette",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3309,6 +5340,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "pilot",
+            "plane"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3319,6 +5354,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "pilot",
+            "plane"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3329,6 +5369,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "pilot",
+            "plane",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3339,6 +5384,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "astronaut",
+            "rocket"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3349,6 +5398,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "astronaut",
+            "man",
+            "rocket"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3359,6 +5413,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "astronaut",
+            "rocket",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3369,6 +5428,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "firefighter",
+            "firetruck",
+            "engine",
+            "fire",
+            "truck",
+            "fire engine",
+            "fire truck"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3379,6 +5447,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fire truck",
+            "firefighter",
+            "man",
+            "firetruck",
+            "fireman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3389,6 +5464,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fire truck",
+            "firefighter",
+            "woman",
+            "firetruck",
+            "engine",
+            "fire",
+            "firewoman",
+            "truck"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3399,6 +5484,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cop",
+            "officer",
+            "police"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3409,6 +5499,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cop",
+            "man",
+            "officer",
+            "police"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3419,6 +5515,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cop",
+            "officer",
+            "police",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3429,6 +5531,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "detective",
+            "investigator",
+            "sleuth",
+            "spy"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3439,6 +5547,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -3449,6 +5558,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -3459,6 +5569,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "guard"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3469,6 +5582,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "guard",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3479,6 +5596,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "guard",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3489,6 +5610,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fighter",
+            "hidden",
+            "ninja",
+            "stealth"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3499,6 +5626,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "construction",
+            "hat",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3509,6 +5641,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "construction",
+            "man",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3519,6 +5656,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "construction",
+            "woman",
+            "worker"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3529,6 +5671,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "monarch",
+            "noble",
+            "person with crown",
+            "regal",
+            "royalty"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3539,6 +5688,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "prince"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3549,6 +5701,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fairy tale",
+            "fantasy",
+            "princess"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3559,6 +5716,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person wearing turban",
+            "turban"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3569,6 +5730,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man wearing turban",
+            "turban"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3579,6 +5745,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "turban",
+            "woman",
+            "woman wearing turban"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3589,6 +5760,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cap",
+            "gua pi mao",
+            "hat",
+            "person",
+            "person with skullcap",
+            "skullcap"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3599,6 +5778,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "headscarf",
+            "hijab",
+            "mantilla",
+            "tichel",
+            "woman with headscarf"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3609,6 +5795,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "groom",
+            "person",
+            "person in tux",
+            "person in tuxedo",
+            "tuxedo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3619,6 +5812,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man in tux",
+            "man in tuxedo",
+            "tux",
+            "tuxedo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3629,6 +5829,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "tuxedo",
+            "woman",
+            "woman in tux",
+            "woman in tuxedo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3639,6 +5845,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bride",
+            "person",
+            "person with veil",
+            "veil",
+            "wedding"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3649,6 +5862,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man with veil",
+            "veil"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3659,6 +5877,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bride",
+            "veil",
+            "woman",
+            "woman with veil"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3669,6 +5893,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "pregnant",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3679,6 +5907,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "belly",
+            "bloated",
+            "full",
+            "pregnant",
+            "pregnant man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3689,6 +5924,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "belly",
+            "bloated",
+            "full",
+            "pregnant",
+            "pregnant person"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3699,6 +5941,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "baby",
+            "breast",
+            "breast-feeding",
+            "nursing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3709,6 +5957,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "baby",
+            "feeding",
+            "nursing",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3719,6 +5973,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "baby",
+            "feeding",
+            "man",
+            "nursing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3729,6 +5989,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "baby",
+            "feeding",
+            "nursing",
+            "person"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3739,6 +6005,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "angel",
+            "baby",
+            "face",
+            "fairy tale",
+            "fantasy"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3749,6 +6022,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "celebration",
+            "Christmas",
+            "Father Christmas",
+            "Santa",
+            "Santa Claus",
+            "claus",
+            "father",
+            "santa",
+            "Claus",
+            "Father"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3759,6 +6044,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "celebration",
+            "Christmas",
+            "Mrs Claus",
+            "Mrs Santa Claus",
+            "Mrs. Claus",
+            "claus",
+            "mother",
+            "Mrs.",
+            "Claus",
+            "Mother"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3769,6 +6066,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "Claus, christmas",
+            "mx claus",
+            "Claus, Christmas",
+            "Mx. Claus"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3779,6 +6082,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "good",
+            "hero",
+            "heroine",
+            "superhero",
+            "superpower"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3789,6 +6099,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "good",
+            "hero",
+            "man",
+            "man superhero",
+            "superpower"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3799,6 +6116,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "good",
+            "hero",
+            "heroine",
+            "superpower",
+            "woman",
+            "woman superhero"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3809,6 +6134,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "criminal",
+            "evil",
+            "superpower",
+            "supervillain",
+            "villain"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3819,6 +6151,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "criminal",
+            "evil",
+            "man",
+            "man supervillain",
+            "superpower",
+            "villain"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3829,6 +6169,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "criminal",
+            "evil",
+            "superpower",
+            "villain",
+            "woman",
+            "woman supervillain"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3839,6 +6187,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "mage",
+            "sorcerer",
+            "sorceress",
+            "witch",
+            "wizard"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3849,6 +6204,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man mage",
+            "sorcerer",
+            "wizard"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3859,6 +6219,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "sorceress",
+            "witch",
+            "woman mage"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3869,6 +6234,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fairy",
+            "Oberon",
+            "Puck",
+            "Titania"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3879,6 +6250,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man fairy",
+            "Oberon",
+            "Puck"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3889,6 +6265,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "Titania",
+            "woman fairy"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3899,6 +6279,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "Dracula",
+            "undead",
+            "vampire"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3909,6 +6294,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "Dracula",
+            "man vampire",
+            "undead"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3919,6 +6309,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "undead",
+            "woman vampire"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3929,6 +6323,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "mermaid",
+            "merman",
+            "merperson",
+            "merwoman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3939,6 +6339,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "merman",
+            "Triton"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3949,6 +6353,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "mermaid",
+            "merwoman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3959,6 +6367,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "elf",
+            "magical"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3969,6 +6381,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "magical",
+            "man elf"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3979,6 +6395,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "magical",
+            "woman elf"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -3989,6 +6409,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "djinn",
+            "genie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -3999,6 +6423,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "djinn",
+            "man genie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4009,6 +6437,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "djinn",
+            "woman genie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4019,6 +6451,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "undead",
+            "walking dead",
+            "zombie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4029,6 +6466,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man zombie",
+            "undead",
+            "walking dead"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4039,6 +6481,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "undead",
+            "walking dead",
+            "woman zombie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4049,6 +6496,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fairy tale",
+            "fantasy",
+            "monster",
+            "troll"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4059,6 +6512,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "face",
+            "massage",
+            "person getting massage",
+            "salon"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4069,6 +6528,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "face",
+            "man",
+            "man getting massage",
+            "massage"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4079,6 +6544,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "face",
+            "massage",
+            "woman",
+            "woman getting massage"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4089,6 +6560,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "barber",
+            "beauty",
+            "haircut",
+            "parlor",
+            "person getting haircut",
+            "parlour"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4099,6 +6578,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "haircut",
+            "hairdresser",
+            "man",
+            "man getting haircut"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4109,6 +6594,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "haircut",
+            "hairdresser",
+            "woman",
+            "woman getting haircut"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4119,6 +6610,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hike",
+            "person walking",
+            "walk",
+            "walking"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4129,6 +6626,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hike",
+            "man",
+            "man walking",
+            "walk"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4139,6 +6642,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hike",
+            "walk",
+            "woman",
+            "woman walking"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4149,6 +6658,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person standing",
+            "stand",
+            "standing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4159,6 +6673,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "standing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4169,6 +6687,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "standing",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4179,6 +6701,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "kneel",
+            "kneeling",
+            "person kneeling"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4189,6 +6716,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "kneeling",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4199,6 +6730,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "kneeling",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4209,6 +6744,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "blind",
+            "person with guide cane",
+            "person with long mobility cane",
+            "person with white cane"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4219,6 +6761,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "blind",
+            "man",
+            "man with white cane",
+            "man with guide cane"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4229,6 +6778,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "blind",
+            "woman",
+            "woman with white cane",
+            "woman with guide cane"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4239,6 +6795,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person in motorised wheelchair",
+            "accessibility",
+            "person in motorized wheelchair",
+            "wheelchair",
+            "person in powered wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4249,6 +6812,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man in motorised wheelchair",
+            "accessibility",
+            "man",
+            "man in motorized wheelchair",
+            "wheelchair",
+            "man in powered wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4259,6 +6830,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "woman in motorised wheelchair",
+            "accessibility",
+            "wheelchair",
+            "woman",
+            "woman in motorized wheelchair",
+            "woman in powered wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4269,6 +6848,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "person in manual wheelchair",
+            "wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4279,6 +6863,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "man",
+            "man in manual wheelchair",
+            "wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4289,6 +6879,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "accessibility",
+            "wheelchair",
+            "woman",
+            "woman in manual wheelchair"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4299,6 +6895,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "marathon",
+            "person running",
+            "running"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4309,6 +6910,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "marathon",
+            "racing",
+            "running"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4319,6 +6926,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "marathon",
+            "racing",
+            "running",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4329,6 +6942,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "dance",
+            "dancing",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4339,6 +6957,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "dance",
+            "dancing",
+            "man"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4349,6 +6972,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "business",
+            "person",
+            "person in suit levitating",
+            "suit"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4359,6 +6988,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bunny ear",
+            "dancer",
+            "partying",
+            "people with bunny ears"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4369,6 +7004,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bunny ear",
+            "dancer",
+            "men",
+            "men with bunny ears",
+            "partying"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4379,6 +7021,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bunny ear",
+            "dancer",
+            "partying",
+            "women",
+            "women with bunny ears"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4389,6 +7038,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person in steamy room",
+            "sauna",
+            "steam room"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4399,6 +7053,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man in steam room",
+            "man in steamy room",
+            "sauna",
+            "steam room"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4409,6 +7069,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "sauna",
+            "steam room",
+            "woman in steam room",
+            "woman in steamy room"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4419,6 +7085,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "climber",
+            "person climbing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4429,6 +7099,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "climber",
+            "man climbing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4439,6 +7113,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "climber",
+            "woman climbing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4449,6 +7127,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "fencer",
+            "fencing",
+            "person fencing",
+            "sword"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4459,6 +7143,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "horse",
+            "jockey",
+            "racehorse",
+            "racing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4469,6 +7159,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ski",
+            "skier",
+            "snow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4479,6 +7174,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ski",
+            "snow",
+            "snowboard",
+            "snowboarder"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4489,6 +7190,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ball",
+            "golf",
+            "golfer",
+            "person golfing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4499,6 +7206,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4509,6 +7217,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4519,6 +7228,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person surfing",
+            "surfer",
+            "surfing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4529,6 +7243,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "surfer",
+            "surfing"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4539,6 +7258,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "surfer",
+            "surfing",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4549,6 +7273,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boat",
+            "person",
+            "person rowing boat",
+            "rowboat"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4559,6 +7289,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boat",
+            "man",
+            "man rowing boat",
+            "rowboat"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4569,6 +7305,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boat",
+            "rowboat",
+            "woman",
+            "woman rowing boat"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4579,6 +7321,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person swimming",
+            "swim",
+            "swimmer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4589,6 +7336,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man swimming",
+            "swim",
+            "swimmer"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4599,6 +7352,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "swim",
+            "swimmer",
+            "woman",
+            "woman swimming"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4609,6 +7368,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ball",
+            "person bouncing ball"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4619,6 +7382,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4629,6 +7393,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4639,6 +7404,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "lifter",
+            "person lifting weights",
+            "weight",
+            "weightlifter"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4649,6 +7420,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4659,6 +7431,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [],
         "hasSkinToneVariations": true
     },
     {
@@ -4669,6 +7442,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "biking",
+            "cyclist",
+            "person biking",
+            "person riding a bike"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4679,6 +7459,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "biking",
+            "cyclist",
+            "man",
+            "man riding a bike"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4689,6 +7476,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "biking",
+            "cyclist",
+            "woman",
+            "woman riding a bike"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4699,6 +7493,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "bicyclist",
+            "bike",
+            "cyclist",
+            "mountain",
+            "person mountain biking"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4709,6 +7511,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "bike",
+            "cyclist",
+            "man",
+            "man mountain biking",
+            "mountain"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4719,6 +7529,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bicycle",
+            "bike",
+            "biking",
+            "cyclist",
+            "mountain",
+            "woman"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4729,6 +7547,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cartwheel",
+            "gymnastics",
+            "person cartwheeling"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4739,6 +7562,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cartwheel",
+            "gymnastics",
+            "man",
+            "man cartwheeling"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4749,6 +7578,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "cartwheel",
+            "gymnastics",
+            "woman",
+            "woman cartwheeling"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4759,6 +7594,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "people wrestling",
+            "wrestle",
+            "wrestler"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4769,6 +7609,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "men",
+            "men wrestling",
+            "wrestle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4779,6 +7624,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "women",
+            "women wrestling",
+            "wrestle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4789,6 +7639,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "person playing water polo",
+            "polo",
+            "water"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4799,6 +7654,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man",
+            "man playing water polo",
+            "water polo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4809,6 +7669,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "water polo",
+            "woman",
+            "woman playing water polo"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4819,6 +7684,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "ball",
+            "handball",
+            "person playing handball"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4829,6 +7699,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "handball",
+            "man",
+            "man playing handball"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4839,6 +7714,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "handball",
+            "woman",
+            "woman playing handball"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4849,6 +7729,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "balance",
+            "juggle",
+            "multi-task",
+            "person juggling",
+            "skill",
+            "multitask"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4859,6 +7747,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "juggling",
+            "man",
+            "multi-task",
+            "multitask"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4869,6 +7763,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "juggling",
+            "multi-task",
+            "woman",
+            "multitask"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4879,6 +7779,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "meditation",
+            "person in lotus position",
+            "yoga"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4889,6 +7794,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "man in lotus position",
+            "meditation",
+            "yoga"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4899,6 +7809,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "meditation",
+            "woman in lotus position",
+            "yoga"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4909,6 +7824,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bath",
+            "bathtub",
+            "person taking bath",
+            "tub"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4919,6 +7840,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "hotel",
+            "person in bed",
+            "sleep",
+            "sleeping",
+            "good night"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4929,6 +7857,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "hand",
+            "hold",
+            "holding hands",
+            "people holding hands",
+            "person"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4939,6 +7875,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "hand",
+            "holding hands",
+            "women",
+            "women holding hands",
+            "two women holding hands"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4949,6 +7893,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "hand",
+            "hold",
+            "holding hands",
+            "man",
+            "woman",
+            "woman and man holding hands",
+            "man and woman holding hands"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4959,6 +7913,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "Gemini",
+            "holding hands",
+            "man",
+            "men",
+            "men holding hands",
+            "twins",
+            "zodiac",
+            "two men holding hands"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4969,6 +7934,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "kiss"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -4979,6 +7948,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "kiss",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4989,6 +7964,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "kiss",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -4999,6 +7979,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "kiss",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5009,6 +7994,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "couple with heart",
+            "love"
+        ],
         "hasSkinToneVariations": true
     },
     {
@@ -5019,6 +8009,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "couple with heart",
+            "love",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5029,6 +8026,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "couple with heart",
+            "love",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5039,6 +8042,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "couple",
+            "couple with heart",
+            "love",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5049,6 +8058,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5059,6 +8071,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5069,6 +8087,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5079,6 +8103,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5089,6 +8120,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5099,6 +8136,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5109,6 +8152,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5119,6 +8167,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5129,6 +8182,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5139,6 +8198,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5149,6 +8213,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5159,6 +8228,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5169,6 +8243,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5179,6 +8258,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5189,6 +8274,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5199,6 +8289,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5209,6 +8304,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5219,6 +8319,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5229,6 +8334,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5239,6 +8349,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5249,6 +8365,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5259,6 +8380,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5269,6 +8395,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5279,6 +8410,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5289,6 +8425,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5299,6 +8441,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5309,6 +8456,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "face",
+            "head",
+            "silhouette",
+            "speak",
+            "speaking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5319,6 +8473,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bust",
+            "bust in silhouette",
+            "silhouette"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5329,6 +8488,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "bust",
+            "busts in silhouette",
+            "silhouette"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5339,6 +8503,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "goodbye",
+            "hello",
+            "hug",
+            "people hugging",
+            "thanks"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5349,6 +8520,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "People & Body",
+        "keywords": [
+            "clothing",
+            "footprint",
+            "footprints",
+            "print"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5359,6 +8536,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "monkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5369,6 +8550,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "monkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5379,6 +8563,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "gorilla"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5389,6 +8576,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "ape",
+            "orangutan"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5399,6 +8590,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dog",
+            "face",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5409,6 +8605,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dog",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5419,6 +8619,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "accessibility",
+            "blind",
+            "guide",
+            "guide dog"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5429,6 +8635,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "accessibility",
+            "assistance",
+            "dog",
+            "service"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5439,6 +8651,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dog",
+            "poodle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5449,6 +8665,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "wolf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5459,6 +8679,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "fox"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5469,6 +8693,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "curious",
+            "raccoon",
+            "sly"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5479,6 +8708,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cat",
+            "face",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5489,6 +8723,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cat",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5499,6 +8737,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "black",
+            "cat",
+            "unlucky"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5509,6 +8752,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "Leo",
+            "lion",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5519,6 +8768,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "tiger"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5529,6 +8782,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "tiger"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5539,6 +8795,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "leopard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5549,6 +8808,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "horse"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5559,6 +8822,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "equestrian",
+            "horse",
+            "racehorse",
+            "racing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5569,6 +8838,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "unicorn"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5579,6 +8852,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "stripe",
+            "zebra"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5589,6 +8866,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "deer",
+            "stag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5599,6 +8880,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bison",
+            "buffalo",
+            "herd",
+            "wisent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5609,6 +8896,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cow",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5619,6 +8910,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bull",
+            "ox",
+            "Taurus",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5629,6 +8926,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "buffalo",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5639,6 +8940,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5649,6 +8953,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "pig"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5659,6 +8967,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "pig",
+            "sow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5669,6 +8981,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "boar",
+            "pig"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5679,6 +8995,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "nose",
+            "pig"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5689,6 +9010,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "Aries",
+            "male",
+            "ram",
+            "sheep",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5699,6 +9027,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "ewe",
+            "female",
+            "sheep"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5709,6 +9042,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "Capricorn",
+            "goat",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5719,6 +9057,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "camel",
+            "dromedary",
+            "hump"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5729,6 +9072,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bactrian",
+            "camel",
+            "hump",
+            "two-hump camel",
+            "Bactrian"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5739,6 +9089,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "alpaca",
+            "guanaco",
+            "llama",
+            "vicuña",
+            "wool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5749,6 +9106,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "giraffe",
+            "spots"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5759,6 +9120,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "elephant"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5769,6 +9133,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "extinction",
+            "large",
+            "mammoth",
+            "tusk",
+            "woolly"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5779,6 +9150,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "rhino",
+            "rhinoceros"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5789,6 +9164,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "hippo",
+            "hippopotamus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5799,6 +9178,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "mouse",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5809,6 +9193,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "mouse",
+            "pet",
+            "rodent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5819,6 +9208,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "pet",
+            "rat",
+            "rodent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5829,6 +9223,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "hamster",
+            "pet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5839,6 +9238,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bunny",
+            "face",
+            "pet",
+            "rabbit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5849,6 +9254,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bunny",
+            "pet",
+            "rabbit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5859,6 +9269,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "chipmunk",
+            "squirrel"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5869,6 +9283,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "beaver",
+            "dam"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5879,6 +9297,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "hedgehog",
+            "spiny"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5889,6 +9311,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bat",
+            "vampire"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5899,6 +9325,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bear",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5909,6 +9339,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "arctic",
+            "bear",
+            "polar bear",
+            "white"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5919,6 +9355,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "koala",
+            "marsupial",
+            "face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5929,6 +9370,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "panda"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5939,6 +9384,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "lazy",
+            "sloth",
+            "slow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5949,6 +9399,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "fishing",
+            "otter",
+            "playful"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5959,6 +9414,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "skunk",
+            "stink"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5969,6 +9428,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "Australia",
+            "joey",
+            "jump",
+            "kangaroo",
+            "marsupial"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5979,6 +9445,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "badger",
+            "honey badger",
+            "pester"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5989,6 +9460,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "feet",
+            "paw",
+            "paw prints",
+            "print"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -5999,6 +9476,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "poultry",
+            "turkey"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6009,6 +9491,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "chicken",
+            "poultry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6019,6 +9506,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "rooster"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6029,6 +9520,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "baby",
+            "bird",
+            "chick",
+            "hatching"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6039,6 +9536,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "baby",
+            "bird",
+            "chick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6049,6 +9551,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "baby",
+            "bird",
+            "chick",
+            "front-facing baby chick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6059,6 +9567,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6069,6 +9580,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "penguin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6079,6 +9594,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "dove",
+            "fly",
+            "peace"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6089,6 +9610,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird of prey",
+            "eagle",
+            "bird"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6099,6 +9625,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "duck"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6109,6 +9639,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "cygnet",
+            "swan",
+            "ugly duckling"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6119,6 +9655,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird of prey",
+            "owl",
+            "wise",
+            "bird"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6129,6 +9671,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dodo",
+            "extinction",
+            "large",
+            "Mauritius"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6139,6 +9687,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "feather",
+            "flight",
+            "light",
+            "plumage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6149,6 +9704,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flamboyant",
+            "flamingo",
+            "tropical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6159,6 +9719,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "ostentatious",
+            "peacock",
+            "peahen",
+            "proud"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6169,6 +9736,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bird",
+            "parrot",
+            "pirate",
+            "talk"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6179,6 +9752,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "frog"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6189,6 +9766,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "crocodile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6199,6 +9779,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "terrapin",
+            "tortoise",
+            "turtle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6209,6 +9794,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "lizard",
+            "reptile"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6219,6 +9808,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bearer",
+            "Ophiuchus",
+            "serpent",
+            "snake",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6229,6 +9825,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dragon",
+            "face",
+            "fairy tale"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6239,6 +9840,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dragon",
+            "fairy tale"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6249,6 +9854,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "brachiosaurus",
+            "brontosaurus",
+            "diplodocus",
+            "sauropod"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6259,6 +9870,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "T-Rex",
+            "Tyrannosaurus Rex"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6269,6 +9884,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "face",
+            "spouting",
+            "whale"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6279,6 +9899,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "whale"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6289,6 +9912,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dolphin",
+            "porpoise",
+            "flipper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6299,6 +9927,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "sea lion",
+            "seal"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6309,6 +9941,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "fish",
+            "Pisces",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6319,6 +9956,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "fish",
+            "reef fish",
+            "tropical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6329,6 +9971,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "blowfish",
+            "fish"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6339,6 +9985,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "fish",
+            "shark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6349,6 +9999,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "octopus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6359,6 +10012,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "shell",
+            "spiral"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6369,6 +10026,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "coral",
+            "ocean",
+            "reef"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6379,6 +10041,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "mollusc",
+            "snail"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6389,6 +10055,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "butterfly",
+            "insect",
+            "moth",
+            "pretty"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6399,6 +10071,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bug",
+            "caterpillar",
+            "insect",
+            "worm"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6409,6 +10087,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "ant",
+            "insect"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6419,6 +10101,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bee",
+            "honeybee",
+            "insect"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6429,6 +10116,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "beetle",
+            "bug",
+            "insect"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6439,6 +10131,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "beetle",
+            "insect",
+            "lady beetle",
+            "ladybird",
+            "ladybug"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6449,6 +10148,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cricket",
+            "grasshopper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6459,6 +10162,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cockroach",
+            "insect",
+            "pest",
+            "roach"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6469,6 +10178,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "arachnid",
+            "spider",
+            "insect"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6479,6 +10193,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "spider",
+            "web"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6489,6 +10207,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "scorpio",
+            "Scorpio",
+            "scorpion",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6499,6 +10223,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "dengue",
+            "fever",
+            "insect",
+            "malaria",
+            "mosquito",
+            "mozzie",
+            "virus",
+            "disease",
+            "pest"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6509,6 +10244,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "disease",
+            "fly",
+            "maggot",
+            "pest",
+            "rotting"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6519,6 +10261,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "annelid",
+            "earthworm",
+            "parasite",
+            "worm"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6529,6 +10277,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "amoeba",
+            "bacteria",
+            "microbe",
+            "virus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6539,6 +10293,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "bouquet",
+            "flower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6549,6 +10307,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "blossom",
+            "cherry",
+            "flower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6559,6 +10322,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "white flower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6569,6 +10336,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "Buddhism",
+            "flower",
+            "Hinduism",
+            "India",
+            "lotus",
+            "purity",
+            "Vietnam"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6579,6 +10355,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "plant",
+            "rosette"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6589,6 +10369,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "rose"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6599,6 +10383,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "wilted"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6609,6 +10397,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "hibiscus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6619,6 +10411,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "sun",
+            "sunflower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6629,6 +10426,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "blossom",
+            "flower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6639,6 +10440,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "flower",
+            "tulip"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6649,6 +10454,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "seedling",
+            "young"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6659,6 +10468,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "grow",
+            "house",
+            "nurturing",
+            "plant",
+            "pot plant",
+            "boring",
+            "potted plant",
+            "useless"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6669,6 +10488,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "evergreen tree",
+            "tree"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6679,6 +10502,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "deciduous",
+            "shedding",
+            "tree"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6689,6 +10517,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "palm",
+            "tree"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6699,6 +10531,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "cactus",
+            "plant"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6709,6 +10545,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "ear",
+            "grain",
+            "rice",
+            "sheaf of rice",
+            "sheaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6719,6 +10562,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "herb",
+            "leaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6729,6 +10576,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "plant",
+            "shamrock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6739,6 +10590,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "4",
+            "clover",
+            "four",
+            "four-leaf clover",
+            "leaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6749,6 +10607,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "falling",
+            "leaf",
+            "maple"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6759,6 +10622,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "fallen leaf",
+            "falling",
+            "leaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6769,6 +10637,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "blow",
+            "flutter",
+            "leaf",
+            "leaf fluttering in wind",
+            "wind"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6779,6 +10654,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "empty nest",
+            "nesting"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6789,6 +10668,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Animals & Nature",
+        "keywords": [
+            "nest with eggs",
+            "nesting"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6799,6 +10682,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "grape",
+            "grapes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6809,6 +10697,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "melon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6819,6 +10711,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "watermelon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6829,6 +10725,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "mandarin",
+            "orange",
+            "tangerine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6839,6 +10741,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "citrus",
+            "fruit",
+            "lemon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6849,6 +10756,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "banana",
+            "fruit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6859,6 +10770,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "pineapple"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6869,6 +10784,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "mango",
+            "tropical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6879,6 +10799,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "apple",
+            "fruit",
+            "red"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6889,6 +10814,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "apple",
+            "fruit",
+            "green"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6899,6 +10829,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "pear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6909,6 +10843,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "peach"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6919,6 +10857,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "berries",
+            "cherries",
+            "cherry",
+            "fruit",
+            "red"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6929,6 +10874,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "berry",
+            "fruit",
+            "strawberry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6939,6 +10889,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "berry",
+            "bilberry",
+            "blue",
+            "blueberries",
+            "blueberry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6949,6 +10906,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "fruit",
+            "kiwi fruit",
+            "kiwi"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6959,6 +10922,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fruit",
+            "tomato",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6969,6 +10937,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "olive"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6979,6 +10951,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "coconut",
+            "palm",
+            "piña colada"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6989,6 +10966,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "avocado",
+            "food",
+            "fruit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -6999,6 +10981,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "aubergine",
+            "eggplant",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7009,6 +10996,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "potato",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7019,6 +11011,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "carrot",
+            "food",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7029,6 +11026,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "corn",
+            "corn on the cob",
+            "sweetcorn",
+            "ear",
+            "ear of corn",
+            "maize",
+            "maze"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7039,6 +11045,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chilli",
+            "hot pepper",
+            "pepper",
+            "hot"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7049,6 +11061,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bell pepper",
+            "capsicum",
+            "pepper",
+            "vegetable",
+            "sweet pepper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7059,6 +11078,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cucumber",
+            "food",
+            "pickle",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7069,6 +11094,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bok choy",
+            "leafy green",
+            "pak choi",
+            "cabbage",
+            "kale",
+            "lettuce"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7079,6 +11112,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "broccoli",
+            "wild cabbage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7089,6 +11126,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "flavouring",
+            "garlic",
+            "flavoring"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7099,6 +11141,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "flavouring",
+            "onion",
+            "flavoring"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7109,6 +11156,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "mushroom",
+            "toadstool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7119,6 +11170,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "nut",
+            "nuts",
+            "peanut",
+            "peanuts",
+            "vegetable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7129,6 +11188,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "kidney bean",
+            "kidney beans",
+            "legume",
+            "beans",
+            "kidney"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7139,6 +11206,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chestnut",
+            "plant",
+            "nut"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7149,6 +11221,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bread",
+            "loaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7159,6 +11235,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bread",
+            "breakfast",
+            "croissant",
+            "food",
+            "french",
+            "roll",
+            "crescent roll",
+            "French"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7169,6 +11255,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "baguette",
+            "bread",
+            "food",
+            "french",
+            "French stick",
+            "French"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7179,6 +11273,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "arepa",
+            "flatbread",
+            "lavash",
+            "naan",
+            "pita"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7189,6 +11290,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "pretzel",
+            "twisted"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7199,6 +11304,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bagel",
+            "bakery",
+            "breakfast",
+            "schmear"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7209,6 +11320,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "breakfast",
+            "crêpe",
+            "food",
+            "hotcake",
+            "pancake",
+            "pancakes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7219,6 +11338,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "waffle",
+            "waffle with butter",
+            "breakfast",
+            "indecisive",
+            "iron",
+            "unclear",
+            "vague"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7229,6 +11357,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cheese",
+            "cheese wedge"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7239,6 +11371,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bone",
+            "meat",
+            "meat on bone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7249,6 +11386,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bone",
+            "chicken",
+            "drumstick",
+            "leg",
+            "poultry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7259,6 +11403,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chop",
+            "cut of meat",
+            "lambchop",
+            "porkchop",
+            "steak",
+            "lamb chop",
+            "pork chop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7269,6 +11422,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bacon",
+            "breakfast",
+            "food",
+            "meat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7279,6 +11438,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "beefburger",
+            "burger",
+            "hamburger"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7289,6 +11453,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chips",
+            "french fries",
+            "fries",
+            "french",
+            "French"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7299,6 +11470,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cheese",
+            "pizza",
+            "slice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7309,6 +11485,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "frankfurter",
+            "hot dog",
+            "hotdog",
+            "sausage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7319,6 +11501,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bread",
+            "sandwich"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7329,6 +11515,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "mexican",
+            "taco",
+            "Mexican"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7339,6 +11530,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "burrito",
+            "mexican",
+            "wrap",
+            "Mexican"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7349,6 +11546,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "mexican",
+            "tamale",
+            "wrapped"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7359,6 +11561,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "falafel",
+            "flatbread",
+            "food",
+            "gyro",
+            "kebab",
+            "pita",
+            "pita roll",
+            "stuffed"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7369,6 +11581,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chickpea",
+            "falafel",
+            "meatball",
+            "chick pea"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7379,6 +11597,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "breakfast",
+            "egg",
+            "food"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7389,6 +11612,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "breakfast",
+            "cooking",
+            "egg",
+            "frying",
+            "pan"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7399,6 +11629,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "casserole",
+            "food",
+            "paella",
+            "pan",
+            "shallow",
+            "shallow pan of food"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7409,6 +11647,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "pot",
+            "pot of food",
+            "stew"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7419,6 +11662,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cheese",
+            "chocolate",
+            "fondue",
+            "melted",
+            "pot",
+            "Swiss"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7429,6 +11680,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bowl with spoon",
+            "breakfast",
+            "cereal",
+            "congee"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7439,6 +11696,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "food",
+            "garden",
+            "salad",
+            "green"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7449,6 +11712,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "popcorn"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7459,6 +11725,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "butter",
+            "dairy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7469,6 +11739,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "condiment",
+            "salt",
+            "shaker"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7479,6 +11754,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "can",
+            "canned food"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7489,6 +11768,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bento",
+            "box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7499,6 +11782,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cracker",
+            "rice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7509,6 +11796,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "ball",
+            "Japanese",
+            "rice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7519,6 +11811,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cooked",
+            "rice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7529,6 +11825,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "curry",
+            "rice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7539,6 +11839,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bowl",
+            "noodle",
+            "ramen",
+            "steaming"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7549,6 +11855,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "pasta",
+            "spaghetti"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7559,6 +11869,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "potato",
+            "roasted",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7569,6 +11884,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "kebab",
+            "oden",
+            "seafood",
+            "skewer",
+            "stick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7579,6 +11901,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "sushi"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7589,6 +11914,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "battered",
+            "fried",
+            "prawn",
+            "shrimp",
+            "tempura"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7599,6 +11931,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cake",
+            "fish",
+            "fish cake with swirl",
+            "pastry",
+            "swirl",
+            "narutomaki"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7609,6 +11949,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "autumn",
+            "festival",
+            "moon cake",
+            "yuèbǐng"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7619,6 +11965,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "dango",
+            "dessert",
+            "Japanese",
+            "skewer",
+            "stick",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7629,6 +11983,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "dumpling",
+            "empanada",
+            "gyōza",
+            "pastie",
+            "samosa",
+            "jiaozi",
+            "pierogi",
+            "potsticker"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7639,6 +12003,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "fortune cookie",
+            "prophecy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7649,6 +12017,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "takeaway container",
+            "takeout",
+            "oyster pail",
+            "takeout box",
+            "takeaway box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7659,6 +12034,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "crab",
+            "crustacean",
+            "seafood",
+            "shellfish",
+            "Cancer",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7669,6 +12052,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bisque",
+            "claws",
+            "lobster",
+            "seafood",
+            "shellfish"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7679,6 +12069,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "prawn",
+            "seafood",
+            "shellfish",
+            "shrimp",
+            "food",
+            "small"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7689,6 +12087,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "decapod",
+            "seafood",
+            "squid",
+            "food",
+            "molusc"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7699,6 +12104,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "diving",
+            "oyster",
+            "pearl"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7709,6 +12119,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cream",
+            "dessert",
+            "ice cream",
+            "soft serve",
+            "sweet",
+            "ice",
+            "icecream",
+            "soft"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7719,6 +12139,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "dessert",
+            "granita",
+            "ice",
+            "sweet",
+            "shaved"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7729,6 +12156,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cream",
+            "dessert",
+            "ice cream",
+            "sweet",
+            "ice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7739,6 +12173,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "breakfast",
+            "dessert",
+            "donut",
+            "doughnut",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7749,6 +12190,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "biscuit",
+            "cookie",
+            "dessert",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7759,6 +12206,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "birthday",
+            "cake",
+            "celebration",
+            "dessert",
+            "pastry",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7769,6 +12224,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cake",
+            "dessert",
+            "pastry",
+            "shortcake",
+            "slice",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7779,6 +12242,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bakery",
+            "cupcake",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7789,6 +12257,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "filling",
+            "pastry",
+            "pie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7799,6 +12272,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "chocolate",
+            "dessert",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7809,6 +12288,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "candy",
+            "dessert",
+            "sweet",
+            "sweets"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7819,6 +12304,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "candy",
+            "dessert",
+            "lollipop",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7829,6 +12320,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "baked custard",
+            "dessert",
+            "pudding",
+            "sweet",
+            "custard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7839,6 +12337,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "honey",
+            "honeypot",
+            "pot",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7849,6 +12353,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "baby",
+            "bottle",
+            "drink",
+            "milk"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7859,6 +12369,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "drink",
+            "glass",
+            "glass of milk",
+            "milk"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7869,6 +12385,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "beverage",
+            "coffee",
+            "drink",
+            "hot",
+            "steaming",
+            "tea"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7879,6 +12403,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "drink",
+            "pot",
+            "tea",
+            "teapot"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7889,6 +12419,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "beverage",
+            "cup",
+            "drink",
+            "tea",
+            "teacup",
+            "teacup without handle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7899,6 +12437,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "beverage",
+            "bottle",
+            "cup",
+            "drink",
+            "sake",
+            "saké"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7909,6 +12456,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "bottle",
+            "bottle with popping cork",
+            "cork",
+            "drink",
+            "popping"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7919,6 +12474,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "beverage",
+            "drink",
+            "glass",
+            "wine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7929,6 +12491,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "cocktail",
+            "drink",
+            "glass"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7939,6 +12507,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "drink",
+            "tropical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7949,6 +12522,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "beer",
+            "drink",
+            "mug"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7959,6 +12538,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bar",
+            "beer",
+            "clink",
+            "clinking beer mugs",
+            "drink",
+            "mug"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7969,6 +12556,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "celebrate",
+            "clink",
+            "clinking glasses",
+            "drink",
+            "glass"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7979,6 +12573,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "glass",
+            "liquor",
+            "shot",
+            "tumbler",
+            "whisky"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7989,6 +12590,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "drink",
+            "empty",
+            "glass",
+            "pouring liquid",
+            "spill"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -7999,6 +12607,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cup with straw",
+            "juice",
+            "soda"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8009,6 +12622,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "bubble",
+            "milk",
+            "pearl",
+            "tea"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8019,6 +12638,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "drink carton",
+            "juice box",
+            "popper",
+            "beverage",
+            "box",
+            "juice",
+            "straw",
+            "sweet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8029,6 +12658,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "drink",
+            "mate",
+            "maté"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8039,6 +12673,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cold",
+            "ice",
+            "ice cube",
+            "iceberg"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8049,6 +12689,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "chopsticks",
+            "pair of chopsticks",
+            "hashi"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8059,6 +12704,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cooking",
+            "fork",
+            "fork and knife with plate",
+            "knife",
+            "plate"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8069,6 +12721,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cooking",
+            "cutlery",
+            "fork",
+            "fork and knife",
+            "knife",
+            "knife and fork"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8079,6 +12739,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "spoon",
+            "tableware"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8089,6 +12753,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "cooking",
+            "hocho",
+            "kitchen knife",
+            "knife",
+            "tool",
+            "weapon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8099,6 +12771,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "condiment",
+            "container",
+            "empty",
+            "jar",
+            "sauce",
+            "store"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8109,6 +12789,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Food & Drink",
+        "keywords": [
+            "amphora",
+            "Aquarius",
+            "cooking",
+            "drink",
+            "jug",
+            "zodiac",
+            "jar"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8119,6 +12808,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Africa",
+            "earth",
+            "Europe",
+            "globe",
+            "globe showing Europe-Africa",
+            "world"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8129,6 +12826,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Americas",
+            "earth",
+            "globe",
+            "globe showing Americas",
+            "world"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8139,6 +12843,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Asia",
+            "Australia",
+            "earth",
+            "globe",
+            "globe showing Asia-Australia",
+            "world"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8149,6 +12861,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "earth",
+            "globe",
+            "globe with meridians",
+            "meridians",
+            "world"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8159,6 +12878,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "map",
+            "world"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8169,6 +12892,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Japan",
+            "map",
+            "map of Japan"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8179,6 +12907,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "compass",
+            "magnetic",
+            "navigation",
+            "orienteering"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8189,6 +12923,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cold",
+            "mountain",
+            "snow",
+            "snow-capped mountain"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8199,6 +12939,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "mountain"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8209,6 +12952,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "eruption",
+            "mountain",
+            "volcano"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8219,6 +12967,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Fuji",
+            "mount Fuji",
+            "mountain",
+            "fuji",
+            "mount fuji",
+            "Mount Fuji"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8229,6 +12985,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "camping"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8239,6 +12998,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "beach",
+            "beach with umbrella",
+            "umbrella"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8249,6 +13013,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "desert"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8259,6 +13026,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "desert",
+            "island"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8269,6 +13040,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "national park",
+            "park"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8279,6 +13054,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "arena",
+            "stadium"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8289,6 +13068,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "classical",
+            "classical building",
+            "column"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8299,6 +13083,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "building construction",
+            "construction"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8309,6 +13097,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "brick",
+            "bricks",
+            "clay",
+            "mortar",
+            "wall"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8319,6 +13114,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boulder",
+            "heavy",
+            "rock",
+            "solid",
+            "stone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8329,6 +13131,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "log",
+            "lumber",
+            "timber",
+            "wood"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8339,6 +13147,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "house",
+            "hut",
+            "roundhouse",
+            "yurt"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8349,6 +13163,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "houses"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8359,6 +13176,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "derelict",
+            "house"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8369,6 +13190,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "home",
+            "house"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8379,6 +13204,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "garden",
+            "home",
+            "house",
+            "house with garden"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8389,6 +13220,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "building",
+            "office building"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8399,6 +13234,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Japanese",
+            "Japanese post office",
+            "post"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8409,6 +13249,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "European",
+            "post",
+            "post office"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8419,6 +13264,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "doctor",
+            "hospital",
+            "medicine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8429,6 +13279,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bank",
+            "building"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8439,6 +13293,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "building",
+            "hotel"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8449,6 +13307,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hotel",
+            "love"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8459,6 +13321,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "convenience",
+            "store",
+            "dépanneur"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8469,6 +13336,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "building",
+            "school"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8479,6 +13350,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "department",
+            "store"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8489,6 +13364,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "building",
+            "factory"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8499,6 +13378,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "castle",
+            "Japanese"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8509,6 +13392,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "castle",
+            "European"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8519,6 +13406,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "chapel",
+            "romance",
+            "wedding"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8529,6 +13421,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Tokyo",
+            "tower",
+            "Tower"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8539,6 +13436,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "liberty",
+            "statue",
+            "Statue of Liberty",
+            "Liberty",
+            "Statue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8549,6 +13453,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Christian",
+            "church",
+            "cross",
+            "religion"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8559,6 +13469,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Islam",
+            "mosque",
+            "Muslim",
+            "religion",
+            "islam"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8569,6 +13486,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hindu",
+            "temple",
+            "Hindu"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8579,6 +13501,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Jew",
+            "Jewish",
+            "religion",
+            "synagogue",
+            "temple",
+            "shul"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8589,6 +13519,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "religion",
+            "Shinto",
+            "shrine",
+            "shinto"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8599,6 +13535,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Islam",
+            "Kaaba",
+            "Muslim",
+            "religion",
+            "islam",
+            "kaaba"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8609,6 +13553,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "fountain"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8619,6 +13566,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "camping",
+            "tent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8629,6 +13580,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "fog",
+            "foggy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8639,6 +13594,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "night",
+            "night with stars",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8649,6 +13609,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "city",
+            "cityscape"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8659,6 +13623,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "morning",
+            "mountain",
+            "sun",
+            "sunrise",
+            "sunrise over mountains"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8669,6 +13640,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "morning",
+            "sun",
+            "sunrise"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8679,6 +13655,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "city",
+            "cityscape at dusk",
+            "dusk",
+            "evening",
+            "landscape",
+            "sunset"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8689,6 +13673,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "dusk",
+            "sun",
+            "sunset"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8699,6 +13688,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bridge",
+            "bridge at night",
+            "night"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8709,6 +13703,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hot",
+            "hotsprings",
+            "springs",
+            "steaming"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8719,6 +13719,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "carousel",
+            "horse",
+            "merry-go-round"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8729,6 +13734,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "amusement park",
+            "play",
+            "playground slide"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8739,6 +13749,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "amusement park",
+            "ferris",
+            "wheel",
+            "Ferris",
+            "theme park"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8749,6 +13766,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "amusement park",
+            "coaster",
+            "roller"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8759,6 +13781,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "barber",
+            "haircut",
+            "pole"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8769,6 +13796,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "big top",
+            "circus",
+            "tent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8779,6 +13811,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "engine",
+            "locomotive",
+            "railway",
+            "steam",
+            "train"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8789,6 +13828,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "electric",
+            "railway",
+            "train",
+            "tram",
+            "trolley bus",
+            "trolleybus",
+            "railway carriage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8799,6 +13848,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "high-speed train",
+            "railway",
+            "shinkansen",
+            "speed",
+            "train",
+            "Shinkansen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8809,6 +13866,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bullet",
+            "railway",
+            "shinkansen",
+            "speed",
+            "train",
+            "Shinkansen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8819,6 +13884,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "railway",
+            "train"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8829,6 +13898,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "metro",
+            "subway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8839,6 +13912,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "light rail",
+            "railway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8849,6 +13926,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "railway",
+            "station",
+            "train"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8859,6 +13941,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "light rail",
+            "oncoming",
+            "oncoming light rail",
+            "tram",
+            "trolleybus",
+            "car",
+            "streetcar",
+            "tramcar",
+            "trolley",
+            "trolley bus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8869,6 +13963,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "monorail",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8879,6 +13977,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "mountain",
+            "railway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8889,6 +13992,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "tram",
+            "trolley bus",
+            "trolleybus",
+            "streetcar",
+            "tramcar",
+            "trolley"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8899,6 +14011,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bus",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8909,6 +14025,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bus",
+            "oncoming"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8919,6 +14039,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bus",
+            "tram",
+            "trolley",
+            "trolleybus",
+            "streetcar"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8929,6 +14056,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bus",
+            "minibus"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8939,6 +14070,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "ambulance",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8949,6 +14084,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "engine",
+            "fire",
+            "truck"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8959,6 +14099,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "patrol",
+            "police"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8969,6 +14114,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "oncoming",
+            "police"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8979,6 +14129,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "taxi",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8989,6 +14143,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "oncoming",
+            "taxi"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -8999,6 +14157,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "automobile",
+            "car"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9009,6 +14171,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "automobile",
+            "car",
+            "oncoming"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9019,6 +14186,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "4WD",
+            "four-wheel drive",
+            "recreational",
+            "sport utility",
+            "sport utility vehicle",
+            "4x4",
+            "off-road vehicle",
+            "SUV"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9029,6 +14206,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "pick-up",
+            "pickup",
+            "truck",
+            "ute"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9039,6 +14222,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "delivery",
+            "truck"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9049,6 +14236,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "articulated truck",
+            "lorry",
+            "semi",
+            "truck",
+            "articulated lorry"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9059,6 +14253,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "tractor",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9069,6 +14267,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "car",
+            "racing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9079,6 +14281,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "motorcycle",
+            "racing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9089,6 +14295,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "motor",
+            "scooter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9099,6 +14309,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "accessibility",
+            "manual wheelchair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9109,6 +14323,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "mobility scooter",
+            "accessibility",
+            "motorized wheelchair",
+            "powered wheelchair"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9119,6 +14339,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "auto rickshaw",
+            "tuk tuk",
+            "tuk-tuk",
+            "tuktuk"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9129,6 +14355,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bicycle",
+            "bike"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9139,6 +14369,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "kick",
+            "scooter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9149,6 +14383,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "board",
+            "skateboard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9159,6 +14397,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "roller",
+            "rollerskate",
+            "skate"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9169,6 +14412,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bus",
+            "stop",
+            "busstop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9179,6 +14427,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "freeway",
+            "highway",
+            "road",
+            "motorway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9189,6 +14443,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "railway",
+            "railway track",
+            "train"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9199,6 +14458,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "drum",
+            "oil"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9209,6 +14472,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "diesel",
+            "fuel",
+            "gas",
+            "petrol pump",
+            "pump",
+            "station",
+            "fuelpump"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9219,6 +14491,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "circle",
+            "turn",
+            "tyre",
+            "wheel",
+            "tire"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9229,6 +14508,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "beacon",
+            "car",
+            "light",
+            "police",
+            "revolving"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9239,6 +14525,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "horizontal traffic lights",
+            "lights",
+            "signal",
+            "traffic",
+            "horizontal traffic light",
+            "light"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9249,6 +14543,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "lights",
+            "signal",
+            "traffic",
+            "vertical traffic lights",
+            "light",
+            "vertical traffic light"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9259,6 +14561,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "octagonal",
+            "sign",
+            "stop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9269,6 +14576,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "barrier",
+            "construction"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9279,6 +14590,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "anchor",
+            "ship",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9289,6 +14605,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "buoy",
+            "float",
+            "life preserver",
+            "rescue",
+            "ring buoy",
+            "safety",
+            "life saver"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9299,6 +14624,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "resort",
+            "sailboat",
+            "sea",
+            "yacht"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9309,6 +14641,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "canoe"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9319,6 +14655,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "speedboat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9329,6 +14669,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "passenger",
+            "ship"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9339,6 +14683,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "ferry",
+            "passenger"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9349,6 +14698,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "motor boat",
+            "motorboat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9359,6 +14713,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "boat",
+            "passenger",
+            "ship"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9369,6 +14728,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "aeroplane",
+            "airplane"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9379,6 +14742,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "aeroplane",
+            "airplane",
+            "small airplane"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9389,6 +14757,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "aeroplane",
+            "airplane",
+            "check-in",
+            "departure",
+            "departures",
+            "take-off"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9399,6 +14775,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "aeroplane",
+            "airplane",
+            "airplane arrival",
+            "arrivals",
+            "arriving",
+            "landing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9409,6 +14793,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hang-glide",
+            "parachute",
+            "parasail",
+            "skydive",
+            "parascend"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9419,6 +14810,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "chair",
+            "seat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9429,6 +14824,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "helicopter",
+            "vehicle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9439,6 +14838,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cable",
+            "railway",
+            "suspension"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9449,6 +14853,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cable",
+            "cableway",
+            "gondola",
+            "mountain",
+            "mountain cableway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9459,6 +14870,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "aerial",
+            "cable",
+            "car",
+            "gondola",
+            "tramway"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9469,6 +14887,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "satellite",
+            "space"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9479,6 +14901,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "rocket",
+            "space"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9489,6 +14915,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "flying saucer",
+            "UFO"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9499,6 +14929,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bell",
+            "hotel",
+            "porter",
+            "bellhop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9509,6 +14945,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "luggage",
+            "packing",
+            "travel"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9519,6 +14960,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hourglass",
+            "hourglass done",
+            "sand",
+            "timer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9529,6 +14976,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "hourglass",
+            "hourglass not done",
+            "sand",
+            "timer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9539,6 +14992,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clock",
+            "watch"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9549,6 +15006,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "alarm",
+            "clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9559,6 +15020,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clock",
+            "stopwatch"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9569,6 +15034,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clock",
+            "timer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9579,6 +15048,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clock",
+            "mantelpiece clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9589,6 +15062,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "12",
+            "12:00",
+            "clock",
+            "o’clock",
+            "twelve"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9599,6 +15080,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "12",
+            "12:30",
+            "clock",
+            "thirty",
+            "twelve",
+            "twelve-thirty",
+            "half past twelve",
+            "12.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9609,6 +15100,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "1",
+            "1:00",
+            "clock",
+            "o’clock",
+            "one"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9619,6 +15118,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "1",
+            "1:30",
+            "clock",
+            "one",
+            "one-thirty",
+            "thirty",
+            "half past one",
+            "1.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9629,6 +15138,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "2",
+            "2:00",
+            "clock",
+            "o’clock",
+            "two"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9639,6 +15156,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "2",
+            "2:30",
+            "clock",
+            "thirty",
+            "two",
+            "two-thirty",
+            "half past two",
+            "2.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9649,6 +15176,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "3",
+            "3:00",
+            "clock",
+            "o’clock",
+            "three"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9659,6 +15194,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "3",
+            "3:30",
+            "clock",
+            "thirty",
+            "three",
+            "three-thirty",
+            "half past three",
+            "3.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9669,6 +15214,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "4",
+            "4:00",
+            "clock",
+            "four",
+            "o’clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9679,6 +15232,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "4",
+            "4:30",
+            "clock",
+            "four",
+            "four-thirty",
+            "thirty",
+            "half past four",
+            "4.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9689,6 +15252,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "5",
+            "5:00",
+            "clock",
+            "five",
+            "o’clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9699,6 +15270,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "5",
+            "5:30",
+            "clock",
+            "five",
+            "five-thirty",
+            "thirty",
+            "half past five",
+            "5.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9709,6 +15290,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "6",
+            "6:00",
+            "clock",
+            "o’clock",
+            "six"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9719,6 +15308,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "6",
+            "6:30",
+            "clock",
+            "six",
+            "six-thirty",
+            "thirty",
+            "half past six",
+            "6.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9729,6 +15328,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "7",
+            "7:00",
+            "clock",
+            "o’clock",
+            "seven"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9739,6 +15346,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "7",
+            "7:30",
+            "clock",
+            "seven",
+            "seven-thirty",
+            "thirty",
+            "half past seven",
+            "7.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9749,6 +15366,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "8",
+            "8:00",
+            "clock",
+            "eight",
+            "o’clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9759,6 +15384,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "8",
+            "8:30",
+            "clock",
+            "eight",
+            "eight-thirty",
+            "thirty",
+            "half past eight",
+            "8.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9769,6 +15404,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "9",
+            "9:00",
+            "clock",
+            "nine",
+            "o’clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9779,6 +15422,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "9",
+            "9:30",
+            "clock",
+            "nine",
+            "nine-thirty",
+            "thirty",
+            "half past nine",
+            "9.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9789,6 +15442,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "10",
+            "10:00",
+            "clock",
+            "o’clock",
+            "ten"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9799,6 +15460,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "10",
+            "10:30",
+            "clock",
+            "ten",
+            "ten-thirty",
+            "thirty",
+            "half past ten",
+            "10.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9809,6 +15480,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "00",
+            "11",
+            "11:00",
+            "clock",
+            "eleven",
+            "o’clock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9819,6 +15498,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "11",
+            "11:30",
+            "clock",
+            "eleven",
+            "eleven-thirty",
+            "thirty",
+            "half past eleven",
+            "11.30"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9829,6 +15518,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "dark",
+            "moon",
+            "new moon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9839,6 +15533,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "crescent",
+            "moon",
+            "waxing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9849,6 +15548,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "first quarter moon",
+            "moon",
+            "quarter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9859,6 +15563,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "gibbous",
+            "moon",
+            "waxing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9869,6 +15578,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "full",
+            "moon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9879,6 +15592,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "gibbous",
+            "moon",
+            "waning"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9889,6 +15607,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "last quarter moon",
+            "moon",
+            "quarter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9899,6 +15622,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "crescent",
+            "moon",
+            "waning"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9909,6 +15637,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "crescent",
+            "moon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9919,6 +15651,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "face",
+            "moon",
+            "new moon face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9929,6 +15666,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "face",
+            "first quarter moon face",
+            "moon",
+            "quarter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9939,6 +15682,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "face",
+            "last quarter moon face",
+            "moon",
+            "quarter"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9949,6 +15698,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "thermometer",
+            "weather"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9959,6 +15712,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bright",
+            "rays",
+            "sun",
+            "sunny"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9969,6 +15728,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bright",
+            "face",
+            "full",
+            "moon",
+            "full-moon face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9979,6 +15745,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "bright",
+            "face",
+            "sun",
+            "sun with face"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9989,6 +15761,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "ringed planet",
+            "saturn",
+            "saturnine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -9999,6 +15776,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10009,6 +15789,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "glittery",
+            "glow",
+            "glowing star",
+            "shining",
+            "sparkle",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10019,6 +15807,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "falling",
+            "shooting",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10029,6 +15822,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "Milky Way",
+            "space",
+            "milky way",
+            "Milky",
+            "Way"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10039,6 +15839,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "weather"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10049,6 +15853,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "sun",
+            "sun behind cloud"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10059,6 +15868,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "cloud with lightning and rain",
+            "rain",
+            "thunder"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10069,6 +15884,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "sun",
+            "sun behind small cloud"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10079,6 +15899,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "sun",
+            "sun behind large cloud"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10089,6 +15914,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "rain",
+            "sun",
+            "sun behind rain cloud"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10099,6 +15930,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "cloud with rain",
+            "rain"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10109,6 +15945,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "cloud with snow",
+            "cold",
+            "snow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10119,6 +15961,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "cloud with lightning",
+            "lightning"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10129,6 +15976,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "tornado",
+            "whirlwind"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10139,6 +15991,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cloud",
+            "fog"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10149,6 +16005,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "blow",
+            "cloud",
+            "face",
+            "wind"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10159,6 +16021,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cyclone",
+            "dizzy",
+            "hurricane",
+            "twister",
+            "typhoon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10169,6 +16038,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "rain",
+            "rainbow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10179,6 +16052,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "closed umbrella",
+            "clothing",
+            "rain",
+            "umbrella"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10189,6 +16068,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clothing",
+            "rain",
+            "umbrella"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10199,6 +16083,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "clothing",
+            "drop",
+            "rain",
+            "umbrella",
+            "umbrella with rain drops"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10209,6 +16100,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "beach",
+            "sand",
+            "sun",
+            "umbrella",
+            "rain",
+            "umbrella on ground"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10219,6 +16118,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "danger",
+            "electric",
+            "high voltage",
+            "lightning",
+            "voltage",
+            "zap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10229,6 +16136,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cold",
+            "snow",
+            "snowflake"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10239,6 +16151,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cold",
+            "snow",
+            "snowman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10249,6 +16166,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cold",
+            "snow",
+            "snowman",
+            "snowman without snow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10259,6 +16182,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "comet",
+            "space"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10269,6 +16196,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "fire",
+            "flame",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10279,6 +16211,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "cold",
+            "comic",
+            "drop",
+            "droplet",
+            "sweat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10289,6 +16228,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Travel & Places",
+        "keywords": [
+            "ocean",
+            "water",
+            "wave"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10299,6 +16243,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "halloween",
+            "jack",
+            "jack-o-lantern",
+            "lantern",
+            "Halloween",
+            "jack-o’-lantern"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10309,6 +16262,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "Christmas",
+            "tree"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10319,6 +16277,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "fireworks"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10329,6 +16291,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "fireworks",
+            "sparkle",
+            "sparkler"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10339,6 +16307,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "dynamite",
+            "explosive",
+            "firecracker",
+            "fireworks"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10349,6 +16323,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "*",
+            "sparkle",
+            "sparkles",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10359,6 +16339,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "balloon",
+            "celebration"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10369,6 +16353,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "party",
+            "popper",
+            "ta-da",
+            "tada"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10379,6 +16370,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "celebration",
+            "confetti"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10389,6 +16385,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "banner",
+            "celebration",
+            "Japanese",
+            "tanabata tree",
+            "tree",
+            "Tanabata tree"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10399,6 +16403,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "bamboo",
+            "celebration",
+            "decoration",
+            "Japanese",
+            "pine",
+            "pine decoration"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10409,6 +16421,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "doll",
+            "festival",
+            "Japanese",
+            "Japanese dolls"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10419,6 +16438,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "carp",
+            "celebration",
+            "streamer",
+            "carp wind sock",
+            "Japanese wind socks",
+            "koinobori"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10429,6 +16456,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "bell",
+            "celebration",
+            "chime",
+            "wind"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10439,6 +16472,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "ceremony",
+            "moon",
+            "moon viewing ceremony",
+            "moon-viewing ceremony"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10449,6 +16489,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "gift",
+            "good luck",
+            "hóngbāo",
+            "lai see",
+            "money",
+            "red envelope"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10459,6 +16507,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "ribbon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10469,6 +16521,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "box",
+            "celebration",
+            "gift",
+            "present",
+            "wrapped"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10479,6 +16538,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "reminder",
+            "ribbon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10489,6 +16553,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "admission",
+            "admission tickets",
+            "entry",
+            "ticket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10499,6 +16569,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "admission",
+            "ticket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10509,6 +16583,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "medal",
+            "military"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10519,6 +16598,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "prize",
+            "trophy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10529,6 +16613,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "medal",
+            "sports",
+            "sports medal"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10539,6 +16629,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "1st place medal",
+            "first",
+            "gold",
+            "medal"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10549,6 +16645,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "2nd place medal",
+            "medal",
+            "second",
+            "silver"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10559,6 +16661,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "3rd place medal",
+            "bronze",
+            "medal",
+            "third"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10569,6 +16677,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "football",
+            "soccer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10579,6 +16692,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "baseball"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10589,6 +16706,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "glove",
+            "softball",
+            "underarm"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10599,6 +16722,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "basketball",
+            "hoop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10609,6 +16737,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "game",
+            "volleyball"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10619,6 +16752,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "american",
+            "ball",
+            "football"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10629,6 +16767,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "australian football",
+            "rugby ball",
+            "rugby league",
+            "rugby union",
+            "ball",
+            "football",
+            "rugby"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10639,6 +16786,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "racquet",
+            "tennis"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10649,6 +16801,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "flying disc",
+            "frisbee",
+            "ultimate",
+            "Frisbee"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10659,6 +16817,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "game",
+            "tenpin bowling",
+            "bowling"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10669,6 +16833,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "bat",
+            "cricket game",
+            "game",
+            "cricket",
+            "cricket match"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10679,6 +16851,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "field",
+            "game",
+            "hockey",
+            "stick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10689,6 +16868,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "game",
+            "hockey",
+            "ice",
+            "puck",
+            "stick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10699,6 +16885,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "goal",
+            "lacrosse",
+            "stick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10709,6 +16901,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "bat",
+            "game",
+            "paddle",
+            "ping pong",
+            "table tennis"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10719,6 +16919,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "badminton",
+            "birdie",
+            "game",
+            "racquet",
+            "shuttlecock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10729,6 +16936,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "boxing",
+            "glove"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10739,6 +16950,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "judo",
+            "karate",
+            "martial arts",
+            "martial arts uniform",
+            "taekwondo",
+            "uniform"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10749,6 +16968,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "goal",
+            "goal cage",
+            "net"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10759,6 +16983,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "flag",
+            "flag in hole",
+            "golf",
+            "hole"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10769,6 +16999,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ice",
+            "ice skating",
+            "skate"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10779,6 +17014,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "fish",
+            "fishing",
+            "pole",
+            "rod",
+            "fishing pole"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10789,6 +17031,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "diving",
+            "diving mask",
+            "scuba",
+            "snorkeling",
+            "snorkelling"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10799,6 +17048,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "athletics",
+            "running",
+            "sash",
+            "shirt"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10809,6 +17064,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ski",
+            "skiing",
+            "skis",
+            "snow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10819,6 +17080,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "sled",
+            "sledge",
+            "sleigh"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10829,6 +17095,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "curling",
+            "game",
+            "rock",
+            "stone",
+            "curling stone",
+            "curling rock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10839,6 +17113,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "bullseye",
+            "dart",
+            "direct hit",
+            "game",
+            "hit",
+            "target"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10849,6 +17131,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "fluctuate",
+            "toy",
+            "yo-yo"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10859,6 +17146,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "fly",
+            "kite",
+            "soar"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10869,6 +17161,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "8",
+            "ball",
+            "billiard",
+            "eight",
+            "game",
+            "pool 8 ball"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10879,6 +17179,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "crystal",
+            "fairy tale",
+            "fantasy",
+            "fortune",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10889,6 +17197,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "magic",
+            "magic wand",
+            "witch",
+            "wizard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10899,6 +17213,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "amulet",
+            "charm",
+            "evil-eye",
+            "nazar",
+            "talisman",
+            "bead",
+            "nazar amulet",
+            "evil eye"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10909,6 +17233,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "amulet",
+            "Fatima",
+            "hamsa",
+            "hand",
+            "Mary",
+            "Miriam",
+            "protection"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10919,6 +17252,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "controller",
+            "game",
+            "video game"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10929,6 +17267,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "game",
+            "joystick",
+            "video game"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10939,6 +17282,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "game",
+            "pokie",
+            "pokies",
+            "slot",
+            "slot machine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10949,6 +17299,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "dice",
+            "die",
+            "game"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10959,6 +17314,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "clue",
+            "interlocking",
+            "jigsaw",
+            "piece",
+            "puzzle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10969,6 +17331,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "plaything",
+            "plush",
+            "stuffed",
+            "teddy bear",
+            "toy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10979,6 +17348,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "celebration",
+            "party",
+            "piñata"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10989,6 +17363,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "dance",
+            "disco",
+            "glitter",
+            "mirror ball",
+            "party"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -10999,6 +17380,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "doll",
+            "nesting",
+            "nesting dolls",
+            "russia",
+            "babushka",
+            "matryoshka",
+            "Russian dolls"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11009,6 +17399,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "game",
+            "spade suit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11019,6 +17414,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "game",
+            "heart suit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11029,6 +17429,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "diamond suit",
+            "diamonds",
+            "game"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11039,6 +17445,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "club suit",
+            "clubs",
+            "game"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11049,6 +17461,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "chess",
+            "chess pawn",
+            "dupe",
+            "expendable"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11059,6 +17477,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "game",
+            "joker",
+            "wildcard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11069,6 +17493,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "game",
+            "mahjong",
+            "mahjong red dragon",
+            "red",
+            "Mahjong",
+            "Mahjong red dragon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11079,6 +17511,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "card",
+            "flower",
+            "flower playing cards",
+            "game",
+            "Japanese",
+            "playing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11089,6 +17529,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "art",
+            "mask",
+            "performing",
+            "performing arts",
+            "theater",
+            "theatre"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11099,6 +17547,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "art",
+            "frame",
+            "framed picture",
+            "museum",
+            "painting",
+            "picture"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11109,6 +17565,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "art",
+            "artist palette",
+            "museum",
+            "painting",
+            "palette"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11119,6 +17582,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "needle",
+            "sewing",
+            "spool",
+            "string",
+            "thread"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11129,6 +17599,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "embroidery",
+            "needle",
+            "needle and thread",
+            "sewing",
+            "stitches",
+            "sutures",
+            "tailoring"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11139,6 +17618,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "ball",
+            "crochet",
+            "knit",
+            "yarn"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11149,6 +17634,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Activities",
+        "keywords": [
+            "knot",
+            "rope",
+            "tangled",
+            "tie",
+            "twine",
+            "twist"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11159,6 +17652,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "eye",
+            "eyeglasses",
+            "eyewear",
+            "glasses"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11169,6 +17669,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "dark",
+            "eye",
+            "eyewear",
+            "glasses",
+            "sunglasses",
+            "sunnies"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11179,6 +17687,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "eye protection",
+            "goggles",
+            "swimming",
+            "welding"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11189,6 +17703,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "doctor",
+            "experiment",
+            "lab coat",
+            "scientist"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11199,6 +17719,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "emergency",
+            "safety",
+            "vest",
+            "hi-vis",
+            "high-vis",
+            "jacket",
+            "life jacket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11209,6 +17738,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "necktie",
+            "tie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11219,6 +17753,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "shirt",
+            "t-shirt",
+            "T-shirt",
+            "tee",
+            "tshirt",
+            "tee-shirt"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11229,6 +17772,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "jeans",
+            "pants",
+            "trousers"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11239,6 +17788,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "neck",
+            "scarf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11249,6 +17802,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "gloves",
+            "hand"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11259,6 +17816,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "coat",
+            "jacket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11269,6 +17830,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "socks",
+            "stocking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11279,6 +17844,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "dress",
+            "woman’s clothes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11289,6 +17859,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "kimono"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11299,6 +17873,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "dress",
+            "sari"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11309,6 +17888,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bathing suit",
+            "one-piece swimsuit",
+            "swimming costume"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11319,6 +17903,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bathers",
+            "briefs",
+            "speedos",
+            "underwear",
+            "bathing suit",
+            "one-piece",
+            "swimsuit",
+            "pants"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11329,6 +17923,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bathing suit",
+            "boardies",
+            "boardshorts",
+            "shorts",
+            "swim shorts",
+            "underwear",
+            "pants"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11339,6 +17942,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bikini",
+            "clothing",
+            "swim suit",
+            "two-piece",
+            "swim"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11349,6 +17959,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "blouse",
+            "clothing",
+            "top",
+            "woman",
+            "woman’s clothes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11359,6 +17976,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accessories",
+            "coin",
+            "purse",
+            "clothing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11369,6 +17992,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accessories",
+            "bag",
+            "handbag",
+            "tote",
+            "clothing",
+            "purse"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11379,6 +18010,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accessories",
+            "bag",
+            "clutch bag",
+            "pouch",
+            "clothing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11389,6 +18027,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bag",
+            "hotel",
+            "shopping",
+            "shopping bags"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11399,6 +18043,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "backpack",
+            "bag",
+            "rucksack",
+            "satchel",
+            "school"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11409,6 +18060,20 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "beach sandals",
+            "sandals",
+            "thong sandal",
+            "thong sandals",
+            "thongs",
+            "zōri",
+            "flip-flop",
+            "beach sandal",
+            "sandal",
+            "thong",
+            "flipflop",
+            "zori"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11419,6 +18084,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "man",
+            "man’s shoe",
+            "shoe"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11429,6 +18100,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "athletic",
+            "clothing",
+            "runners",
+            "running shoe",
+            "shoe",
+            "sneaker",
+            "trainer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11439,6 +18119,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "backpacking",
+            "boot",
+            "camping",
+            "hiking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11449,6 +18135,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ballet flat",
+            "flat shoe",
+            "slip-on",
+            "slipper",
+            "pump"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11459,6 +18152,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "heel",
+            "high-heeled shoe",
+            "shoe",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11469,6 +18169,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "sandal",
+            "shoe",
+            "woman",
+            "woman’s sandal"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11479,6 +18186,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ballet",
+            "ballet shoes",
+            "dance"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11489,6 +18201,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "boot",
+            "clothing",
+            "shoe",
+            "woman",
+            "woman’s boot"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11499,6 +18218,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "crown",
+            "king",
+            "queen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11509,6 +18234,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "hat",
+            "woman",
+            "woman’s hat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11519,6 +18250,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clothing",
+            "hat",
+            "top",
+            "tophat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11529,6 +18266,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cap",
+            "celebration",
+            "clothing",
+            "graduation",
+            "hat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11539,6 +18283,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "baseball cap",
+            "billed cap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11549,6 +18297,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "army",
+            "helmet",
+            "military",
+            "soldier",
+            "warrior"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11559,6 +18314,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "aid",
+            "cross",
+            "face",
+            "hat",
+            "helmet",
+            "rescue worker’s helmet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11569,6 +18332,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "beads",
+            "clothing",
+            "necklace",
+            "prayer",
+            "religion"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11579,6 +18349,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cosmetics",
+            "lipstick",
+            "make-up",
+            "makeup"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11589,6 +18365,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "diamond",
+            "ring"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11599,6 +18379,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "diamond",
+            "gem",
+            "gem stone",
+            "jewel",
+            "gemstone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11609,6 +18396,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "mute",
+            "muted speaker",
+            "quiet",
+            "silent",
+            "speaker"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11619,6 +18413,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "low",
+            "quiet",
+            "soft",
+            "speaker",
+            "volume",
+            "speaker low volume"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11629,6 +18431,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "medium",
+            "speaker medium volume"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11639,6 +18445,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "loud",
+            "speaker high volume"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11649,6 +18459,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "loud",
+            "loudspeaker",
+            "public address"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11659,6 +18474,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cheering",
+            "megaphone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11669,6 +18488,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "horn",
+            "post",
+            "postal"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11679,6 +18503,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bell"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11689,6 +18516,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bell",
+            "bell with slash",
+            "forbidden",
+            "mute",
+            "quiet",
+            "silent"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11699,6 +18534,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "music",
+            "musical score",
+            "score"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11709,6 +18549,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "music",
+            "musical note",
+            "note"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11719,6 +18564,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "music",
+            "musical notes",
+            "note",
+            "notes"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11729,6 +18580,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "mic",
+            "microphone",
+            "music",
+            "studio"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11739,6 +18596,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "level",
+            "music",
+            "slider"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11749,6 +18611,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "control",
+            "knobs",
+            "music"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11759,6 +18626,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "karaoke",
+            "mic",
+            "microphone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11769,6 +18641,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "earbud",
+            "headphone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11779,6 +18655,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "AM",
+            "FM",
+            "radio",
+            "wireless",
+            "video"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11789,6 +18672,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "instrument",
+            "music",
+            "sax",
+            "saxophone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11799,6 +18688,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accordion",
+            "concertina",
+            "squeeze box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11809,6 +18703,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "guitar",
+            "instrument",
+            "music"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11819,6 +18718,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "instrument",
+            "keyboard",
+            "music",
+            "musical keyboard",
+            "organ",
+            "piano"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11829,6 +18736,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "instrument",
+            "music",
+            "trumpet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11839,6 +18751,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "instrument",
+            "music",
+            "violin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11849,6 +18766,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banjo",
+            "music",
+            "stringed"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11859,6 +18781,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "drum",
+            "drumsticks",
+            "music",
+            "percussions"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11869,6 +18797,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "beat",
+            "conga",
+            "drum",
+            "long drum",
+            "rhythm"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11879,6 +18814,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cell",
+            "mobile",
+            "phone",
+            "telephone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11889,6 +18830,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "arrow",
+            "cell",
+            "mobile",
+            "mobile phone with arrow",
+            "phone",
+            "receive"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11899,6 +18848,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "landline",
+            "phone",
+            "telephone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11909,6 +18863,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "phone",
+            "receiver",
+            "telephone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11919,6 +18878,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "pager"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11929,6 +18891,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "fax",
+            "fax machine"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11939,6 +18905,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "battery"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11949,6 +18918,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "electronic",
+            "low battery",
+            "low energy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11959,6 +18933,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "electric",
+            "electricity",
+            "plug"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11969,6 +18948,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "laptop",
+            "PC",
+            "personal",
+            "pc"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11979,6 +18965,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "desktop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11989,6 +18979,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "printer"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -11999,6 +18993,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "keyboard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12009,6 +19007,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "computer mouse"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12019,6 +19021,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "trackball"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12029,6 +19035,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "disk",
+            "minidisk",
+            "optical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12039,6 +19051,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "computer",
+            "disk",
+            "diskette",
+            "floppy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12049,6 +19067,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "CD",
+            "computer",
+            "disk",
+            "optical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12059,6 +19083,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "blu-ray",
+            "computer",
+            "disk",
+            "dvd",
+            "DVD",
+            "optical",
+            "Blu-ray"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12069,6 +19102,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "abacus",
+            "calculation"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12079,6 +19116,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "camera",
+            "cinema",
+            "movie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12089,6 +19131,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cinema",
+            "film",
+            "frames",
+            "movie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12099,6 +19147,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cinema",
+            "film",
+            "movie",
+            "projector",
+            "video"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12109,6 +19164,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clapper",
+            "clapper board",
+            "clapperboard",
+            "film",
+            "movie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12119,6 +19181,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "television",
+            "TV",
+            "video",
+            "tv"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12129,6 +19197,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "camera",
+            "video"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12139,6 +19211,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "camera",
+            "camera with flash",
+            "flash",
+            "video"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12149,6 +19227,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "camera",
+            "video"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12159,6 +19241,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "tape",
+            "VHS",
+            "video",
+            "videocassette",
+            "vhs"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12169,6 +19258,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "glass",
+            "magnifying",
+            "magnifying glass tilted left",
+            "search",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12179,6 +19275,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "glass",
+            "magnifying",
+            "magnifying glass tilted right",
+            "search",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12189,6 +19292,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "candle",
+            "light"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12199,6 +19306,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bulb",
+            "comic",
+            "electric",
+            "globe",
+            "idea",
+            "light"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12209,6 +19324,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "electric",
+            "flashlight",
+            "light",
+            "tool",
+            "torch"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12219,6 +19341,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bar",
+            "lantern",
+            "light",
+            "red",
+            "red paper lantern"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12229,6 +19358,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "diya",
+            "lamp",
+            "oil"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12239,6 +19373,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "cover",
+            "decorated",
+            "notebook",
+            "notebook with decorative cover"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12249,6 +19390,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "closed"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12259,6 +19404,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "open"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12269,6 +19418,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "green"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12279,6 +19432,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "blue",
+            "book"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12289,6 +19446,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "orange"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12299,6 +19460,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "book",
+            "books"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12309,6 +19474,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "notebook"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12319,6 +19487,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ledger",
+            "notebook"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12329,6 +19501,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "curl",
+            "document",
+            "page",
+            "page with curl"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12339,6 +19517,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "paper",
+            "scroll"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12349,6 +19531,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "document",
+            "page",
+            "page facing up"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12359,6 +19546,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "news",
+            "newspaper",
+            "paper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12369,6 +19561,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "news",
+            "newspaper",
+            "paper",
+            "rolled",
+            "rolled-up newspaper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12379,6 +19578,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bookmark",
+            "mark",
+            "marker",
+            "tabs"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12389,6 +19594,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bookmark",
+            "mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12399,6 +19608,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "label"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12409,6 +19621,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bag",
+            "dollar",
+            "money",
+            "moneybag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12419,6 +19637,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "coin",
+            "gold",
+            "metal",
+            "money",
+            "silver",
+            "treasure"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12429,6 +19655,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banknote",
+            "bill",
+            "currency",
+            "money",
+            "note",
+            "yen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12439,6 +19673,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banknote",
+            "bill",
+            "currency",
+            "dollar",
+            "money",
+            "note"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12449,6 +19691,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banknote",
+            "bill",
+            "currency",
+            "euro",
+            "money",
+            "note"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12459,6 +19709,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banknote",
+            "bill",
+            "currency",
+            "money",
+            "note",
+            "pound",
+            "sterling"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12469,6 +19728,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "banknote",
+            "bill",
+            "fly",
+            "money",
+            "money with wings",
+            "wings"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12479,6 +19746,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "card",
+            "credit",
+            "money"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12489,6 +19761,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accounting",
+            "bookkeeping",
+            "evidence",
+            "proof",
+            "receipt"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12499,6 +19778,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chart",
+            "chart increasing with yen",
+            "graph",
+            "graph increasing with yen",
+            "growth",
+            "money",
+            "yen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12509,6 +19797,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "email",
+            "envelope",
+            "letter",
+            "e-mail"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12519,6 +19813,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "e-mail",
+            "email",
+            "letter",
+            "mail"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12529,6 +19829,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "e-mail",
+            "email",
+            "envelope",
+            "incoming",
+            "letter",
+            "receive"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12539,6 +19847,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "arrow",
+            "e-mail",
+            "email",
+            "envelope",
+            "envelope with arrow",
+            "outgoing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12549,6 +19865,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "box",
+            "letter",
+            "mail",
+            "out tray",
+            "outbox",
+            "sent",
+            "tray"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12559,6 +19884,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "box",
+            "in tray",
+            "inbox",
+            "letter",
+            "mail",
+            "receive",
+            "tray"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12569,6 +19903,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "box",
+            "package",
+            "parcel"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12579,6 +19918,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "closed",
+            "closed letterbox with raised flag",
+            "mail",
+            "mailbox",
+            "postbox",
+            "closed mailbox with raised flag",
+            "closed postbox with raised flag",
+            "letterbox",
+            "post",
+            "post box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12589,6 +19940,19 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "closed",
+            "closed letterbox with lowered flag",
+            "lowered",
+            "mail",
+            "mailbox",
+            "postbox",
+            "closed mailbox with lowered flag",
+            "closed postbox with lowered flag",
+            "letterbox",
+            "post box",
+            "post"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12599,6 +19963,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "mail",
+            "mailbox",
+            "open",
+            "open letterbox with raised flag",
+            "postbox",
+            "open mailbox with raised flag",
+            "open postbox with raised flag",
+            "post",
+            "post box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12609,6 +19984,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "lowered",
+            "mail",
+            "mailbox",
+            "open",
+            "open letterbox with lowered flag",
+            "postbox",
+            "open mailbox with lowered flag",
+            "open postbox with lowered flag",
+            "post",
+            "post box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12619,6 +20006,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "mail",
+            "mailbox",
+            "postbox",
+            "post",
+            "post box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12629,6 +20023,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ballot",
+            "ballot box with ballot",
+            "box"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12639,6 +20038,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "pencil"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12649,6 +20051,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "black nib",
+            "nib",
+            "pen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12659,6 +20066,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "fountain",
+            "pen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12669,6 +20080,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ballpoint",
+            "pen"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12679,6 +20094,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "paintbrush",
+            "painting"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12689,6 +20108,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "crayon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12699,6 +20121,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "memo",
+            "pencil"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12709,6 +20135,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "briefcase"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12719,6 +20148,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "file",
+            "folder"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12729,6 +20162,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "file",
+            "folder",
+            "open"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12739,6 +20177,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "card",
+            "dividers",
+            "index"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12749,6 +20192,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "calendar",
+            "date"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12759,6 +20206,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "calendar",
+            "tear-off calendar"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12769,6 +20220,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "note",
+            "pad",
+            "spiral",
+            "spiral notepad"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12779,6 +20236,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "calendar",
+            "pad",
+            "spiral"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12789,6 +20251,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "card",
+            "index",
+            "rolodex"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12799,6 +20266,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chart",
+            "chart increasing",
+            "graph",
+            "graph increasing",
+            "growth",
+            "trend",
+            "upward"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12809,6 +20285,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chart",
+            "chart decreasing",
+            "down",
+            "graph",
+            "graph decreasing",
+            "trend"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12819,6 +20303,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bar",
+            "chart",
+            "graph"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12829,6 +20318,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clipboard"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12839,6 +20331,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "drawing-pin",
+            "pin",
+            "pushpin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12849,6 +20346,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "pin",
+            "pushpin",
+            "round drawing-pin",
+            "round pushpin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12859,6 +20362,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "paperclip"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12869,6 +20375,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "link",
+            "linked paperclips",
+            "paperclip"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12879,6 +20390,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ruler",
+            "straight edge",
+            "straight ruler"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12889,6 +20405,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ruler",
+            "set",
+            "triangle",
+            "triangular ruler",
+            "set square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12899,6 +20422,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cutting",
+            "scissors",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12909,6 +20437,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "box",
+            "card",
+            "file"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12919,6 +20452,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cabinet",
+            "file",
+            "filing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12929,6 +20467,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "wastebasket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12939,6 +20480,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "closed",
+            "locked",
+            "padlock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12949,6 +20495,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "lock",
+            "open",
+            "unlock",
+            "unlocked",
+            "padlock"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12959,6 +20512,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ink",
+            "lock",
+            "locked with pen",
+            "nib",
+            "pen",
+            "privacy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12969,6 +20530,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "closed",
+            "key",
+            "lock",
+            "locked with key",
+            "secure"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12979,6 +20547,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "key",
+            "lock",
+            "password"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12989,6 +20562,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clue",
+            "key",
+            "lock",
+            "old"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -12999,6 +20578,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "hammer",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13009,6 +20592,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "axe",
+            "chop",
+            "hatchet",
+            "split",
+            "wood"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13019,6 +20609,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "mining",
+            "pick",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13029,6 +20624,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "hammer",
+            "hammer and pick",
+            "pick",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13039,6 +20640,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "hammer",
+            "hammer and spanner",
+            "hammer and wrench",
+            "spanner",
+            "tool",
+            "wrench"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13049,6 +20658,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "dagger",
+            "knife",
+            "weapon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13059,6 +20673,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "crossed",
+            "swords",
+            "weapon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13069,6 +20688,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "toy",
+            "water pistol",
+            "gun",
+            "handgun",
+            "pistol",
+            "revolver",
+            "tool",
+            "water",
+            "weapon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13079,6 +20709,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "australia",
+            "boomerang",
+            "rebound",
+            "repercussion"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13089,6 +20725,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "archer",
+            "arrow",
+            "bow",
+            "bow and arrow",
+            "Sagittarius",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13099,6 +20743,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "shield",
+            "weapon"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13109,6 +20757,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "carpenter",
+            "carpentry saw",
+            "lumber",
+            "saw",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13119,6 +20774,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "spanner",
+            "tool",
+            "wrench"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13129,6 +20789,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "screw",
+            "screwdriver",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13139,6 +20804,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bolt",
+            "nut",
+            "nut and bolt",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13149,6 +20820,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cog",
+            "cogwheel",
+            "gear",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13159,6 +20836,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "clamp",
+            "compress",
+            "tool",
+            "vice"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13169,6 +20852,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "balance",
+            "justice",
+            "Libra",
+            "scale",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13179,6 +20869,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accessibility",
+            "long mobility cane",
+            "white cane",
+            "blind",
+            "guide cane"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13189,6 +20886,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "link"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13199,6 +20899,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chain",
+            "chains"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13209,6 +20913,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "catch",
+            "crook",
+            "curve",
+            "ensnare",
+            "fishing",
+            "hook",
+            "selling point"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13219,6 +20932,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chest",
+            "mechanic",
+            "tool",
+            "toolbox"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13229,6 +20948,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "attraction",
+            "horseshoe",
+            "magnet",
+            "magnetic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13239,6 +20964,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "climb",
+            "ladder",
+            "rung",
+            "step"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13249,6 +20980,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "alembic",
+            "chemistry",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13259,6 +20995,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chemist",
+            "chemistry",
+            "experiment",
+            "lab",
+            "science",
+            "test tube"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13269,6 +21013,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bacteria",
+            "biologist",
+            "biology",
+            "culture",
+            "lab",
+            "petri dish"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13279,6 +21031,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "biologist",
+            "dna",
+            "DNA",
+            "evolution",
+            "gene",
+            "genetics",
+            "life"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13289,6 +21050,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "microscope",
+            "science",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13299,6 +21065,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "science",
+            "telescope",
+            "tool"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13309,6 +21080,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "antenna",
+            "dish",
+            "satellite"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13319,6 +21095,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "medicine",
+            "needle",
+            "shot",
+            "sick",
+            "syringe",
+            "ill",
+            "injection"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13329,6 +21114,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bleed",
+            "blood donation",
+            "drop of blood",
+            "injury",
+            "medicine",
+            "menstruation"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13339,6 +21132,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "doctor",
+            "medicine",
+            "pill",
+            "sick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13349,6 +21148,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "adhesive bandage",
+            "bandage",
+            "bandaid",
+            "dressing",
+            "injury",
+            "plaster",
+            "sticking plaster"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13359,6 +21167,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cane",
+            "crutch",
+            "disability",
+            "hurt",
+            "mobility aid",
+            "stick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13369,6 +21185,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "doctor",
+            "heart",
+            "medicine",
+            "stethoscope"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13379,6 +21201,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bones",
+            "doctor",
+            "medical",
+            "skeleton",
+            "x-ray"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13389,6 +21218,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "door"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13399,6 +21231,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "accessibility",
+            "elevator",
+            "hoist",
+            "lift"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13409,6 +21247,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "looking glass",
+            "mirror",
+            "reflection",
+            "reflector",
+            "speculum"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13419,6 +21264,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "frame",
+            "fresh air",
+            "opening",
+            "transparent",
+            "view",
+            "window"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13429,6 +21282,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bed",
+            "hotel",
+            "sleep"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13439,6 +21297,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "couch",
+            "couch and lamp",
+            "hotel",
+            "lamp",
+            "sofa",
+            "sofa and lamp"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13449,6 +21315,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "chair",
+            "seat",
+            "sit"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13459,6 +21330,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "facilities",
+            "loo",
+            "toilet",
+            "WC",
+            "lavatory"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13469,6 +21347,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "force cup",
+            "plumber",
+            "plunger",
+            "suction",
+            "toilet"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13479,6 +21364,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "shower",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13489,6 +21378,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bath",
+            "bathtub"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13499,6 +21392,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bait",
+            "mouse trap",
+            "mousetrap",
+            "snare",
+            "trap",
+            "mouse"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13509,6 +21410,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "razor",
+            "sharp",
+            "shave",
+            "cut-throat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13519,6 +21426,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "lotion",
+            "lotion bottle",
+            "moisturizer",
+            "shampoo",
+            "sunscreen",
+            "moisturiser"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13529,6 +21444,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "nappy",
+            "punk rock",
+            "safety pin",
+            "diaper"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13539,6 +21460,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "broom",
+            "cleaning",
+            "sweeping",
+            "witch"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13549,6 +21476,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "basket",
+            "farming",
+            "laundry",
+            "picnic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13559,6 +21492,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "paper towels",
+            "roll of paper",
+            "toilet paper",
+            "toilet roll"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13569,6 +21508,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bucket",
+            "cask",
+            "pail",
+            "vat"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13579,6 +21524,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bar",
+            "bathing",
+            "cleaning",
+            "lather",
+            "soap",
+            "soapdish"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13589,6 +21542,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bubbles",
+            "burp",
+            "clean",
+            "soap",
+            "underwater"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13599,6 +21559,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "bathroom",
+            "brush",
+            "clean",
+            "dental",
+            "hygiene",
+            "teeth",
+            "toothbrush"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13609,6 +21578,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "absorbing",
+            "cleaning",
+            "porous",
+            "sponge"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13619,6 +21594,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "extinguish",
+            "fire",
+            "fire extinguisher",
+            "quench"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13629,6 +21610,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cart",
+            "shopping",
+            "trolley",
+            "basket"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13639,6 +21626,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cigarette",
+            "smoking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13649,6 +21640,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "coffin",
+            "death"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13659,6 +21654,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "cemetery",
+            "grave",
+            "graveyard",
+            "headstone",
+            "tombstone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13669,6 +21671,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "ashes",
+            "death",
+            "funeral",
+            "urn"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13679,6 +21687,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "face",
+            "moai",
+            "moyai",
+            "statue"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13689,6 +21703,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "demonstration",
+            "picket",
+            "placard",
+            "protest",
+            "sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13699,6 +21720,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Objects",
+        "keywords": [
+            "credentials",
+            "ID",
+            "identification card",
+            "license",
+            "security",
+            "driving",
+            "licence"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13709,6 +21739,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "ATM",
+            "ATM sign",
+            "automated",
+            "bank",
+            "teller"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13719,6 +21756,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "litter",
+            "litter bin",
+            "litter in bin sign",
+            "garbage",
+            "trash"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13729,6 +21773,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "drinking",
+            "potable",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13739,6 +21788,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "access",
+            "disabled access",
+            "wheelchair symbol"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13749,6 +21803,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bathroom",
+            "lavatory",
+            "man",
+            "men’s room",
+            "restroom",
+            "toilet",
+            "WC",
+            "men’s",
+            "washroom",
+            "wc"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13759,6 +21825,21 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "ladies room",
+            "lavatory",
+            "restroom",
+            "wc",
+            "woman",
+            "women’s room",
+            "women’s toilet",
+            "bathroom",
+            "toilet",
+            "WC",
+            "ladies’ room",
+            "washroom",
+            "women’s"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13769,6 +21850,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bathroom",
+            "lavatory",
+            "restroom",
+            "toilet",
+            "WC",
+            "washroom"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13779,6 +21868,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "baby",
+            "baby symbol",
+            "change room",
+            "changing"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13789,6 +21884,18 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "amenities",
+            "bathroom",
+            "restroom",
+            "toilet",
+            "water closet",
+            "wc",
+            "WC",
+            "closet",
+            "lavatory",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13799,6 +21906,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "border",
+            "control",
+            "passport",
+            "security"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13809,6 +21922,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "customs"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13819,6 +21935,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "baggage",
+            "claim"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13829,6 +21949,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "baggage",
+            "left luggage",
+            "locker",
+            "luggage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13839,6 +21965,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "warning"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13849,6 +21978,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "child",
+            "children crossing",
+            "crossing",
+            "pedestrian",
+            "traffic"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13859,6 +21995,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "denied",
+            "entry",
+            "forbidden",
+            "no",
+            "prohibited",
+            "traffic",
+            "not"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13869,6 +22014,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "denied",
+            "entry",
+            "forbidden",
+            "no",
+            "prohibited",
+            "not"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13879,6 +22032,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bicycle",
+            "bike",
+            "forbidden",
+            "no",
+            "no bicycles",
+            "prohibited"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13889,6 +22050,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "denied",
+            "forbidden",
+            "no",
+            "prohibited",
+            "smoking",
+            "not"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13899,6 +22068,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "denied",
+            "forbidden",
+            "litter",
+            "no",
+            "no littering",
+            "prohibited",
+            "not"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13909,6 +22087,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "non-drinkable water",
+            "non-drinking",
+            "non-potable",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13919,6 +22103,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "denied",
+            "forbidden",
+            "no",
+            "no pedestrians",
+            "pedestrian",
+            "prohibited",
+            "not"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13929,6 +22122,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "cell",
+            "forbidden",
+            "mobile",
+            "no",
+            "no mobile phones",
+            "phone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13939,6 +22140,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "18",
+            "age restriction",
+            "eighteen",
+            "no one under eighteen",
+            "prohibited",
+            "underage"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13949,6 +22158,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "radioactive",
+            "sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13959,6 +22172,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "biohazard",
+            "sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13969,6 +22186,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "cardinal",
+            "direction",
+            "north",
+            "up",
+            "up arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13979,6 +22204,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "direction",
+            "intercardinal",
+            "northeast",
+            "up-right arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13989,6 +22221,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "cardinal",
+            "direction",
+            "east",
+            "right arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -13999,6 +22238,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "direction",
+            "down-right arrow",
+            "intercardinal",
+            "southeast"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14009,6 +22255,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "cardinal",
+            "direction",
+            "down",
+            "south"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14019,6 +22272,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "direction",
+            "down-left arrow",
+            "intercardinal",
+            "southwest"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14029,6 +22289,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "cardinal",
+            "direction",
+            "left arrow",
+            "west"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14039,6 +22306,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "direction",
+            "intercardinal",
+            "northwest",
+            "up-left arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14049,6 +22323,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "up-down arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14059,6 +22337,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "left-right arrow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14069,6 +22351,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "right arrow curving left"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14079,6 +22365,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "left arrow curving right"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14089,6 +22379,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "right arrow curving up"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14099,6 +22393,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "down",
+            "right arrow curving down"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14109,6 +22408,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "clockwise",
+            "clockwise vertical arrows",
+            "reload"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14119,6 +22424,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "anticlockwise",
+            "arrow",
+            "counterclockwise",
+            "counterclockwise arrows button",
+            "withershins",
+            "anticlockwise arrows button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14129,6 +22442,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "BACK"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14139,6 +22456,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "END"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14149,6 +22470,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "mark",
+            "ON",
+            "ON!"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14159,6 +22486,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "SOON"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14169,6 +22500,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "TOP",
+            "up"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14179,6 +22515,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "place of worship",
+            "religion",
+            "worship"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14189,6 +22530,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "atheist",
+            "atom",
+            "atom symbol"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14199,6 +22545,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Hindu",
+            "om",
+            "religion"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14209,6 +22560,16 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "David",
+            "Jew",
+            "Jewish",
+            "religion",
+            "star",
+            "star of David",
+            "Judaism",
+            "Star of David"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14219,6 +22580,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Buddhist",
+            "dharma",
+            "religion",
+            "wheel",
+            "wheel of dharma"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14229,6 +22597,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "religion",
+            "tao",
+            "taoist",
+            "yang",
+            "yin",
+            "Tao",
+            "Taoist"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14239,6 +22616,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Christian",
+            "cross",
+            "religion",
+            "latin cross",
+            "Latin cross"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14249,6 +22633,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Christian",
+            "cross",
+            "orthodox cross",
+            "religion",
+            "Orthodox cross"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14259,6 +22650,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "islam",
+            "Muslim",
+            "religion",
+            "star and crescent",
+            "Islam"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14269,6 +22667,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "peace",
+            "peace symbol"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14279,6 +22681,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "candelabrum",
+            "candlestick",
+            "menorah",
+            "religion"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14289,6 +22697,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "dotted six-pointed star",
+            "fortune",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14299,6 +22712,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Aries",
+            "ram",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14309,6 +22727,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bull",
+            "ox",
+            "Taurus",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14319,6 +22743,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Gemini",
+            "twins",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14329,6 +22758,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Cancer",
+            "crab",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14339,6 +22773,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Leo",
+            "lion",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14349,6 +22788,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "virgin",
+            "Virgo",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14359,6 +22803,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "balance",
+            "justice",
+            "Libra",
+            "scales",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14369,6 +22820,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Scorpio",
+            "scorpion",
+            "scorpius",
+            "zodiac",
+            "Scorpius"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14379,6 +22837,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "archer",
+            "centaur",
+            "Sagittarius",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14389,6 +22853,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Capricorn",
+            "goat",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14399,6 +22868,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "Aquarius",
+            "water bearer",
+            "zodiac",
+            "bearer",
+            "water"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14409,6 +22885,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "fish",
+            "Pisces",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14419,6 +22900,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bearer",
+            "Ophiuchus",
+            "serpent",
+            "snake",
+            "zodiac"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14429,6 +22917,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "crossed",
+            "shuffle tracks button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14439,6 +22932,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "clockwise",
+            "repeat",
+            "repeat button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14449,6 +22948,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "clockwise",
+            "once",
+            "repeat single button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14459,6 +22964,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "play",
+            "play button",
+            "right",
+            "triangle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14469,6 +22981,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "fast forward button",
+            "arrow",
+            "double",
+            "fast",
+            "fast-forward button",
+            "forward"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14479,6 +22999,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "next scene",
+            "next track",
+            "next track button",
+            "triangle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14489,6 +23016,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "pause",
+            "play",
+            "play or pause button",
+            "right",
+            "triangle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14499,6 +23034,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "left",
+            "reverse",
+            "reverse button",
+            "triangle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14509,6 +23051,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "double",
+            "fast reverse button",
+            "rewind"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14519,6 +23067,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "last track button",
+            "previous scene",
+            "previous track",
+            "triangle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14529,6 +23084,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "button",
+            "red",
+            "upwards button",
+            "upward button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14539,6 +23101,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "double",
+            "fast up button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14549,6 +23116,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "button",
+            "down",
+            "downwards button",
+            "red",
+            "downward button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14559,6 +23134,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "arrow",
+            "double",
+            "down",
+            "fast down button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14569,6 +23150,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bar",
+            "double",
+            "pause",
+            "pause button",
+            "vertical"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14579,6 +23167,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "square",
+            "stop",
+            "stop button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14589,6 +23182,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "record",
+            "record button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14599,6 +23197,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "eject",
+            "eject button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14609,6 +23211,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "camera",
+            "cinema",
+            "film",
+            "movie"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14619,6 +23227,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "brightness",
+            "dim",
+            "dim button",
+            "low"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14629,6 +23243,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bright button",
+            "brightness",
+            "brightness button",
+            "bright"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14639,6 +23259,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "antenna",
+            "antenna bars",
+            "bar",
+            "cell",
+            "mobile",
+            "phone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14649,6 +23277,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "cell",
+            "mobile",
+            "mode",
+            "phone",
+            "telephone",
+            "vibration",
+            "vibrate"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14659,6 +23296,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "cell",
+            "mobile",
+            "off",
+            "phone",
+            "telephone"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14669,6 +23313,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "female sign",
+            "woman"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14679,6 +23327,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "male sign",
+            "man"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14689,6 +23341,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "transgender",
+            "transgender symbol",
+            "trans"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14699,6 +23356,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "×",
+            "cancel",
+            "multiplication",
+            "multiply",
+            "sign",
+            "x",
+            "heavy multiplication sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14709,6 +23375,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "+",
+            "add",
+            "addition",
+            "math",
+            "maths",
+            "plus",
+            "sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14719,6 +23394,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "-",
+            "–",
+            "math",
+            "maths",
+            "minus",
+            "sign",
+            "subtraction",
+            "−",
+            "heavy minus sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14729,6 +23415,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "÷",
+            "divide",
+            "division",
+            "math",
+            "sign"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14739,6 +23432,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "equality",
+            "heavy equals sign",
+            "maths",
+            "math"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14749,6 +23448,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "eternal",
+            "forever",
+            "infinity",
+            "unbound",
+            "universal",
+            "unbounded"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14759,6 +23466,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "double exclamation mark",
+            "exclamation",
+            "mark",
+            "punctuation",
+            "!",
+            "!!",
+            "bangbang"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14769,6 +23485,17 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "exclamation",
+            "mark",
+            "punctuation",
+            "question",
+            "!",
+            "!?",
+            "?",
+            "interrobang",
+            "exclamation question mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14779,6 +23506,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "?",
+            "mark",
+            "punctuation",
+            "question",
+            "red question mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14789,6 +23523,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "?",
+            "mark",
+            "outlined",
+            "punctuation",
+            "question",
+            "white question mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14799,6 +23541,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "!",
+            "exclamation",
+            "mark",
+            "outlined",
+            "punctuation",
+            "white exclamation mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14809,6 +23559,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "!",
+            "exclamation",
+            "mark",
+            "punctuation",
+            "red exclamation mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14819,6 +23576,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "dash",
+            "punctuation",
+            "wavy"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14829,6 +23591,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "bank",
+            "currency",
+            "exchange",
+            "money"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14839,6 +23607,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "currency",
+            "dollar",
+            "heavy dollar sign",
+            "money"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14849,6 +23623,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "aesculapius",
+            "medical symbol",
+            "medicine",
+            "staff"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14859,6 +23639,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "recycle",
+            "recycling symbol"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14869,6 +23653,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "fleur-de-lis"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14879,6 +23666,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "anchor",
+            "emblem",
+            "ship",
+            "tool",
+            "trident"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14889,6 +23683,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "badge",
+            "name"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14899,6 +23697,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "beginner",
+            "chevron",
+            "Japanese",
+            "Japanese symbol for beginner",
+            "leaf"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14909,6 +23714,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "hollow red circle",
+            "large",
+            "o",
+            "red"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14919,6 +23731,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "✓",
+            "button",
+            "check",
+            "mark",
+            "tick"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14929,6 +23748,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "ballot",
+            "box",
+            "check box with check",
+            "tick",
+            "tick box with tick",
+            "✓",
+            "check"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14939,6 +23767,14 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "check mark",
+            "heavy tick mark",
+            "mark",
+            "tick",
+            "✓",
+            "check"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14949,6 +23785,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "×",
+            "cancel",
+            "cross",
+            "mark",
+            "multiplication",
+            "multiply",
+            "x"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14959,6 +23804,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "×",
+            "cross mark button",
+            "mark",
+            "square",
+            "x"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14969,6 +23821,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "curl",
+            "curly loop",
+            "loop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14979,6 +23836,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "curl",
+            "double",
+            "double curly loop",
+            "loop"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14989,6 +23852,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "mark",
+            "part",
+            "part alternation mark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -14999,6 +23867,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "*",
+            "asterisk",
+            "eight-spoked asterisk"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15009,6 +23882,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "*",
+            "eight-pointed star",
+            "star"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15019,6 +23897,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "*",
+            "sparkle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15029,6 +23911,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "C",
+            "copyright"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15039,6 +23925,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "R",
+            "registered",
+            "r",
+            "trademark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15049,6 +23941,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "mark",
+            "TM",
+            "trade mark",
+            "trademark"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15059,6 +23957,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15069,6 +23970,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15079,6 +23983,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15089,6 +23996,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15099,6 +24009,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15109,6 +24022,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15119,6 +24035,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15129,6 +24048,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15139,6 +24061,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15149,6 +24074,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15159,6 +24087,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15169,6 +24100,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15179,6 +24113,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "keycap"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15189,6 +24126,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "input Latin uppercase",
+            "ABCD",
+            "input",
+            "latin",
+            "letters",
+            "uppercase",
+            "Latin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15199,6 +24145,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "input Latin lowercase",
+            "abcd",
+            "input",
+            "latin",
+            "letters",
+            "lowercase",
+            "Latin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15209,6 +24164,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "1234",
+            "input",
+            "numbers"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15219,6 +24179,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "〒♪&%",
+            "input",
+            "input symbols"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15229,6 +24194,15 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "input Latin letters",
+            "abc",
+            "alphabet",
+            "input",
+            "latin",
+            "letters",
+            "Latin"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15239,6 +24213,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "A",
+            "A button (blood type)",
+            "blood type"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15249,6 +24228,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "AB",
+            "AB button (blood type)",
+            "blood type"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15259,6 +24243,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "B",
+            "B button (blood type)",
+            "blood type"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15269,6 +24258,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "CL",
+            "CL button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15279,6 +24272,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "COOL",
+            "COOL button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15289,6 +24286,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "FREE",
+            "FREE button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15299,6 +24300,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "i",
+            "information"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15309,6 +24314,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "ID",
+            "ID button",
+            "identity"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15319,6 +24329,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "circled M",
+            "M"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15329,6 +24344,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "NEW",
+            "NEW button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15339,6 +24358,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "NG",
+            "NG button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15349,6 +24372,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "blood type",
+            "O",
+            "O button (blood type)"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15359,6 +24387,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "OK",
+            "OK button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15369,6 +24401,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "P",
+            "P button",
+            "parking"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15379,6 +24416,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "help",
+            "SOS",
+            "SOS button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15389,6 +24431,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "mark",
+            "UP",
+            "UP!",
+            "UP! button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15399,6 +24447,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "versus",
+            "VS",
+            "VS button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15409,6 +24462,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“here”",
+            "Japanese",
+            "Japanese “here” button",
+            "katakana",
+            "ココ"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15419,6 +24479,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“service charge”",
+            "Japanese",
+            "Japanese “service charge” button",
+            "katakana",
+            "サ"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15429,6 +24496,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“monthly amount”",
+            "ideograph",
+            "Japanese",
+            "Japanese “monthly amount” button",
+            "月"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15439,6 +24513,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“not free of charge”",
+            "ideograph",
+            "Japanese",
+            "Japanese “not free of charge” button",
+            "有"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15449,6 +24530,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“reserved”",
+            "ideograph",
+            "Japanese",
+            "Japanese “reserved” button",
+            "指"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15459,6 +24547,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“bargain”",
+            "ideograph",
+            "Japanese",
+            "Japanese “bargain” button",
+            "得"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15469,6 +24564,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“discount”",
+            "ideograph",
+            "Japanese",
+            "Japanese “discount” button",
+            "割"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15479,6 +24581,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“free of charge”",
+            "ideograph",
+            "Japanese",
+            "Japanese “free of charge” button",
+            "無"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15489,6 +24598,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“prohibited”",
+            "ideograph",
+            "Japanese",
+            "Japanese “prohibited” button",
+            "禁"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15499,6 +24615,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“acceptable”",
+            "ideograph",
+            "Japanese",
+            "Japanese “acceptable” button",
+            "可"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15509,6 +24632,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“application”",
+            "ideograph",
+            "Japanese",
+            "Japanese “application” button",
+            "申"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15519,6 +24649,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“passing grade”",
+            "ideograph",
+            "Japanese",
+            "Japanese “passing grade” button",
+            "合"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15529,6 +24666,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“vacancy”",
+            "ideograph",
+            "Japanese",
+            "Japanese “vacancy” button",
+            "空"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15539,6 +24683,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“congratulations”",
+            "ideograph",
+            "Japanese",
+            "Japanese “congratulations” button",
+            "祝"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15549,6 +24700,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“secret”",
+            "ideograph",
+            "Japanese",
+            "Japanese “secret” button",
+            "秘"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15559,6 +24717,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“open for business”",
+            "ideograph",
+            "Japanese",
+            "Japanese “open for business” button",
+            "営"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15569,6 +24734,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "“no vacancy”",
+            "ideograph",
+            "Japanese",
+            "Japanese “no vacancy” button",
+            "満"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15579,6 +24751,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "geometric",
+            "red"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15589,6 +24766,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "orange"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15599,6 +24780,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "yellow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15609,6 +24794,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "green"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15619,6 +24808,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "blue",
+            "circle",
+            "geometric"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15629,6 +24823,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "purple"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15639,6 +24837,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "brown",
+            "circle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15649,6 +24851,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black circle",
+            "circle",
+            "geometric"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15659,6 +24866,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "circle",
+            "geometric",
+            "white circle"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15669,6 +24881,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "red",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15679,6 +24895,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "orange",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15689,6 +24909,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "square",
+            "yellow"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15699,6 +24923,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "green",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15709,6 +24937,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "blue",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15719,6 +24951,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "purple",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15729,6 +24965,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "brown",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15739,6 +24979,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black large square",
+            "geometric",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15749,6 +24994,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "geometric",
+            "square",
+            "white large square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15759,6 +25009,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black medium square",
+            "geometric",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15769,6 +25024,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "geometric",
+            "square",
+            "white medium square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15779,6 +25039,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black medium-small square",
+            "geometric",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15789,6 +25054,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "geometric",
+            "square",
+            "white medium-small square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15799,6 +25069,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black small square",
+            "geometric",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15809,6 +25084,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "geometric",
+            "square",
+            "white small square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15819,6 +25099,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "diamond",
+            "geometric",
+            "large orange diamond",
+            "orange"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15829,6 +25115,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "blue",
+            "diamond",
+            "geometric",
+            "large blue diamond"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15839,6 +25131,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "diamond",
+            "geometric",
+            "orange",
+            "small orange diamond"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15849,6 +25147,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "blue",
+            "diamond",
+            "geometric",
+            "small blue diamond"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15859,6 +25163,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "geometric",
+            "red",
+            "red triangle pointed up"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15869,6 +25178,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "down",
+            "geometric",
+            "red",
+            "red triangle pointed down"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15879,6 +25194,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "comic",
+            "diamond",
+            "diamond with a dot",
+            "geometric",
+            "inside"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15889,6 +25211,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "button",
+            "geometric",
+            "radio"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15899,6 +25226,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "button",
+            "geometric",
+            "outlined",
+            "square",
+            "white square button"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15909,6 +25243,12 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Symbols",
+        "keywords": [
+            "black square button",
+            "button",
+            "geometric",
+            "square"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15919,6 +25259,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "checkered",
+            "chequered",
+            "chequered flag",
+            "racing",
+            "checkered flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15929,6 +25276,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "post",
+            "triangular flag",
+            "red flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15939,6 +25291,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "celebration",
+            "cross",
+            "crossed",
+            "crossed flags",
+            "Japanese"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15949,6 +25308,10 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "black flag",
+            "waving"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15959,6 +25322,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "waving",
+            "white flag",
+            "surrender"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15969,6 +25337,11 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "pride",
+            "rainbow",
+            "rainbow flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15979,6 +25352,7 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [],
         "hasSkinToneVariations": false
     },
     {
@@ -15989,6 +25363,13 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "Jolly Roger",
+            "pirate",
+            "pirate flag",
+            "plunder",
+            "treasure"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -15999,6 +25380,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16009,6 +25393,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16019,6 +25406,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16029,6 +25419,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16039,6 +25432,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16049,6 +25445,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16059,6 +25458,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16069,6 +25471,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16079,6 +25484,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16089,6 +25497,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16099,6 +25510,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16109,6 +25523,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16119,6 +25536,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16129,6 +25549,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16139,6 +25562,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16149,6 +25575,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16159,6 +25588,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16169,6 +25601,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16179,6 +25614,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16189,6 +25627,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16199,6 +25640,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16209,6 +25653,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16219,6 +25666,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16229,6 +25679,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16239,6 +25692,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16249,6 +25705,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16259,6 +25718,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16269,6 +25731,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16279,6 +25744,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16289,6 +25757,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16299,6 +25770,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16309,6 +25783,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16319,6 +25796,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16329,6 +25809,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16339,6 +25822,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16349,6 +25835,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16359,6 +25848,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16369,6 +25861,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16379,6 +25874,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16389,6 +25887,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16399,6 +25900,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16409,6 +25913,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16419,6 +25926,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16429,6 +25939,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16439,6 +25952,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16449,6 +25965,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16459,6 +25978,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16469,6 +25991,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16479,6 +26004,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16489,6 +26017,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16499,6 +26030,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16509,6 +26043,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16519,6 +26056,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16529,6 +26069,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16539,6 +26082,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16549,6 +26095,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16559,6 +26108,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16569,6 +26121,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16579,6 +26134,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16589,6 +26147,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16599,6 +26160,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16609,6 +26173,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16619,6 +26186,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16629,6 +26199,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16639,6 +26212,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16649,6 +26225,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16659,6 +26238,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16669,6 +26251,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16679,6 +26264,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16689,6 +26277,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16699,6 +26290,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16709,6 +26303,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16719,6 +26316,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16729,6 +26329,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16739,6 +26342,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16749,6 +26355,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16759,6 +26368,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16769,6 +26381,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16779,6 +26394,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16789,6 +26407,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16799,6 +26420,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16809,6 +26433,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16819,6 +26446,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16829,6 +26459,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16839,6 +26472,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16849,6 +26485,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16859,6 +26498,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16869,6 +26511,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16879,6 +26524,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16889,6 +26537,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16899,6 +26550,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16909,6 +26563,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16919,6 +26576,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16929,6 +26589,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16939,6 +26602,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16949,6 +26615,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16959,6 +26628,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16969,6 +26641,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16979,6 +26654,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16989,6 +26667,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -16999,6 +26680,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17009,6 +26693,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17019,6 +26706,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17029,6 +26719,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17039,6 +26732,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17049,6 +26745,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17059,6 +26758,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17069,6 +26771,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17079,6 +26784,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17089,6 +26797,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17099,6 +26810,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17109,6 +26823,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17119,6 +26836,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17129,6 +26849,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17139,6 +26862,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17149,6 +26875,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17159,6 +26888,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17169,6 +26901,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17179,6 +26914,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17189,6 +26927,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17199,6 +26940,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17209,6 +26953,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17219,6 +26966,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17229,6 +26979,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17239,6 +26992,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17249,6 +27005,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17259,6 +27018,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17269,6 +27031,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17279,6 +27044,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17289,6 +27057,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17299,6 +27070,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17309,6 +27083,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17319,6 +27096,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17329,6 +27109,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17339,6 +27122,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17349,6 +27135,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17359,6 +27148,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17369,6 +27161,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17379,6 +27174,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17389,6 +27187,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17399,6 +27200,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17409,6 +27213,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17419,6 +27226,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17429,6 +27239,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17439,6 +27252,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17449,6 +27265,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17459,6 +27278,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17469,6 +27291,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17479,6 +27304,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17489,6 +27317,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17499,6 +27330,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17509,6 +27343,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17519,6 +27356,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17529,6 +27369,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17539,6 +27382,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17549,6 +27395,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17559,6 +27408,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17569,6 +27421,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17579,6 +27434,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17589,6 +27447,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17599,6 +27460,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17609,6 +27473,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17619,6 +27486,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17629,6 +27499,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17639,6 +27512,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17649,6 +27525,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17659,6 +27538,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17669,6 +27551,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17679,6 +27564,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17689,6 +27577,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17699,6 +27590,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17709,6 +27603,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17719,6 +27616,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17729,6 +27629,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17739,6 +27642,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17749,6 +27655,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17759,6 +27668,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17769,6 +27681,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17779,6 +27694,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17789,6 +27707,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17799,6 +27720,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17809,6 +27733,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17819,6 +27746,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17829,6 +27759,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17839,6 +27772,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17849,6 +27785,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17859,6 +27798,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17869,6 +27811,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17879,6 +27824,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17889,6 +27837,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17899,6 +27850,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17909,6 +27863,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17919,6 +27876,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17929,6 +27889,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17939,6 +27902,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17949,6 +27915,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17959,6 +27928,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17969,6 +27941,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17979,6 +27954,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17989,6 +27967,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -17999,6 +27980,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18009,6 +27993,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18019,6 +28006,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18029,6 +28019,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18039,6 +28032,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18049,6 +28045,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18059,6 +28058,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18069,6 +28071,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18079,6 +28084,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18089,6 +28097,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18099,6 +28110,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18109,6 +28123,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18119,6 +28136,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18129,6 +28149,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18139,6 +28162,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18149,6 +28175,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18159,6 +28188,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18169,6 +28201,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18179,6 +28214,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18189,6 +28227,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18199,6 +28240,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18209,6 +28253,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18219,6 +28266,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18229,6 +28279,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18239,6 +28292,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18249,6 +28305,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18259,6 +28318,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18269,6 +28331,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18279,6 +28344,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18289,6 +28357,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18299,6 +28370,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18309,6 +28383,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18319,6 +28396,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18329,6 +28409,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18339,6 +28422,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18349,6 +28435,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18359,6 +28448,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18369,6 +28461,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18379,6 +28474,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18390,6 +28488,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18400,6 +28501,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18410,6 +28514,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18420,6 +28527,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18430,6 +28540,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18440,6 +28553,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18450,6 +28566,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18460,6 +28579,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18470,6 +28592,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18480,6 +28605,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18490,6 +28618,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18500,6 +28631,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18510,6 +28644,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18520,6 +28657,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18530,6 +28670,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18540,6 +28683,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18550,6 +28696,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18560,6 +28709,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18570,6 +28722,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18580,6 +28735,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18590,6 +28748,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     },
     {
@@ -18600,6 +28761,9 @@ export const emojisData = JSON.parse(`[
         ],
         "emoticons": [],
         "category": "Flags",
+        "keywords": [
+            "flag"
+        ],
         "hasSkinToneVariations": false
     }
 ]`);

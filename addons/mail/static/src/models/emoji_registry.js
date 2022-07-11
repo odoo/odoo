@@ -51,8 +51,10 @@ registerModel({
             await executeGracefully(emojisData.map(emojiData => () => {
                 this.models['Emoji'].insert({
                     codepoints: emojiData.codepoints,
-                    sources: [...emojiData.shortcodes, ...emojiData.emoticons],
+                    shortcodes: emojiData.shortcodes,
+                    emoticons: emojiData.emoticons,
                     name: emojiData.name,
+                    keywords: emojiData.keywords,
                     emojiDataCategory: insertAndReplace(
                         { name: emojiData.category }
                     ),

@@ -8,11 +8,12 @@ registerModel({
     name: 'EmojiCategoryView',
     identifyingFields: ['emojiCategoryBarViewOwner', 'emojiCategory'],
     recordMethods: {
-        /** 
+        /**
          * @param {MouseEvent} ev
          */
         onClick() {
             this.update({ emojiCategoryBarViewOwnerAsActiveByUser: replace(this.emojiCategoryBarViewOwner) });
+            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBar.reset();
         },
         /**
          * @param {MouseEvent} ev
