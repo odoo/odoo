@@ -54,10 +54,20 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             receipt.x_receipt_printed= this.x_receipt_printed;
             receipt.x_receipt_printed_date= this.x_receipt_printed_date;
             receipt.website_order_id= this.website_order_id;
-            console.log('-=====-this----', this)
-            console.log('-=====-receipt----', receipt)
+            var val = {};
+            _.each(receipt.orderlines, function(line){
+                if(line.program_id && line.is_program_reward){
+                    if(val[line.program_id]){
+                        val[line.program_id] = [line.product_name , Math.abs(val[line.program_id][1]) + Math.abs(line.price_with_tax)]
+                    }else{
+                        val[line.program_id] = [line.product_name , Math.abs(line.price_with_tax)]
+                    }
+                }
+            });
+            console.log('----val--', val)
+            console.log('-=====-receipt----', receipt, this);
+            receipt.program_reward_lines= val;
             return receipt;
-
         }
     });
 
