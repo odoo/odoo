@@ -508,7 +508,7 @@
             <t t-call="website_profile.user_profile_sub_nav"/>
             <div class="container">
                 <h1 class="py-4 text-white d-inline-block">All Users</h1>
-                <div class="form-inline py-4 float-end">
+                <div class="py-4 float-end">
                     <strong class="form-group text-white me-2">Rank by :</strong>
                     <div class="form-group btn-group">
                         <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}"
@@ -551,7 +551,7 @@
             <t t-if='search and not users'>
                 <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
             </t>
-            <div class="form-inline justify-content-center">
+            <div class="d-flex justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
             </div>
         </div>

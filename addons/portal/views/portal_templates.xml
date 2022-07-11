@@ -269,7 +269,7 @@
             <!--  Collapsable content  -->
             <div class="collapse navbar-collapse" id="o_portal_navbar_content">
                 <div class="nav flex-column flex-lg-row ms-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
-                    <div t-if="searchbar_sortings" class="form-inline">
+                    <div t-if="searchbar_sortings">
                         <span class="small me-1 navbar-text">Sort By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
@@ -285,7 +285,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="searchbar_filters" class="form-inline ms-lg-2">
+                    <div t-if="searchbar_filters" class="ms-lg-2">
                         <span class="small me-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
@@ -301,7 +301,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="searchbar_groupby" class="form-inline ms-lg-2">
+                    <div t-if="searchbar_groupby" class="ms-lg-2">
                         <span class="small me-1 navbar-text">Group By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
@@ -319,7 +319,7 @@
                     </div>
                     <t t-out="0"/>
                 </div>
-                <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ms-lg-4 col-xl-4 col-md-5">
+                <form t-if="searchbar_inputs" class="o_portal_search_panel ms-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu" role="menu">

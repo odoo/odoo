@@ -24,7 +24,7 @@
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
                     <t t-call="website.website_search_box_input">
-                        <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right order-lg-3"/>
+                        <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right order-lg-3"/>
                         <t t-set="search_type" t-valuef="slides"/>
                         <t t-set="action" t-valuef="/slides/all"/>
                         <t t-set="display_description" t-valuef="true"/>
@@ -198,14 +198,14 @@
                         <a class="nav-link nav-item px-3" href="/slides"><i class="fa fa-chevron-left"/></a>
                     </div>
                     <!-- Clear filtering (mobile)-->
-                    <div class="form-inline text-nowrap ms-auto d-md-none" t-if="search_slide_category or search_my or search_tags">
+                    <div class="text-nowrap ms-auto d-md-none" t-if="search_slide_category or search_my or search_tags">
                         <a href="/slides/all" class="btn btn-info me-2" role="button" title="Clear filters">
                             <i class="fa fa-eraser"/> Clear filters
                         </a>
                     </div>
                     <t t-else="" t-call="website.website_search_box_input">
                         <!-- Search box (mobile)-->
-                        <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right d-md-none"/>
+                        <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right d-md-none"/>
                         <t t-set="search_type" t-valuef="slides"/>
                         <!-- No action: remain on same URL -->
                         <t t-set="display_description" t-valuef="true"/>
@@ -243,14 +243,14 @@
                             </t>
                         </ul>
                         <!-- Clear filtering (desktop)-->
-                        <div class="form-inline ms-auto d-none d-md-flex" t-if="search_slide_category or search_my or search_tags">
+                        <div class="ms-auto d-none d-md-flex" t-if="search_slide_category or search_my or search_tags">
                             <a href="/slides/all" class="btn btn-info text-nowrap me-2" role="button" title="Clear filters">
                                 <i class="fa fa-eraser"/> Clear filters
                             </a>
                         </div>
                         <!-- Search box (desktop) -->
                         <t t-call="website.website_search_box_input">
-                            <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right d-none d-md-flex"/>
+                            <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right d-none d-md-flex"/>
                             <t t-set="search_type" t-valuef="slides"/>
                             <!-- No action: remain on same URL -->
                             <t t-set="display_description" t-valuef="true"/>

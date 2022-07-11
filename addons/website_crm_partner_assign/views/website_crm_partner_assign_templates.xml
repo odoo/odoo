@@ -60,7 +60,7 @@
         <div class="col-lg-8 offset-lg-1" id="ref_content">
             <div class="d-flex p-2">
                 <t t-call="website.pager"/>
-                <form action="" method="get" class="form-inline ms-auto">
+                <form action="" method="get" class="ms-auto">
                     <div class="form-group">
                         <input t-if="country_all" type="hidden" name="country_all" value="True" />
                         <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
@@ -252,7 +252,7 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Opportunities</t>
 
-                <div class="form-inline ms-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
+                <div class="ms-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-success btn-sm" name='new_opp' data-bs-toggle="modal" data-bs-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
                         Create Opportunity
                     </button>
