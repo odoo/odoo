@@ -442,7 +442,6 @@ class ir_cron(models.Model):
         active = bool(self.env[model].search_count(domain))
         return self.try_write({'active': active})
 
-    @api.model
     def _trigger(self, at=None):
         """
         Schedule a cron job to be executed soon independently of its
@@ -470,7 +469,6 @@ class ir_cron(models.Model):
 
         self._trigger_list(at_list)
 
-    @api.model
     def _trigger_list(self, at_list):
         """
         Implementation of :meth:`~._trigger`.
