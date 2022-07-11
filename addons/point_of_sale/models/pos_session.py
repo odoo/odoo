@@ -1181,6 +1181,10 @@ class PosSession(models.Model):
 
     def _get_split_receivable_vals(self, payment, amount, amount_converted):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        if not accounting_partner:
+            raise UserError(_("You have enabled the \"Identify Customer\" option for %s payment method,"
+                              "but the order %s does not contain a customer.") % (payment.payment_method_id.name,
+                               payment.pos_order_id.name))
         partial_vals = {
             'account_id': accounting_partner.property_account_receivable_id.id,
             'move_id': self.move_id.id,
