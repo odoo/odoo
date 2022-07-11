@@ -150,7 +150,7 @@ class Lead(models.Model):
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                          compute="_compute_recurring_revenue_monthly_prorated")
-    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", readonly=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_action_last = fields.Datetime('Last Action', readonly=True)
