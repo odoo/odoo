@@ -208,6 +208,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             {
                 website_id: this.websiteService.currentWebsite.id,
                 lang: this.websiteService.currentWebsite.metadata.lang,
+                user_lang: this.userService.context.lang,
             },
         );
     }
