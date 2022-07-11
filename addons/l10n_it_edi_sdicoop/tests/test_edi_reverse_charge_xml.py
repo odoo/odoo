@@ -171,7 +171,7 @@ class TestItEdiReverseCharge(TestItEdi):
     def _test_invoice_with_sample_file(self, invoice, filename, xpaths_file=None, xpaths_result=None):
         result = self._cleanup_etree(invoice._export_as_xml(), xpaths_result)
         expected = self._cleanup_etree(self._get_test_file_content(filename), xpaths_file)
-        self.assertXmlTreeEqual(expected, result)
+        self.assertXmlTreeEqual(result, expected)
 
     def test_reverse_charge_invoice(self):
         self._test_invoice_with_sample_file(self.reverse_charge_invoice, "reverse_charge_invoice.xml")
