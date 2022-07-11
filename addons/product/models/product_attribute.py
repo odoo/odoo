@@ -77,6 +77,10 @@ class ProductAttribute(models.Model):
                 )
         return super(ProductAttribute, self).unlink()
 
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        restrict_domain = args + ['|', ('product_tmpl_ids.company_id', '=', False), ('product_tmpl_ids.company_id', '=', self.env.company.id)]
+        return super(ProductAttribute, self)._name_search(name=name, args=restrict_domain, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
 class ProductAttributeValue(models.Model):
     _name = "product.attribute.value"
