@@ -125,6 +125,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 168.0,
             'amount_total': 1128.0,
         }
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
     def setUp(self):
         super(TestAccountMoveInInvoiceOnchanges, self).setUp()
