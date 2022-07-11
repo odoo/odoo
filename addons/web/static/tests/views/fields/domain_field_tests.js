@@ -806,4 +806,24 @@ QUnit.module("Fields", (hooks) => {
             "record should not open when clicked on the 'N record(s)' button"
         );
     });
+
+    QUnit.test("domain field with 'inDialog' options", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                </form>`,
+        });
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsNone(target, ".modal");
+        await click(target, ".o_field_domain_dialog_button");
+        assert.containsOnce(target, ".modal");
+        await click(target, ".modal .o_domain_add_first_node_button");
+        await click(target, ".modal-footer .btn-primary");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
+    });
 });
