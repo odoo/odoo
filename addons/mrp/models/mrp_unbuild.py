@@ -115,6 +115,19 @@ class MrpUnbuild(models.Model):
                 self.product_qty = 1
             else:
                 self.product_qty = self.mo_id.product_qty
+            if self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+                return {'warning': {
+                    'title': _("Warning"),
+                    'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+                }}
+
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        if self.mo_id and self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+            }}
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
