@@ -1065,8 +1065,52 @@ class PosGlobalState extends PosModel {
             'taxes': taxes_vals,
             'total_excluded': sign * round_pr(total_excluded, this.currency.rounding),
             'total_included': sign * round_pr(total_included, this.currency.rounding),
-        }
+        };
     }
+
+    _map_tax_fiscal_position(tax, order = false) {
+        var self = this;
+        var current_order = order || this.get_order();
+        var order_fiscal_position = current_order && current_order.fiscal_position;
+        var taxes = [];
+
+        if (order_fiscal_position) {
+            var tax_mappings = _.filter(order_fiscal_position.fiscal_position_taxes_by_id, function (fiscal_position_tax) {
+                return fiscal_position_tax.tax_src_id[0] === tax.id;
+            });
+
+            if (tax_mappings && tax_mappings.length) {
+                _.each(tax_mappings, function(tm) {
+                    if (tm.tax_dest_id) {
+                        var taxe = self.taxes_by_id[tm.tax_dest_id[0]];
+                        if (taxe) {
+                            taxes.push(taxe);
+                        }
+                    }
+                });
+            } else{
+                taxes.push(tax);
+            }
+        } else {
+            taxes.push(tax);
+        }
+
+        return taxes;
+    }
+
+    get_taxes_after_fp(taxes_ids){
+        var self = this;
+        var taxes =  this.taxes;
+        var product_taxes = [];
+        _(taxes_ids).each(function(el){
+            var tax = _.detect(taxes, function(t){
+                return t.id === el;
+            });
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+        });
+        product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
+        return product_taxes;
+      }
 
     /**
      * TODO: We can probably remove this here and put it somewhere else.
@@ -1314,7 +1358,7 @@ class Product extends PosModel {
     }
     get_display_price(pricelist, quantity) {
         if (this.pos.config.iface_tax_included === 'total') {
-            const taxes = this.taxes_id.map(id => this.pos.taxes_by_id[id]);
+            const taxes = this.pos.get_taxes_after_fp(this.taxes_id);
             const allPrices = this.pos.compute_all(taxes, this.get_price(pricelist, quantity), 1, this.pos.currency.rounding);
             return allPrices.total_included;
         } else {
@@ -1766,17 +1810,7 @@ class Orderline extends PosModel {
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     }
     get_taxes_after_fp(taxes_ids){
-        var self = this;
-        var taxes =  this.pos.taxes;
-        var product_taxes = [];
-        _(taxes_ids).each(function(el){
-            var tax = _.detect(taxes, function(t){
-                return t.id === el;
-            });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, self.order));
-        });
-        product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
-        return product_taxes;
+        return this.pos.get_taxes_after_fp(taxes_ids);
     }
     get_display_price_one(){
         var rounding = this.pos.currency.rounding;
@@ -1842,33 +1876,7 @@ class Orderline extends PosModel {
         return taxes;
     }
     _map_tax_fiscal_position(tax, order = false) {
-        var self = this;
-        var current_order = order || this.pos.get_order();
-        var order_fiscal_position = current_order && current_order.fiscal_position;
-        var taxes = [];
-
-        if (order_fiscal_position) {
-            var tax_mappings = _.filter(order_fiscal_position.fiscal_position_taxes_by_id, function (fiscal_position_tax) {
-                return fiscal_position_tax.tax_src_id[0] === tax.id;
-            });
-
-            if (tax_mappings && tax_mappings.length) {
-                _.each(tax_mappings, function(tm) {
-                    if (tm.tax_dest_id) {
-                        var taxe = self.pos.taxes_by_id[tm.tax_dest_id[0]];
-                        if (taxe) {
-                            taxes.push(taxe);
-                        }
-                    }
-                });
-            } else{
-                taxes.push(tax);
-            }
-        } else {
-            taxes.push(tax);
-        }
-
-        return taxes;
+        return this.pos._map_tax_fiscal_position(tax, order);
     }
     /**
      * Mirror JS method of:
