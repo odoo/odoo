@@ -20,7 +20,7 @@ class TestTokenAccess(TransactionCase):
                 'name': f'{u}',
                 'login': f'{u}',
                 'email': f'{u}@odoo.com',
-                'google_cal_account_id': credentials.id,
+                'google_calendar_account_id': credentials.id,
             })
             cls.users += [user]
 
@@ -33,14 +33,14 @@ class TestTokenAccess(TransactionCase):
 
     def test_normal_user_should_be_able_to_reset_his_own_token(self):
         user = self.users[0]
-        old_validity = user.google_cal_account_id.calendar_token_validity
+        old_validity = user.google_calendar_account_id.calendar_token_validity
 
-        user.with_user(user).google_cal_account_id._set_auth_tokens('my_new_token', 'my_new_rtoken', 3600)
+        user.with_user(user).google_calendar_account_id._set_auth_tokens('my_new_token', 'my_new_rtoken', 3600)
 
-        self.assertEqual(user.google_cal_account_id.calendar_rtoken, 'my_new_rtoken')
-        self.assertEqual(user.google_cal_account_id.calendar_token, 'my_new_token')
+        self.assertEqual(user.google_calendar_account_id.calendar_rtoken, 'my_new_rtoken')
+        self.assertEqual(user.google_calendar_account_id.calendar_token, 'my_new_token')
         self.assertNotEqual(
-            user.google_cal_account_id.calendar_token_validity,
+            user.google_calendar_account_id.calendar_token_validity,
             old_validity
         )
 
@@ -48,19 +48,19 @@ class TestTokenAccess(TransactionCase):
         user1, user2 = self.users
 
         with self.assertRaises(AccessError):
-            user2.with_user(user1).google_cal_account_id._set_auth_tokens(False, False, 0)
+            user2.with_user(user1).google_calendar_account_id._set_auth_tokens(False, False, 0)
 
     def test_system_user_should_be_able_to_reset_any_tokens(self):
         user = self.users[0]
-        old_validity = user.google_cal_account_id.calendar_token_validity
+        old_validity = user.google_calendar_account_id.calendar_token_validity
 
-        user.with_user(self.system_user).google_cal_account_id._set_auth_tokens(
+        user.with_user(self.system_user).google_calendar_account_id._set_auth_tokens(
             'my_new_token', 'my_new_rtoken', 3600
         )
 
-        self.assertEqual(user.google_cal_account_id.calendar_rtoken, 'my_new_rtoken')
-        self.assertEqual(user.google_cal_account_id.calendar_token, 'my_new_token')
+        self.assertEqual(user.google_calendar_account_id.calendar_rtoken, 'my_new_rtoken')
+        self.assertEqual(user.google_calendar_account_id.calendar_token, 'my_new_token')
         self.assertNotEqual(
-            user.google_cal_account_id.calendar_token_validity,
+            user.google_calendar_account_id.calendar_token_validity,
             old_validity
         )
