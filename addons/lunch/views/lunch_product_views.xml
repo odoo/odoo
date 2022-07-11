@@ -113,8 +113,8 @@
                 <field name="is_new"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png', 'size': [94, 94]}" widget="image"/>
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left" options="{'placeholder': '/lunch/static/img/lunch.png', 'size': [94, 94]}" widget="image"/>
                             <div class="oe_kanban_details ml8">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -160,7 +160,7 @@
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
                             <div class="o_kanban_image_fill_left d-none d-md-block"
                                 t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_128', record.id.raw_value)}')"/>
                             <div class="oe_kanban_details">
