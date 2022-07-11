@@ -56,6 +56,29 @@
                ])]"/>
     </record>
 
+    <record id="payment_acquirer_aps" model="payment.acquirer">
+        <field name="name">Amazon Payment Services</field>
+        <field name="display_as">Amazon Payment Services</field>
+        <field name="image_128" type="base64" file="payment_aps/static/src/img/aps-icon.png"/>
+        <field name="module_id" ref="base.module_payment_aps"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Amazon Payment Services to accept online payments.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+            </ul>
+        </field>
+        <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                        ref('payment.payment_icon_cc_mastercard'),
+                        ref('payment.payment_icon_cc_visa'),
+                        ref('payment.payment_icon_sadad'),
+                        ref('payment.payment_icon_mada'),
+                    ])]"/>
+    </record>
+
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
         <field name="display_as">Credit Card (powered by Authorize)</field>
