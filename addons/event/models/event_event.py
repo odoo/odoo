@@ -418,8 +418,14 @@ class EventEvent(models.Model):
         onchange: if event type is changed, update event configuration. Changing
         event type content itself should not trigger this method. """
         for event in self:
-            if not event.tag_ids and event.event_type_id.tag_ids:
-                event.tag_ids = event.event_type_id.tag_ids
+            if event.event_type_id:
+                if not event.tag_ids and event.event_type_id.tag_ids:
+                    event.tag_ids = event.event_type_id.tag_ids
+                    return
+                saved_event = self.env['event.event'].browse(event.ids)
+                if saved_event:
+                    if event.tag_ids.ids == saved_event.event_type_id.tag_ids.ids:
+                        event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
     def _compute_event_ticket_ids(self):
