@@ -253,9 +253,20 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             };
             fieldInfo.relatedFields = models[field.relation];
         }
-        fieldInfo.viewMode =
-            (node.getAttribute("mode") === "tree" ? "list" : node.getAttribute("mode")) ||
-            Object.keys(views).find((v) => ["list", "kanban"].includes(v));
+
+        let viewMode = node.getAttribute("mode");
+        if (!viewMode) {
+            if (views.list && !views.kanban) {
+                viewMode = "list";
+            } else if (!views.list && views.kanban) {
+                viewMode = "kanban";
+            } else {
+                viewMode = "list,kanban";
+            }
+        } else {
+            viewMode = viewMode.replace("tree", "list");
+        }
+        fieldInfo.viewMode = viewMode;
 
         const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?
         // special case for color field
