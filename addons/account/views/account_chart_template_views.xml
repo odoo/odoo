@@ -83,7 +83,7 @@
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="account_type"/>
+                        <field name="account_type" widget="account_type_selection"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
