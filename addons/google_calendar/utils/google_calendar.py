@@ -7,7 +7,6 @@ import json
 import logging
 
 from odoo import fields
-from odoo.tools import exception_to_unicode
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
 
@@ -107,7 +106,19 @@ class GoogleCalendarService():
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def _google_authentication_url(self, from_url='http://www.odoo.com'):
-        return self.google_service._get_authorize_uri(from_url, service='calendar', scope=self._get_calendar_scope())
+        state = {
+            'd': self.google_service.env.cr.dbname,
+            's': 'calendar',
+            'f': from_url
+        }
+        return self.google_service._get_authorize_uri(
+            'calendar',
+            self._get_calendar_scope(),
+            self.google_service.get_base_url() + '/google_account/authentication',
+            state=json.dumps(state),
+            approval_prompt='force',
+            access_type='offline'
+        )
 
     def _can_authorize_google(self, user):
         return user.has_group('base.group_erp_manager')
