@@ -1079,7 +1079,7 @@ class SaleOrderLine(models.Model):
             'is_downpayment': self.is_downpayment,
         }
         analytic_account_id = self.order_id.analytic_account_id.id
-        if analytic_account_id:
+        if analytic_account_id and not self.display_type:
             res['analytic_distribution'] = res['analytic_distribution'] or {}
             if self.analytic_distribution:
                 res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
