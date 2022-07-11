@@ -17,6 +17,7 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 const WidgetWrapper = require("web.WidgetWrapper");
+var session = require("web.session")
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -577,7 +578,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
             selection_mode: this.selectionMode,
             read_only_mode: this.read_only_mode,
             record: this.record,
-            user_context: this.getSession().user_context,
+            user_context: session.user_context,
             widget: this,
         };
     },
