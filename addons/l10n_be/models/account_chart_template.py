@@ -17,20 +17,18 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_be_template_data(self, template_code, company):
         cid = (company or self.env.company).id
         return {
-            'l10nbe_chart_template': {
-                'bank_account_code_prefix': '550',
-                'cash_account_code_prefix': '570',
-                'transfer_account_code_prefix': '580',
-                'spoken_languages': 'nl_BE;nl_NL;fr_FR;fr_BE;de_DE',
-                'code_digits': '6',
-                'property_account_receivable_id': f'account.{cid}_a400',
-                'property_account_payable_id': f'account.{cid}_a440',
-                'property_account_expense_categ_id': f'account.{cid}_a600',
-                'property_account_income_categ_id': f'account.{cid}_a7000',
-                'property_tax_payable_account_id': f'account.{cid}_a4512',
-                'property_tax_receivable_account_id': f'account.{cid}_a4112',
-                'account_journal_suspense_account_id': f'account.{cid}_a499',
-            }
+            'bank_account_code_prefix': '550',
+            'cash_account_code_prefix': '570',
+            'transfer_account_code_prefix': '580',
+            'spoken_languages': 'nl_BE;nl_NL;fr_FR;fr_BE;de_DE',
+            'code_digits': '6',
+            'property_account_receivable_id': f'account.{cid}_a400',
+            'property_account_payable_id': f'account.{cid}_a440',
+            'property_account_expense_categ_id': f'account.{cid}_a600',
+            'property_account_income_categ_id': f'account.{cid}_a7000',
+            'property_tax_payable_account_id': f'account.{cid}_a4512',
+            'property_tax_receivable_account_id': f'account.{cid}_a4112',
+            'account_journal_suspense_account_id': f'account.{cid}_a499',
         }
 
     def _get_be_account_journal(self, template_code, company):
