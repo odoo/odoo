@@ -120,7 +120,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
             return { records: [], isMaxed: false };
         }
         try {
-            const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY);
+            const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.props.orientation);
             this.state.isFetchingUnsplash = false;
             this.state.unsplashError = false;
             const records = images.map(record => {
