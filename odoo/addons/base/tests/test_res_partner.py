@@ -138,3 +138,22 @@ class TestPartner(TransactionCase):
         self.assertEqual(partner.lang, 'fr_FR')
         self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "First Child").lang, 'de_DE')
         self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "Second Child").lang, 'fr_FR')
+
+    def test_display_address_missing_key(self):
+        """ Check _display_address when some keys are missing. As a defaultdict is used, missing keys should be
+        filled with empty strings. """
+        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s"})
+        partner = self.env["res.partner"].create({
+            "name": "TestPartner",
+            "country_id": country.id,
+            "city": "TestCity",
+            "zip": "12345",
+        })
+        before = partner._display_address()
+        # Manually update the country address_format because placeholders are checked by create
+        self.env.cr.execute(
+            "UPDATE res_country SET address_format ='%%(city)s %%(zip)s %%(nothing)s' WHERE id=%s",
+            [country.id]
+        )
+        self.env["res.country"].invalidate_cache()
+        self.assertEqual(before, partner._display_address().strip())

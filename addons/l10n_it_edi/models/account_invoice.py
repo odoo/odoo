@@ -161,7 +161,7 @@ class AccountMove(models.Model):
         # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
         #   taxable base = sum(taxable base for each unit) + Arrotondamento
         tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent > 0
+            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
         )
         for _tax_name, tax_dict in tax_details['tax_details'].items():
             base_amount = tax_dict['base_amount_currency']
