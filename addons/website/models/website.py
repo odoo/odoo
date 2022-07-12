@@ -125,7 +125,7 @@ class Website(models.Model):
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
-    partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
+    partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', related_inverse=True)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_url = fields.Char(help='E.g. /contactus or /shop')
     custom_code_head = fields.Html('Custom <head> code', sanitize=False)

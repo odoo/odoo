@@ -323,7 +323,7 @@ class Users(models.Model):
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
-    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
+    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication')
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
@@ -342,8 +342,8 @@ class Users(models.Model):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    name = fields.Char(related='partner_id.name', inherited=True, related_inverse=True)
+    email = fields.Char(related='partner_id.email', inherited=True, related_inverse=True)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)

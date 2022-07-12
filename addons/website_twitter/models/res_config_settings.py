@@ -27,15 +27,15 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     twitter_api_key = fields.Char(
-        related='website_id.twitter_api_key', readonly=False,
+        related='website_id.twitter_api_key', related_inverse=True,
         string='API Key',
         help='Twitter API key you can get it from https://apps.twitter.com/')
     twitter_api_secret = fields.Char(
-        related='website_id.twitter_api_secret', readonly=False,
+        related='website_id.twitter_api_secret', related_inverse=True,
         string='API secret',
         help='Twitter API secret you can get it from https://apps.twitter.com/')
     twitter_screen_name = fields.Char(
-        related='website_id.twitter_screen_name', readonly=False,
+        related='website_id.twitter_screen_name', related_inverse=True,
         string='Favorites From',
         help='Screen Name of the Twitter Account from which you want to load favorites.'
              'It does not have to match the API Key/Secret.')

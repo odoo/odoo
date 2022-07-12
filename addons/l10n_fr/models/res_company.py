@@ -8,7 +8,7 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
-    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
+    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, related_inverse=True)
     ape = fields.Char(string='APE')
 
     l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account', check_company=True)

@@ -13,10 +13,10 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)
     opening_move_posted = fields.Boolean(string='Opening Move Posted', compute='_compute_opening_move_posted')
-    opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.", readonly=False)
-    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True, readonly=False,
+    opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', related_inverse=True, help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.")
+    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True, related_inverse=True,
                                          help="The last day of the month will be used if the chosen day doesn't exist.")
-    fiscalyear_last_month = fields.Selection(related="company_id.fiscalyear_last_month", readonly=False,
+    fiscalyear_last_month = fields.Selection(related="company_id.fiscalyear_last_month", related_inverse=True,
                                              required=True,
                                              help="The last day of the month will be used if the chosen day doesn't exist.")
 
@@ -76,7 +76,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         compute="_compute_linked_journal_id",
         check_company=True,
         domain=[('type', '=', 'bank'), ('bank_account_id', '=', False)])
-    bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
+    bank_bic = fields.Char(related='bank_id.bic', related_inverse=True, string="Bic")
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
 
     def _number_unlinked_journal(self):

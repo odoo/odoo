@@ -9,4 +9,4 @@ class ResConfigSettings(models.TransientModel):
     l10n_fr_reference_leave_type = fields.Many2one(
         'hr.leave.type',
         related='company_id.l10n_fr_reference_leave_type',
-        readonly=False)
+        related_inverse=True)

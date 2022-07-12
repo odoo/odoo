@@ -19,7 +19,7 @@ class AliasMixinOptional(models.AbstractModel):
     ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_contact', 'alias_defaults', 'alias_bounced_content']
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=False)
-    alias_name = fields.Char(related='alias_id.alias_name', readonly=False)
+    alias_name = fields.Char(related='alias_id.alias_name', related_inverse=True)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
     alias_defaults = fields.Text(related='alias_id.alias_defaults')
     alias_email = fields.Char('Email Alias', compute='_compute_alias_email')

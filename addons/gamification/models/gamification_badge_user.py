@@ -17,7 +17,7 @@ class BadgeUser(models.Model):
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge')
     comment = fields.Text('Comment')
-    badge_name = fields.Char(related='badge_id.name', string="Badge Name", readonly=False)
+    badge_name = fields.Char(related='badge_id.name', string="Badge Name", related_inverse=True)
     level = fields.Selection(
         string='Badge Level', related="badge_id.level", store=True, readonly=True)
 

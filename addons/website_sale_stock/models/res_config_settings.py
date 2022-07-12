@@ -20,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
         'stock.warehouse',
         related='website_id.warehouse_id',
         domain="[('company_id', '=', website_company_id)]",
-        readonly=False)
+        related_inverse=True)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()

@@ -40,7 +40,7 @@ class PosSession(models.Model):
         readonly=False,
         default=lambda self: self.env.uid,
         ondelete='restrict')
-    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", readonly=False)
+    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", related_inverse=True)
     start_at = fields.Datetime(string='Opening Date', readonly=True)
     stop_at = fields.Datetime(string='Closing Date', readonly=True, copy=False)
 

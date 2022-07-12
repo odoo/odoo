@@ -86,7 +86,7 @@ class Repair(models.Model):
         compute="compute_lot_id", store=True,
         domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True,
         help="Products repaired are all belonging to this lot")
-    tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
+    tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", related_inverse=True)
 
     # Picking & Locations
     picking_type_id = fields.Many2one(

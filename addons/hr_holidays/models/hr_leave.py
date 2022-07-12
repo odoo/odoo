@@ -157,7 +157,7 @@ class HolidaysRequest(models.Model):
     holiday_allocation_id = fields.Many2one(
         'hr.leave.allocation', compute='_compute_from_holiday_status_id', string="Allocation", store=True, readonly=False)
     color = fields.Integer("Color", related='holiday_status_id.color')
-    validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.leave_validation_type', readonly=False)
+    validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.leave_validation_type', related_inverse=True)
     # HR data
 
     employee_id = fields.Many2one(

@@ -47,7 +47,7 @@ class EmployeePublic(models.Model):
 class User(models.Model):
     _inherit = ['res.users']
 
-    expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
+    expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', related_inverse=True)
 
     @property
     def SELF_READABLE_FIELDS(self):

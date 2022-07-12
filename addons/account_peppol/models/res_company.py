@@ -61,8 +61,8 @@ class ResCompany(models.Model):
         compute='_compute_account_peppol_proxy_state', required=True, readonly=False, store=True, precompute=True,
     )
     is_account_peppol_participant = fields.Boolean(string='PEPPOL Participant')
-    peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
-    peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
+    peppol_eas = fields.Selection(related='partner_id.peppol_eas', related_inverse=True)
+    peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', related_inverse=True)
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='PEPPOL Purchase Journal',

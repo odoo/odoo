@@ -40,9 +40,9 @@ class ResCompany(models.Model):
                                                   inverse='_l10n_sa_edi_inverse_plot_identification')
 
     l10n_sa_additional_identification_scheme = fields.Selection(
-        related='partner_id.l10n_sa_additional_identification_scheme', readonly=False)
+        related='partner_id.l10n_sa_additional_identification_scheme', related_inverse=True)
     l10n_sa_additional_identification_number = fields.Char(
-        related='partner_id.l10n_sa_additional_identification_number', readonly=False)
+        related='partner_id.l10n_sa_additional_identification_number', related_inverse=True)
 
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [

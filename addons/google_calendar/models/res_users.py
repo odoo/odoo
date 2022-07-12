@@ -21,7 +21,7 @@ class User(models.Model):
     google_calendar_token_validity = fields.Datetime(related='google_calendar_account_id.calendar_token_validity')
     google_calendar_sync_token = fields.Char(related='google_calendar_account_id.calendar_sync_token')
     google_calendar_cal_id = fields.Char(related='google_calendar_account_id.calendar_cal_id')
-    google_synchronization_stopped = fields.Boolean(related='google_calendar_account_id.synchronization_stopped', readonly=False)
+    google_synchronization_stopped = fields.Boolean(related='google_calendar_account_id.synchronization_stopped', related_inverse=True)
 
     _sql_constraints = [
         ('google_token_uniq', 'unique (google_calendar_account_id)', "The user has already a google account"),

@@ -19,26 +19,26 @@ class ResConfigSettings(models.TransientModel):
         string='EDI user',
         compute='_compute_account_peppol_edi_user',
     )
-    account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False)
-    account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
+    account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', related_inverse=True)
+    account_peppol_eas = fields.Selection(related='company_id.peppol_eas', related_inverse=True)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
-    account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False)
+    account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', related_inverse=True)
     account_peppol_endpoint_warning = fields.Char(
         string="Warning",
         compute="_compute_account_peppol_endpoint_warning",
     )
-    account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
-    account_peppol_phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
-    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
-    account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
-    account_peppol_verification_code = fields.Char(related='account_peppol_edi_user.peppol_verification_code', readonly=False)
+    account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', related_inverse=True)
+    account_peppol_phone_number = fields.Char(related='company_id.account_peppol_phone_number', related_inverse=True)
+    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', related_inverse=True)
+    account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', related_inverse=True)
+    account_peppol_verification_code = fields.Char(related='account_peppol_edi_user.peppol_verification_code', related_inverse=True)
     is_account_peppol_eligible = fields.Boolean(
         string='PEPPOL eligible',
         compute='_compute_is_account_peppol_eligible',
     ) # technical field used for showing the Peppol settings conditionally
     is_account_peppol_participant = fields.Boolean(
         string='Use PEPPOL',
-        related='company_id.is_account_peppol_participant', readonly=False,
+        related='company_id.is_account_peppol_participant', related_inverse=True,
         help='Register as a PEPPOL user',
     )
 

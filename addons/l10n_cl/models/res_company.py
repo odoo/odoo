@@ -7,7 +7,7 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_cl_activity_description = fields.Char(
-        string='Company Activity Description', related='partner_id.l10n_cl_activity_description', readonly=False)
+        string='Company Activity Description', related='partner_id.l10n_cl_activity_description', related_inverse=True)
 
     def _localization_use_documents(self):
         """ Chilean localization use documents """

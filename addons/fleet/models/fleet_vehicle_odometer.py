@@ -14,7 +14,7 @@ class FleetVehicleOdometer(models.Model):
     value = fields.Float('Odometer Value', group_operator="max")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
     unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver", readonly=False)
+    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver", related_inverse=True)
 
     @api.depends('vehicle_id', 'date')
     def _compute_vehicle_log_name(self):

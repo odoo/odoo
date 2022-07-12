@@ -115,4 +115,4 @@ class UomCateg(models.Model):
 class Uom(models.Model):
     _inherit = 'uom.uom'
 
-    is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)
+    is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', related_inverse=True)

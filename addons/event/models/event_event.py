@@ -220,7 +220,7 @@ class EventEvent(models.Model):
         string='Venue (formatted for one line uses)', compute='_compute_address_inline',
         compute_sudo=True)
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+        'res.country', 'Country', related='address_id.country_id', related_inverse=True, store=True)
     lang = fields.Selection(_lang_get, string='Language',
         help="All the communication emails sent to attendees will be translated in this language.")
     # ticket reports

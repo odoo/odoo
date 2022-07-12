@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
     reminder_user_allow = fields.Boolean(string="Employee Reminder")
     reminder_allow = fields.Boolean(string="Approver Reminder")
     project_time_mode_id = fields.Many2one(
-        'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', readonly=False,
+        'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', related_inverse=True,
         help="This will set the unit of measure used in projects and tasks.\n"
              "If you use the timesheet linked to projects, don't "
              "forget to setup the right unit of measure in your employees.")

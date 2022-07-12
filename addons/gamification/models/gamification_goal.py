@@ -44,7 +44,7 @@ class Goal(models.Model):
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal')
 
-    computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
+    computation_mode = fields.Selection(related='definition_id.computation_mode', related_inverse=True)
     remind_update_delay = fields.Integer(
         "Remind delay", help="The number of days after which the user "
                              "assigned to a manual goal will be reminded. "

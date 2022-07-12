@@ -126,7 +126,7 @@ class Message(models.Model):
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.avatar_128', depends=['author_id'], readonly=False)
+    author_avatar = fields.Binary("Author's avatar", related='author_id.avatar_128', depends=['author_id'], related_inverse=True)
     author_guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest')
     is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after

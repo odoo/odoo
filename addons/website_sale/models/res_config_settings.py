@@ -7,8 +7,8 @@ from odoo import api, models, fields, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson', readonly=False, domain="[('share', '=', False)]")
-    salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team', readonly=False)
+    salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson', related_inverse=True, domain="[('share', '=', False)]")
+    salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team', related_inverse=True)
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='account.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
     group_show_uom_price = fields.Boolean(default=False, string="Base Unit Price", implied_group="website_sale.group_show_uom_price", group='base.group_portal,base.group_user,base.group_public')
     group_product_price_comparison = fields.Boolean(
@@ -25,10 +25,10 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_picking = fields.Boolean('On Site Payments & Picking')
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
-                                                  related='website_id.cart_recovery_mail_template_id', readonly=False)
-    cart_abandoned_delay = fields.Float(string="Send After", related='website_id.cart_abandoned_delay', readonly=False)
-    send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', readonly=False)
-    add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
+                                                  related='website_id.cart_recovery_mail_template_id', related_inverse=True)
+    cart_abandoned_delay = fields.Float(string="Send After", related='website_id.cart_abandoned_delay', related_inverse=True)
+    send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', related_inverse=True)
+    add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', related_inverse=True)
 
     module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     group_product_pricelist = fields.Boolean(
@@ -47,12 +47,12 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_account_on_checkout",
         inverse="_inverse_account_on_checkout",
         readonly=False, required=True)
-    website_sale_prevent_zero_price_sale = fields.Boolean(string="Prevent Sale of Zero Priced Product", related='website_id.prevent_zero_price_sale', readonly=False)
-    website_sale_contact_us_button_url = fields.Char(string="Button URL", related='website_id.contact_us_button_url', readonly=False)
-    website_sale_enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal", related='website_id.enabled_portal_reorder_button', readonly=False)
+    website_sale_prevent_zero_price_sale = fields.Boolean(string="Prevent Sale of Zero Priced Product", related='website_id.prevent_zero_price_sale', related_inverse=True)
+    website_sale_contact_us_button_url = fields.Char(string="Button URL", related='website_id.contact_us_button_url', related_inverse=True)
+    website_sale_enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal", related='website_id.enabled_portal_reorder_button', related_inverse=True)
     show_line_subtotals_tax_selection = fields.Selection(
-        readonly=False,
         related='website_id.show_line_subtotals_tax_selection',
+        related_inverse=True,
     )
 
     @api.model

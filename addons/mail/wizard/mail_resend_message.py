@@ -87,8 +87,8 @@ class PartnerResend(models.TransientModel):
 
     notification_id = fields.Many2one('mail.notification', string='Notification', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Partner', related='notification_id.res_partner_id')
-    name = fields.Char(related='partner_id.name', string='Recipient Name', related_sudo=False, readonly=False)
-    email = fields.Char(related='partner_id.email', string='Email Address', related_sudo=False, readonly=False)
+    name = fields.Char(related='partner_id.name', string='Recipient Name', related_sudo=False, related_inverse=True)
+    email = fields.Char(related='partner_id.email', string='Email Address', related_sudo=False, related_inverse=True)
     failure_reason = fields.Text('Failure Reason', related='notification_id.failure_reason')
     resend = fields.Boolean(string='Try Again', default=True)
     resend_wizard_id = fields.Many2one('mail.resend.message', string="Resend wizard")

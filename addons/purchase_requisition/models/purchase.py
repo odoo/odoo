@@ -24,11 +24,11 @@ class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     requisition_id = fields.Many2one('purchase.requisition', string='Blanket Order', copy=False)
-    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', readonly=False)
+    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', related_inverse=True)
 
     purchase_group_id = fields.Many2one('purchase.order.group')
     alternative_po_ids = fields.One2many(
-        'purchase.order', related='purchase_group_id.order_ids', readonly=False,
+        'purchase.order', related='purchase_group_id.order_ids', related_inverse=True,
         domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
         string="Alternative POs", check_company=True,
         help="Other potential purchase orders for purchasing products")

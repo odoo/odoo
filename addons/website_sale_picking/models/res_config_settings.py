@@ -10,5 +10,5 @@ class ResConfigSettings(models.TransientModel):
     picking_site_ids = fields.Many2many(
         'delivery.carrier',
         related='website_id.picking_site_ids',
-        readonly=False,
+        related_inverse=True,
     )

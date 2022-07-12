@@ -6,8 +6,8 @@ from odoo import fields, models
 class User(models.Model):
     _inherit = ['res.users']
 
-    resume_line_ids = fields.One2many(related='employee_id.resume_line_ids', readonly=False)
-    employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids', readonly=False)
+    resume_line_ids = fields.One2many(related='employee_id.resume_line_ids', related_inverse=True)
+    employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids', related_inverse=True)
 
     @property
     def SELF_READABLE_FIELDS(self):

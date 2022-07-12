@@ -179,8 +179,8 @@ class Slide(models.Model):
         sanitize_attributes=False, sanitize_form=False, sanitize_overridable=True,
         help="Custom HTML content for slides of category 'Article'.")
     # content - images
-    image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False) # Used to filter file input to images only
-    image_google_url = fields.Char('Image Link', related='url', readonly=False,
+    image_binary_content = fields.Binary('Image Content', related='binary_content', related_inverse=True) # Used to filter file input to images only
+    image_google_url = fields.Char('Image Link', related='url', related_inverse=True,
         help="Link of the image (we currently only support Google Drive as source)")
     # content - documents
     slide_icon_class = fields.Char('Slide Icon fa-class', compute='_compute_slide_icon_class')
@@ -197,11 +197,11 @@ class Slide(models.Model):
         ('vimeo_video', 'Vimeo Video')],
         string="Slide Type", compute='_compute_slide_type', store=True, readonly=False,
         help="Subtype of the slide category, allows more precision on the actual file type / source type.")
-    document_google_url = fields.Char('Document Link', related='url', readonly=False,
+    document_google_url = fields.Char('Document Link', related='url', related_inverse=True,
         help="Link of the document (we currently only support Google Drive as source)")
-    document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False) # Used to filter file input to PDF only
+    document_binary_content = fields.Binary('PDF Content', related='binary_content', related_inverse=True) # Used to filter file input to PDF only
     # content - videos
-    video_url = fields.Char('Video Link', related='url', readonly=False,
+    video_url = fields.Char('Video Link', related='url', related_inverse=True,
         help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)")
     video_source_type = fields.Selection([
         ('youtube', 'YouTube'),

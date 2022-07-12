@@ -35,11 +35,11 @@ class ResConfigSettings(models.TransientModel):
     module_base_geolocalize = fields.Boolean("GeoLocalize")
     module_google_recaptcha = fields.Boolean("reCAPTCHA")
     module_website_cf_turnstile = fields.Boolean("Cloudflare Turnstile")
-    report_footer = fields.Html(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
+    report_footer = fields.Html(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", related_inverse=True)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
-    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", related_inverse=True)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
     active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")

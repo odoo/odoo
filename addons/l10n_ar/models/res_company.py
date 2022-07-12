@@ -7,13 +7,13 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_ar_gross_income_number = fields.Char(
-        related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', readonly=False,
+        related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', related_inverse=True,
         help="This field is required in order to print the invoice report properly")
     l10n_ar_gross_income_type = fields.Selection(
-        related='partner_id.l10n_ar_gross_income_type', string='Gross Income', readonly=False,
+        related='partner_id.l10n_ar_gross_income_type', string='Gross Income', related_inverse=True,
         help="This field is required in order to print the invoice report properly")
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        domain="[('code', 'in', [1, 4, 6])]", related='partner_id.l10n_ar_afip_responsibility_type_id', readonly=False)
+        domain="[('code', 'in', [1, 4, 6])]", related='partner_id.l10n_ar_afip_responsibility_type_id', related_inverse=True)
     l10n_ar_company_requires_vat = fields.Boolean(compute='_compute_l10n_ar_company_requires_vat', string='Company Requires Vat?')
     l10n_ar_afip_start_date = fields.Date('Activities Start')
 

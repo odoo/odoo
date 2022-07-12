@@ -51,7 +51,7 @@ class FleetVehicle(models.Model):
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True)
 
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, related_inverse=True)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
@@ -107,8 +107,8 @@ class FleetVehicle(models.Model):
     car_value = fields.Float(string="Catalog Value (VAT Incl.)")
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
-    plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, readonly=False)
-    plan_to_change_bike = fields.Boolean(related='driver_id.plan_to_change_bike', store=True, readonly=False)
+    plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, related_inverse=True)
+    plan_to_change_bike = fields.Boolean(related='driver_id.plan_to_change_bike', store=True, related_inverse=True)
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
     electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
