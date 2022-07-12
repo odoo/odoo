@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import patch, ANY
+from unittest.mock import patch, ANY, call
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -80,6 +80,24 @@ class TestDeleteEvents(TestCommon):
             token=mock_get_token(self.organizer_user),
             timeout=ANY
         )
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_archive_several_events_at_once(self, mock_delete):
+        """
+        Archive several events at once should not produce any exception.
+        """
+        # act
+        self.several_events.action_archive()
+        self.call_post_commit_hooks()
+        self.several_events.invalidate_recordset()
+
+        # assert
+        self.assertFalse(all(e.active for e in self.several_events))
+
+        mock_delete.assert_has_calls([
+            call(e.ms_organizer_event_id, token=ANY, timeout=ANY)
+            for e in self.several_events
+        ])
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_cancel_simple_event_from_outlook_organizer_calendar(self, mock_get_events):

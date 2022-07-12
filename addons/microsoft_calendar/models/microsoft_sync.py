@@ -78,30 +78,22 @@ class MicrosoftSync(models.AbstractModel):
     def write(self, vals):
         if 'ms_universal_event_id' in vals:
             self._from_uids.clear_cache(self)
-        synced_fields = self._get_microsoft_synced_fields()
-        if (
-            'need_sync_m' not in vals and vals.keys() & synced_fields
-            and self.ms_organizer_event_id
-            and not self.env.user.microsoft_synchronization_stopped
-        ):
-            fields_to_sync = [x for x in vals.keys() if x in synced_fields]
-            if fields_to_sync:
-                vals['need_sync_m'] = True
-        else:
-            fields_to_sync = [x for x in vals.keys() if x in synced_fields]
+
+        fields_to_sync = [x for x in vals.keys() if x in self._get_microsoft_synced_fields()]
+        if fields_to_sync and 'need_sync_m' not in vals and not self.env.user.microsoft_synchronization_stopped:
+            vals['need_sync_m'] = True
 
         result = super().write(vals)
-        need_delete = 'active' in vals.keys() and not vals.get('active')
-        for record in self.filtered('need_sync_m'):
-            if record.ms_universal_event_id:
-                if need_delete:
-                    # We need to delete the event. Cancel is not sufficant. Errors may occurs
-                    record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
-                elif fields_to_sync:
-                    values = record._microsoft_values(fields_to_sync)
-                    if not values:
-                        continue
-                    record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
+
+        for record in self.filtered(lambda e: e.need_sync_m and e.ms_organizer_event_id):
+            if not vals.get('active', True):
+                # We need to delete the event. Cancel is not sufficant. Errors may occurs
+                record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
+            elif fields_to_sync:
+                values = record._microsoft_values(fields_to_sync)
+                if not values:
+                    continue
+                record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
 
         return result
 
