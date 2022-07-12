@@ -43,10 +43,11 @@ class FetchmailServer(models.Model):
     server = fields.Char(string='Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft': [('readonly', False)]})
     port = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
     server_type = fields.Selection([
-        ('pop', 'POP Server'),
         ('imap', 'IMAP Server'),
+        ('pop', 'POP Server'),
         ('local', 'Local Server'),
     ], string='Server Type', index=True, required=True, default='pop')
+    server_type_info = fields.Text('Server Type Info', compute='_compute_server_type_info')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
@@ -63,6 +64,14 @@ class FetchmailServer(models.Model):
     message_ids = fields.One2many('mail.mail', 'fetchmail_server_id', string='Messages', readonly=True)
     configuration = fields.Text('Configuration', readonly=True)
     script = fields.Char(readonly=True, default='/mail/static/scripts/odoo-mailgate.py')
+
+    @api.depends('server_type')
+    def _compute_server_type_info(self):
+        for server in self:
+            if server.server_type == 'local':
+                server.server_type_info = _('Use a local script to fetch your emails and create new records.')
+            else:
+                server.server_type_info = False
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):

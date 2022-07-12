@@ -3,13 +3,15 @@
 
 {
     "name": "Microsoft Outlook",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
-    "description": "Outlook support for outgoing mail servers",
+    "description": "Outlook support for incoming / outgoing mail servers",
     "depends": [
+        "fetchmail",
         "mail",
     ],
     "data": [
+        "views/fetchmail_server_views.xml",
         "views/ir_mail_server_views.xml",
         "views/res_config_settings_views.xml",
         "views/templates.xml",

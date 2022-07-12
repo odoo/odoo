@@ -9,8 +9,8 @@
             <field name="user" position="after">
                 <field name="google_gmail_uri" invisible="1"/>
                 <field name="google_gmail_refresh_token" invisible="1"/>
-                <div></div>
-                <div attrs="{'invisible': [('server_type', '!=', 'gmail')]}">
+                <div attrs="{'invisible': [('server_type', '!=', 'gmail')]}"
+                    class="d-flex flex-row align-items-center" colspan="8">
                     <span attrs="{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}"
                         class="badge text-bg-success">
                         Gmail Token Valid
@@ -22,21 +22,17 @@
                         Connect your Gmail account
                     </button>
                     <button type="object"
-                        name="open_google_gmail_uri" class="btn-link px-0"
+                        name="open_google_gmail_uri" class="btn-link px-0 ml-2"
                         attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}">
-                        <i class="fa fa-cog"/>
-                        Edit Settings
+                        <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
-                    <div class="alert alert-warning" role="alert"
+                    <button class="alert alert-warning d-block mt-2 text-left"
+                        icon="fa-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
                         attrs="{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
                         Setup your Gmail API credentials in the general settings to link a Gmail account.
-                    </div>
+                    </button>
                 </div>
-            </field>
-            <field name="password" position="attributes">
-                <attribute name="attrs">
-                    {'required' : [('server_type', '!=', 'local'), ('server_type', '!=', 'gmail'), ('password', '!=', False)], 'invisible' : [('server_type', '=', 'gmail')]}
-                </attribute>
             </field>
         </field>
     </record>
