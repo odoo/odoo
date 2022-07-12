@@ -5,14 +5,14 @@
             <field name="name">fetchmail.server.list</field>
             <field name="model">fetchmail.server</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="POP/IMAP Servers">
+                <tree string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="server_type"/>
-                    <field name="is_ssl"/>
-                    <field name="object_id"/>
+                    <field name="user"/>
                     <field name="date"/>
-                    <field name="message_ids" string="Email Count"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'draft'"
+                        decoration-success="state == 'done'"/>
                 </tree>
             </field>
         </record>
@@ -29,10 +29,20 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                     <group col="4">
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="server_type" widget="radio"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"/>
+                     <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="server_type" widget="radio" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'invisible': [('date', '=', False)]}"/>
+                            <div class="text-muted font-italic" colspan="8" role="alert"
+                                attrs="{'invisible': [('server_type_info', '=', False)]}">
+                                <field name="server_type_info"/>
+                            </div>
+                        </group>
                      </group>
                      <notebook>
                         <page string="Server &amp; Login" name="server_login_details">
@@ -47,7 +57,8 @@
                                 </group>
                                 <group attrs="{'invisible' : [('server_type', '=', 'local')]}" string="Login Information">
                                     <field name="user" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
-                                    <field name="password" password="True" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
+                                    <field name="password" password="True"
+                                        attrs="{'required' : [('server_type', 'in', ('imap', 'pop'))], 'invisible' : [('server_type', 'not in', ('imap', 'pop'))]}"/>
                                 </group>
                                 <group string="Actions to Perform on Incoming Mails">
                                     <field name="object_id"/>
@@ -63,7 +74,7 @@
                                 <field name="priority"/>
                                 <field name="attach"/>
                                 <field name="original"/>
-                                <field name="active" widget="boolean_toggle"/>
+                                <field name="active" invisible="1"/>
                             </group>
                         </page>
                     </notebook>
@@ -78,6 +89,7 @@
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
                     <field name="name" string="Incoming Mail Server"/>
+                    <field name="user"/>
                     <filter string="IMAP" name="imap" domain="[('server_type', '=', 'imap')]" help="Server type IMAP."/>
                     <filter string="POP" name="pop" domain="[('server_type', '=', 'pop')]" help="Server type POP."/>
                     <separator/>
