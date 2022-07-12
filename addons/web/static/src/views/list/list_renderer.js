@@ -772,7 +772,10 @@ export class ListRenderer extends Component {
         }
     }
 
-    async onCellClicked(record, column) {
+    async onCellClicked(record, column, ev) {
+        if (ev.target.special_click) {
+            return;
+        }
         const recordAfterResequence = async () => {
             const recordIndex = this.props.list.records.indexOf(record);
             await this.resequencePromise;

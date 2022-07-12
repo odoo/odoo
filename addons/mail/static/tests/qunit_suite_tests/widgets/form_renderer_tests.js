@@ -867,7 +867,7 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
             views: [[false, 'form']],
         },
         {
-            currentId: resPartnerId1,
+            resId: resPartnerId1,
             resIds: [resPartnerId1, resPartnerId2],
         },
     );
