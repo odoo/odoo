@@ -29,6 +29,9 @@ This module add, for accounting:
         'views/res_company_view.xml',
         'views/res_partner_view.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': '_preserve_tag_on_taxes',
     'license': 'LGPL-3',
 }
