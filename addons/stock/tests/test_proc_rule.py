@@ -115,7 +115,6 @@ class TestProcRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.product
-        orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
         orderpoint = orderpoint_form.save()
@@ -174,14 +173,12 @@ class TestProcRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.productA
-        orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
         orderpoint = orderpoint_form.save()
 
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'ProductB RR',
-            'location_id': warehouse.lot_stock_id.id,
             'product_id': self.productB.id,
             'product_min_qty': 0,
             'product_max_qty': 5,
@@ -382,6 +379,51 @@ class TestProcRule(TransactionCase):
             {'location_id': warehouse_2.lot_stock_id.id, 'route_id': route_2.id},
             {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
         ])
+
+    def test_orderpoint_compute_warehouse_location(self):
+        warehouse_a = self.env['stock.warehouse'].search([], limit=1)
+        warehouse_b = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
+
+        # No warehouse specified, no location specified
+        # Must choose default/first warehouse and the `lot_stock_id` of that warehouse
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a)
+        self.assertEqual(orderpoint.location_id, warehouse_a.lot_stock_id)
+        orderpoint.unlink()
+
+        # Warehouse specified, must choose the `lot_stock_id` of that warehouse by default
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'warehouse_id': warehouse_b.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_b)
+        self.assertEqual(orderpoint.location_id, warehouse_b.lot_stock_id)
+        orderpoint.unlink()
+
+        # Location specified, must choose the warehouse of that location by default
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'location_id': warehouse_b.lot_stock_id.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_b)
+        self.assertEqual(orderpoint.location_id, warehouse_b.lot_stock_id)
+        orderpoint.unlink()
+
+        # Warehouse specified, location specified, must let them and not overwrite them with a default
+        location = warehouse_b.lot_stock_id.copy()
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'warehouse_id': warehouse_b.id,
+            'location_id': location.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_b)
+        self.assertEqual(orderpoint.location_id, location)
+        orderpoint.unlink()
 
 
 class TestProcRuleLoad(TransactionCase):
