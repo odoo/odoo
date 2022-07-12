@@ -79,7 +79,7 @@ QUnit.test('should have correct members in member list', async function (assert)
         channel_type: 'group',
         public: 'private',
     });
-    const { click, messaging, openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -96,16 +96,12 @@ QUnit.test('should have correct members in member list', async function (assert)
     );
     assert.containsOnce(
         document.body,
-        `.o_ChannelMember[data-partner-local-id="${
-            messaging.models['Partner'].findFromIdentifyingData({ id: pyEnv.currentPartnerId }).localId
-        }"]`,
+        `.o_ChannelMember[data-partner-id="${pyEnv.currentPartnerId}"]`,
         "should have current partner in member list (current partner is a member)",
     );
     assert.containsOnce(
         document.body,
-        `.o_ChannelMember[data-partner-local-id="${
-            messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).localId
-        }"]`,
+        `.o_ChannelMember[data-partner-id="${resPartnerId1}"]`,
         "should have 'Demo' in member list ('Demo' is a member)",
     );
 });
@@ -215,7 +211,7 @@ QUnit.test('chat with member should be opened after clicking on channel member',
         channel_type: 'group',
         public: 'private',
     });
-    const { click, messaging, openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -225,7 +221,7 @@ QUnit.test('chat with member should be opened after clicking on channel member',
     await openDiscuss();
 
     await click('.o_ThreadViewTopbar_showMemberListButton');
-    await click(`.o_ChannelMember[data-partner-local-id="${messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).localId}"]`);
+    await click(`.o_ChannelMember[data-partner-id="${resPartnerId1}"]`);
     assert.containsOnce(
         document.body,
         `.o_ThreadView[data-correspondent-id="${resPartnerId1}"]`,
