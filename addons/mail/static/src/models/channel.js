@@ -52,8 +52,8 @@ registerModel({
          */
         _sortMembers() {
             return [
-                ['truthy-first', 'name'],
-                ['case-insensitive-asc', 'name'],
+                ['truthy-first', 'persona.name'],
+                ['case-insensitive-asc', 'persona.name'],
             ];
         },
     },

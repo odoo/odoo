@@ -1329,17 +1329,41 @@ patch(MockServer.prototype, 'mail', {
         const memberCount = this.pyEnv['mail.channel.partner'].searchCount([
             ['channel_id', 'in', channel_ids],
         ]);
-        return {
-            channelMembers: [['insert', channelPartners.map(channelPartner => {
+        const membersData = [];
+        for (const channelPartner of channelPartners) {
+            let persona;
+            if (channelPartner.partner_id) {
                 const [partner] = this.pyEnv['res.partner'].searchRead(
                     [['id', '=', channelPartner.partner_id[0]]],
                     { fields: ['id', 'name', 'im_status'] }
                 );
-                return {
-                    id: channelPartner.id,
-                    partner: [['insert', partner]],
+                persona = {
+                    'partner': [['insert-and-replace', {
+                        'id': partner.id,
+                        'name': partner.name,
+                        'im_status': partner.im_status,
+                    }]],
                 };
-            })]],
+            }
+            if (channelPartner.guest_id) {
+                const [guest] = this.pyEnv['mail.guest'].searchRead(
+                    [['id', '=', channelPartner.guest_id[0]]],
+                    { fields: ['id', 'name'] }
+                );
+                persona = {
+                    'guest': [['insert-and-replace', {
+                        'id': guest.id,
+                        'name': guest.name,
+                    }]],
+                };
+            }
+            membersData.push({
+                'id': channelPartner.id,
+                'persona': [['insert-and-replace', persona]],
+            });
+        }
+        return {
+            channelMembers: [['insert', membersData]],
             memberCount,
         };
     },

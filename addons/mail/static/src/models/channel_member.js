@@ -10,30 +10,48 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeAvatarUrl() {
+            if (this.persona.partner) {
+                return `/mail/channel/${this.channel.id}/partner/${this.persona.partner.id}/avatar_128`;
+            }
+            if (this.persona.guest) {
+                return `/mail/channel/${this.channel.id}/guest/${this.persona.guest.id}/avatar_128?unique=${this.persona.guest.name}`;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeChannelAsOfflineMember() {
-            return this.partner && !this.partner.isOnline ? replace(this.channel) : clear();
+            if (this.persona.partner) {
+                return !this.persona.partner.isOnline ? replace(this.channel) : clear();
+            }
+            if (this.persona.guest) {
+                return replace(this.channel);
+            }
+            return clear();
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeChannelAsOnlineMember() {
-            return this.partner && this.partner.isOnline ? replace(this.channel) : clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (!this.partner) {
-                return;
+            if (this.persona.partner) {
+                return this.persona.partner.isOnline ? replace(this.channel) : clear();
             }
-            return this.partner.nameOrDisplayName;
+            if (this.persona.guest) {
+                return clear();
+            }
+            return clear();
         },
     },
     fields: {
+        avatarUrl: attr({
+            compute: '_computeAvatarUrl',
+        }),
         channel: one('Channel', {
             inverse: 'channelMembers',
             readonly: true,
@@ -55,12 +73,10 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        name: attr({
-            compute: '_computeName',
-        }),
-        partner: one('Partner', {
+        persona: one('Persona', {
             inverse: 'channelMembers',
             readonly: true,
+            required: true,
         }),
     },
 });

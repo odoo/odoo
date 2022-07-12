@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
@@ -36,6 +36,10 @@ registerModel({
         },
     },
     fields: {
+        channelMembers: many('ChannelMember', {
+            inverse: 'persona',
+            isCausal: true,
+        }),
         guest: one('Guest', {
             inverse: 'persona',
             readonly: true,

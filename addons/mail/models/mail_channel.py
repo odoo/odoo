@@ -1176,15 +1176,29 @@ class Channel(models.Model):
         count = self.env['mail.channel.partner'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        return {
-            'channelMembers': [('insert', [{
+        members_data = []
+        for member in channel_partners:
+            if member.partner_id:
+                persona = {
+                    'partner': [('insert-and-replace', {
+                        'id': member.partner_id.id,
+                        'name': member.partner_id.name,
+                        'im_status': member.partner_id.im_status,
+                    })],
+                }
+            if member.guest_id:
+                persona = {
+                    'guest': [('insert-and-replace', {
+                        'id': member.guest_id.id,
+                        'name': member.guest_id.name,
+                    })],
+                }
+            members_data.append({
                 'id': member.id,
-                'partner': [('insert', {
-                    'id': member.partner_id.id,
-                    'name': member.partner_id.name,
-                    'im_status': member.partner_id.im_status,
-                })] if member.partner_id else [('clear',)],
-            } for member in channel_partners])],
+                'persona': [('insert-and-replace', persona)],
+            })
+        return {
+            'channelMembers': [('insert', members_data)],
             'memberCount': count,
         }
 

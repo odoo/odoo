@@ -15,17 +15,17 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMember(ev) {
-            if (isEventHandled(ev, 'PersonaImStatusIcon.Click') || !this.channelMember.partner) {
+            if (isEventHandled(ev, 'PersonaImStatusIcon.Click') || !this.channelMember.persona.partner) {
                 return;
             }
-            this.channelMember.partner.openChat();
+            this.channelMember.persona.partner.openChat();
         },
         /**
          * @private
          * @returns {Boolean}
          */
         _computeHasOpenChat() {
-            return this.channelMember.partner ? true : false;
+            return this.channelMember.persona.partner ? true : false;
         },
         /**
          * @private
@@ -39,7 +39,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.channelMember.partner && this.channelMember.partner.isImStatusSet ? insertAndReplace() : clear();
+            return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? insertAndReplace() : clear();
         },
     },
     fields: {
