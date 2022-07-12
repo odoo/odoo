@@ -155,8 +155,10 @@ const Wysiwyg = Widget.extend({
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
+                    const no_powerbox = closestElement(selection.anchorNode, '.o_no_powerbox');
                     const node = closestElement(selection.anchorNode, 'P, DIV');
-                    return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
+                    return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) &&
+                        !no_powerbox && node;
                 }
             },
             isHintBlacklisted: node => {
