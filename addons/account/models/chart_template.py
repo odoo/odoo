@@ -212,6 +212,13 @@ class AccountChartTemplate(models.AbstractModel):
         code_digits = int(template_data.get('code_digits', 6))
         for key, account_data in data.get('account.account', {}).items():
             data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
+
+        # Create utility bank_accounts
+        bank_prefix = template_data.get('bank_account_code_prefix', '')
+        cash_prefix = template_data.get('cash_account_code_prefix', '')
+        code_digits = int(template_data.get('code_digits', 6))
+        self._setup_utility_bank_accounts(template_code, company, bank_prefix, cash_prefix, code_digits)
+
         return data
 
     def _load_data(self, data):
@@ -337,7 +344,7 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.debug("No file %s found for template '%s'", file_name, module)
             return {}
 
-    def _setup_utility_bank_accounts(self, template_code, company, bank_prefix, code_digits):
+    def _setup_utility_bank_accounts(self, template_code, company, bank_prefix, cash_prefix, code_digits):
         """
             Define basic bank accounts for the company.
             - Suspense Account
@@ -402,16 +409,8 @@ class AccountChartTemplate(models.AbstractModel):
                 account_id = self.env['account.account'].create(account_data)
                 if xml_id:
                     self.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': account_id}])
-                setattr(company, company_attr_name, account_id)
-
-        # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
-        self.env.ref(f"account.{cid}_cash").suspense_account_id = company.account_journal_suspense_account_id
-        self.env.ref(f"account.{cid}_cash").profit_account_id = company.default_cash_difference_income_account_id
-        self.env.ref(f"account.{cid}_cash").loss_account_id = company.default_cash_difference_expense_account_id
-
-        self.env.ref(f"account.{cid}_bank").suspense_account_id = company.account_journal_suspense_account_id
-        self.env.ref(f"account.{cid}_bank").profit_account_id = company.default_cash_difference_income_account_id
-        self.env.ref(f"account.{cid}_bank").loss_account_id = company.default_cash_difference_expense_account_id
+                if hasattr(company, company_attr_name):
+                    setattr(company, company_attr_name, account_id)
 
         # Uneffected earnings account on the company (if not present yet)
         company.get_unaffected_earnings_account()
@@ -444,13 +443,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_data(self, template_code, company, template_data):
         company = (company or self.env.company)
         cid = company.id
-
-        # Create utility bank_accounts
-        bank_prefix = template_data.get('bank_account_code_prefix', '')
         additional_properties = template_data.pop('additional_properties', {})
-        code_digits = int(template_data.get('code_digits', 6))
 
-        self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
+        # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
+        for kind, journal in [(kind, self.env.ref(f"account.{cid}_{kind}")) for kind in ('bank', 'cash')]:
+            journal.suspense_account_id = journal.suspense_account_id or company.account_journal_suspense_account_id
+            journal.profit_account_id = journal.profit_account_id or company.default_cash_difference_income_account_id
+            journal.loss_account_id = journal.loss_account_id or company.default_cash_difference_expense_account_id
 
         # Set newly created journals as defaults for the company
         if not company.tax_cash_basis_journal_id:
