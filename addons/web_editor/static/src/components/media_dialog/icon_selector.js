@@ -63,6 +63,7 @@ export class IconSelector extends Component {
     }
 }
 IconSelector.mediaSpecificClasses = ['fa'];
+IconSelector.mediaSpecificStyles = ['color', 'background-color'];
 IconSelector.mediaExtraClasses = [
     'rounded-circle', 'rounded', 'img-thumbnail', 'shadow',
     /^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/,

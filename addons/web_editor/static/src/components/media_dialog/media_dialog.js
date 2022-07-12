@@ -159,6 +159,9 @@ export class MediaDialog extends Component {
                     }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
+                    for (const property of TABS[otherTab].Component.mediaSpecificStyles) {
+                        element.style.removeProperty(property);
+                    }
                     element.classList.remove(...TABS[otherTab].Component.mediaSpecificClasses);
                     const extraClassesToRemove = [];
                     for (const name of TABS[otherTab].Component.mediaExtraClasses) {
