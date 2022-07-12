@@ -124,12 +124,6 @@ class AccountMove(models.Model):
 
         return journal
 
-    # TODO remove in master
-    @api.model
-    def _get_default_invoice_date(self):
-        warnings.warn("Method '_get_default_invoice_date()' is deprecated and has been removed.", DeprecationWarning)
-        return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in self.get_purchase_types(include_receipts=True) else False
-
     @api.model
     def _get_default_currency(self):
         ''' Get the default currency from either the journal, either the default journal's company. '''
