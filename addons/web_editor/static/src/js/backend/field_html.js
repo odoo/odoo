@@ -230,25 +230,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _toggleCodeView: function ($codeview) {
         this.wysiwyg.odooEditor.observerUnactive();
-        $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
         this.$content.toggleClass('d-none');
         if ($codeview.hasClass('d-none')) {
-            if (this.resizerHandleObserver) {
-                this.resizerHandleObserver.disconnect();
-                delete this.resizerHandleObserver;
-            }
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
         } else {
-            this.resizerHandleObserver = new MutationObserver((mutations, observer) => {
-                for (let mutation of mutations) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        $codeview[0].style.height = this.$content[0].style.height;
-                    }
-                }
-            });
-            this.resizerHandleObserver.observe(this.$content[0], {attributes: true});
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();
         }
