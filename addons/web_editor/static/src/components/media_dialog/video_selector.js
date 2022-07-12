@@ -193,6 +193,7 @@ export class VideoSelector extends Component {
     }
 }
 VideoSelector.mediaSpecificClasses = ['media_iframe_video'];
+VideoSelector.mediaSpecificStyles = [];
 VideoSelector.mediaExtraClasses = [];
 VideoSelector.tagNames = ['IFRAME', 'DIV'];
 VideoSelector.template = 'web_editor.VideoSelector';
