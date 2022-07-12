@@ -22,6 +22,10 @@ function enableButtons(el, manuallyDisabledButtons) {
         }
     }
 }
+
+function undefinedAsTrue(val) {
+    return typeof val === "undefined" || val;
+}
 export function useViewButtons(model, ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
@@ -33,12 +37,17 @@ export function useViewButtons(model, ref, options = {}) {
             return true;
         });
     useSubEnv({
-        async onClickViewButton({ clickParams, record }) {
+        async onClickViewButton({ clickParams, record, beforeExecute }) {
             const manuallyDisabledButtons = disableButtons(getEl());
 
             async function execute() {
-                const _continue = await beforeExecuteAction(clickParams);
-                if (typeof _continue !== "undefined" && !_continue) {
+                let _continue = true;
+                if (beforeExecute) {
+                    _continue = undefinedAsTrue(await beforeExecute());
+                }
+
+                _continue = _continue && undefinedAsTrue(await beforeExecuteAction(clickParams));
+                if (!_continue) {
                     enableButtons(getEl(), manuallyDisabledButtons);
                     return;
                 }
