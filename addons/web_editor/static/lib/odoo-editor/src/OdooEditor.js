@@ -3007,6 +3007,7 @@ export class OdooEditor extends EventTarget {
     addImagesFiles(imageFiles) {
         for (const imageFile of imageFiles) {
             const imageNode = document.createElement('img');
+            imageNode.style.width = '100%';
             imageNode.dataset.fileName = imageFile.name;
             getImageUrl(imageFile).then((url)=> {
                 imageNode.src = url;
