@@ -24,17 +24,6 @@ class StockWarehouseOrderpoint(models.Model):
     _order = "location_id,company_id,id"
 
     @api.model
-    def default_get(self, fields):
-        res = super().default_get(fields)
-        warehouse = None
-        if 'warehouse_id' not in res and res.get('company_id'):
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', res['company_id'])], limit=1)
-        if warehouse:
-            res['warehouse_id'] = warehouse.id
-            res['location_id'] = warehouse.lot_stock_id.id
-        return res
-
-    @api.model
     def _domain_product_id(self):
         domain = "('type', '=', 'product')"
         if self.env.context.get('active_model') == 'product.template':
@@ -56,11 +45,11 @@ class StockWarehouseOrderpoint(models.Model):
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
-        compute="_compute_warehouse_id", store=True, readonly=False,
+        compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
         check_company=True, ondelete="cascade", required=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
-        compute="_compute_location_id", store=True, readonly=False,
+        compute="_compute_location_id", store=True, readonly=False, precompute=True,
         ondelete="cascade", required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
@@ -169,11 +158,16 @@ class StockWarehouseOrderpoint(models.Model):
                     ('company_id', '=', orderpoint.company_id.id)
                 ], limit=1)
 
-    @api.depends('warehouse_id')
+    @api.depends('warehouse_id', 'company_id')
     def _compute_location_id(self):
         """ Finds location id for changed warehouse. """
         for orderpoint in self:
-            orderpoint.location_id = orderpoint.warehouse_id.lot_stock_id.id
+            warehouse = orderpoint.warehouse_id
+            if not warehouse:
+                warehouse = orderpoint.env['stock.warehouse'].search([
+                    ('company_id', '=', orderpoint.company_id.id)
+                ], limit=1)
+            orderpoint.location_id = warehouse.lot_stock_id.id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
