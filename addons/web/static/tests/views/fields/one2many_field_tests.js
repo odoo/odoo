@@ -7884,6 +7884,44 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("one2many with invalid value and click on another row", async function (assert) {
+        serverData.models.partner.records[0].p = [2, 4];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        await clickEdit(target);
+
+        const rows = target.querySelectorAll(".o_data_row");
+        await click(rows[0].querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        const dataPointID = target.querySelector(".o_data_row.o_selected_row").dataset.id;
+
+        await editInput(target, ".o_data_row [name='int_field'] input", "abc");
+        const input = target.querySelector(".o_data_row [name='int_field'] input");
+        input.value = "abc";
+        await triggerEvent(input, null, "input");
+        await click(rows[1].querySelector(".o_data_cell"));
+        // Stays on the invalid row
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        assert.strictEqual(
+            target.querySelector(".o_data_row.o_selected_row").dataset.id,
+            dataPointID
+        );
+    });
+
     QUnit.test(
         "default value for nested one2manys (coming from onchange)",
         async function (assert) {
