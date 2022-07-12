@@ -10,21 +10,33 @@ const { xml, useState, Component } = owl;
 const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
-    async primaryClick() {
-        if (this.props.primaryClick) {
-            await this.props.primaryClick();
-        }
-        if (this.props.closeOnClick) {
-            this.props.close();
-        }
+    setup() {
+        this.state = useState({
+            disabled: false,
+        });
     }
-
-    async secondaryClick() {
-        if (this.props.secondaryClick) {
-            await this.props.secondaryClick();
-        }
-        if (this.props.closeOnClick) {
-            this.props.close();
+    /**
+     * Disables the buttons of the dialog when a click is made.
+     * If a handler is provided, await for its call.
+     * If the prop closeOnClick is true, close the dialog.
+     * Otherwise, restore the button.
+     *
+     * @param handler {function|void} The handler to protect.
+     * @returns {function(): Promise} handler called when a click is made.
+     */
+    protectedClick(handler) {
+        return async () => {
+            if (this.state.disabled) {
+                return;
+            }
+            this.state.disabled = true;
+            if (handler) {
+                await handler();
+            }
+            if (this.props.closeOnClick) {
+                return this.props.close();
+            }
+            this.state.disabled = false;
         }
     }
 
