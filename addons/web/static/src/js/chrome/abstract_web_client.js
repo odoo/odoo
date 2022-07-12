@@ -118,6 +118,16 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         // If not set on the url, retrieve cids from the local storage
         // of from the default company on the user
         var current_company_id = session.user_companies.current_company[0]
+        if (config.device.isIosApp) {
+            // Native apps can be opened via native notification. In order to
+            // avoid multi-company access error, the app must be initialized
+            // with all allowed companies active. It works well on Android
+            // because it has cookie cids equal to all allowed companies.
+            // However, iOS app has session id cookie only and there is no way
+            // to update iOS app. So, as a workaround we force cids here.
+            var allowed_company_ids = session.user_companies.allowed_companies.map(value => value[0]);
+            state.cids = allowed_company_ids.join(",");
+        }
         if (!state.cids) {
             state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
         }

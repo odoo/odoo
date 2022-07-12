@@ -13,6 +13,7 @@ odoo.define('web.config', function () {
 const maxTouchPoints = navigator.maxTouchPoints || 1;
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && maxTouchPoints > 1);
+const isIosApp = /OdooMobile \(iOS\)/i.test(navigator.userAgent);
 const isOtherMobileDevice = /(webOS|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
 
 var config = {
@@ -65,6 +66,12 @@ var config = {
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */
         SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
+        /**
+         * OdooMobile (iOS) App detection using userAgent.
+         *
+         * @return Boolean
+         */
+        isIosApp: isIosApp,
     },
     /**
      * States whether the current environment is in debug or not.
