@@ -7890,6 +7890,44 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("one2many with invalid value and click on another row", async function (assert) {
+        serverData.models.partner.records[0].p = [2, 4];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        await clickEdit(target);
+
+        let rows = target.querySelectorAll(".o_data_row");
+        await click(rows[0].querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        rows = target.querySelectorAll(".o_data_row");
+        assert.hasClass(rows[0], "o_selected_row");
+        assert.doesNotHaveClass(rows[1], "o_selected_row");
+
+        await editInput(target, ".o_data_row [name='int_field'] input", "abc");
+        rows = target.querySelectorAll(".o_data_row");
+        await click(rows[1].querySelector(".o_data_cell"));
+        // Stays on the invalid row
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        rows = target.querySelectorAll(".o_data_row");
+        assert.hasClass(rows[0], "o_selected_row");
+        assert.containsOnce(rows[0], "[name='int_field'] .o_field_invalid");
+        assert.doesNotHaveClass(rows[1], "o_selected_row");
+    });
+
     QUnit.test(
         "default value for nested one2manys (coming from onchange)",
         async function (assert) {
