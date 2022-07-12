@@ -4,7 +4,6 @@
         <record id="team_sales_department" model="crm.team">
             <field name="name">Sales</field>
             <field name="sequence">0</field>
-            <field name="company_id" eval="False"/>
         </record>
         <record id="crm_team_member_admin_sales" model="crm.team.member">
             <field name="crm_team_id" ref="team_sales_department"/>
@@ -13,13 +12,11 @@
 
         <record id="salesteam_website_sales" model="crm.team">
             <field name="name">Website</field>
-            <field name="company_id" eval="False"/>
             <field name="active" eval="False"/>
         </record>
 
         <record id="pos_sales_team" model="crm.team">
             <field name="name">Point of Sale</field>
-            <field name="company_id" eval="False"/>
             <field name="active" eval="False"/>
         </record>
 
