@@ -23,6 +23,9 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Mailing Lists" sample="1">
+                <header>
+                    <button name="mass_mailing.mailing_list_merge_action" type="action" string="Merge"/>
+                </header>
                 <field name="name"/>
                 <field name="contact_count" string="Recipients"/>
                 <field name="is_public"/>
