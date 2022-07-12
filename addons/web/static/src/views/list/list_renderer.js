@@ -358,7 +358,7 @@ export class ListRenderer extends Component {
             const fieldName = column.name;
             // in findNextFocusableOnRow test is done by using classList
             // refactor
-            if (!editedRecord.isReadonly(fieldName)) {
+            if (!editedRecord.isReadonly(fieldName) && column.widget !== "handle") {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name=${fieldName}]`
                 );
@@ -1201,7 +1201,12 @@ export class ListRenderer extends Component {
 
                 if (futureRecord) {
                     futureRecord.switchMode("edit");
-                } else if (this.lastIsDirty || !record.canBeAbandoned || this.lastCreatingAction) {
+                } else if (
+                    this.lastIsDirty ||
+                    record.isDirty ||
+                    !record.canBeAbandoned ||
+                    this.lastCreatingAction
+                ) {
                     this.props.onAdd({ group });
                 } else if (record.checkValidity()) {
                     const index = list.records.indexOf(record);
