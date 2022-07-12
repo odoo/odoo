@@ -136,6 +136,7 @@ class SaleOrder(models.Model):
         if documents:
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
+                parent = parent.sudo()
                 if parent._name == 'stock.picking':
                     if parent.state == 'cancel':
                         continue
@@ -314,7 +315,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
         # in database. Hence, we need to explicitly read them from there.
         if self._origin:
             product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
