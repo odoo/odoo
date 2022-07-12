@@ -600,6 +600,7 @@ var dom = {
                 $scrollable.stop();
                 dom.scrollTo(el, Object.assign({}, options, {
                     duration: remainingMs,
+                    easing: 'linear',
                 })).then(() => resolve());
             };
 
