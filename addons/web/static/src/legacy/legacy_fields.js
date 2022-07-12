@@ -7,6 +7,8 @@ import { Domain } from "web.Domain";
 import legacyFieldRegistry from "web.field_registry";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import viewUtils from "web.viewUtils";
+import { useWowlService } from "@web/legacy/utils";
+import { RPCError } from "@web/core/network/rpc_service";
 
 const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
@@ -23,6 +25,7 @@ class FieldAdapter extends ComponentAdapter {
         super.setup();
         this.wowlEnv = this.env;
         this.env = Component.env;
+        this.orm = useWowlService("orm");
         useEffect(() => {
             if (!this.widgetEl || !this.widgetEl.parentElement) {
                 return;
@@ -108,8 +111,35 @@ class FieldAdapter extends ComponentAdapter {
                             } else if (valueIds.length && "id" in valueIds[0]) {
                                 newIds = valueIds.map((r) => r.id);
                             }
-                        } else if ("id" in valueIds) {
+                        } else if ("id" in valueIds && valueIds.id) {
                             newIds = [valueIds.id];
+                        } else if ("id" in valueIds) {
+                            const fieldName = this.props.fieldParams.name;
+                            let newId;
+                            try {
+                                [newId] = await this.orm.call(
+                                    this.props.record.fields[fieldName].relation,
+                                    "name_create",
+                                    [valueIds.display_name],
+                                    {
+                                        context: this.props.record.getFieldContext(fieldName),
+                                    }
+                                );
+                            } catch (e) {
+                                if (!(e instanceof RPCError)) {
+                                    throw e;
+                                }
+                                if (payload.onFailure) {
+                                    // wrap error for guardedCatch compatibility in legacy code
+                                    payload.onFailure({
+                                        message: e,
+                                        event: $.Event(),
+                                        legacy: true,
+                                    });
+                                }
+                                return;
+                            }
+                            newIds = [newId];
                         }
                         value = {
                             resIds: [...record.data[name].res_ids, ...newIds],
