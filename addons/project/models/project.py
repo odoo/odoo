@@ -409,6 +409,7 @@ class Project(models.Model):
         ('off_track', 'Off Track'),
         ('on_hold', 'On Hold'),
         ('to_define', 'Set Status'),
+        ('done', 'Done'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)

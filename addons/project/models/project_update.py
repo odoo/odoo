@@ -14,6 +14,7 @@ STATUS_COLOR = {
     'at_risk': 2,  # orange
     'off_track': 23,  # red / danger
     'on_hold': 4,  # light blue
+    'done': 5,  # purple
     False: 0,  # default grey -- for studio
     # Only used in project.task
     'to_define': 0,
@@ -46,7 +47,8 @@ class ProjectUpdate(models.Model):
         ('on_track', 'On Track'),
         ('at_risk', 'At Risk'),
         ('off_track', 'Off Track'),
-        ('on_hold', 'On Hold')
+        ('on_hold', 'On Hold'),
+        ('done', 'Done'),
     ], required=True, tracking=True)
     color = fields.Integer(compute='_compute_color')
     progress = fields.Integer(tracking=True)

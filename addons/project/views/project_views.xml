@@ -826,7 +826,7 @@
                     <field name="last_update_color"/>
                     <field name="last_update_status"/>
                     <field name="tag_ids"/>
-                    <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info"}'/>
+                    <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
                     <field name="sequence" widget="handle"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -1508,8 +1508,8 @@
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
                     <field name="allow_milestones" invisible="1"/>
-                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
                     <field name="id" optional="hide"/>
+                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
                     <field name="child_text" invisible="1"/>
                     <field name="allow_subtasks" invisible="1"/>
                     <field name="name" widget="name_with_subtask_count"/>
@@ -1650,7 +1650,19 @@
             </field>
         </record>
 
-        <record id="action_view_all_task" model="ir.actions.act_window">
+        <record id="view_task_kanban_inherit_all_task" model="ir.ui.view">
+            <field name="name">project.task.kanban.inherit.all.task</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">project_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
@@ -1690,16 +1702,51 @@
             <field name="act_window_id" ref="action_view_task"/>
         </record>
 
-        <record id="open_view_all_task_list_kanban" model="ir.actions.act_window.view">
+        <record id="open_view_my_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="10"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="view_task_kanban_inherit_my_task"/>
-            <field name="act_window_id" ref="action_view_all_task"/>
+            <field name="act_window_id" ref="action_view_my_task"/>
         </record>
-        <record id="open_view_all_task_list_tree" model="ir.actions.act_window.view">
+        <record id="open_view_my_task_list_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="open_view_my_tasks_list_view"/>
+            <field name="act_window_id" ref="action_view_my_task"/>
+        </record>
+        <record id="open_view_my_task_list_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="40"/>
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="action_view_my_task"/>
+            <field name="view_id" ref="view_task_all_calendar"/>
+        </record>
+
+        <record id="action_view_all_task" model="ir.actions.act_window">
+            <field name="name">All Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
+            <field name="search_view_id" ref="view_task_search_form_extended"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No tasks found. Let's create one!
+                </p>
+                <p>
+                    Organize your tasks by dispatching them across the pipeline.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_all_task_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_view_all_task"/>
+        </record>
+        <record id="open_view_all_task_list_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_task_kanban_inherit_all_task"/>
             <field name="act_window_id" ref="action_view_all_task"/>
         </record>
         <record id="open_view_all_task_list_calendar" model="ir.actions.act_window.view">
@@ -1710,7 +1757,10 @@
         </record>
 
         <menuitem name="My Tasks" id="menu_project_management" parent="menu_main_pm"
-            action="action_view_all_task" sequence="2" groups="base.group_no_one,group_project_user"/>
+            action="action_view_my_task" sequence="2" groups="group_project_user"/>
+
+        <menuitem name="All Tasks" id="menu_project_management_all_tasks" parent="menu_main_pm"
+            action="action_view_all_task" sequence="2" groups="group_project_user"/>
 
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
             <field name="name">Tasks</field>

@@ -100,9 +100,8 @@
                                 <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                     <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2" t-att-title="record.portal_user_names.raw_value">
                                         <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
-                                        <t t-out="user_count"/>
-                                        <t t-if="user_count > 1"> assignees</t>
-                                        <t t-else=""> assignee</t>
+                                        <t t-if="user_count > 1"><t t-out="user_count"/> assignees</t>
+                                        <t t-else="" t-out="record.portal_user_names.raw_value"/>
                                     </span>
                                     <field name="kanban_state" widget="state_selection"/>
                                 </div>

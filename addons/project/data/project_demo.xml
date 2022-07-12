@@ -1332,5 +1332,11 @@ Send it ASAP, its urgent.</field>
             <field name="progress" eval="35"/>
             <field name="status">at_risk</field>
         </record>
+        <record id="project_update_3" model="project.update" context="{'default_project_id': ref('project.project_project_3')}">
+            <field name="name">Status</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="100"/>
+            <field name="status">done</field>
+        </record>
     </data>
 </odoo>
