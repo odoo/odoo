@@ -1874,6 +1874,22 @@ const Wysiwyg = Widget.extend({
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
             },
+            {
+                groupName: 'Basic blocks',
+                title: 'Signature',
+                description: 'Insert your signature.',
+                fontawesome: 'fa-pencil-square-o',
+                callback: async () => {
+                    const res = await this._rpc({
+                        model: 'res.users',
+                        method: 'read',
+                        args: [this.getSession().uid, ['signature']],
+                    });
+                    if (res && res[0] && res[0].signature) {
+                        this.odooEditor.execCommand('insertHTML', res[0].signature);
+                    }
+                },
+            },
         ];
         if (options.allowCommandLink) {
             commands.push(
