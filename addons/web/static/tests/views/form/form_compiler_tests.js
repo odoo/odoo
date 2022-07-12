@@ -129,7 +129,7 @@ QUnit.module("Form Compiler", () => {
         const expected = /*xml*/ `
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
-                <div class="o_form_statusbar"/>
+                <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                 <div>someDiv</div>
             </div>
             </t>`;
@@ -152,7 +152,7 @@ QUnit.module("Form Compiler", () => {
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar"/>
+                    <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet">
                         <div>inside sheet</div>
@@ -202,6 +202,38 @@ QUnit.module("Form Compiler", () => {
             <div class="visible3" />
             <div t-if="!evalDomainFromRecord(props.record,&quot;[['display_name','=','take']]&quot;)" />
         `;
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile status bar with content", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header><div>someDiv</div></header>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="o_form_statusbar">
+               <StatusBarButtons readonly="!props.record.isInEdition">
+                  <t t-set-slot="button_0" isVisible="true" displayInReadOnly="false">
+                     <div>someDiv</div>
+                  </t>
+               </StatusBarButtons>
+            </div>`;
+
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile status bar without content", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header></header>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="o_form_statusbar">
+               <StatusBarButtons readonly="!props.record.isInEdition"/>
+            </div>`;
+
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 });
