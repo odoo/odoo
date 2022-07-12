@@ -72,8 +72,6 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         openDetailsPopup() {
             if (this.moneyDetailsRef.comp.isClosed()){
                 this.moneyDetailsRef.comp.openPopup();
-                this.state.payments[this.defaultCashDetails.id].counted = 0;
-                this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
                 this.state.notes = '';
                 if (this.manualInputCashCount) {
                     this.moneyDetailsRef.comp.reset();

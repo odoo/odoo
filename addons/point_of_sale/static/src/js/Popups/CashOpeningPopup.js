@@ -19,7 +19,6 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         openDetailsPopup() {
             if (this.moneyDetailsRef.comp.isClosed()){
                 this.moneyDetailsRef.comp.openPopup();
-                this.state.openingCash = 0;
                 this.state.notes = "";
                 if (this.manualInputCashCount) {
                     this.moneyDetailsRef.comp.reset();
