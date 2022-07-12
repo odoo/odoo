@@ -67,7 +67,7 @@ class ProjectTaskTypeDelete(models.TransientModel):
         elif self.env.context.get('stage_view'):
             action = self.env["ir.actions.actions"]._for_xml_id("project.open_task_type_form")
         else:
-            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_all_task")
+            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
 
         context = action.get('context', '{}')
         context = context.replace('uid', str(self.env.uid))
