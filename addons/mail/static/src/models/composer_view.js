@@ -50,6 +50,7 @@ registerModel({
         discard() {
             if (this.messageViewInEditing) {
                 this.messageViewInEditing.stopEditing();
+                return;
             }
             if (this.threadView && this.threadView.replyingToMessageView) {
                 const { threadView } = this;
@@ -180,7 +181,9 @@ registerModel({
          */
         onClickCancelLink(ev) {
             ev.preventDefault();
-            this.discard();
+            if (this.exists()) {
+                this.discard();
+            }
         },
         /**
          * Discards the composer when clicking away.
