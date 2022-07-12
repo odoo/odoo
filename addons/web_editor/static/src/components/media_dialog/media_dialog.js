@@ -172,7 +172,23 @@ export class MediaDialog extends Component {
                             }
                         }
                     }
-                    element.classList.remove(...extraClassesToRemove);
+                    // Remove classes that do not also exist in the target type.
+                    element.classList.remove(...extraClassesToRemove.filter(candidateName => {
+                        for (const name of TABS[this.state.activeTab].Component.mediaExtraClasses) {
+                            if (typeof(name) === 'string') {
+                                if (candidateName === name) {
+                                    return false;
+                                }
+                            } else { // Regex
+                                for (const className of element.classList) {
+                                    if (className.match(candidateName)) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        return true;
+                    }));
                 }
                 element.classList.remove(...this.initialIconClasses);
                 element.classList.remove('o_modified_image_to_save');
