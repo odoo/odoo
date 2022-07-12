@@ -11,6 +11,8 @@
 # Albert Cabedo <albert@gafic.com>
 # Olivier Colson <oco@odoo.com>
 # Roberto Lizana <robertolizana@trey.es>
+# Julián Ramos <julian@infinityloop.es>
+# Omar Castiñeira <omar@comunitea.com>
 
 {
     "name" : "Spain - Accounting (PGCE 2008)",
@@ -25,6 +27,7 @@ Spanish charts of accounts (PGCE 2008).
         * Spanish general chart of accounts 2008
         * Spanish general chart of accounts 2008 for small and medium companies
         * Spanish general chart of accounts 2008 for associations
+        * Canary Islands specifications as option
     * Defines templates for sale and purchase VAT
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
@@ -42,10 +45,15 @@ Spanish charts of accounts (PGCE 2008).
         'data/account.account.template-pymes.csv',
         'data/account.account.template-assoc.csv',
         'data/account.account.template-full.csv',
+        'data/account.account.template-common-canary.csv',
+        'data/account.account.template-pymes-canary.csv',
+        'data/account.account.template-assoc-canary.csv',
+        'data/account.account.template-full-canary.csv',
         'data/account_chart_template_account_account_link.xml',
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
+        'data/account_fiscal_position_template_canary_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
