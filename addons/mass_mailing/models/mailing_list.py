@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.tools.sql import SQL
 
 
 class MailingList(models.Model):
@@ -205,68 +206,127 @@ class MailingList(models.Model):
         action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_bounce': 1}
         return action
 
-    def action_merge(self, src_lists, archive):
+    def action_mailing_lists_merge(self):
+        sorted_lists = self.sorted(
+            lambda mailing_list:
+                (mailing_list.contact_count,
+                 mailing_list.mailing_count,
+                 -mailing_list.id),
+            reverse=True
+        )
+        dest = sorted_lists[0]
+        dest.action_merge(self - dest)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Mailing Lists'),
+            'res_model': 'mailing.list',
+            'view_mode': 'form',
+            'res_id': dest.id
+        }
+
+    def action_merge(self, src_lists):
+        """Merge lists into self, removing exact duplicates from source lists.
+
+        Duplicates are completely removed and mailings using the source lists
+        will be updated to use self instead.
+
+        The opt-out status of the destination list is preffered.
+        Otherwise if it is opted out of any list, it is opted out of the final one.
         """
-            Insert all the contact from the mailing lists 'src_lists' to the
-            mailing list in 'self'. Possibility to archive the mailing lists
-            'src_lists' after the merge except the destination mailing list 'self'.
-        """
-        # Explanation of the SQL query with an example. There are the following lists
-        # A (id=4): yti@odoo.com; yti@example.com
-        # B (id=5): yti@odoo.com; yti@openerp.com
-        # C (id=6): nothing
-        # To merge the mailing lists A and B into C, we build the view st that looks
-        # like this with our example:
-        #
-        #  contact_id |           email           | row_number |  list_id |
-        # ------------+---------------------------+------------------------
-        #           4 | yti@odoo.com              |          1 |        4 |
-        #           6 | yti@odoo.com              |          2 |        5 |
-        #           5 | yti@example.com           |          1 |        4 |
-        #           7 | yti@openerp.com           |          1 |        5 |
-        #
-        # The row_column is kind of an occurrence counter for the email address.
-        # Then we create the Many2many relation between the destination list and the contacts
-        # while avoiding to insert an existing email address (if the destination is in the source
-        # for example)
         self.ensure_one()
         # Put destination is sources lists if not already the case
-        src_lists |= self
-        self.env.flush_all()
-        self.env.cr.execute("""
-            INSERT INTO mailing_subscription (contact_id, list_id)
-            SELECT st.contact_id AS contact_id, %s AS list_id
-            FROM
-                (
-                SELECT
-                    contact.id AS contact_id,
-                    contact.email AS email,
-                    list.id AS list_id,
-                    row_number() OVER (PARTITION BY email ORDER BY email) AS rn
-                FROM
-                    mailing_contact contact,
-                    mailing_subscription contact_list_rel,
-                    mailing_list list
-                WHERE contact.id=contact_list_rel.contact_id
-                AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
-                AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
-                AND list.id=contact_list_rel.list_id
-                AND list.id IN %s
-                AND NOT EXISTS
-                    (
-                    SELECT 1
-                    FROM
-                        mailing_contact contact2,
-                        mailing_subscription contact_list_rel2
-                    WHERE contact2.email = contact.email
-                    AND contact_list_rel2.contact_id = contact2.id
-                    AND contact_list_rel2.list_id = %s
+        self.env['mailing.contact'].flush_model()
+        self.env['mailing.subscription'].flush_model()
+        select_field_tuples = self._mailing_list_get_select_fields()
+        models_to_flush, contact_condition = self._mailing_list_get_contact_condition()
+        for model in models_to_flush:
+            model.flush_model()
+
+        def _get_key(alias):
+            return SQL(', ').join(
+                SQL("COALESCE(%(fields)s, '')",
+                    fields=SQL(', ').join(
+                        SQL("NULLIF(%(alias)s.%(field)s, '')", alias=alias, field=field)
+                        for field in select_fields
                     )
-                ) st
-            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
-        self.env.invalidate_all()
-        if archive:
-            (src_lists - self).action_archive()
+                )
+                for select_fields in select_field_tuples
+            )
+        # get every contact with contact data (email/phone)
+        # that do not fully match with those of a contact in the destination list
+        # pick only the first one, prioritizing the opted-out one if there is one
+        # then for every distinct contact, update their first subscription to be linked to the target list
+        update_query = SQL("""
+              WITH new_sub AS (
+              SELECT DISTINCT ON (%(src_fields)s)
+                                 src_sub.id AS subscription_id
+                            FROM mailing_contact src_contact
+                            JOIN mailing_subscription src_sub
+                              ON src_contact.id = src_sub.contact_id
+                             AND src_sub.list_id IN %(src_list_ids)s
+                             AND (%(contact_condition)s)
+                             AND (%(src_fields)s) NOT IN (
+                               SELECT %(target_fields)s
+                                 FROM mailing_subscription target_sub
+                                 JOIN mailing_contact target_contact ON target_sub.contact_id = target_contact.id
+                                WHERE target_sub.list_id = %(target_list_id)s
+                          )
+                        ORDER BY %(src_fields)s, src_sub.opt_out DESC NULLS LAST
+              )
+            UPDATE mailing_subscription AS src_sub
+               SET list_id = %(target_list_id)s
+              FROM new_sub
+             WHERE src_sub.id = new_sub.subscription_id
+        """,
+        contact_condition=contact_condition,
+        src_fields=_get_key(SQL('src_contact')),
+        src_list_ids=tuple(src_lists.ids),
+        target_fields=_get_key(SQL('target_contact')),
+        target_list_id=self.id,
+        )
+        # delete all contacts that were considered "duplicates" in source lists
+        # if not used in any other list
+        unlink_query = SQL("""
+            DELETE FROM mailing_contact AS src_contact
+                  USING mailing_subscription as src_sub
+                  WHERE src_sub.contact_id = src_contact.id
+                    AND src_sub.list_id IN %(src_list_ids)s
+                    AND src_contact.id NOT IN (
+                        SELECT other_contact.id
+                          FROM mailing_subscription other_sub
+                          JOIN mailing_contact other_contact ON other_sub.contact_id = other_contact.id
+                         WHERE other_sub.list_id NOT IN %(src_list_ids)s
+                    )
+        """,
+        src_list_ids=tuple(src_lists.ids),
+        )
+        self.env.cr.execute(update_query)
+        self.env.cr.execute(unlink_query)
+        self.env['mailing.contact'].invalidate_model()
+        self.env['mailing.subscription'].invalidate_model()
+        self.env['mailing.list'].invalidate_model()
+        # replace sources with destination in draft mailings
+        self.env['mailing.mailing'].with_context(active_search=False).search([
+            ('contact_list_ids', 'in', src_lists.ids),
+            ('state', '=', 'draft'),
+        ]).write({
+            'contact_list_ids': [(3, src_list.id, 0) for src_list in src_lists] + [(4, self.id, 0)],
+        })
+        (src_lists - self).write({
+            'active': False,
+            'subscription_ids': [(5, 0, 0)],  # clear remaining subscriptions, considered moved
+        })
+
+    def _mailing_list_get_contact_condition(self):
+        """Return a tuple of lists of models to flush and SQL condition."""
+        return (
+            [self.env['mail.blacklist']],
+            SQL("src_contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)")
+        )
+
+    def _mailing_list_get_select_fields(self):
+        """Return a list of tuples of column names that will be coalesced in that order."""
+        return [(SQL('email_normalized'), SQL('email'))]
 
     # ------------------------------------------------------
     # SUBSCRIPTION MANAGEMENT
