@@ -293,6 +293,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
 
+    QUnit.test("status bar rendering without buttons", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><header/><sheet/></form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_form_sheet_bg > .o_form_statusbar > .o_statusbar_buttons");
+    });
+
     QUnit.test("duplicate fields rendered properly", async function (assert) {
         await makeView({
             type: "form",

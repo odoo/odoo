@@ -356,23 +356,21 @@ export class FormCompiler extends ViewCompiler {
                 buttons.push(compiled);
             }
         }
-        if (buttons.length) {
-            let slotId = 0;
-            const statusBarButtons = createElement("StatusBarButtons");
-            statusBarButtons.setAttribute("readonly", "!props.record.isInEdition");
-            for (const button of buttons) {
-                const slot = createElement("t", {
-                    "t-set-slot": `button_${slotId++}`,
-                    isVisible: button.getAttribute("t-if") || true,
-                    displayInReadOnly:
-                        button.hasAttribute("className") &&
-                        button.getAttribute("className").includes("oe_read_only"),
-                });
-                append(slot, button);
-                append(statusBarButtons, slot);
-            }
-            append(statusBar, statusBarButtons);
+        let slotId = 0;
+        const statusBarButtons = createElement("StatusBarButtons");
+        statusBarButtons.setAttribute("readonly", "!props.record.isInEdition");
+        for (const button of buttons) {
+            const slot = createElement("t", {
+                "t-set-slot": `button_${slotId++}`,
+                isVisible: button.getAttribute("t-if") || true,
+                displayInReadOnly:
+                    button.hasAttribute("className") &&
+                    button.getAttribute("className").includes("oe_read_only"),
+            });
+            append(slot, button);
+            append(statusBarButtons, slot);
         }
+        append(statusBar, statusBarButtons);
         append(statusBar, others);
         return statusBar;
     }
