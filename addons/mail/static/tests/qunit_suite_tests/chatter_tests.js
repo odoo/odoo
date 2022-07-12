@@ -37,10 +37,10 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, '');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
-QUnit.test('list activity widget with activities', async function (assert) {
+QUnit.skipWOWL('list activity widget with activities', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -90,10 +90,10 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.containsOnce(secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual(secondRow.querySelector('.o_activity_summary').innerText, 'Type 2');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
-QUnit.test('list activity widget with exception', async function (assert) {
+QUnit.skipWOWL('list activity widget with exception', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -130,10 +130,10 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.containsOnce(document.body, '.o_activity_color_today.text-warning.fa-warning');
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Warning');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
-QUnit.test('list activity widget: open dropdown', async function (assert) {
+QUnit.skipWOWL('list activity widget: open dropdown', async function (assert) {
     assert.expect(9);
 
     const pyEnv = await startServer();
@@ -223,7 +223,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Meet FP');
 
     assert.verifySteps([
-        '/web/dataset/search_read',
+        '/web/dataset/call_kw/res.users/web_search_read',
         'select_record [2,{\"mode\":\"readonly\"}]',
         'open dropdown',
         'activity_format',
@@ -232,7 +232,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
     ]);
 });
 
-QUnit.test('list activity exception widget with activity', async function (assert) {
+QUnit.skipWOWL('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -465,7 +465,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     assert.verifySteps([`[${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
 });
 
-QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
+QUnit.skipWOWL('many2many_tags_email widget can load more than 40 records', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -492,7 +492,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
 
     await click('.o_form_button_edit');
 
-    assert.hasClass(document.querySelector('.o_legacy_form_view'), 'o_form_editable');
+    assert.containsOnce(document.body, '.o_form_editable');
 
     // add a record to the relation
     await testUtils.fields.many2one.clickOpenDropdown('partner_ids');

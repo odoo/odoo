@@ -13,7 +13,8 @@ import FormView from 'web.FormView';
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('messaging_notification_handler_tests.js');
 
-QUnit.test('should open chat window on send chat request to website visitor', async function (assert) {
+QUnit.skipWOWL('should open chat window on send chat request to website visitor', async function (assert) {
+    // skipWOWL: patch of _trigger_up is not the correct way to execute the action
     assert.expect(3);
 
     const pyEnv = await startServer();

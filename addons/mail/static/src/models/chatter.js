@@ -160,6 +160,10 @@ registerModel({
          * @param {string[]} [fieldNames]
          */
         reloadParentView({ fieldNames } = {}) {
+            if (this.webRecord) {
+                this.webRecord.model.load({ resId: this.threadId });
+                return;
+            }
             if (this.component) {
                 const options = { keepChanges: true };
                 if (fieldNames) {
@@ -301,8 +305,10 @@ registerModel({
          */
         _onThreadIsLoadingAttachmentsChanged() {
             if (!this.thread || !this.thread.isLoadingAttachments) {
-                this._stopAttachmentsLoading();
-                this.update({ isShowingAttachmentsLoading: false });
+                this.update({
+                    attachmentsLoaderTimer: clear(),
+                    isShowingAttachmentsLoading: false,
+                });
                 return;
             }
             if (this.isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
@@ -315,12 +321,6 @@ registerModel({
          */
         _prepareAttachmentsLoading() {
             this.update({ attachmentsLoaderTimer: insertAndReplace() });
-        },
-        /**
-         * @private
-         */
-        _stopAttachmentsLoading() {
-            this.update({ attachmentsLoaderTimer: clear() });
         },
     },
     fields: {
@@ -490,6 +490,7 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        webRecord: attr(),
     },
     onChanges: [
         new OnChange({

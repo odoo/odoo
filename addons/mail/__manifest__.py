@@ -142,6 +142,7 @@
             'mail/static/src/components/*/*.scss',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
+            'mail/static/src/views/**/*.js',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',

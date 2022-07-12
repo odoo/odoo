@@ -15,10 +15,6 @@ import { doAction, getActionManagerServerData } from "@web/../tests/webclient/he
 
 import core from 'web.core';
 
-import legacyViewRegistry from "web.view_registry";
-import FormView from 'web.FormView';
-import ListView from 'web.ListView';
-
 const { App, EventBus } = owl;
 const { afterNextRender } = App;
 const modelDefinitionsPromise = new Promise(resolve => {
@@ -464,15 +460,13 @@ function getOpenFormView(afterEvent, openView) {
             },
         }));
         const waitMessages = func => afterNextRender(() => afterEvent({
-            eventName: 'o-thread-view-hint-processed',
+            eventName: 'o-thread-loaded-messages',
             func,
             message: "should wait until chatter loaded its messages",
-            predicate: ({ hint, threadViewer }) => {
+            predicate: ({ thread }) => {
                 return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer &&
-                    threadViewer.thread.model === action.res_model &&
-                    threadViewer.thread.id === action.res_id
+                    thread.model === action.res_model &&
+                    thread.id === action.res_id
                 );
             },
         }));
@@ -530,12 +524,6 @@ function getOpenFormView(afterEvent, openView) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
-    if (!param0.useWowlListForm) {
-        registry.category("views").remove("list"); // remove new list from registry
-        registry.category("views").remove("form"); // remove new form from registry
-        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
-        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
-    }
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
         debounce: func => func,

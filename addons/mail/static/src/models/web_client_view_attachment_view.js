@@ -39,7 +39,12 @@ registerModel({
          * @private
          */
         _onChangeThreadAttachmentsInWebClientView() {
-            if (!this.thread.mainAttachment && this.thread.attachmentsInWebClientView.length > 0) {
+            if (
+                this.thread.areAttachmentsLoaded &&
+                !this.thread.isLoadingAttachments &&
+                !this.thread.mainAttachment &&
+                this.thread.attachmentsInWebClientView.length > 0
+            ) {
                 this.setMainAttachmentFromIndex(0);
             }
         },
@@ -57,7 +62,7 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['thread.attachmentsInWebClientView'],
+            dependencies: ['thread.areAttachmentsLoaded', 'thread.attachmentsInWebClientView', 'thread.isLoadingAttachments'],
             methodName: '_onChangeThreadAttachmentsInWebClientView',
         }),
     ],
