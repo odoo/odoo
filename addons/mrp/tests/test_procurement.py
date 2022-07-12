@@ -298,7 +298,7 @@ class TestProcurement(TestMrpCommon):
 
     def test_procurement_with_empty_bom(self):
         """Ensure that a procurement request using a product with an empty BoM
-        will create an empty MO in confirmed state that can be completed afterwards.
+        will create an empty MO in draft state that can be completed afterwards.
         """
         self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
@@ -328,7 +328,7 @@ class TestProcurement(TestMrpCommon):
         production = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertTrue(production)
         self.assertFalse(production.move_raw_ids)
-        self.assertEqual(production.state, 'confirmed')
+        self.assertEqual(production.state, 'draft')
 
         comp1 = self.env['product.product'].create({
             'name': 'egg',
