@@ -59,6 +59,7 @@ wTourUtils.registerEditionTour('edit_menus', {
     },
     {
         content: "Confirm the new menu entry without a label",
+        extra_trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         trigger: '.modal-footer .btn-primary',
     },
     {
@@ -74,6 +75,7 @@ wTourUtils.registerEditionTour('edit_menus', {
     {
         content: "It didn't save without a url. Fill url input.",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
         run: 'text #',
     },
     {
