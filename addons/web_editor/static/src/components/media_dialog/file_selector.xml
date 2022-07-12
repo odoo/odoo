@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.FileSelectorControlPanel" owl="1">
-    <div class="row align-items-center py-4">
+    <div class="row g-2 align-items-center py-4">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
 
-        <div class="col">
-            <div t-if="props.showOptimizedOption" class="form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
+        <div class="col-auto d-flex gap-2 align-items-center">
+            <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
                 <input class="o_we_show_optimized form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
                 <label class="form-check-label" for="o_we_show_optimized_switch">
                     Show optimized images
@@ -18,7 +18,7 @@
             </select>
         </div>
 
-        <div class="col input-group">
+        <div class="col justify-content-end align-items-center input-group">
             <input type="text" class="form-control flex-grow-0 o_we_url_input o_we_transition_ease me-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
             <button type="button" class="btn o_upload_media_url_button" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>
