@@ -422,6 +422,18 @@ class TestCommon(HttpCase):
                 )
             )
 
+        # a group of events
+        self.several_events = self.env["calendar.event"].search([("name", "like", "event%")])
+        if not self.several_events:
+            self.several_events = self.env["calendar.event"].with_user(self.organizer_user).create([
+                dict(
+                    self.simple_event_values,
+                    name=f"event{i}",
+                    microsoft_id=combine_ids(f"e{i}", f"u{i}"),
+                )
+                for i in range(1, 4)
+            ])
+
         # a recurrent event with 7 occurrences
         self.recurrent_base_event = self.env["calendar.event"].search(
             [("name", "=", "recurrent_event")],
