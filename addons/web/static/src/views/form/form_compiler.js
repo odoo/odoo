@@ -183,13 +183,26 @@ export class FormCompiler extends ViewCompiler {
             "t-att-class": "props.class",
             "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}`,
         });
-        let hasSheet = false;
-        for (const child of el.childNodes) {
-            hasSheet = hasSheet || getTag(child, true) === "sheet";
-            append(form, this.compileNode(child, params));
-        }
-        if (!hasSheet) {
+
+        const sheetNode = el.querySelector("sheet");
+        if (!sheetNode) {
+            for (const child of el.childNodes) {
+                append(form, this.compileNode(child, params));
+            }
             form.className = "o_form_nosheet";
+        } else {
+            let compiledList = [];
+            for (const child of el.childNodes) {
+                const compiled = this.compileNode(child, params);
+                if (getTag(child, true) === "sheet") {
+                    append(form, compiled);
+                    compiled.prepend(...compiledList);
+                    compiledList = [];
+                } else if (compiled) {
+                    compiledList.push(compiled);
+                }
+            }
+            append(form, compiledList);
         }
         return form;
     }

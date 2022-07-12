@@ -119,6 +119,53 @@ QUnit.module("Form Compiler", () => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
+    QUnit.test("properly compile no sheet", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header>someHeader</header>
+            <div>someDiv</div>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <t>
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div class="o_form_statusbar"/>
+                <div>someDiv</div>
+            </div>
+            </t>`;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile sheet", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header>someHeader</header>
+            <div>someDiv</div>
+            <sheet>
+                <div>inside sheet</div>
+            </sheet>
+            <div>after sheet</div>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <t>
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" t-ref="compiled_view_root">
+                <div class="o_form_sheet_bg">
+                    <div class="o_form_statusbar"/>
+                    <div>someDiv</div>
+                    <div class="o_form_sheet">
+                        <div>inside sheet</div>
+                    </div>
+                </div>
+                <div>after sheet</div>
+            </div>
+            </t>
+        `;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
     QUnit.test("properly compile invisible", async (assert) => {
         // cf python side: def transfer_node_to_modifiers
         // modifiers' string are evaluated to their boolean or array form
