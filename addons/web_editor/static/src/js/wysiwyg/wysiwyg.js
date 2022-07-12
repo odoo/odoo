@@ -269,7 +269,7 @@ const Wysiwyg = Widget.extend({
                 }).join(' ');
             }
 
-            if (!$el.parent().hasClass('o_stars')) {
+            if (!wysiwygUtils.isInNonEditableMedia($el[0])) {
                 self.openMediaDialog(params);
             }
         });
@@ -1629,7 +1629,7 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
         // Only show the media tools in the toolbar if the current selected
         // snippet is a media.
-        const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars');
+        const isInMedia = $target.is(mediaSelector) && !wysiwygUtils.isInNonEditableMedia($target[0]);
         this.toolbar.$el.find([
             '#image-shape',
             '#image-width',

@@ -4,6 +4,18 @@ export function isImg(node) {
     return (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image|fa)(\s|$)/i))));
 }
 
+export const nonEditableMediaAncestorsSelectors = [
+    '.o_stars',
+];
+
+export function isInNonEditableMedia(node) {
+    if (!node) {
+        return false;
+    }
+    const ancestorsSelector = nonEditableMediaAncestorsSelectors.join(', ');
+    return node.closest(`:where(${ancestorsSelector})`);
+}
+
 /**
  * Returns a list of all the ancestors nodes of the provided node.
  *
