@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools.sql import SQL
 
 
 class MailingList(models.Model):
@@ -80,3 +81,16 @@ class MailingList(models.Model):
         opt_out_contacts = subscriptions.filtered(lambda sub: sub.opt_out).mapped('contact_id')
         opt_in_contacts = subscriptions.filtered(lambda sub: not sub.opt_out).mapped('contact_id')
         return list(set(c.id for c in opt_out_contacts if c not in opt_in_contacts))
+
+    def _mailing_list_get_contact_condition(self):
+        models_to_flush, condition = super()._mailing_list_get_contact_condition()
+        return (
+            models_to_flush + [self.env['phone.blacklist']],
+            SQL(
+                "%(super_condition)s AND src_contact.phone_sanitized NOT IN (select number from phone_blacklist where active = TRUE)",
+                super_condition=condition
+            )
+        )
+
+    def _mailing_list_get_select_fields(self):
+        return super()._mailing_list_get_select_fields() + [(SQL('phone_sanitized'), SQL('mobile'))]
