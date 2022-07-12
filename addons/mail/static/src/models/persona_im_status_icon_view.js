@@ -25,7 +25,7 @@ registerModel({
                 return replace(this.channelInvitationFormSelectablePartnerViewOwner.partner.persona);
             }
             if (this.channelMemberViewOwner) {
-                return replace(this.channelMemberViewOwner.channelMember.partner.persona);
+                return replace(this.channelMemberViewOwner.channelMember.persona);
             }
             if (this.composerSuggestionViewOwner) {
                 return replace(this.composerSuggestionViewOwner.suggestable.partner.persona);
