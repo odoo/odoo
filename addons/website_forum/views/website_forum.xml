@@ -159,7 +159,7 @@
             <ul class="navbar-nav d-lg-none flex-row flex-grow-1 justify-content-between">
                 <span class="navbar-text me-1">Go to:</span>
                 <li class="nav-item dropdown me-auto">
-                    <a class="nav-link active dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <a class="nav-link active dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown">
                         <t t-if="searches.get('users')">People</t>
                         <t t-elif="searches.get('tags')">Tags</t>
                         <t t-elif="searches.get('badges')">Badges</t>
@@ -663,7 +663,7 @@
                 <!-- Filter post by type (mobile only) -->
                 <div class="col-6 col-md-auto d-lg-none d-flex align-items-center">
                     <div class="dropdown"> Show
-                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <a href="#" class="dropdown-toggle user-select-none" data-bs-toggle="dropdown">
                             <t t-if="no_filters"> All</t>
                             <t t-elif="filters == 'solved'"> Solved</t>
                             <t t-elif="filters == 'unsolved'"> Unsolved</t>
@@ -721,7 +721,7 @@
                 <span class="mx-3  mx-lg-2 text-400 d-none d-md-inline">|</span>
                 <span class="dropdown">
                     Order by
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <a href="#" class="dropdown-toggle user-select-none" data-bs-toggle="dropdown">
                         <t t-if="sorting == 'relevancy desc'"> trending</t>
                         <t t-elif="sorting == 'create_date desc'"> newest</t>
                         <t t-elif="sorting == 'write_date desc'"> activity date</t>
@@ -1356,7 +1356,7 @@
                             </a>
                         </div>
                         <div t-if="answer.can_comment" class="btn-group btn-group-sm ms-1 ms-md-2">
-                            <a class="btn border dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="btn border dropdown-toggle user-select-none" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 More
                             </a>
                             <div class="dropdown-menu shadow">

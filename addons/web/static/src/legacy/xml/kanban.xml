@@ -16,7 +16,7 @@
                 <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
                 <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle o-no-caret" data-bs-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <a class="dropdown-toggle user-select-none o-no-caret" data-bs-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
                     <div class="dropdown-menu o_cursor_default" role="menu">
                         <a t-if="!widget.isMobile" role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">

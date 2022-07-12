@@ -20,7 +20,7 @@
                     <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
-                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
+                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1 user-select-none" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
                         <img alt="Avatar"
                              t-att-class="{
                                 'o-isTalking': callParticipantCard.isTalking,
@@ -40,7 +40,7 @@
                             <span class="o_CallParticipantCard_name p-1 rounded-1 bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <small class="o_CallParticipantCard_liveIndicator o-isMinimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
+                            <small class="o_CallParticipantCard_liveIndicator o-isMinimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder user-select-none" title="live" aria-label="live">
                                 LIVE
                             </small>
                         </t>
@@ -67,7 +67,7 @@
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and !callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <span class="o_CallParticipantCard_liveIndicator rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                            <span class="o_CallParticipantCard_liveIndicator rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder user-select-none" title="live" aria-label="live">
                                 LIVE
                             </span>
                         </t>

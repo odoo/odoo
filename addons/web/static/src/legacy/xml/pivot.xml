@@ -56,8 +56,8 @@
 
     <t t-name="web.legacy.PivotHeader" owl="1">
         <th t-att-colspan="isXAxis ? cell.width : undefined" t-att-rowspan="isXAxis ? cell.height : undefined" t-att-class="{
-                o_pivot_header_cell_closed: cell.isLeaf,
-                o_pivot_header_cell_opened: !cell.isLeaf,
+                'o_pivot_header_cell_closed user-select-none': cell.isLeaf,
+                'o_pivot_header_cell_opened user-select-none': !cell.isLeaf,
             }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-att-title="cell.label" t-on-click.self.prevent="() => this._onHeaderClick(cell, isXAxis ? 'col' : 'row')">
             <span t-on-click.self.prevent="() => this._onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
             <t t-if="cell.isLeaf and !cell.isFolded" t-call="web.legacy.PivotGroupBySelection"/>
@@ -67,7 +67,7 @@
     <t t-name="web.legacy.PivotMeasure" owl="1">
         <th class="text-muted" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
                 o_pivot_origin_row: cell.originIndexes,
-                o_pivot_measure_row: !cell.originIndexes,
+                'o_pivot_measure_row user-select-none': !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.trigger('sort_rows',cell)" t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">

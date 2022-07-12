@@ -17,7 +17,7 @@
           t-if="currentApp"
           href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
-          class="'o_menu_brand d-none d-md-block'"
+          class="'o_menu_brand d-none d-md-block user-select-none'"
           dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
         />
@@ -78,7 +78,7 @@
         <t t-if="!section.childrenTree.length">
           <DropdownItem
             title="section.name"
-            class="'o_nav_entry'"
+            class="'o_nav_entry user-select-none'"
             href="getMenuItemHref(section)"
             hotkey="hotkey"
             t-esc="section.name"

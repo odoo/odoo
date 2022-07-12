@@ -97,7 +97,7 @@ const LinkPopoverWidget = Widget.extend({
         })
         .on('inserted.bs.popover.link_popover', () => {
             const popover = Popover.getInstance(this.target);
-            popover.tip.classList.add('o_edit_menu_popover');
+            popover.tip.classList.add('o_edit_menu_popover', 'user-select-none');
         })
         .popover('show');
 

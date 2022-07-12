@@ -55,7 +55,7 @@
             <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
             <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
-                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle user-select-none #{_btn_class}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
                             class="align-middle"
                             t-esc="active_lang[2].split('/').pop()"/>
@@ -84,7 +84,7 @@
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
             <t t-set="is_connected" t-value="not user_id._is_public()"/>
             <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
+                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle user-select-none #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
                         <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
@@ -272,7 +272,7 @@
                     <div t-if="searchbar_sortings" class="form-inline">
                         <span class="small me-1 navbar-text">Sort By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle user-select-none">
                                 <t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
@@ -288,7 +288,7 @@
                     <div t-if="searchbar_filters" class="form-inline ms-lg-2">
                         <span class="small me-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle user-select-none">
                                 <t t-esc="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
@@ -304,7 +304,7 @@
                     <div t-if="searchbar_groupby" class="form-inline ms-lg-2">
                         <span class="small me-1 navbar-text">Group By:</span>
                         <div class="btn-group">
-                            <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle user-select-none">
                                 <t t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
@@ -321,7 +321,7 @@
                 </div>
                 <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ms-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"/>
+                        <button type="button" class="btn btn-secondary dropdown-toggle user-select-none" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu" role="menu">
                             <t t-foreach='searchbar_inputs' t-as='input'>
                                 <a t-att-href="'#' + input_value['input']"

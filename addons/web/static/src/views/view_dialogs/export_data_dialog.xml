@@ -40,7 +40,7 @@
                 </div>
                 <h4 class="mt-3">Available fields</h4>
                 <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
-                <div class="o_left_field_panel h-100 overflow-auto border">
+                <div class="o_left_field_panel h-100 overflow-auto border user-select-none">
                     <div class="o_field_tree_structure">
                         <t t-if="fieldsAvailable">
                             <t t-foreach="rootFields" t-as="field" t-key="field.name">
@@ -104,7 +104,7 @@
                         </t>
                     </div>
                 </div>
-                <div class="o_right_field_panel h-100 px-2 overflow-auto border">
+                <div class="o_right_field_panel h-100 px-2 overflow-auto border user-select-none">
                     <ul class="o_fields_list list-unstyled" t-ref="draggable">
                         <t t-foreach="state.exportList" t-as="field" t-key="field.name">
                             <li class="o_export_field" t-att-data-field_id="field.name">

@@ -14,7 +14,7 @@
     >
       <button
         t-if="props.toggler !== 'parent'"
-        class="dropdown-toggle"
+        class="dropdown-toggle user-select-none"
         t-attf-class="
           {{props.togglerClass || ''}}
           {{parentDropdown ? 'dropdown-item' : ''}}

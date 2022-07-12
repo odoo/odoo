@@ -129,7 +129,7 @@
                         <t t-set="dropdown_item_classes">dropdown-item d-flex align-items-center justify-content-between</t>
                         <li class="nav-item dropdown me-2 my-1">
                             <a href="#" role="button" data-bs-toggle="dropdown"
-                               t-attf-class="btn btn-outline-primary dropdown-toggle #{'active' if search_finished else ''}">
+                               t-attf-class="btn btn-outline-primary dropdown-toggle user-select-none #{'active' if search_finished else ''}">
                                 <span t-if="search_finished">Completed surveys</span>
                                 <span t-else="">All surveys</span>
                             </a>
@@ -146,7 +146,7 @@
                         </li>
                         <li t-if="survey.scoring_type != 'no_scoring'" class="nav-item dropdown me-2 my-1">
                             <a href="#" role="button" data-bs-toggle="dropdown"
-                               t-attf-class="btn btn-outline-primary dropdown-toggle #{'active' if search_passed_or_failed else ''}">
+                               t-attf-class="btn btn-outline-primary dropdown-toggle user-select-none #{'active' if search_passed_or_failed else ''}">
                                 <span t-if="search_failed">Failed only</span>
                                 <span t-elif="search_passed">Passed only</span>
                                 <span t-else="">Passed and Failed</span>

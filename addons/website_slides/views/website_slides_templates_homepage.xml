@@ -226,7 +226,7 @@
                             <t t-foreach="tag_groups" t-as="tag_group">
                                 <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
                                 <li class="nav-item dropdown ml16" t-if="group_frontend_tags">
-                                    <a t-att-class="'nav-link dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
+                                    <a t-att-class="'nav-link dropdown-toggle user-select-none %s' % ('active' if tag_group in search_tag_groups else '')"
                                         href="/slides/all"
                                         t-att-data-bs-target="'#navToogleTagGroup%s' % tag_group.id"
                                         role="button" data-bs-toggle="dropdown"

@@ -37,7 +37,7 @@
                                     t-on-click="() => this.toggleFilterGroup(section.id, group)"
                                 />
                                 <label t-attf-for="{{ section.id }}_input_{{ groupId }})"
-                                    class="o_search_panel_label form-check-label"
+                                    class="o_search_panel_label user-select-none form-check-label"
                                     t-att-class="{ o_with_counters: group.enableCounters }"
                                     t-att-title="group.tooltip or false"
                                     >
@@ -81,7 +81,7 @@
                 t-att-class="{ active: state.active[section.id] === valueId }"
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
-                <label class="o_search_panel_label mb0" t-att-class="{ o_with_counters: section.enableCounters }">
+                <label class="o_search_panel_label mb0 user-select-none" t-att-class="{ o_with_counters: section.enableCounters }">
                     <div class="o_toggle_fold">
                         <i t-if="value.childrenIds.length"
                             t-attf-class="fa fa-caret-{{ state.expanded[section.id][valueId] ? 'down' : 'right' }}"
@@ -116,7 +116,7 @@
                 class="form-check-input"
                 t-on-click="ev => this.toggleFilterValue(section.id, valueId, ev)"
             />
-            <label class="o_search_panel_label form-check-label"
+            <label class="o_search_panel_label user-select-none form-check-label"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
                 <span class="o_search_panel_label_title" t-esc="value.display_name"/>

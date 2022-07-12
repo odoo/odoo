@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Pager" owl="1">
-        <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
+        <nav class="o_pager align-items-center d-flex gap-2 user-select-none" aria-label="Pager">
             <span class="o_pager_counter" t-on-click.stop="">
                 <t t-if="state.isEditing">
                     <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />

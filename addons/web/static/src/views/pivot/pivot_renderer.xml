@@ -8,7 +8,7 @@
                 class="table-hover table table-sm table-bordered table-borderless bg-white"
                 t-att-class="{
                     o_enable_linking: !model.metaData.disableLinking,
-                    o_sample_data_disabled: model.useSampleModel,
+                    'o_sample_data_disabled bg-info': model.useSampleModel,
                 }"
                 t-ref="table"
             >
@@ -61,8 +61,8 @@
             t-att-colspan="isXAxis ? cell.width : undefined"
             t-att-rowspan="isXAxis ? cell.height : undefined"
             t-att-class="{
-                o_pivot_header_cell_closed: cell.isLeaf,
-                o_pivot_header_cell_opened: !cell.isLeaf,
+                'o_pivot_header_cell_closed user-select-none': cell.isLeaf,
+                'o_pivot_header_cell_opened user-select-none': !cell.isLeaf,
             }"
             t-attf-style="{{
                 isXAxis
@@ -94,8 +94,8 @@
 
     <t t-name="web.PivotMeasure" owl="1">
         <th class="text-muted text-center text-nowrap fw-normal bg-100" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
-                'o_pivot_origin_row o_cursor_pointer': cell.originIndexes,
-                'o_pivot_measure_row o_cursor_pointer': !cell.originIndexes,
+                'o_pivot_origin_row o_cursor_pointer user-select-none': cell.originIndexes,
+                'o_pivot_measure_row o_cursor_pointer user-select-none': !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">

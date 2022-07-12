@@ -5,7 +5,7 @@
 
 <div t-name="web.BurgerMenu" owl="1">
     <a type="button"
-        class="o_mobile_menu_toggle dropdown-toggle o-no-caret d-md-none"
+        class="o_mobile_menu_toggle dropdown-toggle user-select-none o-no-caret d-md-none"
         title="Toggle menu" aria-label="Toggle menu"
         t-on-click="_openBurger">
         <i class="oi oi-panel-right"/>
@@ -15,7 +15,7 @@
         <div class="o_burger_menu d-flex flex-column flex-nowrap position-fixed" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
           <div class="o_burger_menu_topbar d-flex align-items-center justify-content-between"
               t-on-click.stop='_toggleUserMenu'>
-              <span class="dropdown-toggle small d-flex align-items-center justify-content-between o-no-caret" t-att-class="{active: isUserMenuUnfolded}">
+              <span class="dropdown-toggle small d-flex align-items-center justify-content-between user-select-none o-no-caret" t-att-class="{active: isUserMenuUnfolded}">
                   <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
                   <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
                   <i t-if="isUserMenuTogglable" class="fa" t-att-class="state.isUserMenuOpened ? 'fa-caret-down' : 'fa-caret-left'"/>
@@ -50,7 +50,7 @@
 
 <t t-name="web.BurgerSection" owl="1">
     <div t-if="section.childrenTree.length" t-key="section.id" class="dropdown o_burger_menu_section show">
-        <button class="dropdown-toggle" t-att-data-menu-xmlid="section.xmlid">
+        <button class="dropdown-toggle user-select-none" t-att-data-menu-xmlid="section.xmlid">
             <span t-esc="section.name"/>
         </button>
         <div class="dropdown-menu d-block">

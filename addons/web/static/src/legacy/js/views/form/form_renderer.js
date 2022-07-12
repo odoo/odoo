@@ -567,7 +567,7 @@ var FormRenderer = BasicRenderer.extend({
             if (folded_buttons.length) {
                 $result.append(dom.renderButton({
                     attrs: {
-                        'class': 'oe_stat_button o_button_more dropdown-toggle',
+                        'class': 'oe_stat_button o_button_more dropdown-toggle user-select-none',
                         'data-bs-toggle': 'dropdown',
                     },
                     text: _t("More"),

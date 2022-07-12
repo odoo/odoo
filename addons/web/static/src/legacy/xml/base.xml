@@ -151,7 +151,7 @@
 <t t-name="web.DropdownMenu" owl="1">
     <div class="btn-group dropdown" t-att-class="{ show: state.open }">
         <button type="button"
-            class="dropdown-toggle btn btn-secondary o-no-caret"
+            class="dropdown-toggle btn btn-secondary user-select-none o-no-caret"
             t-attf-class="{{ icon || displayCaret || displayChevron ? 'd-flex align-items-center ' : ''}} {{ displayCaret || displayChevron ? 'pe-1 ' : ''}}"
             t-att-aria-expanded="state.open ? 'true' : 'false'"
             tabindex="-1"
@@ -290,7 +290,7 @@
 </t>
 
 <t t-name="web.legacy.Pager" owl="1">
-    <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
+    <nav class="o_pager align-items-center d-flex gap-2 user-select-none" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
             <input t-if="state.editing" type="text"
                 class="o_pager_value o_input d-inline-block w-auto text-end"
@@ -755,7 +755,7 @@
 
 <t t-name="PivotView.buttons">
     <div class="btn-group" role="toolbar" aria-label="Main actions">
-        <button class="btn btn-primary dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-primary dropdown-toggle user-select-none o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
             Measures <i class="fa fa-caret-down ms-1"/>
         </button>
         <div class="dropdown-menu o_pivot_measures_list" role="menu">
@@ -1064,12 +1064,12 @@
     <t t-foreach="elements" t-as="el" t-key="el_index">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div t-attf-class="badge rounded-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+        <div t-attf-class="badge rounded-pill user-select-none #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
             <t t-set="_badge_text">
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
-                <a role="button" href="#" class="dropdown-toggle o-no-caret" aria-expanded="false">
+                <a role="button" href="#" class="dropdown-toggle user-select-none o-no-caret" aria-expanded="false">
                     <t t-out="_badge_text"/>
                 </a>
             </t>

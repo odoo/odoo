@@ -5857,7 +5857,7 @@ QUnit.module('LegacyViews', {
                         '<t t-name="kanban-box">' +
                             '<div color="color">' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle user-select-none o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<ul class="dropdown-menu" role="menu">' +
@@ -6304,7 +6304,7 @@ QUnit.module('LegacyViews', {
                             '<t t-name="kanban-box">' +
                                 '<div color="color">' +
                                     '<div class="o_dropdown_kanban dropdown">' +
-                                        '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
+                                        '<a class="dropdown-toggle user-select-none o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                         '</a>' +
                                         '<ul class="dropdown-menu" role="menu">' +
@@ -7778,7 +7778,7 @@ QUnit.module('LegacyViews', {
                             '<div class="oe_kanban_global_click">' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle user-select-none o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
                                         '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<div class="dropdown-menu" role="menu">' +

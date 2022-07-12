@@ -16,7 +16,7 @@
         (submenu.clean_url() and submenu.clean_url() != '/' and any(request.httprequest.path == child.url for child in submenu.child_id if child.url) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         } #{submenu.is_mega_menu and 'position-static'}">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-bs-toggle="dropdown" href="#">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle user-select-none #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-bs-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
         <div t-if="submenu.is_mega_menu"
@@ -2031,7 +2031,7 @@
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-bs-toggle="dropdown"/>
+            <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split user-select-none" t-att-id="'dopprod-%s' % object.id" data-bs-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-out="0"/>
                 <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration')}"

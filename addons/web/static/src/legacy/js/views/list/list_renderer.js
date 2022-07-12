@@ -939,7 +939,7 @@ var ListRenderer = BasicRenderer.extend({
             .attr('tabindex', -1)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
-            .addClass((field.sortable || this.state.fieldsInfo.list[name].options.allow_order || false) && 'o_column_sortable');
+            .addClass((field.sortable || this.state.fieldsInfo.list[name].options.allow_order || false) && 'o_column_sortable user-select-none');
 
         if (isNodeSorted) {
             $th.attr('aria-sort', order[0].asc ? 'ascending' : 'descending');
@@ -1010,7 +1010,7 @@ var ListRenderer = BasicRenderer.extend({
             class: 'o_optional_columns text-center dropdown',
         });
         var $a = $("<a>", {
-            'class': "dropdown-toggle text-dark o-no-caret",
+            'class': "dropdown-toggle text-dark o-no-caret user-select-none",
             'href': "#",
             'role': "button",
             'data-bs-toggle': "dropdown",
@@ -1027,7 +1027,7 @@ var ListRenderer = BasicRenderer.extend({
         var direction = _t.database.parameters.direction;
         var dropdownMenuClass = direction === 'rtl' ? 'dropdown-menu-start' : 'dropdown-menu-end';
         var $dropdown = $("<div>", {
-            class: 'dropdown-menu o_optional_columns_dropdown ' + dropdownMenuClass,
+            class: 'dropdown-menu o_optional_columns_dropdown user-select-none ' + dropdownMenuClass,
             role: 'menu',
         });
         this.optionalColumns.forEach(function (col) {

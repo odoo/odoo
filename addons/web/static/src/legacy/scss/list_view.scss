@@ -82,7 +82,6 @@
 
         .o_column_sortable:not(.o_handle_cell) {
             position: relative;
-            user-select: none;  // Prevent unwanted selection while sorting
 
             &::after {
                 font-family: FontAwesome;
@@ -158,7 +157,6 @@
             }
             .o_pager {
                 cursor: text;
-                user-select: none;
                 text-align: right;
                 padding-top: 0 !important;
                 padding-bottom: 0 !important;
@@ -356,7 +354,6 @@
 
     .o_optional_columns {
         .o_optional_columns_dropdown {
-            user-select: none;
             .dropdown-item {
                 label {
                     padding-left: 10px;

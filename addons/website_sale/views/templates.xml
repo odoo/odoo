@@ -228,7 +228,7 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
             <t t-set="curr_pl" t-value="website.pricelist_id" />
-            <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
+            <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline user-select-none" data-bs-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
             <div class="dropdown-menu" role="menu">
@@ -389,7 +389,7 @@
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
             <div class="o_sortby_dropdown dropdown dropdown_sorty_by ms-3 pb-2">
                 <span class="d-none d-lg-inline fw-bold text-muted">Sort By:</span>
-                <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-bs-toggle="dropdown">
+                <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline user-select-none" data-bs-toggle="dropdown">
                     <span class="d-none d-lg-inline">
                         <t t-if='website_sale_sortable_current'>
                             <t t-esc="website_sale_sortable_current[0][1]"/>

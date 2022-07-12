@@ -3,7 +3,7 @@
 
     <t t-name="web.ribbon">
         <div class="ribbon ribbon-top-right">
-            <span t-att-class="widget.className" t-att-title="widget.tooltip">
+            <span t-att-class="widget.className + ' user-select-none'" t-att-title="widget.tooltip">
                 <t t-esc="widget.text"/>
             </span>
         </div>

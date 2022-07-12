@@ -4,7 +4,7 @@
     <t t-name="mail.MessagingMenu" owl="1">
         <t t-if="messagingMenu">
             <div class="o_MessagingMenu dropdown" t-att-class="{ 'show bg-black-15': messagingMenu.isOpen, 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-ref="root">
-                <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="messagingMenu.onClickToggler">
+                <a class="o_MessagingMenu_toggler dropdown-toggle user-select-none o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="messagingMenu.onClickToggler">
                     <i class="o_MessagingMenu_icon fa fa-lg fa-comments" role="img" aria-label="Messages"/>
                     <t t-if="!messaging.isInitialized">
                         <i class="o_MessagingMenu_loading fa fa-circle-o-notch fa-spin position-absolute bottom-50 end-0 small"/>

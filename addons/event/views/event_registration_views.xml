@@ -152,7 +152,7 @@
                                             <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
                                             <div id="event_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
                                                 <t t-if="record.event_ticket_id.raw_value">
-                                                    <div t-attf-class="badge rounded-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
+                                                    <div t-attf-class="badge rounded-pill user-select-none o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
                                                         <b><span class="o_badge_text o_text_overflow"><t t-out="record.event_ticket_id.value"/></span></b>
                                                     </div>
                                                 </t>

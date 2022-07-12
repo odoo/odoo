@@ -531,7 +531,7 @@ export class ListRenderer extends Component {
         const field = this.fields[column.name];
         const classNames = [];
         if (field.sortable && column.hasLabel) {
-            classNames.push("o_column_sortable");
+            classNames.push("o_column_sortable user-select-none");
         }
         const orderBy = this.props.list.orderBy;
         if (orderBy.length && orderBy[0].name === column.name) {

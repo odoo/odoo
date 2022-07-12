@@ -2170,7 +2170,7 @@ var SnippetsMenu = Widget.extend({
         };
 
         this.$snippets = $scroll.find('.o_panel_body').children()
-            .addClass('oe_snippet')
+            .addClass('oe_snippet user-select-none')
             .each((i, el) => {
                 const $snippet = $(el);
                 const name = _.escape(el.getAttribute('name'));

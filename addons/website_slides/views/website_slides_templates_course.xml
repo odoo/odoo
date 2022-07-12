@@ -53,7 +53,7 @@
                 <div class="col d-md-none py-1">
                     <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
                         <div class="btn-group w-100">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+                            <a class="btn bg-black-25 text-white dropdown-toggle user-select-none" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
 
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/slides">Home</a>
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="btn-group ms-1 position-static">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                            <a class="btn bg-black-25 text-white dropdown-toggle user-select-none" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
                             <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                                 <t t-call="website.website_search_box_input">
                                     <t t-set="_classes" t-valuef="px-3"/>
@@ -633,7 +633,7 @@
                         <div class="col-12 d-flex align-items-start">
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item dropdown ms-lg-auto">
-                                    <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
+                                    <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex user-select-none" type="button" id="slidesChannelDropdownSort"
                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
                                         <b>Order by</b>
                                         <span class="d-none d-xl-inline">:
