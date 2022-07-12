@@ -215,6 +215,7 @@ function mapStaticListDatapoint(staticList) {
         data: staticList.records.map(mapRecordDatapoint),
         groupedBy: [],
         orderedBy: staticList.orderBy,
+        count: staticList.count,
     };
 }
 

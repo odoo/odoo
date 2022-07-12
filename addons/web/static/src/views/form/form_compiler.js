@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { SIZES } from "@web/core/ui/ui_service";
 import {
     append,
     combineAttributes,
@@ -187,7 +188,7 @@ export class FormCompiler extends ViewCompiler {
     compileForm(el, params) {
         const form = createElement("div", {
             "t-att-class": "props.class",
-            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}`,
+            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`,
         });
 
         const sheetNode = el.querySelector("sheet");
