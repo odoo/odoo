@@ -23,7 +23,7 @@ except ImportError:
 from odoo import release, SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
+from odoo.tools import config, func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
 from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
 
@@ -314,6 +314,9 @@ class AssetsBundle(object):
         """
         assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map')
         ira = self.env['ir.attachment']
+        if config['x_sendfile']:
+            ira = ira.with_context(create_extra_gzip_file=True)
+
 
         # Set user direction in name to store two bundles
         # 1 for ltr and 1 for rtl, this will help during cleaning of assets bundle

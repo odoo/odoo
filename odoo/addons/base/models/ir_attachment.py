@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import gzip
 import hashlib
 import io
 import itertools
@@ -129,6 +130,14 @@ class IrAttachment(models.Model):
             try:
                 with open(full_path, 'wb') as fp:
                     fp.write(bin_value)
+
+                if self.env.context.get('create_extra_gzip_file', False):
+                    try:
+                        with gzip.open(full_path + '.gz', 'wb') as fp:
+                            fp.write(bin_value)
+                    except IOError:
+                        pass
+
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
             except IOError:
@@ -195,7 +204,12 @@ class IrAttachment(models.Model):
                 filepath = checklist[fname]
                 if fname not in whitelist:
                     try:
-                        os.unlink(self._full_path(fname))
+                        full_path = self._full_path(fname)
+                        os.unlink(full_path)
+                        try:
+                            os.unlink(full_path + '.gz')
+                        except FileNotFoundError:
+                            pass
                         _logger.debug("_file_gc unlinked %s", self._full_path(fname))
                         removed += 1
                     except (OSError, IOError):
