@@ -56,8 +56,8 @@ const COMMANDS = {
 };
 
 export const barcodeGenericHandlers = {
-    dependencies: ["ui", "barcode"],
-    start(env, { ui, barcode }) {
+    dependencies: ["ui", "barcode", "notification"],
+    start(env, { ui, barcode, notification }) {
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
             const barcode = ev.detail.barcode;
@@ -79,7 +79,10 @@ export const barcodeGenericHandlers = {
                 if (fn) {
                     fn();
                 } else {
-                    console.warn(`Barcode '${barcode}' is not a valid command`);
+                    notification.add(env._t("Barcode: ") + `'${barcode}'`, {
+                        title: env._t("Unknown barcode command"),
+                        type: "danger"
+                    });
                 }
             }
         });

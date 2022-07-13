@@ -4,6 +4,7 @@ odoo.define('barcodes.field', function(require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
+var core = require('web.core');
 
 // Field in which the user can both type normally and scan barcodes
 
@@ -37,29 +38,24 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
     }
 });
 
-// Field to use scan barcodes
 var FormViewBarcodeHandler = AbstractField.extend({
     /**
      * @override
      */
     init: function() {
         this._super.apply(this, arguments);
-
-        this.trigger_up('activeBarcode', {
-            name: this.name,
-            commands: {
-                barcode: '_barcodeAddX2MQuantity',
-            }
-        });
+        core.bus.on('barcode_scanned', this, this._barcodeScanned);
+    },
+    destroy: function () {
+        core.bus.off('barcode_scanned', this, this._barcodeScanned);
+        this._super();
+    },
+    _barcodeScanned(barcode) {
+        this._setValue(barcode);
     },
 });
 
 fieldRegistry.add('field_float_scannable', FieldFloatScannable);
 fieldRegistry.add('barcode_handler', FormViewBarcodeHandler);
-
-return {
-    FieldFloatScannable: FieldFloatScannable,
-    FormViewBarcodeHandler: FormViewBarcodeHandler,
-};
 
 });
