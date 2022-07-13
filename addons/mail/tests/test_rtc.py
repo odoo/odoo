@@ -86,6 +86,7 @@ class TestChannelInternals(MailCommon):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
         channel_partner = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == self.user_employee.partner_id)
+        channel_partner_test_user = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == test_user.partner_id)
         channel_partner._rtc_join_call()
         last_rtc_session_id = channel_partner.rtc_session_ids.id
         channel_partner._rtc_leave_call()
@@ -122,15 +123,34 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedPartners': [('insert', [{'id': test_user.partner_id.id, 'name': 'Test User'}])],
+                        'invitedMembers': [('insert', [{
+                            'id': channel_partner_test_user.id,
+                            'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                            'persona': [('insert-and-replace', {
+                                'partner': [('insert-and-replace', {
+                                    'id': channel_partner_test_user.partner_id.id,
+                                    'name': channel_partner_test_user.partner_id.name,
+                                    'im_status': channel_partner_test_user.partner_id.im_status,
+                                })],
+                            })],
+                        }])],
                     },
                 },
             ]
         ):
             res = channel_partner._rtc_join_call()
-        self.assertNotIn('invitedGuests', res)
-        self.assertIn('invitedPartners', res)
-        self.assertEqual(res['invitedPartners'], [('insert', [{'id': test_user.partner_id.id, 'name': "Test User"}])])
+        self.assertIn('invitedMembers', res)
+        self.assertEqual(res['invitedMembers'], [('insert', [{
+            'id': channel_partner_test_user.id,
+            'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+            'persona': [('insert-and-replace', {
+                'partner': [('insert-and-replace', {
+                    'id': channel_partner_test_user.partner_id.id,
+                    'name': channel_partner_test_user.partner_id.name,
+                    'im_status': channel_partner_test_user.partner_id.im_status,
+                })],
+            })],
+        }])])
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -139,6 +159,8 @@ class TestChannelInternals(MailCommon):
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         channel = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
         channel.add_members(guest_ids=test_guest.ids)
+        channel_partner_test_user = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == test_user.partner_id)
+        channel_partner_test_guest = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.guest_id == test_guest)
         channel_partner = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == self.user_employee.partner_id)
         channel_partner._rtc_join_call()
         last_rtc_session_id = channel_partner.rtc_session_ids.id
@@ -194,17 +216,58 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
-                        'invitedPartners': [('insert', [{'id': test_user.partner_id.id, 'name': 'Test User'}])],
+                        'invitedMembers': [('insert', [
+                            {
+                                'id': channel_partner_test_user.id,
+                                'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'partner': [('insert-and-replace', {
+                                        'id': channel_partner_test_user.partner_id.id,
+                                        'name': channel_partner_test_user.partner_id.name,
+                                        'im_status': channel_partner_test_user.partner_id.im_status,
+                                    })],
+                                })],
+                            },
+                            {
+                                'id': channel_partner_test_guest.id,
+                                'channel': [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'guest': [('insert-and-replace', {
+                                        'id': channel_partner_test_guest.guest_id.id,
+                                        'name': channel_partner_test_guest.guest_id.name,
+                                    })],
+                                })],
+                            },
+                        ])],
                     },
                 },
             ]
         ):
             res = channel_partner._rtc_join_call()
-        self.assertIn('invitedGuests', res)
-        self.assertEqual(res['invitedGuests'], [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])])
-        self.assertIn('invitedPartners', res)
-        self.assertEqual(res['invitedPartners'], [('insert', [{'id': test_user.partner_id.id, 'name': "Test User"}])])
+        self.assertIn('invitedMembers', res)
+        self.assertEqual(res['invitedMembers'], [('insert', [
+            {
+                'id': channel_partner_test_user.id,
+                'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                'persona': [('insert-and-replace', {
+                    'partner': [('insert-and-replace', {
+                        'id': channel_partner_test_user.partner_id.id,
+                        'name': channel_partner_test_user.partner_id.name,
+                        'im_status': channel_partner_test_user.partner_id.im_status,
+                    })],
+                })],
+            },
+            {
+                'id': channel_partner_test_guest.id,
+                'channel': [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                'persona': [('insert-and-replace', {
+                    'guest': [('insert-and-replace', {
+                        'id': channel_partner_test_guest.guest_id.id,
+                        'name': channel_partner_test_guest.guest_id.name,
+                    })],
+                })],
+            },
+        ])])
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -236,7 +299,17 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
+                        'invitedMembers': [('insert-and-unlink', [{
+                            'id': channel_partner_test_user.id,
+                            'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                            'persona': [('insert-and-replace', {
+                                'partner': [('insert-and-replace', {
+                                    'id': channel_partner_test_user.partner_id.id,
+                                    'name': channel_partner_test_user.partner_id.name,
+                                    'im_status': channel_partner_test_user.partner_id.im_status,
+                                })],
+                            })],
+                        }])],
                     },
                 },
                 {
@@ -282,7 +355,16 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
+                        'invitedMembers': [('insert-and-unlink', [{
+                            'id': channel_partner_test_guest.id,
+                            'channel':  [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                            'persona': [('insert-and-replace', {
+                                'guest': [('insert-and-replace', {
+                                    'id': channel_partner_test_guest.guest_id.id,
+                                    'name': channel_partner_test_guest.guest_id.name,
+                                })],
+                            })],
+                        }])],
                     },
                 },
                 {
@@ -337,7 +419,17 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
+                        'invitedMembers': [('insert-and-unlink', [{
+                            'id': channel_partner_test_user.id,
+                            'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                            'persona': [('insert-and-replace', {
+                                'partner': [('insert-and-replace', {
+                                    'id': channel_partner_test_user.partner_id.id,
+                                    'name': channel_partner_test_user.partner_id.name,
+                                    'im_status': channel_partner_test_user.partner_id.im_status,
+                                })],
+                            })],
+                        }])],
                     },
                 },
             ]
@@ -363,7 +455,16 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
+                        'invitedMembers': [('insert-and-unlink', [{
+                            'id': channel_partner_test_guest.id,
+                            'channel':  [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                            'persona': [('insert-and-replace', {
+                                'guest': [('insert-and-replace', {
+                                    'id': channel_partner_test_guest.guest_id.id,
+                                    'name': channel_partner_test_guest.guest_id.name,
+                                })],
+                            })],
+                        }])],
                     },
                 },
             ]
@@ -378,6 +479,8 @@ class TestChannelInternals(MailCommon):
         channel = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
         channel.add_members(guest_ids=test_guest.ids)
         channel_partner = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == self.user_employee.partner_id)
+        channel_partner_test_user = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == test_user.partner_id)
+        channel_partner_test_guest = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.guest_id == test_guest)
         channel_partner._rtc_join_call()
 
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -414,8 +517,29 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
-                        'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
+                        'invitedMembers': [('insert-and-unlink', [
+                            {
+                                'id': channel_partner_test_user.id,
+                                'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'partner': [('insert-and-replace', {
+                                        'id': channel_partner_test_user.partner_id.id,
+                                        'name': channel_partner_test_user.partner_id.name,
+                                        'im_status': channel_partner_test_user.partner_id.im_status,
+                                    })],
+                                })],
+                            },
+                            {
+                                'id': channel_partner_test_guest.id,
+                                'channel': [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'guest': [('insert-and-replace', {
+                                        'id': channel_partner_test_guest.guest_id.id,
+                                        'name': channel_partner_test_guest.guest_id.name,
+                                    })],
+                                })],
+                            },
+                        ])],
                     },
                 },
                 {
@@ -438,7 +562,14 @@ class TestChannelInternals(MailCommon):
         channel_partner = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == self.user_employee.partner_id)
         channel_partner._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
-        with self.assertBus(
+
+
+        with self.mock_bus():
+            channel.add_members(partner_ids=test_user.partner_id.ids, guest_ids=test_guest.ids, invite_to_rtc_call=True)
+
+        channel_partner_test_user = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == test_user.partner_id)
+        channel_partner_test_guest = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.guest_id == test_guest)
+        found_bus_notifs = self.assertBusNotifications(
             [
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # message_post "invited" (not asserted below)
@@ -453,7 +584,7 @@ class TestChannelInternals(MailCommon):
                 (self.cr.dbname, 'mail.channel', channel.id),  # new member (guest) (not asserted below)
                 (self.cr.dbname, 'mail.guest', test_guest.id), # channel joined for guest (not asserted below)
             ],
-            [
+            message_items=[
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
@@ -492,13 +623,34 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
-                        'invitedPartners': [('insert', [{'id': test_user.partner_id.id, 'name': 'Test User'}])],
+                        'invitedMembers': [('insert', [
+                            {
+                                'id': channel_partner_test_user.id,
+                                'channel':  [('insert-and-replace', {'id': channel_partner_test_user.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'partner': [('insert-and-replace', {
+                                        'id': channel_partner_test_user.partner_id.id,
+                                        'name': channel_partner_test_user.partner_id.name,
+                                        'im_status': channel_partner_test_user.partner_id.im_status,
+                                    })],
+                                })],
+                            },
+                            {
+                                'id': channel_partner_test_guest.id,
+                                'channel': [('insert-and-replace', {'id': channel_partner_test_guest.channel_id.id})],
+                                'persona': [('insert-and-replace', {
+                                    'guest': [('insert-and-replace', {
+                                        'id': channel_partner_test_guest.guest_id.id,
+                                        'name': channel_partner_test_guest.guest_id.name,
+                                    })],
+                                })],
+                            },
+                        ])],
                     },
                 },
             ],
-        ):
-            channel.add_members(partner_ids=test_user.partner_id.ids, guest_ids=test_guest.ids, invite_to_rtc_call=True)
+        )
+        self.assertEqual(self._new_bus_notifs, found_bus_notifs)
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
