@@ -31,7 +31,7 @@
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
                     <group id="top-group">
-                        <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                        <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
