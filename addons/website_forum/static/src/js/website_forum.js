@@ -137,9 +137,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 resizable: true,
                 userGeneratedContent: true,
             };
-            if (hasFullEdit) {
-                options.allowCommandLink = true;
-                options.allowCommandImage = true;
+            if (!hasFullEdit) {
+                options.allowCommandLink = false;
+                options.allowCommandImage = false;
             }
             wysiwygLoader.loadFromTextarea(self, $textarea[0], options).then(wysiwyg => {
                 if (!hasFullEdit) {

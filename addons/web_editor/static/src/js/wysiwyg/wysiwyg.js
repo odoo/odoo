@@ -70,6 +70,8 @@ const Wysiwyg = Widget.extend({
         recordInfo: {context: {}},
         document: document,
         allowCommandVideo: true,
+        allowCommandImage: true,
+        allowCommandLink: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
