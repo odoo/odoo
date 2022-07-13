@@ -37,6 +37,11 @@
     <template id="mail.discuss_public_channel_template" name="Discuss Public Channel Template">
         <t t-call="mail.discuss_public_layout">
             <t t-set="head">
+                <style>
+                    body {
+                        direction: <t t-out="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'" />;
+                    }
+                </style>
                 <script>
                     odoo.define('mail.discuss_public_channel_template', function() {
                         return {
