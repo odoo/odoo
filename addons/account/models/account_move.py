@@ -4939,7 +4939,7 @@ class AccountMoveLine(models.Model):
             and self._context.get('default_move_type') in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'):
             # Fill missing 'account_id'.
             journal = self.env['account.journal'].browse(self._context.get('default_journal_id') or self._context['journal_id'])
-            if values['partner_id']:
+            if values.get('partner_id'):
                 # Get most used account of the partner as the default.
                 account_id = self.env['account.account']._order_by_frequency_per_partner(
                     journal.company_id.id, values['partner_id'], self._context.get("default_move_type"), limit=1)[0]
