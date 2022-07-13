@@ -234,26 +234,6 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
-def install_pg_trgm(cr):
-    cr.execute("SELECT installed_version FROM pg_available_extensions WHERE name='pg_trgm'")
-    version = cr.fetchone()
-    if version is None:
-        return False
-    if version[0]:
-        return True
-    cr.execute('SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER')
-    if not cr.fetchone()[0]:
-        return False
-    try:
-        db = odoo.sql_db.db_connect(cr.dbname)
-        with closing(db.cursor()) as cr:
-            cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-            cr.commit()
-        return True
-    except psycopg2.Error:
-        return False
-
-
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))

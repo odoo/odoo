@@ -77,7 +77,7 @@ class AccountMove(models.Model):
         compute='_compute_name', readonly=False, store=True,
         copy=False,
         tracking=True,
-        index='btree',
+        index='btree',  # We need the btree index for unicity constraint (`_check_unique_sequence_number`)
     )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
     date = fields.Date(
@@ -543,8 +543,8 @@ class AccountMove(models.Model):
 
     def _auto_init(self):
         super()._auto_init()
-        if sql.install_pg_trgm(self._cr):
-            # We need the btree index for unicity constraint (on field) AND this one for human searches
+        if self.pool.has_trigram:
+            # This index is for human searches
             sql.create_index(self._cr, 'account_move_name_trigram_index', self._table, ['"name" gin_trgm_ops'], 'gin')
 
         self.env.cr.execute("""
