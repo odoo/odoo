@@ -11,20 +11,20 @@ ProgressBar.template = 'web_editor.ProgressBar';
 
 export class UploadProgressToast extends Component {
     setup() {
-        this.state = useState({ hide: false });
+        this.state = useState({
+            isVisible: false,
+            numberOfFiles: 0,
+        });
 
         useEffect((numberOfFiles) => {
-            if (numberOfFiles) {
-                this.state.hide = false;
+            if (numberOfFiles === 0) {
+                this.state.isVisible = false;
             }
+            if (numberOfFiles > this.state.numberOfFiles) {
+                this.state.isVisible = true;
+            }
+            this.state.numberOfFiles = numberOfFiles;
         }, () => [Object.keys(this.props.files).length]);
-    }
-
-    get show() {
-        if (!this.props.files || !Object.keys(this.props.files).length) {
-            return false;
-        }
-        return !this.state.hide;
     }
 }
 UploadProgressToast.defaultProps = {
