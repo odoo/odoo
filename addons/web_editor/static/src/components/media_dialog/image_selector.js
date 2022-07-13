@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import { getCSSVariableValue } from 'web_editor.utils';
+import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 
 const { useRef, useState, useEffect } = owl;
@@ -23,7 +23,10 @@ export class AutoResizeImage extends Attachment {
         }, () => []);
     }
 
-    onImageLoaded() {
+    async onImageLoaded() {
+        if (this.props.onLoaded) {
+            await this.props.onLoaded(this.image.el);
+        }
         const aspectRatio = this.image.el.offsetWidth / this.image.el.offsetHeight;
         const width = aspectRatio * this.props.minRowHeight;
         this.container.el.style.flexGrow = width;
@@ -253,6 +256,37 @@ export class ImageSelector extends FileSelector {
             imageEl.alt = attachment.description || '';
             return imageEl;
         }));
+    }
+
+    /**
+     * This converts the colors of an svg coming from the media library to
+     * the palette's ones, and make them dynamic.
+     *
+     * @param {HTMLElement} imgEl
+     * @param {Object} media
+     * @returns
+     */
+    async onLibraryImageLoaded(imgEl, media) {
+        const mediaUrl = imgEl.src;
+        try {
+            const response = await fetch(mediaUrl);
+            if (response.headers.get('content-type') === 'image/svg+xml') {
+                const svg = await response.text();
+                const dynamicColors = {};
+                const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+                svg.replace(combinedColorsRegex, match => {
+                    const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                    const colorKey = 'c' + colorId
+                    dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                });
+                if (Object.keys(dynamicColors).length) {
+                    media.isDynamicSVG = true;
+                    media.dynamicColors = dynamicColors;
+                }
+            }
+        } catch (_e) {
+            console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
+        }
     }
 }
 

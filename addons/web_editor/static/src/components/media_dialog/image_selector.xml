@@ -49,7 +49,8 @@
                         altDescription="media.tooltip"
                         minRowHeight="MIN_ROW_HEIGHT"
                         selected="this.selectedMediaIds.includes(media.id)"
-                        onImageClick="() => this.onClickMedia(media)"/>
+                        onImageClick="() => this.onClickMedia(media)"
+                        onLoaded="(imgEl) => this.onLibraryImageLoaded(imgEl, media)"/>
                 </t>
             </t>
             <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
