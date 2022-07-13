@@ -192,11 +192,11 @@ export const websiteService = {
                 }
                 return Wysiwyg;
             },
-            blockIframe(showLoader = true, loaderDelay = 0) {
-                bus.trigger('BLOCK', {showLoader, loaderDelay});
+            blockIframe(showLoader = true, loaderDelay = 0, processId) {
+                bus.trigger('BLOCK', {showLoader, loaderDelay, processId});
             },
-            unblockIframe() {
-                bus.trigger('UNBLOCK');
+            unblockIframe(processId) {
+                bus.trigger('UNBLOCK', { processId });
             },
             leaveEditMode() {
                 // FIXME this does not care about if the page is dirty or not.
