@@ -12,10 +12,14 @@ class TestFormCreate(TransactionCase):
     """
 
     def test_create_res_partner(self):
-        # Required for `property_account_payable_id`, `property_account_receivable_id` to be visible in the view
-        group_account_readonly = self.env.ref('account.group_account_readonly', raise_if_not_found=False)
-        if group_account_readonly:
+        # YTI: Clean that brol
+        if hasattr(self.env['res.partner'], 'property_account_payable_id'):
+            # Required for `property_account_payable_id`, `property_account_receivable_id` to be visible in the view
+            # By default, it's the `group` `group_account_readonly` which is required to see it, in the `account` module
+            # But once `account_accountant` gets installed, it becomes `account.group_account_manager`
+            # https://github.com/odoo/enterprise/blob/bfa643278028da0bfabded2f87ccb7e323d697c1/account_accountant/views/product_views.xml#L9
             self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+            self.env.user.groups_id += self.env.ref('account.group_account_manager')
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'a partner'
         # YTI: Clean that brol
