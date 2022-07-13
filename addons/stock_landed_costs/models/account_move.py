@@ -73,3 +73,7 @@ class AccountMoveLine(models.Model):
             self.is_landed_costs_line = True
         else:
             self.is_landed_costs_line = False
+
+    def _get_stock_valuation_layers(self, move):
+        layers = super()._get_stock_valuation_layers(move)
+        return layers.filtered(lambda svl: not svl.stock_landed_cost_id)

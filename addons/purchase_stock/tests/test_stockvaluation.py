@@ -255,7 +255,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 10.0
         invoice_form.invoice_date = fields.Date.today()
@@ -296,7 +295,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates a second invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 25.0
         invoice_form.invoice_date = fields.Date.today()
@@ -344,7 +342,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price AND the quantity.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5.0
             line_form.price_unit = 10.0
@@ -413,7 +410,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5.0
             line_form.price_unit = 10.0
@@ -452,7 +448,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates a second invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 1
             line_form.price_unit = 10.0
@@ -503,7 +498,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates the first invoice (4 units at $12).
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 4.0
             line_form.price_unit = 12.0
@@ -520,7 +514,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates a second invoice for the remaining quantity (6 units at $15).
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 6.0
             line_form.price_unit = 15.0
@@ -559,7 +552,6 @@ class TestStockValuation(TransactionCase):
         receipt.button_validate()
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 10.0
         invoice_form.invoice_date = fields.Date.today()
@@ -612,7 +604,6 @@ class TestStockValuation(TransactionCase):
         order.button_confirm()
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 4
             line_form.price_unit = 10.0
@@ -671,7 +662,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5
             line_form.price_unit = 10.0
@@ -699,7 +689,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates a second invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(1) as line_form:
             line_form.quantity = 2
             line_form.price_unit = 25.0
@@ -745,7 +734,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5
             line_form.price_unit = 10.0
@@ -817,7 +805,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 2
             line_form.price_unit = 180.0
@@ -864,7 +851,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5
             line_form.price_unit = 10.0
@@ -943,7 +929,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 5
             line_form.price_unit = 10.0
@@ -1090,7 +1075,6 @@ class TestStockValuation(TransactionCase):
 
         # Creates an invoice for 6 product_fifo at $10 and 5 product_avco at $14.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_fifo_product:
             line_fifo_product.quantity = 6
             line_fifo_product.price_unit = 10.0
