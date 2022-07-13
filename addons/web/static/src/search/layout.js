@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { pick } from "@web/core/utils/objects";
 
 const { Component } = owl;
 
@@ -10,11 +9,7 @@ const { Component } = owl;
  * @returns {Object}
  */
 export function extractLayoutComponents(params) {
-    return {
-        ControlPanel: params.ControlPanel || ControlPanel,
-        SearchPanel: params.SearchPanel || SearchPanel,
-        Banner: params.Banner || false,
-    };
+    return pick(params, "ControlPanel", "SearchPanel", "Banner");
 }
 
 export class Layout extends Component {
