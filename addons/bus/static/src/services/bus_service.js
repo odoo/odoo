@@ -113,7 +113,7 @@ export class BusService extends CrossTab {
 }
 
 export const busService = {
-    dependencies: ['notification', 'rpc'],
+    dependencies: ['notification', 'presence', 'rpc'],
     start(env, services) {
         return new BusService(env, services);
     },

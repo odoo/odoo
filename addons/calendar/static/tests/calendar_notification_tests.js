@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { busService } from "@bus/services/bus_service";
+import { presenceService } from "@bus/services/presence_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
@@ -18,6 +19,7 @@ QUnit.module("Calendar Notification", (hooks) => {
 
         serviceRegistry.add("calendarNotification", calendarNotificationService);
         serviceRegistry.add("bus_service", busService);
+        serviceRegistry.add("presence", presenceService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
                 this._super(fn, 0);

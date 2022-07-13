@@ -16,7 +16,10 @@
             'bus/static/src/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'bus/static/tests/*.js',
+            'bus/static/tests/**/*.js',
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'bus/static/tests/helpers/*.js',
         ],
     },
     'license': 'LGPL-3',

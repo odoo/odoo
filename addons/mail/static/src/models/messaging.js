@@ -27,7 +27,7 @@ registerModel({
          * Starts messaging and related records.
          */
         async start() {
-            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            this.env.bus.on('window_focus', null, this._handleGlobalWindowFocus);
             await this.initializer.start();
             if (!this.exists()) {
                 return;

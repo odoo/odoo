@@ -2,6 +2,7 @@
 
 import { busService } from '@bus/services/bus_service';
 import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
+import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
 
 import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
@@ -87,9 +88,6 @@ function setupMessagingServiceRegistries({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
                 _registerWindowUnload() {}, // Do nothing
-                isOdooFocused() {
-                    return true;
-                },
                 updateOption() {},
             });
             return originalService;
@@ -100,6 +98,9 @@ function setupMessagingServiceRegistries({
         bus_service: customBusService,
         messaging: messagingService,
         messagingValues,
+        presence: makeFakePresenceService({
+            isOdooFocused: () => true,
+        }),
         systrayService,
         ...services,
     };

@@ -209,6 +209,7 @@ Help your customers with this chat, and analyse their feedback.
             # Framework JS
             'bus/static/src/*.js',
             'bus/static/src/services/bus_service.js',
+            'bus/static/src/services/presence_service.js',
             'bus/static/src/services/legacy/make_bus_service_to_legacy_env.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/core/**/*',
