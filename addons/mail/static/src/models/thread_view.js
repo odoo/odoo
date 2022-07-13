@@ -77,11 +77,11 @@ registerModel({
          * Starts editing the last message of this thread from the current user.
          */
         startEditingLastMessageFromCurrentUser() {
-            const messageListViewMessageViewItem = this.messageListView.messageListViewMessageViewItems;
-            messageListViewMessageViewItem.reverse();
-            const messageView = messageListViewMessageViewItem.find(messageListViewMessageViewItem => messageListViewMessageViewItem.message.isCurrentUserOrGuestAuthor && messageListViewMessageViewItem.message.canBeDeleted);
-            if (messageView) {
-                messageView.startEditing();
+            const messageListViewMessageViewItems = this.messageListView.messageListViewMessageViewItems;
+            messageListViewMessageViewItems.reverse();
+            const messageListViewMessageViewItem = messageListViewMessageViewItems.find(messageListViewMessageViewItem => messageListViewMessageViewItem.message.isCurrentUserOrGuestAuthor && messageListViewMessageViewItem.message.canBeDeleted);
+            if (messageListViewMessageViewItem) {
+                messageListViewMessageViewItem.messageView.startEditing();
             }
         },
         /**
