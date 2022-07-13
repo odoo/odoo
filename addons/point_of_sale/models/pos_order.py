@@ -144,11 +144,14 @@ class PosOrder(models.Model):
             pos_order._create_order_picking()
             pos_order._compute_total_cost_in_real_time()
 
-        if pos_order.to_invoice and pos_order.state == 'paid':
+        if pos_order._should_create_invoice():
             pos_order._generate_pos_order_invoice()
 
         return pos_order.id
 
+    def _should_create_invoice(self):
+        self.ensure_one()
+        return self.to_invoice and self.state == 'paid'
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
