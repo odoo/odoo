@@ -122,32 +122,30 @@
                     <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <t t-call="master_input" />
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label for="backup_file" class="col-md-4 col-form-label">File</label>
                                 <div class="col-md-8">
                                     <input id="backup_file" type="file" name="backup_file" class="required"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label for="dbname_restore" class="col-md-4 col-form-label">Database Name</label>
                                 <div class="col-md-8">
                                     <input id="dbname_restore" type="text" name="name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="radio_copy_true">This database might have been moved or copied.</label>
-                                <p class="form-text">
-                                    In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.<br/>
-                                    If you don't know, answer "This database is a copy".
-                                </p>
-                                <div class="custom-control form-check">
-                                    <input id="radio_copy_true" name="copy" type="radio" class="form-check-input" value="true" checked="1" />
-                                    <label for="radio_copy_true" class="form-check-label">This database is a copy</label>
-                                </div>
-                                <div class="custom-control form-check">
-                                    <input id="radio_copy_false" name="copy" type="radio" class="form-check-input" value="false" />
-                                    <label for="radio_copy_false" class="form-check-label">This database was moved</label>
-                                </div>
+                            <label for="radio_copy_true">This database might have been moved or copied.</label>
+                            <p class="form-text">
+                                In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.<br/>
+                                If you don't know, answer "This database is a copy".
+                            </p>
+                            <div class="form-check">
+                                <input id="radio_copy_true" name="copy" type="radio" class="form-check-input" value="true" checked="1" />
+                                <label for="radio_copy_true" class="form-check-label">This database is a copy</label>
+                            </div>
+                            <div class="form-check">
+                                <input id="radio_copy_false" name="copy" type="radio" class="form-check-input" value="false" />
+                                <label for="radio_copy_false" class="form-check-label">This database was moved</label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -171,11 +169,13 @@
                             <p>The master password is required to create, delete, dump or restore databases.</p>
                             <t t-set="set_master_pwd" t-value="True" />
                             <t t-call="master_input" />
-                            <div class="form-group">
-                                <label for="master_pwd_new" class="col-form-label">New Master Password</label>
-                                <div class="input-group">
-                                    <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="new-password"/>
-                                    <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                            <div class="row mb-3">
+                                <label for="master_pwd_new" class="col-md-5 col-form-label">New Master Password</label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="new-password"/>
+                                        <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -199,13 +199,17 @@
                         <div class="modal-body">
                             <t t-set="set_master_pwd" t-value="False" />
                             <t t-call="master_input" />
-                            <div class="form-group">
-                                <label for="dbname_duplicate" class="col-form-label">Database Name</label>
-                                <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                            <div class="row mb-3">
+                                <label for="dbname_duplicate" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="new_name" class="col-form-label">New Name</label>
-                                <input id="new_name" type="text" name="new_name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                            <div class="row mb-3">
+                                <label for="new_name" class="col-md-4 col-form-label">New Name</label>
+                                <div class="col-md-8">
+                                    <input id="new_name" type="text" name="new_name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -227,9 +231,11 @@
                     <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
                         <div class="modal-body">
                             <t t-call="master_input" />
-                            <div class="form-group">
-                                <label for="dbname_delete" class="col-form-label">Database</label>
-                                <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                            <div class="row mb-3">
+                                <label for="dbname_delete" class="col-md-4 col-form-label">Database</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -251,16 +257,20 @@
                     <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
                         <div class="modal-body">
                             <t t-call="master_input" />
-                            <div class="form-group">
-                                <label for="dbname_backup" class="col-form-label">Database Name</label>
-                                <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                            <div class="row mb-3">
+                                <label for="dbname_backup" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="backup_format" class="col-form-label">Backup Format</label>
-                                <select id="backup_format" name="backup_format" class="form-select" required="required">
-                                    <option value="zip">zip (includes filestore)</option>
-                                    <option value="dump">pg_dump custom format (without filestore)</option>
-                                </select>
+                            <div class="row mb-3">
+                                <label for="backup_format" class="col-md-4 col-form-label">Backup Format</label>
+                                <div class="col-md-8">
+                                    <select id="backup_format" name="backup_format" class="form-select" required="required">
+                                        <option value="zip">zip (includes filestore)</option>
+                                        <option value="dump">pg_dump custom format (without filestore)</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
