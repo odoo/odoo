@@ -9,6 +9,7 @@ export const messagingService = {
         'localization',
         'messagingValues',
         'orm',
+        'presence',
         'router',
         'rpc',
         'ui',
