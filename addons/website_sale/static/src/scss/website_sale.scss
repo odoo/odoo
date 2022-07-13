@@ -127,6 +127,26 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding-bottom: 0.75rem;
     }
     #products_grid_before {
+        // == Guess the distance with the navbar
+        $-container-top-gap: calc(#{map-get($spacers, 2)} + var(--gutter-x));
+
+        // == Guess the distance with the viewport's top.
+        // Defined using CSS variables to ease custom-headers overrides.
+        --o_ws_sidebar_top_gap: calc(#{($navbar-padding-y * 2) + ($btn-padding-y-lg * 2)} + #{$-container-top-gap});
+
+        @include media-breakpoint-up(lg) {
+            @include o-position-sticky($-container-top-gap);
+            height: 100vh;
+
+            @if (o-website-value('header-scroll-effect') == 'standard') or (o-website-value('header-scroll-effect') == 'fixed') {
+                top: var(--o_ws_sidebar_top_gap);
+            }
+
+            .o_wsale_products_grid_before_rail {
+                overflow-y: auto;
+            }
+        }
+
         .css_attribute_color {
             height: 32px;
             width: 32px;
