@@ -16,16 +16,19 @@
         </t>
     </t>
     <t t-if="not insecure or not set_master_pwd">
-        <div class="form-group row">
+        <div class="row mb-3">
             <label for="master_pwd" class="col-md-4 col-form-label">Master Password</label>
-            <div class="col-md-8 input-group">
-                <input name="master_pwd"
-                    t-att-class="input_class"
-                    required="required"
-                    autofocus="autofocus"
-                    type="password"
-                    autocomplete="current-password" />
-                <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input name="master_pwd"
+                        id="master_pwd"
+                        t-att-class="input_class"
+                        required="required"
+                        autofocus="autofocus"
+                        type="password"
+                        autocomplete="current-password" />
+                    <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                </div>
             </div>
         </div>
     </t>
