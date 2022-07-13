@@ -383,10 +383,10 @@ class AccountMove(models.Model):
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
-    # We neeed the btree index for unicity constraint (on field) AND this one for human searches
+    # We need the btree index for unicity constraint (`_check_unique_sequence_number`) AND this one for human searches
     def _auto_init(self):
         super(AccountMove, self)._auto_init()
-        if sql.install_pg_trgm(self._cr):
+        if self.pool.has_trigram:
             sql.create_index(self._cr, 'account_move_name_trigram_index', self._table, ['"name" gin_trgm_ops'], 'gin')
 
     @api.model
