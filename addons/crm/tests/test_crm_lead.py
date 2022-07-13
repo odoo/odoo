@@ -275,6 +275,17 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(won_lead.date_closed, old_date_closed, 'Should not change date')
         self.assertEqual(other_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
 
+        # back to open stage
+        leads.write({'stage_id': self.stage_team1_2.id})
+        self.assertFalse(won_lead.date_closed)
+        self.assertFalse(other_lead.date_closed)
+
+        # close with lost
+        with freeze_time('2020-02-02 18:00'):
+            leads.action_set_lost()
+        self.assertEqual(won_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
+        self.assertEqual(other_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
+
     @users('user_sales_leads')
     @freeze_time("2012-01-14")
     def test_crm_lead_lost_date_closed(self):
