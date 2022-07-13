@@ -11957,4 +11957,30 @@ QUnit.module("Fields", (hooks) => {
             "should have the correct values in the many2many tag widget"
         );
     });
+
+    QUnit.test(
+        "does not crash when you parse a tree arch containing another tree arch",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="turtles">
+                                <tree>
+                                    <field name="turtle_foo"/>
+                                </tree>
+                            </field>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.containsOnce(target, ".o_list_renderer");
+        }
+    );
 });
