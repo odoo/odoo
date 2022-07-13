@@ -3,11 +3,11 @@
 
     <t t-name="web.KanbanRecordQuickCreate" owl="1">
         <div
-            class="o_kanban_quick_create"
-            t-att-class="{ o_disabled: state.disabled }"
+            class="o_kanban_quick_create shadow"
+            t-att-class="{ o_disabled: state.disabled, 'w-100 mx-0': props.listIsGrouped }"
             t-ref="root"
         >
-            <FormRenderer class="'o_form_view o_xxs_form_view'" record="props.record" archInfo="props.archInfo" />
+            <FormRenderer class="'o_form_view o_xxs_form_view p-0'" record="props.record" archInfo="props.archInfo" />
             <div class="d-flex">
                 <button class="btn btn-primary o_kanban_add me-1 text_truncate" t-on-click="() => this.validate('add')">
                     Add
@@ -15,7 +15,7 @@
                 <button class="btn btn-primary o_kanban_edit me-1 text_truncate" t-on-click="() => this.validate('edit')">
                     Edit
                 </button>
-                <button class="btn btn-secondary o_kanban_cancel ms-auto" t-on-click="() => this.cancel(true)">
+                <button class="btn btn-secondary o_kanban_cancel ms-auto text-600" t-on-click="() => this.cancel(true)">
                     <i class="fa fa-trash" />
                 </button>
             </div>
