@@ -1,68 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <!-- This template is for a table at the top of purchase views that shows some KPIs. -->
     <t t-name="purchase.PurchaseDashboard">
-        <div class="o_purchase_dashboard container">
-        <div class="row">
-            <div class="col-sm-5">
-            <table class="table table-sm">
-                <!-- thead needed to avoid list view rendering error for some reason -->
-                <thead>
-                    <tr>
-                    <!-- can't use th tag due to list rendering error when no values in list... -->
-                        <td class="o_text">
-                            <div>All RFQs</div>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="All Draft RFQs" context='{"search_default_draft_rfqs": true}'>
-                            <a href="#"><t t-esc="values['all_to_send']"/><br/>To Send</a>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="All Waiting RFQs" context='{"search_default_waiting_rfqs": true}'>
-                            <a href="#"><t t-esc="values['all_waiting']"/><br/>Waiting</a>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="All Late RFQs" context='{"search_default_late_rfqs": true}'>
-                            <a href="#"><t t-esc="values['all_late']"/><br/>Late</a>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="o_text">
-                            <div>My RFQs</div>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="My Draft RFQs" context='{"search_default_draft_rfqs": true, "search_default_my_purchases": true}'>
-                            <a href="#"><t t-esc="values['my_to_send']"/></a>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="My Waiting RFQs" context='{"search_default_waiting_rfqs": true, "search_default_my_purchases": true}'>
-                            <a href="#"><t t-esc="values['my_waiting']"/></a>
-                        </td>
-                        <td class="o_main o_dashboard_action" title="My Late RFQs" context='{"search_default_late_rfqs": true, "search_default_my_purchases": true}'>
-                            <a href="#"><t t-esc="values['my_late']"/></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table></div>
-
-            <div class="col-sm-7">
-            <table class="table table-sm">
-                <!-- thead needed to avoid list view rendering error for some reason -->
-                <thead>
-                    <tr>
-                        <!-- can't use th tag due to list rendering error when no values in list... -->
-                        <td class="o_text">Avg Order Value (<t t-esc="values['company_currency_symbol']"/>)</td>
-                        <td><span><t t-esc="values['all_avg_order_value']"/></span></td>
-                        <td class="o_text">Purchased Last 7 Days (<t t-esc="values['company_currency_symbol']"/>)</td>
-                        <td><span><t t-esc="values['all_total_last_7_days']"/></span></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="o_text">Lead Time to Purchase</td>
-                        <td><span><t t-esc="values['all_avg_days_to_purchase']"/> &#160;Days</span></td>
-                        <td class="o_text">RFQs Sent Last 7 Days</td>
-                        <td><span><t t-esc="values['all_sent_rfqs']"/></span></td>
-                    </tr>
-                </tbody>
-            </table></div>
-        </div></div>
+        <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-white">
+            <div class="row justify-content-between gap-3 gap-lg-0">
+                <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <div class="grid gap-4">
+                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start">
+                            All RFQs
+                        </div>
+                        <div class="g-col-9 g-col-sm-10 grid gap-1">
+                            <div class="o_dashboard_action g-col-4 p-0" title="All Draft RFQs" context='{"search_default_draft_rfqs": true}'>
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize font-weight-normal">
+                                    <h2 t-out="values['all_to_send']"/>To Send
+                                </a>
+                            </div>
+                            <div class="o_dashboard_action g-col-4 p-0" title="All Waiting RFQs" context='{"search_default_waiting_rfqs": true}'>
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize font-weight-normal">
+                                    <h2 t-out="values['all_waiting']"/>Waiting
+                                </a>
+                            </div>
+                            <div class="o_dashboard_action g-col-4 p-0" title="All Late RFQs" context='{"search_default_late_rfqs": true}'>
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize font-weight-normal">
+                                    <h2 t-out="values['all_late']"/>Late
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid gap-4">
+                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start">
+                            My RFQs
+                        </div>
+                        <div class="g-col-9 g-col-sm-10 grid gap-2">
+                            <div class="o_dashboard_action g-col-4 p-0" title="My Draft RFQs" context='{"search_default_draft_rfqs": true, "search_default_my_purchases": true}'>
+                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 font-weight-normal">
+                                    <div class="w-100 p-2" t-out="values['my_to_send']"/>
+                                </a>
+                            </div>
+                            <div class="o_dashboard_action g-col-4 p-0" title="My Waiting RFQs" context='{"search_default_waiting_rfqs": true, "search_default_my_purchases": true}'>
+                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 font-weight-normal">
+                                    <div class="w-100 p-2" t-out="values['my_waiting']"/>
+                                </a>
+                            </div>
+                            <div class="o_dashboard_action g-col-4 p-0" title="My Late RFQs" context='{"search_default_late_rfqs": true, "search_default_my_purchases": true}'>
+                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 font-weight-normal">
+                                    <div class="w-100 p-2" t-out="values['my_late']"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-7 col-xl-6 col-xxl-5 flex-shrink-0">
+                    <div class="d-flex flex-column justify-content-between gap-2 h-100">
+                        <div class="grid gap-2 h-100">
+                            <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                    Avg Order Value
+                                </div>
+                                <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-light">
+                                    <span><t t-out="values['all_avg_order_value']"/></span>
+                                </div>
+                            </div>
+                            <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center py-2 justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                    Purchased Last 7 Days
+                                </div>
+                                <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-light">
+                                    <span><t t-out="values['all_total_last_7_days']"/></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid gap-2 h-100">
+                            <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                    Lead Time to Purchase
+                                </div>
+                                <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-light">
+                                    <span><t t-out="values['all_avg_days_to_purchase']"/> &#160;Days</span>
+                                </div>
+                            </div>
+                            <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
+                                <div class="g-col-12 g-col-md-4 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                    RFQs Sent Last 7 Days
+                                </div>
+                                <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-light">
+                                    <span><t t-out="values['all_sent_rfqs']"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 </templates>
+

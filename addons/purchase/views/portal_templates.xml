@@ -243,8 +243,8 @@
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
-                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
-                                  <span t-else="" class="small badge text-bg-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
+                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
+                                  <span t-else="" class="small badge text-bg-info"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
                               </div>
                           </t>
                       </ul>
@@ -281,7 +281,7 @@
                           <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                           <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
 
-                          <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                          <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic text-break' if line.display_type == 'line_note' else ''">
                               <t t-if="not line.display_type">
                                   <td id="product_name">
                                       <img t-att-src="image_data_uri(resize_to_48(line.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
