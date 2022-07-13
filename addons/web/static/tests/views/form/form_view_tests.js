@@ -1536,6 +1536,30 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "label is not rendered when invisible and not at top-level in a group",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <div>
+                                <label for="bar" attrs='{"invisible": [["bar", "=", True]]}'/>
+                                <field name="bar" />
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+                resId: 2,
+            });
+            assert.containsNone(target, "label.o_form_label");
+        }
+    );
+
+    QUnit.test(
         "input ids for multiple occurrences of fields in form view",
         async function (assert) {
             // A same field can occur several times in the view, but its id must be
