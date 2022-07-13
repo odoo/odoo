@@ -45,10 +45,10 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 notifications.append([channel.uuid, 'mail.channel/new_message', notifications[0][2]])
         if not message.author_id:
-            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
-            if unpinned_channel_partner:
-                unpinned_channel_partner.write({'is_pinned': True})
-                notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
+            unpinned_members = self.channel_member_ids.filtered(lambda member: not member.is_pinned)
+            if unpinned_members:
+                unpinned_members.write({'is_pinned': True})
+                notifications = self._channel_channel_notifications(unpinned_members.partner_id.ids) + notifications
         return notifications
 
     def channel_info(self):

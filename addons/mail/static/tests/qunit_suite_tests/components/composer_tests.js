@@ -150,7 +150,7 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Marc Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],

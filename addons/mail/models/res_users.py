@@ -135,11 +135,11 @@ class Users(models.Model):
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
         """
-        current_cp = self.env['mail.channel.partner'].sudo().search([
+        current_cm = self.env['mail.channel.member'].sudo().search([
             ('partner_id', 'in', self.partner_id.ids),
         ])
-        current_cp.filtered(
-            lambda cp: cp.channel_id.public != 'public' and cp.channel_id.channel_type == 'channel'
+        current_cm.filtered(
+            lambda cm: cm.channel_id.public != 'public' and cm.channel_id.channel_type == 'channel'
         ).unlink()
 
     def _get_portal_access_update_body(self, access_granted):

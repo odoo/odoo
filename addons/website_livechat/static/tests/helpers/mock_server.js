@@ -72,7 +72,7 @@ patch(MockServer.prototype, 'website_livechat', {
             }
             const livechatId = this.pyEnv['mail.channel'].create({
                 anonymous_name: visitor_name,
-                channel_last_seen_partner_ids: membersToAdd,
+                channel_member_ids: membersToAdd,
                 channel_type: 'livechat',
                 livechat_operator_id: this.currentPartnerId,
                 public: 'private',

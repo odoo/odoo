@@ -162,7 +162,7 @@ const LivechatButton = Widget.extend({
                 });
                 return;
             }
-            case 'mail.channel.partner/typing_status': {
+            case 'mail.channel.member/typing_status': {
                 if (payload.channel_id !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._id) {
                     return;
                 }

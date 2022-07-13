@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 import json
 
-from odoo import models, api, fields, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -58,13 +57,13 @@ class WebsiteVisitor(models.Model):
             operator = self.env.user
             country = visitor.country_id
             visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
-            channel_partner_to_add = [(4, operator.partner_id.id)]
+            members_to_add = [Command.link(operator.partner_id.id)]
             if visitor.partner_id:
-                channel_partner_to_add.append((4, visitor.partner_id.id))
+                members_to_add.append(Command.link(visitor.partner_id.id))
             else:
-                channel_partner_to_add.append((4, self.env.ref('base.public_partner').id))
+                members_to_add.append(Command.link(self.env.ref('base.public_partner').id))
             mail_channel_vals_list.append({
-                'channel_partner_ids': channel_partner_to_add,
+                'channel_partner_ids': members_to_add,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
                 'livechat_operator_id': self.env.user.partner_id.id,
                 'channel_type': 'livechat',
@@ -78,7 +77,7 @@ class WebsiteVisitor(models.Model):
         if mail_channel_vals_list:
             mail_channels = self.env['mail.channel'].create(mail_channel_vals_list)
             # Open empty chatter to allow the operator to start chatting with the visitor.
-            channel_members = self.env['mail.channel.partner'].sudo().search([
+            channel_members = self.env['mail.channel.member'].sudo().search([
                 ('partner_id', '=', self.env.user.partner_id.id),
                 ('channel_id', 'in', mail_channels.ids),
             ])

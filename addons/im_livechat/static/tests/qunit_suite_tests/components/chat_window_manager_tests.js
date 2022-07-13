@@ -19,7 +19,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create(
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, {
                     is_pinned: true,
                     partner_id: pyEnv.currentPartnerId,
