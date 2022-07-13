@@ -48,7 +48,7 @@
                         <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
-                            <h1><field class="o_text_overflow" name="name" placeholder="e.g. Product Pricing"/></h1>
+                            <h1><field class="text-break" name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="o_row g-0 align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="expected_revenue" class="oe_edit_only" />
