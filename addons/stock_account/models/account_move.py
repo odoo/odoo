@@ -74,7 +74,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for layer in stock_valuation_layers:
-            description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}" 
+            description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}"
             layer.description = description
             layer.account_move_id.ref = description
             layer.account_move_id.line_ids.write({'name': description})
