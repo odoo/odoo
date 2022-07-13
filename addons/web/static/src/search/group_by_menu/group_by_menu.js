@@ -27,6 +27,13 @@ export class GroupByMenu extends Component {
     }
 
     /**
+     * @returns {boolean}
+     */
+    get hideCustomGroupBy() {
+        return this.env.searchModel.hideCustomGroupBy || false;
+    }
+
+    /**
      * @returns {Object[]}
      */
     get items() {

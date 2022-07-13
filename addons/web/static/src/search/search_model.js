@@ -212,13 +212,14 @@ export class SearchModel extends EventBus {
         // used to avoid useless recomputations
         this._reset();
 
-        const { comparison, context, domain, groupBy, orderBy } = config;
+        const { comparison, context, domain, groupBy, hideCustomGroupBy, orderBy } = config;
 
         this.globalComparison = comparison;
         this.globalContext = toRaw(context || {});
         this.globalDomain = domain || [];
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
+        this.hideCustomGroupBy = hideCustomGroupBy;
 
         this.searchMenuTypes = new Set(config.searchMenuTypes || ["filter", "groupBy", "favorite"]);
 

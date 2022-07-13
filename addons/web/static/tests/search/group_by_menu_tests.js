@@ -457,4 +457,69 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
         assert.deepEqual(getFacetTexts(target), []);
     });
+
+    QUnit.test("Custom group by menu is displayed when hideCustomGroupBy is not set", async function (assert) {
+
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <filter string="Birthday" name="birthday" context="{'group_by': 'birthday'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'foo'}"/>
+                    </search>
+                `,
+            searchMenuTypes: ["groupBy"],
+        });
+
+        await toggleGroupByMenu(target);
+
+        assert.containsOnce(target, ".o_add_custom_group_menu");
+    });
+
+    QUnit.test("Custom group by menu is displayed when hideCustomGroupBy is false", async function (assert) {
+
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <filter string="Birthday" name="birthday" context="{'group_by': 'birthday'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'foo'}"/>
+                    </search>
+                `,
+            hideCustomGroupBy: false,
+            searchMenuTypes: ["groupBy"],
+        });
+
+        await toggleGroupByMenu(target);
+
+        assert.containsOnce(target, ".o_add_custom_group_menu");
+    });
+
+    QUnit.test("Custom group by menu is displayed when hideCustomGroupBy is true", async function (assert) {
+
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <filter string="Birthday" name="birthday" context="{'group_by': 'birthday'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'foo'}"/>
+                    </search>
+                `,
+            hideCustomGroupBy: true,
+            searchMenuTypes: ["groupBy"],
+        });
+
+        await toggleGroupByMenu(target);
+
+        assert.containsNone(target, ".o_add_custom_group_menu");
+    });
 });
