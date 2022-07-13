@@ -270,10 +270,12 @@
             <div id="wrap" class="js_sale o_wsale_products_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale pt-2">
-                    <div class="row o_wsale_products_main_row">
+                    <div class="row o_wsale_products_main_row align-items-start">
                         <div t-if="enable_left_column" id="products_grid_before" class="col-lg-3 pb-2">
-                            <div class="products_categories"/>
-                            <div class="products_attributes_filters"/>
+                            <div class="o_wsale_products_grid_before_rail h-100 pe-lg-2 pb-lg-5">
+                                <div class="products_categories"/>
+                                <div class="products_attributes_filters"/>
+                            </div>
                         </div>
                         <div id="products_grid" t-attf-class="col #{'o_wsale_layout_list' if layout_mode == 'list' else ''}">
                             <t t-call="website_sale.products_breadcrumb">
@@ -571,7 +573,7 @@
     </template>
 
     <template id="filter_products_price" inherit_id="website_sale.products" active="False" name="Filter by Prices">
-        <xpath expr="//div[@id='products_grid_before']" position="inside">
+        <xpath expr="//div[@id='products_grid_before']/div" position="inside">
             <div t-if="available_min_price != available_max_price" id="o_wsale_price_range_option">
                 <label class="m-0 h6 o_products_attributes_title">
                     <b>Price Range</b>

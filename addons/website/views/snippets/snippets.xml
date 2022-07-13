@@ -752,7 +752,7 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
-        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector">
+        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header-scroll-effect">
             <t t-set="header_effect_standard_label">Standard</t>
             <t t-set="header_effect_scroll_label">Scroll</t>
             <t t-set="header_effect_fixed_label">Fixed</t>
@@ -761,6 +761,7 @@
             <we-button id="option_header_visibility_standard"
                        t-att-data-select-label="header_effect_standard_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'standard'"
                        data-name="header_visibility_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
@@ -770,6 +771,7 @@
             <we-button id="option_header_effect_scroll"
                        t-att-data-select-label="header_effect_scroll_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'scroll'"
                        data-name="header_effect_scroll_opt"
                        data-select-class=""
                        data-customize-website-views=""
@@ -779,6 +781,7 @@
             <we-button id="option_header_effect_fixed"
                        t-att-data-select-label="header_effect_fixed_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'fixed'"
                        data-name="header_effect_fixed_opt"
                        data-select-class="o_header_fixed"
                        data-customize-website-views="website.header_visibility_fixed"
@@ -788,6 +791,7 @@
             <we-button id="option_header_effect_disappears"
                        t-att-data-select-label="header_effect_disappears_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'disappears'"
                        data-name="header_effect_disappears_opt"
                        data-select-class="o_header_disappears"
                        data-customize-website-views="website.header_visibility_disappears"
@@ -797,6 +801,7 @@
             <we-button id="option_header_effect_fade_out"
                        t-att-data-select-label="header_effect_fadeout_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'fade-out'"
                        data-name="header_effect_fade_out_opt"
                        data-select-class="o_header_fade_out"
                        data-customize-website-views="website.header_visibility_fade_out"
