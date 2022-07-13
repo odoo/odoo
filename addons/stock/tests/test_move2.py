@@ -2232,6 +2232,26 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(picking.move_ids.state, 'cancel', "Stock move should be in a cancel state.")
         self.assertEqual(picking.state, 'cancel', "Picking should be in a cancel state.")
 
+    def test_immediate_picking_with_lot(self):
+        self.productA.tracking = 'serial'
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+            'immediate_transfer': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+                'qty_done': 1,
+                'lot_name': '12345',
+            })]
+        })
+
+        self.assertEqual(len(picking.move_line_ids), 1, "Picking should have a single move line")
+        picking.button_validate()
+        self.assertEqual(len(picking.move_line_ids), 1, "Picking should have a single move line")
 
 class TestStockUOM(TestStockCommon):
     @classmethod
