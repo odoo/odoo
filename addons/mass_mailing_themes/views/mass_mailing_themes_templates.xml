@@ -37,12 +37,12 @@
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                         <a style="text-decoration:none;float:none;" href="http://www.example.com" target="_blank">
-                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 400px; width: 194px;" alt="Your Logo" />
+                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" />
                         </a>
                     </div>
-                    <div class="col-lg-4 o_mail_header_social" style="text-align: right;" t-translation="off">
+                    <div class="col-lg-8 o_mail_header_social" style="text-align: right;" t-translation="off">
                         <a title="Facebook" href="https://www.facebook.com/Odoo">
                             <span class="fa fa-facebook rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
@@ -179,12 +179,12 @@
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-snippet="s_mail_block_header_social" data-name="Header Social">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
-                            <img border="0" width="189" style="height:auto;max-width:400px;" src="/mass_mailing_themes/static/src/img/theme_tech/tech_logo.png"/>
+                            <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_tech/tech_logo.png"/>
                         </a>
                     </div>
-                    <div class="col-lg-4 o_mail_header_social" style="text-align:right;">
+                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
                         <a title="Facebook" href="https://www.facebook.com/Odoo">
                             <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
                         </a>
@@ -358,8 +358,8 @@
                         <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">SHIPPING</font></span></p>
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
-                        <a style="text-decoration:none; text-align:center;" href="http://www.example.com">
-                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_vip/s_default_image_logo.png" style="height: auto; max-width: 400px; width: 105px;" />
+                        <a style="text-decoration:none; text-align:center;" t-att-href="(company_id.website) or '#'" target="_blank">
+                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_vip/vip_logo.png" style="height: auto; max-width: 100%; width: 105px;" width="105" />
                         </a>
                     </div>
                     <div class="col-lg-4" style="text-align: center;">
@@ -672,7 +672,7 @@
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
                         <a style="text-decoration:none;" href="http://www.example.com">
-                            <img src="/mass_mailing_themes/static/src/img/theme_bignews/bignews_logo.png" width="70" style="height:auto;max-width:400px;width:70px"/>
+                            <img src="/mass_mailing_themes/static/src/img/theme_bignews/bignews_logo.png" width="70" style="height:auto;max-width:100%; width:70px;"/>
                         </a>
                     </div>
                     <div class="col-lg-4" style="text-align:right"></div>
@@ -765,14 +765,14 @@
         <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 pt16 pb16">
+                    <div class="col-lg-4 pt16 pb16">
                         <h1>
                             <a t-att-href="(company_id.website) or '#'" target="_blank">
                                 <span style="color: rgb(255, 187, 0) !important; font-size: 32px" class="fa fa-1x fa-sun-o" />
                             </a><span style="font-size: 32px;"><font style="font-weight: bolder; color: rgb(255, 255, 255); background-color: rgb(255, 187, 0);">SOLAR</font></span>
                         </h1>
                     </div>
-                    <div class="col-lg-4 o_mail_header_social" style="text-align:right;">
+                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
                         <a href="/view">
                             <span style="font-weight: bolder;">View online</span>&amp;nbsp;<span class="fa fa-external-link" />
                         </a>
