@@ -167,7 +167,7 @@
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
-                            <field class="o_text_overflow" name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
+                            <field class="text-break" name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">
