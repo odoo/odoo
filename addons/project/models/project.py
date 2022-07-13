@@ -341,6 +341,7 @@ class Project(models.Model):
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
     privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning')
+    access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message')
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
@@ -522,6 +523,16 @@ class Project(models.Model):
                 project.privacy_visibility_warning = _('Portal users will be removed from the followers of the project and its tasks.')
             else:
                 project.privacy_visibility_warning = ''
+
+    @api.depends('privacy_visibility')
+    def _compute_access_instruction_message(self):
+        for project in self:
+            if project.privacy_visibility == 'portal':
+                project.access_instruction_message = _('Grant portal users access to your project or tasks by adding them as followers.')
+            elif project.privacy_visibility == 'followers':
+                project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers.')
+            else:
+                project.access_instruction_message = ''
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
