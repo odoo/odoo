@@ -171,7 +171,7 @@
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <label for="subject">Subject</label>
                             <div class="o_mass_mailing_subject d-flex flex-row align-items-baseline">
-                                <field class="o_text_overflow" name="subject" string="Subject"
+                                <field class="text-break" name="subject" string="Subject"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
                                     widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                                 <field name="favorite" invisible="1"/>
