@@ -24,7 +24,20 @@ export class DomainSelectorLeafNode extends Component {
     }
 
     get displayedOperator() {
-        const op = this.getOperatorInfo(this.props.node.operator);
+        let op = this.getOperatorInfo(this.props.node.operator);
+        if (op) {
+            return op.label;
+        }
+        op = registry
+            .category("domain_selector/operator")
+            .getAll()
+            .find((op) =>
+                op.matches({
+                    field: this.fieldInfo,
+                    operator: this.props.node.operator,
+                    value: this.props.node.operands[1],
+                })
+            );
         return op ? op.label : "?";
     }
     get isValueHidden() {

@@ -339,4 +339,16 @@ QUnit.module("Components", (hooks) => {
             "should still have a single domain node"
         );
     });
+
+    QUnit.test("operator fallback", async (assert) => {
+        await mount(DomainSelector, target, {
+            env,
+            props: {
+                resModel: "partner",
+                value: "[['foo', 'like', 'kikou']]",
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like "kikou"`);
+    });
 });
