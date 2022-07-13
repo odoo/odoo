@@ -9,7 +9,7 @@
                 <h1>Payments failed</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_error" t-as="tx">
-                        <li class="list-group-item">
+                        <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
                                 <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
@@ -18,7 +18,7 @@
                                 An error occurred during the processing of this payment.<br/>
                                 <strong>Reason:</strong> <t t-esc="tx['state_message']"/>
                             </small>
-                        </li>
+                        </a>
                     </t>
                 </ul>
             </div>
@@ -66,7 +66,7 @@
                     </t>
                     <!-- Authorized transactions -->
                     <t t-foreach="tx_authorized" t-as="tx">
-                        <li class="list-group-item">
+                        <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
                                 <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
@@ -82,7 +82,7 @@
                                     You will be notified when the payment is confirmed.
                                 </t>
                             </small>
-                        </li>
+                        </a>
                     </t>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                 <h1>Waiting for payment</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_draft" t-as="tx">
-                        <li class="list-group-item">
+                        <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
                                 <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
@@ -106,7 +106,7 @@
                                     We are waiting for the payment acquirer to confirm the payment.
                                 </t>
                             </small>
-                        </li>
+                        </a>
                     </t>
                 </ul>
             </div>
@@ -115,7 +115,7 @@
                 <h1>Cancelled payments</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_cancel" t-as="tx">
-                        <li class="list-group-item">
+                        <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
                                 <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
@@ -124,7 +124,7 @@
                                 This transaction has been cancelled.<br/>
                                 No payment has been processed.
                             </small>
-                        </li>
+                        </a>
                     </t>
                 </ul>
             </div>
