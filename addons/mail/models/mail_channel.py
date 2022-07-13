@@ -429,7 +429,7 @@ class Channel(models.Model):
             for channel in self:
                 current_channel_partner = self.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id)])
                 if current_channel_partner and current_channel_partner.rtc_session_ids:
-                    current_channel_partner._rtc_invite_members(partner_ids=partners.ids, guest_ids=guests.ids)
+                    current_channel_partner._rtc_invite_members(member_ids=new_members.ids)
         self.env['bus.bus']._sendmany(notifications)
 
     def _can_invite(self, partner_id):
@@ -456,33 +456,26 @@ class Channel(models.Model):
     # RTC
     # ------------------------------------------------------------
 
-    def _rtc_cancel_invitations(self, partner_ids=None, guest_ids=None):
-        """ Cancels the invitations of the RTC call from all invited members (or the specified partner_ids).
-            :param list partner_ids: list of the partner ids from which the invitation has to be removed
-            :param list guest_ids: list of the guest ids from which the invitation has to be removed
-            if either partner_ids or guest_ids is set, only the specified ids will be invited.
+    def _rtc_cancel_invitations(self, member_ids=None):
+        """ Cancels the invitations of the RTC call from all invited members,
+            if member_ids is provided, only the invitations of the specified members are canceled.
+
+            :param list member_ids: list of the members ids from which the invitation has to be removed
         """
         self.ensure_one()
         channel_partner_domain = [
             ('channel_id', '=', self.id),
             ('rtc_inviting_session_id', '!=', False),
         ]
-        if partner_ids or guest_ids:
-            channel_partner_domain = expression.AND([channel_partner_domain, [
-                '|',
-                ('partner_id', 'in', partner_ids or []),
-                ('guest_id', 'in', guest_ids or []),
-            ]])
-        invited_partners = self.env['res.partner']
-        invited_guests = self.env['mail.guest']
+        if member_ids:
+            channel_partner_domain = expression.AND([channel_partner_domain, [('id', 'in', member_ids)]])
         invitation_notifications = []
-        for member in self.env['mail.channel.partner'].search(channel_partner_domain):
+        members = self.env['mail.channel.partner'].search(channel_partner_domain)
+        for member in members:
             member.rtc_inviting_session_id = False
             if member.partner_id:
-                invited_partners |= member.partner_id
                 target = member.partner_id
             else:
-                invited_guests |= member.guest_id
                 target = member.guest_id
             invitation_notifications.append((target, 'mail.channel/insert', {
                 'id': self.id,
@@ -490,11 +483,8 @@ class Channel(models.Model):
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         channel_data = {'id': self.id}
-        if invited_guests:
-            channel_data['invitedGuests'] = [('insert-and-unlink', [{'id': guest.id} for guest in invited_guests])]
-        if invited_partners:
-            channel_data['invitedPartners'] = [('insert-and-unlink', [{'id': partner.id} for partner in invited_partners])]
-        if invited_partners or invited_guests:
+        if members:
+            channel_data['invitedMembers'] = [('insert-and-unlink', members.mail_channel_member_format())]
             self.env['bus.bus']._sendone(self, 'mail.channel/insert', channel_data)
         return channel_data
 
@@ -826,8 +816,7 @@ class Channel(models.Model):
 
             # add RTC sessions info
             info.update({
-                'invitedGuests': [('insert', [{'id': member.guest_id.id, 'name': member.guest_id.name} for member in invited_members_by_channel[channel] if member.guest_id])],
-                'invitedPartners': [('insert', [{'id': member.partner_id.id, 'name': member.partner_id.name} for member in invited_members_by_channel[channel] if member.partner_id])],
+                'invitedMembers': [('insert', invited_members_by_channel[channel].mail_channel_member_format())],
                 'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
             })
 
@@ -1176,29 +1165,8 @@ class Channel(models.Model):
         count = self.env['mail.channel.partner'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        members_data = []
-        for member in channel_partners:
-            if member.partner_id:
-                persona = {
-                    'partner': [('insert-and-replace', {
-                        'id': member.partner_id.id,
-                        'name': member.partner_id.name,
-                        'im_status': member.partner_id.im_status,
-                    })],
-                }
-            if member.guest_id:
-                persona = {
-                    'guest': [('insert-and-replace', {
-                        'id': member.guest_id.id,
-                        'name': member.guest_id.name,
-                    })],
-                }
-            members_data.append({
-                'id': member.id,
-                'persona': [('insert-and-replace', persona)],
-            })
         return {
-            'channelMembers': [('insert', members_data)],
+            'channelMembers': [('insert', channel_partners.mail_channel_member_format())],
             'memberCount': count,
         }
 

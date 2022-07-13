@@ -137,34 +137,18 @@ registerModel({
                 return clear();
             }
             const tileCards = [];
-            const sessionPartners = new Set();
-            const sessionGuests = new Set();
             for (const rtcSession of this.channel.rtcSessions) {
                 if (this.filterVideoGrid && !rtcSession.videoStream) {
                     continue;
                 }
-                rtcSession.partner && sessionPartners.add(rtcSession.partner.id);
-                rtcSession.guest && sessionPartners.add(rtcSession.guest.id);
                 tileCards.push({
                     rtcSession: replace(rtcSession),
                     channel: replace(this.channel),
                 });
             }
-            for (const partner of this.channel.invitedPartners) {
-                if (sessionPartners.has(partner.id)) {
-                    continue;
-                }
+            for (const member of this.channel.invitedMembers) {
                 tileCards.push({
-                    invitedPartner: replace(partner),
-                    channel: replace(this.channel),
-                });
-            }
-            for (const guest of this.channel.invitedGuests) {
-                if (sessionGuests.has(guest.id)) {
-                    continue;
-                }
-                tileCards.push({
-                    invitedGuest: replace(guest),
+                    invitedMember: replace(member),
                     channel: replace(this.channel),
                 });
             }

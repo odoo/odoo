@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: [['rtcSession', 'invitedPartner', 'invitedGuest'], ['callViewAsMainCard', 'callViewAsTile']],
+    identifyingFields: [['rtcSession', 'invitedMember'], ['callViewAsMainCard', 'callViewAsTile']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -37,8 +37,7 @@ registerModel({
                 route: '/mail/rtc/channel/cancel_call_invitation',
                 params: {
                     channel_id: this.channel.id,
-                    partner_ids: this.invitedPartner && [this.invitedPartner.id],
-                    guest_ids: this.invitedGuest && [this.invitedGuest.id],
+                    member_ids: this.invitedMember && [this.invitedMember.id],
                 },
             }));
             if (!channel.exists()) {
@@ -78,11 +77,8 @@ registerModel({
             if (this.rtcSession) {
                 return this.rtcSession.avatarUrl;
             }
-            if (this.invitedPartner) {
-                return `/mail/channel/${this.channel.id}/partner/${this.invitedPartner.id}/avatar_128`;
-            }
-            if (this.invitedGuest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128?unique=${this.invitedGuest.name}`;
+            if (this.invitedMember) {
+                return this.invitedMember.avatarUrl;
             }
         },
         /**
@@ -131,13 +127,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeIsInvitation() {
-            return Boolean(this.invitedPartner || this.invitedGuest);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeIsTalking() {
             return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
         },
@@ -149,11 +138,8 @@ registerModel({
             if (this.rtcSession) {
                 return this.rtcSession.name;
             }
-            if (this.invitedPartner) {
-                return this.invitedPartner.name;
-            }
-            if (this.invitedGuest) {
-                return this.invitedGuest.name;
+            if (this.invitedMember) {
+                return this.invitedMember.name;
             }
         },
         /**
@@ -208,25 +194,9 @@ registerModel({
         inboundConnectionTypeText: attr({
             compute: '_computeInboundConnectionTypeText',
         }),
-        /**
-         * If set, this card represents an invitation of this guest to this call.
-         */
-        invitedGuest: one('Guest', {
+        invitedMember: one('ChannelMember', {
             readonly: true,
          }),
-        /**
-         * If set, this card represents an invitation of this partner to this call.
-         */
-        invitedPartner: one('Partner', {
-            readonly: true,
-         }),
-        /**
-         * States whether this card is representing a person with a pending
-         * invitation.
-         */
-        isInvitation: attr({
-            compute: '_computeIsInvitation'
-        }),
         /**
          * Determines if this card has to be displayed in a minimized form.
          */
