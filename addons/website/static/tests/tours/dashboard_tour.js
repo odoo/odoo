@@ -1,19 +1,15 @@
 odoo.define("website.tour.backend_dashboard", function (require) {
   "use strict";
 
-  var tour = require("web_tour.tour");
+  const wTourUtils = require("website.tour_utils");
 
-  tour.register(
+  wTourUtils.registerEditionTour(
     "backend_dashboard",
     {
       test: true,
-      url: "/web",
+      url: '/',
     },
     [
-      tour.stepUtils.showAppsMenuItem(),
-      {
-        trigger: '.o_app[data-menu-xmlid="website.menu_website_configuration"]',
-      },
       {
         trigger: 'button[data-menu-xmlid="website.menu_reporting"]',
       },
@@ -21,8 +17,8 @@ odoo.define("website.tour.backend_dashboard", function (require) {
         trigger: '.dropdown-item[data-menu-xmlid="website.menu_website_google_analytics"]',
       },
       {
-        // Visits section should always be present even when empty / not hooked to anything
-        trigger: 'h2:contains("Visits")',
+        // Analytics section should always be present even when empty / not hooked to anything
+        trigger: 'h2:contains("Analytics")',
         content: "Check if dashboard loads",
         run: function () {},
       },
