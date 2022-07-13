@@ -8,8 +8,6 @@ const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const { registry } = require("@web/core/registry");
 const { mockTimeout } = require("@web/../tests/helpers/utils");
 
-var AbstractField = require('web.AbstractField');
-var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
@@ -178,7 +176,6 @@ QUnit.test('pager buttons', async function (assert) {
 
     var form = await createView({
         View: FormView,
-        debug: true,
         model: 'product',
         data: this.data,
         arch: '<form><field name="display_name"/></form>',
@@ -215,7 +212,7 @@ QUnit.test('pager buttons', async function (assert) {
 });
 
 QUnit.test('do no update form twice after a command barcode scanned', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     testUtils.mock.patch(FormController, {
         update: function () {
@@ -253,12 +250,6 @@ QUnit.test('do no update form twice after a command barcode scanned', async func
     // a first update is done to reload the data (thus followed by a read), but
     // update shouldn't be called afterwards
     assert.verifySteps(['update', 'read']);
-
-    simulateBarCode(['5','4','3','9','8','2','6','7','1','2','5','2','Enter']);
-    await testUtils.nextTick();
-    // a real barcode has been scanned -> an update should be requested (with
-    // option reload='false', so it isn't followed by a read)
-    assert.verifySteps(['update']);
 
     form.destroy();
     testUtils.mock.unpatch(FormController);
@@ -321,128 +312,6 @@ QUnit.test('widget field_float_scannable', async function (assert) {
 
     form.destroy();
     core.bus.off('barcode_scanned', null, _onBarcodeScanned)
-});
-
-QUnit.test('widget barcode_handler', async function (assert) {
-    assert.expect(4);
-
-    this.data.product.fields.barcode_scanned = {string : "Scanned barcode", type: "char"};
-    this.data.product.onchanges = {
-        barcode_scanned: function (obj) {
-            // simulate an onchange that increment the int_field value
-            // at each barcode scanned
-            obj.int_field = obj.int_field + 1;
-        },
-    };
-
-    var form = await createView({
-        View: FormView,
-        model: 'product',
-        data: this.data,
-        arch: '<form>' +
-                    '<field name="display_name"/>' +
-                    '<field name="int_field"/>' +
-                    '<field name="barcode_scanned" widget="barcode_handler"/>' +
-                '</form>',
-        mockRPC: function (route, args) {
-            if (args.method === 'onchange') {
-                assert.step('onchange');
-            }
-            return this._super.apply(this, arguments);
-        },
-        res_id: 1,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
-
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '0',
-        "initial value should be correct");
-
-    simulateBarCode(['5','4','3','9','8','2','6','7','1','2','5','2','Enter']);
-    await testUtils.nextTick();
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '1',
-        "value should have been incremented");
-
-    assert.verifySteps(['onchange'], "an onchange should have been done");
-
-    form.destroy();
-});
-
-QUnit.test('specification of widget barcode_handler', async function (assert) {
-    assert.expect(5);
-
-    // Define a specific barcode_handler widget for this test case
-    var TestBarcodeHandler = AbstractField.extend({
-        init: function () {
-            this._super.apply(this, arguments);
-
-            this.trigger_up('activeBarcode', {
-                name: 'test',
-                fieldName: 'line_ids',
-                quantity: 'quantity',
-                commands: {
-                    barcode: '_barcodeAddX2MQuantity',
-                }
-            });
-        },
-    });
-    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
-
-    var form = await createView({
-        View: FormView,
-        model: 'order',
-        data: this.data,
-        arch: '<form>' +
-                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
-                    '<field name="line_ids">' +
-                        '<tree>' +
-                            '<field name="product_id"/>' +
-                            '<field name="product_barcode" invisible="1"/>' +
-                            '<field name="quantity"/>' +
-                        '</tree>' +
-                    '</field>' +
-                '</form>',
-        mockRPC: function (route, args) {
-            if (args.method === 'onchange') {
-                assert.notOK(true, "should not do any onchange RPC");
-            }
-            if (args.method === 'write') {
-                assert.deepEqual(args.args[1].line_ids, [
-                    [1, 1, {quantity: 2}], [1, 2, {quantity: 1}],
-                ], "should have generated the correct commands");
-            }
-            return this._super.apply(this, arguments);
-        },
-        res_id: 1,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
-
-    assert.containsN(form, '.o_data_row', 2,
-        "one2many should contain 2 rows");
-
-    // scan twice product 1
-    simulateBarCode(['1','2','3','4','5','6','7','8','9','0','Enter']);
-    await testUtils.nextTick();
-    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '1',
-        "quantity of line one should have been incremented");
-    simulateBarCode(['1','2','3','4','5','6','7','8','9','0','Enter']);
-    await testUtils.nextTick();
-    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '2',
-        "quantity of line one should have been incremented");
-
-    // scan once product 2
-    simulateBarCode(['0','9','8','7','6','5','4','3','2','1','Enter']);
-    await testUtils.nextTick();
-    assert.strictEqual(form.$('.o_data_row:nth(1) .o_data_cell:nth(1)').text(), '1',
-        "quantity of line one should have been incremented");
-
-    await testUtils.form.clickSave(form);
-
-    form.destroy();
-    delete fieldRegistry.map.test_barcode_handler;
 });
 
 });
