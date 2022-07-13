@@ -275,7 +275,7 @@ export class KanbanCompiler extends ViewCompiler {
         }
 
         for (const attr in attrs) {
-            if (attr.startsWith("t") && !attr.startsWith("t-att")) {
+            if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
                 compiled.setAttribute(attr, attrs[attr]);
             }
         }
