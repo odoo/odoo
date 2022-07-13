@@ -13,6 +13,11 @@
         'data/payment_acquirer_data.xml',
     ],
     'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'payment_transfer/static/src/js/post_processing.js',
+        ],
+    },
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
