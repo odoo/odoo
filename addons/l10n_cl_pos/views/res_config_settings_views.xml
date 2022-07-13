@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.pos.cl</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="pos_journal_id" position="after">
+                    <field name="country_code" invisible="1"/>
+                </field>
+                <field name="pos_journal_id" position="attributes">
+                    <attribute name="domain">
+                        [('company_id', '=', company_id), ('type', '=', 'general')]
+                    </attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
+
