@@ -84,6 +84,7 @@ dso.add("like", {
     label: _lt("like"),
     value: "like",
     onDidChange: onDidChange(() => ({ value: "" })),
+    matches: matchValue(),
 });
 dso.add("not like", {
     category: "like",
