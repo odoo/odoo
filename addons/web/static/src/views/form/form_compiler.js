@@ -81,10 +81,15 @@ export class FormCompiler extends ViewCompiler {
         labelText = labelText
             ? toStringExpression(labelText)
             : `props.record.fields['${fieldName}'].string`;
-        return createElement("FormLabel", {
+        const formLabel = createElement("FormLabel", {
             "t-props": objectToString(props),
             string: labelText,
         });
+        const condition = label.getAttribute("t-if");
+        if (condition) {
+            formLabel.setAttribute("t-if", condition);
+        }
+        return formLabel;
     }
 
     /**
