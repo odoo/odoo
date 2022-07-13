@@ -531,15 +531,14 @@ class DiscussController(http.Controller):
         return channel_partner_sudo._rtc_leave_call()
 
     @http.route('/mail/rtc/channel/cancel_call_invitation', methods=['POST'], type="json", auth="public")
-    def channel_call_cancel_invitation(self, channel_id, partner_ids=None, guest_ids=None):
-        """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited.
-            :param list partner_ids: list of the partner ids to invite
-            :param list guest_ids: list of the guest ids to invite
+    def channel_call_cancel_invitation(self, channel_id, member_ids=None):
+        """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited,
+            if member_ids is provided, only the specified ids will be invited.
 
-            if either partner_ids or guest_ids is set, only the specified ids will be invited.
+            :param list member_ids: list of member ids to invite
         """
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        return channel_partner_sudo.channel_id._rtc_cancel_invitations(partner_ids=partner_ids, guest_ids=guest_ids)
+        return channel_partner_sudo.channel_id._rtc_cancel_invitations(member_ids=member_ids)
 
     @http.route('/mail/rtc/audio_worklet_processor', methods=['GET'], type='http', auth='public')
     def audio_worklet_processor(self):
