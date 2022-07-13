@@ -164,7 +164,8 @@ class TestSaleOrder(TestSaleCommon):
         """Test application of a fiscal position mapping
         price included to price included tax
         """
-
+        # Required for `product_uom` to be visible in the view
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
         uom = self.env['uom.uom'].search([('name', '=', 'Units')])
         pricelist = self.env['product.pricelist'].search([('name', '=', 'Public Pricelist')])
 
