@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
-from odoo.tools import config, is_html_empty, parse_version
+from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
@@ -549,6 +549,14 @@ class IrActionsReport(models.Model):
             # But we can use `barBorder` to get a similar behaviour.
             if kwargs['quiet']:
                 kwargs['barBorder'] = 0
+
+        if barcode_type in ('EAN8', 'EAN13') and not check_barcode_encoding(value, barcode_type):
+            # If the barcode does not respect the encoding specifications, convert its type into Code128.
+            # Otherwise, the report-lab method may return a barcode different from its value. For instance,
+            # if the barcode type is EAN-8 and the value 11111111, the report-lab method will take the first
+            # seven digits and will compute the check digit, which gives: 11111115 -> the barcode does not
+            # match the expected value.
+            barcode_type = 'Code128'
 
         try:
             barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)

@@ -4,6 +4,7 @@ import calendar
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import get_barcode_check_digit
 
 FNC1_CHAR = '\x1D'
 
@@ -76,7 +77,7 @@ class BarcodeNomenclature(models.Model):
                     rule.name))
         elif rule.gs1_content_type == 'identifier':
             # Check digit and remove it of the value
-            if match.group(2)[-1] != str(self.get_barcode_check_digit("0" * (18 - len(match.group(2))) + match.group(2))):
+            if match.group(2)[-1] != str(get_barcode_check_digit("0" * (18 - len(match.group(2))) + match.group(2))):
                 return None
             result['value'] = match.group(2)
         elif rule.gs1_content_type == 'date':
