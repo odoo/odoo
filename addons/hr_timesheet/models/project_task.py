@@ -78,10 +78,7 @@ class Task(models.Model):
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.planned_hours, 0)
-                if task_total_hours > task.planned_hours:
-                    task.progress = 100
-                else:
-                    task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
+                task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
             else:
                 task.progress = 0.0
                 task.overtime = 0
