@@ -1732,9 +1732,12 @@ class MrpProduction(models.Model):
                 else:
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
-        backorders.workorder_ids._action_confirm()
+        backorders._action_confirm_mo_backorders()
 
         return self.env['mrp.production'].browse(production_ids)
+
+    def _action_confirm_mo_backorders(self):
+        self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
         self._button_mark_done_sanity_checks()
