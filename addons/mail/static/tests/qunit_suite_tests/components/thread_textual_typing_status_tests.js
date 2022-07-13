@@ -17,7 +17,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -38,7 +38,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             channel_id: mailChannelId1,
             is_typing: true,
             partner_id: resPartnerId1,
@@ -58,7 +58,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -79,7 +79,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,
@@ -94,7 +94,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 
     // simulate receive typing notification from demo "is no longer typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': false,
             'partner_id': resPartnerId1,
@@ -114,7 +114,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -137,7 +137,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,
@@ -164,7 +164,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -187,7 +187,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,
@@ -202,7 +202,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 
     // simulate receive typing notification from demo "is typing" again after 50s.
     await advanceTime(50 * 1000);
-    pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+    pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
         'channel_id': mailChannelId1,
         'is_typing': true,
         'partner_id': resPartnerId1,
@@ -234,7 +234,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         { name: 'Other 12' },
     ]);
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -257,7 +257,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from other10 (is typing)
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,
@@ -272,7 +272,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other11 (is typing)
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId2,
@@ -287,7 +287,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other12 (is typing)
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId3,
@@ -302,7 +302,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other10 (no longer is typing)
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': false,
             'partner_id': resPartnerId1,
@@ -317,7 +317,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other10 (is typing again)
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,

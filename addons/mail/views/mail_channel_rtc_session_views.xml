@@ -6,7 +6,7 @@
         <field name="model">mail.channel.rtc.session</field>
         <field name="arch" type="xml">
             <search string="Search RTC session">
-                <field name="channel_partner_id"/>
+                <field name="channel_member_id"/>
                 <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
             </search>
         </field>
@@ -21,7 +21,7 @@
                     <button name="action_disconnect" type="object" string="Disconnect"/>
                 </header>
                 <field name="id"/>
-                <field name="channel_partner_id"/>
+                <field name="channel_member_id"/>
                 <field name="channel_id"/>
                 <field name="write_date"/>
             </tree>
@@ -35,7 +35,7 @@
             <form string="RTC Session">
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="channel_partner_id"/></h1>
+                        <h1><field name="channel_member_id"/></h1>
                     </div>
                     <group>
                         <group string="Identity">

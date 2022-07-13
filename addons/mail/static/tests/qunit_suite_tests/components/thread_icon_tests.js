@@ -19,7 +19,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         name: 'Demo',
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -46,7 +46,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': true,
             'partner_id': resPartnerId1,
@@ -66,7 +66,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
             'channel_id': mailChannelId1,
             'is_typing': false,
             'partner_id': resPartnerId1,

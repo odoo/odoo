@@ -61,7 +61,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [[0, 0, {
+        channel_member_ids: [[0, 0, {
             fold_state: 'open',
             is_minimized: true,
             partner_id: pyEnv.currentPartnerId,
@@ -172,7 +172,7 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [[0, 0, {
+        channel_member_ids: [[0, 0, {
             is_pinned: false,
             partner_id: pyEnv.currentPartnerId,
         }]],

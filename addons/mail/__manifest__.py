@@ -22,7 +22,7 @@
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_ice_server_views.xml',
-        'views/mail_channel_partner_views.xml',
+        'views/mail_channel_member_views.xml',
         'views/mail_channel_rtc_session_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',

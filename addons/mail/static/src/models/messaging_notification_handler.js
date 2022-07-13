@@ -52,12 +52,12 @@ registerModel({
                     switch (message.type) {
                         case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
-                        case 'mail.channel.partner/seen':
-                            return this._handleNotificationChannelPartnerSeen(message.payload);
-                        case 'mail.channel.partner/fetched':
-                            return this._handleNotificationChannelPartnerFetched(message.payload);
-                        case 'mail.channel.partner/typing_status':
-                            return this._handleNotificationChannelPartnerTypingStatus(message.payload);
+                        case 'mail.channel.member/seen':
+                            return this._handleNotificationChannelMemberSeen(message.payload);
+                        case 'mail.channel.member/fetched':
+                            return this._handleNotificationChannelMemberFetched(message.payload);
+                        case 'mail.channel.member/typing_status':
+                            return this._handleNotificationChannelMemberTypingStatus(message.payload);
                         case 'mail.channel/new_message':
                             if (channelsLeft.has(message.payload.id)) {
                                 /**
@@ -148,7 +148,7 @@ registerModel({
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
-        async _handleNotificationChannelPartnerFetched({
+        async _handleNotificationChannelMemberFetched({
             channel_id: channelId,
             last_message_id,
             partner_id,
@@ -296,7 +296,7 @@ registerModel({
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
-        async _handleNotificationChannelPartnerSeen({
+        async _handleNotificationChannelMemberSeen({
             channel_id: channelId,
             last_message_id,
             partner_id,
@@ -340,7 +340,7 @@ registerModel({
          * @param {integer} param1.partner_id
          * @param {string} param1.partner_name
          */
-        _handleNotificationChannelPartnerTypingStatus({ channel_id, is_typing, partner_id, partner_name }) {
+        _handleNotificationChannelMemberTypingStatus({ channel_id, is_typing, partner_id, partner_name }) {
             const channel = this.messaging.models['Thread'].findFromIdentifyingData({
                 id: channel_id,
                 model: 'mail.channel',

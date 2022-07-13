@@ -19,7 +19,7 @@ QUnit.test('should display the channel invitation form after clicking on the inv
     });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -57,7 +57,7 @@ QUnit.test('should be able to search for a new user to invite from an existing c
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -96,7 +96,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -136,7 +136,7 @@ QUnit.test('Invitation form should display channel group restriction', async fun
         name: "testGroup",
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
         ],
         channel_type: 'channel',

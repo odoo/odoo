@@ -246,8 +246,8 @@ QUnit.test('counter is taking into account failure notification', async function
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
+    const [mailChannelMemberId] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId], { seen_message_id: mailMessageId1 });
     // failure that is expected to be used in the test
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1, // id of the related message

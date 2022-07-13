@@ -89,7 +89,7 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo", im_status: 'offline' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -126,7 +126,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
-            channel_last_seen_partner_ids: [[0, 0, {
+            channel_member_ids: [[0, 0, {
                 last_interest_dt: datetime_to_str(new Date(2021, 0, 1)),
                 partner_id: pyEnv.currentPartnerId,
             }]],
@@ -134,7 +134,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
             public: 'private',
         },
         {
-            channel_last_seen_partner_ids: [[0, 0, {
+            channel_member_ids: [[0, 0, {
                 last_interest_dt: datetime_to_str(new Date(2021, 0, 2)),
                 partner_id: pyEnv.currentPartnerId,
             }]],

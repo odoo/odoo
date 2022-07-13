@@ -70,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
             'chatbot_posted_message': posted_message.message_format()[0] if posted_message else None,
             'chatbot_step': {
                 'chatbot_operator_found': next_step.step_type == 'forward_operator' and len(
-                    mail_channel.channel_last_seen_partner_ids) > 2,
+                    mail_channel.channel_member_ids) > 2,
                 'chatbot_script_step_id': next_step.id,
                 'chatbot_step_answers': [{
                     'id': answer.id,

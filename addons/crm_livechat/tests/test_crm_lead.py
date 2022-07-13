@@ -55,7 +55,7 @@ class TestLivechatLead(TestCrmCommon):
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(
-            channel.channel_last_seen_partner_ids.partner_id,
+            channel.channel_member_ids.partner_id,
             self.user_sales_leads.partner_id | self.env.ref('base.public_partner')
         )
         self.assertEqual(lead.name, 'TestLead command')

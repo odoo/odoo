@@ -434,7 +434,7 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 0,
                 partner_id: pyEnv.currentPartnerId,
@@ -458,7 +458,7 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 10,
                 partner_id: pyEnv.currentPartnerId,
@@ -481,7 +481,7 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 0,
                 partner_id: pyEnv.currentPartnerId,
@@ -506,7 +506,7 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create([
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, {
                     message_unread_counter: 10,
                     partner_id: pyEnv.currentPartnerId,
@@ -516,7 +516,7 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
             public: 'private',
         },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, {
                     message_unread_counter: 20,
                     partner_id: pyEnv.currentPartnerId,

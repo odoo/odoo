@@ -242,7 +242,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     const pyEnv = await startServer();
     const resPartnerId = pyEnv['res.partner'].create({});
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId }],
         ],
@@ -277,7 +277,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/fetched', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/fetched', {
             'channel_id': mailChannelId,
             'last_message_id': 100,
             'partner_id': resPartnerId,
@@ -297,7 +297,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     const pyEnv = await startServer();
     const resPartnerId = pyEnv['res.partner'].create({});
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId }],
         ],
@@ -332,7 +332,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/seen', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/seen', {
             'channel_id': mailChannelId,
             'last_message_id': 100,
             'partner_id': resPartnerId,
@@ -352,7 +352,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     const pyEnv = await startServer();
     const resPartnerId = pyEnv['res.partner'].create({ display_name: "Recipient" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId }],
         ],
@@ -387,7 +387,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/fetched', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/fetched', {
             'channel_id': mailChannelId,
             'last_message_id': 100,
             'partner_id': resPartnerId,
@@ -401,7 +401,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
 
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/seen', {
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/seen', {
             'channel_id': mailChannelId,
             'last_message_id': 100,
             'partner_id': resPartnerId,
@@ -422,7 +422,7 @@ QUnit.test('do not show message seen indicator on the last message seen by every
     const otherPartnerId = pyEnv['res.partner'].create({ name: 'Demo User' });
     const mailChannelId = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: otherPartnerId }],
         ],
@@ -433,8 +433,8 @@ QUnit.test('do not show message seen indicator on the last message seen by every
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const memberIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(memberIds, { seen_message_id: mailMessageId });
+    const memberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(memberIds, { seen_message_id: mailMessageId });
     const { openDiscuss } = await start({
         discuss: {
             params: {
@@ -463,7 +463,7 @@ QUnit.test('do not show message seen indicator on all the messages of the curren
     const otherPartnerId = pyEnv['res.partner'].create({ name: 'Demo User' });
     const mailChannelId = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: otherPartnerId }],
         ],
@@ -482,8 +482,8 @@ QUnit.test('do not show message seen indicator on all the messages of the curren
             res_id: mailChannelId,
         },
     ]);
-    const memberIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(memberIds, { seen_message_id: lastMailMessageId });
+    const memberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(memberIds, { seen_message_id: lastMailMessageId });
     const { openDiscuss } = await start({
         discuss: {
             params: {
@@ -517,7 +517,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     const otherPartnerId = pyEnv['res.partner'].create({ name: 'Demo User' });
     const mailChannelId = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: otherPartnerId }],
         ],
@@ -528,8 +528,8 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         res_id: mailChannelId,
         model: 'mail.channel',
     });
-    const memberIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(memberIds, {
+    const memberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(memberIds, {
         fetched_message_id: mailMessageId,
         seen_message_id: mailMessageId - 1,
     });
@@ -938,7 +938,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     const resPartnerId = pyEnv['res.partner'].create({});
     pyEnv['res.users'].create({ partner_id: resPartnerId });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId }],
         ],

@@ -21,7 +21,7 @@ class Partner(models.Model):
     user_id = fields.Many2one(tracking=4)
     vat = fields.Char(tracking=5)
     # channels
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
 
     def _compute_im_status(self):
         super()._compute_im_status()
@@ -149,7 +149,7 @@ class Partner(models.Model):
         # get the pinned direct messages
         channels |= self.env['mail.channel'].search([
             ('channel_type', '=', 'chat'),
-            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+            ('channel_member_ids', 'in', self.env['mail.channel.member'].sudo()._search([
                 ('partner_id', '=', self.id),
                 ('is_pinned', '=', True),
             ])),

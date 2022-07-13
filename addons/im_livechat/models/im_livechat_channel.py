@@ -134,12 +134,12 @@ class ImLivechatChannel(models.Model):
     def _get_livechat_mail_channel_vals(self, anonymous_name, operator=None, chatbot_script=None, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id if operator else chatbot_script.operator_partner_id.id
-        channel_partner_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
+        members_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active and operator and visitor_user != operator:  # valid session user (not public)
-                channel_partner_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
+                members_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
 
         if chatbot_script:
             name = chatbot_script.title
@@ -150,7 +150,7 @@ class ImLivechatChannel(models.Model):
             ])
 
         return {
-            'channel_last_seen_partner_ids': channel_partner_to_add,
+            'channel_member_ids': members_to_add,
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
