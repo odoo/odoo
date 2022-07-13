@@ -8,7 +8,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import groupby
+from odoo.tools import check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1101,7 +1101,7 @@ class QuantPackage(models.Model):
         self.valid_sscc = False
         for package in self:
             if package.name:
-                package.valid_sscc = self.env['barcode.nomenclature'].check_encoding(package.name, 'sscc')
+                package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
         if value:
