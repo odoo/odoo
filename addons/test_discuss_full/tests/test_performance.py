@@ -129,7 +129,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_general.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_general.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_general._channel_last_message_ids()),
                     'memberCount': len(self.group_user.users | self.user_root),
                     'message_needaction_counter': 0,
@@ -154,7 +154,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_public_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_public_1._channel_last_message_ids()),
                     'message_needaction_counter': 1,
                     'memberCount': 5,
@@ -179,7 +179,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_public_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_public_2._channel_last_message_ids()),
                     'memberCount': 5,
                     'message_needaction_counter': 0,
@@ -204,7 +204,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_group_1._channel_last_message_ids()),
                     'memberCount': 5,
                     'message_needaction_counter': 0,
@@ -229,7 +229,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_group_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_group_2._channel_last_message_ids()),
                     'memberCount': 5,
                     'message_needaction_counter': 0,
@@ -254,7 +254,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_private_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_private_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_private_1._channel_last_message_ids()),
                     'memberCount': 5,
                     'message_needaction_counter': 0,
@@ -279,7 +279,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_private_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_channel_private_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_private_2._channel_last_message_ids()),
                     'memberCount': 5,
                     'message_needaction_counter': 0,
@@ -305,7 +305,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
                     'memberCount': 2,
                     'members': [
@@ -341,13 +341,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_group_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[12].partner_id).id,
+                            'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[12].partner_id).id,
                             'partner_id': self.users[12].partner_id.id,
                             'seen_message_id': False,
                         }
@@ -369,7 +369,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
                     'memberCount': 2,
                     'members': [
@@ -404,13 +404,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[14].partner_id).id,
+                            'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[14].partner_id).id,
                             'partner_id': self.users[14].partner_id.id,
                             'seen_message_id': False,
                         },
@@ -433,7 +433,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
                     'memberCount': 2,
                     'members': [
@@ -468,13 +468,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[15].partner_id).id,
+                            'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[15].partner_id).id,
                             'partner_id': self.users[15].partner_id.id,
                             'seen_message_id': False,
                         },
@@ -497,7 +497,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
                     'memberCount': 2,
                     'members': [
@@ -532,13 +532,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_3.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[2].partner_id).id,
+                            'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[2].partner_id).id,
                             'partner_id': self.users[2].partner_id.id,
                             'seen_message_id': False,
                         },
@@ -561,7 +561,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': False,
                     'memberCount': 2,
                     'members': [
@@ -596,13 +596,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_chat_4.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[3].partner_id).id,
+                            'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[3].partner_id).id,
                             'partner_id': self.users[3].partner_id.id,
                             'seen_message_id': False,
                         },
@@ -625,7 +625,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_livechat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
                     'memberCount': 2,
                     'livechat_visitor': {
@@ -660,13 +660,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_livechat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },
                         {
                             'fetched_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
-                            'id': self.channel_livechat_1.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[1].partner_id).id,
+                            'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[1].partner_id).id,
                             'partner_id': self.users[1].partner_id.id,
                             'seen_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
                         },
@@ -689,7 +689,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'invitedMembers': [('insert', [])],
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_livechat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
                     'memberCount': 2,
                     'livechat_visitor': {
@@ -724,13 +724,13 @@ class TestDiscussFullPerformance(TransactionCase):
                     'seen_partners_info': [
                         {
                             'fetched_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
-                            'id': self.channel_livechat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.env.ref('base.public_partner')).id,
+                            'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.env.ref('base.public_partner')).id,
                             'partner_id': self.env.ref('base.public_user').partner_id.id,
                             'seen_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
                         },
                         {
                             'fetched_message_id': False,
-                            'id': self.channel_livechat_2.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).id,
+                            'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
                             'partner_id': self.users[0].partner_id.id,
                             'seen_message_id': False,
                         },

@@ -15,7 +15,7 @@ QUnit.test('there should be a button to show member list in the thread view topb
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -43,7 +43,7 @@ QUnit.test('should show member list when clicking on show member list button in 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -72,7 +72,7 @@ QUnit.test('should have correct members in member list', async function (assert)
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -112,7 +112,7 @@ QUnit.test('there should be a button to hide member list in the thread view topb
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -139,13 +139,13 @@ QUnit.test('should show a button to load more members if they are not all loaded
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const channel_last_seen_partner_ids = [[0, 0, { partner_id: pyEnv.currentPartnerId }]];
+    const channel_member_ids = [[0, 0, { partner_id: pyEnv.currentPartnerId }]];
     for (let i = 0; i < 101; i++) {
         const resPartnerId = pyEnv['res.partner'].create({ name: "name" + i });
-        channel_last_seen_partner_ids.push([0, 0, { partner_id: resPartnerId }]);
+        channel_member_ids.push([0, 0, { partner_id: resPartnerId }]);
     }
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids,
+        channel_member_ids,
         channel_type: 'group',
         public: 'private',
     });
@@ -170,13 +170,13 @@ QUnit.test('Load more button should load more members', async function (assert) 
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const channel_last_seen_partner_ids = [[0, 0, { partner_id: pyEnv.currentPartnerId }]];
+    const channel_member_ids = [[0, 0, { partner_id: pyEnv.currentPartnerId }]];
     for (let i = 0; i < 101; i++) {
         const resPartnerId = pyEnv['res.partner'].create({ name: "name" + i });
-        channel_last_seen_partner_ids.push([0, 0, { partner_id: resPartnerId }]);
+        channel_member_ids.push([0, 0, { partner_id: resPartnerId }]);
     }
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids,
+        channel_member_ids,
         channel_type: 'group',
         public: 'private',
     });
@@ -204,7 +204,7 @@ QUnit.test('chat with member should be opened after clicking on channel member',
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],

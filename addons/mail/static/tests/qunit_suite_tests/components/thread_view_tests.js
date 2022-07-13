@@ -127,7 +127,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -325,7 +325,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 0,
                 partner_id: pyEnv.currentPartnerId,
@@ -339,8 +339,8 @@ QUnit.test('[technical] new messages separator on posting message', async functi
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
+    const [mailChannelMemberId] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId], { seen_message_id: mailMessageId1 });
     const { insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -391,7 +391,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 0,
                 partner_id: pyEnv.currentPartnerId,
@@ -406,8 +406,8 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
+    const [mailChannelMemberId] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId], { seen_message_id: mailMessageId1 });
     const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -495,7 +495,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 0,
                 partner_id: pyEnv.currentPartnerId,

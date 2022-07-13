@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
@@ -14,7 +13,7 @@ class Partners(models.Model):
         channels = super()._get_channels_as_member()
         channels |= self.env['mail.channel'].search([
             ('channel_type', '=', 'livechat'),
-            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+            ('channel_member_ids', 'in', self.env['mail.channel.member'].sudo()._search([
                 ('partner_id', '=', self.id),
                 ('is_pinned', '=', True),
             ])),

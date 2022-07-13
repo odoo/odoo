@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound
@@ -8,10 +7,10 @@ from odoo.exceptions import AccessError
 from odoo.osv import expression
 
 
-class ChannelPartner(models.Model):
-    _name = 'mail.channel.partner'
+class ChannelMember(models.Model):
+    _name = 'mail.channel.member'
     _description = 'Listeners of a Channel'
-    _table = 'mail_channel_partner'
+    _table = 'mail_channel_member'
     _rec_names_search = ['partner_id', 'guest_id']
 
     # identity
@@ -30,7 +29,7 @@ class ChannelPartner(models.Model):
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
     # RTC
-    rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='mail.channel.rtc.session', inverse_name='channel_partner_id')
+    rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='mail.channel.rtc.session', inverse_name='channel_member_id')
     rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
 
     @api.depends('channel_id.message_ids', 'seen_message_id')
@@ -39,29 +38,29 @@ class ChannelPartner(models.Model):
         self.flush_recordset(['channel_id', 'seen_message_id'])
         self.env.cr.execute("""
                  SELECT count(mail_message.id) AS count,
-                        mail_channel_partner.id
+                        mail_channel_member.id
                    FROM mail_message
-             INNER JOIN mail_channel_partner
-                     ON mail_channel_partner.channel_id = mail_message.res_id
+             INNER JOIN mail_channel_member
+                     ON mail_channel_member.channel_id = mail_message.res_id
                   WHERE mail_message.model = 'mail.channel'
                     AND mail_message.message_type NOT IN ('notification', 'user_notification')
                     AND (
-                        mail_message.id > mail_channel_partner.seen_message_id
-                     OR mail_channel_partner.seen_message_id IS NULL
+                        mail_message.id > mail_channel_member.seen_message_id
+                     OR mail_channel_member.seen_message_id IS NULL
                     )
-                    AND mail_channel_partner.id IN %(ids)s
-               GROUP BY mail_channel_partner.id
+                    AND mail_channel_member.id IN %(ids)s
+               GROUP BY mail_channel_member.id
         """, {'ids': tuple(self.ids)})
-        unread_counter_by_channel_partner = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
-        for channel_partner in self:
-            channel_partner.message_unread_counter = unread_counter_by_channel_partner.get(channel_partner.id)
+        unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
+        for member in self:
+            member.message_unread_counter = unread_counter_by_member.get(member.id)
 
     def name_get(self):
         return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
 
     def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_partner_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_partner_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_member_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
 
     _sql_constraints = [
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A channel member must be a partner or a guest."),
@@ -81,14 +80,14 @@ class ChannelPartner(models.Model):
                     channel_id = self.env['mail.channel'].browse(vals['channel_id'])
                     if not channel_id._can_invite(vals.get('partner_id')):
                         raise AccessError(_('This user can not be added in this channel'))
-        return super(ChannelPartner, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
-        for channel_partner in self:
+        for channel_member in self:
             for field_name in {'channel_id', 'partner_id', 'guest_id'}:
-                if field_name in vals and vals[field_name] != channel_partner[field_name].id:
+                if field_name in vals and vals[field_name] != channel_member[field_name].id:
                     raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
-        return super(ChannelPartner, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         self.sudo().rtc_session_ids.unlink()
@@ -96,30 +95,30 @@ class ChannelPartner(models.Model):
 
     @api.model
     def _get_as_sudo_from_request_or_raise(self, request, channel_id):
-        channel_partner = self._get_as_sudo_from_request(request=request, channel_id=channel_id)
-        if not channel_partner:
+        channel_member = self._get_as_sudo_from_request(request=request, channel_id=channel_id)
+        if not channel_member:
             raise NotFound()
-        return channel_partner
+        return channel_member
 
     @api.model
     def _get_as_sudo_from_request(self, request, channel_id):
-        """ Seeks a channel partner matching the provided `channel_id` and the
+        """ Seeks a channel member matching the provided `channel_id` and the
         current user or guest.
 
         :param channel_id: The id of the channel of which the user/guest is
             expected to be member.
         :type channel_id: int
-        :return: A record set containing the channel partner if found, or an
+        :return: A record set containing the channel member if found, or an
             empty record set otherwise. In case of guest, the record is returned
             with the 'guest' record in the context.
-        :rtype: mail.channel.partner
+        :rtype: mail.channel.member
         """
         if request.session.uid:
-            return self.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
+            return self.env['mail.channel.member'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
         guest = self.env['mail.guest']._get_guest_from_request(request)
         if guest:
-            return guest.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
-        return self.env['mail.channel.partner'].sudo()
+            return guest.env['mail.channel.member'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
+        return self.env['mail.channel.member'].sudo()
 
     def mail_channel_member_format(self):
         members_formatted_data = []
@@ -155,7 +154,7 @@ class ChannelPartner(models.Model):
         check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
         self.rtc_session_ids.unlink()
-        rtc_session = self.env['mail.channel.rtc.session'].create({'channel_partner_id': self.id})
+        rtc_session = self.env['mail.channel.rtc.session'].create({'channel_member_id': self.id})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         res = {
             'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,
@@ -180,7 +179,7 @@ class ChannelPartner(models.Model):
             return self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
-        """Synchronize the RTC sessions for self channel partner.
+        """Synchronize the RTC sessions for self channel member.
             - Inactive sessions of the channel are deleted.
             - Current sessions are returned.
             - Sessions given in check_rtc_session_ids that no longer exists
@@ -200,15 +199,15 @@ class ChannelPartner(models.Model):
             :param list member_ids: list of the partner ids to invite
         """
         self.ensure_one()
-        channel_partner_domain = [
+        channel_member_domain = [
             ('channel_id', '=', self.channel_id.id),
             ('rtc_inviting_session_id', '=', False),
             ('rtc_session_ids', '=', False),
         ]
         if member_ids:
-            channel_partner_domain = expression.AND([channel_partner_domain, [('id', 'in', member_ids)]])
+            channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
         invitation_notifications = []
-        members = self.env['mail.channel.partner'].search(channel_partner_domain)
+        members = self.env['mail.channel.member'].search(channel_member_domain)
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             if member.partner_id:

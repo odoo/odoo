@@ -16,7 +16,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -38,7 +38,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 10,
                 partner_id: pyEnv.currentPartnerId,
@@ -63,7 +63,7 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -90,7 +90,7 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 10,
                 partner_id: pyEnv.currentPartnerId,
@@ -120,7 +120,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -169,7 +169,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -218,7 +218,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -268,7 +268,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -318,7 +318,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -366,7 +366,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -415,7 +415,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
@@ -460,7 +460,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],

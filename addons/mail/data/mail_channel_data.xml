@@ -18,7 +18,7 @@
             <p>This channel is accessible to all users to <b>easily share company information</b>.</p>]]></field>
         </record>
 
-        <record model="mail.channel.partner" id="channel_partner_general_channel_for_admin">
+        <record model="mail.channel.member" id="channel_member_general_channel_for_admin">
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="mail.channel_all_employees"/>
             <field name="fetched_message_id" ref="mail.module_install_notification"/>

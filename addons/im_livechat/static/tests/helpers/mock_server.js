@@ -96,7 +96,7 @@ patch(MockServer.prototype, 'im_livechat', {
         const id = ids[0]; // ensure_one
         const mailChannel = this.getRecords('mail.channel', [['id', '=', id]])[0];
         // remove active test to ensure public partner is taken into account
-        const members = this.getRecords('mail.channel.partner', [['id', 'in', mailChannel.channel_last_seen_partner_ids]]);
+        const members = this.getRecords('mail.channel.member', [['id', 'in', mailChannel.channel_member_ids]]);
         let partners = this.getRecords(
             'res.partner',
             [['id', 'in', members.filter(member => member.partner_id).map(member => member.partner_id)]],
@@ -184,7 +184,7 @@ patch(MockServer.prototype, 'im_livechat', {
             operator.livechat_username ? operator.livechat_username : operator.name,
         ];
         return {
-            'channel_last_seen_partner_ids': membersToAdd,
+            'channel_member_ids': membersToAdd,
             'livechat_active': true,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': id,
@@ -242,10 +242,10 @@ patch(MockServer.prototype, 'im_livechat', {
      */
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this.getRecords('res.partner', [['id', 'in', ids]])[0];
-        const members = this.getRecords('mail.channel.partner', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
+        const members = this.getRecords('mail.channel.member', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
         const livechats = this.getRecords('mail.channel', [
             ['channel_type', '=', 'livechat'],
-            ['channel_last_seen_partner_ids', 'in', members.map(member => member.id)],
+            ['channel_member_ids', 'in', members.map(member => member.id)],
         ]);
         return [
             ...this._super(ids),

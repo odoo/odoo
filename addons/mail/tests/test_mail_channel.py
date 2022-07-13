@@ -142,7 +142,7 @@ class TestChannelAccessRights(MailCommon):
             group_private.read(['name'])
 
         with self.assertRaises(AccessError):
-            self.env['mail.channel.partner'].create({
+            self.env['mail.channel.member'].create({
                 'partner_id': self.env.user.partner_id.id,
                 'channel_id': group_private.id,
             })
@@ -194,7 +194,7 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.test_partner)
 
-        self.env['mail.channel.partner'].sudo().search([
+        self.env['mail.channel.member'].sudo().search([
             ('partner_id', 'in', self.test_partner.ids),
             ('channel_id', 'in', channel.ids)
         ]).unlink()
@@ -215,16 +215,16 @@ class TestChannelInternals(MailCommon):
         # so we can see if the `last_interest_dt` is updated correctly
         with patch.object(fields.Datetime, 'now', lambda: post_time):
             chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        channel_partner_employee = self.env['mail.channel.partner'].search([
+        channel_member_employee = self.env['mail.channel.member'].search([
             ('partner_id', '=', self.partner_employee.id),
             ('channel_id', '=', chat.id),
         ])
-        channel_partner_admin = self.env['mail.channel.partner'].search([
+        channel_member_admin = self.env['mail.channel.member'].search([
             ('partner_id', '=', self.partner_admin.id),
             ('channel_id', '=', chat.id),
         ])
-        self.assertEqual(channel_partner_employee.last_interest_dt, post_time)
-        self.assertEqual(channel_partner_admin.last_interest_dt, post_time)
+        self.assertEqual(channel_member_employee.last_interest_dt, post_time)
+        self.assertEqual(channel_member_admin.last_interest_dt, post_time)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')

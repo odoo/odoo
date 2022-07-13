@@ -17,7 +17,7 @@ QUnit.test('rendering when just one has received the message', async function (a
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
     const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -30,8 +30,8 @@ QUnit.test('rendering when just one has received the message', async function (a
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const [cpId1] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
-    pyEnv['mail.channel.partner'].write([cpId1], {
+    const [mailChannelMemberId1] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId1], {
         fetched_message_id: mailMessageId,
         seen_message_id: false,
     });
@@ -67,7 +67,7 @@ QUnit.test('rendering when everyone have received the message', async function (
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
     const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -80,8 +80,8 @@ QUnit.test('rendering when everyone have received the message', async function (
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(cpIds, {
+    const mailChannelMemberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(mailChannelMemberIds, {
         fetched_message_id: mailMessageId,
         seen_message_id: false,
     });
@@ -117,7 +117,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
     const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -130,13 +130,13 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(cpIds, {
+    const mailChannelMemberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(mailChannelMemberIds, {
         fetched_message_id: mailMessageId,
         seen_message_id: false,
     });
-    const [seenCpId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
-    pyEnv['mail.channel.partner'].write([seenCpId], {
+    const [mailChannelMemberId1] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId1], {
         seen_message_id: mailMessageId,
     });
     const { openDiscuss } = await start({
@@ -172,7 +172,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
     const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -185,8 +185,8 @@ QUnit.test('rendering when just one has seen & received the message', async func
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const [seenCpId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
-    pyEnv['mail.channel.partner'].write([seenCpId], {
+    const [mailChannelMemberId1] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId1], {
         seen_message_id: mailMessageId,
         fetched_message_id: mailMessageId,
     });
@@ -223,7 +223,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
     const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
     const mailChannelId = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
             [0, 0, { partner_id: resPartnerId2 }],
@@ -236,8 +236,8 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
-    pyEnv['mail.channel.partner'].write(cpIds, {
+    const mailChannelMemberIds = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.member'].write(mailChannelMemberIds, {
         fetched_message_id: mailMessageId,
         seen_message_id: mailMessageId,
     });
