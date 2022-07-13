@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, check_barcode_encoding
 from odoo.tools.float_utils import float_round
 from odoo.tools.mail import html2plaintext, is_html_empty
 
@@ -113,7 +113,7 @@ class Product(models.Model):
         self.valid_ean = False
         for product in self:
             if product.barcode:
-                product.valid_ean = self.env['barcode.nomenclature'].check_encoding(product.barcode.rjust(14, '0'), 'gtin14')
+                product.valid_ean = check_barcode_encoding(product.barcode.rjust(14, '0'), 'gtin14')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(

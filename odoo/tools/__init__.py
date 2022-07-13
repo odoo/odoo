@@ -7,6 +7,7 @@ from . import cloc
 from . import pdf
 from . import pycompat
 from . import win32
+from .barcode import *
 from .config import config
 from .date_utils import *
 from .debugger import *
