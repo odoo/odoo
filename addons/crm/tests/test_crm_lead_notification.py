@@ -80,7 +80,7 @@ class NewLeadNotification(TestCrmCommon):
 
         new_message0 = """MIME-Version: 1.0
 Date: Thu, 27 Dec 2018 16:27:45 +0100
-Message-ID: blablabla0
+Message-ID: <blablabla0>
 Subject: sale team 0 in company 0
 From:  A client <client_a@someprovider.com>
 To: sale_team_0@aqualung.com
@@ -101,7 +101,7 @@ Content-Transfer-Encoding: quoted-printable
 
         new_message1 = """MIME-Version: 1.0
 Date: Thu, 27 Dec 2018 16:27:45 +0100
-Message-ID: blablabla1
+Message-ID: <blablabla1>
 Subject: sale team 1 in company 1
 From:  B client <client_b@someprovider.com>
 To: sale_team_1@aqualung.com
