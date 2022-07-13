@@ -1378,7 +1378,7 @@ export class SearchModel extends EventBus {
      * is instanciated in a view (this doesn't apply for any other action type).
      * @private
      * @param {Object} [display={}]
-     * @returns {{ controlPanel: Object | false, searchPanel: boolean }}
+     * @returns {{ controlPanel: Object | false, searchPanel: boolean, banner: boolean }}
      */
     _getDisplay(display = {}) {
         const { viewTypes } = this.searchPanelInfo;

@@ -10633,4 +10633,31 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps(["notification"]);
     });
+
+    QUnit.test("renders banner_route", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban banner_route="/mybody/isacage">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div/>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+            async mockRPC(route) {
+                if (route === "/mybody/isacage") {
+                    assert.step(route);
+                    return { html: `<div class="setmybodyfree">myBanner</div>` };
+                }
+            },
+        });
+
+        assert.verifySteps(["/mybody/isacage"]);
+        assert.containsOnce(target, ".setmybodyfree");
+    });
 });

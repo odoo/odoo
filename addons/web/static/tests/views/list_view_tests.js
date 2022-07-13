@@ -14130,4 +14130,25 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_selected_row");
     });
+
+    QUnit.test("renders banner_route", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree banner_route="/mybody/isacage">
+                    <field name="foo"/>
+                </tree>`,
+            async mockRPC(route) {
+                if (route === "/mybody/isacage") {
+                    assert.step(route);
+                    return { html: `<div class="setmybodyfree">myBanner</div>` };
+                }
+            },
+        });
+
+        assert.verifySteps(["/mybody/isacage"]);
+        assert.containsOnce(target, ".setmybodyfree");
+    });
 });
