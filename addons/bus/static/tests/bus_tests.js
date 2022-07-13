@@ -2,6 +2,8 @@ odoo.define('web.bus_tests', function (require) {
 "use strict";
 
 var { busService } = require('@bus/services/bus_service');
+const { presenceService } = require('@bus/services/presence_service');
+
 var { CrossTab } = require('@bus/crosstab_bus');
 var testUtils = require('web.test_utils');
 const { browser } = require("@web/core/browser/browser");
@@ -22,6 +24,7 @@ QUnit.module('Bus', {
             },
         };
         registry.category('services').add('bus_service', customBusService);
+        registry.category('services').add('presence', presenceService);
     },
 }, function () {
     QUnit.test('notifications received from the longpolling channel', async function (assert) {

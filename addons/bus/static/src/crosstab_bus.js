@@ -21,7 +21,6 @@ import { Longpolling } from '@bus/longpolling_bus';
  * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.tab_master : generated id of the master tab
  *
  * trigger:
- * - window_focus : when the window is focused
  * - notification : when a notification is receive from the long polling
  * - become_master : when this tab became the master
  * - no_longer_master : when this tab is not longer the master (the user swith tab)
@@ -182,14 +181,6 @@ export class CrossTab extends Longpolling {
     }
 
     /**
-     * @override
-     * @returns {integer} number of milliseconds since 1 January 1970 00:00:00
-     */
-    _getLastPresence() {
-        return this._callLocalStorage('getItem', 'lastPresence') || super._getLastPresence();
-    }
-
-    /**
      * Check all the time (according to the constants) if the tab is the master tab and
      * check if it is active. Use the local storage for this checks.
      *
@@ -236,11 +227,7 @@ export class CrossTab extends Longpolling {
             this._callLocalStorage('setItem', 'peers', peers);
         }
 
-        // Write lastPresence in local storage if it has been updated since last heartbeat
         var hbPeriod = this._isMasterTab ? this.MASTER_TAB_HEARTBEAT_PERIOD : this.TAB_HEARTBEAT_PERIOD;
-        if (this._lastPresenceTime + hbPeriod > now) {
-            this._callLocalStorage('setItem', 'lastPresence', this._lastPresenceTime);
-        }
         this._heartbeatTimeout = browser.setTimeout(this._heartbeat.bind(this), hbPeriod);
     }
 
@@ -335,14 +322,6 @@ export class CrossTab extends Longpolling {
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    _onFocusChange(params) {
-        super._onFocusChange(params);
-        this._callLocalStorage('setItem', 'focus', params.focus);
-    }
-
-    /**
      * If it's the master tab, the notifications ares broadcasted to other tabs by the
      * local storage.
      *
@@ -396,11 +375,6 @@ export class CrossTab extends Longpolling {
         // update options
         else if (key === this._generateKey('options')) {
             this._options = value;
-        }
-        // update focus
-        else if (key === this._generateKey('focus')) {
-            this._isOdooFocused = value;
-            this.trigger('window_focus', this._isOdooFocused);
         }
     }
 

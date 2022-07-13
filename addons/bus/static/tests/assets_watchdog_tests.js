@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { busService } from "@bus/services/bus_service";
+import { presenceService } from "@bus/services/presence_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
@@ -15,6 +16,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
     hooks.beforeEach((assert) => {
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
         serviceRegistry.add("bus_service", busService);
+        serviceRegistry.add("presence", presenceService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
                 return this._super(fn, 0);

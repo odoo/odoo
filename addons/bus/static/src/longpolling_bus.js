@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
-import { browser } from '@web/core/browser/browser';
-
 const { EventBus } = owl;
 
 /**
  * Event Longpolling bus used to bind events on the server long polling return
  *
  * trigger:
- * - window_focus : when the window focus change (true for focused, false for blur)
  * - notification : when a notification is receive from the long polling
  */
 export class Longpolling extends EventBus {
@@ -25,23 +22,12 @@ export class Longpolling extends EventBus {
         this._isActive = null;
         this._id = _.uniqueId('bus');
         this._lastNotificationID = 0;
-        this._isOdooFocused = true;
         this._pollRetryTimeout = null;
 
         // the _id is modified by crosstab_bus, so we can't use it to unbind the events in the destroy.
         this._longPollingBusId = this._id;
         this._options = {};
         this._channels = [];
-
-        // bus presence
-        this._lastPresenceTime = new Date().getTime();
-
-        browser.addEventListener("focus", this._onFocusChange.bind(this, { focus: true }));
-        browser.addEventListener("blur", this._onFocusChange.bind(this, { focus: false }));
-        browser.addEventListener("unload", this._onFocusChange.bind(this, { focus: false }));
-        browser.addEventListener("click", this._onPresence.bind(this));
-        browser.addEventListener("keydown", this._onPresence.bind(this));
-        browser.addEventListener("keyup", this._onPresence.bind(this));
     }
 
     //--------------------------------------------------------------------------
@@ -80,15 +66,6 @@ export class Longpolling extends EventBus {
                 this._pollRpc.abort();
             }
         }
-    }
-
-    /**
-     * Tell whether odoo is focused or not
-     *
-     * @returns {boolean}
-     */
-    isOdooFocused() {
-        return this._isOdooFocused;
     }
 
     /**
@@ -137,16 +114,6 @@ export class Longpolling extends EventBus {
     //--------------------------------------------------------------------------
 
     /**
-     * returns the last recorded presence
-     *
-     * @private
-     * @returns {integer} number of milliseconds since 1 January 1970 00:00:00
-     */
-    _getLastPresence() {
-        return this._lastPresenceTime;
-    }
-
-    /**
      * Continually start a poll:
      *
      * A poll is a connection that is kept open for a relatively long period
@@ -167,7 +134,7 @@ export class Longpolling extends EventBus {
         }
         var now = new Date().getTime();
         var options = _.extend({}, this._options, {
-            bus_inactivity: now - this._getLastPresence(),
+            bus_inactivity: now - this.env.services['presence'].getLastPresence(),
         });
         var data = {channels: this._channels, last: this._lastNotificationID, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
@@ -200,22 +167,6 @@ export class Longpolling extends EventBus {
     //--------------------------------------------------------------------------
 
     /**
-     * Handler when the focus of the window change.
-     * Trigger the 'window_focus' event.
-     *
-     * @private
-     * @param {Object} params
-     * @param {Boolean} params.focus
-     */
-    _onFocusChange(params) {
-        this._isOdooFocused = params.focus;
-        if (params.focus) {
-            this._lastPresenceTime = new Date().getTime();
-            this.trigger('window_focus', this._isOdooFocused);
-        }
-    }
-
-    /**
      * Handler when the long polling receive the new notifications
      * Update the last notification id received.
      * Triggered the 'notification' event with a list [channel, message] from notifications.
@@ -234,16 +185,6 @@ export class Longpolling extends EventBus {
         });
         this.trigger("notification", notifs);
         return notifs;
-    }
-
-    /**
-     * Handler when they are an activity on the window (click, keydown, keyup)
-     * Update the last presence date.
-     *
-     * @private
-     */
-    _onPresence() {
-        this._lastPresenceTime = new Date().getTime();
     }
 
     /**
