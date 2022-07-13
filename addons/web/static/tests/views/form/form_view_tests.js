@@ -305,6 +305,71 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_form_sheet_bg > .o_form_statusbar > .o_statusbar_buttons");
     });
 
+    QUnit.test("button box rendering on small screen", async (assert) => {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    size: 0,
+                    isSmall: true,
+                };
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><sheet><div name="button_box"><button id="btn1">MyButton</button><button id="btn2">MyButton2</button><button id="btn3">MyButton3</button></div></sheet></form>`,
+            resId: 2,
+        });
+
+        assert.containsN(target, ".o-form-buttonbox > button", 2);
+        assert.containsOnce(target, ".o-dropdown.oe_stat_button .o_button_more");
+        await click(target, ".o-dropdown.oe_stat_button .o_button_more");
+
+        assert.containsOnce(target, ".o-dropdown--menu #btn3");
+    });
+
+    QUnit.test("button box rendering on big screen", async (assert) => {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    size: 9,
+                    isSmall: false,
+                };
+            },
+        });
+
+        let btnString = "";
+        for (let i = 0; i < 9; i++) {
+            btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><sheet><div name="button_box">${btnString}</div></sheet></form>`,
+            resId: 2,
+        });
+
+        assert.containsN(target, ".o-form-buttonbox > button", 7);
+        assert.containsOnce(target, ".o-form-buttonbox > .oe_stat_button.o-dropdown");
+
+        const buttonBox = target.querySelector(".o-form-buttonbox");
+        const buttonBoxRect = buttonBox.getBoundingClientRect();
+
+        for (const btn of buttonBox.children) {
+            assert.strictEqual(btn.getBoundingClientRect().top, buttonBoxRect.top);
+        }
+    });
+
     QUnit.test("duplicate fields rendered properly", async function (assert) {
         await makeView({
             type: "form",
@@ -6673,7 +6738,7 @@ QUnit.module("Views", (hooks) => {
             </button>`);
 
         // legacySelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
-        const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o_dropdown_more)";
+        const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o-dropdown)";
 
         const formView = await makeView({
             type: "form",

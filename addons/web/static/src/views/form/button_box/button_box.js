@@ -8,7 +8,7 @@ const { Component } = owl;
 export class ButtonBox extends Component {
     setup() {
         const ui = useService("ui");
-        this.getMaxButtons = () => [2, 2, 2, 4, 7][ui.size] || 8;
+        this.getMaxButtons = () => [2, 2, 2, 4][ui.size] || 7;
     }
 
     getButtons() {

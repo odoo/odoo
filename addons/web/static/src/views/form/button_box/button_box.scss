@@ -24,6 +24,20 @@
         }
     }
 
+    > .btn.oe_stat_button.o-dropdown {
+        .o_button_more {
+            height:100%;
+            width: 100%;
+            &:after {
+                @include o-caret-right
+            };
+        }
+
+        &.show .o_button_more:after {
+            @include o-caret-down;
+        }
+    }
+
     .btn.oe_stat_button {
         color: $o-main-text-color;
         height: $o-statbutton-height;
