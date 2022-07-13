@@ -326,7 +326,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        history.replaceState(undefined, undefined, '#attr=' + attributeIds.join(','));
+        window.location.hash = 'attr=' + attributeIds.join(',');
     },
     /**
      * Set the checked values active.
@@ -784,7 +784,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 }
             }
             if (dataValueIds.length) {
-                history.replaceState(undefined, undefined, `#attr=${dataValueIds.join(',')}`);
+                window.location.hash = `attr=${dataValueIds.join(',')}`;
             }
         }
         this._applyHash();
@@ -957,7 +957,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     /**
      * Center the selected indicator to scroll the indicators list when it
      * overflows.
-     * 
+     *
      * @private
      * @param {Event} ev
      */

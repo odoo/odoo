@@ -187,16 +187,22 @@ export class WebsitePreview extends Component {
         return host !== window.location.host || (pathname && (backendRoutes.includes(pathname) || pathname.startsWith('/@/')));
     }
 
-    _onPageLoaded() {
-        this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
-
-        // This replaces the browser url (/web#action=website...) with
-        // the iframe's url (it is clearer for the user).
+    /**
+     * This replaces the browser url (/web#action=website...) with
+     * the iframe's url (it is clearer for the user).
+     */
+    _replaceBrowserUrl() {
         const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
         currentUrl.pathname = `/@${currentUrl.pathname}`;
         this.currentTitle = this.iframe.el.contentDocument.title;
         history.replaceState({}, this.currentTitle, currentUrl.href);
         this.title.setParts({ action: this.currentTitle });
+    }
+
+    _onPageLoaded() {
+        this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
+        this._replaceBrowserUrl();
+        this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
 
