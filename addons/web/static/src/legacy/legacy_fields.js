@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
+import { evalDomain } from "@web/views/utils";
 import { Domain } from "web.Domain";
 import legacyFieldRegistry from "web.field_registry";
 import { ComponentAdapter } from "web.OwlCompatibility";
@@ -26,6 +27,9 @@ class FieldAdapter extends ComponentAdapter {
         this.env = Component.env;
         this.orm = useWowlService("orm");
         useEffect(() => {
+            if (!this.widgetEl || !this.widgetEl.parentElement) {
+                return;
+            }
             // if classNames are given to the field, we only want
             // to add those classes to the legacy field without
             // the parent element affecting the style of the field
@@ -284,10 +288,11 @@ function registerField(name, LegacyFieldWidget) {
             const { name, record } = this.props;
             if (record.model.__bm__) {
                 const legacyRecord = record.model.__bm__.get(record.__bm_handle__);
+                const hasReadonlyModifier = record.isReadonly(name);
                 const options = {
                     viewType: legacyRecord.viewType,
-                    hasReadonlyModifier: record.isReadonly(name),
-                    mode: record.mode,
+                    hasReadonlyModifier,
+                    mode: hasReadonlyModifier ? "readonly" : record.mode,
                 };
                 return { name, record: legacyRecord, options };
             } else {
@@ -306,16 +311,19 @@ function registerField(name, LegacyFieldWidget) {
                         arch: viewUtils.parseArch(arch),
                     };
                 }
+                const modifiers = JSON.parse(fieldInfo.rawAttrs.modifiers || "{}");
+                let hasReadonlyModifier = evalDomain(modifiers.readonly, record.evalContext);
                 const options = {
                     attrs: {
                         ...fieldInfo.rawAttrs,
-                        modifiers: JSON.parse(fieldInfo.rawAttrs.modifiers || "{}"),
+                        modifiers,
                         options: fieldInfo.options,
                         widget: fieldInfo.widget,
                         views,
                         mode: fieldInfo.viewMode,
                     },
-                    mode: record.mode,
+                    mode: hasReadonlyModifier ? "readonly" : record.mode,
+                    hasReadonlyModifier,
                 };
                 return { name, record: legacyRecord, options };
             }
