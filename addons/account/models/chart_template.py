@@ -115,6 +115,9 @@ class AccountChartTemplate(models.AbstractModel):
         ])}
         return lambda *args: [tags[x] for x in args]
 
+    def _with_context(self, company):
+        return self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
+
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
 
@@ -137,7 +140,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template and not company.existing_accounting():
-            return self._load(template_code, company, install_demo)
+            # Make subclasses work with the right context
+            return self._with_context(company)._load(template_code, company, install_demo)
 
     def _load(self, template_code, company, install_demo):
         """ Installs this chart of accounts for the current company.
@@ -149,13 +153,15 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
+        # Ensure that the context is the correct one, even if not called by try_loading
+        with_company = self._with_context(company)
+
         module_names = self.get_chart_template_mapping()[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
             self.env.reset()
 
-        with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
         xml_id = company.get_metadata()[0]['xmlid']
         if not xml_id:
             with_company.env['ir.model.data']._update_xmlids([{
