@@ -9,6 +9,7 @@ from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
 from odoo.tests.common import Form, tagged, users
+from odoo.tools import mute_logger
 
 
 @tagged('lead_internals')
@@ -120,6 +121,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.country_id, self.contact_1.country_id)
         self.assertEqual(lead.lang_id.code, self.contact_1.lang)
 
+    @users('user_sales_manager')
     def test_crm_lead_creation_partner_address(self):
         """ Test that an address erases all lead address fields (avoid mixed addresses) """
         other_country = self.env.ref('base.fr')
@@ -150,6 +152,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.state_id, empty_partner.state_id, "State should be sync from the Partner")
         self.assertEqual(lead.country_id, empty_partner.country_id, "Country should be sync from the Partner")
 
+    @users('user_sales_manager')
     def test_crm_lead_creation_partner_company(self):
         """ Test lead / partner synchronization involving company details """
         # Test that partner_name (company name) is the partner name if partner is company
@@ -172,6 +175,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.partner_name, self.contact_company.company_name,
                          "Lead company name should be set to company name if partner is not a company")
 
+    @users('user_sales_manager')
     def test_crm_lead_creation_partner_no_address(self):
         """ Test that an empty address on partner does not void its lead values """
         empty_partner = self.env['res.partner'].create({
@@ -252,6 +256,37 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.company_currency, self.env.ref('base.CHF'))
         #set back original currency
         self.company_main.currency_id = self.env.ref('base.EUR')
+
+    @users('user_sales_manager')
+    def test_crm_lead_date_closed(self):
+        # Test for one won lead
+        stage_team1_won2 = self.env['crm.stage'].create({
+            'name': 'Won2',
+            'sequence': 75,
+            'team_id': self.sales_team_1.id,
+            'is_won': True,
+        })
+        won_lead = self.lead_team_1_won.with_env(self.env)
+        other_lead = self.lead_1.with_env(self.env)
+        old_date_closed = won_lead.date_closed
+        self.assertTrue(won_lead.date_closed)
+        self.assertFalse(other_lead.date_closed)
+
+        # multi update
+        leads = won_lead + other_lead
+        with freeze_time('2020-02-02 18:00'):
+            leads.stage_id = stage_team1_won2
+        self.assertEqual(won_lead.date_closed, old_date_closed, 'Should not change date')
+        self.assertEqual(other_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
+
+    @users('user_sales_leads')
+    @freeze_time("2012-01-14")
+    def test_crm_lead_lost_date_closed(self):
+        lead = self.lead_1.with_env(self.env)
+        self.assertFalse(lead.date_closed, "Initially, closed date is not set")
+        # Mark the lead as lost
+        lead.action_set_lost()
+        self.assertEqual(lead.date_closed, datetime.now(), "Closed date is updated after marking lead as lost")
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
@@ -481,14 +516,6 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
 
     @users('user_sales_leads')
-    @freeze_time("2012-01-14")
-    def test_crm_lead_lost_date_closed(self):
-        self.assertFalse(self.lead_1.date_closed, "Initially, closed date is not set")
-        # Mark the lead as lost
-        self.lead_1.action_set_lost()
-        self.assertEqual(self.lead_1.date_closed, datetime.now(), "Closed date is updated after marking lead as lost")
-
-    @users('user_sales_leads')
     def test_crm_lead_update_contact(self):
         # ensure initial data, especially for corner cases
         self.assertFalse(self.contact_company_1.phone)
@@ -540,6 +567,7 @@ class TestCRMLead(TestCrmCommon):
         # self.assertFalse(new_team.alias_id.alias_name)
         # self.assertFalse(new_team.alias_name)
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailgateway(self):
         new_lead = self.format_and_process(
             INCOMING_EMAIL,
@@ -725,26 +753,3 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
-
-    def test_no_date_closed_update_between_won_stages(self):
-        # Test for one won lead
-        stage_team1_won2 = self.env['crm.stage'].create({
-            'name': 'Won2',
-            'sequence': 75,
-            'team_id': self.sales_team_1.id,
-            'is_won': True,
-        })
-        won_lead = self.lead_team_1_won
-        date_closed = datetime.strptime('2020-02-02 15:00', '%Y-%m-%d %H:%M')
-        won_lead.date_closed = date_closed
-        with freeze_time('2020-02-02 18:00'):
-            won_lead.stage_id = stage_team1_won2
-        self.assertEqual(won_lead.date_closed, date_closed)
-
-        # Test for one won and one unwon lead
-        leads = won_lead + self.lead_1
-        self.assertFalse(self.lead_1.date_closed)
-        with freeze_time('2020-02-02 18:00'):
-            leads.stage_id = self.stage_team1_won
-        self.assertEqual(won_lead.date_closed, date_closed)
-        self.assertEqual(self.lead_1.date_closed, datetime.strptime('2020-02-02 18:00', '%Y-%m-%d %H:%M'))
