@@ -1397,34 +1397,6 @@ patch(MockServer.prototype, 'mail', {
         this.pyEnv['bus.bus']._sendmany(notifications);
     },
     /**
-     * Simulates `_get_channel_partner_info` on `mail.channel`.
-     *
-     * @private
-     * @param {integer[]} all_partners
-     * @param {integer[]} direct_partners
-     * @returns {Object[]}
-     */
-    _mockMailChannelPartnerInfo(all_partners, direct_partners) {
-        const partners = this.getRecords(
-            'res.partner',
-            [['id', 'in', all_partners]],
-            { active_test: false },
-        );
-        const partnerInfos = {};
-        for (const partner of partners) {
-            const partnerInfo = {
-                email: partner.email,
-                id: partner.id,
-                name: partner.name,
-            };
-            if (direct_partners.includes(partner.id)) {
-                partnerInfo.im_status = partner.im_status;
-            }
-            partnerInfos[partner.id] = partnerInfo;
-        }
-        return partnerInfos;
-    },
-    /**
      * Simulates the `_set_last_seen_message` method of `mail.channel`.
      *
      * @private
