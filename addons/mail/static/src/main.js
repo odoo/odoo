@@ -20,7 +20,11 @@ const serviceRegistry = registry.category('services');
 serviceRegistry.add('messaging', messagingService);
 serviceRegistry.add('messagingValues', messagingValuesService);
 serviceRegistry.add('systray_service', systrayService);
-serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(owl.Component.env));
+
+registry.category('wowlToLegacyServiceMappers').add(
+    'messaging_service_to_legacy_env',
+    makeMessagingToLegacyEnv
+);
 
 registry.category('actions').add('mail.action_discuss', DiscussContainer);
 

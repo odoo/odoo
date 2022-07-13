@@ -46,10 +46,14 @@ Component.env = legacyEnv;
     serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
     serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
     serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
-    serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(Component.env));
 
     serviceRegistry.add('messaging', messagingService);
     serviceRegistry.add('messagingValues', messagingValuesService);
+
+    registry.category('wowlToLegacyServiceMappers').add(
+        'messaging_service_to_legacy_env',
+        makeMessagingToLegacyEnv
+    );
 
     const mainComponentsRegistry = registry.category('main_components');
     mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });

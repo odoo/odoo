@@ -22,5 +22,9 @@ const messagingValuesService = {
 const serviceRegistry = registry.category('services');
 serviceRegistry.add('messaging', messagingService);
 serviceRegistry.add('messagingValues', messagingValuesService);
-serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(owl.Component.env));
 serviceRegistry.add('public_livechat_service', publicLivechatService);
+
+registry.category('wowlToLegacyServiceMappers').add(
+    'messaging_service_to_legacy_env',
+    makeMessagingToLegacyEnv
+);
