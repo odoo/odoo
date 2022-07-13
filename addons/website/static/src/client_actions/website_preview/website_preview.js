@@ -18,7 +18,8 @@ class BlockIframe extends Component {
             blockIframe: false,
             showLoader: false,
         });
-        this.iframeLocks = 0;
+        this.processes = [];
+        this.ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
         this.websiteService.bus.addEventListener("BLOCK", this.block.bind(this));
         this.websiteService.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
     }
@@ -28,17 +29,18 @@ class BlockIframe extends Component {
                 this.state.showLoader = true;
             }, event.detail.loaderDelay);
         }
-        if (this.iframeLocks === 0) {
+        if (!this.processes.length) {
             this.state.blockIframe = true;
         }
-        this.iframeLocks++;
+        this.processes.push(event.detail.processId || this.ANONYMOUS_PROCESS_ID);
     }
-    unblock() {
-        this.iframeLocks--;
-        if (this.iframeLocks < 0) {
-            this.iframeLocks = 0;
+    unblock(event) {
+        const processId = event.detail.processId || this.ANONYMOUS_PROCESS_ID;
+        const processIndex = this.processes.indexOf(processId);
+        if (processIndex > -1) {
+            this.processes.splice(processIndex, 1);
         }
-        if (this.iframeLocks === 0) {
+        if (this.processes.length === 0) {
             this.state.blockIframe = false;
             this.state.showLoader = false;
         }
@@ -95,8 +97,12 @@ export class WebsitePreview extends Component {
         }, () => [this.props.action.context.params]);
 
         useEffect(() => {
-            this.websiteService.blockIframe();
-            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe(), { once: true });
+            this.websiteService.blockIframe(true, 0, 'load-iframe');
+            this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+            // For a frontend page, it is better to use the
+            // OdooFrameContentLoaded event to unblock the iframe, as it is
+            // triggered faster than the load event.
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
         }, () => []);
     }
 
