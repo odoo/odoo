@@ -13,10 +13,10 @@
         role="feed" t-attf-aria-labelledby="kanban_header_#{widget.id or widget.db_id}">
         <div class="o_kanban_header">
             <div class="o_kanban_header_title">
-                <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
-                <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
+                <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title" t-attf-class="{{ !widget.isMobile and widget.folded ? 'fs-4 overflow-visible' : '' }}"><t t-esc="widget.title"/></span>
+                <button class="o_column_unfold btn btn-link p-0 border-0 small text-center text-700 cursor-pointer"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></button>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle o-no-caret" data-bs-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <a class="dropdown-toggle o-no-caret" data-bs-toggle="dropdown" href="#"><i class="fa fa-gear d-block text-center text-700 small opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Settings" title="Settings"/></a>
                     <div class="dropdown-menu cursor-default" role="menu">
                         <a t-if="!widget.isMobile" role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">
@@ -29,7 +29,7 @@
                         </t>
                     </div>
                 </span>
-                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
+                <a t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus d-block small text-center text-700 opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Quick add" title="Quick add"/></a>
             </div>
         </div>
         <div t-if="widget.loadMoreCount > 0" class="o_kanban_load_more">
@@ -57,7 +57,7 @@
                 </div>
                 <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-end">Esc to discard</span>
                 <t t-if="widget.examples &amp;&amp; !widget.isMobile">
-                    <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
+                    <button type="button" class="btn btn-link o_kanban_examples p-0">See examples</button>
                 </t>
             </div>
             <div class="o_kanban_muted_record"/>
@@ -157,9 +157,9 @@
                     <div t-if="example.description" class="o_kanban_examples_description">
                         <t t-out="example.description"/>
                     </div>
-                    <div class="o_kanban_examples">
+                    <div class="o_kanban_examples d-flex p-2">
                         <t t-foreach="example.columns" t-as="column">
-                            <div class="o_kanban_examples_group">
+                            <div class="o_kanban_examples_group flex-grow-1 m-3">
                                 <h6><b><t t-esc="column"/></b></h6>
                                 <t t-foreach="_.random(1,4)">
                                     <t t-call="KanbanView.ExamplesDialog.RecordGhost"/>
@@ -173,23 +173,23 @@
     </div>
 </div>
 <t t-name="KanbanView.ExamplesDialog.RecordGhost">
-    <div class="o_kanban_examples_ghost">
-        <div class="o_ghost_content"/>
-        <div class="o_ghost_content o_ghost_tag"/>
+    <div class="o_kanban_examples_ghost o_collapse p-2 border bg-white">
+        <div class="o_ghost_content pb-3 bg-300"/>
+        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
             <t t-if="example.bullets and _.random(0, 5) > 3">
                 <t t-out="_.sample(example.bullets)"/>
             </t>
-        <img class="float-end o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+        <img class="float-end o_ghost_avatar mt-2" src="/base/static/img/avatar.png" alt="Avatar"/>
     </div>
 </t>
 
 <!-- Kanban Example Background -->
 <t t-name="KanbanView.ExamplesBackground">
-    <div class="o_kanban_example_background_container">
-        <div class="o_kanban_example_background">
-            <div class="o_kanban_examples">
+    <div class="o_kanban_example_background_container d-flex opacity-50">
+        <div class="o_kanban_example_background flex-grow-1">
+            <div class="o_kanban_examples d-flex p-2">
                 <t t-foreach="ghostColumns" t-as="column">
-                    <div class="o_kanban_examples_group">
+                    <div class="o_kanban_examples_group flex-grow-1 m-3">
                         <h6><b><t t-esc="column"/></b></h6>
                         <t t-foreach="_.random(2,6)">
                             <t t-call="KanbanView.ExamplesBackground.RecordGhost"/>
@@ -201,10 +201,10 @@
     </div>
 </t>
 <t t-name="KanbanView.ExamplesBackground.RecordGhost">
-    <div class="o_kanban_examples_ghost">
-        <div class="o_ghost_content"/>
-        <div class="o_ghost_content o_ghost_tag"/>
-        <img class="float-end o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+    <div class="o_kanban_examples_ghost mb-3 p-2 border bg-white">
+        <div class="o_ghost_content pb-3 bg-300"/>
+        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
+        <img class="float-end o_ghost_avatar mt-2" src="/base/static/img/avatar.png" alt="Avatar"/>
     </div>
 </t>
 

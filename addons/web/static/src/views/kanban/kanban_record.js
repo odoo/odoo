@@ -221,7 +221,7 @@ export class KanbanRecord extends Component {
 
     getRecordClasses() {
         const { archInfo, canResequence, forceGlobalClick, group, record } = this.props;
-        const classes = ["o_kanban_record"];
+        const classes = ["o_kanban_record d-flex"];
         if (canResequence) {
             classes.push("o_record_draggable");
         }
@@ -238,6 +238,9 @@ export class KanbanRecord extends Component {
         }
         if (record.model.useSampleModel) {
             classes.push("o_sample_data_disabled");
+        }
+        if (!this.props.list.isGrouped) {
+            classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
         return classes.join(" ");
     }
