@@ -213,7 +213,7 @@ class AutomaticEntryWizard(models.TransientModel):
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
             'move_type': 'entry',
             'line_ids': [],
-            'ref': _('Adjusting Entry'),
+            'ref': self._format_strings(_('{label}: Adjusting Entry of {new_date}'), self.move_line_ids[0].move_id),
             'date': fields.Date.to_string(self.date),
             'journal_id': self.journal_id.id,
         }}
@@ -225,7 +225,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
                 'move_type': 'entry',
                 'line_ids': [],
-                'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
+                'ref': self._format_strings(_('{label}: Adjusting Entry of {date}'), grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
             }
@@ -248,7 +248,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': aml.partner_id.id,
                 }),
                 (0, 0, {
-                    'name': _('Adjusting Entry'),
+                    'name': self._format_strings(_('{percent:0.2f}% recognized on {new_date}'), aml.move_id),
                     'debit': reported_credit,
                     'credit': reported_debit,
                     'amount_currency': -reported_amount_currency,
@@ -268,7 +268,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': aml.partner_id.id,
                 }),
                 (0, 0, {
-                    'name': _('Adjusting Entry'),
+                    'name': self._format_strings(_('{percent:0.2f}% to recognize on {new_date}'), aml.move_id),
                     'debit': reported_debit,
                     'credit': reported_credit,
                     'amount_currency': reported_amount_currency,
@@ -436,13 +436,14 @@ class AutomaticEntryWizard(models.TransientModel):
     def _format_move_link(self, move):
         return move._get_html_link()
 
-    def _format_strings(self, string, move, amount):
+    def _format_strings(self, string, move, amount=None):
         return string.format(
+            label=move.name or 'Adjusting Entry',
             percent=self.percentage,
             name=move.name,
             id=move.id,
-            amount=formatLang(self.env, abs(amount), currency_obj=self.company_id.currency_id),
-            debit_credit=amount < 0 and _('C') or _('D'),
+            amount=formatLang(self.env, abs(amount), currency_obj=self.company_id.currency_id) if amount else '',
+            debit_credit=amount < 0 and _('C') or _('D') if amount else None,
             link=self._format_move_link(move),
             date=format_date(self.env, move.date),
             new_date=self.date and format_date(self.env, self.date) or _('[Not set]'),
