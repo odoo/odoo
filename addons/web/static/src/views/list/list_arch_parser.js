@@ -22,10 +22,12 @@ export class GroupListArchParser extends XMLParser {
                     ...processButton(node),
                     id: buttonId++,
                 });
+                return false;
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list", jsClass);
                 fieldNodes[fieldInfo.name] = fieldInfo;
                 node.setAttribute("field_id", fieldInfo.name);
+                return false;
             }
         });
         return { fieldNodes, buttons };
@@ -96,6 +98,7 @@ export class ListArchParser extends XMLParser {
                             fieldInfo.string,
                     });
                 }
+                return false;
             } else if (node.tagName === "widget") {
                 const widgetInfo = Widget.parseWidgetNode(node);
                 for (const [name, field] of Object.entries(widgetInfo.fieldDependencies)) {
@@ -104,6 +107,7 @@ export class ListArchParser extends XMLParser {
                         type: field.type,
                     };
                 }
+                return false;
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
                 const xmlSerializer = new XMLSerializer();
@@ -134,6 +138,7 @@ export class ListArchParser extends XMLParser {
                     context: node.getAttribute("context"),
                     description: node.getAttribute("string"),
                 });
+                return false;
             } else if (["tree", "list"].includes(node.tagName)) {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
