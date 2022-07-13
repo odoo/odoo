@@ -73,11 +73,8 @@ registerModel({
             if ('id' in data) {
                 data2.id = data.id;
             }
-            if ('invitedGuests' in data) {
-                data2.invitedGuests = data.invitedGuests;
-            }
-            if ('invitedPartners' in data) {
-                data2.invitedPartners = data.invitedPartners;
+            if ('invitedMembers' in data) {
+                data2.invitedMembers = data.invitedMembers;
             }
             if ('is_minimized' in data && 'state' in data) {
                 data2.serverFoldState = data.is_minimized ? data.state : 'closed';
@@ -642,7 +639,7 @@ registerModel({
                 });
                 return;
             }
-            const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.messaging.rpc({
+            const { rtcSessions, iceServers, sessionId, invitedMembers } = await this.messaging.rpc({
                 route: '/mail/rtc/channel/join_call',
                 params: {
                     channel_id: this.id,
@@ -656,8 +653,7 @@ registerModel({
                 rtc: replace(this.messaging.rtc),
                 rtcInvitingSession: clear(),
                 rtcSessions,
-                invitedGuests,
-                invitedPartners,
+                invitedMembers,
             });
             await this.messaging.rtc.initSession({
                 currentSessionId: sessionId,
@@ -1945,15 +1941,9 @@ registerModel({
             compute: '_computeInvitationLink',
         }),
         /**
-         * List of guests that have been invited to the RTC call of this channel.
-         * FIXME should be simplified if we have the mail.channel.partner model
-         * in which case the two following fields should be a single relation to that model.
+         * List of members that have been invited to the RTC call of this channel.
          */
-        invitedGuests: many('Guest'),
-        /**
-         * List of partners that have been invited to the RTC call of this channel.
-         */
-        invitedPartners: many('Partner'),
+        invitedMembers: many('ChannelMember'),
         /**
          * Determines whether this description can be changed.
          * Only makes sense for channels.
