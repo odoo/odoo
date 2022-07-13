@@ -14,7 +14,7 @@ import {
 
 addModelNamesToFetch([
     'ir.attachment', 'ir.model', 'ir.model.fields', 'mail.activity', 'mail.activity.type',
-    'mail.channel', 'mail.channel.partner', 'mail.followers', 'mail.message', 'mail.message.subtype',
+    'mail.channel', 'mail.channel.member', 'mail.followers', 'mail.message', 'mail.message.subtype',
     'mail.notification', 'mail.shortcode', 'mail.template', 'mail.tracking.value',
     'res.company', 'res.country', 'res.partner', 'res.users', 'res.users.settings', 'res.groups',
     'res.users.settings.volumes'
@@ -46,7 +46,7 @@ insertModelFields('mail.channel', {
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
-    channel_last_seen_partner_ids: {
+    channel_member_ids: {
         default() {
             return [[0, 0, { partner_id: this.currentPartnerId }]];
         },
@@ -55,7 +55,7 @@ insertModelFields('mail.channel', {
     group_based_subscription: { string: "Group based subscription", type: "boolean" },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
 });
-insertModelFields('mail.channel.partner', {
+insertModelFields('mail.channel.member', {
     fold_state: { default: 'open' },
     is_pinned: { default: true },
     message_unread_counter: { default: 0 },

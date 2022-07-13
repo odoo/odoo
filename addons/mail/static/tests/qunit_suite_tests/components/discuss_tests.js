@@ -615,7 +615,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
@@ -680,7 +680,7 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 100,
                 partner_id: pyEnv.currentPartnerId,
@@ -725,7 +725,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     ]);
     const [mailChannelId1, mailChannelId2, mailChannelId3] = pyEnv['mail.channel'].create([
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
@@ -733,7 +733,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
             public: 'private',
         },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: resPartnerId2 }],
             ],
@@ -741,7 +741,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
             public: 'private',
         },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: resPartnerId3 }],
             ],
@@ -845,7 +845,7 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Marc Demo" });
     pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 custom_channel_name: "Marc",
                 partner_id: pyEnv.currentPartnerId,
@@ -1766,8 +1766,8 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
             res_id: mailChannelId1,
         });
     }
-    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: lastMessageId });
+    const [mailChannelMemberId] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.member'].write([mailChannelMemberId], { seen_message_id: lastMessageId });
     const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             params: {
@@ -2046,7 +2046,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         { name: "General" },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
@@ -2921,7 +2921,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
-        channel_last_seen_partner_ids: [
+        channel_member_ids: [
             [0, 0, {
                 message_unread_counter: 1,
                 partner_id: pyEnv.currentPartnerId,
@@ -3700,7 +3700,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     pyEnv['mail.channel'].create([
         { name: "General" },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
@@ -3804,7 +3804,7 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, {
                     message_unread_counter: 1,
                     partner_id: pyEnv.currentPartnerId,
@@ -3813,7 +3813,7 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
             name: 'Bla',
         },
         {
-            channel_last_seen_partner_ids: [
+            channel_member_ids: [
                 [0, 0, {
                     message_unread_counter: 1,
                     partner_id: pyEnv.currentPartnerId,

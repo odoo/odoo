@@ -20,9 +20,9 @@
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
-        <record id="ir_rule_mail_channel_partner_group_user" model="ir.rule">
-            <field name="name">mail.channel.partner: write its own entries</field>
-            <field name="model_id" ref="model_mail_channel_partner"/>
+        <record id="ir_rule_mail_channel_member_group_user" model="ir.rule">
+            <field name="name">mail.channel.member: write its own entries</field>
+            <field name="model_id" ref="model_mail_channel_member"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
             <field name="domain_force">['|', '|',
 ('channel_id.public', '=', 'public'),
@@ -34,9 +34,9 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="ir_rule_mail_channel_partner_group_system" model="ir.rule">
-            <field name="name">mail.channel.partner: admin can manipulate all entries</field>
-            <field name="model_id" ref="model_mail_channel_partner"/>
+        <record id="ir_rule_mail_channel_member_group_system" model="ir.rule">
+            <field name="name">mail.channel.member: admin can manipulate all entries</field>
+            <field name="model_id" ref="model_mail_channel_member"/>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>

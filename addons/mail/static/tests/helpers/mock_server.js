@@ -781,14 +781,14 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockMailChannelActionUnfollow(ids) {
         const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
-        const [channelMember] = this.getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        const [channelMember] = this.getRecords('mail.channel.member', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
         if (!channelMember) {
             return true;
         }
         this.pyEnv['mail.channel'].write(
             [channel.id],
             {
-                channel_last_seen_partner_ids: [[2, channelMember.id]],
+                channel_member_ids: [[2, channelMember.id]],
             },
         );
         this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.channel/leave', {
@@ -819,7 +819,7 @@ patch(MockServer.prototype, 'mail', {
         const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
         const partners = this.getRecords('res.partner', [['id', 'in', partner_ids]]);
         for (const partner of partners) {
-            this.pyEnv['mail.channel.partner'].create({
+            this.pyEnv['mail.channel.member'].create({
                 channel_id: channel.id,
                 partner_id: partner.id,
             });
@@ -896,12 +896,12 @@ patch(MockServer.prototype, 'mail', {
             if (!lastMessage) {
                 continue;
             }
-            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this.pyEnv['mail.channel.partner'].write(
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this.pyEnv['mail.channel.member'].write(
                 [memberOfCurrentUser.id],
                 { fetched_message_id: lastMessage.id },
             );
-            this.pyEnv['bus.bus']._sendone(channel, 'mail.channel.partner/fetched', {
+            this.pyEnv['bus.bus']._sendone(channel, 'mail.channel.member/fetched', {
                 'channel_id': channel.id,
                 'id': memberOfCurrentUser.id,
                 'last_message_id': lastMessage.id,
@@ -946,13 +946,13 @@ patch(MockServer.prototype, 'mail', {
     _mockMailChannelChannelFold(ids, state) {
         const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             const foldState = state ? state : memberOfCurrentUser.fold_state === 'open' ? 'folded' : 'open';
             const vals = {
                 fold_state: foldState,
                 is_minimized: foldState !== 'closed',
             };
-            this.pyEnv['mail.channel.partner'].write([memberOfCurrentUser.id], vals);
+            this.pyEnv['mail.channel.member'].write([memberOfCurrentUser.id], vals);
             this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.channel/insert', {
                 'id': channel.id,
                 'serverFoldState': memberOfCurrentUser.fold_state,
@@ -981,7 +981,7 @@ patch(MockServer.prototype, 'mail', {
         // always creating a new chat, because no test is relying on receiving
         // an existing chat.
         const id = this.pyEnv['mail.channel'].create({
-            channel_last_seen_partner_ids: partners.map(partner => [0, 0, {
+            channel_member_ids: partners.map(partner => [0, 0, {
                 partner_id: partner.id,
             }]),
             channel_type: 'chat',
@@ -1000,7 +1000,7 @@ patch(MockServer.prototype, 'mail', {
     _mockMailChannelChannelInfo(ids) {
         const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         return channels.map(channel => {
-            const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
             const partnerIds = members.filter(member => member.partner_id).map(member => member.partner_id);
             const messages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
@@ -1037,7 +1037,7 @@ patch(MockServer.prototype, 'mail', {
                     };
                 });
             }
-            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
@@ -1063,9 +1063,9 @@ patch(MockServer.prototype, 'mail', {
      */
     async _mockMailChannelChannelPin(ids, pinned = false) {
         const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
-        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
         if (memberOfCurrentUser) {
-            this.pyEnv['mail.channel.partner'].write(
+            this.pyEnv['mail.channel.member'].write(
                 [memberOfCurrentUser.id],
                 { is_pinned: pinned },
             );
@@ -1103,12 +1103,12 @@ patch(MockServer.prototype, 'mail', {
         if (!channel) {
             return;
         }
-        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel_id], ['partner_id', '=', this.currentPartnerId]]);
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', this.currentPartnerId]]);
         if (memberOfCurrentUser.seen_message_id && memberOfCurrentUser.seen_message_id >= last_message_id) {
             return;
         }
         this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
-        this.pyEnv['bus.bus']._sendone(channel.channel_type === 'chat' ? channel : this.currentPartner, 'mail.channel.partner/seen', {
+        this.pyEnv['bus.bus']._sendone(channel.channel_type === 'chat' ? channel : this.currentPartner, 'mail.channel.member/seen', {
             'channel_id': channel.id,
             'last_message_id': last_message_id,
             'partner_id': this.currentPartnerId,
@@ -1139,9 +1139,9 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockMailChannelChannelSetCustomName(ids, name) {
         const channelId = ids[0]; // simulate ensure_one.
-        const [channelPartnerId] = this.pyEnv['mail.channel.partner'].search([['partner_id', '=', this.currentPartnerId], ['channel_id', '=', channelId]]);
-        this.pyEnv['mail.channel.partner'].write(
-            [channelPartnerId],
+        const [memberIdOfCurrentUser] = this.pyEnv['mail.channel.member'].search([['partner_id', '=', this.currentPartnerId], ['channel_id', '=', channelId]]);
+        this.pyEnv['mail.channel.member'].write(
+            [memberIdOfCurrentUser],
             { custom_channel_name: name },
         );
         this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.channel/insert', {
@@ -1160,7 +1160,7 @@ patch(MockServer.prototype, 'mail', {
         const partners = this.getRecords('res.partner', [['id', 'in', partners_to]]);
         const id = this.pyEnv['mail.channel'].create({
             channel_type: 'group',
-            channel_last_seen_partner_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
+            channel_member_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
             name: '',
             public: 'private',
         });
@@ -1189,7 +1189,7 @@ patch(MockServer.prototype, 'mail', {
         const ids = args.args[0];
         const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
             const otherPartnerIds = members.filter(member => member.partner_id && member.partner_id !== this.currentPartnerId).map(member => member.partner_id);
             const otherPartners = this.getRecords('res.partner', [['id', 'in', otherPartnerIds]]);
             let message = "You are alone in this channel.";
@@ -1284,8 +1284,8 @@ patch(MockServer.prototype, 'mail', {
         const message_type = kwargs.message_type || 'notification';
         const channel = this.getRecords('mail.channel', [['id', '=', id]])[0];
         if (channel.channel_type !== 'channel') {
-            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this.pyEnv['mail.channel.partner'].write(
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this.pyEnv['mail.channel.member'].write(
                 [memberOfCurrentUser.id],
                 {
                     last_interest_dt: datetime_to_str(new Date()),
@@ -1305,9 +1305,9 @@ patch(MockServer.prototype, 'mail', {
             this._mockMailChannel_SetLastSeenMessage([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter
-        const otherMembers = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
+        const otherMembers = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
         for (const member of otherMembers) {
-            this.pyEnv['mail.channel.partner'].write(
+            this.pyEnv['mail.channel.member'].write(
                 [member.id],
                 { message_unread_counter: member.message_unread_counter + 1 },
             );
@@ -1322,19 +1322,19 @@ patch(MockServer.prototype, 'mail', {
      * @param {integer[]} known_member_ids
      */
     _mockMailChannelLoadMoreMembers(channel_ids, known_member_ids) {
-        const channelPartners = this.pyEnv['mail.channel.partner'].searchRead([
+        const members = this.pyEnv['mail.channel.member'].searchRead([
             ['id', 'not in', known_member_ids],
             ['channel_id', 'in', channel_ids],
         ], { limit: 100 });
-        const memberCount = this.pyEnv['mail.channel.partner'].searchCount([
+        const memberCount = this.pyEnv['mail.channel.member'].searchCount([
             ['channel_id', 'in', channel_ids],
         ]);
         const membersData = [];
-        for (const channelPartner of channelPartners) {
+        for (const member of members) {
             let persona;
-            if (channelPartner.partner_id) {
+            if (member.partner_id) {
                 const [partner] = this.pyEnv['res.partner'].searchRead(
-                    [['id', '=', channelPartner.partner_id[0]]],
+                    [['id', '=', member.partner_id[0]]],
                     { fields: ['id', 'name', 'im_status'] }
                 );
                 persona = {
@@ -1345,9 +1345,9 @@ patch(MockServer.prototype, 'mail', {
                     }]],
                 };
             }
-            if (channelPartner.guest_id) {
+            if (member.guest_id) {
                 const [guest] = this.pyEnv['mail.guest'].searchRead(
-                    [['id', '=', channelPartner.guest_id[0]]],
+                    [['id', '=', member.guest_id[0]]],
                     { fields: ['id', 'name'] }
                 );
                 persona = {
@@ -1358,7 +1358,7 @@ patch(MockServer.prototype, 'mail', {
                 };
             }
             membersData.push({
-                'id': channelPartner.id,
+                'id': member.id,
                 'persona': [['insert-and-replace', persona]],
             });
         }
@@ -1386,7 +1386,7 @@ patch(MockServer.prototype, 'mail', {
         const partner = this.getRecords('res.partner', [['id', '=', partner_id]]);
         const notifications = [];
         for (const channel of channels) {
-            const data = [channel, 'mail.channel.partner/typing_status', {
+            const data = [channel, 'mail.channel.member/typing_status', {
                 'channel_id': channel.id,
                 'is_typing': is_typing,
                 'partner_id': partner_id,
@@ -1404,8 +1404,8 @@ patch(MockServer.prototype, 'mail', {
      * @param {integer} message_id
      */
     _mockMailChannel_SetLastSeenMessage(ids, message_id) {
-        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
-        this.pyEnv['mail.channel.partner'].write([memberOfCurrentUser.id], {
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        this.pyEnv['mail.channel.member'].write([memberOfCurrentUser.id], {
             fetched_message_id: message_id,
             seen_message_id: message_id,
         });
@@ -1941,8 +1941,8 @@ patch(MockServer.prototype, 'mail', {
                 }]);
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
-                const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
-                this.pyEnv['mail.channel.partner'].write(
+                const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
+                this.pyEnv['mail.channel.member'].write(
                     members.map(member => member.id),
                     { last_interest_dt: now },
                 );
@@ -2156,15 +2156,15 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this.getRecords('res.partner', [['id', 'in', ids]])[0];
-        const channelMembers = this.getRecords('mail.channel.partner', [['partner_id', '=', partner.id]]);
+        const channelMembers = this.getRecords('mail.channel.member', [['partner_id', '=', partner.id]]);
         const channels = this.getRecords('mail.channel', [
             ['channel_type', 'in', ['channel', 'group']],
-            ['channel_last_seen_partner_ids', 'in', channelMembers.map(member => member.id)],
+            ['channel_member_ids', 'in', channelMembers.map(member => member.id)],
         ]);
-        const directMessagesMembers = this.getRecords('mail.channel.partner', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
+        const directMessagesMembers = this.getRecords('mail.channel.member', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
         const directMessages = this.getRecords('mail.channel', [
             ['channel_type', '=', 'chat'],
-            ['channel_last_seen_partner_ids', 'in', directMessagesMembers.map(member => member.id)],
+            ['channel_member_ids', 'in', directMessagesMembers.map(member => member.id)],
         ]);
         return [
             ...channels,

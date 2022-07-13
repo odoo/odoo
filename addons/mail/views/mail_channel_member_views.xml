@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <odoo><data>
-    <!-- mail.channel.partner -->
-    <record id="mail_channel_partner_view_tree" model="ir.ui.view">
-        <field name="name">mail.channel.partner.tree</field>
-        <field name="model">mail.channel.partner</field>
+    <!-- mail.channel.member -->
+    <record id="mail_channel_member_view_tree" model="ir.ui.view">
+        <field name="name">mail.channel.member.tree</field>
+        <field name="model">mail.channel.member</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Channels">
@@ -14,9 +14,9 @@
         </field>
     </record>
 
-    <record id="mail_channel_partner_view_form" model="ir.ui.view">
-        <field name="name">mail.channel.partner.form</field>
-        <field name="model">mail.channel.partner</field>
+    <record id="mail_channel_member_view_form" model="ir.ui.view">
+        <field name="name">mail.channel.member.form</field>
+        <field name="model">mail.channel.member</field>
         <field name="arch" type="xml">
             <form string="Channel">
                 <sheet>
@@ -32,9 +32,9 @@
         </field>
     </record>
 
-    <record id="mail_channel_partner_action" model="ir.actions.act_window">
+    <record id="mail_channel_member_action" model="ir.actions.act_window">
         <field name="name">Channels/Partner</field>
-        <field name="res_model">mail.channel.partner</field>
+        <field name="res_model">mail.channel.member</field>
         <field name="view_mode">tree,form</field>
     </record>
 

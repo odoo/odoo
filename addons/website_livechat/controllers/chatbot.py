@@ -14,7 +14,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         that will hold the conversation between the bot and the user testing the script. """
 
         mail_channel_values = {
-            'channel_last_seen_partner_ids': [(0, 0, {
+            'channel_member_ids': [(0, 0, {
                 'partner_id': chatbot_script.operator_partner_id.id,
                 'is_pinned': False
             }, {

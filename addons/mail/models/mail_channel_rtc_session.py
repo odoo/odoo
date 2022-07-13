@@ -11,10 +11,10 @@ class MailRtcSession(models.Model):
     _name = 'mail.channel.rtc.session'
     _description = 'Mail RTC session'
 
-    channel_partner_id = fields.Many2one('mail.channel.partner', index=True, required=True, ondelete='cascade')
-    channel_id = fields.Many2one('mail.channel', related='channel_partner_id.channel_id', store=True, readonly=True)
-    partner_id = fields.Many2one('res.partner', related='channel_partner_id.partner_id', string="Partner")
-    guest_id = fields.Many2one('mail.guest', related='channel_partner_id.guest_id')
+    channel_member_id = fields.Many2one('mail.channel.member', index=True, required=True, ondelete='cascade')
+    channel_id = fields.Many2one('mail.channel', related='channel_member_id.channel_id', store=True, readonly=True)
+    partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner")
+    guest_id = fields.Many2one('mail.guest', related='channel_member_id.guest_id')
 
     write_date = fields.Datetime("Last Updated On", index=True)
 
@@ -24,8 +24,8 @@ class MailRtcSession(models.Model):
     is_deaf = fields.Boolean(string="Has disabled incoming sound")
 
     _sql_constraints = [
-        ('channel_partner_unique', 'UNIQUE(channel_partner_id)',
-         'There can only be one rtc session per channel partner')
+        ('channel_member_unique', 'UNIQUE(channel_member_id)',
+         'There can only be one rtc session per channel member')
     ]
 
     @api.model_create_multi
