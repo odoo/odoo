@@ -17,11 +17,17 @@ class IrAsset(models.Model):
         assets = super()._get_related_assets(domain)
         return assets.filter_duplicate()
 
+    def _get_active_addons_list_skip_theme(self):
+        return False
+
     def _get_active_addons_list(self):
         """Overridden to discard inactive themes."""
         addons_list = super()._get_active_addons_list()
-        website = self.env['website'].get_current_website(fallback=False)
 
+        if self._get_active_addons_list_skip_theme():
+            return addons_list
+
+        website = self.env['website'].get_current_website(fallback=False)
         if not website:
             return addons_list
 
