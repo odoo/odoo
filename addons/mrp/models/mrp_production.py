@@ -1731,9 +1731,12 @@ class MrpProduction(models.Model):
         workorders_to_cancel.action_cancel()
         for workorder in workorders_to_update:
             workorder.state = 'ready' if workorder.next_work_order_id.production_availability == 'assigned' else 'waiting'
-        backorders.workorder_ids._action_confirm()
+        backorders._action_confirm_mo_backorders()
 
         return self.env['mrp.production'].browse(production_ids)
+
+    def _action_confirm_mo_backorders(self):
+        self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
         self._button_mark_done_sanity_checks()
