@@ -699,26 +699,31 @@ class Lead(models.Model):
     def write(self, vals):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-        stage_is_won = False
+
+        stage_updated, stage_is_won = vals.get('stage_id'), False
         # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            stage_id = self.env['crm.stage'].browse(vals['stage_id'])
-            if stage_id.is_won:
+        if stage_updated:
+            stage = self.env['crm.stage'].browse(vals['stage_id'])
+            if stage.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})
                 stage_is_won = True
+
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
         elif vals.get('probability', 0) > 0:
             vals['date_closed'] = False
+        elif stage_updated and not stage_is_won and not 'probability' in vals:
+            vals['date_closed'] = False
 
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
+
         if not stage_is_won:
             return super(Lead, self).write(vals)
 
         # stage change between two won stages: does not change the date_closed
-        leads_already_won = self.filtered(lambda r: r.stage_id.is_won)
+        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
         remaining = self - leads_already_won
         if remaining:
             result = super(Lead, remaining).write(vals)
