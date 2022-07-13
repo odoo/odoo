@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import {
-    makeFakeNotificationService,
     makeFakeLocalizationService,
+    makeFakeNotificationService,
 } from "@web/../tests/helpers/mock_services";
-import { registry } from "@web/core/registry";
 import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -363,7 +363,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("ProgressBarField: field is editable in kanban", async function (assert) {
-        assert.expect(4);
+        assert.expect(7);
         serverData.models.partner.records[0].int_field = 99;
 
         await makeView({
@@ -375,7 +375,7 @@ QUnit.module("Fields", (hooks) => {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />
+                                <field name="int_field" title="ProgressBarTitle" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />
                             </div>
                         </t>
                     </templates>
@@ -393,6 +393,10 @@ QUnit.module("Fields", (hooks) => {
             "99 / 100",
             "Initial value should be correct"
         );
+        assert.strictEqual(
+            target.querySelector(".o_progressbar_title").textContent,
+            "ProgressBarTitle"
+        );
 
         // Clicking on the progress bar should not change the value
         await click(target.querySelector(".o_progress"));
@@ -402,12 +406,20 @@ QUnit.module("Fields", (hooks) => {
             "99",
             "Initial value in input is still correct"
         );
+        assert.strictEqual(
+            target.querySelector(".o_progressbar_title").textContent,
+            "ProgressBarTitle"
+        );
 
         await editInput(target, ".o_progressbar_value.o_input", "69");
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
             "69 / 100",
             "New value should be different than initial after click"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_progressbar_title").textContent,
+            "ProgressBarTitle"
         );
     });
 
@@ -481,7 +493,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ProgressBar: value should update in readonly mode with right parameter when typing in input with field value",
         async function (assert) {
-            assert.expect(4);
+            assert.expect(7);
             serverData.models.partner.records[0].int_field = 99;
 
             await makeView({
@@ -490,7 +502,7 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 arch: `
                     <form>
-                        <field name="int_field" widget="progressbar" options="{\'editable\': true, \'editable_readonly\': true}" />
+                        <field name="int_field" widget="progressbar" title="ProgressBarTitle" options="{'editable': true, 'editable_readonly': true}" />
                     </form>`,
                 resId: 1,
                 mockRPC(route, args) {
@@ -509,6 +521,10 @@ QUnit.module("Fields", (hooks) => {
                 "99%",
                 "Initial value should be correct"
             );
+            assert.strictEqual(
+                target.querySelector(".o_progressbar_title").textContent,
+                "ProgressBarTitle"
+            );
 
             await click(target.querySelector(".o_progress"));
 
@@ -517,6 +533,10 @@ QUnit.module("Fields", (hooks) => {
                 "99",
                 "Initial value in input is correct"
             );
+            assert.strictEqual(
+                target.querySelector(".o_progressbar_title").textContent,
+                "ProgressBarTitle"
+            );
 
             await editInput(target, ".o_field_widget input", "69.6");
 
@@ -524,6 +544,10 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_progressbar_value").textContent,
                 "69%",
                 "New value should be different than initial after changing it"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_progressbar_title").textContent,
+                "ProgressBarTitle"
             );
         }
     );

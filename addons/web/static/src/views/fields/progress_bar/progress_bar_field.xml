@@ -4,6 +4,7 @@
     <t t-name="web.ProgressBarField" owl="1">
         <t t-if="!state.isEditing">
             <div class="o_progressbar" t-on-click="onClick">
+                <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
@@ -17,6 +18,7 @@
         </t>
         <t t-else="">
             <div class="o_progressbar d-flex" t-ref="numpadDecimal" t-on-click="onClick">
+                <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
