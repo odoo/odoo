@@ -3,13 +3,13 @@
 
     <t t-name="web.KanbanExamplesNotebookTemplate" owl="1">
         <div t-if="props.description" class="o_kanban_examples_description" t-out="props.description"/>
-        <div class="o_kanban_examples">
+        <div class="o_kanban_examples d-flex p-2">
             <t t-foreach="columns" t-as="column" t-key="column.title">
-                <div class="o_kanban_examples_group">
+                <div class="o_kanban_examples_group flex-grow-1 m-3">
                     <h6><b t-esc="column.title"/></h6>
-                    <div t-foreach="column.records" t-as="record" t-key="record.id" class="o_kanban_examples_ghost">
-                        <div class="o_ghost_content"/>
-                        <div class="o_ghost_content o_ghost_tag"/>
+                    <div t-foreach="column.records" t-as="record" t-key="record.id" class="o_kanban_examples_ghost p-2 border bg-white" t-att-class="{ 'o_collapse': record_index > 0 }">
+                        <div class="o_ghost_content pb-3 bg-300"/>
+                        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
                         <span class="ms-2" t-if="record.bullet" t-out="record.bullet"/>
                     </div>
                 </div>
