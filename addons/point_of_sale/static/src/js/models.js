@@ -434,6 +434,7 @@ class PosGlobalState extends PosModel {
     async load_orders(){
         var jsons = this.db.get_unpaid_orders();
         await this._loadMissingProducts(jsons);
+        await this._loadMissingPartners(jsons);
         var orders = [];
 
         for (var i = 0; i < jsons.length; i++) {
@@ -478,6 +479,32 @@ class PosGlobalState extends PosModel {
             args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
         });
         this._loadProductProduct(products);
+    }
+    // load the partners based on the ids
+    async _loadPartners(partnerIds) {
+        if (partnerIds.length > 0) {
+            var domain = [['id','in', partnerIds]];
+            const fetchedPartners = await this.env.services.rpc({
+                model: 'pos.session',
+                method: 'get_pos_ui_res_partner_by_params',
+                args: [[odoo.pos_session_id], {domain}],
+            }, {
+                timeout: 3000,
+                shadow: true,
+            });
+            this.env.pos.db.add_partners(fetchedPartners);
+        }
+    }
+    async _loadMissingPartners(orders) {
+        const missingPartnerIds = new Set([]);
+        for (const order of orders) {
+            const partnerId = order.partner_id;
+            if(missingPartnerIds.has(partnerId)) continue;
+            if (partnerId && !this.db.get_partner_by_id(partnerId)) {
+                missingPartnerIds.add(partnerId);
+            }
+        }
+        await this._loadPartners([...missingPartnerIds]);
     }
     async loadProductsBackground() {
         let page = 0;

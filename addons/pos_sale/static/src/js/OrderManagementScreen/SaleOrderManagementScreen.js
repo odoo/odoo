@@ -90,7 +90,20 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               }
               catch (_error){
               }
-              currentPOSOrder.set_partner(this.env.pos.db.get_partner_by_id(sale_order.partner_id[0]));
+              let order_partner = this.env.pos.db.get_partner_by_id(sale_order.partner_id[0])
+              if(order_partner){
+                currentPOSOrder.set_client(order_partner);
+              } else {
+                try {
+                    await this.env.pos._loadPartners([sale_order.partner_id[0]]);
+                }
+                catch (_error){
+                    const title = this.env._t('Customer loading error');
+                    const body = _.str.sprintf(this.env._t('There was a problem in loading the %s customer.'), sale_order.partner_id[1]);
+                    await this.showPopup('ErrorPopup', { title, body });
+                }
+                currentPOSOrder.set_partner(this.env.pos.db.get_partner_by_id(sale_order.partner_id[0]));
+              }
               let orderFiscalPos = sale_order.fiscal_position_id ? this.env.pos.fiscal_positions.find(
                   (position) => position.id === sale_order.fiscal_position_id[0]
               )

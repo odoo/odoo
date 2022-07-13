@@ -573,8 +573,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     args: [idsNotInCache],
                     context: this.env.session.user_context,
                 });
-                // Check for missing products and load them in the PoS
+                // Check for missing products and partners and load them in the PoS
                 await this.env.pos._loadMissingProducts(fetchedOrders);
+                await this.env.pos._loadMissingPartners(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
                 fetchedOrders.forEach((order) => {
