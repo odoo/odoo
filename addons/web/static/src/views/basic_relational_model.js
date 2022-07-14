@@ -360,6 +360,15 @@ export class Record extends DataPoint {
                         this.setInvalidField(fieldName);
                     }
                     break;
+                case "monetary":
+                    if (
+                        this.isRequired(fieldName) &&
+                        !this.data[fieldName] &&
+                        this.data[fieldName] !== 0
+                    ) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
                 default:
                     if (this.isRequired(fieldName) && !this.data[fieldName]) {
                         this.setInvalidField(fieldName);
