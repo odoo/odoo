@@ -11,10 +11,8 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        env.bus.on("WEB_CLIENT_READY", null, async () => {
-            bus_service.onNotification(this, onNotification);
-            bus_service.startPolling();
-        });
+        bus_service.onNotification(this, onNotification);
+        bus_service.startPolling();
 
         /**
          * Displays one notification on user's screen when assets have changed

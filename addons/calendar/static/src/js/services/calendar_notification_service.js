@@ -12,16 +12,14 @@ export const calendarNotificationService = {
         let nextCalendarNotifTimeout = null;
         const displayedNotifications = new Set();
 
-        env.bus.on("WEB_CLIENT_READY", null, async () => {
-            bus_service.onNotification(this, (notifications) => {
-                for (const { payload, type } of notifications) {
-                    if (type === "calendar.alarm") {
-                        displayCalendarNotification(payload);
-                    }
+        bus_service.onNotification(this, (notifications) => {
+            for (const { payload, type } of notifications) {
+                if (type === "calendar.alarm") {
+                    displayCalendarNotification(payload);
                 }
-            });
-            bus_service.startPolling();
+            }
         });
+        bus_service.startPolling();
 
         /**
          * Displays the Calendar notification on user's screen
