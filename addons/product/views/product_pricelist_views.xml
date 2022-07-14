@@ -120,6 +120,7 @@
             <field name="item_ids" position="replace">
                 <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_product_pricelist">
                     <tree string="Pricelist Rules">
+                        <field name="product_tmpl_id" invisible="1"/>
                         <field name="name" string="Applicable On"/>
                         <field name="min_quantity"/>
                         <field name="price" string="Price"/>
