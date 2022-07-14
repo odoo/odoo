@@ -9,6 +9,12 @@ class TestUBL(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        if cls.env['ir.module.module'].search(
+            [('name', '=', 'account_edi_ubl_cii'), ('state', '=', 'installed')],
+            limit=1,
+        ):
+            cls.skipTest(cls, "L10n_be_edi Tests skipped because account_edi_ubl_cii is installed.")
+
         cls.partner_a.vat = 'BE0477472701'
 
     def test_invoice_edi_xml_update(self):

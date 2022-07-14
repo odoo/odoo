@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -492,12 +492,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        % set doc_name = 'il preventivo' if object.state in ('draft', 'sent') else 'l\\'ordine'\n"
 "        Buongiorno,\n"
 "        <br/><br/>\n"
-"        la\n"
+"        \n"
 "        % if ctx.get('proforma'):\n"
-"            fattura pro forma per ${doc_name} <strong>${object.name}</strong>\n"
+"            il documento fattura pro forma per ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
 "                (con riferimento: ${object.origin} )\n"
 "            % endif\n"
@@ -507,7 +507,7 @@ msgstr ""
 "            % if object.origin:\n"
 "                (con riferimento: ${object.origin} )\n"
 "            % endif\n"
-"            di importo pari a <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> è pronta per essere esaminata.\n"
+"            di importo pari a <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> è pronto per essere esaminato.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        Per ulteriori domande, non esiti a contattarci.\n"
@@ -4617,6 +4617,15 @@ msgstr ""
 "Qui è possibile impostare il tipo di comunicazione che comparirà negli "
 "ordini di vendita, da fornire al cliente alla scelta del metodo di "
 "pagamento."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

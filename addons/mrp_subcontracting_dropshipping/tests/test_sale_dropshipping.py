@@ -250,3 +250,44 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
 
         sale_order.picking_ids.action_cancel()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+
+    def test_sale_kit_with_dropshipped_component(self):
+        """
+        The test checks the delivered quantity of a kit when one of the
+        components is dropshipped
+        """
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': n,
+            'type': 'consu',
+        } for n in ['compo01', 'compo02', 'super kit']])
+
+        compo02.write({
+            'route_ids': [(6, 0, [self.dropship_route.id])],
+            'seller_ids': [(0, 0, {'name': self.supplier.id})],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+            ],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'picking_policy': 'direct',
+            'order_line': [
+                (0, 0, {'name': kit.name, 'product_id': kit.id, 'product_uom_qty': 1}),
+            ],
+        })
+        sale_order.action_confirm()
+        self.env['purchase.order'].search([], order='id desc', limit=1).button_confirm()
+
+        sale_order.picking_ids.move_lines.quantity_done = 1
+        sale_order.picking_ids[0].button_validate()
+        sale_order.picking_ids[1].button_validate()
+
+        self.assertEqual(sale_order.order_line.qty_delivered, 1.0)

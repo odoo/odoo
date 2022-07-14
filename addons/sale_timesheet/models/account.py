@@ -94,7 +94,7 @@ class AccountAnalyticLine(models.Model):
             task = self.env['project.task'].browse(values.get('task_id'))
             if task.analytic_account_id:
                 values['account_id'] = task.analytic_account_id.id
-                values['company_id'] = task.analytic_account_id.company_id.id
+                values['company_id'] = task.analytic_account_id.company_id.id or task.company_id.id
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         return values
 

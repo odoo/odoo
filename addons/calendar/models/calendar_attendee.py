@@ -132,7 +132,7 @@ class Attendee(models.Model):
                         attendee.ids,
                         compute_lang=True,
                         post_process=True)[attendee.id]
-                subject = mail_template._render_field(
+                subject = mail_template.with_context(safe=True)._render_field(
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]

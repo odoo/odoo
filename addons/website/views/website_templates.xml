@@ -103,13 +103,14 @@
             </t>
         </t>
 
-        <t t-if="request and request.is_frontend_multilang and website">
+        <!-- `alternate`/`canonical` mainly useful to crawlers/bots/SEO tools, which test the website as public user -->
+        <t t-if="request and request.is_frontend_multilang and website and website.is_public_user()">
             <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
             <t t-foreach="alternate_languages" t-as="lg">
                 <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
             </t>
         </t>
-        <link t-if="request and website" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+        <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
 
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>

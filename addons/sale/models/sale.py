@@ -593,7 +593,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(self.partner_invoice_id.id)).id,
-            'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
+            'partner_bank_id': self.company_id.partner_id.bank_ids.filtered(lambda bank: bank.company_id.id in (self.company_id.id, False))[:1].id,
             'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
@@ -1138,6 +1138,7 @@ Reason(s) of this behavior could be:
 
         :param optional_values: any parameter that should be added to the returned down payment section
         """
+        context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
             'name': _('Down Payments'),
@@ -1148,6 +1149,7 @@ Reason(s) of this behavior could be:
             'price_unit': 0,
             'account_id': False
         }
+        del context
         if optional_values:
             down_payments_section_line.update(optional_values)
         return down_payments_section_line

@@ -650,6 +650,34 @@ var SnippetEditor = Widget.extend({
         }
         return show;
     },
+    /**
+     * Returns false if the element matches a snippet block that cannot be
+     * dropped in a sanitized HTML field or a string representing a specific
+     * reason. Returns true if no such issue exists.
+     *
+     * @param {Element} el
+     * @return {boolean|str} str indicates a specific type of forbidden sanitization
+     */
+    _canBeSanitizedUnless(el) {
+        let result = true;
+        for (const snippetEl of [el, ...el.querySelectorAll('[data-snippet]')]) {
+            this.trigger_up('find_snippet_template', {
+                snippet: snippetEl,
+                callback: function (snippetTemplate) {
+                    const forbidSanitize = snippetTemplate.dataset.oeForbidSanitize;
+                    if (forbidSanitize) {
+                        result = forbidSanitize === 'form' ? 'form' : false;
+                    }
+                },
+            });
+            // If some element in the block is already fully non-sanitizable,
+            // the whole block cannot be sanitized.
+            if (!result) {
+                break;
+            }
+        }
+        return result;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -698,16 +726,24 @@ var SnippetEditor = Widget.extend({
                 $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
             }
         }
+        const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
         this.trigger_up('go_to_parent', {$snippet: this.$target});
         this.trigger_up('activate_insertion_zones', {
             $selectorSiblings: $selectorSiblings,
             $selectorChildren: $selectorChildren,
+            canBeSanitizedUnless: canBeSanitizedUnless,
         });
 
         this.$body.addClass('move-important');
 
-        this.$editable.find('.oe_drop_zone').droppable({
+        this.$dropZones = this.$editable.find('.oe_drop_zone');
+        if (!canBeSanitizedUnless) {
+            this.$dropZones = this.$dropZones.not('[data-oe-sanitize] .oe_drop_zone');
+        } else if (canBeSanitizedUnless === 'form') {
+            this.$dropZones = this.$dropZones.not('[data-oe-sanitize][data-oe-sanitize!="allow_form"] .oe_drop_zone');
+        }
+        this.$dropZones.droppable({
             over: function () {
                 if (self.dropped) {
                     self.$target.detach();
@@ -744,13 +780,16 @@ var SnippetEditor = Widget.extend({
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
             var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
+            // Some drop zones might have been disabled.
+            $el = $el.filter(this.$dropZones);
             if ($el.length) {
                 $el.after(this.$target);
                 this.dropped = true;
             }
         }
 
-        this.$editable.find('.oe_drop_zone').droppable('destroy').remove();
+        this.$dropZones.droppable('destroy');
+        this.$editable.find('.oe_drop_zone').remove();
 
         var prev = this.$target.first()[0].previousSibling;
         var next = this.$target.last()[0].nextSibling;
@@ -792,6 +831,7 @@ var SnippetEditor = Widget.extend({
             $snippet: this.$target,
         });
         this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
+        delete this.$dropZones;
     },
     /**
      * @private
@@ -945,6 +985,7 @@ var SnippetsMenu = Widget.extend({
         'drag_and_drop_stop': '_onDragAndDropStop',
         'get_snippet_versions': '_onGetSnippetVersions',
         'go_to_parent': '_onGoToParent',
+        'find_snippet_template': '_onFindSnippetTemplate',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
@@ -1833,6 +1874,14 @@ var SnippetsMenu = Widget.extend({
                 const $els = $(snippetClasses).not('[data-name]').add($sbody);
                 $els.attr('data-name', name).data('name', name);
 
+                // TODO Adapt in each stable version to target specific
+                // snippets, remove in master.
+                if ($snippet[0].querySelector('form') && !$snippet.data('oeForbidSanitize')) {
+                    // In stable, make sure that existing FORM snippets cannot
+                    // be dropped in sanitized HTML model fields.
+                    $snippet[0].dataset.oeForbidSanitize = 'form';
+                }
+
                 // Create the thumbnail
                 const $thumbnail = $(`
                     <div class="oe_snippet_thumbnail">
@@ -1942,6 +1991,12 @@ var SnippetsMenu = Widget.extend({
         this.$snippets.each(function () {
             var $snippet = $(this);
             var $snippetBody = $snippet.find('.oe_snippet_body');
+            const isSanitizeForbidden = $snippet.data('oeForbidSanitize');
+            const filterSanitize = isSanitizeForbidden === 'form'
+                ? $els => $els.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])'))
+                : isSanitizeForbidden
+                    ? $els => $els.filter((i, el) => !el.closest('[data-oe-sanitize]'))
+                    : $els => $els;
 
             var check = false;
             _.each(self.templateOptions, function (option, k) {
@@ -1949,9 +2004,10 @@ var SnippetsMenu = Widget.extend({
                     return;
                 }
 
+                k = isSanitizeForbidden ? 'forbidden/' + k : k;
                 cache[k] = cache[k] || {
-                    'drop-near': option['drop-near'] ? option['drop-near'].all().length : 0,
-                    'drop-in': option['drop-in'] ? option['drop-in'].all().length : 0
+                    'drop-near': option['drop-near'] ? filterSanitize(option['drop-near'].all()).length : 0,
+                    'drop-in': option['drop-in'] ? filterSanitize(option['drop-in'].all()).length : 0,
                 };
                 check = (cache[k]['drop-near'] || cache[k]['drop-in']);
             });
@@ -2030,11 +2086,24 @@ var SnippetsMenu = Widget.extend({
      * @param {Object} [style]
      */
     _insertDropzone: function ($hook, vertical, style) {
+        // TODO Done this way in stable but should be a parameter in master.
+        let forbidSanitize;
+        if (this._insertDropzoneCanBeSanitizedUnless === 'form') {
+            forbidSanitize = $hook.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])').length;
+        } else {
+            forbidSanitize = !this._insertDropzoneCanBeSanitizedUnless && $hook.closest('[data-oe-sanitize]').length;
+        }
         var $dropzone = $('<div/>', {
-            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : ''),
+            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') +
+                (forbidSanitize ? ' text-center oe_drop_zone_danger' : ''),
         });
         if (style) {
             $dropzone.css(style);
+        }
+        if (forbidSanitize) {
+            $dropzone[0].appendChild(document.createTextNode(
+                _t("For technical reasons, this block cannot be dropped here")
+            ));
         }
         $hook.replaceWith($dropzone);
         return $dropzone;
@@ -2048,6 +2117,7 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $toInsert, dropped, $snippet;
+        let $dropZones;
 
         let dragAndDropResolve;
         const $scrollingElement = $().getScrollingElement();
@@ -2105,9 +2175,19 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
+                    // TODO Done this way in stable but should be a parameter in
+                    // master.
+                    const forbidSanitize = $snippet.data('oeForbidSanitize');
+                    self._insertDropzoneCanBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
-
-                    self.getEditableArea().find('.oe_drop_zone').droppable({
+                    delete self._insertDropzoneCanBeSanitizedUnless;
+                    $dropZones = self.getEditableArea().find('.oe_drop_zone');
+                    if (forbidSanitize === 'form') {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
+                    } else if (forbidSanitize) {
+                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize] .oe_drop_zone'));
+                    }
+                    $dropZones.droppable({
                         over: function () {
                             if (dropped) {
                                 $toInsert.detach();
@@ -2128,7 +2208,6 @@ var SnippetsMenu = Widget.extend({
                             }
                         },
                     });
-
                     // If a modal is open, the scroll target must be that modal
                     const $openModal = self.getEditableArea().find('.modal:visible');
                     self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : $scrollingElement;
@@ -2145,13 +2224,16 @@ var SnippetsMenu = Widget.extend({
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
+                        // Some drop zones might have been disabled.
+                        $el = $el.filter($dropZones);
                         if ($el.length) {
                             $el.after($toInsert);
                             dropped = true;
                         }
                     }
 
-                    self.getEditableArea().find('.oe_drop_zone').droppable('destroy').remove();
+                    $dropZones.droppable('destroy');
+                    self.getEditableArea().find('.oe_drop_zone').remove();
 
                     if (dropped) {
                         var prev = $toInsert.first()[0].previousSibling;
@@ -2351,7 +2433,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onActivateInsertionZones: function (ev) {
+        // TODO Done this way in stable but should be a parameter in master.
+        this._insertDropzoneCanBeSanitizedUnless = ev.data.canBeSanitizedUnless;
         this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren);
+        delete this._insertDropzoneCanBeSanitizedUnless;
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
@@ -2426,6 +2511,21 @@ var SnippetsMenu = Widget.extend({
         // on each editors.
         await this._destroyEditors($modal.length ? $modal : null);
         await this._activateSnippet(ev.data.$snippet);
+    },
+    /**
+     * Returns the droppable snippet from which a dropped snippet originates.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onFindSnippetTemplate(ev) {
+        this.$snippets.each(function () {
+            const snippetBody = this.querySelector(`.oe_snippet_body[data-snippet=${ev.data.snippet.dataset.snippet}]`);
+            if (snippetBody) {
+                ev.data.callback(snippetBody.parentElement);
+                return false;
+            }
+        });
     },
     /**
      * Called when a snippet editor asked to disable itself and to enable its

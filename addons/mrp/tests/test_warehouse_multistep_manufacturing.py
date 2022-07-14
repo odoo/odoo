@@ -421,6 +421,16 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(len(picking.move_lines), 1)
         picking.product_id = self.complex_product
 
+        # MOs are correctly linked to each other
+        self.assertEqual(production.mrp_production_child_count, 1)
+        self.assertEqual(production.mrp_production_source_count, 0)
+        self.assertEqual(subproduction.mrp_production_child_count, 0)
+        self.assertEqual(subproduction.mrp_production_source_count, 1)
+        child_action = production.action_view_mrp_production_childs()
+        source_action = subproduction.action_view_mrp_production_sources()
+        self.assertEqual(child_action.get('res_id'), subproduction.id)
+        self.assertEqual(source_action.get('res_id'), production.id)
+
     def test_3_steps_and_byproduct(self):
         """ Suppose a warehouse with Manufacture option set to '3 setps' and a product P01 with a reordering rule.
         Suppose P01 has a BoM and this BoM mentions that when some P01 are produced, some P02 are produced too.

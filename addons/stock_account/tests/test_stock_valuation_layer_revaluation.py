@@ -158,6 +158,38 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         self.assertEqual(layers[0].value, 200)
         self.assertEqual(layers[1].value, 300)
 
+    def test_stock_valuation_layer_revaluation_avco_rounding_5_digits(self):
+        """
+        Check that the rounding of the new price (cost) is equivalent to the rounding of the standard price (cost)
+        The check is done indirectly via the layers valuations.
+        If correct => rounding method is correct too
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self.env['decimal.precision'].search([
+            ('name', '=', 'Product Price'),
+        ]).digits = 5
+
+        # First Move
+        self.product1.write({'standard_price': 0.00875})
+        self._make_in_move(self.product1, 10000)
+
+        self.assertEqual(self.product1.standard_price, 0.00875)
+        self.assertEqual(self.product1.quantity_svl, 10000)
+
+        layer = self.product1.stock_valuation_layer_ids
+        self.assertEqual(layer.value, 87.5)
+
+        # Second Move
+        self.product1.write({'standard_price': 0.00975})
+
+        self.assertEqual(self.product1.standard_price, 0.00975)
+        self.assertEqual(self.product1.quantity_svl, 10000)
+
+        layers = self.product1.stock_valuation_layer_ids
+        self.assertEqual(layers[0].value, 87.5)
+        self.assertEqual(layers[1].value, 10)
+
     def test_stock_valuation_layer_revaluation_fifo(self):
         self.product1.categ_id.property_cost_method = 'fifo'
         context = {

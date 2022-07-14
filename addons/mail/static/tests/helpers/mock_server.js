@@ -1721,7 +1721,7 @@ MockServer.include({
             ['partner_id', 'in', partner_ids || []],
             ['channel_id', 'in', channel_ids || []],
         ]);
-        this._mockUnlink(model, [followers.map(follower => follower.id)]);
+        this._mockUnlink('mail.followers', [followers.map(follower => follower.id)]);
     },
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.

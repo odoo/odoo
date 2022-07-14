@@ -27,6 +27,30 @@ odoo.define('web.test_utils', async function (require) {
     const testUtilsPivot = require('web.test_utils_pivot');
     const tools = require('web.tools');
 
+    QUnit.begin(() => {
+        // alt attribute causes issues with scroll tests. Indeed, alt is
+        // displayed between the time we scroll to the bottom of a thread
+        // and the time we assert for the scroll position. The src
+        // attribute is removed as well to make sure images won't
+        // trigger a GET request on the server.
+        function replaceAttr(attrName, prefix, element) {
+            const attrKey = `${prefix}${attrName}`;
+            const attrValue = element.getAttribute(attrKey);
+            element.removeAttribute(attrKey);
+            element.setAttribute(`${prefix}data-${attrName}`, attrValue);
+        }
+        const attrsToRemove = ['alt', 'src'];
+        const attrPrefixes = ['', 't-att-', 't-attf-'];
+        const templates = new DOMParser().parseFromString(session.owlTemplates, "text/xml");
+        for (const attrName of attrsToRemove) {
+            for (const prefix of attrPrefixes) {
+                for (const element of templates.querySelectorAll(`*[${prefix}${attrName}]`)) {
+                    replaceAttr(attrName, prefix, element);
+                }
+            }
+        }
+        session.owlTemplates = templates.documentElement.outerHTML;
+    });
 
     function deprecated(fn, type) {
         const msg = `Helper 'testUtils.${fn.name}' is deprecated. ` +

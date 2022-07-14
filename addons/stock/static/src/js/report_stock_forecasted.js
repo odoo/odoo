@@ -109,6 +109,7 @@ const ReplenishReport = clientAction.extend({
                 modelName: model,
                 domain: this._getReportDomain(),
                 hasActionMenus: false,
+                context: {fill_temporal: false},
             };
             const graphView = new GraphView(viewInfo, params);
             return graphView.getController(this);

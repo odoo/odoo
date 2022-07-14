@@ -12,7 +12,7 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,13 +20,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: project
 #. openerp-web
@@ -324,11 +324,11 @@ msgstr ""
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            % if partner.name:\n"
-"                Spett.le ${partner.name},<br/><br/>\n"
+"                Buongiorno ${partner.name},<br/><br/>\n"
 "            % else:\n"
 "                Buongiorno,<br/><br/>\n"
 "            % endif\n"
-"            La preghiamo di dedicare qualche minuto per valutare i nostri servizi relativi al lavoro \"<strong>${object.name}</strong>\"\n"
+"            Le chiediamo cortesemente di dedicare qualche minuto alla valutazione dei nostri servizi, in relazione al lavoro \"<strong>${object.name}</strong>\"\n"
 "            % if object.rating_get_rated_partner_id().name:\n"
 "                assegnato a <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
 "            % else:\n"
@@ -365,7 +365,7 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Apprezziamo la sua opinione, aiuta a migliorarci continuamente.\n"
+"            La ringraziamo per la sua opinione, ci aiuta a migliorare continuamente.\n"
 "            % if object.project_id.rating_status == 'stage':\n"
 "                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Questo sondaggio clienti è stato inviato perché il lavoro è passato allo stato <b>${object.stage_id.name}</b></span>\n"
 "            % endif\n"
@@ -1109,7 +1109,7 @@ msgstr "Creare lavori inviando una e-mail a"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_uid
@@ -1233,8 +1233,8 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
-"Personalizzare il nome dei lavori in base al progetto e creare messaggi di "
-"stato su misura per ciascuna fase del flusso. Ciò aiuta a documentare il "
+"Personalizza il nome da dare ai lavori in base al progetto e crea messaggi "
+"di stato su misura per ciascuna fase del flusso. Ciò aiuta a documentare il "
 "flusso stesso: cosa deve essere fatto e in quale fase."
 
 #. module: project
@@ -1314,17 +1314,16 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"Definisce la visibilità dei lavori del progetto:\n"
-"- Utenti interni invitati: i dipendenti possono vedere solo i progetti e i lavori seguiti.\n"
-"- Tutti gli utenti interni: i dipendenti possono vedere tutti i progetti e i lavori.\n"
-"- Utenti portale invitati e tutti gli utenti interni: i dipendenti possono vedere tutti i progetti e i lavori, gli utenti del portale solo quelli\n"
-"   seguiti da loro o da qualcuno dell'azienda."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2773,7 +2772,7 @@ msgstr "Procedura di eliminazione progetto"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Responsabile di progetto"
+msgstr "Responsabile progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3512,7 +3511,7 @@ msgstr "Etichette"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Tags are perfect to categorize your tasks."
-msgstr "Le etichetta sono perfette per organizzare i lavori."
+msgstr "Le etichette sono perfette per classificare i lavori."
 
 #. module: project
 #. openerp-web

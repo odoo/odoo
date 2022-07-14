@@ -497,7 +497,9 @@ class PaymentAcquirer(models.Model):
             values = method(values)
 
         values.update({
-            'tx_url': self._context.get('tx_url', self.get_form_action_url()),
+            'tx_url':  self._context.get(
+                'tx_url', self.with_context(form_action_url_values=values).get_form_action_url()
+            ),
             'submit_class': self._context.get('submit_class', 'btn btn-link'),
             'submit_txt': self._context.get('submit_txt'),
             'acquirer': self,
@@ -677,7 +679,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         payment_vals = {
-            'amount': self.amount,
+            'amount': abs(self.amount),
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,
@@ -889,7 +891,8 @@ class PaymentTransaction(models.Model):
         if not self:
             ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
             # we don't want to forever try to process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # as for Paypal, it sometime takes 3 or 4 days for payment verification due to weekend. Set 4 here should be fine.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
                                 ('is_processed', '=', False),

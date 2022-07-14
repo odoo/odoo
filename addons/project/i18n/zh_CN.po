@@ -11,19 +11,19 @@
 # Shane Tsoi <sso@odoo.com>, 2020
 # mrshelly <mrshelly@hotmail.com>, 2020
 # Maie <m@maie.name>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # fausthuang, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 李赋 <fu792659@163.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # 笔 陈 <cowboycb@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # wopalm <wopalm@gmail.com>, 2020
 # xu xiaohu <xu.xiaohu@gmail.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
@@ -1303,17 +1303,16 @@ msgstr "定义在项目里的步骤有创建任务，更新已结束的任务或
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"定义项目任务的可见性：\n"
-"-受邀的内部用户：员工只能看到关注的项目和任务。\n"
-"-所有内部用户：员工可以会看到所有项目和任务。\n"
-"-邀请门户网站和所有内部用户：员工可以看到所有内容。 门户网站用户可能会看到关注的项目和任务，或者\n"
-"其公司的其他用户。"
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action

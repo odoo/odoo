@@ -27,11 +27,12 @@
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Emilia Pittet <emilia@dootix.com>, 2021
 # Yann Papouin <ypa@decgroupe.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Luis Ventura, 2022
 # Florian (flda-odoo), 2022
+# Florent de Labarre <florent@iguanayachts.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Florian (flda-odoo), 2022\n"
+"Last-Translator: Florent de Labarre <florent@iguanayachts.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -904,7 +905,7 @@ msgstr "Afficher les allocations utilisées"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid "Allocation Validation"
-msgstr ""
+msgstr "Validation des allocations"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -977,7 +978,7 @@ msgstr "Attributions"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed_allocation
 msgid "Allow Employees Requests"
-msgstr ""
+msgstr "Autoriser les demandes des employés"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -1126,13 +1127,13 @@ msgstr "Par catégorie d'employé"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Manager"
-msgstr ""
+msgstr "Manager de l'employé"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr ""
+msgstr "Par responsable de l'employé et le responsable des congés"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -2118,6 +2119,7 @@ msgstr "Nouveau"
 msgid ""
 "New %(leave_type)s Request created by %(user)s from %(start)s to %(end)s"
 msgstr ""
+"Nouvelle demande %(leave_type)s créée par %(user)s du %(start)s au %(end)s"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2193,7 +2195,7 @@ msgstr "Notification"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_text
 msgid "Number Of Hours Text"
-msgstr ""
+msgstr "Nombre d'Heures (Texte)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2382,7 +2384,7 @@ msgstr "Absent du bureau"
 #: code:addons/hr_holidays/static/src/components/thread_view/thread_view.js:0
 #, python-format
 msgid "Out of office until %s."
-msgstr ""
+msgstr "Absent du bureau jusqu'au %s"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -2619,7 +2621,7 @@ msgstr "Séquence"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr ""
+msgstr "Défini par le responsable des congés"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3190,7 +3192,7 @@ msgstr "Type d'activité d'exception enregistrée"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
 msgid "Tz"
-msgstr ""
+msgstr "Tz"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
@@ -3337,7 +3339,7 @@ msgstr "Années"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You can allocate %(allocation_type)s only before %(date)s."
-msgstr ""
+msgstr "Vous pouvez allouer %(allocation_type)s seulement après le %(date)s."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3375,6 +3377,8 @@ msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
 msgstr ""
+"Vous ne pouvez pas réaliser la première validation du congé de %s, car vous "
+"n'êtes pas son gestionnaire des congés"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3390,7 +3394,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
-msgstr ""
+msgstr "Vous devez être le manager de %s pour approuver ce congé"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3417,7 +3421,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr ""
+msgstr "Votre %(leave_type)s planifié pour le %(date)s a été accepté "
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

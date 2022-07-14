@@ -18,12 +18,12 @@
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1322,16 +1322,16 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"Projenin görevlerinin görünürlüğünü tanımlar:\n"
-"- Davet edilen çalışanlar: çalışanlar yalnızca takip edilen projeyi ve görevleri görebilir.\n"
-"- Tüm çalışanlar: çalışanlar tüm proje ve görevleri görebilir.\n"
-"- Portal kullanıcıları ve tüm çalışanlar: çalışanlar her şeyi görebilir. Portal kullanıcıları, proje ve görevleri kendileri veya şirketlerinden biri tarafından görebilir."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2208,6 +2208,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"Kanban görünümünü kullanarak projenizin yaşam döngüsünü yönetin. Yeni "
+"edinilen projeleri ekleyin, atayın ve projenin bir sonraki adıma hazır olup "
+"olmadığını belirlemek için %s ve %s'yi kullanın. %s"
 
 #. module: project
 #. openerp-web
@@ -2651,6 +2654,8 @@ msgid ""
 "Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"Projeler ve görevler arasında kaynak tahsisi planlayın ve son teslim "
+"tarihlerini daha doğru tahmin edin"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast

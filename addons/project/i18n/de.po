@@ -722,7 +722,7 @@ msgstr "Sind Sie sicher, dass Sie diese Stufen löschen möchten?"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "Montage"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1260,16 +1260,16 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"Legt die Sichtbarkeit von Projektaufgaben fest.\n"
-"- Eingeladene interne User: User können nur die gefolgten Projekte und Aufgaben sehen.\n"
-"- Alle internen User: User können alle Projekte und Aufgaben sehen.\n"
-"- Eingeladene Portal User und alle internen User: User können alles sehen. Portal User oder jemand von deren Unternehmen können Projekt(e) und Aufgaben sehen."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
