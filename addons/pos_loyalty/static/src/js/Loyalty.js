@@ -5,7 +5,7 @@ import Registries from 'point_of_sale.Registries';
 import session from 'web.session';
 import concurrency from 'web.concurrency';
 import { Gui } from 'point_of_sale.Gui';
-import { round_precision } from 'web.utils';
+import { round_decimals,round_precision } from 'web.utils';
 import core from 'web.core';
 
 const _t = core._t;
@@ -1349,12 +1349,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         const claimable_count = reward.clear_wallet ? 1 : Math.min(Math.ceil(unclaimedQty / reward.reward_product_qty), Math.floor(points / reward.required_points));
         const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
+        // In case the reward is the product multiple times, give it as many times as possible
+        const freeQuantity = Math.min(unclaimedQty, reward.reward_product_qty * claimable_count);
         return [{
             product: reward.discount_line_product_id,
-            price: -product.lst_price,
+            price: -round_decimals(product.get_price(this.pricelist, freeQuantity), this.pos.currency.decimal_places),
             tax_ids: product.taxes_id,
-            // In case the reward is the product multiple times, give it as many times as possible
-            quantity: Math.min(unclaimedQty, reward.reward_product_qty * claimable_count),
+            quantity: freeQuantity,
             reward_id: reward.id,
             is_reward_line: true,
             reward_product_id: product.id,
