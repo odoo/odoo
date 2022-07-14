@@ -2,7 +2,7 @@
 
 import { ActionDialog } from "./action_dialog";
 
-const { Component, xml, onWillDestroy } = owl;
+const { Component, xml, onWillDestroy, useEffect } = owl;
 
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
@@ -10,20 +10,36 @@ const { Component, xml, onWillDestroy } = owl;
 export class ActionContainer extends Component {
     setup() {
         this.info = {};
-        this.onActionManagerUpdate = async ({ detail: info }) => {
-            if (info.Component && !this.info.Component) {
-                // we wait for one animation frame before rendering, so the new
-                // rendering does not cancel the "empty" rendering, and we get
-                // the chance to see the wonderful white screen
-                await new Promise((resolve) => requestAnimationFrame(resolve));
+        this.hasVisibleContent = false;
+        this.nextInfo = null;
+        useEffect(() => {
+            this.hasVisibleContent = Boolean(this.info.Component);
+            if (this.nextInfo) {
+                this.setInfo(info);
             }
-            this.info = info;
-            this.render();
-        };
+        })
+
         this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         onWillDestroy(() => {
             this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         });
+    }
+
+    setInfo(info) {
+        this.info = info;
+        this.nextInfo = null;
+        this.render();
+    }
+
+    onActionManagerUpdate = async ({ detail: info }) => {
+        if (this.hasVisibleContent && !this.info.Component && info.Component) {
+            // if we have some content, but an update requested clearing the
+            // screen, and we now request some content, then we wait for the
+            // screen to be updated before rendering the new content
+            this.nextInfo = info;
+        } else {
+            this.setInfo(info);
+        }
     }
 }
 ActionContainer.components = { ActionDialog };
