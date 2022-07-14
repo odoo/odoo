@@ -5,14 +5,14 @@ var AbstractService = require('web.AbstractService');
 var core = require("web.core");
 
 var SnailmailAccountNotificationManager =  AbstractService.extend({
-    dependencies: ['bus_service'],
-
     /**
      * @override
      */
     start: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        core.bus.on('web_client_ready', null, () => {
+            this.call('bus_service', 'onNotification', this, this._onNotification);
+        });
     },
 
     _onNotification: function(notifications) {
