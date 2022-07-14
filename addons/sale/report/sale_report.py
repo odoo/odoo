@@ -13,7 +13,7 @@ class SaleReport(models.Model):
 
     @api.model
     def _get_done_states(self):
-        return ['sale', 'done', 'paid']
+        return ['sale', 'done']
 
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
