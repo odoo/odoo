@@ -2,6 +2,7 @@
 import { patienceDiff } from './patienceDiff.js';
 import { getRangePosition } from '../utils/utils.js';
 
+const REGEX_RESERVED_CHARS = /[\\^$.*+?()[\]{}|]/g;
 /**
  * Make `num` cycle from 0 to `max`.
  */
@@ -10,366 +11,380 @@ function cycle(num, max) {
     return ((num % y) + y) % y;
 }
 
-export class Powerbox {
-    constructor(options = {}) {
-        this._active = false;
-        this.options = options;
-        if (!this.options._t) this.options._t = string => string;
+/**
+ * interface PowerboxCommand {
+ *     groupName: string;
+ *     title: string;
+ *     description: string;
+ *     fontawesome: string; // a fontawesome class name
+ *     callback: () => void; // to execute when the command is picked
+ *     isDisabled?: () => boolean; // return true to disable the command
+ * }
+ */
 
+export class Powerbox {
+    constructor({
+        commands, commandFilters, editable, getContextFromParentRect,
+        onOpen, onShow, onStop, beforeCommand, afterCommand
+    } = {}) {
+        this.commands = commands;
+        this.commandFilters = commandFilters || [];
+        this.editable = editable;
+        this.getContextFromParentRect = getContextFromParentRect;
+        this.onOpen = onOpen;
+        this.onShow = onShow;
+        this.onStop = onStop;
+        this.beforeCommand = beforeCommand;
+        this.afterCommand = afterCommand;
+        this.isOpen = false;
+        this.document = editable.ownerDocument;
+
+        // Draw the powerbox.
         this.el = document.createElement('div');
         this.el.className = 'oe-commandbar-wrapper';
         this.el.style.display = 'none';
-        if (this.options.width !== undefined) {
-            this.el.style.width = `${this.options.width}px`;
-        }
         document.body.append(this.el);
-
-        this.addHotKey('/', { commands: this.options.commands });
-
         this._mainWrapperElement = document.createElement('div');
         this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
         this.el.append(this._mainWrapperElement);
-        this.el.addEventListener('mousedown', event => {
-            event.stopPropagation();
-        });
-    }
+        this.el.addEventListener('mousedown', ev => ev.stopPropagation());
 
+        // Set up events for later binding.
+        this._boundOnKeyup = this._onKeyup.bind(this);
+        this._boundOnKeydown = this._onKeydown.bind(this);
+        this._boundClose = this.close.bind(this);
+        this._events = [
+            [this.document, 'keyup', this._boundOnKeyup],
+            [this.document, 'keydown', this._boundOnKeydown, true],
+            [this.document, 'mousedown', this._boundClose],
+        ]
+        // If the global document is different from the provided
+        // options.document, which happens when the editor is inside an iframe,
+        // we need to listen to the mouse event on both documents to be sure the
+        // Powerbox will always close when clicking outside of it.
+        if (document !== this.document) {
+            this._events.push(
+                [document, 'mousedown', this._boundClose],
+            );
+        }
+
+    }
     destroy() {
+        if (this.isOpen) {
+            this.close();
+        }
         this.el.remove();
     }
 
-    render(commands) {
-        if (this.options.commandFilters && this.options.commandFilters.length) {
-            /**
-             * Some available commands may need to be disabled in certain
-             * situations. i.e.:
-             * in a knowledge article, prevent the usage of the /template
-             * command inside a /template block.
-             * @see commandFilters is an array of functions which returns
-             * commands that can be used.
-             */
-            for (let filter of this.options.commandFilters) {
-                commands = filter(commands);
-            }
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * Open the Powerbox with the given commands or with all instance commands.
+     *
+     * @param {PowerboxCommand[]} [commands=this.commands]
+     */
+    open(commands=this.commands) {
+        if (this.onOpen) {
+            this.onOpen();
         }
-        this._mainWrapperElement.innerHTML = '';
-        clearTimeout(this._renderingTimeout);
-        this._hoverActive = false;
-
-        // Do not show disabled commands.
-        commands = commands.filter(command => !command.isDisabled || !command.isDisabled());
-
-        this._mainWrapperElement.classList.toggle('oe-commandbar-noResult', commands.length === 0);
-        if (commands.length === 0) {
-            return;
+        commands = this._getCurrentCommands(commands);
+        this._context = {
+            commands, filteredCommands: commands, selectedCommand: undefined,
+            initialTarget: this.editable, initialValue: this.editable.textContent,
+            lastText: undefined,
         }
-
-        this._currentSelectedCommand =
-            commands.find(c => c === this._currentSelectedCommand) || commands[0];
-        const groups = {};
-        for (const command of commands) {
-            groups[command.groupName] = groups[command.groupName] || [];
-            groups[command.groupName].push(command);
-        }
-        for (const [groupName, commands] of Object.entries(groups)) {
-            const groupWrapperEl = document.createElement('div');
-            groupWrapperEl.className = 'oe-commandbar-groupWrapper';
-            const groupNameEl = document.createElement('div');
-            groupNameEl.className = 'oe-commandbar-groupName';
-            groupWrapperEl.append(groupNameEl);
-            this._mainWrapperElement.append(groupWrapperEl);
-            groupNameEl.innerText = groupName;
-            for (const command of commands) {
-                const commandElWrapper = document.createElement('div');
-                commandElWrapper.className = 'oe-commandbar-commandWrapper';
-                if (this._currentSelectedCommand === command) {
-                    commandElWrapper.classList.add('active');
-                    // use setTimeout in order to avoid to call it upon the
-                    // first rendering.
-                    this._renderingTimeout = setTimeout(() => {
-                        commandElWrapper.scrollIntoView({
-                            block: 'nearest',
-                            inline: 'nearest',
-                        });
-                    });
-                }
-                let commandImgEl, commandTitleEl, commandDescriptionEl;
-                switch (command.style) {
-                    case 'small':
-                        commandTitleEl = document.createElement('div');
-                        commandTitleEl.setAttribute('class', 'oe-commandbar-commandSmall');
-                        commandTitleEl.setAttribute('title', command.description);
-                        commandTitleEl.innerText = command.title;
-                        commandElWrapper.append(commandTitleEl);
-                        break;
-                    default:
-                        commandElWrapper.innerHTML = `
-                    <div class="oe-commandbar-commandLeftCol">
-                        <i class="oe-commandbar-commandImg fa"></i>
-                    </div>
-                    <div class="oe-commandbar-commandRightCol">
-                        <div class="oe-commandbar-commandTitle">
-                        </div>
-                        <div class="oe-commandbar-commandDescription">
-                        </div>
-                    </div>`;
-                        commandImgEl = commandElWrapper.querySelector('.oe-commandbar-commandImg');
-                        commandTitleEl = commandElWrapper.querySelector(
-                            '.oe-commandbar-commandTitle',
-                        );
-                        commandDescriptionEl = commandElWrapper.querySelector(
-                            '.oe-commandbar-commandDescription',
-                        );
-                        commandTitleEl.innerText = command.title;
-                        commandDescriptionEl.innerText = command.description;
-                        commandImgEl.classList.add(command.fontawesome);
-                }
-
-                groupWrapperEl.append(commandElWrapper);
-
-                const commandElWrapperMouseMove = () => {
-                    if (!this._hoverActive || commandElWrapper.classList.contains('active')) {
-                        return;
-                    }
-                    this.el
-                        .querySelector('.oe-commandbar-commandWrapper.active')
-                        .classList.remove('active');
-                    this._currentSelectedCommand = command;
-                    commandElWrapper.classList.add('active');
-                };
-                commandElWrapper.addEventListener('mousemove', commandElWrapperMouseMove);
-                commandElWrapper.addEventListener(
-                    'mousedown',
-                    ev => {
-                        ev.preventDefault();
-                        ev.stopImmediatePropagation();
-                        this._currentValidate(command);
-                    },
-                    true,
-                );
-            }
-        }
-        this._resetPosition();
+        this.isOpen = true;
+        this._render(this._context.commands);
+        this._bindEvents();
+        this.show();
     }
-
-    addHotKey(triggerKey, options) {
-        this.options.editable.addEventListener(
-            'input',
-            ev => {
-                const selection = this.options.document.getSelection();
-                if (!selection.isCollapsed || !selection.rangeCount) return;
-                if (
-                    ev.data === triggerKey &&
-                    !this._active &&
-                    (!this.options.shouldActivate || this.options.shouldActivate())
-                ) {
-                    this.open({ ...options, openOnKeyupTarget: ev.target });
-                }
-            },
-            true,
-        );
-    }
-
-    open(openOptions) {
-        this.options.onActivate && this.options.onActivate();
-        this._currentOpenOptions = openOptions;
-        this._currentOpenOptions.commands = this._orderCommandsByGroup(openOptions.commands);
-
-        const openOnKeyupTarget =
-            this._currentOpenOptions.openOnKeyupTarget || this.options.editable;
-        const onValueChangeFunction = term =>
-            this._currentOpenOptions.valueChangeFunction
-                ? this._currentOpenOptions.valueChangeFunction(term)
-                : this._filter(term, this._currentOpenOptions.commands);
-
-        const showOnceOnKeyup = () => {
-            this.show();
-            openOnKeyupTarget.removeEventListener('keyup', showOnceOnKeyup, true);
-            initialTarget = openOnKeyupTarget;
-            this._initialValue = openOnKeyupTarget.textContent;
-        };
-        openOnKeyupTarget.addEventListener('keyup', showOnceOnKeyup, true);
-
-        this._active = true;
-        this._currentFilteredCommands = this._currentOpenOptions.commands;
-        this.render(this._currentOpenOptions.commands);
-
-        let initialTarget;
-
-        const keyup = async ev => {
-            if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
-                ev.preventDefault();
-                return;
-            }
-            if (!initialTarget) return;
-            const diff = patienceDiff(
-                this._initialValue.split(''),
-                initialTarget.textContent.split(''),
-                true,
-            );
-            this._lastText = diff.bMove.join('');
-            if (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) {
-                this._stop();
-                return;
-            }
-            const term = this._lastText;
-
-            this._currentFilteredCommands =
-                term === '' ? this._currentOpenOptions.commands : await onValueChangeFunction(term);
-            this.render(this._currentFilteredCommands);
-        };
-        const keydown = ev => {
-            if (ev.key === 'Enter') {
-                ev.stopImmediatePropagation();
-                this._currentValidate();
-                ev.preventDefault();
-            } else if (ev.key === 'Escape') {
-                ev.stopImmediatePropagation();
-                this._stop();
-                ev.preventDefault();
-            } else if (ev.key === 'Backspace' && !this._lastText) {
-                this._stop();
-            } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
-                ev.preventDefault();
-                ev.stopImmediatePropagation();
-
-                const index = this._currentFilteredCommands.findIndex(
-                    c => c === this._currentSelectedCommand,
-                );
-                if (!this._currentFilteredCommands.length || index === -1) {
-                    this._currentSelectedCommand = undefined;
-                } else {
-                    const n = ev.key === 'ArrowDown' ? 1 : -1;
-                    const newIndex = cycle(index + n, this._currentFilteredCommands.length - 1);
-                    this._currentSelectedCommand = this._currentFilteredCommands[newIndex];
-                }
-                ev.preventDefault();
-                this.render(this._currentFilteredCommands);
-            }
-        };
-        const mousemove = () => {
-            this._hoverActive = true;
-        };
-
-        this._stop = () => {
-            this._active = false;
-            this.hide();
-            this._currentSelectedCommand = undefined;
-
-            this.options.document.removeEventListener('keyup', keyup);
-            this.options.document.removeEventListener('keydown', keydown, true);
-            this.options.document.removeEventListener('mousemove', mousemove);
-            this.options.document.removeEventListener('mousedown', this._stop);
-            if (document !== this.options.document) {
-                document.removeEventListener('mousemove', mousemove);
-                document.removeEventListener('mousedown', this._stop);
-            }
-
-            this.options.onStop && this.options.onStop();
-        };
-        this._currentValidate = async (command) => {
-            if (!command) {
-                command = this._currentFilteredCommands.find(
-                    c => c === this._currentSelectedCommand,
-                );
-            }
-            if (command) {
-                !command.isIntermediateStep &&
-                    (!command.shouldPreValidate || command.shouldPreValidate()) &&
-                    this.options.preValidate &&
-                    await this.options.preValidate();
-                await command.callback();
-                !command.isIntermediateStep &&
-                    this.options.postValidate &&
-                    await this.options.postValidate();
-            }
-            if (!command || !command.isIntermediateStep) {
-                this._stop();
-            }
-        };
-        this.options.document.addEventListener('keyup', keyup);
-        this.options.document.addEventListener('keydown', keydown, true);
-        this.options.document.addEventListener('mousemove', mousemove);
-        this.options.document.addEventListener('mousedown', this._stop);
-        // If the Golbal document is diferent than the provided options.document,
-        // which happend when the editor is inside an Iframe.
-        // We need to listen to the mouse event on both document
-        // to be sure the command bar will always close when clicking outside of it.
-        if (document !== this.options.document) {
-            document.addEventListener('mousemove', mousemove);
-            document.addEventListener('mousedown', this._stop);
-        }
-    }
-
-    nextOpenOptions(openOptions) {
-        this._currentOpenOptions = openOptions;
-        this._currentOpenOptions.commands = this._orderCommandsByGroup(openOptions.commands);
-        this._initialValue = (
-            this._currentOpenOptions.openOnKeyupTarget || this.options.editable
-        ).textContent;
-        this._currentFilteredCommands = this._currentOpenOptions.commands;
-        this.render(this._currentOpenOptions.commands);
-    }
-
+    /**
+     * Close the Powerbox without destroying it. Unbind events, reset context
+     * and call the optional `onStop` hook.
+     */
+    close() {
+        this.isOpen = false;
+        this.hide();
+        this._context = undefined;
+        this._unbindEvents();
+        this.onStop && this.onStop();
+    };
+    /**
+     * Show the Powerbox and position it. Call the optional `onShow` hook.
+     */
     show() {
-        this.options.onShow && this.options.onShow();
+        this.onShow && this.onShow();
         this.el.style.display = 'flex';
         this._resetPosition();
     }
-
+    /**
+     * Hide the Powerbox. If the Powerbox is active, close it.
+     *
+     * @see close
+     */
     hide() {
         this.el.style.display = 'none';
-        if (this._active) this._stop();
+        if (this.isOpen) {
+            this.close();
+        }
     }
 
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
 
-    _filter(term, commands) {
-        const initialCommands = commands;
-        term = term.toLowerCase();
-        term = term.replaceAll(/\s/g, '\\s');
-        const regex = new RegExp(
-            term
-                .split('')
-                .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
-                .join('.*'),
-        );
-        if (term.length) {
-            commands = initialCommands.filter(command => {
-                const commandText = (command.groupName + ' ' + command.title).toLowerCase();
-                return commandText.match(regex);
-            });
+    /**
+     * Render the Powerbox with the given commands, grouped by `groupName`.
+     *
+     * @private
+     * @param {PowerboxCommand[]} commands
+     */
+    _render(commands) {
+        const parser = new DOMParser();
+        this._mainWrapperElement.innerHTML = '';
+        this._hoverActive = false;
+        this._mainWrapperElement.classList.toggle('oe-commandbar-noResult', commands.length === 0);
+        this._context.selectedCommand = commands.find(command => command === this._context.selectedCommand) || commands[0];
+        for (const [groupName, groupCommands] of Object.entries(this._groupCommands(commands))) {
+            const groupWrapperEl = parser.parseFromString(`
+                <div class="oe-commandbar-groupWrapper">
+                    <div class="oe-commandbar-groupName"></div>
+                </div>`, 'text/html').body.firstChild;
+            this._mainWrapperElement.append(groupWrapperEl);
+            groupWrapperEl.firstElementChild.innerText = groupName;
+            for (const command of groupCommands) {
+                const commandElWrapper = document.createElement('div');
+                commandElWrapper.className = 'oe-commandbar-commandWrapper';
+                commandElWrapper.classList.toggle('active', this._context.selectedCommand === command);
+                commandElWrapper.replaceChildren(...parser.parseFromString(`
+                    <div class="oe-commandbar-commandLeftCol">
+                        <i class="oe-commandbar-commandImg fa"></i>
+                    </div>
+                    <div class="oe-commandbar-commandRightCol">
+                        <div class="oe-commandbar-commandTitle"></div>
+                        <div class="oe-commandbar-commandDescription"></div>
+                    </div>`, 'text/html').body.children);
+                commandElWrapper.querySelector('.oe-commandbar-commandImg').classList.add(command.fontawesome);
+                commandElWrapper.querySelector('.oe-commandbar-commandTitle').innerText = command.title;
+                commandElWrapper.querySelector('.oe-commandbar-commandDescription').innerText = command.description;
+                groupWrapperEl.append(commandElWrapper);
+                // Handle events on command (activate and pick).
+                commandElWrapper.addEventListener('mousemove', () => {
+                    this.el.querySelector('.oe-commandbar-commandWrapper.active').classList.remove('active');
+                    this._context.selectedCommand = command;
+                    commandElWrapper.classList.add('active');
+                });
+                commandElWrapper.addEventListener('mousedown', ev => {
+                        ev.preventDefault();
+                        ev.stopImmediatePropagation();
+                        this._pickCommand(command);
+                    }, true,
+                );
+            }
         }
-        return commands;
+        this._resetPosition();
     }
-    _orderCommandsByGroup(commands) {
+    /**
+     * Handle the selection of a command: call the command's callback. Also call
+     * the `beforeCommand` and `afterCommand` hooks if they exists.
+     *
+     * @private
+     * @param {PowerboxCommand} [command=this._context.selectedCommand]
+     */
+    async _pickCommand(command=this._context.selectedCommand) {
+        if (command) {
+            if (this.beforeCommand) {
+                await this.beforeCommand();
+            }
+            await command.callback();
+            if (this.afterCommand) {
+                await this.afterCommand();
+            }
+        }
+        this.close();
+    };
+    /**
+     * Filter an array of commands based on the given term using fuzzy matching.
+     *
+     * @private
+     * @param {PowerboxCommand[]} commands
+     * @param {string} term
+     * @returns {PowerboxCommand[]}
+     */
+    _filter(commands, term) {
+        term = term.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
+        if (term.length) {
+            const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
+            return commands.filter(command => `${command.groupName} ${command.title}`.toLowerCase().match(regex));
+        } else {
+            return commands;
+        }
+    }
+    /**
+     * Take a list of commands, filter them based on `commandFilters` and
+     * `isDisabled`) and return the remaining commands, ordered so that commands
+     * that belong to the same group are grouped together.
+     * Note: `commandFilters` is on the Powerbox instance and allows the
+     * filtering of several commands at once (eg, a whole group), while
+     * `isDisabled` is on a specific command and is made to target that command.
+     *
+     * @see commandFilters {Array<() => PowerboxCommand[]} return commands that can be used.
+     * @see command.isDisabled {() => boolean} return true if the command is disabled.
+     * @private
+     * @param {PowerboxCommand[]} commands
+     * @returns {PowerboxCommand[]}
+     */
+    _getCurrentCommands(commands) {
+        /**
+         * Some available commands may need to be disabled in certain
+         * situations. i.e.: in a knowledge article, prevent the usage of the
+         * /template command inside a /template block.
+         */
+        for (let filter of this.commandFilters) {
+            commands = filter(commands);
+        }
+        // Do not show disabled commands.
+        commands = commands.filter(command => !command.isDisabled || !command.isDisabled());
+        return this._orderCommandsByGroup(commands);
+    }
+    /**
+     * Takes a list of commands and returns an object whose keys are all
+     * existing group names and whose values are each of these groups' commands.
+     *
+     * @private
+     * @param {PowerboxCommand[]} commands
+     * @returns {{[key: groupName]: PowerboxCommand[]}>}
+     */
+    _groupCommands(commands) {
         const groups = {};
         for (const command of commands) {
-            groups[command.groupName] = groups[command.groupName] || [];
-            groups[command.groupName].push(command);
+            groups[command.groupName] = [...(groups[command.groupName] || []), command];
         }
+        return groups;
+    }
+    /**
+     * Take a list of commands and returns them reordered so that commands that
+     * belong to the same group are grouped together.
+     *
+     * @private
+     * @param {PowerboxCommand[]} commands
+     * @returns {PowerboxCommand[]}
+     */
+    _orderCommandsByGroup(commands) {
+        const groups = this._groupCommands(commands);
         const reorderedCommands = [];
         for (const groupCommands of Object.values(groups)) {
             reorderedCommands.push(...groupCommands);
         }
         return reorderedCommands;
     }
+    /**
+     * Recompute the Powerbox's position base on the selection in the document.
+     *
+     * @private
+     */
     _resetPosition() {
-        const position = getRangePosition(this.el, this.options.document);
-        if (!position) {
+        const position = getRangePosition(this.el, this.document);
+        if (position) {
+            let { left, top } = position;
+            if (this.getContextFromParentRect) {
+                const parentContextRect = this.getContextFromParentRect();
+                left += parentContextRect.left;
+                top += parentContextRect.top;
+            }
+            this.el.style.left = `${left}px`;
+            this.el.style.top = `${top}px`;
+        } else {
             this.hide();
-            return;
         }
-        let { left, top } = position;
-        if (this.options.getContextFromParentRect) {
-            const parentContextRect = this.options.getContextFromParentRect();
-            left += parentContextRect.left;
-            top += parentContextRect.top;
+    }
+    /**
+     * Add all events to their given target, based on @see _events.
+     *
+     * @private
+     */
+    _bindEvents() {
+        for (const [target, eventName, callback, option] of this._events) {
+            target.addEventListener(eventName, callback, option);
         }
+    }
+    /**
+     * Remove all events from their given target, based on @see _events.
+     *
+     * @private
+     */
+    _unbindEvents() {
+        for (const [target, eventName, callback, option] of this._events) {
+            target.removeEventListener(eventName, callback, option);
+        }
+    }
 
-        this.el.style.left = `${left}px`;
-        this.el.style.top = `${top}px`;
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Handle keyup events to filter commands based on what was typed, and
+     * prevent changing selection when using the arrow keys.
+     *
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeyup(ev) {
+        if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+            ev.preventDefault();
+        } else {
+            const diff = patienceDiff(
+                this._context.initialValue.split(''),
+                this._context.initialTarget.textContent.split(''),
+                true,
+            );
+            this._context.lastText = diff.bMove.join('');
+            if (this._context.lastText.match(/\s/)) {
+                this.close();
+            } else {
+                this._context.filteredCommands = this._context.lastText === ''
+                    ? this._context.commands
+                    : this._filter(this._context.commands, this._context.lastText);
+                this._render(this._context.filteredCommands);
+            }
+        }
+    }
+    /**
+     * Handle keydown events to add keyboard interactions with the Powerbox.
+     *
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown(ev) {
+        if (ev.key === 'Enter') {
+            ev.stopImmediatePropagation();
+            this._pickCommand();
+            ev.preventDefault();
+        } else if (ev.key === 'Escape') {
+            ev.stopImmediatePropagation();
+            this.close();
+            ev.preventDefault();
+        } else if (ev.key === 'Backspace' && !this._context.lastText) {
+            this.close();
+        } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+
+            const commandIndex = this._context.filteredCommands.findIndex(
+                command => command === this._context.selectedCommand,
+            );
+            if (this._context.filteredCommands.length && commandIndex !== -1) {
+                const nextIndex = commandIndex + (ev.key === 'ArrowDown' ? 1 : -1);
+                const newIndex = cycle(nextIndex, this._context.filteredCommands.length - 1);
+                this._context.selectedCommand = this._context.filteredCommands[newIndex];
+            } else {
+                this._context.selectedCommand = undefined;
+            }
+            this._render(this._context.filteredCommands);
+            this.el.querySelector('.oe-commandbar-commandWrapper.active').scrollIntoView({block: 'nearest', inline: 'nearest'});
+        }
     }
 }

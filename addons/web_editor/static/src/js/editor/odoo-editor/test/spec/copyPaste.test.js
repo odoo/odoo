@@ -1323,9 +1323,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>ab<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]cd</p>',
                 });
@@ -1336,9 +1336,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<span>b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</span>d</p>',
                 });
@@ -1349,9 +1349,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<a href="http://existing.com">b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</a>d</p>',
                 });
@@ -1364,9 +1364,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>ab<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]cd</p>',
                 });
@@ -1377,9 +1377,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<span>b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</span>d</p>',
                 });
@@ -1390,9 +1390,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://download.odoocdn.com/icons/website/static/description/icon.png');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<a href="http://existing.com">b<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">[]c</a>d</p>',
                 });
@@ -1407,9 +1407,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>ab<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]cd</p>',
                 });
@@ -1420,9 +1420,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<span>b<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]c</span>d</p>',
                 });
@@ -1433,7 +1433,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
                         // Ensure the powerbox is not active
-                        window.chai.expect(editor.commandBar._active).to.be.false;
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>',
                 });
@@ -1446,9 +1446,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://youtu.be/dQw4w9WgXcQ');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>ab<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]cd</p>',
                 });
@@ -1459,9 +1459,9 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
                         // Ensure the powerbox is active
-                        window.chai.expect(editor.commandBar._active).to.be.true;
-                        // Force commandBar validation on the default first choice
-                        await editor.commandBar._currentValidate();
+                        window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                        // Force powerbox validation on the default first choice
+                        await editor.powerbox._pickCommand();
                     },
                     contentAfter: '<p>a<span>b<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="1"></iframe>[]c</span>d</p>',
                 });
@@ -1472,7 +1472,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
                         // Ensure the powerbox is not active
-                        window.chai.expect(editor.commandBar._active).to.be.false;
+                        window.chai.expect(editor.powerbox.isOpen).to.be.false;
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttps://www.youtube.com/watch?v=dQw4w9WgXcQ[]c</a>d</p>',
                 });

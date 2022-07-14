@@ -307,7 +307,7 @@ export class OdooEditor extends EventTarget {
 
         this._pluginCall('sanitizeElement', [editable]);
 
-        this._createCommandBar();
+        this._createPowerbox();
 
         this.toolbarTablePicker = new TablePicker({ document: this.document });
         this.toolbarTablePicker.addEventListener('cell-selected', ev => {
@@ -401,8 +401,8 @@ export class OdooEditor extends EventTarget {
     destroy() {
         this.observerUnactive();
         this._removeDomListener();
-        this.commandBar.destroy();
-        this.commandbarTablePicker.el.remove();
+        this.powerbox.destroy();
+        this.powerboxTablePicker.el.remove();
         this._collabSelectionsContainer.remove();
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
@@ -1781,15 +1781,15 @@ export class OdooEditor extends EventTarget {
     // COMMAND BAR
     // ===========
 
-    _createCommandBar() {
-        this.commandbarTablePicker = new TablePicker({
+    _createPowerbox() {
+        this.powerboxTablePicker = new TablePicker({
             document: this.document,
             floating: true,
         });
 
-        document.body.appendChild(this.commandbarTablePicker.el);
+        document.body.appendChild(this.powerboxTablePicker.el);
 
-        this.commandbarTablePicker.addEventListener('cell-selected', ev => {
+        this.powerboxTablePicker.addEventListener('cell-selected', ev => {
             this.execCommand('insertTable', {
                 rowNumber: ev.detail.rowNumber,
                 colNumber: ev.detail.colNumber,
@@ -1875,7 +1875,7 @@ export class OdooEditor extends EventTarget {
                 description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
                 callback: () => {
-                    this.commandbarTablePicker.show();
+                    this.powerboxTablePicker.show();
                 },
             },
             {
@@ -1912,30 +1912,32 @@ export class OdooEditor extends EventTarget {
                 },
             },
         ];
-        this.commandBar = new Powerbox({
+        let beforeStepIndex;
+        this.powerbox = new Powerbox({
             editable: this.editable,
-            document: this.document,
             getContextFromParentRect: this.options.getContextFromParentRect,
             commandFilters: this.options.powerboxFilters,
-            _t: this.options._t,
             onShow: () => {
-                this.commandbarTablePicker.hide();
+                this.powerboxTablePicker.hide();
             },
-            shouldActivate: () => !!this.options.getPowerboxElement(),
-            onActivate: () => {
-                this._beforeCommandbarStepIndex = this._historySteps.length - 1;
+            onOpen: () => {
+                // Undo input '/'.
+                beforeStepIndex = this._historySteps.length - 2;
             },
-            preValidate: () => {
-                this._historyRevertUntil(this._beforeCommandbarStepIndex);
+            beforeCommand: () => {
+                if (this._isPowerboxOpenOnInput) {
+                    this._historyRevertUntil(beforeStepIndex);
+                    this.historyStep(true);
+                    this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
+                    setTimeout(() => {
+                        ensureFocus(this.editable);
+                        getDeepRange(this.editable, { select: true });
+                    });
+                }
+            },
+            afterCommand: () => {
                 this.historyStep(true);
-                this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-                setTimeout(() => {
-                    ensureFocus(this.editable);
-                    getDeepRange(this.editable, { select: true });
-                });
-            },
-            postValidate: () => {
-                this.historyStep(true);
+                this._isPowerboxOpenOnInput = false;
             },
             commands: [...mainCommands, ...(this.options.commands || [])],
         });
@@ -2349,6 +2351,11 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onInput(ev) {
+        // See if the Powerbox should be opened. If so, it will open at the end.
+        const newSelection = this.document.getSelection();
+        const shouldOpenPowerbox = newSelection.isCollapsed && newSelection.rangeCount &&
+            ev.data === '/' && this.powerbox && !this.powerbox.isOpen &&
+            (!this.options.getPowerboxElement || !!this.options.getPowerboxElement());
         // Record the selection position that was computed on keydown or before
         // contentEditable execCommand (whatever preceded the 'input' event)
         this._recordHistorySelection(true);
@@ -2356,7 +2363,6 @@ export class OdooEditor extends EventTarget {
         const { anchorNodeOid, anchorOffset, focusNodeOid, focusOffset } = selection || {};
         const wasCollapsed =
             !selection || (focusNodeOid === anchorNodeOid && focusOffset === anchorOffset);
-
         // Sometimes google chrome wrongly triggers an input event with `data`
         // being `null` on `deleteContentForward` `insertParagraph`. Luckily,
         // chrome provide the proper signal with the event `beforeinput`.
@@ -2434,8 +2440,7 @@ export class OdooEditor extends EventTarget {
                     selection.anchorNode &&
                     !closestElement(selection.anchorNode).closest('a') &&
                     selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                    (!this.commandBar._active ||
-                        this.commandBar._currentOpenOptions.closeOnSpace !== true)
+                    !this.powerbox.isOpen
                 ) {
                     const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
                     const textNodeSplitted = textSliced.split(/\s/);
@@ -2467,6 +2472,10 @@ export class OdooEditor extends EventTarget {
             }
         } else if (ev.inputType === 'insertCompositionText') {
             this._fromCompositionText = true;
+        }
+        if (shouldOpenPowerbox) {
+            this._isPowerboxOpenOnInput = true;
+            this.powerbox.open();
         }
     }
 
@@ -2784,7 +2793,7 @@ export class OdooEditor extends EventTarget {
 
     }
     /**
-     * Handle the hint preview for the commandbar.
+     * Handle the hint preview for the Powerbox.
      * @private
      */
     _handleCommandHint() {
@@ -3189,78 +3198,74 @@ export class OdooEditor extends EventTarget {
                     if (isImageUrl) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
-                        this.commandBar.open({
-                            commands: [
-                                {
-                                    groupName: this.options._t('Embed'),
-                                    title: this.options._t('Embed Image'),
-                                    description: this.options._t('Embed the image in the document.'),
-                                    fontawesome: 'fa-image',
-                                    shouldPreValidate: () => false,
-                                    callback: () => {
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                            const img = document.createElement('IMG');
-                                            img.setAttribute('src', url);
-                                            const sel = this.document.getSelection();
-                                            if (!sel.isCollapsed) {
-                                                this.deleteRange(sel);
-                                            }
-                                            if (sel.rangeCount) {
-                                                sel.getRangeAt(0).insertNode(img);
-                                                sel.collapseToEnd();
-                                            }
-                                        });
-                                    },
+                        this.powerbox.open([
+                            {
+                                groupName: this.options._t('Embed'),
+                                title: this.options._t('Embed Image'),
+                                description: this.options._t('Embed the image in the document.'),
+                                fontawesome: 'fa-image',
+                                callback: () => {
+                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
+                                        const img = document.createElement('IMG');
+                                        img.setAttribute('src', url);
+                                        const sel = this.document.getSelection();
+                                        if (!sel.isCollapsed) {
+                                            this.deleteRange(sel);
+                                        }
+                                        if (sel.rangeCount) {
+                                            sel.getRangeAt(0).insertNode(img);
+                                            sel.collapseToEnd();
+                                        }
+                                    });
                                 },
-                            ].concat(baseEmbedCommand),
-                        });
+                            },
+                            ...baseEmbedCommand,
+                        ]);
                     } else if (this.options.allowCommandVideo && youtubeUrl) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
-                        this.commandBar.open({
-                            commands: [
-                                {
-                                    groupName: this.options._t('Embed'),
-                                    title: this.options._t('Embed Youtube Video'),
-                                    description: this.options._t('Embed the youtube video in the document.'),
-                                    fontawesome: 'fa-youtube-play',
-                                    shouldPreValidate: () => false,
-                                    callback: async () => {
-                                        let videoElement;
-                                        if (this.options.getYoutubeVideoElement) {
-                                            videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
-                                        } else {
-                                            videoElement = document.createElement('iframe');
-                                            videoElement.setAttribute('width', '560');
-                                            videoElement.setAttribute('height', '315');
-                                            videoElement.setAttribute(
-                                                'src',
-                                                `https://www.youtube.com/embed/${youtubeUrl[1]}`,
-                                            );
-                                            videoElement.setAttribute('title', 'YouTube video player');
-                                            videoElement.setAttribute('frameborder', '0');
-                                            videoElement.setAttribute(
-                                                'allow',
-                                                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                                            );
-                                            videoElement.setAttribute('allowfullscreen', '1');
+                        this.powerbox.open([
+                            {
+                                groupName: this.options._t('Embed'),
+                                title: this.options._t('Embed Youtube Video'),
+                                description: this.options._t('Embed the youtube video in the document.'),
+                                fontawesome: 'fa-youtube-play',
+                                callback: async () => {
+                                    let videoElement;
+                                    if (this.options.getYoutubeVideoElement) {
+                                        videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                    } else {
+                                        videoElement = document.createElement('iframe');
+                                        videoElement.setAttribute('width', '560');
+                                        videoElement.setAttribute('height', '315');
+                                        videoElement.setAttribute(
+                                            'src',
+                                            `https://www.youtube.com/embed/${youtubeUrl[1]}`,
+                                        );
+                                        videoElement.setAttribute('title', 'YouTube video player');
+                                        videoElement.setAttribute('frameborder', '0');
+                                        videoElement.setAttribute(
+                                            'allow',
+                                            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                                        );
+                                        videoElement.setAttribute('allowfullscreen', '1');
+                                    }
+
+                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
+
+                                        const sel = this.document.getSelection();
+                                        if (!sel.isCollapsed) {
+                                            this.deleteRange(sel);
                                         }
-
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-
-                                            const sel = this.document.getSelection();
-                                            if (!sel.isCollapsed) {
-                                                this.deleteRange(sel);
-                                            }
-                                            if (sel.rangeCount) {
-                                                sel.getRangeAt(0).insertNode(videoElement);
-                                                sel.collapseToEnd();
-                                            }
-                                        });
-                                    },
+                                        if (sel.rangeCount) {
+                                            sel.getRangeAt(0).insertNode(videoElement);
+                                            sel.collapseToEnd();
+                                        }
+                                    });
                                 },
-                            ].concat(baseEmbedCommand),
-                        });
+                            },
+                            ...baseEmbedCommand,
+                        ]);
                     } else {
                         const link = document.createElement('A');
                         link.setAttribute('href', url);
