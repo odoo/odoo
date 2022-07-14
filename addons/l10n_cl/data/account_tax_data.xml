@@ -41,15 +41,15 @@
     </record>
 
     <record id="OTAX_19" model="account.tax.template">
-      <field name="chart_template_id" ref="cl_chart_template"/>
-      <field name="name">IVA 19% Compra</field>
-      <field name="description">IVA 19% Comp</field>
-      <field name="amount">19</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">purchase</field>
-      <field name="l10n_cl_sii_code">14</field>
-      <field name="tax_group_id" ref="tax_group_iva_19"/>
-      <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">IVA 19% Compra</field>
+        <field name="description">IVA 19% Comp</field>
+        <field name="amount">19</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">14</field>
+        <field name="tax_group_id" ref="tax_group_iva_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
@@ -79,9 +79,239 @@
 
     <record id="I_IU2C" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría</field>
-        <field name="description">Ret. 2da Cat</field>
+        <field name="name">Ret. 2da Categoría 2020</field>
+        <field name="description">Ret. 2da 2020</field>
+        <field name="active">False</field>
+        <field name="amount">-10.75</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2021" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2021</field>
+        <field name="description">Ret. 2da 2021</field>
+        <field name="active">False</field>
         <field name="amount">-11.5</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2022" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2022</field>
+        <field name="description">Ret. 2da 2022</field>
+        <field name="amount">-12.25</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2023" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2023</field>
+        <field name="description">Ret. 2da 2023</field>
+        <field name="amount">-13</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2024" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2024</field>
+        <field name="description">Ret. 2da 2024</field>
+        <field name="amount">-13.75</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2025" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2025</field>
+        <field name="description">Ret. 2da 2025</field>
+        <field name="amount">-14.5</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_2da_categ"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_retencion_segunda_categ')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
+                'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="I_IR2C_2026" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Ret. 2da Categoría 2026</field>
+        <field name="description">Ret. 2da 2026</field>
+        <field name="amount">-15.25</field>
         <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
