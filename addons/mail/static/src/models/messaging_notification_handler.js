@@ -16,10 +16,8 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('notification');
-                this.env.services['bus_service'].stopPolling();
-            }
+            this.env.services['bus_service'].off('notification');
+            this.env.services['bus_service'].stopPolling();
         },
     },
     recordMethods: {
