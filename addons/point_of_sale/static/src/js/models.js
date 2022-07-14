@@ -1098,7 +1098,7 @@ class PosGlobalState extends PosModel {
         return taxes;
     }
 
-    get_taxes_after_fp(taxes_ids){
+    get_taxes_after_fp(taxes_ids, order){
         var self = this;
         var taxes =  this.taxes;
         var product_taxes = [];
@@ -1106,7 +1106,7 @@ class PosGlobalState extends PosModel {
             var tax = _.detect(taxes, function(t){
                 return t.id === el;
             });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, order));
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
         return product_taxes;
@@ -1358,7 +1358,7 @@ class Product extends PosModel {
     }
     get_display_price(pricelist, quantity) {
         if (this.pos.config.iface_tax_included === 'total') {
-            const taxes = this.pos.get_taxes_after_fp(this.taxes_id);
+            const taxes = this.pos.get_taxes_after_fp(this.taxes_id, this.pos.get_order());
             const allPrices = this.pos.compute_all(taxes, this.get_price(pricelist, quantity), 1, this.pos.currency.rounding);
             return allPrices.total_included;
         } else {
@@ -1808,7 +1808,7 @@ class Orderline extends PosModel {
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     }
     get_taxes_after_fp(taxes_ids){
-        return this.pos.get_taxes_after_fp(taxes_ids);
+        return this.pos.get_taxes_after_fp(taxes_ids, this.order);
     }
     get_display_price_one(){
         var rounding = this.pos.currency.rounding;
