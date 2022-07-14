@@ -3196,6 +3196,10 @@ class AccountMove(models.Model):
     def button_cancel(self):
         self.write({'auto_post': False, 'state': 'cancel'})
 
+    def is_mail_sendable(self):
+        self.ensure_one()
+        return self.is_invoice(include_receipts=True)
+
     def _get_mail_template(self):
         """
         :return: the correct mail template based on the current move type
@@ -3320,7 +3324,7 @@ class AccountMove(models.Model):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        if any(not move.is_invoice(include_receipts=True) for move in self):
+        if any(not move.is_mail_sendable() for move in self):
             raise UserError(_("Only invoices could be printed."))
 
         self.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})

@@ -2,11 +2,11 @@
 <odoo>
     <data>
         <!-- 
-		PURCHASE WITHHOLDS OVER ANTICIPADED PROFIT *IMPUESTO A LA RENTA
-		-->
+        PURCHASE WITHHOLDS OVER ANTICIPADED PROFIT *IMPUESTO A LA RENTA
+        -->
         <record id="tax_withhold_profit_303" model="account.tax.template">
-            <field name="name">303 10% honorarios profesionales y demas pagos por servicios relacionados con el titulo profesional</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">303 10% Honorarios Profesionales y Demás Pagos por Servicios Relacionados con el Titulo Profesional</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-10.0</field>
@@ -15,7 +15,7 @@
             <field name="l10n_ec_code_base">303</field>
             <field name="l10n_ec_code_ats">303</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -42,8 +42,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304" model="account.tax.template">
-            <field name="name">304 8% servicios predomina el intelecto no relacionados con el titulo profesional</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304 8% Servicios Predomina el Intelecto No Relacionados con el Titulo Profesional</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -52,7 +52,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -79,8 +79,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304A" model="account.tax.template">
-            <field name="name">304a 8% comisiones y demas pagos por servicios predomina intelecto no relacionados con el titulo profesional</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304A 8% Comisiones y Demas Pagos por Servicios Predomina Intelecto No Relacionados con el Titulo Profesional</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -89,7 +89,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -116,8 +116,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304B" model="account.tax.template">
-            <field name="name">304b 8% pagos a notarios y registradores de la propiedad y mercantil por sus actividades ejercidas como tales</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304B 8% Pagos a Notarios y Registradores de la Propiedad y Mercantil por sus Actividades Ejercidas Como Tales</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -126,7 +126,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304B</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -153,8 +153,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304C" model="account.tax.template">
-            <field name="name">304c 8% pagos a deportistas, entrenadores, arbitros, miembros del cuerpo tecnico por sus actividades ejercidas como tales</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304C 8% Pagos a Deportistas, Entrenadores, Arbitros, Miembros del Cuerpo Tecnico por sus Actividades Ejercidas Como Tales</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -163,7 +163,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304C</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -190,8 +190,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304D" model="account.tax.template">
-            <field name="name">304d 8% pagos a artistas por sus actividades ejercidas como tales</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304D 8% Pagos a Artistas por sus Actividades Ejercidas Como Tales</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -200,7 +200,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304D</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -227,8 +227,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_304E" model="account.tax.template">
-            <field name="name">304e 8% honorarios y demas pagos por servicios de docencia</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">304E 8% Honorarios y Demas Pagos por Servicios de Docencia</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -237,7 +237,7 @@
             <field name="l10n_ec_code_base">304</field>
             <field name="l10n_ec_code_ats">304E</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -264,8 +264,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_307" model="account.tax.template">
-            <field name="name">307 2% servicios predomina mano de obra</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">307 2% Servicios Predomina Mano de Obra</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.0</field>
@@ -274,7 +274,7 @@
             <field name="l10n_ec_code_base">307</field>
             <field name="l10n_ec_code_ats">307</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -301,8 +301,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_308" model="account.tax.template">
-            <field name="name">308 10% utilizacion o aprovechamiento de la imagen o renombre</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">308 10% Utilizacion o Aprovechamiento de la Imagen o Renombre</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-10.0</field>
@@ -311,7 +311,7 @@
             <field name="l10n_ec_code_base">308</field>
             <field name="l10n_ec_code_ats">308</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -338,8 +338,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_309" model="account.tax.template">
-            <field name="name">309 1.75% servicios prestados por medios de comunicación y agencias de publicidad</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">309 1.75% Servicios Prestados por Medios de Comunicación y Agencias de Publicidad</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
@@ -348,7 +348,7 @@
             <field name="l10n_ec_code_base">309</field>
             <field name="l10n_ec_code_ats">309</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -375,8 +375,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_310" model="account.tax.template">
-            <field name="name">310 1% servicio de transporte privado de pasajeros o transporte publico o privado de carga</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">310 1% Servicio de Transporte Privado de Pasajeros o Transporte Publico o Privado de Carga</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
@@ -385,7 +385,7 @@
             <field name="l10n_ec_code_base">310</field>
             <field name="l10n_ec_code_ats">310</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -412,8 +412,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_311" model="account.tax.template">
-            <field name="name">311 2% por pagos a traves de liquidacion de compra (nivel cultural o rusticidad)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">311 2% Por Pagos a Traves de Liquidacion de Compra (nivel cultural o rusticidad)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.0</field>
@@ -422,7 +422,7 @@
             <field name="l10n_ec_code_base">311</field>
             <field name="l10n_ec_code_ats">311</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -449,8 +449,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_312" model="account.tax.template">
-            <field name="name">312 1.75% transferencia de bienes muebles de naturaleza corporal</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">312 1.75% Transferencia de Bienes Muebles de Naturaleza Corporal</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
@@ -459,7 +459,7 @@
             <field name="l10n_ec_code_base">312</field>
             <field name="l10n_ec_code_ats">312</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -486,8 +486,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_312A" model="account.tax.template">
-            <field name="name">312a 1% compra de bienes de origen agricola, avicola, pecuario, apicola, cunicula, bioacuatico, y forestal</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">312A 1% Compra de Bienes de Origen Agricola, Avicola, Pecuario, Apicola, Cunicula, Bioacuatico, y Forestal</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
@@ -496,7 +496,7 @@
             <field name="l10n_ec_code_base">312</field>
             <field name="l10n_ec_code_ats">312A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -523,8 +523,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314A" model="account.tax.template">
-            <field name="name">314a 8% regalias por concepto de franquicias de acuerdo a ley de propiedad intelectual - pago a personas naturales</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">314A 8% Regalias por Concepto de Franquicias de Acuerdo a Ley de Propiedad Intelectual - Pago a Personas Naturales</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -533,7 +533,7 @@
             <field name="l10n_ec_code_base">314</field>
             <field name="l10n_ec_code_ats">314A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -560,8 +560,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314B" model="account.tax.template">
-            <field name="name">314b 8% casales, derechos de autor, marcas, patentes y similares de acuerdo a ley de propiedad intelectual – pago a personas naturales</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">314B 8% Casales, Derechos de Autor, Marcas, Patentes y Similares de Acuerdo a Ley de Propiedad Intelectual – Pago a Personas Naturales</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -570,7 +570,7 @@
             <field name="l10n_ec_code_base">314</field>
             <field name="l10n_ec_code_ats">314B</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -597,8 +597,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314C" model="account.tax.template">
-            <field name="name">314c 8% regalias por concepto de franquicias de acuerdo a ley de propiedad intelectual - pago a sociedades</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">314C 8% Regalias por Concepto de Franquicias de Acuerdo a Ley de Propiedad Intelectual - Pago a Sociedades</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -607,7 +607,7 @@
             <field name="l10n_ec_code_base">314</field>
             <field name="l10n_ec_code_ats">314C</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -634,8 +634,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_314D" model="account.tax.template">
-            <field name="name">314d 8% casales, derechos de autor, marcas, patentes y similares de acuerdo a ley de propiedad intelectual – pago a sociedades</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">314D 8% Casales, Derechos de Autor, Marcas, Patentes y Similares de Acuerdo a Ley de Propiedad Intelectual – Pago a Sociedades</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -644,7 +644,7 @@
             <field name="l10n_ec_code_base">314</field>
             <field name="l10n_ec_code_ats">314D</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -671,8 +671,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_319" model="account.tax.template">
-            <field name="name">319 1.75% cuotas de arrendamiento mercantil (prestado por sociedades), inclusive la de opción de compra</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">319 1.75% Cuotas de Arrendamiento Mercantil (Prestado por Sociedades), Inclusive la de Opción de Compra</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
@@ -681,7 +681,7 @@
             <field name="l10n_ec_code_base">319</field>
             <field name="l10n_ec_code_ats">319</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -708,8 +708,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_320" model="account.tax.template">
-            <field name="name">320 8% por arrendamiento bienes inmuebles</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">320 8% Por Arrendamiento Bienes Inmuebles</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
@@ -718,7 +718,7 @@
             <field name="l10n_ec_code_base">320</field>
             <field name="l10n_ec_code_ats">320</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -745,8 +745,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_322" model="account.tax.template">
-            <field name="name">322 1.75% seguros y reaseguros (primas y cesiones) 1.75%	</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">322 1.75% Seguros y Reaseguros (Primas y Cesiones) 1.75%</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
@@ -755,7 +755,7 @@
             <field name="l10n_ec_code_base">322</field>
             <field name="l10n_ec_code_ats">322</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -782,8 +782,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332" model="account.tax.template">
-            <field name="name">332 0% otras compras de bienes y servicios no sujetas a retencion</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332 0% Otras Compras de Bienes y Servicios No Sujetas a Retencion</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -791,7 +791,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -816,8 +816,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332A" model="account.tax.template">
-            <field name="name">332a 0% enajenacion de derechos representativos de capital y otros derechos exentos (mayo 2016)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332A 0% Enajenacion de Derechos Representativos de Capital y Otros Derechos Exentos (mayo 2016)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -825,7 +825,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -850,8 +850,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332B" model="account.tax.template">
-            <field name="name">332b 0% compra de bienes inmuebles</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332B 0% Compra de Bienes Inmuebles</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -859,7 +859,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332B</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -884,8 +884,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332C" model="account.tax.template">
-            <field name="name">332c 0% transporte publico de pasajeros</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332C 0% Transporte Publico de Pasajeros</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -893,7 +893,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332C</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -918,8 +918,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332D" model="account.tax.template">
-            <field name="name">332d 0% pagos en el pais por transporte de pasajeros o transporte internacional de carga, a compañias nacionales o extranjeras de aviacion o maritimas</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332D 0% Pagos en el Pais por Transporte de Pasajeros o Transporte Internacional de Carga, a Compañias Nacionales o Extranjeras de Aviacion o Maritimas</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -927,7 +927,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332D</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -952,8 +952,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332G" model="account.tax.template">
-            <field name="name">332g 0% pagos con tarjeta de credito</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332G 0% Pagos con Tarjeta de Credito</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -961,7 +961,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332G</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -986,8 +986,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_332I" model="account.tax.template">
-            <field name="name">332i 0% pagos a través de convenios de débito (clientes ifi`s)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">332I 0% Pagos a Través de Convenios de Débito (clientes ifi`s)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">0.0</field>
@@ -995,7 +995,7 @@
             <field name="l10n_ec_code_base">332</field>
             <field name="l10n_ec_code_ats">332I</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1019,9 +1019,46 @@
                     'account_id': ref('l10n_ec.ret_ir_others'),
                 })]"/>
         </record>
+        <record id="tax_withhold_profit_343" model="account.tax.template">
+            <field name="name">343 1% Otras Retenciones Aplicables el 1% (Incluye régimen RIMPE)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-1.0</field>
+            <field name="description">Otras 1%</field>
+            <field name="l10n_ec_code_applied">393</field>
+            <field name="l10n_ec_code_base">343</field>
+            <field name="l10n_ec_code_ats">343</field>
+            <field name="chart_template_id" ref="l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_103_343')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_1x100'),
+                    'plus_report_line_ids': [ref('tax_report_line_103_393')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_103_343')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_1x100'),
+                    'minus_report_line_ids': [ref('tax_report_line_103_393')],
+                })]"/>
+        </record>
         <record id="tax_withhold_profit_343A" model="account.tax.template">
-            <field name="name">343a 1% por energia electrica</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">343A 1% Por Energia Electrica</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
@@ -1030,7 +1067,7 @@
             <field name="l10n_ec_code_base">343</field>
             <field name="l10n_ec_code_ats">343A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1057,8 +1094,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_343B" model="account.tax.template">
-            <field name="name">343b 1% por actividades de construccion de obra material inmueble, urbanizacion, lotizacion o actividades similares</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">343B 1% Por Actividades de Construccion de Obra Material Inmueble, Urbanizacion, Lotizacion o Actividades Similares</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
@@ -1067,7 +1104,7 @@
             <field name="l10n_ec_code_base">343</field>
             <field name="l10n_ec_code_ats">343B</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1094,17 +1131,17 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_3440" model="account.tax.template">
-            <field name="name">3440 2.75% otras retenciones aplicables el 2,75%</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">3440 2.75% Otras Retenciones Aplicables el 2,75%</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
-            <field name="amount">-2.0</field>
+            <field name="amount">-2.75</field>
             <field name="description">3440</field>
             <field name="l10n_ec_code_applied">394</field>
             <field name="l10n_ec_code_base">3440</field>
             <field name="l10n_ec_code_ats">3440</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1131,8 +1168,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_346" model="account.tax.template">
-            <field name="name">346 1.75% microempresas (otras retenciones aplicables a otros porcentajes)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">346 1.75% Microempresas (Otras retenciones aplicables a otros porcentajes)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
@@ -1141,35 +1178,35 @@
             <field name="l10n_ec_code_base">346</field>
             <field name="l10n_ec_code_ats">346</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
+                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1_75x100'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
+                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
+                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1_75x100'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
+                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_347_346" model="account.tax.template">
-            <field name="name">347-346 2% donaciones en dinero -impuesto a la donaciones</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">347-346 2% Donaciones en Dinero -Impuesto a las Donaciones</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.0</field>
@@ -1178,7 +1215,7 @@
             <field name="l10n_ec_code_base">346</field>
             <field name="l10n_ec_code_ats">347</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1205,8 +1242,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_501_411" model="account.tax.template">
-            <field name="name">501-411 22% pago al exterior - beneficios empresariales (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">501-411 22% Pago al Exterior - Beneficios Empresariales (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1215,7 +1252,7 @@
             <field name="l10n_ec_code_base">411</field>
             <field name="l10n_ec_code_ats">501</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1242,8 +1279,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_501_422" model="account.tax.template">
-            <field name="name">501-422 22% pago al exterior - beneficios empresariales (sin convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">501-422 22% Pago al Exterior - Beneficios Empresariales (Sin Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1252,7 +1289,7 @@
             <field name="l10n_ec_code_base">422</field>
             <field name="l10n_ec_code_ats">501</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1279,8 +1316,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_502_411" model="account.tax.template">
-            <field name="name">502-411 22% pago al exterior - servicios empresariales (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">502-411 22% Pago al Exterior - Servicios Empresariales (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1289,7 +1326,7 @@
             <field name="l10n_ec_code_base">411</field>
             <field name="l10n_ec_code_ats">502</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1316,8 +1353,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_502_422" model="account.tax.template">
-            <field name="name">502-422 22% pago al exterior - servicios empresariales (sin convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">502-422 22% Pago al Exterior - Servicios Empresariales (Sin Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1326,7 +1363,7 @@
             <field name="l10n_ec_code_base">422</field>
             <field name="l10n_ec_code_ats">502</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1353,8 +1390,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_509_411" model="account.tax.template">
-            <field name="name">509-411 22% pago al exterior - casales, derechos de autor, marcas, patentes y similares (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">509-411 22% Pago al Exterior - Casales, Derechos de Autor, Marcas, Patentes y Similares (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1363,7 +1400,7 @@
             <field name="l10n_ec_code_applied">461</field>
             <field name="l10n_ec_code_ats">509</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1390,8 +1427,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_509_422" model="account.tax.template">
-            <field name="name">509-422 pago al exterior - casales, derechos de autor, marcas, patentes y similares (sin convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">509-422 Pago al Exterior - Casales, Derechos de Autor, Marcas, Patentes y Similares (Sin Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1400,7 +1437,7 @@
             <field name="l10n_ec_code_applied">472</field>
             <field name="l10n_ec_code_ats">509</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1427,8 +1464,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_511_411" model="account.tax.template">
-            <field name="name">511-411 22% pago al exterior - servicios profesionales independientes (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">511-411 22% Pago al Exterior - Servicios Profesionales Independientes (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1437,7 +1474,7 @@
             <field name="l10n_ec_code_applied">461</field>
             <field name="l10n_ec_code_ats">511</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1464,8 +1501,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_512_411" model="account.tax.template">
-            <field name="name">512-411 22% pago al exterior - servicios profesionales dependientes (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">512-411 22% Pago al Exterior - Servicios Profesionales Dependientes (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1474,7 +1511,7 @@
             <field name="l10n_ec_code_applied">461</field>
             <field name="l10n_ec_code_ats">512</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1501,8 +1538,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_517_411" model="account.tax.template">
-            <field name="name">517-411 22% pago al exterior - reembolso de gastos (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">517-411 22% Pago al Exterior - Reembolso de Gastos (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1511,7 +1548,7 @@
             <field name="l10n_ec_code_applied">461</field>
             <field name="l10n_ec_code_ats">517</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1538,8 +1575,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_520D_411" model="account.tax.template">
-            <field name="name">520d-411 22% pago al exterior - comisiones por exportaciones y por promocion de turismo receptivo (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">520D-411 22% Pago al Exterior - Comisiones por Exportaciones y Por Promocion de Turismo Receptivo (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1548,7 +1585,7 @@
             <field name="l10n_ec_code_applied">461</field>
             <field name="l10n_ec_code_ats">520D</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1575,8 +1612,8 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_522A_410" model="account.tax.template">
-            <field name="name">522a-410 22% pago al exterior - servicios tecnicos, administrativos o de consultoria y regalias con convenio de doble tributacion (con convenio de doble tributación)</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="name">522A-410 22% Pago al Exterior - Servicios Tecnicos, Administrativos o de Consultoria y Regalias (Con Convenio de Doble Tributación)</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
@@ -1585,7 +1622,7 @@
             <field name="l10n_ec_code_applied">460</field>
             <field name="l10n_ec_code_ats">522A</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -1611,313 +1648,314 @@
                     'minus_report_line_ids': [ref('tax_report_line_103_460')],
                 })]"/>
         </record>
+        <record id="income_tax_withholding_302" model="account.tax.template">
+            <field name="name">352 En relación de Dependencia que Supera o no la Base Desgravada</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">none</field>
+            <field name="l10n_ec_code_base">352</field>
+            <field name="l10n_ec_code_applied">302</field>
+            <field name="l10n_ec_code_ats">352</field>
+            <field name="amount">-22.0</field>
+            <field name="description">352</field>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="sequence">70</field>
+            <field name="chart_template_id" ref="l10n_ec_ifrs"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_103_302')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec21070101'),
+                    'plus_report_line_ids': [ref('tax_report_line_103_352')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_103_302')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec21070101'),
+                    'minus_report_line_ids': [ref('tax_report_line_103_352')],
+                })]"/>
+        </record>
         <!-- 
-		SALES WITHHOLDS OVER ANTICIPADED PROFIT *IMPUESTO A LA RENTA VENTA
-		-->
+        SALES WITHHOLDS OVER ANTICIPADED PROFIT *IMPUESTO A LA RENTA VENTA
+        -->
         <record id="tax_withhold_profit_sale_1x100" model="account.tax.template">
-            <field name="name">1% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">1% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.0</field>
             <field name="description">1%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_343')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_393')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_343')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_393')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_1_75x100" model="account.tax.template">
-            <field name="name">1.75% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">1.75% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-1.75</field>
             <field name="description">1.75%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_2x100" model="account.tax.template">
-            <field name="name">2% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">2% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.0</field>
             <field name="description">2%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_344')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_394')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_344')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_394')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_2_75x100" model="account.tax.template">
-            <field name="name">2.75% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">2.75% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.75</field>
             <field name="description">2.75%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_3440')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_3940')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_3440')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_3940')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_5x100" model="account.tax.template">
-            <field name="name">5% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">5% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-5.0</field>
             <field name="description">5%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_8x100" model="account.tax.template">
-            <field name="name">8% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">8% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-8.0</field>
             <field name="description">8%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_345')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_395')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_345')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_395')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_10x100" model="account.tax.template">
-            <field name="name">10% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">10% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-10.0</field>
             <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_15x100" model="account.tax.template">
-            <field name="name">15% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">15% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-15.0</field>
             <field name="description">15%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
         <record id="tax_withhold_profit_sale_22x100" model="account.tax.template">
-            <field name="name">22% retenciones de la fuente</field>
-            <field name="type_tax_use">sale</field>
+            <field name="name">22% Retenciones de la Fuente</field>
+            <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-22.0</field>
             <field name="description">22%</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
-            <field name="tax_group_id" ref="tax_group_withhold_income"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_sale"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'plus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_346')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
-                    'minus_report_line_ids': [ref('tax_report_line_103_396')],
                 })]"/>
         </record>
     </data>

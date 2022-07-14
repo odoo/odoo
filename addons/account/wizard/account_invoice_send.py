@@ -36,8 +36,8 @@ class AccountInvoiceSend(models.TransientModel):
         res = super(AccountInvoiceSend, self).default_get(fields)
         res_ids = self._context.get('active_ids')
 
-        invoices = self.env['account.move'].browse(res_ids).filtered(lambda move: move.is_invoice(include_receipts=True))
-        if not invoices:
+        moves = self.env['account.move'].browse(res_ids).filtered(lambda move: move.is_mail_sendable())
+        if not moves:
             raise UserError(_("You can only send invoices."))
 
         composer = self.env['mail.compose.message'].create({

@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="account_l10n_ec_sri_payment" model="ir.ui.view">
-        <field name="name">l10n.ec.sri.payment.form</field>
+
+    <record id="view_payment_method_form" model="ir.ui.view">
+        <field name="name">view.payment.method.form</field>
         <field name="model">l10n_ec.sri.payment</field>
+        <field name="type">form</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
+            <form string="Payment Method" create="0" edit="0">
+                <sheet>
+                    <group>
+                          <field name="code"/>
+                          <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_payment_method_tree" model="ir.ui.view" >
+        <field name="name">view.payment.method.tree</field>
+        <field name="model">l10n_ec.sri.payment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Method" create="0" edit="0">
                 <field name="code"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -15,8 +33,9 @@
         <field name="name">Payment Methods SRI</field>
         <field name="res_model">l10n_ec.sri.payment</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_payment_method_tree"/>
     </record>
 
     <menuitem id="menu_action_account_l10n_ec_sri_payment" action="action_account_l10n_ec_sri_payment_tree"
-              groups="account.group_account_manager" parent="account.account_invoicing_menu" sequence="3"/>
+              groups="account.group_account_manager" parent="l10n_ec.sri_menu" sequence="3"/>
 </odoo>

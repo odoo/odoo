@@ -48,7 +48,7 @@ _DOCUMENTS_MAPPING = {
     "04": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -65,7 +65,7 @@ _DOCUMENTS_MAPPING = {
     "05": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -78,7 +78,7 @@ _DOCUMENTS_MAPPING = {
     "06": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18',
+        'ec_dt_18',  # TODO 18
         'ec_dt_41',
         'ec_dt_44',
         'ec_dt_47',
@@ -91,7 +91,7 @@ _DOCUMENTS_MAPPING = {
     "07": [
         'ec_dt_04',
         'ec_dt_05',
-        'ec_dt_18'
+        'ec_dt_18',  # TODO 18
     ],
     "09": [
         'ec_dt_01',
@@ -144,32 +144,25 @@ class AccountMove(models.Model):
         is_ruc = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_ruc.id
         is_dni = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_dni.id
         is_passport = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_passport.id
-        l10n_ec_is_exportation = move.partner_id.commercial_partner_id.country_id.code != 'EC'
         identification_code = False
         if move.move_type in ("in_invoice", "in_refund"):
             if is_ruc:
                 identification_code = "01"
             elif is_dni:
-                identification_code = "02"
+                identification_code = "05"  # TODO revert to "02" (test purposes only)
+            elif self.l10n_latam_document_type_id.internal_type == 'purchase_liquidation':  # TODO review (this made the govt/XSD accept purchase liquidation XMLs)
+                identification_code = "08"
             else:
                 identification_code = "03"
-        elif move.move_type in ("out_invoice", "out_refund"):
-            if not l10n_ec_is_exportation:
-                if is_final_consumer:
-                    identification_code = "07"
-                elif is_ruc:
-                    identification_code = "04"
-                elif is_dni:
-                    identification_code = "05"
-                elif is_passport:
-                    identification_code = "06"
-            else:
-                if is_ruc:
-                    identification_code = "20"
-                elif is_dni:
-                    identification_code = "21"
-                else:
-                    identification_code = "09"
+        elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
+            if is_final_consumer:
+                identification_code = "07"
+            elif is_ruc:
+                identification_code = "04"
+            elif is_dni:
+                identification_code = "05"
+            elif is_passport:
+                identification_code = "06"
         return identification_code
 
     @api.model
@@ -184,11 +177,8 @@ class AccountMove(models.Model):
     def _get_l10n_ec_internal_type(self):
         self.ensure_one()
         internal_type = self.env.context.get("internal_type", "invoice")
-        if self.move_type in ("out_refund", "in_refund"):
-            internal_type = "credit_note"
-        if self.debit_origin_id:
-            internal_type = "debit_note"
-        return internal_type
+        if self.l10n_latam_document_type_id:
+            internal_type = self.l10n_latam_document_type_id.internal_type
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -233,7 +223,7 @@ class AccountMove(models.Model):
             "in_invoice",
             "in_refund",
         ):
-            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False)
+            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False) #seems duplicated code
             internal_type = self._get_l10n_ec_internal_type()
             document_types = l10n_latam_document_type_model.search([
                 ('internal_type', '=', internal_type),
