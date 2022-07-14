@@ -24,6 +24,9 @@
             <div data-name="coffeebreak" title="Coffeebreak" data-layout-styles="background-color: rgb(238, 233, 226) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_coffeebreak_template"/>
             </div>
+            <div data-name="textnews" title="Text Base" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_textnews_template"/>
+            </div>
         </xpath>
     </template>
 
@@ -1048,6 +1051,182 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Theme "textnews" default template -->
+    <template id="theme_textnews_template">
+        <style id="design-element">
+            h1 {
+                color: #CE0000;
+            }
+            h3 {
+                font-size: 18px;
+                font-weight: bolder;
+            }
+            a:not(.btn), a.btn.btn-link {
+                text-decoration-line: underline;
+                color: #212529;
+            }
+            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                background-color: #CE0000;
+                border-color: #CE0000;
+            }
+        </style>
+        <t t-set="now" t-value="datetime.datetime.now()"/>
+        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general bg-white pt40 pb40" style="background-color: rgb(255, 255, 255) !important;" data-snippet="s_mail_block_header_social" data-name="Left Logo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h1>Musings of the week</h1>
+                    </div>
+                    <div class="col-lg-5 o_mail_header_social" style="text-align: right;">
+                        <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-facebook.png" data-original-id="435" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-facebook.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Twitter" target="_blank" href="https://twitter.com/Odoo" data-original-title="Twitter" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-twitter.png" data-original-id="436" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-twitter.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Instagram" target="_blank" href="https://www.linkedin.com/company/odoo" data-original-title="Linkedin" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-linkedin.png" data-original-id="437" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-linkedin.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_mail_blockquote blockquote o_mail_snippet_general o_cc o_cc1 pt16 pb16 mb-0 w-100" data-snippet="s_blockquote" data-name="Blockquote">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-1 pb80" style="text-align: right;">
+                        <i class="fa fa-1x fa-quote-left"></i>
+                    </div>
+                    <div class="col-lg-10">
+                        <div>
+                            <p><i class="">The greatest impediments to changes in our traditional roles seem to lie not in the visible world of conscious intent, but in the murky realm of the unconscious mind.</i></p>
+                            <div style="text-align: right">
+                                <span class="s_blockquote_author">- Dr. Augustus Napier</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 pt80" style="text-align: left;">
+                        <i class="fa fa-1x fa-quote-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24 " data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>Making companies a better place, one app at a time</h3>
+                <p>I needed to change the world. I wanted to... You know how it is when you are young; you have big dreams, a lot of energy and naive stupidity. My dream was to lead the enterprise management market with a fully open source software (I also wanted to get 100 employees before 30 years old with a self-financed company but I failed this one by only a few months).</p>
+                <p>To fuel my motivation, I had to pick someone to fight against. In business, it's like a playground. When you arrive in a new school, if you want to quickly become the leader, you must choose the class bully, the older guy who terrorizes small boys, and kick his butt in front of everyone. That was my strategy with SAP, the enterprise software giant.</p>
+                <p>So in 2005, I started to develop the TinyERP product, the software that (at least in my mind) would change the enterprise world. While preparing for the "day of the fight" in 2006, I <a href="http://whois.domaintools.com/sorrysap.com" target="_blank">bought the SorrySAP.com domain name</a>. I put it on hold for 6 years, waiting for the right moment to use it. I thought it would take 3 years to deprecate a 77 billion dollars company just because open source is so cool. Sometimes it's better for your self-motivation not to face reality...</p>
+                <p>To make things happen, I worked hard, very hard. I worked 13 hours a day, 7 days a week, with no vacation for 7 years. I lost friendships and broke up with my girlfriend in the process (fortunately, I found a more valuable wife now. I will explain later why she is worth 1 million EUR :) ).</p>
+                <p>Three years later, I discovered you can't change the world if you are "tiny". Especially if the United States is part of this world, where it's better to be a BigERP, rather than a TinyERP. Can you imagine how small you feel <a href="http://slidesha.re/ohc44E" target="_blank">in front of Danone's directors</a> asking; "But why should we pay millions of dollars for a tiny software?" So, we renamed TinyERP to OpenERP.</p>
+                <p>As we worked hard, things started to evolve. We were developing dozens of modules for OpenERP, the open source community was growing and I was even able to pay all employees' salaries at the end of the month without fear (which was a situation I struggled with for 4 years).</p>
+                <p>In 2010, we had a 100+ employees selling services on OpenERP and a powerful but ugly product. This is what happens when delivering services to customers distracts you from building an exceptional product. It was time to do a pivot in the business model.</p>
+            </div>
+        </div>
+        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
+            <img src="/mass_mailing_themes/static/src/img/theme_textnews/s_default_image_block_banner.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb40" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>The Pivot</h3>
+                <p>We wanted to switch from a service company to a software publisher company. This would allow us to increase our efforts in our research and development activities. As a result, <a href="https://accounts.openerp.com/blog/OpenERP-Blog-Post-1/post/Open-Source-Free-as-in-Freedom-not-free-as-in-Free-services-119" target="_blank">we changed our business model</a> and decided to stop our services for customers and focus on building a strong partner network and maintenance offer. This would cost money, so I had to raise a few million euros.</p>
+                <p>After a few months of pitching investors, I got roughly 10 LOI from different VCs. We chose Sofinnova Partners, the biggest European VC, and Xavier Niel the founder of Iliad, the only company in France funded in the past 10 years to have reached the 1 billion EUR valuation.</p>
+                <p>I signed the LOI. I didn't realize that this contract could have turned me into a homeless person. (I already had a dog, all I needed was to lose a lot of money to become homeless). The fundraising was based on a company valuation but there was a financial mechanism to re-evaluate the company up by 9.8 m€ depending on the turnover of the next 4 years. I should have received warrants convertible into shares if we achieved the turnover targeted in the business plan.</p>
+                <p>The night before receiving the warrants in front of the notary, my wife checked the contracts. She asked me what would be the taxation on these warrants. I rang the lawyer and guess what? Belgium is probably the only country in the world where you have to pay taxes on warrants when you receive them, even if you never reach the conditions to convert them into shares. If I had accepted these warrants, I would have had to pay a 12.5% tax on 9.8 m€; resulting in a tax of 1.2m€ to pay in 18 months! So, my wife is worth 1.2 million EUR. I would have ended up a homeless person without her, as I still did not have a salary at that time.</p>
+                <p>We changed the deal and I got the 3 million EUR. It allowed me to recruit a rocking management team.</p>
+            </div>
+        </div>
+        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
+            <img src="/mass_mailing_themes/static/src/img/theme_textnews/s_default_image_block_banner_2.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb40" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>Being a Mature Company</h3>
+                <p>With this money in our bank account, we boosted two departments: R&amp;D and Sales. We burned 2 million EUR in 18 months, mostly in salaries. The company started to grow even faster. We developed a partner network of 500 partners in 100 countries and we started to sign contracts with 6 zeros.</p>
+                <p>Then, things became different. You know, tedious things like handling human resources, board meetings, dealing with big customer contracts, traveling to launch international subsidiaries. We did boring stuff like budgets, career paths, management meetings, etc.</p>
+                <p>2011 was a complex year. We did not meet our expectations: we only achieved 70% of the forecasted sales budget. Our management meetings were tense. We under-performed. We were not satisfied with ourselves. We had a constant feeling that we were missing something. It's a strange feeling to build extraordinary things but to not be proud of ourselves.</p>
+                <p>But one day, someone (I don't remember who, I have a goldfish memory) made a graph of the monthly turnover of the past 2 years. It was like waking up from a nightmare. In fact, it was not that bad, we had multiplied the monthly turnover by 10 over the span of roughly two years! This is when we understood that OpenERP is a marathon, not a sprint. Only 100% growth a year is ok... if you can keep the rhythm for several years. </p>
+                <p>As usual, I should have listened to my wife. She is way more lucid than I am. Every week I complained to her "It's not good enough, we should grow faster, what am I missing?" and she used to reply: "But you already are the fastest growing company in Belgium!" (Deloitte awarded us as <a href="https://accounts.openerp.com/blog/OpenERP-Blog-1/post/Three-Awards-for-OpenERP-in-2013-139" target="_blank">the fastest growing company of Belgium</a> with 1549% growth of the turnover between 2007 and 2011).</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb40" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>Changing the World</h3>
+                <p>Then the dream started to become reality. We started to get clues that what we did would change the world:</p>
+                <ul>
+                    <li>With 1000 installations per day, we became the most installed management software in the world
+                    </li>
+                    <li><a href="http://amzn.to/P4lRmE" target="_blank">Analysts from Big 4 started to prefer OpenERP over SAP</a></li>
+                    <li>OpenERP is now a compulsory subject for the baccalaureate in France like Word, Excel and PowerPoint</li>
+                    <li>60 new modules are released every month (we became the wikipedia of the management software thanks to our strong community)</li>
+                    <li>In 2013, we had 2,000,000 users worldwide</li>
+                </ul>
+                <p>Something is happening... And it's big!</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb40" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>New Financing in 2014</h3>
+                <p>After years of rapid growth, we achieved another amazing goal - we secured a new round of 10 Million USD of financing, jointly provided by leading venture capital firms XAnge (France), SRIW (Belgium), Sofinnova (France), and the management team.</p>
+                <p>The new financing will support the acceleration of the outstanding growth the company has seen over the last years, enabling the doubling of the commercial force and increased R&amp;D staff - already 100+ people strong. </p>
+            </div>
+        </div>
+        <div class="s_cover o_mail_snippet_general pb24" data-snippet="s_cover" data-name="Cover">
+            <img src="/mass_mailing_themes/static/src/img/theme_textnews/s_default_image_block_banner_3.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>The Rise of Odoo</h3>
+                <p>After having disrupted the ERP market, OpenERP moved far beyond the boundaries of traditional ERP players. The integration of business activities is no longer restricted to sales, accounting, inventory and procurements. In June 2014, we released version 8 with awesome CMS &amp; eCommerce, a Point of Sale, an integrated Business Intelligence engine and much more (3000+ modules).</p>
+                <p>Our exceptional technology allowed us to move to newer markets (CMS &amp; eCommerce) and propose a product that disrupts existing open source players (Wordpress, Magento, etc). The OpenERP CMS is so good that even top competitors admitted it publicly when we released the beta version.</p>
+                <p>If current open source players have a real technical challenge to follow us, we also have a huge marketing challenge. Wordpress has 22% of all internet websites. We were the leader in management software, but we start with 0% of the website market.</p>
+                <p>To move forward, we raised 10 million USD in May 2014 in order to boost marketing and sales activities. In order to support our vision, we had to change the name that is not restricted to ERPs functions. We needed a name that allowed us to support our ambitions; build business solutions like CMS, eCommerce, Business Intelligence and, who knows, even sky rockets or driverless cars in the future...</p>
+                <p>In May 2014, we renamed the company and product to Odoo. And a new story just started...</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general pt16 pb16 px-3" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <img src="/mass_mailing_themes/static/src/img/theme_textnews/FPsignature.gif" style="width: 125px" alt=""/>
+                <br/>
+                <br/>
+                <p style="text-align:center;">
+                    <a role="button" href="#" class="btn btn-primary btn-lg" target="_blank">&amp;nbsp;&amp;nbsp;COMMENT ON THIS POST&amp;nbsp;&amp;nbsp;</a>
+                </p>
+            </div>
+        </div>
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb0" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 o_mail_footer_social" style="text-align: center;">
+                        <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-facebook.png" data-original-id="435" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-facebook.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Twitter" target="_blank" href="https://twitter.com/Odoo" data-original-title="Twitter" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-twitter.png" data-original-id="436" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-twitter.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Instagram" target="_blank" href="https://www.linkedin.com/company/odoo" data-original-title="Linkedin" rel="noreferrer">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_textnews/social-linkedin.png" data-original-id="437" data-original-src="/mass_mailing_themes/static/src/img/theme_textnews/social-linkedin.png" data-mimetype="image/png" style="width: 30px;"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_hr o_mail_snippet_general pt16 pb16" data-snippet="s_hr" data-name="Separator">
+            <hr class="s_hr_1px s_hr_solid" style="border-top-color: rgb(206, 212, 218) !important;"/>
+        </div>
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt0 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div class="container" style="text-align: center; color:rgb(183, 191, 199) !important;">
+                <span style="font-size: 12px;">250 Executive Park Blvd</span>
+                <br/>
+                <span style="font-size: 12px;">San Francisco, California 94134</span>
+                <br/>
+                <span style="font-size: 12px;">You received this email from&amp;nbsp;</span><a href="mailto:" target="_blank"><span style="font-size: 12px;">hello@musingsoftheweek.com</span></a>
+                <br/>
+                <span style="font-size: 12px;">To unsubscribe,&amp;nbsp;</span><a href="/unsubscribe_from_list" target="_blank"><span style="font-size: 12px;">click here</span></a><span style="font-size: 12px;">.</span>
             </div>
         </div>
     </template>
