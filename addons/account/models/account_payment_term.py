@@ -27,9 +27,13 @@ class AccountPaymentTerm(models.Model):
             payment_term_lines = terms.line_ids.sorted()
             if payment_term_lines and payment_term_lines[-1].value != 'balance':
                 raise ValidationError(_('The last line of a Payment Term should have the Balance type.'))
-            lines = terms.line_ids.filtered(lambda r: r.value == 'balance')
-            if len(lines) > 1:
+            balance_lines = terms.line_ids.filtered(lambda r: r.value == 'balance')
+            if len(balance_lines) > 1:
                 raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
+            balance_line_date = self._get_payment_term_line_last_date(balance_lines[0])
+            for line in payment_term_lines:
+                if self._get_payment_term_line_last_date(line) > balance_line_date:
+                    raise ValidationError(_('The balance line should be the last due.'))
 
     def compute(self, value, date_ref=False, currency=None):
         self.ensure_one()
@@ -48,19 +52,7 @@ class AccountPaymentTerm(models.Model):
                 amt = currency.round(value * (line.value_amount / 100.0))
             elif line.value == 'balance':
                 amt = currency.round(amount)
-            next_date = fields.Date.from_string(date_ref)
-            if line.option == 'day_after_invoice_date':
-                next_date += relativedelta(days=line.days)
-                if line.day_of_the_month > 0:
-                    months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
-                    next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
-            elif line.option == 'after_invoice_month':
-                next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
-                next_date = next_first_date + relativedelta(days=line.days - 1)
-            elif line.option == 'day_following_month':
-                next_date += relativedelta(day=line.days, months=1)
-            elif line.option == 'day_current_month':
-                next_date += relativedelta(day=line.days, months=0)
+            next_date = self._get_payment_term_line_last_date(line, fields.Date.from_string(date_ref))
             result.append((fields.Date.to_string(next_date), amt))
             amount -= amt
         amount = sum(amt for _, amt in result)
@@ -77,6 +69,21 @@ class AccountPaymentTerm(models.Model):
             property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in terms])])
             property_recs.unlink()
         return super(AccountPaymentTerm, self).unlink()
+
+    def _get_payment_term_line_last_date(self, payment_term_line, last_date=fields.Date.today()):
+        if payment_term_line.option == 'day_after_invoice_date':
+            last_date += relativedelta(days=payment_term_line.days)
+            if payment_term_line.day_of_the_month > 0:
+                months_delta = (payment_term_line.day_of_the_month < last_date.day) and 1 or 0
+                last_date += relativedelta(day=payment_term_line.day_of_the_month, months=months_delta)
+        elif payment_term_line.option == 'after_invoice_month':
+            next_first_date = last_date + relativedelta(day=1, months=1)  # Getting 1st of next month
+            last_date = next_first_date + relativedelta(days=payment_term_line.days - 1)
+        elif payment_term_line.option == 'day_following_month':
+            last_date += relativedelta(day=payment_term_line.days, months=1)
+        elif payment_term_line.option == 'day_current_month':
+            last_date += relativedelta(day=payment_term_line.days, months=0)
+        return last_date
 
 
 class AccountPaymentTermLine(models.Model):
