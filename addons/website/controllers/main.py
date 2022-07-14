@@ -604,6 +604,19 @@ class Website(Home):
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+
+        # TODO remove in master: customize_show was kept by mistake on a view
+        # in website_crm. It was removed in stable at the same time this hack is
+        # introduced but would still be shown for existing customers if nothing
+        # else was done here. For users that disabled the view but were not
+        # supposed to be able to, we hide it too. The feature does not do much
+        # and is not a discoverable feature anyway, best removing the confusion
+        # entirely. If someone somehow wants that very technical feature, they
+        # can still enable the view again via the backend. We will also
+        # re-enable the view automatically in master.
+        crm_contactus_view = request.website.viewref('website_crm.contactus_form', raise_if_not_found=False)
+        views -= crm_contactus_view
+
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
