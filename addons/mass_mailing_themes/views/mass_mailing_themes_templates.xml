@@ -33,6 +33,9 @@
             <div data-name="roadshow2" title="Roadshow 2" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_roadshow2_template"/>
             </div>
+            <div data-name="graphic" title="Graphic" data-layout-styles="background-color: rgb(220, 234, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_graphic_template"/>
+            </div>
         </xpath>
     </template>
 
@@ -1452,6 +1455,142 @@
                 <p>Thank you, once again, for your attendance at yesterday's event.</p>
                 <p>--</p>
                 <p>[speaker] &amp; [speaker]</p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Graphic -->
+    <template id="theme_graphic_template">
+        <style id="design-element">
+            h1 {
+                font-size: 30px;
+            }
+            h3 {
+                color: #1466b8;
+            }
+            p, p > *, li, li > * {
+                color: #5b778f;
+            }
+            a:not(.btn), a.btn.btn-link {
+                color: #ff9800;
+            }
+            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                color: #ffffff;
+                border-color: #4381db;
+                background-color: #4381db;
+            }
+            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
+                color: #ffffff;
+                background-color: #ff9800;
+                border-color: #ff9800;
+            }
+        </style>
+        <t t-set="now" t-value="datetime.datetime.now()"/>
+        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4" style="text-align: center;">
+                        <a style="text-decoration:none;" href="#" target="_blank">
+                            <font style="font-size: 24px; background-color: rgb(20, 102, 184);" class="text-o-color-4">A+</font> <font style="color: rgb(20, 102, 184); font-size: 24px;"><span style="font-weight: normal">Training</span></font>
+                        </a>
+                    </div>
+                    <div class="col-lg-4" style="text-align: right;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="s_picture o_mail_snippet_general pt48 pb24 px-3 o_cc o_cc2 bg-o-color-4" data-snippet="s_picture" data-name="Picture">
+            <img src="/mass_mailing_themes/static/src/img/theme_graphic/shape-image.svg" class="padding-large mx-auto d-block" width="620" data-original-id="222" data-original-src="/mass_mailing_themes/static/src/img/theme_graphic/s_default_image_block_image.jpg" data-mimetype="image/svg+xml" style="padding: 0px;" data-shape="web_editor/line/organic_1_line" data-file-name="shape-image.svg" data-shape-colors="#FF9D00;;;;" data-original-mimetype="image/jpeg"/>
+        </div>
+        <div class="s_title o_mail_snippet_general pt32 pb0" data-snippet="s_title" data-name="Title">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <h1>
+                            <font style="font-size: 42px;">Get Free in-person training and advice from some of the best software developers</font>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_title o_mail_snippet_general pb0 pt16" data-snippet="s_title" data-name="Title">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-11 offset-lg-1">
+                        <h3 style="text-align: left;">
+                            <span style="font-weight: bolder;">29 May - 2 June 2022</span>
+                            <br/>Greenville Training Center
+                            <br/><span style="font-size: 18px;">2 Willington Avenue</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general pt8 pb16" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <p>Software developer training can be expensive, so we've compiled a list of free courses that are perfect for non-Computer Science graduates who want to upskill and learn to code.</p>
+                        <p>Universities may give us a shiny degrees, but it does not give us the practical skills we need to start an innovative career in tech.</p>
+                        <p>Getting practical experience can be as likely as getting struck by lightning – thank you, coronavirus – but, you can take things into your own hands and use your free time to upskill.</p>
+                        <p>And what better field to upskill in than software development? Jobs have been steadily booming for years, and will continue to do so. By taking some of these free courses, you can make your CV more competitive and your portfolio more interesting.</p>
+                        <p><br/></p>
+                        <p>
+                            <a href="#" target="_blank" class="btn btn-primary flat btn-lg">Register now</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_cover o_mail_snippet_general pb8" data-snippet="s_cover" data-name="Cover">
+            <img src="/mass_mailing_themes/static/src/img/theme_graphic/s_default_image_block_banner.jpg" class="img-fluid w-100 mx-auto" data-original-id="430" data-original-src="/mass_mailing_themes/static/src/img/theme_graphic/s_default_image_block_banner.jpg" data-mimetype="image/jpeg" data-resize-width="700"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb16" data-snippet="s_text_block" data-name="Text" style="background-color: rgb(220, 234, 255);">
+            <div class="container s_allow_columns">
+                <p style="text-align: center">
+                    <span style="font-size: 10px;">
+                        <font style="color: rgb(112, 157, 225);">You are receiving this email because you showed an interest in our previous events
+                        </font>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt0" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(220, 234, 255);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 o_mail_footer_social" style="text-align: center;">
+                        <a aria-label="Facebook" title="" href="https://www.facebook.com/Odoo" data-original-title="Facebook" target="_blank">
+                            <span class="fa fa-facebook rounded-circle text-o-color-4" style="background-color: rgb(20, 102, 184);">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="LinkedIn" title="" href="https://www.linkedin.com/company/odoo" data-original-title="LinkedIn" target="_blank">
+                            <span class="fa fa-linkedin rounded-circle text-o-color-4" style="background-color: rgb(20, 102, 184);">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Twitter" title="" href="https://twitter.com/Odoo" data-original-title="Twitter" target="_blank">
+                            <span class="fa fa-twitter rounded-circle text-o-color-4" style="background-color: rgb(20, 102, 184);">​</span>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" aria-label="Instagram" title="" href="https://www.instagram.com/explore/tags/odoo/" data-original-title="Instagram" target="_blank">
+                            <span class="fa fa-instagram rounded-circle text-o-color-4" style="background-color: rgb(20, 102, 184);">​</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
+                        <a role="button" href="/unsubscribe_from_list" class=" btn btn-link" target="_blank">
+                            <font style="color: rgb(112, 157, 225);">Unsubscribe</font>
+                        </a>
+                        <font style="color: rgb(112, 157, 225);"> | </font>
+                        <a role="button" href="/contactus" class="btn btn-link">
+                            <font style="color: rgb(112, 157, 225);">Contact</font>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p style="text-align: center;">
+                            <span style="font-size: 9px;">© <t t-out="now.strftime('%Y')" /> All Rights Reserved</span>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
