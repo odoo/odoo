@@ -16,10 +16,10 @@ patch(ExpenseKanbanController.prototype, 'expense_kanban_controller_upload', Exp
 
 export class ExpenseKanbanRenderer extends KanbanRenderer {}
 patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode', ExpenseMobileQRCode);
-ExpenseKanbanRenderer.template = 'hr_expense.KanbanRenderer';
 
 export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {}
 patch(ExpenseDashboardKanbanRenderer.prototype, 'expense_kanban_renderer_dashboard', ExpenseDashboardMixin);
+ExpenseDashboardKanbanRenderer.template = 'hr_expense.KanbanRenderer';
 
 registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,
