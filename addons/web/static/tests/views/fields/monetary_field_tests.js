@@ -1140,4 +1140,24 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("required monetary field with zero value", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="monetary_field" required="1"/>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_editable");
+        assert.strictEqual(target.querySelector("[name=monetary_field] input").value, "0.00");
+
+        await clickSave(target);
+
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.strictEqual(target.querySelector("[name=monetary_field] span").innerText, "0.00");
+    });
 });
