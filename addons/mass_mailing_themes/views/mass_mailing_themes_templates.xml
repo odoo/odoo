@@ -27,6 +27,12 @@
             <div data-name="textnews" title="Text Base" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_textnews_template"/>
             </div>
+            <div data-name="roadshow1" title="Roadshow 1" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_roadshow1_template"/>
+            </div>
+            <div data-name="roadshow2" title="Roadshow 2" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_roadshow2_template"/>
+            </div>
         </xpath>
     </template>
 
@@ -1227,6 +1233,225 @@
                 <span style="font-size: 12px;">You received this email from&amp;nbsp;</span><a href="mailto:" target="_blank"><span style="font-size: 12px;">hello@musingsoftheweek.com</span></a>
                 <br/>
                 <span style="font-size: 12px;">To unsubscribe,&amp;nbsp;</span><a href="/unsubscribe_from_list" target="_blank"><span style="font-size: 12px;">click here</span></a><span style="font-size: 12px;">.</span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Roadshow 1 -->
+    <template id="theme_roadshow1_template">
+        <style id="design-element">
+            h1 {
+                font-size: 24px;
+                font-weight: bolder;
+            }
+            h2 {
+                font-size: 21px;
+            }
+            h3 {
+                font-size: 18px;
+                font-weight: bolder;
+            }
+            a:not(.btn), a.btn.btn-link {
+                color: #35979c;
+            }
+        </style>
+        <t t-set="now" t-value="datetime.datetime.now()"/>
+        <div class="s_text_block o_mail_snippet_general pt40 px-3 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h1>We're almost there!</h1>
+                <p>Odoo invites you on <span class="font-weight: bolder">[date]</span>at <span class="font-weight: bolder">[time]</span> for their infamous roadshow in <span class="font-weight: bolder">[city]</span>: an event that combines learning and networking in a casual afterwork-like atmosphere.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>Registration is free, but mandatory:</p>
+                <p style="text-align: center;">
+                    <a href="#" class="btn btn-primary btn-lg">Save your seat now</a>
+                </p>
+                <p style="text-align: center;">
+                    <span class="font-weight: bolder">
+                        <font style="color: rgb(206, 0, 0); font-weight: normal;">(only 195 tickets left)</font>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>Discover Odoo, the all-in-one management platform, and its apps designed to improve employees' daily tasks. From sales and deliveries, to logistics, marketing and accounting ; learn what are the best available options to digitize your company.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>[speaker] and [speaker] will rely on a unique demo concept in which YOU lead the demo and choose what you wish to see. They'll show how to tackle the challenge using the best tools, live. You will be amazed!</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>You may then take part in roundtable discussions with experts who will give you their tips and tricks to help digitize companies. We'll wrap up the event with a networking session including a walking dinner.</p>
+            </div>
+        </div>
+        <div class="s_title o_mail_snippet_general pb0 pt8" data-snippet="s_title" data-name="Title">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="offset-lg-2 col-lg-8">
+                        <h3 class="text-center">Schedule</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_hr o_mail_snippet_general pb16 pt4" data-snippet="s_hr" data-name="Separator">
+            <hr class="s_hr_1px s_hr_solid w-50"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p style="text-align: right;">
+                            <span class="font-weight: bolder">8h:</span>
+                        </p>
+                        <p style="text-align: right;">
+                            <span class="font-weight: bolder">18h30:</span>
+                        </p>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <span class="font-weight: bolder">Welcome</span>
+                        </p>
+                        <p>
+                            <span class="font-weight: bolder">[speaker] &amp; [speaker]'s conference</span>
+                        </p>
+                        <ul>
+                            <li>Interactive Odoo demo</li>
+                            <li>Best practices to digitize your company</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p style="text-align: right;">
+                            <span class="font-weight: bolder">19h00:</span>
+                        </p>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <span class="font-weight: bolder">Table Ronde</span>
+                        </p>
+                        <ul>
+                            <li>Business Case</li>
+                            <li>Client Testimonials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb16" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p style="text-align: right;">
+                            <span class="font-weight: bolder">19h30: </span>
+                        </p>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <span class="font-weight: bolder">Networking: Walking Dinner &amp; Drinks</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb4" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>For more information, check the event page : <a href="#" target="_blank" rel="noreferrer">[link]</a>.</p>
+                <p>We're on the starting blocks to prepare an incredible event for you!
+                    <br/>We hope to see you there.
+                </p>
+                <p>See you soon.</p>
+                <p>--</p>
+                <p>[speaker] &amp; [speaker]</p>
+                <p><span style="font-style: italic;"><font class="text-600">The first 20 participants will get a free copy of our business game "Scale-Up".</font></span></p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Roadshow 2 -->
+    <template id="theme_roadshow2_template">
+        <style id="design-element">
+            h1 {
+                font-size: 24px;
+                font-weight: bolder;
+            }
+            h2 {
+                font-size: 21px;
+            }
+            h3 {
+                font-size: 18px;
+                font-weight: bolder;
+            }
+            a:not(.btn), a.btn.btn-link {
+                color: #35979c;
+            }
+        </style>
+        <t t-set="now" t-value="datetime.datetime.now()"/>
+        <div class="s_text_block o_mail_snippet_general px-3 pt40 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h1>
+                    Yesterday's event at [venue] in [city] was incredible!
+                </h1>
+                <p>Here are some photos taken during the event:</p>
+                <ul>
+                    <li><a href="#" target="_blank">Link 1</a></li>
+                    <li><a href="#" target="_blank">Link 2</a></li>
+                </ul>
+                <p>Don't hesitate to send us more!</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>You had the chance to discover Odoo during a full 3 hours, how great is that?
+                    <br/>Now that you've seen Odoo in action and asked some questions, you likely need more information to move forward in your project and to work with us. You'll find additional points just below.
+                </p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>Do you wish to use Odoo?</h3>
+                <p>If you wish to evaluate Odoo while taking into account your company's specific needs, you can book a free appointment with one of our <a href="https://odoo.com/r/meeting" target="_blank">Odoo Experts</a> or <a href="https://odoo.com/page/tour" target="_blank">watch our videos about the product</a>.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>Here are the links to our sponsors' websites if you wish to meet them:</p>
+                <ul>
+                    <li><a href="#" target="_blank">Link 1</a></li>
+                    <li><a href="#" target="_blank">Link 2</a></li>
+                    <li><a href="#" target="_blank">Link 3</a></li>
+                    <li><a href="#" target="_blank">Link 4</a></li>
+                </ul>
+                <p>You may test Odoo for free by clicking <a href="https://odoo.com/trial" target="_blank">here</a>.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <h3>Do you wish to become a partner?</h3>
+                <p>If you wish to become a partner and offer your services in [country], take a look at <a href="https://odoo.com/r/meeting" target="_blank">this page</a>.</p>
+                <p>Learn more about our pricing <a href="https://odoo.com/r/meeting" target="_blank">here</a>.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>You may then take part in roundtable discussions with experts who will give you their tips and tricks to help digitize companies. We'll wrap up the event with a networking session including a walking dinner.</p>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>Thank you, once again, for your attendance at yesterday's event.</p>
+                <p>--</p>
+                <p>[speaker] &amp; [speaker]</p>
             </div>
         </div>
     </template>
