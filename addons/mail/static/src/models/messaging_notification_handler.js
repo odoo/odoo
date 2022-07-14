@@ -16,7 +16,7 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _willDelete() {
-            this.env.services['bus_service'].off('notification');
+            this.env.services['bus_service'].offNotification(this._handleNotifications);
             this.env.services['bus_service'].stopPolling();
         },
     },
@@ -26,7 +26,7 @@ registerModel({
          * the current users. This includes pinned channels for instance.
          */
         start() {
-            this.env.services['bus_service'].onNotification(null, notifs => this._handleNotifications(notifs));
+            this.env.services['bus_service'].onNotification(this._handleNotifications);
             this.env.services['bus_service'].startPolling();
         },
         /**

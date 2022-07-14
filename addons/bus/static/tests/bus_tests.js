@@ -44,7 +44,7 @@ QUnit.module('Bus', {
                 }
             },
         });
-        env.services['bus_service'].onNotification(null, notifications => {
+        env.services['bus_service'].onNotification(notifications => {
             assert.step('notification - ' + notifications.toString());
         });
         env.services['bus_service'].addChannel('lambda');
@@ -161,7 +161,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        masterEnv.services['bus_service'].onNotification(null, notifications => {
+        masterEnv.services['bus_service'].onNotification(notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
         masterEnv.services['bus_service'].addChannel('lambda');
@@ -174,7 +174,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        slaveEnv.services['bus_service'].onNotification(null, notifications => {
+        slaveEnv.services['bus_service'].onNotification(notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slaveEnv.services['bus_service'].addChannel('lambda');
@@ -211,7 +211,7 @@ QUnit.module('Bus', {
             }
         });
 
-        masterEnv.services['bus_service'].onNotification(null, notifications => {
+        masterEnv.services['bus_service'].onNotification(notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
         masterEnv.services['bus_service'].addChannel('lambda');
@@ -228,7 +228,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        slaveEnv.services['bus_service'].onNotification(null, notifications => {
+        slaveEnv.services['bus_service'].onNotification(notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slaveEnv.services['bus_service'].addChannel('lambda');

@@ -11,7 +11,7 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        bus_service.onNotification(this, onNotification);
+        bus_service.onNotification(onNotification.bind(this));
         bus_service.startPolling();
 
         /**

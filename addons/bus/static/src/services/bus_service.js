@@ -54,11 +54,19 @@ export class BusService extends CrossTab {
     /**
      * Register listeners on notifications received on this bus service
      *
-     * @param {Object} receiver
-     * @param {function} func
+     * @param {function} callback
      */
-    onNotification() {
-        this.on.apply(this, ["notification"].concat(Array.prototype.slice.call(arguments)));
+    onNotification(callback) {
+        this.addEventListener('notification', ({ detail }) => callback(detail));
+    }
+
+    /**
+     * Unregister listeners on notifications received on this bus service.
+     *
+     * @param {function} callback
+     */
+    offNotification(callback) {
+        this.removeEventListener('notification', callback);
     }
 
     //--------------------------------------------------------------------------

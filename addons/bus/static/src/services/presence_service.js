@@ -9,7 +9,7 @@ export const presenceService = {
         const LOCAL_STORAGE_PREFIX = 'presence';
 
         // map window_focus event from the wowlBus to the legacy one.
-        env.bus.on('window_focus', null, isOdooFocused => {
+        env.bus.addEventListener('window_focus', isOdooFocused => {
             core.bus.trigger('window_focus', isOdooFocused);
         });
 

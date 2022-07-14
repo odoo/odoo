@@ -943,7 +943,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 }, 2000);
             }
 
-            this.call('bus_service', 'onNotification', this, this._onNotification);
+            this.call('bus_service', 'onNotification', this._onNotification.bind(this));
         }
     },
 

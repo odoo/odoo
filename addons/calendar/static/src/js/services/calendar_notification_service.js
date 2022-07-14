@@ -12,7 +12,7 @@ export const calendarNotificationService = {
         let nextCalendarNotifTimeout = null;
         const displayedNotifications = new Set();
 
-        bus_service.onNotification(this, (notifications) => {
+        bus_service.onNotification(notifications => {
             for (const { payload, type } of notifications) {
                 if (type === "calendar.alarm") {
                     displayCalendarNotification(payload);

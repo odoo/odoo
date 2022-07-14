@@ -68,7 +68,7 @@ const LivechatButton = Widget.extend({
                 });
             }
         }
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        this.call('bus_service', 'onNotification', this._onNotification.bind(this));
         if (this.messaging.livechatButtonView.buttonBackgroundColor) {
             this.$el.css('background-color', this.messaging.livechatButtonView.buttonBackgroundColor);
         }
