@@ -18,7 +18,7 @@ registerModel({
             odoo.__DEBUG__.messaging = this;
         },
         _willDelete() {
-            this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            this.env.bus.removeEventListener('window_focus', this._handleGlobalWindowFocus);
             delete odoo.__DEBUG__.messaging;
         },
     },
@@ -27,7 +27,7 @@ registerModel({
          * Starts messaging and related records.
          */
         async start() {
-            this.env.bus.on('window_focus', null, this._handleGlobalWindowFocus);
+            this.env.bus.addEventListener('window_focus', this._handleGlobalWindowFocus);
             await this.initializer.start();
             if (!this.exists()) {
                 return;
