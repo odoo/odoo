@@ -385,6 +385,8 @@ class PurchaseOrder(models.Model):
             return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in init_values and self.state == 'done':
             return self.env.ref('purchase.mt_rfq_done')
+        elif 'state' in init_values and self.state == 'sent':
+            return self.env.ref('purchase.mt_rfq_sent')
         return super(PurchaseOrder, self)._track_subtype(init_values)
 
     # ------------------------------------------------------------
@@ -686,30 +688,17 @@ class PurchaseOrder(models.Model):
 
         one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
 
-        # Get list of translation values
-        Translation = self.env['ir.translation']
-        list_old_value_char = []
-        list_new_value_char = []
-        field_name = 'ir.model.fields.selection,name'
-        for lang in self.env['res.lang'].search_read([], ['code']):
-            list_old_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ'))
-            list_new_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ Sent'))
-
-        # This query is brittle since it depends on the label values of a selection field
-        # not changing, but we don't have a direct time tracker of when a state changes
         query = """SELECT COUNT(1)
-                   FROM mail_tracking_value v
-                   LEFT JOIN mail_message m ON (v.mail_message_id = m.id)
+                   FROM mail_message m
                    JOIN purchase_order po ON (po.id = m.res_id)
                    WHERE m.create_date >= %s
                      AND m.model = 'purchase.order'
                      AND m.message_type = 'notification'
-                     AND v.old_value_char IN %s
-                     AND v.new_value_char IN %s
+                     AND m.subtype_id = %s
                      AND po.company_id = %s;
                 """
 
-        self.env.cr.execute(query, (one_week_ago, tuple(list_old_value_char), tuple(list_new_value_char), self.env.company.id))
+        self.env.cr.execute(query, (one_week_ago, self.env.ref('purchase.mt_rfq_sent').id, self.env.company.id))
         res = self.env.cr.fetchone()
         result['all_sent_rfqs'] = res[0] or 0
 

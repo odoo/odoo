@@ -17,6 +17,11 @@
             <field name="default" eval="False"/>
             <field name="res_model">purchase.order</field>
         </record>
+        <record id="mt_rfq_sent" model="mail.message.subtype">
+            <field name="name">RFQ Sent</field>
+            <field name="default" eval="False"/>
+            <field name="res_model">purchase.order</field>
+        </record>
 
         <!-- Sequences for purchase.order -->
         <record id="seq_purchase_order" model="ir.sequence">
