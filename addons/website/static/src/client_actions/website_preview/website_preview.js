@@ -184,7 +184,7 @@ export class WebsitePreview extends Component {
      */
     _isTopWindowURL({ host, pathname }) {
         const backendRoutes = ['/web', '/web/session/logout'];
-        return host !== window.location.host || (pathname && backendRoutes.includes(pathname));
+        return host !== window.location.host || (pathname && (backendRoutes.includes(pathname) || pathname.startsWith('/@/')));
     }
 
     _onPageLoaded() {
