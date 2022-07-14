@@ -1242,6 +1242,41 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_p_iva5_sc" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% IVA soportado</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_28')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('mod_303_29')],
+                'account_id': ref('l10n_es.account_common_472'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_40')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('mod_303_41')],
+                'account_id': ref('l10n_es.account_common_472'),
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_p_iva10_bi" model="account.tax.template">
         <field name="description"/>
         <!-- for resetting the value on existing DBs -->
@@ -1616,6 +1651,41 @@
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
             (0,0, {
+                'repartition_type': 'tax',
+                'tag_ids': [ref('mod_303_15')],
+                'account_id': ref('l10n_es.account_common_477'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_s_iva5s" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">sale</field>
+        <field name="name">IVA 5%</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_01')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('mod_303_03')],
+                'account_id': ref('l10n_es.account_common_477'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_14_sale')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_15')],
                 'account_id': ref('l10n_es.account_common_477'),
