@@ -22,7 +22,7 @@ odoo.define('pos_coupon.pos', function (require) {
     const session = require('web.session');
     const concurrency = require('web.concurrency');
     const { Gui } = require('point_of_sale.Gui');
-    const { float_is_zero } = require('web.utils');
+    const { float_is_zero,round_decimals } = require('web.utils');
     const Registries = require('point_of_sale.Registries');
 
     const dp = new concurrency.DropPrevious();
@@ -855,7 +855,7 @@ odoo.define('pos_coupon.pos', function (require) {
                     [
                         new Reward({
                             product: discountLineProduct,
-                            unit_price: -rewardProduct.lst_price,
+                            unit_price: -round_decimals(rewardProduct.get_price(this.pricelist, freeQuantity), this.pos.currency.decimal_places),
                             quantity: freeQuantity,
                             program: program,
                             tax_ids: rewardProduct.taxes_id,
