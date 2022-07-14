@@ -563,6 +563,7 @@ export class Record extends DataPoint {
                 case "boolean":
                 case "float":
                 case "integer":
+                case "monetary":
                     continue;
                 case "one2many":
                 case "many2many":
