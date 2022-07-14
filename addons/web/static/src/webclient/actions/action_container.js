@@ -15,7 +15,7 @@ export class ActionContainer extends Component {
         useEffect(() => {
             this.hasVisibleContent = Boolean(this.info.Component);
             if (this.nextInfo) {
-                this.setInfo(info);
+                this.setInfo(this.nextInfo);
             }
         })
         const onActionManagerUpdate = this.onActionManagerUpdate.bind(this);
