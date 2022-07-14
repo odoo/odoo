@@ -132,3 +132,113 @@ class TestMrpByProduct(common.TransactionCase):
             'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_qty': 1})]
         })
         self.assertEqual(bom.byproduct_ids.product_uom_id, self.env.ref('uom.product_uom_dozen'))
+
+    def test_finished_and_byproduct_moves(self):
+        """
+            Tests the behavior of the `create` override in the model `mrp.production`
+            regarding the values for the fields `move_finished_ids` and `move_byproduct_ids`.
+            The behavior is a bit tricky, because the moves included in `move_byproduct_ids`
+            are included in the `move_finished_ids`. `move_byproduct_ids` is a subset of `move_finished_ids`.
+
+            So, when creating a manufacturing order, whether:
+            - Only `move_finished_ids` is passed, containing both the finished product and the by-products of the BOM,
+            - Only `move_byproduct_ids` is passed, only containing the by-products of the BOM,
+            - Both `move_finished_ids` and `move_byproduct_ids` are passed,
+              holding the product finished and the byproducts respectively
+            At the end, in the created manufacturing order
+            `move_finished_ids` must contain both the finished product, and the by-products,
+            `move_byproduct_ids` must contain only the by-products.
+
+            Besides, the code shouldn't raise an error
+            because only one of the two `move_finished_ids`, `move_byproduct_ids` is provided.
+
+            In addition, the test voluntary sets a different produced quantity
+            for the finished product and the by-products moves than defined in the BOM
+            as it's the point to manually pass the `move_finished_ids` and `move_byproduct_ids`
+            when creating a manufacturing order, set different values than the defaults, in this case
+            a different produced quantity than the defaults from the BOM.
+        """
+        bom_product_a = self.MrpBom.create({
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2.0
+            })],
+            'byproduct_ids': [(0, 0, {
+                'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1.0
+            })]
+        })
+        for expected_finished_qty, expected_byproduct_qty, values in [
+            # Only `move_finished_ids` passed, containing both the finished product and the by-product
+            (3.0, 4.0, {
+                'move_finished_ids': [
+                    (0, 0, {
+                        'product_id': self.product_a.id,
+                        'product_uom_qty': 3.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                    (0, 0, {
+                        'product_id': self.product_b.id,
+                        'product_uom_qty': 4.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                ],
+            }),
+            # Only `move_byproduct_ids` passed, containing the by-product move only
+            (2.0, 4.0, {
+                'move_byproduct_ids': [
+                    (0, 0, {
+                        'product_id': self.product_b.id,
+                        'product_uom_qty': 4.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                ],
+            }),
+            # Both `move_finished_ids` and `move_byproduct_ids` passed,
+            # containing respectively the finished product and the by-product
+            (3.0, 4.0, {
+                'move_finished_ids': [
+                    (0, 0, {
+                        'product_id': self.product_a.id,
+                        'product_uom_qty': 3.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                ],
+                'move_byproduct_ids': [
+                    (0, 0, {
+                        'product_id': self.product_b.id,
+                        'product_uom_qty': 4.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                ],
+            }),
+        ]:
+            mo = self.env['mrp.production'].create({
+                'product_id': self.product_a.id,
+                'bom_id': bom_product_a.id,
+                'product_qty': 2.0,
+                **values,
+            })
+            self.assertEqual(mo.move_finished_ids.product_id, self.product_a + self.product_b)
+            self.assertEqual(mo.move_byproduct_ids.product_id, self.product_b)
+
+            finished_move = mo.move_finished_ids.filtered(lambda x: x.product_id == self.product_a)
+            self.assertEqual(
+                finished_move.product_uom_qty, expected_finished_qty, "Wrong produced quantity of finished product."
+            )
+
+            by_product_move = mo.move_finished_ids.filtered(lambda x: x.product_id == self.product_b)
+            self.assertEqual(
+                by_product_move.product_uom_qty, expected_byproduct_qty, "Wrong produced quantity of by-product."
+            )
+
+            # Also check the produced quantity of the by-product through `move_byproduct_ids`
+            self.assertEqual(
+                mo.move_byproduct_ids.product_uom_qty, expected_byproduct_qty, "Wrong produced quantity of by-product."
+            )
