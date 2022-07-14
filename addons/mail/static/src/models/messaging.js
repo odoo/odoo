@@ -18,9 +18,7 @@ registerModel({
             odoo.__DEBUG__.messaging = this;
         },
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
-            }
+            this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             delete odoo.__DEBUG__.messaging;
         },
     },
