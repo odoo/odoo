@@ -459,9 +459,10 @@ export class ModelField {
      * @private
      * @param {Record} record
      * @param {Object|Object[]} data
+     * @param {Object} [options]
      * @returns {Record|Record[]}
      */
-    _insertOtherRecord(record, data) {
+    _insertOtherRecord(record, data, options) {
         const otherModel = record.models[this.to];
         const otherField = otherModel.__fieldMap[this.inverse];
         const isMulti = typeof data[Symbol.iterator] === 'function';
@@ -475,7 +476,7 @@ export class ModelField {
             }
             dataList.push(recordData2);
         }
-        const records = record.modelManager._insert(otherModel, dataList);
+        const records = record.modelManager._insert(otherModel, dataList, options);
         return isMulti ? records : records[0];
     }
 
@@ -509,7 +510,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsert(record, data, options) {
-        const newValue = this._insertOtherRecord(record, data);
+        const newValue = this._insertOtherRecord(record, data, options);
         return this._setRelationLink(record, newValue, options);
     }
 
@@ -525,7 +526,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndReplace(record, data, options) {
-        const newValue = this._insertOtherRecord(record, data);
+        const newValue = this._insertOtherRecord(record, data, options);
         return this._setRelationReplace(record, newValue, options);
     }
 
@@ -541,7 +542,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndUnlink(record, data, options) {
-        const newValue = this._insertOtherRecord(record, data);
+        const newValue = this._insertOtherRecord(record, data, options);
         return this._setRelationUnlink(record, newValue, options);
     }
 

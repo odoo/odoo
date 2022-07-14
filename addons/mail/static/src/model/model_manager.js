@@ -1021,9 +1021,10 @@ export class ModelManager {
      * @private
      * @param {Object} model
      * @param {Object[]} dataList
+     * @param {Object} [options={}]
      * @returns {Record[]}
      */
-    _insert(model, dataList) {
+    _insert(model, dataList, options = {}) {
         this._ensureNoLockingListener();
         const records = [];
         for (const data of dataList) {
@@ -1031,9 +1032,9 @@ export class ModelManager {
             let record = model.get(localId);
             if (!record) {
                 record = this._create(model, localId);
-                this._update(record, this._addDefaultData(model, data), { allowWriteReadonly: true });
+                this._update(record, this._addDefaultData(model, data), { ...options, allowWriteReadonly: true });
             } else {
-                this._update(record, data);
+                this._update(record, data, options);
             }
             records.push(record);
         }
@@ -1276,8 +1277,8 @@ export class ModelManager {
      * @private
      * @param {Record} record
      * @param {Object} data
-     * @param {Object} [options]
-     * @param [options.allowWriteReadonly=false]
+     * @param {Object} [options={}]
+     * @param {boolean} [options.allowWriteReadonly=false]
      * @returns {boolean} whether any value changed for the current record
      */
     _update(record, data, options = {}) {
