@@ -66,7 +66,6 @@
                         <div class="container py-3">
                             <div class="row">
                                 <div class="col-sm text-center text-sm-start text-muted">
-                                    <t t-call="web.debug_icon"/>
                                     <span class="o_footer_copyright_name me-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
                                 </div>
                                 <div class="col-sm text-center text-sm-end">
@@ -316,14 +315,6 @@
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
-        </t>
-    </template>
-
-    <template id="debug_icon" name="Debug Icon">
-        <t t-if="debug" t-nocache="The query strings and debug mode can change for the same page and the same rendering.">
-            <t t-set="debug_mode_help" t-value="' (%s)' % debug if debug != '1' else ''"/>
-            <a t-attf-href="?#{keep_query('*', debug='')}" t-attf-title="Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
-               class="o_debug_mode"><span class="fa fa-bug"/></a>
         </t>
     </template>
 
