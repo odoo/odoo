@@ -5741,3 +5741,26 @@ class StockMove(TransactionCase):
         self.assertEqual(move.forecast_availability, -1)
         move._action_confirm()
         self.assertEqual(move.forecast_availability, -1)
+
+    def test_receive_more_and_in_child_location(self):
+        """
+        Ensure that, when receiving more than expected, and when the destination
+        location of the SML is different from the SM one, the SM validation will
+        not change the destination location of the SML
+        """
+        move = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move._action_confirm()
+        move.move_line_ids.write({
+            'location_dest_id': self.stock_location.child_ids[0].id,
+            'qty_done': 3,
+        })
+        move._action_done()
+        self.assertEqual(move.move_line_ids.qty_done, 3)
+        self.assertEqual(move.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
