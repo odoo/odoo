@@ -690,13 +690,22 @@ class PurchaseOrder(models.Model):
         one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
 
         # Get list of translation values
-        Translation = self.env['ir.translation']
         list_old_value_char = []
         list_new_value_char = []
-        field_name = 'ir.model.fields.selection,name'
-        for lang in self.env['res.lang'].search_read([], ['code']):
-            list_old_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ'))
-            list_new_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ Sent'))
+        field_id = self.env['ir.model.fields']._get_ids(self._name).get('state')
+        query = """
+            SELECT name
+            FROM ir_model_fields_selection
+            WHERE field_id = %s AND (name->>'en_US' = 'RFQ' OR name->>'en_US' = 'RFQ Sent')
+        """
+        self.env.cr.execute(query, (field_id,))
+        res = self.env.cr.fetchall()
+        for row in res:
+            name = row[0]
+            if name['en_US'] == 'RFQ':
+                list_old_value_char.extend(name.values())
+            elif name['en_US'] == 'RFQ Sent':
+                list_new_value_char.extend(name.values())
 
         # This query is brittle since it depends on the label values of a selection field
         # not changing, but we don't have a direct time tracker of when a state changes
