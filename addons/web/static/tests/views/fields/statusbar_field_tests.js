@@ -436,6 +436,10 @@ QUnit.module("Fields", (hooks) => {
             "default status is 'aaa'"
         );
         assert.strictEqual(
+            target.querySelector("[aria-label='Current state']").title,
+            "Current state"
+        );
+        assert.strictEqual(
             document
                 .querySelector(".o_statusbar_status .dropdown-toggle.o_arrow_button")
                 .textContent.trim(),
