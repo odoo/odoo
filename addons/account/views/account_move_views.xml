@@ -133,6 +133,18 @@
             </field>
         </record>
 
+        <record id="account_move_line_view_kanban_mobile" model="ir.ui.view">
+            <field name="inherit_id" ref="account_move_line_view_kanban"/>
+            <field name="mode">primary</field>
+            <field name="model">account.move.line</field>
+            <field name="name">account.move.line.kanban.mobile</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban[hasclass('o_kanban_mobile')]" position="attributes">
+                    <attribute name="create">true</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_move_line_pivot" model="ir.ui.view">
             <field name="name">account.move.line.pivot</field>
             <field name="model">account.move.line</field>
@@ -1127,7 +1139,7 @@
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
                                 <field name="line_ids"
                                        mode="tree,kanban"
-                                       context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
+                                       context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id, 'kanban_view_ref': 'account.account_move_line_view_kanban_mobile'}"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
