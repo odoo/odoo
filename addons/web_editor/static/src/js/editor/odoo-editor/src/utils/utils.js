@@ -1443,6 +1443,7 @@ const paragraphRelatedElements = [
     'H4',
     'H5',
     'H6',
+    'PRE',
 ];
 
 /**
