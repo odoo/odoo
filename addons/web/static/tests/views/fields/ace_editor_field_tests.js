@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getFixture } from "@web/../tests/helpers/utils";
+import { getFixture, clickEdit, triggerEvents } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -56,5 +56,23 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.ok(target.querySelector(".o_field_ace").textContent.includes("yop"));
+    });
+
+    QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name" />
+                    <field name="foo" widget="ace" />
+                </form>`,
+        });
+
+        await clickEdit(target);
+        await triggerEvents(target, ".ace-view-editor textarea", ["focus", "click"]);
+        assert.hasClass(target.querySelector(".ace-view-editor"), "ace_focus");
     });
 });
