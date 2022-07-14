@@ -369,10 +369,15 @@ class HolidaysRequest(models.Model):
                     date_to_check = allocation['date_to'] >= date_to if allocation['date_to'] else True
                     date_from_check = allocation['date_from'] <= date_from
                     if (date_to_check and date_from_check):
-                        allocation_taken_leaves = allocation['taken_leaves'] - leave
-                        allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
-                        leave_number_of_units = leave[leave_unit]
-                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units:
+                        if leave.state in ('confirm', 'validate', 'validate1'):
+                            allocation_taken_leaves = allocation['taken_leaves'] - leave
+                            allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
+                            leave_number_of_units = leave[leave_unit]
+                            if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units:
+                                found_allocation = allocation['id']
+                                allocation['taken_leaves'] |= leave
+                                break
+                        else:
                             found_allocation = allocation['id']
                             break
                 leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
