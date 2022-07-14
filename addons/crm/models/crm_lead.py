@@ -1831,8 +1831,14 @@ class Lead(models.Model):
         defaults.update(custom_values)
 
         # assign right company
-        if 'company_id' not in defaults and 'team_id' in defaults:
-            defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
+        company_id = defaults.get('company_id', False)
+        if not company_id:
+            if 'team_id' in defaults:
+                company_id = self.env['crm.team'].browse(defaults['team_id']).company_id
+            if not company_id and 'partner_id' in defaults:
+                company_id = self.env['res.partner'].browse(defaults['partner_id']).company_id
+            if company_id:
+                defaults['company_id'] = company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):

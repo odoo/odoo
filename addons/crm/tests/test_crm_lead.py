@@ -754,3 +754,16 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
+
+    def test_incompatible_company_error_on_incoming_email(self):
+        partner_admin = self.env['res.partner'].search([('email', '=', 'admin@yourcompany.example.com')])
+        self.assertTrue(partner_admin)
+
+        new_lead = self.format_and_process(
+            INCOMING_EMAIL,
+            'admin@yourcompany.example.com',
+            '%s@%s' % (self.sales_team_1.alias_name, self.alias_domain),
+            subject='Helpdesk team having partner in company False',
+            target_model='crm.lead',
+        )
+        self.assertTrue(new_lead.company_id)
