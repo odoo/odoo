@@ -38,6 +38,7 @@ import {
     startPos,
     nodeSize,
     allowsParagraphRelatedElements,
+    isEmptyBlock,
     isUnbreakable,
     makeContentsInline,
 } from '../utils/utils.js';
@@ -168,6 +169,9 @@ function insert(editor, data, isText = true) {
                 if (offset) {
                     const [left, right] = splitElement(currentNode.parentElement, offset);
                     currentNode = insertBefore ? right : left;
+                    if (isEmptyBlock(right)) {
+                        right.remove();
+                    }
                 } else {
                     currentNode = currentNode.parentElement;
                 }
