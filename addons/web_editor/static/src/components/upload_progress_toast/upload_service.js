@@ -46,9 +46,18 @@ export const uploadService = {
                 await onUploaded(attachment);
             },
 
+            /**
+             * This takes an array of files (from an input HTMLElement), and
+             * uploads them while managing the UploadProgressToast.
+             *
+             * @param {Array<File>} files
+             * @param {Object} options
+             * @param {Function} onUploaded
+             */
             uploadFiles: async (files, {resModel, resId, isImage}, onUploaded) => {
                 // Upload the smallest file first to block the user the least possible.
-                for (const [index, file] of Array.from(files).sort((a, b) => a.size - b.size).entries()) {
+                const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
+                for (const [index, file] of sortedFiles.entries()) {
                     let fileSize = file.size;
                     if (!fileSize) {
                         fileSize = null;
@@ -61,6 +70,8 @@ export const uploadService = {
                     }
 
                     const id = ++fileId;
+                    // This reactive object, built based on the files array,
+                    // is given as a prop to the UploadProgressToast.
                     filesToUpload[id] = {
                         id,
                         index,
@@ -73,9 +84,11 @@ export const uploadService = {
                     };
                 }
 
-                await Promise.all(Object.keys(filesToUpload).map(async (fileId, index) => {
+                // Upload one file at a time: no need to parallel as upload is
+                // limited by bandwidth.
+                for (const fileId of Object.keys(filesToUpload)) {
                     const file = filesToUpload[fileId];
-                    const dataURL = await getDataURLFromFile(files[index]);
+                    const dataURL = await getDataURLFromFile(sortedFiles[file.index]);
                     try {
                         const xhr = new XMLHttpRequest();
                         xhr.upload.addEventListener('progress', ev => {
@@ -108,7 +121,7 @@ export const uploadService = {
                         setTimeout(() => delete filesToUpload[file.id], AUTOCLOSE_DELAY);
                         throw error;
                     }
-                }));
+                }
             }
         };
     },
