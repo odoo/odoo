@@ -19,18 +19,7 @@
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name"/>
         <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-right ' or '') + 'badge badge-secondary'" />
-        <t t-if="delivery.delivery_type == 'fixed'">
-          <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class">
-            <t t-esc="delivery.rate_shipment(website_sale_order)['price'] if delivery.free_over else delivery.fixed_price"
-               t-options='{"widget": "monetary",
-                           "from_currency": website_sale_order.currency_id if delivery.free_over else delivery.product_id.company_id.currency_id or website_sale_order.company_id.currency_id,
-                           "display_currency": website_sale_order.currency_id}'/>
-          </span>
-          <span t-else="" t-att-class="badge_class">Free</span>
-        </t>
-        <t t-else="">
-            <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
-        </t>
+        <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
         <t t-if="delivery.website_description">
             <div t-field="delivery.website_description" class="text-muted mt8"/>
         </t>
