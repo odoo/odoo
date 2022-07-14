@@ -1186,11 +1186,11 @@ QUnit.module('Views', {
 
             this.combinationsToCheck = {
                 'last_30_days,previous_period,day': {
-                    labels: [...Array(7).keys()].map(x => [x]),
+                    labels: [...Array(8).keys()].map(x => [x]),
                     legend: ["Last 30 Days", "Previous Period"],
                     datasets: [
                         {
-                            data: [26, 53, 2, 63, 110, 48, 48],
+                            data: [26, 53, 2, 4, 63, 110, 48, 48],
                             label: "Last 30 Days",
                         },
                         {
@@ -1206,11 +1206,12 @@ QUnit.module('Views', {
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
             this.combinationsToCheck['last_30_days,previous_period,day'] = {
-                labels: [...Array(7).keys()].map(x => [x]),
+                labels: [...Array(8).keys()].map(x => [x]),
                 legend: [
                     "2016-12-15,2016-11-03",
                     "2016-12-17,2016-11-01",
                     "2016-11-22",
+                    "2016-12-20",
                     "2016-12-19",
                     "2016-12-01",
                     "2016-12-10",
@@ -1218,11 +1219,11 @@ QUnit.module('Views', {
                 ],
                 datasets: [
                     {
-                        data: [26, 53, 2, 63, 110, 48, 48],
+                        data: [26, 53, 2, 4, 63, 110, 48, 48],
                         label: "Last 30 Days",
                     },
                     {
-                        data: [24, 53, 0, 0, 0, 0, 0],
+                        data: [24, 53, 0, 0, 0, 0, 0, 0],
                         label: "Previous Period",
                     }
                 ],
@@ -1242,7 +1243,7 @@ QUnit.module('Views', {
                     legend: ["Last 30 Days", "Previous Period"],
                     datasets: [
                         {
-                            data: [350],
+                            data: [354],
                             label: "Last 30 Days",
                         },
                         {
@@ -1261,7 +1262,7 @@ QUnit.module('Views', {
                 legend: ["Last 30 Days", "Previous Period"],
                 datasets: [
                     {
-                        data: [undefined, 350],
+                        data: [undefined, 354],
                         label: "Last 30 Days",
                     },
                     {
@@ -1278,7 +1279,7 @@ QUnit.module('Views', {
                 legend: ["Total"],
                 datasets: [
                     {
-                        data: [350],
+                        data: [354],
                         label: "Last 30 Days",
                     },
                     {
@@ -1302,7 +1303,7 @@ QUnit.module('Views', {
                     legend: ["Last 30 Days", "Previous Period"],
                     datasets: [
                         {
-                            data: [151, 151, 48],
+                            data: [151, 155, 48],
                             label: "Last 30 Days",
                         },
                         {
@@ -1322,7 +1323,7 @@ QUnit.module('Views', {
                 legend: ["Last 30 Days", "Previous Period"],
                 datasets: [
                     {
-                        data: [151, 151],
+                        data: [151, 155],
                         label: "Last 30 Days",
                     },
                     {
@@ -1339,7 +1340,7 @@ QUnit.module('Views', {
                 legend: ["xphone", "xpad", "Undefined"],
                 datasets: [
                     {
-                        data: [151, 151, 48],
+                        data: [151, 155, 48],
                         label: "Last 30 Days",
                     },
                     {
@@ -1360,7 +1361,7 @@ QUnit.module('Views', {
             this.keepFirst = true;
             this.combinationsToCheck = {
                 'last_7_days,previous_period,day': {
-                    labels: [...Array(3).keys()].map(x => [x]),
+                    labels: [...Array(4).keys()].map(x => [x]),
                     legend: [
                         "Last 7 Days/xphone",
                         "Last 7 Days/xpad",
@@ -1368,11 +1369,11 @@ QUnit.module('Views', {
                     ],
                     datasets: [
                         {
-                            data: [3, 53, 0],
+                            data: [3, 53, 0, 0],
                             label: "Last 7 Days/xphone",
                         },
                         {
-                            data: [23, 0, 63],
+                            data: [23, 0, 4, 63],
                             label: "Last 7 Days/xpad",
                         },
                         {
@@ -1391,20 +1392,21 @@ QUnit.module('Views', {
 
 
             this.combinationsToCheck['last_7_days,previous_period,day'] = {
-                labels: [[0,"xphone"], [1,"xphone"], [2, "xpad"], [0, "xpad"]],
+                labels: [[0,"xphone"], [1,"xphone"], [2, "xpad"], [3, "xpad"], [0, "xpad"]],
                 legend: [
                     "2016-12-15,2016-12-10/xphone",
                     "2016-12-17/xphone",
+                    "2016-12-20/xpad",
                     "2016-12-19/xpad",
                     "2016-12-15,2016-12-10/xpad"
                 ],
                 datasets: [
                     {
-                        data: [3, 53, 63, 23],
+                        data: [3, 53, 4, 63, 23],
                         label: "Last 7 Days",
                     },
                     {
-                        data: [48, 0, 0, 0],
+                        data: [48, 0, 0, 0, 0],
                         label: "Previous Period",
                     }
                 ],

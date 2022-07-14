@@ -351,22 +351,22 @@ var Domain = collections.Tree.extend({
                 return makeInterval();
             case 'last_7_days':
                 leftBoundaryParams = {days: -7};
-                rightBoundaryParams = {};
+                rightBoundaryParams = {days: 1};
                 offsetPeriodParams = {days: -7};
                 return makeInterval();
             case 'last_30_days':
                 leftBoundaryParams = {days: -30};
-                rightBoundaryParams = {};
+                rightBoundaryParams = {days: 1};
                 offsetPeriodParams = {days: -30};
                 return makeInterval();
             case 'last_365_days':
                 leftBoundaryParams = {days: -365};
-                rightBoundaryParams = {};
+                rightBoundaryParams = {days: 1};
                 offsetPeriodParams = {days: -365};
                 return makeInterval();
             case 'last_5_years':
                 leftBoundaryParams = {years: -5};
-                rightBoundaryParams = {};
+                rightBoundaryParams = {days: 1};
                 offsetPeriodParams = {years: -5};
                 return makeInterval();
         }

@@ -224,13 +224,13 @@ QUnit.module('Search View', {
         // assuming that the current time is: 2017-03-22:01:00:00
         this.periodDomains = [
             // last 7 days (whole days)
-            ['&', ["date_field", ">=", "2017-03-15"],["date_field", "<", "2017-03-22"]],
+            ['&', ["date_field", ">=", "2017-03-15"],["date_field", "<", "2017-03-23"]],
             // last 30 days
-            ['&', ["date_field", ">=", "2017-02-20"],["date_field", "<", "2017-03-22"]],
+            ['&', ["date_field", ">=", "2017-02-20"],["date_field", "<", "2017-03-23"]],
             // last 365 days
-            ['&', ["date_field", ">=", "2016-03-22"],["date_field", "<", "2017-03-22"]],
+            ['&', ["date_field", ">=", "2016-03-22"],["date_field", "<", "2017-03-23"]],
             // last 5 years
-            ['&', ["date_field", ">=", "2012-03-22"],["date_field", "<", "2017-03-22"]],
+            ['&', ["date_field", ">=", "2012-03-22"],["date_field", "<", "2017-03-23"]],
             // today
             ['&', ["date_field", ">=", "2017-03-22"],["date_field", "<", "2017-03-23"]],
             // this week
@@ -289,13 +289,13 @@ QUnit.module('Search View', {
         // assuming that the current time is: 2017-03-22:01:00:00
         this.previousPeriodDomains = [
             // last 7 days (whole days) - 1 week
-            ['&', ["date_field", ">=", "2017-03-08"],["date_field", "<", "2017-03-15"]],
+            ['&', ["date_field", ">=", "2017-03-08"],["date_field", "<", "2017-03-16"]],
             // last 30 days - 30 days
-            ['&', ["date_field", ">=", "2017-01-21"],["date_field", "<", "2017-02-20"]],
+            ['&', ["date_field", ">=", "2017-01-21"],["date_field", "<", "2017-02-21"]],
             // last 365 days
-            ['&', ["date_field", ">=", "2015-03-23"],["date_field", "<", "2016-03-22"]],
+            ['&', ["date_field", ">=", "2015-03-23"],["date_field", "<", "2016-03-23"]],
             // last 5 years
-            ['&', ["date_field", ">=", "2007-03-22"],["date_field", "<", "2012-03-22"]],
+            ['&', ["date_field", ">=", "2007-03-22"],["date_field", "<", "2012-03-23"]],
             // today - 1 day
             ['&', ["date_field", ">=", "2017-03-21"],["date_field", "<", "2017-03-22"]],
             // this week - 1 week
