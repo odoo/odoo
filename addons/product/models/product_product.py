@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from operator import itemgetter
+from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -39,7 +39,7 @@ class ProductProduct(models.Model):
         'product.template', 'Product Template',
         auto_join=True, index=True, ondelete="cascade", required=True)
     barcode = fields.Char(
-        'Barcode', copy=False,
+        'Barcode', copy=False, index='btree_not_null',
         help="International Article Number used for product identification.")
     product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', string="Attribute Values", ondelete='restrict')
     product_template_variant_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination',
@@ -169,41 +169,24 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
-    @api.constrains("barcode")
-    def _check_barcode_unique(self):
-
-        # Collect `product.product.id` of objects that share a barcode with any of those in `self`,
-        # and group them by barcode.
-        candidate_duplicates = self.env['product.product'].sudo().read_group(
-            domain=[("barcode", "in", list(set(product.barcode for product in self if product.barcode)))],
-            fields=['ids:array_agg(id)', 'barcode'],
-            groupby=['barcode']
-        )
-
-        # Keep only barcodes that match more than one `product.product` object.
-        duplicates = [candidate for candidate in candidate_duplicates if candidate['barcode_count'] > 1]
-        if duplicates:
-            # Prepare a mapping of "{ `product.barcode`: [`product.display_name`, ... ] }" to show the user.
-            duplicates_joined = {dup['barcode']: ', '.join(
-                sorted([product.display_name for product in
-                        self.env['product.product'].browse(dup['ids'])])
-            ) for dup in sorted(duplicates, key=itemgetter('barcode'))}
-
-            # Transform the mapping into a prettified string and raise.
-            duplicates_as_str = "\n".join(
-                f"Barcode \"{barcode}\" already assigned to product(s): {products}"
-                for barcode, products in duplicates_joined.items()
-            )
-
-            raise ValidationError(
-                "Barcode(s) already assigned:\n\n{duplicates}".format(duplicates=duplicates_as_str)
-            )
-
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
-        domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
+        all_barcode = [b for b in self.mapped('barcode') if b]
+        domain = [('barcode', 'in', all_barcode)]
+        matched_products = self.sudo().search(domain, order='id')
+        if len(matched_products) > len(all_barcode):  # It means that you find more than `self` -> there are duplicates
+            products_by_barcode = defaultdict(list)
+            for product in matched_products:
+                products_by_barcode[product.barcode].append(product)
+
+            duplicates_as_str = "\n".join(
+                _("- Barcode \"%s\" already assigned to product(s): %s", barcode, ", ".join(p.display_name for p in products))
+                for barcode, products in products_by_barcode.items() if len(products) > 1
+            )
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
         if self.env['product.packaging'].search(domain, order="id", limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
