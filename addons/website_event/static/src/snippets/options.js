@@ -3,6 +3,7 @@
 import options from 'web_editor.snippets.options';
 
 options.registry.WebsiteEvent = options.Class.extend({
+    rpcFields: ['website_menu', 'website_url'],
 
     /**
      * @override
@@ -14,17 +15,17 @@ options.registry.WebsiteEvent = options.Class.extend({
         this.eventId = eventObject.id;
         // Only need for one RPC request as the option will be destroyed if a
         // change is made.
-        const rpcData = await this._rpc({
+        this.rpcData = await this._rpc({
             model: this.modelName,
             method: 'read',
             args: [
                 [this.eventId],
-                ['website_menu', 'website_url'],
+                this.rpcFields,
             ],
         });
-        this.eventUrl = rpcData[0]['website_url'];
+        this.eventUrl = this.rpcData[0]['website_url'];
         this.data.reload = this.eventUrl;
-        this.websiteMenu = rpcData[0]['website_menu'];
+        this.websiteMenu = this.rpcData[0]['website_menu'];
         return res;
     },
 

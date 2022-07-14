@@ -1549,7 +1549,8 @@ var SnippetsMenu = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         options = options || {};
-        this.$body = $((options.document || document).body);
+        this.editableOwnerDocument = (options.document || document);
+        this.$body = $(this.editableOwnerDocument.body);
 
         this.options = options;
         if (!this.options.snippets) {
@@ -1885,7 +1886,7 @@ var SnippetsMenu = Widget.extend({
             return;
         }
         for (const snippetEditor of this.snippetEditors) {
-            if (snippetEditor.$target.closest('body').length) {
+            if (snippetEditor.$target.closest('html').length) {
                 snippetEditor.cover();
                 continue;
             }
@@ -2437,7 +2438,7 @@ var SnippetsMenu = Widget.extend({
                 return $from.closest(selector, parentNode).filter(filterFunc);
             };
             functions.all = function ($from) {
-                return ($from ? dom.cssFind($from, selector) : self.$body.find(selector)).filter(filterFunc);
+                return ($from ? dom.cssFind($from, selector) : $(self.editableOwnerDocument).find(selector)).filter(filterFunc);
             };
         } else {
             functions.is = function ($from) {
