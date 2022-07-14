@@ -34,7 +34,7 @@ This module provides the core of the Odoo Web Client.
         # 2) the prefix "assets_"
         # 3) an arbitrary name, relevant to the content of the bundle.
         #
-        # Exemples:
+        # Examples:
         #   > web.assets_common = assets common to both frontend and backend clients.
         #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
 
