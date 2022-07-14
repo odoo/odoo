@@ -136,6 +136,8 @@ class AccountBankStatementImport(models.TransientModel):
         sanitized_acc_number = journal.bank_account_id.sanitized_acc_number
         if " " in sanitized_acc_number:
             sanitized_acc_number = sanitized_acc_number.split(" ")[0]
+        if len(sanitized_acc_number) == 27 and sanitized_acc_number[:2].upper() == "FR":
+            return sanitized_acc_number[14:-2] == account_number
         return sanitized_acc_number == account_number
 
     def _find_additional_data(self, currency_code, account_number):
