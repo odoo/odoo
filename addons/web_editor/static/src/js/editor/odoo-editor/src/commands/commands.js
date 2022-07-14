@@ -20,6 +20,7 @@ import {
     isBlock,
     isColorGradient,
     isContentTextNode,
+    isEmptyBlock,
     isSelectionFormat,
     isShrunkBlock,
     isVisible,
@@ -262,6 +263,9 @@ export const editorCommands = {
                     if (offset) {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
                         currentNode = insertBefore ? right : left;
+                        if (isEmptyBlock(right)) {
+                            right.remove();
+                        }
                     } else {
                         currentNode = currentNode.parentElement;
                     }
