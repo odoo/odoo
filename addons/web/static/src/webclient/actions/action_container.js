@@ -18,10 +18,10 @@ export class ActionContainer extends Component {
                 this.setInfo(info);
             }
         })
-
-        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+        const onActionManagerUpdate = this.onActionManagerUpdate.bind(this);
+        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", onActionManagerUpdate);
         onWillDestroy(() => {
-            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", onActionManagerUpdate);
         });
     }
 
@@ -31,7 +31,7 @@ export class ActionContainer extends Component {
         this.render();
     }
 
-    onActionManagerUpdate = async ({ detail: info }) => {
+    async onActionManagerUpdate({ detail: info }) {
         if (this.hasVisibleContent && !this.info.Component && info.Component) {
             // if we have some content, but an update requested clearing the
             // screen, and we now request some content, then we wait for the
@@ -42,6 +42,7 @@ export class ActionContainer extends Component {
         }
     }
 }
+
 ActionContainer.components = { ActionDialog };
 ActionContainer.template = xml`
     <t t-name="web.ActionContainer">
