@@ -4,7 +4,14 @@ import { uiService } from "@web/core/ui/ui_service";
 import { useAutofocus, useBus, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { click, destroy, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+} from "@web/../tests/helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { Component, onMounted, xml } = owl;
@@ -254,6 +261,81 @@ QUnit.module("utils", () => {
 
             const comp = await mount(MyComponent, target, { env });
             assert.strictEqual(comp.toyService, null);
+        });
+
+        QUnit.test("useService: async service with protected methods", async function (assert) {
+            let nbCalls = 0;
+            let def = makeDeferred();
+            class MyComponent extends Component {
+                setup() {
+                    this.objectService = useService("object_service");
+                    this.functionService = useService("function_service");
+                }
+            }
+            MyComponent.template = xml`<div/>`;
+
+            serviceRegistry.add("object_service", {
+                name: "object_service",
+                async: ["asyncMethod"],
+                start() {
+                    return {
+                        async asyncMethod() {
+                            nbCalls++;
+                            await def;
+                            return this;
+                        },
+                    };
+                },
+            });
+
+            serviceRegistry.add("function_service", {
+                name: "function_service",
+                async: true,
+                start() {
+                    return async function asyncFunc() {
+                        nbCalls++;
+                        await def;
+                        return this;
+                    };
+                },
+            });
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+
+            const comp = await mount(MyComponent, target, { env });
+            // Functions and methods have the correct this
+            def.resolve();
+            assert.deepEqual(await comp.objectService.asyncMethod(), comp.objectService);
+            assert.deepEqual(await comp.objectService.asyncMethod.call("boundThis"), "boundThis");
+            assert.deepEqual(await comp.functionService(), comp);
+            assert.deepEqual(await comp.functionService.call("boundThis"), "boundThis");
+            assert.strictEqual(nbCalls, 4);
+            // Functions that were called before the component is destroyed but resolved after never resolve
+            let nbResolvedProms = 0;
+            def = makeDeferred();
+            comp.objectService.asyncMethod().then(() => nbResolvedProms++);
+            comp.objectService.asyncMethod.call("boundThis").then(() => nbResolvedProms++);
+            comp.functionService().then(() => nbResolvedProms++);
+            comp.functionService.call("boundThis").then(() => nbResolvedProms++);
+            assert.strictEqual(nbCalls, 8);
+            comp.__owl__.app.destroy();
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                nbResolvedProms,
+                0,
+                "The promises returned by the calls should never resolve"
+            );
+            // Calling the functions after the destruction rejects the promise
+            assert.rejects(comp.objectService.asyncMethod(), "Component is destroyed");
+            assert.rejects(
+                comp.objectService.asyncMethod.call("boundThis"),
+                "Component is destroyed"
+            );
+            assert.rejects(comp.functionService(), "Component is destroyed");
+            assert.rejects(comp.functionService.call("boundThis"), "Component is destroyed");
+            assert.strictEqual(nbCalls, 8);
         });
     });
 });

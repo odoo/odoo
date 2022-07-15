@@ -161,12 +161,12 @@ export function useListener(eventName, querySelector, handler, options = {}) {
 // useService
 // -----------------------------------------------------------------------------
 
-function _protectMethod(component, caller, fn) {
-    return async (...args) => {
+function _protectMethod(component, fn) {
+    return async function (...args) {
         if (status(component) === "destroyed") {
             throw new Error("Component is destroyed");
         }
-        const result = await fn.call(caller, ...args);
+        const result = await fn.call(this, ...args);
         return status(component) === "destroyed" ? new Promise(() => {}) : result;
     };
 }
@@ -186,12 +186,12 @@ export function useService(serviceName) {
     const service = services[serviceName];
     if (serviceName in SERVICES_METADATA) {
         if (service instanceof Function) {
-            return _protectMethod(component, null, service);
+            return _protectMethod(component, service);
         } else {
             const methods = SERVICES_METADATA[serviceName];
             const result = Object.create(service);
             for (const method of methods) {
-                result[method] = _protectMethod(component, service, service[method]);
+                result[method] = _protectMethod(component, service[method]);
             }
             return result;
         }
