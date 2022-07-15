@@ -4,7 +4,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { deepCopy, pluck } from "@web/core/utils/objects";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/view_hook";
@@ -363,8 +363,8 @@ export class View extends Component {
     }
 
     onWillUpdateProps(nextProps) {
-        const oldProps = pluck(this.props, "arch", "type", "resModel");
-        const newProps = pluck(nextProps, "arch", "type", "resModel");
+        const oldProps = pick(this.props, "arch", "type", "resModel");
+        const newProps = pick(nextProps, "arch", "type", "resModel");
         if (JSON.stringify(oldProps) !== JSON.stringify(newProps)) {
             return this.loadView(nextProps);
         }
