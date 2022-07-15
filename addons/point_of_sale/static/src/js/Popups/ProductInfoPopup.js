@@ -3,6 +3,7 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError } = require('@web/core/network/rpc_service')
 
     /**
@@ -17,7 +18,6 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
         setup() {
             super.setup();
             owl.onWillStart(this.onWillStart);
-            owl.onMounted(this.onMounted);
         }
         async onWillStart() {
             const order = this.env.pos.get_order();
@@ -48,22 +48,14 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
                 this.orderMarginCurrency = this.env.pos.format_currency(orderMargin);
                 this.orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
             } catch (error) {
-                this.error = error;
-            }
-        }
-        /*
-         * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
-         */
-        onMounted() {
-            if (this.error) {
                 this.cancel();
-                if (this.error.message instanceof ConnectionLostError) {
+                if (identifyError(error) instanceof ConnectionLostError) {
                     this.showPopup('ErrorPopup', {
                         title: this.env._t('Network Error'),
                         body: this.env._t('Cannot access product information screen if offline.'),
                     });
                 } else {
-                    throw this.error;
+                    throw error;
                 }
             }
         }
