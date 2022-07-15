@@ -94,6 +94,9 @@ class TestProjectCommon(TransactionCase):
         self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
+
+class TestProjectBase(TestProjectCommon):
+
     def test_delete_project_with_tasks(self):
         """User should never be able to delete a project with tasks"""
 
