@@ -24,6 +24,7 @@ import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { makeLegacyCrashManagerService } from "@web/legacy/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
+import * as cpHelpers from "@web/../tests/search/helpers";
 
 import AbstractView from "web.AbstractView";
 import ControlPanel from "web.ControlPanel";
@@ -741,5 +742,35 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_legacy_form_view");
+    });
+
+    QUnit.test("correct pager when coming from list (legacy)", async (assert) => {
+        assert.expect(4);
+
+        registry.category("views").remove("list");
+        legacyViewRegistry.add("list", ListView);
+        serverData.views = {
+            "partner,false,search": `<search />`,
+            "partner,99,list": `<list limit="4"><field name="display_name" /></list>`,
+            "partner,100,form": `<form><field name="display_name" /></form>`,
+        };
+
+        const wc = await createWebClient({ serverData });
+        await doAction(wc, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [99, "list"],
+                [100, "form"],
+            ],
+        });
+
+        assert.deepEqual(cpHelpers.getPagerValue(target), [1, 4]);
+        assert.deepEqual(cpHelpers.getPagerLimit(target), 5);
+
+        await click(target, ".o_data_row:nth-child(2) .o_data_cell");
+        await legacyExtraNextTick();
+        assert.deepEqual(cpHelpers.getPagerValue(target), [2]);
+        assert.deepEqual(cpHelpers.getPagerLimit(target), 4);
     });
 });
