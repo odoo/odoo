@@ -381,7 +381,11 @@ export class ViewAdapter extends ActionAdapter {
         if (ev.name === "switch_view") {
             if (payload.view_type === "form") {
                 if (payload.res_id) {
-                    return this.props.selectRecord(payload.res_id, { mode: payload.mode });
+                    const activeIds = this.__widget.model.get(this.__widget.handle).res_ids;
+                    return this.props.selectRecord(payload.res_id, {
+                        mode: payload.mode,
+                        activeIds,
+                    });
                 } else {
                     return this.props.createRecord();
                 }
