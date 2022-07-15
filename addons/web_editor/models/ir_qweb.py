@@ -170,7 +170,11 @@ class Integer(models.AbstractModel):
     _description = 'Qweb Field Integer'
     _inherit = 'ir.qweb.field.integer'
 
-    value_from_string = int
+    @api.model
+    def from_html(self, model, field, element):
+        lang = self.user_lang()
+        value = element.text_content().strip()
+        return int(value.replace(lang.thousands_sep, ''))
 
 
 class Float(models.AbstractModel):
