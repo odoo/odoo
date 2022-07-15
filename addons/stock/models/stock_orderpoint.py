@@ -206,6 +206,7 @@ class StockWarehouseOrderpoint(models.Model):
         return action
 
     def action_replenish(self):
+        now = datetime.now()
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
@@ -219,7 +220,6 @@ class StockWarehouseOrderpoint(models.Model):
                 'views': [(self.env.ref('product.product_normal_form_view').id, 'form')],
                 'context': {'form_view_initial_mode': 'edit'}
             }, _('Edit Product'))
-        now = datetime.now()
         notification = False
         if len(self) == 1:
             notification = self.with_context(written_after=now)._get_replenishment_order_notification()
@@ -446,7 +446,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_replenishment_order_notification(self):
         self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
-        if self.env.context.get('written_date'):
+        if self.env.context.get('written_after'):
             domain = expression.AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
         move = self.env['stock.move'].search(domain, limit=1)
         if move.picking_id:
