@@ -185,6 +185,7 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/longpolling_bus.js',
             'bus/static/src/crosstab_bus.js',
             'bus/static/src/services/bus_service.js',
+            'bus/static/src/services/multi_tab_service.js',
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
