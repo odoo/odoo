@@ -44,6 +44,12 @@ class Job(models.Model):
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
+    no_of_hired_employee = fields.Integer(compute='_compute_no_of_hired_employee', store=True)
+
+    @api.depends('application_ids.date_closed')
+    def _compute_no_of_hired_employee(self):
+        for job in self:
+            job.no_of_hired_employee = len(job.application_ids.filtered(lambda applicant: applicant.date_closed))
 
     def _compute_is_favorite(self):
         for job in self:
