@@ -165,6 +165,15 @@ class PickingType(models.Model):
             res.append((picking_type.id, name))
         return res
 
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        # Try to reverse the `name_get` structure
+        parts = name.split(': ')
+        if len(parts) == 2:
+            domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
     @api.onchange('code')
     def _onchange_picking_code(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
