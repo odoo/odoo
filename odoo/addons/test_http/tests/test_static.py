@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
 from freezegun import freeze_time
 
-from odoo.tests import tagged
-from odoo.tools import config, file_open
+import odoo
+from odoo.tests import new_test_user, tagged
+from odoo.tools import config, file_open, image_process
 
 from .test_common import TestHttpBase
 
@@ -252,6 +254,120 @@ class TestHttpStatic(TestHttpStaticCommon):
         public_user = self.env.ref('base.public_user')
         res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
         self.assertEqual(res.status_code, 404)
+
+
+@tagged('post_install', '-at_install')
+class TestHttpStaticLogo(TestHttpStaticCommon):
+    @staticmethod
+    def img_data_to_web_data(img_base_64):
+        return image_process(img_base_64, size=(180, 0))
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        ResCompany = cls.env['res.company']
+        cls.default_logo_data = cls.img_data_to_web_data(base64.b64decode(ResCompany._get_logo()))
+        cls.gizeh_data_b64 = base64.encodebytes(cls.gizeh_data)
+        cls.logo_gizeh_data = cls.img_data_to_web_data(cls.gizeh_data)
+        with file_open('web/static/img/nologo.png', 'rb') as file:
+            cls.logo_no_logo_data = file.read()
+        cls.headers_default_logo = {
+            'Content-Length': f'{len(cls.default_logo_data)}',
+            'Content-Type': 'image/png',
+            'Content-Disposition': 'inline; filename=logo.png'
+        }
+        cls.headers_logo_gizeh = {
+            'Content-Length': f'{len(cls.logo_gizeh_data)}',
+            'Content-Type': 'image/png',
+            'Content-Disposition': 'inline; filename=logo.png'
+        }
+        cls.headers_logo_no_logo = {
+            'Content-Length': f'{len(cls.logo_no_logo_data)}',
+            'Content-Type': 'image/png',
+            'Content-Disposition': 'inline; filename=nologo.png'
+        }
+        super_user = cls.env['res.users'].browse([odoo.SUPERUSER_ID])
+        companies = ResCompany.browse([super_user.company_id.id]) | ResCompany.create(
+            {
+                'name': 'Company 2',
+                'email': 'company.2@test.example.com',
+                'country_id': cls.env.ref('base.fr').id,
+            }
+        )
+        cls.company_of_superuser, cls.company2 = companies
+        cls.password = 'Pl1bhD@2!kXZ'
+        cls.user_of_company_of_superuser, cls.user_company2 = [
+            new_test_user(cls.env, f'user_{company.id}', company_id=company.id, password=cls.password)
+            for company in companies]
+
+    def assertDownloadLogo(self, headers, img_data, user=None, company=None):
+        """Assert that the logo endpoint returns the right image and headers.
+
+        :param dict headers: expected headers
+        :param bytes img_data: expected image data
+        :param user: optional user, if set the check will be done while being authenticated with that user
+        :param company: optional company, if set the company will be appended in the URL parameters
+        """
+        url_suffix = f'?company={company.id}' if company else ''
+        if user:
+            self.authenticate(user.login, self.password)
+        else:
+            self.authenticate(None, None)
+        self.assertDownload(f'/logo.png{url_suffix}', 200, headers, img_data)
+
+    def assertDownloadLogoDefault(self, user=None, company=None):
+        self.assertDownloadLogo(self.headers_default_logo, self.default_logo_data, user, company)
+
+    def assertDownloadLogoGizeh(self, user=None, company=None):
+        self.assertDownloadLogo(self.headers_logo_gizeh, self.logo_gizeh_data, user, company)
+
+    def assertDownloadLogoNoLogo(self, user=None, company=None):
+        self.assertDownloadLogo(self.headers_logo_no_logo, self.logo_no_logo_data, user, company)
+
+    def test_default_logo(self):
+        self.assertDownloadLogoDefault()
+        self.assertDownloadLogoDefault(company=self.company_of_superuser)
+        self.assertDownloadLogoDefault(user=self.user_of_company_of_superuser)
+        self.assertDownloadLogoDefault(company=self.company2)
+        self.assertDownloadLogoDefault(user=self.user_company2)
+
+    def test_set_logo_company_of_superuser(self):
+        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.assertDownloadLogoGizeh()
+        self.assertDownloadLogoGizeh(company=self.company_of_superuser)
+        self.assertDownloadLogoGizeh(user=self.user_of_company_of_superuser)
+        self.assertDownloadLogoDefault(company=self.company2)
+        self.assertDownloadLogoDefault(user=self.user_company2)
+
+    def test_set_logo_other_company(self):
+        self.company2.logo = self.gizeh_data_b64
+        self.assertDownloadLogoDefault()
+        self.assertDownloadLogoGizeh(company=self.company2)
+        self.assertDownloadLogoGizeh(user=self.user_company2)
+        self.assertDownloadLogoDefault(company=self.company_of_superuser)
+        self.assertDownloadLogoDefault(user=self.user_of_company_of_superuser)
+
+    def test_set_no_logo_company_of_superuser(self):
+        self.company_of_superuser.logo = None
+        self.assertDownloadLogoNoLogo()
+        self.assertDownloadLogoNoLogo(company=self.company_of_superuser)
+        self.assertDownloadLogoNoLogo(user=self.user_of_company_of_superuser)
+        self.assertDownloadLogoDefault(company=self.company2)
+        self.assertDownloadLogoDefault(user=self.user_company2)
+
+    def test_set_no_logo_other_company(self):
+        self.company2.logo = None
+        self.assertDownloadLogoDefault()
+        self.assertDownloadLogoNoLogo(company=self.company2)
+        self.assertDownloadLogoNoLogo(user=self.user_company2)
+        self.assertDownloadLogoDefault(company=self.company_of_superuser)
+        self.assertDownloadLogoDefault(user=self.user_of_company_of_superuser)
+
+    def test_company_param_win_on_current_user(self):
+        """When company and user are specified, company wins (ex: in an email you see the company logo and not yours)"""
+        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.assertDownloadLogoGizeh(company=self.company_of_superuser, user=self.user_company2)
+        self.assertDownloadLogoDefault(company=self.company2, user=self.user_of_company_of_superuser)
 
 
 class TestHttpStaticCache(TestHttpStaticCommon):
