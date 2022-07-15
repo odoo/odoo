@@ -256,5 +256,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_toy_content");
         assert.containsOnce(target, ".o_toy_banner");
+        assert.notOk(target.querySelector(".o_toy_banner").closest(".o_content"));
+        assert.ok(target.querySelector(".o_toy_content").closest(".o_content"));
     });
 });
