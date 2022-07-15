@@ -246,7 +246,7 @@ var BoardRenderer = FormRenderer.extend({
                     // the action does not exist anymore
                     return Promise.resolve();
                 }
-                var evalContext = new Context(params.context).eval();
+                var evalContext = new Context(session.user_context, params.context).eval();
                 if (evalContext.group_by && evalContext.group_by.length === 0) {
                     delete evalContext.group_by;
                 }
