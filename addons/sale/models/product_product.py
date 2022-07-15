@@ -49,8 +49,8 @@ class ProductProduct(models.Model):
             'pivot_measures': ['product_uom_qty'],
             'active_id': self._context.get('active_id'),
             'search_default_Sales': 1,
+            'search_default_filter_date_365days': 1,
             'active_model': 'sale.report',
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'},
         }
         return action
 
