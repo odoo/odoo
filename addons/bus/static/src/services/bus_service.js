@@ -28,7 +28,7 @@ export class BusService extends CrossTab {
      */
     sendNotification(options, callback) {
         if (window.Notification && Notification.permission === "granted") {
-            if (this.isMasterTab()) {
+            if (this.env.services['multiTab'].isOnMainTab()) {
                 try {
                     this._sendNativeNotification(options.title, options.message, callback);
                 } catch (error) {
@@ -45,7 +45,7 @@ export class BusService extends CrossTab {
             }
         } else {
             this.env.services['notification'].add(options.message, options);
-            if (this.isMasterTab()) {
+            if (this.env.services['multiTab'].isOnMainTab()) {
                 this._beep();
             }
         }
@@ -121,7 +121,7 @@ export class BusService extends CrossTab {
 }
 
 export const busService = {
-    dependencies: ['notification', 'presence', 'rpc'],
+    dependencies: ['notification', 'presence', 'rpc', 'multiTab'],
     start(env, services) {
         return new BusService(env, services);
     },

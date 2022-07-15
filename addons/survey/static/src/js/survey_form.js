@@ -934,10 +934,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.call('bus_service', 'addChannel', this.options.surveyToken);
             this.call('bus_service', 'startPolling');
 
-            if (!this._checkIsMasterTab()) {
+            if (!this._checkisOnMainTab()) {
                 this.shouldReloadMasterTab = true;
                 this.masterTabCheckInterval = setInterval(function () {
-                     if (self._checkIsMasterTab()) {
+                     if (self._checkisOnMainTab()) {
                         clearInterval(self.masterTabCheckInterval);
                      }
                 }, 2000);
@@ -1077,10 +1077,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     *
     * @private
     */
-    _checkIsMasterTab: function () {
-        var isMasterTab = this.call('bus_service', 'isMasterTab');
+    _checkisOnMainTab: function () {
+        var isOnMainTab = this.call('multiTab', 'isOnMainTab');
         var $errorModal = this.$('#MasterTabErrorModal');
-        if (isMasterTab) {
+        if (isOnMainTab) {
             // Force reload the page when survey is ready to be followed, to force restart long polling
             if (this.shouldReloadMasterTab) {
                 window.location.reload();

@@ -9,34 +9,24 @@ import { Longpolling } from '@bus/longpolling_bus';
  * CrossTab
  *
  * This is an extension of the longpolling bus with browser cross-tab synchronization.
- * It uses a Master/Slaves with Leader Election architecture:
- * - a single tab handles longpolling.
+ * It uses the multiTab service.
+ * - only the main tab handles longpolling.
  * - tabs are synchronized by means of the local storage.
  *
  * localStorage used keys are:
  * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.channels : shared public channel list to listen during the poll
  * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.options : shared options
  * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.notification : the received notifications from the last poll
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.tab_list : list of opened tab ids
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.tab_master : generated id of the master tab
  *
  * trigger:
  * - notification : when a notification is receive from the long polling
- * - become_master : when this tab became the master
- * - no_longer_master : when this tab is not longer the master (the user swith tab)
  */
 export class CrossTab extends Longpolling {
     constructor(env, services) {
         super(env, services);
-         // constants
-        this.TAB_HEARTBEAT_PERIOD = 10000; // 10 seconds
-        this.MASTER_TAB_HEARTBEAT_PERIOD = 1500; // 1.5 seconds
-        this.HEARTBEAT_OUT_OF_DATE_PERIOD = 5000; // 5 seconds
-        this.HEARTBEAT_KILL_OLD_PERIOD = 15000; // 15 seconds
         this.LOCAL_STORAGE_PREFIX = 'bus';
 
         // properties
-        this._isMasterTab = false;
         this._isRegistered = false;
 
         var now = new Date().getTime();
@@ -49,7 +39,11 @@ export class CrossTab extends Longpolling {
             this._callLocalStorage('removeItem', 'last');
         }
         this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
+        this._registerWindowUnload();
         browser.addEventListener('storage', this._onStorage.bind(this));
+
+        env.bus.addEventListener('no_longer_main_tab', () => this.stopPolling());
+        env.bus.addEventListener('become_main_tab', () => this.startPolling());
     }
 
     //--------------------------------------------------------------------------
@@ -86,48 +80,23 @@ export class CrossTab extends Longpolling {
     }
 
     /**
-     * Tells whether this bus is related to the master tab.
-     *
-     * @returns {boolean}
-     */
-    isMasterTab() {
-        return this._isMasterTab;
-    }
-
-    /**
      * Use the local storage to share the long polling from the master tab.
      *
      * @override
      */
     startPolling() {
-        if (this._isActive === null) {
-            this._heartbeat = this._heartbeat.bind(this);
-        }
         if (!this._isRegistered) {
             this._isRegistered = true;
 
-            var peers = this._callLocalStorage('getItem', 'peers', {});
-            peers[this._id] = new Date().getTime();
-            this._callLocalStorage('setItem', 'peers', peers);
-
-            this._registerWindowUnload();
-
-            if (!this._callLocalStorage('getItem', 'master')) {
-                this._startElection();
-            }
-
-            this._heartbeat();
-
-            if (this._isMasterTab) {
+            if (this.env.services['multiTab'].isOnMainTab()) {
                 this._callLocalStorage('setItem', 'options', this._options);
             } else {
                 this._options = this._callLocalStorage('getItem', 'options', this._options);
             }
             this._updateChannels();
-            return;  // startPolling will be called again on tab registration
         }
 
-        if (this._isMasterTab) {
+        if (this.env.services['multiTab'].isOnMainTab()) {
             super.startPolling();
         }
     }
@@ -181,100 +150,10 @@ export class CrossTab extends Longpolling {
     }
 
     /**
-     * Check all the time (according to the constants) if the tab is the master tab and
-     * check if it is active. Use the local storage for this checks.
-     *
-     * @private
-     * @see _startElection method
-     */
-    _heartbeat() {
-        var now = new Date().getTime();
-        var heartbeatValue = parseInt(this._callLocalStorage('getItem', 'heartbeat', 0));
-        var peers = this._callLocalStorage('getItem', 'peers', {});
-
-        if ((heartbeatValue + this.HEARTBEAT_OUT_OF_DATE_PERIOD) < now) {
-            // Heartbeat is out of date. Electing new master
-            this._startElection();
-            heartbeatValue = parseInt(this._callLocalStorage('getItem', 'heartbeat', 0));
-        }
-
-        if (this._isMasterTab) {
-            //walk through all peers and kill old
-            var cleanedPeers = {};
-            for (var peerName in peers) {
-                if (peers[peerName] + this.HEARTBEAT_KILL_OLD_PERIOD > now) {
-                    cleanedPeers[peerName] = peers[peerName];
-                }
-            }
-
-            if (heartbeatValue !== this.lastHeartbeat) {
-                // someone else is also master...
-                // it should not happen, except in some race condition situation.
-                this._isMasterTab = false;
-                this.lastHeartbeat = 0;
-                peers[this._id] = now;
-                this._callLocalStorage('setItem', 'peers', peers);
-                this.stopPolling();
-                this.trigger('no_longer_master');
-            } else {
-                this.lastHeartbeat = now;
-                this._callLocalStorage('setItem', 'heartbeat', now);
-                this._callLocalStorage('setItem', 'peers', cleanedPeers);
-            }
-        } else {
-            //update own heartbeat
-            peers[this._id] = now;
-            this._callLocalStorage('setItem', 'peers', peers);
-        }
-
-        var hbPeriod = this._isMasterTab ? this.MASTER_TAB_HEARTBEAT_PERIOD : this.TAB_HEARTBEAT_PERIOD;
-        this._heartbeatTimeout = browser.setTimeout(this._heartbeat.bind(this), hbPeriod);
-    }
-
-    /**
      * @private
      */
     _registerWindowUnload() {
         browser.addEventListener('unload', this._onUnload.bind(this));
-    }
-
-    /**
-     * Check with the local storage if the current tab is the master tab.
-     * If this tab became the master, trigger 'become_master' event
-     *
-     * @private
-     */
-    _startElection() {
-        if (this._isMasterTab) {
-            return;
-        }
-        //check who's next
-        var now = new Date().getTime();
-        var peers = this._callLocalStorage('getItem', 'peers', {});
-        var heartbeatKillOld = now - this.HEARTBEAT_KILL_OLD_PERIOD;
-        var newMaster;
-        for (var peerName in peers) {
-            //check for dead peers
-            if (peers[peerName] < heartbeatKillOld) {
-                continue;
-            }
-            newMaster = peerName;
-            break;
-        }
-
-        if (newMaster === this._id) {
-            //we're next in queue. Electing as master
-            this.lastHeartbeat = now;
-            this._callLocalStorage('setItem', 'heartbeat', this.lastHeartbeat);
-            this._callLocalStorage('setItem', 'master', true);
-            this._isMasterTab = true;
-            this.startPolling();
-            this.trigger('become_master');
-
-            //removing master peer from queue
-            delete peers[newMaster];
-            this._callLocalStorage('setItem', 'peers', peers);
-        }
     }
 
     /**
@@ -284,7 +163,7 @@ export class CrossTab extends Longpolling {
      * @return {boolean} true if the aggregated channels has changed.
      */
     _updateChannels() {
-        const currentPeerIds = new Set(Object.keys(this._callLocalStorage('getItem', 'peers') || {}));
+        const currentPeerIds = new Set(this.env.services['multiTab'].getAllTabIds());
         const peerChannels = this._callLocalStorage('getItem', 'channels')  || {};
         const peerChannelsBefore = JSON.stringify(peerChannels);
         peerChannels[this._id] = Array.from(this._currentTabChannels);
@@ -329,7 +208,7 @@ export class CrossTab extends Longpolling {
      */
     _onPoll(notifications) {
         var notifs = super._onPoll(notifications);
-        if (this._isMasterTab && notifs.length) {
+        if (this.env.services['multiTab'].isOnMainTab() && notifs.length) {
             this._callLocalStorage('setItem', 'last', this._lastNotificationID);
             this._callLocalStorage('setItem', 'last_ts', new Date().getTime());
             this._callLocalStorage('setItem', 'notification', notifs);
@@ -351,18 +230,13 @@ export class CrossTab extends Longpolling {
         var value = JSON.parse(e.newValue);
         var key = e.key;
 
-        if (this._isRegistered && key === this._generateKey('master') && !value) {
-            //master was unloaded
-            this._startElection();
-        }
-
         // last notification id changed
         if (key === this._generateKey('last')) {
             this._lastNotificationID = value || 0;
         }
         // notifications changed
         else if (key === this._generateKey('notification')) {
-            if (!this._isMasterTab) {
+            if (!this.env.services['multiTab'].isOnMainTab()) {
                 this.trigger("notification", value);
             }
         }
@@ -384,16 +258,7 @@ export class CrossTab extends Longpolling {
      * @private
      */
     _onUnload() {
-        // unload peer
-        var peers = this._callLocalStorage('getItem', 'peers') || {};
-        delete peers[this._id];
-        this._callLocalStorage('setItem', 'peers', peers);
         this._currentTabChannels.clear();
         this._updateChannels();
-
-        // unload master
-        if (this._isMasterTab) {
-            this._callLocalStorage('removeItem', 'master');
-        }
     }
 }
