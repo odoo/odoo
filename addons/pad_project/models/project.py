@@ -3,6 +3,19 @@
 
 from odoo import api, fields, models
 
+PROJECT_TASK_READABLE_FIELDS = {
+    "description",
+    "description_pad",
+    "use_pad"
+}
+
+
+PROJECT_TASK_WRITABLE_FIELDS = {
+    "description",
+    "description_pad",
+    "use_pad"
+}
+
 
 class ProjectTask(models.Model):
     _name = "project.task"
@@ -51,6 +64,14 @@ class ProjectTask(models.Model):
         """
         self.ensure_one()
         return self.pad_get_content(self.description_pad)
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return PROJECT_TASK_READABLE_FIELDS | super().SELF_READABLE_FIELDS
+
+    @property
+    def SELF_WRITABLE_FIELDS(self):
+        return PROJECT_TASK_WRITABLE_FIELDS | super().SELF_WRITABLE_FIELDS
 
 
 class ProjectProject(models.Model):

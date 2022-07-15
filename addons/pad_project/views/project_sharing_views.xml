@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="project_task_portal_description_form" model="ir.ui.view">
+        <field
+            name="inherit_id"
+            ref="project.project_sharing_project_task_view_form"
+        />
+        <field name="name">project.task.description.portal.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="attributes">
+                <attribute name="attrs">{'invisible': [('use_pad', '=', True)], 'readonly': [('use_pad', '=', True)]}</attribute>
+            </xpath>
+            <field name="description" position="after">
+                <field name="use_pad" invisible="1"/>
+                <field name="description_pad" widget="pad" options="{'collaborative': true}" attrs="{'invisible': [('use_pad', '=', False)], 'readonly': [('use_pad', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
