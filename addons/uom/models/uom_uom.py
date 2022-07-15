@@ -238,7 +238,7 @@ class UoM(models.Model):
 
     def _filter_protected_uoms(self):
         """Verifies self does not contain protected uoms."""
-        linked_model_data = self.env['ir.model.data'].search([
+        linked_model_data = self.env['ir.model.data'].sudo().search([
             ('model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('module', '=', 'uom'),
