@@ -1,20 +1,14 @@
 /** @odoo-module **/
 
-import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 import { start } from '@mail/../tests/helpers/test_utils';
 
-import { Items as legacySystrayItems } from 'web.SystrayMenu';
 import testUtils from 'web.test_utils';
-import { registerCleanup } from '@web/../tests/helpers/cleanup';
 
 QUnit.module('note', {}, function () {
 QUnit.module("ActivityMenu");
 
 QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {
     assert.expect(15);
-
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
 
     await start();
     assert.containsOnce(document.body, '.o_mail_systray_item',

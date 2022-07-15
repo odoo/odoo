@@ -1,16 +1,13 @@
 /** @odoo-module **/
 
-import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 import {
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import session from 'web.session';
-import { Items as legacySystrayItems } from 'web.SystrayMenu';
 import testUtils from 'web.test_utils';
 import { date_to_str } from 'web.time';
-import { registerCleanup } from '@web/../tests/helpers/cleanup';
 import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 
@@ -37,8 +34,6 @@ QUnit.module('systray_activity_menu_tests.js', {
 QUnit.test('activity menu widget: menu with no records', async function (assert) {
     assert.expect(1);
 
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
     await start({
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -53,8 +48,6 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
 QUnit.test('activity menu widget: activity menu with 2 models', async function (assert) {
     assert.expect(10);
 
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
     const { env } = await start();
 
     await testUtils.nextTick();
@@ -108,8 +101,6 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     assert.expect(14);
 
     patchWithCleanup(session, { uid: 10 });
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
     const { env } = await start();
     await testUtils.nextTick();
     assert.containsN(document.body, '.o_mail_activity_action', 2,
@@ -160,8 +151,6 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
     assert.expect(2);
 
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
     const { click } = await start();
     await testUtils.nextTick();
 

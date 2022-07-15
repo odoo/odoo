@@ -1,11 +1,8 @@
 /** @odoo-module **/
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
-import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
-import { Items as legacySystrayItems } from 'web.SystrayMenu';
 import testUtils from 'web.test_utils';
-import { registerCleanup } from '@web/../tests/helpers/cleanup';
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('calendar', {}, function () {
@@ -31,8 +28,6 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
             attendee_ids: [calendarAttendeeId1],
         },
     ]);
-    legacySystrayItems.push(ActivityMenu);
-    registerCleanup(() => legacySystrayItems.pop());
     const { env } = await start();
     assert.containsOnce(document.body, '.o_mail_systray_item', 'should contain an instance of widget');
 
