@@ -3746,6 +3746,46 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "read", "onchange"]);
     });
 
+    QUnit.test("pressing enter several times in a one2many", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom">
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+        });
+
+        await clickEdit(target);
+        await addRow(target);
+        assert.containsOnce(target, ".o_data_row");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+
+        await editInput(target, "[name='turtle_foo'] input", "a");
+        triggerHotkey("Enter");
+        await nextTick();
+        assert.containsN(target, ".o_data_row", 2);
+        assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
+
+        await editInput(target, "[name='turtle_foo'] input", "a");
+        triggerHotkey("Enter");
+        await nextTick();
+        assert.containsN(target, ".o_data_row", 3);
+        assert.hasClass(target.querySelectorAll(".o_data_row")[2], "o_selected_row");
+
+        // this is a weird case, but there's no required fields, so the record is already valid, we can press Enter directly.
+        triggerHotkey("Enter");
+        await nextTick();
+        assert.containsN(target, ".o_data_row", 4);
+        assert.hasClass(target.querySelectorAll(".o_data_row")[3], "o_selected_row");
+    });
+
     QUnit.test("editing a o2m, with required field and onchange", async function (assert) {
         serverData.models.turtle.fields.turtle_foo.required = true;
         delete serverData.models.turtle.fields.turtle_foo.default;
@@ -8944,7 +8984,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(document.activeElement, input);
 
-        await triggerEvent(input, null, "keydown", { key: "Enter" });
+        triggerHotkey("Enter");
+        await nextTick();
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza", ""]
