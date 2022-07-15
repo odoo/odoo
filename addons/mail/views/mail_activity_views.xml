@@ -99,7 +99,7 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
-                    <div class="oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box" invisible="1">
                         <button name="action_open_document" string="Open Document"
                                 type="object" class="oe_link" icon="fa-file-text-o"
                                 attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}"/>
@@ -165,6 +165,9 @@
                 <field name="res_name" readonly="1" string="Document"/>
             </field>
             <footer position="replace"/>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
         </field>
     </record>
 
