@@ -1208,11 +1208,14 @@ export class ListRenderer extends Component {
 
                 if (futureRecord) {
                     futureRecord.switchMode("edit");
-                } else if (this.lastIsDirty || !record.canBeAbandoned || this.lastCreatingAction) {
+                } else if (
+                    this.lastIsDirty ||
+                    !record.canBeAbandoned ||
+                    (activeActions && (activeActions.canLink || activeActions.canCreate))
+                ) {
                     this.props.onAdd({ group });
-                } else if (record.checkValidity()) {
-                    const index = list.records.indexOf(record);
-                    futureRecord = list.records[index + 1] || list.records.at(0);
+                } else {
+                    futureRecord = list.records.at(0);
                     futureRecord.switchMode("edit");
                 }
                 break;
