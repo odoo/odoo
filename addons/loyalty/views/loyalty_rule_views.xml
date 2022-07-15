@@ -77,9 +77,24 @@
                             
 
                             <div class="o_loyalty_kanban_card_left">
-                                <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
-                                    <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/></a>
-                                </t>
+                                <a>
+                                    <t t-if="record.minimum_qty.raw_value > 1 || record.minimum_amount.raw_value">
+                                        <t t-set="qty" t-value="record.minimum_qty.raw_value"/>
+                                        <t t-set="amt" t-value="record.minimum_amount.raw_value"/>
+                                        <t t-set="tax_mode" t-value="record.minimum_amount_tax_mode.raw_value"/>
+                                        <span>If<t t-if="qty > 1"> minimum <field name="minimum_qty"/> PCE</t>
+                                            <t t-if="amt"><t t-if="qty > 1">and</t> minimum <field name="minimum_amount"/><t t-if="tax_mode === 'excl'"> (tax excluded)</t></t>
+                                        </span>
+                                        <br/>
+                                    </t>
+                                </a>
+
+                                <br/>
+                                
+                                <div class="o_kanban_record_title">
+                                    <a>Among:</a>
+                                </div>
+
                                 <t t-if="record.product_ids.raw_value.length > 0">
                                     <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags" class="d-inline"/></div>
                                 </t>
@@ -95,22 +110,15 @@
                                     <a><i class="fa fa-cube fa-fw" title="Products"/> All Products</a>
                                     <br/>
                                 </t>
-                                <a>
-                                    <t t-if="record.minimum_qty.raw_value > 1 || record.minimum_amount.raw_value">
-                                        <t t-set="qty" t-value="record.minimum_qty.raw_value"/>
-                                        <t t-set="amt" t-value="record.minimum_amount.raw_value"/>
-                                        <t t-set="tax_mode" t-value="record.minimum_amount_tax_mode.raw_value"/>
-                                        <span>If<t t-if="qty > 1"> minimum <field name="minimum_qty"/> PCE</t>
-                                            <t t-if="amt"><t t-if="qty > 1">and</t> minimum <field name="minimum_amount"/><t t-if="tax_mode === 'excl'"> (tax excluded)</t></t>
-                                        </span>
-                                        <br/>
-                                    </t>
-                                </a>
+                                <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
+                                    <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/></a>
+                                </t>
+
                                 <t t-if="record.code.raw_value">
                                     <a><i class="fa fa-pencil-square-o fa-fw" title="Code"/>With Code: <field name="code"/></a>
                                     <br/>
                                 </t>
-                                <i class="fa fa-gift fa-fw" title="conditions"/> <span>Reward <field name="reward_point_amount"/> <field name="reward_point_name"/> <field name="reward_point_mode"/></span>
+                                <!-- <i class="fa fa-gift fa-fw" title="conditions"/> <span>Reward <field name="reward_point_amount"/> <field name="reward_point_name"/> <field name="reward_point_mode"/></span> -->
                             </div>
 
 
