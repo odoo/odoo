@@ -364,7 +364,7 @@ export class ListRenderer extends Component {
                 );
                 if (cell) {
                     const toFocus = getElementToFocus(cell);
-                    if (toFocus) {
+                    if (cell !== toFocus) {
                         this.focus(toFocus);
                         break;
                     }
