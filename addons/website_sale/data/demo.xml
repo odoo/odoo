@@ -131,38 +131,47 @@
         <record id="public_category_desks" model="product.public.category">
           <field name="name">Desks</field>
           <field name="sequence">15</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desks.jpg"/>
         </record>
         <record id="public_category_furnitures" model="product.public.category">
           <field name="name">Furnitures</field>
           <field name="sequence">17</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
         </record>
         <record id="public_category_boxes" model="product.public.category">
             <field name="name">Boxes</field>
             <field name="sequence">20</field>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
         </record>
         <record id="public_category_drawers" model="product.public.category">
           <field name="name">Drawers</field>
           <field name="sequence">21</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
         </record>
         <record id="public_category_cabinets" model="product.public.category">
           <field name="name">Cabinets</field>
           <field name="sequence">22</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
         </record>
         <record id="public_category_bins" model="product.public.category">
           <field name="name">Bins</field>
           <field name="sequence">23</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
         </record>
         <record id="public_category_lamps" model="product.public.category">
           <field name="name">Lamps</field>
           <field name="sequence">24</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
         </record>
         <record id="services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">25</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
           <field name="sequence">26</field>
+          <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
         </record>
 
         <!-- subcategories -->
@@ -170,6 +179,7 @@
           <field name="parent_id" eval="ref('public_category_desks')"/>
           <field name="name">Components</field>
           <field name="sequence">16</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
         </record>
         <record id="public_category_furnitures_chairs" model="product.public.category">
           <field name="parent_id" eval="ref('public_category_furnitures')"/>
