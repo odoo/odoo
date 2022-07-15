@@ -28,6 +28,6 @@ export function deepCopy(obj) {
  * @param {...(keyof T)} properties
  * @returns {Partial<T>}
  */
-export function pluck(object, ...properties) {
+export function pick(object, ...properties) {
     return Object.fromEntries(Object.entries(object).filter(([k]) => properties.includes(k)));
 }
