@@ -895,7 +895,7 @@ exports.PosModel = Backbone.Model.extend({
             // things will happen as a duplicate will be sent next time
             // so we must make sure the server detects and ignores duplicated orders
 
-            var transfer = self._flush_orders([self.db.get_order(order_id)], {timeout:30000, to_invoice:true});
+            var transfer = self._flush_orders([self.db.get_order(order_id)], {timeout:50000, to_invoice:true});
 
             transfer.fail(function(error){
                 invoiced.reject(error);
@@ -999,10 +999,10 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 self.set('failed',false);
                 return server_ids;
-            }).fail(function (type, error){
+            }).fail(function (error, type){
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     //if warning do not need to display traceback!!
-                    if (error.data.exception_type == 'warning') {
+                    if (error.data.exception_type == 'warning' || error.data.exception_type == 'user_error') {
                         delete error.data.debug;
                     }
 
