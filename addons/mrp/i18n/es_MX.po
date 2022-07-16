@@ -1116,6 +1116,8 @@ msgid ""
 "Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
+"Los lotes de componentes deben ser únicos para la producción en masa. "
+"Compruebe la reservación para:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -3079,6 +3081,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"El número de piezas (en la unidad de medida del producto) que se pueden "
+"producir en paralelo (al mismo tiempo) en este centro de trabajo. Por "
+"ejemplo: la capacidad es 5 y necesita producir 10 unidades, por lo que el "
+"tiempo de operación que se indica en la LdM se multiplicará por 2. Sin "
+"embargo, tome en cuenta que ambos tiempos, el anterior y el posterior a "
+"producción, se contarán solo una vez."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3087,6 +3095,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
 msgstr ""
+"Esta debería ser la cantidad más pequeña que se puede producir de este "
+"producto. Si la LdM contiene operaciones, asegúrese de que la capacidad del "
+"centro de trabajo sea precisa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4621,6 +4632,17 @@ msgstr "¡La cantidad a producir debe ser positiva!"
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "El ID de registro a lo que se adjuntó esto."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+"El número de serie seleccionado no corresponde con el que se utilizó en la "
+"orden de fabricación, seleccione otro."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

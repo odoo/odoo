@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -3098,6 +3098,12 @@ msgstr "Solamente puede chatear con empleados que tienen un usuario dedicado."
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "No puede crear departamentos recursivos."
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr "No tiene acceso a este documento."
 
 #. module: hr
 #: code:addons/hr/models/res_config_settings.py:0
