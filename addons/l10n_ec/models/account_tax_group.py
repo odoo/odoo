@@ -4,20 +4,20 @@
 from odoo import fields, models
 
 _TYPE_EC = [
-    ("vat08", "IVA 8%"),
-    ("vat12", "IVA 12%"),
-    ("vat14", "IVA 14%"),
-    ("zero_vat", "IVA 0%"),
-    ("not_charged_vat", "No Grava IVA"),
-    ("exempt_vat", "Exento de IVA"),
-    ("ice", "Impuesto a los Consumos Especiales (ICE)"),
-    ("irbpnr", "Botellas de Plástico (IRBPNR)"),
-    ("withhold_vat_sale", "Retención de IVA en Ventas"),
-    ("withhold_vat_purchase", "Retención de IVA en Compras"),
-    ("withhold_income_sale", "Retención de Renta en Ventas"),
-    ("withhold_income_purchase", "Retención de Renta en Compras"),
-    ("outflows_tax", "Impuesto a la Salida de Divisas"),
-    ("other", "Otros"),
+    ("vat08", "VAT 8%"),
+    ("vat12", "VAT 12%"),
+    ("vat14", "VAT 14%"),
+    ("zero_vat", "VAT 0%"),
+    ("not_charged_vat", "VAT Not Charged"),
+    ("exempt_vat", "VAT Exempt"),
+    ("ice", "Special Consumptions Tax (ICE)"),
+    ("irbpnr", "Plastic Bottles (IRBPNR)"),
+    ("withhold_vat_sale", "VAT Withhold on Sales"),
+    ("withhold_vat_purchase", "VAT Withhold on Purchases"),
+    ("withhold_income_sale", "Profit Withhold on Sales"),
+    ("withhold_income_purchase", "Profit Withhold on Purchases"),
+    ("outflows_tax", "Exchange Outflows"),
+    ("other", "Others"),
 ]
 
 

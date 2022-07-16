@@ -16,4 +16,3 @@ class AccountChartTemplate(models.Model):
                           'l10n_ec_emission': '001',
                           })
         return res
-    

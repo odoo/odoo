@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="l10n_latam_use_documents" position="after">
-                	<!-- Support for purchase liquidation and withholds is added in separated module -->
+                    <!-- Support for purchase liquidation and withholds is added in separated module -->
                     <field name="l10n_ec_entity"
                            placeholder="001"
                            attrs="{'invisible':['|', '|', ('country_code', '!=', 'EC'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('sale'))],
