@@ -3,7 +3,7 @@
 from odoo import api, SUPERUSER_ID
 
 def update_withhold_type(env):
-    # reclasifies withhold taxes into independent tax groups for sales and purchases
+    # reclassifies withhold taxes into independent tax groups for sales and purchases
     env.cr.execute('''
         UPDATE account_tax
         SET tax_group_id=t.id FROM (SELECT id FROM account_tax_group WHERE l10n_ec_type='withhold_vat_sale') AS t
