@@ -56,12 +56,12 @@ msgstr "نشط"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "إضافة وحدة قياس جديدة "
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "إضافة فئة وحدة قياس جديدة "
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -119,7 +119,7 @@ msgstr "الاسم المعروض"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr ""
+msgstr "درزينات "
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -137,6 +137,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"بكم مرة تعد وحدة القياس هذه أكبر من وحدة القياس المرجعية في هذه الفئة: 1 * "
+"(هذه الوحدة) = النسبة * (الوحدة المرجعية) "
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -144,6 +146,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"بكم مرة تعد وحدة القياس هذه أكبر أو أصغر مقارنة بوحدة القياس المرجعية في هذه"
+" الفئة: 1 * (هذه الوحدة) = النسبة * (الوحدة المرجعية) "
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -197,7 +201,7 @@ msgstr "النسبة"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "وحدة قياس المرجع لهذه الفئة "
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -207,7 +211,7 @@ msgstr "دقة التقريب"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "البحث عن وحدة القياس "
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -220,21 +224,23 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"ستكون الكمية المحتسبة من أضعاف هذه القيمة. استخدم 1.0 لوحدة قياس لا يمكن "
+"تقسيمها بعد الآن، كقطعة. "
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "لا يمكن أن يكون معدل التحويل لوحدة قياس 0! "
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "يجب أن يكون للوحدة المرجعية معامل تحويل يساوي 1. "
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "يجب أن تكون دقة التقريب قيمة موجبة. "
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -245,6 +251,9 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"لا تنتمي وحدة القياس %s المحددة في بند الطلب إلى نفس الفئة التي تنتمي إليها "
+"وحدة القياس %s المحددة في المنتج. يرجى تصحيح وحدة القياس المحددة في بند "
+"الطلب أو في المنتج. يجب أن ينتميا لنفس الفئة. "
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -255,7 +264,7 @@ msgstr "النوع"
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "قم بإلغاء تحديد الحقل النشط لتعطيل وحدة قياس دون حذفها. "
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -303,6 +312,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"يمكن تحويل وحدات القياس التي تنتمي إلى \n"
+"            نفس الفئة بين بعضها. على سبيل المثال، في الفئة\n"
+"            <i>'الوقت'</i>، ستكون لديك وحدات القياس التالية:\n"
+"             ساعات، أيام. "
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -316,7 +329,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "يجب أن يكون لفئة وحدة القياس %s وحدة قياس مرجعية واحدة فقط. "
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -353,6 +366,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"عليك تحديد معدل تحويل بين عدة وحدات\n"
+"            قياس ضمن نفس الفئة. "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -362,12 +377,12 @@ msgstr "سم"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr ""
+msgstr "أونصة (الولايات المتحدة الأمريكية)  "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr ""
+msgstr "قدم "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -377,7 +392,7 @@ msgstr "قدم مكعب "
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr ""
+msgstr "غالون (الولايات المحدة الأمريكية) "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -387,7 +402,7 @@ msgstr "في"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr ""
+msgstr "إنش مكعب "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -402,7 +417,7 @@ msgstr "كم"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr ""
+msgstr "رطل "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -417,9 +432,9 @@ msgstr "متر مكعب "
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr ""
+msgstr "أونصة "
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr ""
+msgstr "الكمية (الولايات المتحدة الأمريكية) "
