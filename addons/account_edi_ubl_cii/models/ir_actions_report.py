@@ -13,8 +13,7 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _add_pdf_into_invoice_xml(self, invoice, stream_data):
-        # exclude efff because it's handled by l10n_be_edi
-        format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1']
+        format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1', 'efff_1']
         edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).attachment_id
         for edi_attachment in edi_attachments:
             old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
