@@ -298,7 +298,8 @@ function registerEditionTour(name, options, steps) {
     let tourSteps = steps;
     let url = getClientActionUrl(options.url, !!options.edition);
     if (options.edition) {
-       tourSteps = [{
+        tourSteps = [{
+            content: "Wait for the edit mode to be started",
             trigger: '.o_website_preview.editor_enable.editor_has_snippets',
             timeout: 30000,
             run: () => {}, // It's a check

@@ -151,6 +151,10 @@ export class WebsitePreview extends Component {
         return path;
     }
 
+    get testMode() {
+        return false;
+    }
+
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
             this.iframe.el.addEventListener('OdooFrameContentLoaded', resolve, { once: true });
@@ -215,7 +219,8 @@ export class WebsitePreview extends Component {
         // This is needed for the registerThemeHomepageTour tours
         const { editable, viewXmlid } = this.websiteService.currentWebsite.metadata;
         this.container.el.dataset.viewXmlid = viewXmlid;
-        if (!editable) {
+        // The iframefallback is hidden in test mode
+        if (!editable && this.iframefallback.el) {
             this.iframefallback.el.classList.add('d-none');
         }
 
@@ -280,7 +285,8 @@ export class WebsitePreview extends Component {
         // Chrome Windows/Linux).
         // If the iframe is currently displaying an XML file, the body does not
         // exist, so we do not replace the iframefallback content.
-        if (!this.websiteContext.edition && this.iframe.el.contentDocument.body) {
+        // The iframefallback is hidden in test mode
+        if (!this.websiteContext.edition && this.iframe.el.contentDocument.body && this.iframefallback.el) {
             this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;

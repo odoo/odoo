@@ -152,6 +152,7 @@
         ],
         'web.assets_tests': [
             'website/static/tests/tours/**/*',
+            'website/static/src/client_actions/website_preview/website_preview_test_mode.js',
         ],
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
@@ -168,6 +169,7 @@
             'website/static/src/js/theme_preview_kanban.js',
             'website/static/src/js/theme_preview_form.js',
             'website/static/src/client_actions/*/*.js',
+            ('remove', 'website/static/src/client_actions/website_preview/website_preview_test_mode.js'),
             'website/static/src/client_actions/*/*.scss',
             'website/static/src/components/fields/fields.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',

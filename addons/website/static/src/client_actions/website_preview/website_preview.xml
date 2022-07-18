@@ -15,7 +15,8 @@
     <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }" t-ref="container">
         <div class="o_iframe_container" t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }">
             <BlockIframe/>
-            <iframe t-att-src="iframeFallbackUrl"
+            <iframe t-if="!testMode"
+                t-att-src="iframeFallbackUrl"
                 class="o_ignore_in_tour"
                 t-att-class="{ 'd-none': this.websiteContext.edition }"
                 t-ref="iframefallback"/>
