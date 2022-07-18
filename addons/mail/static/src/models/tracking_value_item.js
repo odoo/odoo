@@ -5,6 +5,10 @@ import { attr, one } from '@mail/model/model_field';
 
 import { format } from 'web.field_utils';
 import { session } from '@web/session';
+import { registry } from '@web/core/registry';
+import { deserializeDateTime } from '@web/core/l10n/dates';
+
+const formatters = registry.category("formatters");
 
 registerModel({
     name: 'TrackingValueItem',
@@ -41,10 +45,7 @@ registerModel({
                     }
                     return format.date(this.value);
                 case 'datetime':
-                    if (this.value) {
-                        return format.datetime(moment.utc(this.value));
-                    }
-                    return format.datetime(this.value);
+                    return formatters.get("datetime")(deserializeDateTime(this.value), { timezone: true });
                 case 'float':
                     return format.float(this.value);
                 case 'integer':

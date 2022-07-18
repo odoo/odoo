@@ -5,7 +5,7 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import { editInput, editSelect, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { editInput, editSelect, patchWithCleanup, patchTimeZone } from "@web/../tests/helpers/utils";
 
 import session from 'web.session';
 import testUtils from 'web.test_utils';
@@ -300,9 +300,10 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
-    // skipWOWL: timezone issue
-    assert.expect(1);
+QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
+    assert.expect(2);
+
+    patchTimeZone(180);
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: false });
@@ -310,6 +311,8 @@ QUnit.skipWOWL('rendering of tracked field of type datetime: from no date and ti
 
     await testUtils.fields.editAndTrigger(document.querySelector('div[name=datetime_field] .o_datepicker .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
     await click('.o_form_button_save');
+    const savedRecord = pyEnv.getData()["mail.test.track.all"].records.find(({id}) => id === mailTestTrackAllId1);
+    assert.strictEqual(savedRecord.datetime_field, '2018-12-14 10:42:28');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
         "Datetime:None12/14/2018 13:42:28",
