@@ -5,6 +5,8 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
+import { getTabableElements } from "@web/core/utils/ui";
+import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
 const { EventBus, useEffect, useRef } = owl;
 
@@ -27,11 +29,58 @@ export function useActiveElement(refName) {
     }
     const uiService = useService("ui");
     const owner = useRef(refName);
+
+    let lastTabableEl, firstTabableEl;
+
+    function trapFocus(e) {
+        switch (getActiveHotkey(e)) {
+            case "tab":
+                if (document.activeElement === lastTabableEl) {
+                    firstTabableEl.focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                break;
+            case "shift+tab":
+                if (document.activeElement === firstTabableEl) {
+                    lastTabableEl.focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                break;
+        }
+    }
+
     useEffect(
         (el) => {
             if (el) {
+                const oldActiveElement = document.activeElement;
                 uiService.activateElement(el);
-                return () => uiService.deactivateElement(el);
+                const tabableEls = getTabableElements(el);
+                if (tabableEls.length === 0 && el.tabIndex < 0) {
+                    /**
+                     * It's possible that the active element is not a focusable element,
+                     * adding tabindex="-1" will allow the element to be focusable.
+                     * Note that, even if the default of tabIndex is -1, for the element to be
+                     * focusable it should be explicitly set.
+                     */
+                    el.tabIndex = -1;
+                }
+                firstTabableEl = tabableEls[0] || el;
+                lastTabableEl = tabableEls[tabableEls.length - 1] || el;
+
+                el.addEventListener("keydown", trapFocus);
+
+                if (!el.contains(document.activeElement)) {
+                    firstTabableEl.focus();
+                }
+                return () => {
+                    uiService.deactivateElement(el);
+                    el.removeEventListener("keydown", trapFocus);
+                    if (el.contains(document.activeElement)) {
+                        oldActiveElement.focus();
+                    }
+                };
             }
         },
         () => [owner.el]
