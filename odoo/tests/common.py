@@ -880,7 +880,7 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, logger, window_size, test_class):
+    def __init__(self, logger, window_size, touch_enabled, test_class):
         self._logger = logger
         self.test_class = test_class
         if websocket is None:
@@ -904,6 +904,7 @@ class ChromeBrowser:
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
         self.window_size = window_size
+        self.touch_enabled = touch_enabled
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
@@ -1043,10 +1044,11 @@ class ChromeBrowser:
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
             '--disable-gpu': '',
-            # required for tests that depends on the jquery.touchSwipe library, which detects
-            # touch capabilities using "'ontouchstart' in window"
-            '--touch-events':'',
         }
+        if self.touch_enabled:
+            # enable Chrome's Touch mode, useful to detect touch capabilities using
+            # "'ontouchstart' in window"
+            switches['--touch-events'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1557,6 +1559,7 @@ class HttpCase(TransactionCase):
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
+    touch_enabled = False
 
     _logger: logging.Logger = None
 
@@ -1587,7 +1590,7 @@ class HttpCase(TransactionCase):
     def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
+            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.touch_enabled, cls.__name__)
             cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
