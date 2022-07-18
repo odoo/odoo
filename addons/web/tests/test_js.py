@@ -40,6 +40,7 @@ class WebSuite(odoo.tests.HttpCase):
 @odoo.tests.tagged('post_install', '-at_install')
 class MobileWebSuite(odoo.tests.HttpCase):
     browser_size = '375x667'
+    touch_enabled = True
 
     def test_mobile_js(self):
         # webclient mobile test suite
