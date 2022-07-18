@@ -122,7 +122,7 @@ class DiscussController(http.Controller):
             'data': {
                 'channelData': channel_sudo.channel_info()[0],
                 'discussPublicViewData': dict({
-                    'channel': [('insert', {'id': channel_sudo.id, 'model': 'mail.channel'})],
+                    'channel': [('insert', {'id': channel_sudo.id})],
                     'shouldDisplayWelcomeViewInitially': channel_sudo.default_display_mode == 'video_full_screen',
                 }, **discuss_public_view_data),
             },

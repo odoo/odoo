@@ -18,7 +18,7 @@ registerModel({
                     hasMemberList: true,
                     hasThreadView: true,
                     hasTopbar: true,
-                    thread: replace(this.channel),
+                    thread: replace(this.channel.thread),
                 }),
                 welcomeView: clear(),
             });
@@ -26,8 +26,8 @@ registerModel({
                 // Change the URL to avoid leaking the invitation link.
                 window.history.replaceState(window.history.state, null, `/discuss/channel/${this.channel.id}${window.location.search}`);
             }
-            if (this.channel.defaultDisplayMode === 'video_full_screen') {
-                await this.channel.toggleCall({ startWithVideo: true });
+            if (this.channel.thread.defaultDisplayMode === 'video_full_screen') {
+                await this.channel.thread.toggleCall({ startWithVideo: true });
                 await this.threadView.callView.activateFullScreen();
             }
         },
@@ -38,7 +38,7 @@ registerModel({
             this.update({
                 threadViewer: clear(),
                 welcomeView: insertAndReplace({
-                    channel: replace(this.channel),
+                    channel: replace(this.channel.thread),
                     isDoFocusGuestNameInput: true,
                     originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
@@ -54,7 +54,7 @@ registerModel({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one('Thread', {
+        channel: one('Channel', {
             readonly: true,
             required: true,
         }),
