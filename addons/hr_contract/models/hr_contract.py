@@ -208,6 +208,8 @@ class Contract(models.Model):
             contract.contract_wage = contract._get_contract_wage()
 
     def _get_contract_wage(self):
+        if not self:
+            return 0
         self.ensure_one()
         return self[self._get_contract_wage_field()]
 
