@@ -283,10 +283,15 @@ class MailThread(models.AbstractModel):
             threads_no_subtype = self.env[self._name]
             for thread in threads:
                 subtype = thread._creation_subtype()
-                if subtype:  # if we have a subtype, post message to notify users from _message_auto_subscribe
-                    thread.sudo().message_post(subtype_id=subtype.id, author_id=self.env.user.partner_id.id)
-                else:
+                if not subtype:
                     threads_no_subtype += thread
+                    continue
+                # if we have a subtype, post message to notify users from _message_auto_subscribe
+                thread.sudo().message_post(
+                    subtype_id=subtype.id, author_id=self.env.user.partner_id.id,
+                    # summary="o_mail_notification" is used to hide the message body in the front-end
+                    body=Markup('<div summary="o_mail_notification"><p>%s</p></div>') % thread._creation_message()
+                )
             if threads_no_subtype:
                 bodies = dict(
                     (thread.id, thread._creation_message())
@@ -424,7 +429,7 @@ class MailThread(models.AbstractModel):
 
     def _creation_message(self):
         """ Get the creation message to log into the chatter at the record's creation.
-        :returns: The message's body to log.
+        :returns: The message's body to log (either plain text or markup safe html).
         """
         self.ensure_one()
         doc_name = self.env['ir.model']._get(self._name).name
