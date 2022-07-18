@@ -458,7 +458,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=32, employee=32):
+        with self.assertQueryCount(__system__=24, employee=26):
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -490,7 +490,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=33, employee=33):
+        with self.assertQueryCount(__system__=25, employee=27):
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
