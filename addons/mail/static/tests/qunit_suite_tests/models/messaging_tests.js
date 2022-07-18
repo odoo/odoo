@@ -72,7 +72,7 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     await messaging.openChat({ partnerId: resPartnerId1 });
     const chat = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).dmChatWithCurrentPartner;
     assert.ok(chat, 'a chat should exist with the target partner');
-    assert.strictEqual(chat.threadViews.length, 1, 'the chat should be displayed in a `ThreadView`');
+    assert.strictEqual(chat.thread.threadViews.length, 1, 'the chat should be displayed in a `ThreadView`');
 });
 
 QUnit.test('openChat: open existing chat for user', async function (assert) {
@@ -92,12 +92,12 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     const { messaging } = await start();
     const existingChat = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).dmChatWithCurrentPartner;
     assert.ok(existingChat, 'a chat should initially exist with the target partner');
-    assert.strictEqual(existingChat.threadViews.length, 0, 'the chat should not be displayed in a `ThreadView`');
+    assert.strictEqual(existingChat.thread.threadViews.length, 0, 'the chat should not be displayed in a `ThreadView`');
 
     await messaging.openChat({ partnerId: resPartnerId1 });
     assert.ok(existingChat, 'a chat should still exist with the target partner');
     assert.strictEqual(existingChat.id, mailChannelId1, 'the chat should be the existing chat');
-    assert.strictEqual(existingChat.threadViews.length, 1, 'the chat should now be displayed in a `ThreadView`');
+    assert.strictEqual(existingChat.thread.threadViews.length, 1, 'the chat should now be displayed in a `ThreadView`');
 });
 
 });

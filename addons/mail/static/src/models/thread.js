@@ -1067,22 +1067,6 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeCorrespondentOfDmChat() {
-            if (
-                this.channel &&
-                this.channel.channel_type === 'chat' &&
-                this.channel.correspondent &&
-                this.model === 'mail.channel' &&
-                this.public === 'private'
-            ) {
-                return replace(this.channel.correspondent);
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
         _computeDiscussSidebarCategoryItem() {
             if (this.model !== 'mail.channel') {
                 return clear();
@@ -1771,10 +1755,6 @@ registerModel({
             inverse: 'thread',
             isCausal: true,
             readonly: true,
-        }),
-        correspondentOfDmChat: one('Partner', {
-            compute: '_computeCorrespondentOfDmChat',
-            inverse: 'dmChatWithCurrentPartner',
         }),
         counter: attr({
             default: 0,

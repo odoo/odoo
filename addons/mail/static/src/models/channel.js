@@ -65,6 +65,20 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeCorrespondentOfDmChat() {
+            if (
+                this.channel_type === 'chat' &&
+                this.correspondent &&
+                this.thread.public === 'private'
+            ) {
+                return replace(this.correspondent);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             return insertAndReplace({
                 id: this.id,
@@ -121,6 +135,10 @@ registerModel({
         channel_type: attr(),
         correspondent: one('Partner', {
             compute: '_computeCorrespondent',
+        }),
+        correspondentOfDmChat: one('Partner', {
+            compute: '_computeCorrespondentOfDmChat',
+            inverse: 'dmChatWithCurrentPartner',
         }),
         id: attr({
             readonly: true,

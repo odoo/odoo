@@ -397,7 +397,7 @@ registerModel({
             compute: '_computeDisplayName',
             default: "",
         }),
-        dmChatWithCurrentPartner: one('Thread', {
+        dmChatWithCurrentPartner: one('Channel', {
             inverse: 'correspondentOfDmChat',
         }),
         email: attr(),
