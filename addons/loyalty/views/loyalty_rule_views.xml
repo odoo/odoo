@@ -87,9 +87,14 @@
                                         </span>
                                         <br/>
                                     </t>
+                                    <t t-else="">
+                                        <br/>
+                                    </t>
                                 </a>
 
                                 <br/>
+
+                                
                                 
                                 <div class="o_kanban_record_title">
                                     <a>Among:</a>
@@ -98,27 +103,27 @@
                                 <t t-if="record.product_ids.raw_value.length > 0">
                                     <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags" class="d-inline"/></div>
                                 </t>
+
                                 <t t-if="record.product_category_id.raw_value">
-                                    <a><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id"/></a>
+                                    <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id"/>
                                     <br/>
                                 </t>
                                 <t t-if="record.product_tag_id.raw_value">
-                                    <a><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="product_tag_id"/></a>
+                                    <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="product_tag_id"/>
                                     <br/>
                                 </t>
                                 <t t-if="record.product_ids.raw_value.length === 0 &amp;&amp; !record.product_category_id.raw_value &amp;&amp; !record.product_tag_id.raw_value">
-                                    <a><i class="fa fa-cube fa-fw" title="Products"/> All Products</a>
+                                    <i class="fa fa-cube fa-fw" title="Products"/> All Products
                                     <br/>
                                 </t>
                                 <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
-                                    <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/></a>
+                                    <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/>
                                 </t>
 
                                 <t t-if="record.code.raw_value">
-                                    <a><i class="fa fa-pencil-square-o fa-fw" title="Code"/>With Code: <field name="code"/></a>
+                                    <i class="fa fa-pencil-square-o fa-fw" title="Code"/>With Code: <field name="code"/>
                                     <br/>
                                 </t>
-                                <!-- <i class="fa fa-gift fa-fw" title="conditions"/> <span>Reward <field name="reward_point_amount"/> <field name="reward_point_name"/> <field name="reward_point_mode"/></span> -->
                             </div>
 
 
