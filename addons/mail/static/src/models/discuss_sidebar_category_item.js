@@ -18,7 +18,7 @@ registerModel({
             switch (this.channelType) {
                 case 'channel':
                 case 'group':
-                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
+                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.channel.avatarCacheKey}`;
                 case 'chat':
                     if (this.channel.correspondent) {
                         return this.channel.correspondent.avatarUrl;

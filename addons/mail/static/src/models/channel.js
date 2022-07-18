@@ -82,6 +82,10 @@ registerModel({
         areAllMembersLoaded: attr({
             compute: '_computeAreAllMembersLoaded',
         }),
+        /**
+         * Cache key to force a reload of the avatar when avatar is changed.
+         */
+        avatarCacheKey: attr(),
         callParticipants: many('ChannelMember', {
             compute: '_computeCallParticipants',
             sort: '_sortCallParticipants',

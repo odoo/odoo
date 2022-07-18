@@ -1006,6 +1006,7 @@ patch(MockServer.prototype, 'mail', {
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
             const channelData = {
+                avatarCacheKey: channel.avatarCacheKey,
                 id: channel.id,
             };
             const res = Object.assign({}, channel, {
@@ -1256,8 +1257,11 @@ patch(MockServer.prototype, 'mail', {
         );
         const channel = this.pyEnv['mail.channel'].searchRead([['id', '=', id]])[0];
         this.pyEnv['bus.bus']._sendone(channel, 'mail.channel/insert', {
-            'id': id,
-            'avatarCacheKey': channel.avatarCacheKey
+            channel: [['insert', {
+                id,
+                avatarCacheKey: channel.avatarCacheKey,
+            }]],
+            id,
         });
     },
     /**

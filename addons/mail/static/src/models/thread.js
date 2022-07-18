@@ -42,9 +42,6 @@ registerModel({
             if ('authorizedGroupFullName' in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
-            if ('avatarCacheKey' in data) {
-                data2.avatarCacheKey = data.avatarCacheKey;
-            }
             if ('channel' in data) {
                 data2.channel = data.channel;
             }
@@ -1751,11 +1748,6 @@ registerModel({
             sort: '_sortAttachmentsInWebClientView',
         }),
         authorizedGroupFullName: attr(),
-        /**
-         * Cache key to force a reload of the avatar when avatar is changed.
-         * It only makes sense for channels.
-         */
-        avatarCacheKey: attr(),
         cache: one('ThreadCache', {
             default: insertAndReplace(),
             inverse: 'thread',

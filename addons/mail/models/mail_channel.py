@@ -284,7 +284,10 @@ class Channel(models.Model):
             for channel in self:
                 notifications.append([channel, 'mail.channel/insert', {
                     'id': channel.id,
-                    'avatarCacheKey': channel._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'avatarCacheKey': channel._get_avatar_cache_key(),
+                        'id': channel.id
+                    })],
                 }])
             self.env['bus.bus']._sendmany(notifications)
         return result
@@ -766,7 +769,6 @@ class Channel(models.Model):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
             info = {
-                'avatarCacheKey': channel._get_avatar_cache_key(),
                 'id': channel.id,
                 'name': channel.name,
                 'defaultDisplayMode': channel.default_display_mode,
@@ -779,7 +781,10 @@ class Channel(models.Model):
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
                 'authorizedGroupFullName': channel.group_public_id.full_name,
-                'channel': [('insert-and-replace', {'id': channel.id})],
+                'channel': [('insert-and-replace', {
+                    'avatarCacheKey': channel._get_avatar_cache_key(),
+                    'id': channel.id
+                })],
             }
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)

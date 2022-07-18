@@ -25,10 +25,13 @@ export class ThreadPreview extends Component {
      * @returns {string}
      */
     image() {
+        if (!this.threadPreviewView.thread.channel) {
+            return '/mail/static/src/img/smiley/avatar.jpg';
+        }
         if (this.threadPreviewView.thread.correspondent) {
             return this.threadPreviewView.thread.correspondent.avatarUrl;
         }
-        return `/web/image/mail.channel/${this.threadPreviewView.thread.id}/avatar_128?unique=${this.threadPreviewView.thread.avatarCacheKey}`;
+        return `/web/image/mail.channel/${this.threadPreviewView.thread.id}/avatar_128?unique=${this.threadPreviewView.thread.channel.avatarCacheKey}`;
     }
 
     /**

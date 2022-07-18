@@ -118,8 +118,8 @@ class TestDiscussFullPerformance(TransactionCase):
             'channels': [
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_general._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_general._get_avatar_cache_key(),
                         'id': self.channel_general.id,
                     })],
                     'channel_type': 'channel',
@@ -146,8 +146,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_public_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_public_1._get_avatar_cache_key(),
                         'id': self.channel_channel_public_1.id,
                     })],
                     'channel_type': 'channel',
@@ -174,8 +174,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_public_2._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_public_2._get_avatar_cache_key(),
                         'id': self.channel_channel_public_2.id,
                     })],
                     'channel_type': 'channel',
@@ -202,8 +202,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_group_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_group_1._get_avatar_cache_key(),
                         'id': self.channel_channel_group_1.id,
                     })],
                     'channel_type': 'channel',
@@ -230,8 +230,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_group_2._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_group_2._get_avatar_cache_key(),
                         'id': self.channel_channel_group_2.id,
                     })],
                     'channel_type': 'channel',
@@ -258,8 +258,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_private_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_private_1._get_avatar_cache_key(),
                         'id': self.channel_channel_private_1.id,
                     })],
                     'channel_type': 'channel',
@@ -286,8 +286,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
-                    'avatarCacheKey': self.channel_channel_private_2._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_channel_private_2._get_avatar_cache_key(),
                         'id': self.channel_channel_private_2.id,
                     })],
                     'channel_type': 'channel',
@@ -314,8 +314,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_group_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_group_1._get_avatar_cache_key(),
                         'id': self.channel_group_1.id,
                     })],
                     'channel_type': 'group',
@@ -381,8 +381,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_chat_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_chat_1._get_avatar_cache_key(),
                         'id': self.channel_chat_1.id,
                     })],
                     'channel_type': 'chat',
@@ -448,8 +448,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_chat_2._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_chat_2._get_avatar_cache_key(),
                         'id': self.channel_chat_2.id,
                     })],
                     'channel_type': 'chat',
@@ -515,8 +515,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_chat_3._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_chat_3._get_avatar_cache_key(),
                         'id': self.channel_chat_3.id,
                     })],
                     'channel_type': 'chat',
@@ -582,8 +582,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_chat_4._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_chat_4._get_avatar_cache_key(),
                         'id': self.channel_chat_4.id,
                     })],
                     'channel_type': 'chat',
@@ -649,8 +649,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_livechat_1._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_livechat_1._get_avatar_cache_key(),
                         'id': self.channel_livechat_1.id,
                     })],
                     'channel_type': 'livechat',
@@ -716,8 +716,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 },
                 {
                     'authorizedGroupFullName': False,
-                    'avatarCacheKey': self.channel_livechat_2._get_avatar_cache_key(),
                     'channel': [('insert-and-replace', {
+                        'avatarCacheKey': self.channel_livechat_2._get_avatar_cache_key(),
                         'id': self.channel_livechat_2.id,
                     })],
                     'channel_type': 'livechat',
