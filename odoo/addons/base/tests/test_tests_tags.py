@@ -377,6 +377,45 @@ class TestSelectorSelection(TransactionCase):
         tags = TagsSelector(__file__)
         self.assertTrue(tags.check(no_tags_obj), 'Test should its absolute file path')
 
+    def test_selector_parser_parameters(self):
+        tags = ','.join([
+            '/base:FakeClassA[failfast=0,filter=-livechat]',
+            #'/base:FakeClassA[filter=[-barecode,-stock_x]]',
+            '/other[notForThisClass]',
+            '-/base:FakeClassA[arg1,arg2]',
+        ])
+        tags = TagsSelector(tags)
+        class FakeClassA(TransactionCase):
+            pass
+
+        fc = FakeClassA()
+        tags.check(fc)
+        self.assertEqual(fc._test_params, [('+', 'failfast=0,filter=-livechat'), ('-', 'arg1,arg2')])
+
+    def test_negative_parameters_translate(self):
+        tags = TagsSelector('.test_negative_parameters_translate')
+        self.assertTrue(tags.check(self), "Sanity check")
+        self.assertEqual(self._test_params, [])
+
+        tags = TagsSelector('/other_module,-.test_negative_parameters_translate[someparam]')
+        self.assertFalse(tags.check(self), "we don't expect a negative parameter to enable the test if not enabled in other tags")
+        self.assertEqual(self._test_params, [])
+
+        tags = TagsSelector('/base,-.test_negative_parameters_translate[someparam]')
+        self.assertTrue(tags.check(self), "A negative parametric tag should not disable the test")
+        self.assertEqual(self._test_params, [('-', 'someparam')])
+
+        tags = TagsSelector('-.test_negative_parameters_translate[someparam]')
+        self.assertTrue(tags.check(self), "we don't expect a single negative parameter to disable the test that should run by edfault")
+        self.assertEqual(self._test_params, [('-', 'someparam')])
+
+        tags = TagsSelector('/base,-.test_negative_parameters_translate')
+        self.assertFalse(tags.check(self), "Sanity check, a negative parametric tag without params still disable the test")
+        self.assertEqual(self._test_params, [])
+
+        tags = TagsSelector('.test_negative_parameters_translate[-someparam]')
+        self.assertTrue(tags.check(self), "A parametric tag should enable test")
+        self.assertEqual(self._test_params, [('+', '-someparam')])
 
 class TestTestClass(BaseCase):
     def test_canonical_tag(self):
