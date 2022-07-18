@@ -375,7 +375,7 @@ class SaleOrderLine(models.Model):
 
     name_short = fields.Char(compute="_compute_name_short")
 
-    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False)
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False, index=True)
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
     def get_sale_order_line_multiline_description_sale(self, product):
