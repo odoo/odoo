@@ -779,6 +779,7 @@ class Channel(models.Model):
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
                 'authorizedGroupFullName': channel.group_public_id.full_name,
+                'channel': [('insert-and-replace', {'id': channel.id})],
             }
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)

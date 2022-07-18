@@ -119,6 +119,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_general._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_general.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.user_root.id,
                     'custom_channel_name': False,
@@ -144,6 +147,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_public_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_public_1.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -169,6 +175,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_public_2._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_public_2.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -194,6 +203,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_group_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_group_1.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -219,6 +231,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_group_2._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_group_2.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -244,6 +259,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_private_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_private_1.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -269,6 +287,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': self.channel_channel_private_2._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_channel_private_2.id,
+                    })],
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -294,6 +315,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_group_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_group_1.id,
+                    })],
                     'channel_type': 'group',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -358,6 +382,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_chat_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_chat_1.id,
+                    })],
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -422,6 +449,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_chat_2._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_chat_2.id,
+                    })],
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -486,6 +516,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_chat_3._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_chat_3.id,
+                    })],
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -550,6 +583,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_chat_4._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_chat_4.id,
+                    })],
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -614,6 +650,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_livechat_1._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_livechat_1.id,
+                    })],
                     'channel_type': 'livechat',
                     'create_uid': self.env.user.id,
                     'custom_channel_name': False,
@@ -678,6 +717,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'authorizedGroupFullName': False,
                     'avatarCacheKey': self.channel_livechat_2._get_avatar_cache_key(),
+                    'channel': [('insert-and-replace', {
+                        'id': self.channel_livechat_2.id,
+                    })],
                     'channel_type': 'livechat',
                     'create_uid': self.env.ref('base.public_user').id,
                     'custom_channel_name': False,

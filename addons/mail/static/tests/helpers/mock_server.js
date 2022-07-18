@@ -1005,7 +1005,11 @@ patch(MockServer.prototype, 'mail', {
                 ['is_read', '=', false],
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
+            const channelData = {
+                id: channel.id,
+            };
             const res = Object.assign({}, channel, {
+                channel: [['insert-and-replace', channelData]],
                 last_message_id: lastMessageId,
                 members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
                 message_needaction_counter: messageNeedactionCounter,

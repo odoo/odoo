@@ -45,6 +45,9 @@ registerModel({
             if ('avatarCacheKey' in data) {
                 data2.avatarCacheKey = data.avatarCacheKey;
             }
+            if ('channel' in data) {
+                data2.channel = data.channel;
+            }
             if ('defaultDisplayMode' in data) {
                 data2.defaultDisplayMode = data.defaultDisplayMode;
             }
@@ -1053,13 +1056,6 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeChannel() {
-            return this.model === 'mail.channel' ? insertAndReplace({ id: this.id }) : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
         _computeComposer() {
             if (this.model === 'mail.box') {
                 return clear();
@@ -1768,7 +1764,6 @@ registerModel({
             required: true,
         }),
         channel: one('Channel', {
-            compute: '_computeChannel',
             inverse: 'thread',
             isCausal: true,
             readonly: true,
