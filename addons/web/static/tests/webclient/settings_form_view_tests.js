@@ -363,14 +363,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 1);
-            assert.notOk(target.querySelector(".custom-control input").disabled);
+            assert.notOk(target.querySelector(".o_field_boolean input").disabled);
             await click(target.querySelector("button[name='4']"));
             assert.strictEqual(
                 target.querySelector(".breadcrumb").textContent,
                 "SettingsOther action"
             );
             await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
-            assert.notOk(target.querySelector(".custom-control input").disabled);
+            assert.notOk(target.querySelector(".o_field_boolean input").disabled);
             assert.verifySteps([
                 "get_views", // initial setting action
                 "onchange", // this is a setting view => create new record
@@ -413,7 +413,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "checkbox should not be checked"
         );
         assert.containsNone(target, ".o_dirty_warning", "warning message should not be shown");
-        await click(target.querySelector(".custom-control input[id=bar]"));
+        await click(target.querySelector(".o_field_boolean input[id=bar]"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
 
         window.dispatchEvent(new Event("beforeunload"));
@@ -469,8 +469,8 @@ QUnit.module("SettingsFormView", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, 1);
-        assert.notOk(target.querySelector(".custom-control input").disabled);
-        await click(target.querySelector(".custom-control input"));
+        assert.notOk(target.querySelector(".o_field_boolean input").disabled);
+        await click(target.querySelector(".o_field_boolean input"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
         await click(target.querySelector(".o_form_button_save"));
 
@@ -610,7 +610,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "checkbox should not be checked"
             );
 
-            await click(target.querySelector(".custom-control input"));
+            await click(target.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 target,
                 ".o_field_boolean input:checked",
@@ -630,7 +630,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "checkbox should not be checked"
             );
 
-            await click(target.querySelector(".custom-control input"));
+            await click(target.querySelector(".o_field_boolean input"));
             await click(target.querySelector("button[name='4']"));
             assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
@@ -639,9 +639,9 @@ QUnit.module("SettingsFormView", (hooks) => {
 
             await click(target.querySelector(".o_form_button_save")); // Form Save button
             assert.containsNone(document.body, ".modal", "should not open a warning dialog");
-            assert.notOk(target.querySelector(".custom-control input").disabled); // Everything must stay in edit
+            assert.notOk(target.querySelector(".o_field_boolean input").disabled); // Everything must stay in edit
 
-            await click(target.querySelector(".custom-control input"));
+            await click(target.querySelector(".o_field_boolean input"));
             await click(target.querySelector(".o_form_button_cancel")); // Form Discard button
             assert.containsNone(document.body, ".modal", "should not open a warning dialog");
         }
@@ -703,7 +703,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "checkbox should not be checked"
             );
 
-            await click(target.querySelector(".custom-control input"));
+            await click(target.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 target,
                 ".o_field_boolean input:checked",
@@ -795,7 +795,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "checkbox should not be checked"
         );
         assert.containsNone(target, ".o_dirty_warning", "warning message should not be shown");
-        await click(target.querySelector(".custom-control input[id=bar]"));
+        await click(target.querySelector(".o_field_boolean input[id=bar]"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
         assert.containsOnce(target, ".o_dirty_warning", "warning message should be shown");
     });
@@ -1008,7 +1008,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "checkbox should not be checked"
             );
 
-            await click(target.querySelector(".custom-control input"));
+            await click(target.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 target,
                 ".o_field_boolean input:checked",
@@ -1085,7 +1085,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "checkbox should not be checked"
         );
 
-        await click(target.querySelector(".custom-control input"));
+        await click(target.querySelector(".o_field_boolean input"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
 
         await click(target.querySelector(".o_form_button_cancel"));

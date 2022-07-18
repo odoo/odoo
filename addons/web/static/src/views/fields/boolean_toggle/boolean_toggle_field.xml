@@ -3,14 +3,13 @@
 
     <t t-name="web.BooleanToggleField" owl="1">
         <CheckBox
-            className="'o_field_boolean o_boolean_toggle'"
+            className="'o_field_boolean o_boolean_toggle form-switch'"
             id="props.id"
             value="props.value or false"
             disabled="isReadonly"
             onChange="props.update"
         >
             &#8203; <!-- Zero width space needed to set height -->
-            <i class="fa" t-att-class="props.value ? 'fa-check-circle' : 'fa-times-circle'" />
         </CheckBox>
     </t>
 

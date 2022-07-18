@@ -5113,7 +5113,7 @@ QUnit.module("Views", (hooks) => {
             "",
             "Char field should yield an empty element"
         );
-        assert.containsOnce(cells[1], ".form-check", "Boolean field has been instantiated");
+        assert.containsOnce(cells[1], ".o-checkbox", "Boolean field has been instantiated");
         assert.notOk(isNaN(cells[2].innerText.trim()), "Intger value is a number");
         assert.ok(cells[3].innerText.trim(), "Many2one field is a string");
 
