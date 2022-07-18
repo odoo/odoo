@@ -67,8 +67,7 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT):
-        send_updates = self._context.get('send_updates', True)
-        url = "/calendar/v3/calendars/primary/events?sendUpdates=%s" % ("all" if send_updates else "none")
+        url = "/calendar/v3/calendars/primary/events?sendUpdates=all"
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
