@@ -387,6 +387,7 @@ class AccountEdiFormat(models.Model):
         """
         invoices = self.env['account.move']
         first_run = True
+        message_to_log = []
 
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
         for body_tree in tree.xpath('//FatturaElettronicaBody'):
@@ -401,10 +402,13 @@ class AccountEdiFormat(models.Model):
             company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
             if not company:
                 elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+                if not elements:
+                    message_to_log.append(_('No Codice Fiscale found in the xml.'))
+                    continue
+                company = self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
                 if not company:
                     # Only invoices with a correct VAT or Codice Fiscale can be imported
-                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
+                    message_to_log.append(_('No company found with VAT or Codice Fiscale like %r.', elements[0].text))
                     continue
 
             # Refund type.
@@ -423,7 +427,10 @@ class AccountEdiFormat(models.Model):
             move_type = self._l10n_it_document_type_mapping().get(document_type, {}).get('import_type', False)
             if not move_type:
                 move_type = "in_invoice"
-                _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+                if not elements:
+                    message_to_log.append(_('Document type not found in xml. Invoice type is set by default.'))
+                else:
+                    message_to_log.append(_('Document type not managed: %s. Invoice type is set by default.', document_type))
 
             simplified = self._l10n_it_is_simplified_document_type(document_type)
 
@@ -433,8 +440,6 @@ class AccountEdiFormat(models.Model):
 
             # move could be a single record (editing) or be empty (new).
             with Form(invoice_ctx) as invoice_form:
-                message_to_log = []
-
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
                 elements = tree.xpath('//CedentePrestatore//IdCodice')
                 partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
@@ -746,8 +751,8 @@ class AccountEdiFormat(models.Model):
                         attachment_ids=[attachment_64.id]
                     )
 
-            for message in message_to_log:
-                new_invoice.message_post(body=message)
+            new_invoice.message_post(body="<strong>" + _("Importing the Fattura attachment:")
+                                          + "</strong><ul><li>" + "</li>\n<li>".join(message_to_log) + "</li></ul>")
 
             invoices += new_invoice
 
