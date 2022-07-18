@@ -997,6 +997,9 @@ body.editor_enable.editor_has_snippets {
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
+                &:not(.dropdown-menu) {
+                    margin-top: $o-we-sidebar-content-field-dropdown-spacing !important;
+                }
 
                 &:not(.o_we_has_pager) {
                     max-height: 600px;
