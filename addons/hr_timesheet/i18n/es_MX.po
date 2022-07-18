@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1190,6 +1190,12 @@ msgid "Timesheets can be logged on this task."
 msgstr "Las hojas de horas se pueden registrar en esta tarea."
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr "Las hojas de horas se deben crear con un empleado activo."
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
 msgstr "Consejo: Registe sus hojas de horas más rápido"
@@ -1352,6 +1358,13 @@ msgstr ""
 "No puede registrar hojas de horas a este proyecto pues está vinculado a una "
 "cuenta analítica inactiva. Por favor, cambie de ciente, o reactive el "
 "proyecto actual en las hojas de horas del proyecto."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
+"No puede establecer un empleado archivado en las hojas de horas existentes."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
