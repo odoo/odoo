@@ -64,7 +64,7 @@ registerModel({
                 route: '/mail/channel/add_guest_as_member',
                 params: {
                     channel_id: this.channel.id,
-                    channel_uuid: this.channel.thread.uuid,
+                    channel_uuid: this.channel.uuid,
                 },
             });
         },

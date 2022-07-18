@@ -219,5 +219,6 @@ registerModel({
         unknownMemberCount: attr({
             compute: '_computeUnknownMemberCount',
         }),
+        uuid: attr(),
     },
 });

@@ -113,9 +113,6 @@ registerModel({
             if ('seen_message_id' in data) {
                 data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id || 0;
             }
-            if ('uuid' in data) {
-                data2.uuid = data.uuid;
-            }
 
             // relations
             if ('members' in data) {
@@ -1185,13 +1182,13 @@ registerModel({
             return ['channel', 'group'].includes(this.channel.channel_type);
         },
         /**
-         * @returns {string}
+         * @returns {string|FieldCommand}
          */
         _computeInvitationLink() {
-            if (!this.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
+            if (!this.channel || !this.channel.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
                 return clear();
             }
-            return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+            return `${window.location.origin}/chat/${this.id}/${this.channel.uuid}`;
         },
         /**
          * @private
@@ -2285,7 +2282,6 @@ registerModel({
             compute: '_computeUrl',
             default: '',
         }),
-        uuid: attr(),
         /**
          * The amount of videos broadcast in the current Rtc call
          */
