@@ -476,7 +476,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== currency_id ====
 
         currency_code_node = tree.find('.//{*}DocumentCurrencyCode')
-        if currency_code_node is not None:
+        if currency_code_node is not None and self.env.user.has_group('base.group_multi_currency'):
             currency = self.env['res.currency'].with_context(active_test=False).search([
                 ('name', '=', currency_code_node.text),
             ], limit=1)

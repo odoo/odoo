@@ -471,7 +471,7 @@ class AccountEdiFormat(models.Model):
 
                 # Currency. <2.1.1.2>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
-                if elements:
+                if elements and self.env.user.has_group('base.group_multi_currency'):
                     currency_str = elements[0].text
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
                     if currency != self.env.company.currency_id and currency.active:

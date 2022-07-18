@@ -503,7 +503,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         # quantity
         invoice_line_form.quantity = billed_qty * qty_factor
-        if product_uom_id is not None:
+        if product_uom_id is not None and not invoice_line_form._get_modifier('product_uom_id', 'invisible'):
             invoice_line_form.product_uom_id = product_uom_id
 
         # price_unit
