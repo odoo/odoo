@@ -31,7 +31,7 @@ class GoogleDrive(models.Model):
     _description = "Google Drive templates config"
 
     def _module_deprecated(self):
-        return GOOGLE_AUTH_DEPRECATION_DATE > fields.Date.today()
+        return GOOGLE_AUTH_DEPRECATION_DATE < fields.Date.today()
 
     def get_google_drive_url(self, res_id, template_id):
         if self._module_deprecated():
