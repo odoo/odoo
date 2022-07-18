@@ -7,6 +7,25 @@ import unittest
 class BaseTestUi(odoo.tests.HttpCase):
 
     def main_flow_tour(self):
+        user = self.env['res.users'].create({
+            'name': 'I am the test machine',
+            'login': 'testmachine',
+            'password': 'testmachine',
+            'groups_id': [
+                (6, 0, self.env.user.groups_id.ids),
+                (4, self.env.ref('account.group_account_manager').id),
+            ],
+        })
+        user.partner_id.email = 'testmachine@test.com'
+        self.env = self.env(user=user)
+        self.company = self.env['res.company'].create({
+            'name': 'testmachine company'
+        })
+        user.write({
+            'company_ids': [(6, 0, [self.company.id])],
+            'company_id': self.company.id,
+        })
+
         # Enable Make to Order
         self.env.ref('stock.route_warehouse0_mto').active = True
 
