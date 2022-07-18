@@ -1,12 +1,12 @@
 odoo.define("website.tour.default_shape_gets_palette_colors", function (require) {
 "use strict";
 
-var tour = require("web_tour.tour");
 const wTourUtils = require('website.tour_utils');
 
-tour.register("default_shape_gets_palette_colors", {
+wTourUtils.registerEditionTour("default_shape_gets_palette_colors", {
     test: true,
-    url: wTourUtils.getClientActionUrl('/', true),
+    url: '/',
+    edition: true,
 }, [
     wTourUtils.dragNDrop({
         id: 's_text_image',
