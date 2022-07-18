@@ -405,7 +405,17 @@ class BaseModel(models.AbstractModel):
         return Markup("<a href=# data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
             self._name, self.id, title or self.display_name)
 
-    # ------------------------------------------------------
+    @api.model
+    def _get_backend_root_menu_ids(self):
+        """ Method meant to be overridden to define the root menu for the model.
+
+        When overriding this method, call super and then add the menu id of your
+        module so that the menu id related to the most specialized will be at the
+        end of the list.
+        """
+        return []
+
+# ------------------------------------------------------
     # CONTROLLERS
     # ------------------------------------------------------
 
