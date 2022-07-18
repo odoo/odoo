@@ -29,7 +29,7 @@
     'author': '1FG',
     'company': 'Food Group Philippines',
     'maintainer': '1FG',
-    "depends": ['base', 'web', 'mail','point_of_sale'],
+    "depends": ['base', 'mail','point_of_sale'],
     "data": [
         'views/icons.xml',
         'views/layout.xml',
