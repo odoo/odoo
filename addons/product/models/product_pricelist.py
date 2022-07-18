@@ -93,7 +93,7 @@ class Pricelist(models.Model):
     def _compute_price_rule_get_items(self, products_qty_partner, date, uom_id, prod_tmpl_ids, prod_ids, categ_ids):
         self.ensure_one()
         # Load all rules
-        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
+        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id', 'active'])
         self.env.cr.execute(
             """
             SELECT
@@ -108,6 +108,7 @@ class Pricelist(models.Model):
                 AND (item.pricelist_id = %s)
                 AND (item.date_start IS NULL OR item.date_start<=%s)
                 AND (item.date_end IS NULL OR item.date_end>=%s)
+                AND (item.active = TRUE)
             ORDER BY
                 item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
             """,
@@ -572,6 +573,9 @@ class PricelistItem(models.Model):
         self.env['product.template'].invalidate_cache(['price'])
         self.env['product.product'].invalidate_cache(['price'])
         return res
+
+    def toggle_active(self):
+        raise ValidationError(_("You cannot disable a pricelist rule, please delete it or archive its pricelist instead."))
 
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
         """Compute the unit price of a product in the context of a pricelist application.
