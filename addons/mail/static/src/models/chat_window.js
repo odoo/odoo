@@ -367,7 +367,10 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasCallButtons() {
-            return Boolean(this.thread) && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+            if (!this.thread || !this.thread.channel) {
+                return clear();
+            }
+            return this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel.channel_type);
         },
         /**
          * @private

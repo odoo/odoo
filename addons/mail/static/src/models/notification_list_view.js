@@ -57,7 +57,8 @@ registerModel({
                 case 'channel': {
                     return replace(this.messaging.models['Thread']
                         .all(thread =>
-                            thread.channel_type === 'channel' &&
+                            thread.channel &&
+                            thread.channel.channel_type === 'channel' &&
                             thread.isPinned &&
                             thread.model === 'mail.channel'
                         )

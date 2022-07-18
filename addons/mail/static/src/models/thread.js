@@ -44,6 +44,7 @@ registerModel({
             }
             if ('channel' in data) {
                 data2.channel = data.channel;
+                data2.model = 'mail.channel';
             }
             if ('defaultDisplayMode' in data) {
                 data2.defaultDisplayMode = data.defaultDisplayMode;
@@ -53,10 +54,6 @@ registerModel({
             }
             if ('model' in data) {
                 data2.model = data.model;
-            }
-            if ('channel_type' in data) {
-                data2.channel_type = data.channel_type;
-                data2.model = 'mail.channel';
             }
             if ('create_uid' in data) {
                 data2.creator = insert({ id: data.create_uid });
@@ -431,8 +428,15 @@ registerModel({
                     limit,
                 },
             });
-            return this.insert(channelsData.map(
-                channelData => this.convertData(channelData)
+            return this.insert(channelsData.map(channelData =>
+                this.messaging.models['Thread'].convertData({
+                    channel: insertAndReplace({
+                        channel_type: channelData.channel_type,
+                        id: channelData.id,
+                    }),
+                    id: channelData.id,
+                    name: channelData.name,
+                })
             ));
         },
         /**
@@ -462,8 +466,8 @@ registerModel({
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return [threads.filter(thread =>
                 !thread.isTemporary &&
-                thread.model === 'mail.channel' &&
-                thread.channel_type === 'channel' &&
+                thread.channel &&
+                thread.channel.channel_type === 'channel' &&
                 thread.displayName &&
                 cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
             )];
@@ -787,7 +791,7 @@ registerModel({
          * Only makes sense if isPendingPinned is set to the desired value.
          */
         async notifyPinStateToServer() {
-            if (this.channel_type === 'channel') {
+            if (this.channel.channel_type === 'channel') {
                 await this.leave();
                 return;
             }
@@ -1064,7 +1068,7 @@ registerModel({
          * @returns {Partner}
          */
         _computeCorrespondent() {
-            if (this.channel_type === 'channel') {
+            if (this.channel && this.channel.channel_type === 'channel') {
                 return clear();
             }
             const correspondents = this.members.filter(partner =>
@@ -1086,7 +1090,8 @@ registerModel({
          */
         _computeCorrespondentOfDmChat() {
             if (
-                this.channel_type === 'chat' &&
+                this.channel &&
+                this.channel.channel_type === 'chat' &&
                 this.correspondent &&
                 this.model === 'mail.channel' &&
                 this.public === 'private'
@@ -1120,10 +1125,10 @@ registerModel({
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel_type === 'chat' && this.correspondent) {
+            if (this.channel && this.channel.channel_type === 'chat' && this.correspondent) {
                 return this.custom_channel_name || this.correspondent.nameOrDisplayName;
             }
-            if (this.channel_type === 'group' && !this.name) {
+            if (this.channel && this.channel.channel_type === 'group' && !this.name) {
                 const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
                 const guestNames = this.guestMembers.map(guest => guest.name);
                 return [...partnerNames, ...guestNames].join(this.env._t(", "));
@@ -1173,10 +1178,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
+         * @returns {boolean|FieldCommand}
          */
         _computeHasCallFeature() {
-            return ['channel', 'chat', 'group'].includes(this.channel_type);
+            if (!this.channel) {
+                return clear();
+            }
+            return ['channel', 'chat', 'group'].includes(this.channel.channel_type);
         },
         /**
          * @private
@@ -1190,17 +1198,20 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasSeenIndicators() {
-            if (this.model !== 'mail.channel') {
-                return false;
+            if (!this.channel) {
+                return clear();
             }
-            return ['chat', 'livechat'].includes(this.channel_type);
+            return ['chat', 'livechat'].includes(this.channel.channel_type);
         },
         /**
         * @private
         * @returns {boolean}
         */
         _computeIsChannelDescriptionChangeable() {
-            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
+            if (!this.channel) {
+                return clear();
+            }
+            return ['channel', 'group'].includes(this.channel.channel_type);
         },
         /**
          * @private
@@ -1218,33 +1229,39 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsChannelRenamable() {
-            return (
-                this.model === 'mail.channel' &&
-                ['chat', 'channel', 'group'].includes(this.channel_type)
-            );
+            if (!this.channel) {
+                return clear();
+            }
+            return ['chat', 'channel', 'group'].includes(this.channel.channel_type);
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasMemberListFeature() {
-            return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
+            if (!this.channel) {
+                return clear();
+            }
+            return ['channel', 'group'].includes(this.channel.channel_type);
         },
         /**
          * @returns {string}
          */
         _computeInvitationLink() {
-            if (!this.uuid || !this.channel_type || this.channel_type === 'chat') {
+            if (!this.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
                 return clear();
             }
             return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
         },
         /**
          * @private
-         * @returns {boolean}
+         * @returns {boolean|FieldCommand}
          */
         _computeIsChatChannel() {
-            return this.channel_type === 'chat' || this.channel_type === 'group';
+            if (!this.channel) {
+                return clear();
+            }
+            return this.channel.channel_type === 'chat' || this.channel.channel_type === 'group';
         },
         /**
          * @private
@@ -1575,7 +1592,7 @@ registerModel({
          * @returns {DiscussSidebarCategory}
          */
         _getDiscussSidebarCategory() {
-            switch (this.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'channel':
                     return this.messaging.discuss.categoryChannel;
                 case 'chat':
@@ -1760,7 +1777,6 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        channel_type: attr(),
         /**
          * States the chat window related to this thread (if any).
          */
@@ -1918,6 +1934,7 @@ registerModel({
          */
         hasMemberListFeature: attr({
             compute: '_computeHasMemberListFeature',
+            default: false,
         }),
         /**
          * States whether there is a server request for joining or leaving the RTC session.
@@ -1958,6 +1975,7 @@ registerModel({
          */
         isChannelDescriptionChangeable: attr({
             compute: '_computeIsChannelDescriptionChangeable',
+            default: false,
         }),
         /**
          * Determines whether this thread can be renamed.
@@ -1965,6 +1983,7 @@ registerModel({
          */
         isChannelRenamable: attr({
             compute: '_computeIsChannelRenamable',
+            default: false,
         }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.

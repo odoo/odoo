@@ -80,7 +80,10 @@ registerModel({
                     return false;
                 }
                 if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel_type);
+                    return (
+                        Boolean(thread.channel) &&
+                        command.channel_types.includes(thread.channel.channel_type)
+                    );
                 }
                 return true;
             })];

@@ -214,7 +214,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeFollowButtonView() {
-            if (this.hasFollowers && this.thread && this.thread.channel_type !== 'chat') {
+            if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
                 return insertAndReplace();
             }
             return clear();

@@ -168,7 +168,7 @@ registerModel({
             // compute seen indicators (if applicable)
             for (const message of messages) {
                 for (const thread of message.threads) {
-                    if (thread.model !== 'mail.channel' || thread.channel_type === 'channel') {
+                    if (!thread.channel || thread.channel.channel_type === 'channel') {
                         // disabled on non-channel threads and
                         // on `channel` channels for performance reasons
                         continue;

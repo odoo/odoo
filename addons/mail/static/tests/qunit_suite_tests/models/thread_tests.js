@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert } from '@mail/model/model_field_command';
+import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -37,7 +37,10 @@ QUnit.test('create (channel)', async function (assert) {
     }));
 
     const thread = messaging.models['Thread'].insert({
-        channel_type: 'channel',
+        channel: insertAndReplace({
+            id: 100,
+            channel_type: 'channel',
+        }),
         id: 100,
         members: insert([{
             email: "john@example.com",
@@ -68,7 +71,7 @@ QUnit.test('create (channel)', async function (assert) {
         model: 'mail.channel',
     }));
     assert.strictEqual(thread.model, 'mail.channel');
-    assert.strictEqual(thread.channel_type, 'channel');
+    assert.strictEqual(thread.channel.channel_type, 'channel');
     assert.strictEqual(thread.id, 100);
     assert.ok(thread.members.includes(partner9));
     assert.ok(thread.members.includes(partner10));
@@ -95,7 +98,10 @@ QUnit.test('create (chat)', async function (assert) {
     }));
 
     const channel = messaging.models['Thread'].insert({
-        channel_type: 'chat',
+        channel: insertAndReplace({
+            id: 200,
+            channel_type: 'chat',
+        }),
         id: 200,
         members: insert({
             email: "demo@example.com",
@@ -117,7 +123,7 @@ QUnit.test('create (chat)', async function (assert) {
         model: 'mail.channel',
     }));
     assert.strictEqual(channel.model, 'mail.channel');
-    assert.strictEqual(channel.channel_type, 'chat');
+    assert.strictEqual(channel.channel.channel_type, 'chat');
     assert.strictEqual(channel.id, 200);
     assert.ok(channel.correspondent);
     assert.strictEqual(partner, channel.correspondent);

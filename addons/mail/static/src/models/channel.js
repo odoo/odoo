@@ -94,6 +94,10 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
         }),
+        /**
+         * Either 'channel', 'chat', 'group', or 'livechat'.
+         */
+        channel_type: attr(),
         id: attr({
             readonly: true,
             required: true,

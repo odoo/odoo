@@ -15,7 +15,7 @@ registerModel({
          * @returns {string}
          */
         _computeAvatarUrl() {
-            switch (this.channelType) {
+            switch (this.channel.channel.channel_type) {
                 case 'channel':
                 case 'group':
                     return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.channel.avatarCacheKey}`;
@@ -31,7 +31,7 @@ registerModel({
          * @returns {integer}
          */
         _computeCategoryCounterContribution() {
-            switch (this.channel.channel_type) {
+            switch (this.channel.channel.channel_type) {
                 case 'channel':
                     return this.channel.message_needaction_counter > 0 ? 1 : 0;
                 case 'chat':
@@ -44,7 +44,7 @@ registerModel({
          * @returns {integer}
          */
         _computeCounter() {
-            switch (this.channelType) {
+            switch (this.channel.channel.channel_type) {
                 case 'channel':
                     return this.channel.message_needaction_counter;
                 case 'chat':
@@ -58,7 +58,7 @@ registerModel({
          */
         _computeHasLeaveCommand() {
             return (
-                ['channel', 'group'].includes(this.channelType) &&
+                ['channel', 'group'].includes(this.channel.channel.channel_type) &&
                 !this.channel.message_needaction_counter &&
                 !this.channel.group_based_subscription
             );
@@ -68,14 +68,14 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasSettingsCommand() {
-            return this.channelType === 'channel';
+            return this.channel.channel.channel_type === 'channel';
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasUnpinCommand() {
-            return this.channelType === 'chat' && !this.channel.localMessageUnreadCounter;
+            return this.channel.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
         },
         /**
          * @private
@@ -99,7 +99,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasThreadIcon() {
-            switch (this.channelType) {
+            switch (this.channel.channel.channel_type) {
                 case 'channel':
                     return ['private', 'public'].includes(this.channel.public);
                 case 'chat':
@@ -119,10 +119,10 @@ registerModel({
          */
         async onClickCommandLeave(ev) {
             ev.stopPropagation();
-            if (this.channel.channel_type !== 'group' && this.channel.creator === this.messaging.currentUser) {
+            if (this.channel.channel.channel_type !== 'group' && this.channel.creator === this.messaging.currentUser) {
                 await this._askAdminConfirmation();
             }
-            if (this.channel.channel_type === 'group') {
+            if (this.channel.channel.channel_type === 'group') {
                 await this._askLeaveGroupConfirmation();
             }
             this.channel.leave();
@@ -272,12 +272,6 @@ registerModel({
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,
-        }),
-        /**
-         * Type of the related channel thread.
-         */
-        channelType: attr({
-            related: 'channel.channel_type',
         }),
     },
 });

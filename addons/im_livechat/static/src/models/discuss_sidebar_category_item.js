@@ -9,7 +9,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeAvatarUrl() {
-        if (this.channelType === 'livechat') {
+        if (this.channel.channel.channel_type === 'livechat') {
             if (this.channel.correspondent && this.channel.correspondent.id > 0) {
                 return this.channel.correspondent.avatarUrl;
             }
@@ -20,7 +20,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeCategoryCounterContribution() {
-        switch (this.channel.channel_type) {
+        switch (this.channel.channel.channel_type) {
             case 'livechat':
                 return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
         }
@@ -30,7 +30,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeCounter() {
-        if (this.channelType === 'livechat') {
+        if (this.channel.channel.channel_type === 'livechat') {
             return this.channel.localMessageUnreadCounter;
         }
         return this._super();
@@ -39,7 +39,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeHasUnpinCommand() {
-        if (this.channelType === 'livechat') {
+        if (this.channel.channel.channel_type === 'livechat') {
             return !this.channel.localMessageUnreadCounter;
         }
         return this._super();
@@ -48,7 +48,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeHasThreadIcon() {
-        if (this.channelType === 'livechat') {
+        if (this.channel.channel.channel_type === 'livechat') {
             return false;
         }
         return this._super();

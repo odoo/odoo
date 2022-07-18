@@ -55,7 +55,7 @@ registerModel({
          */
         _computeActiveItem() {
             const thread = this.messaging.discuss.thread;
-            if (thread && this.supportedChannelTypes.includes(thread.channel_type)) {
+            if (thread && thread.channel && this.supportedChannelTypes.includes(thread.channel.channel_type)) {
                 return insertAndReplace({
                     channel: replace(thread),
                     category: replace(this),

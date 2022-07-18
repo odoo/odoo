@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='root']" position="inside">
-            <t t-elif="thread.channel_type === 'livechat'">
+            <t t-elif="thread.channel and thread.channel.channel_type === 'livechat'">
                 <t t-if="thread.orderedOtherTypingMembers.length > 0">
                     <ThreadTypingIcon
                         className="'o_ThreadIcon_typing'"

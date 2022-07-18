@@ -164,10 +164,7 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -180,11 +177,11 @@ registerModel({
             this.messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
                 partner: insertAndReplace({ id: partner_id }),
-                thread: replace(channel),
+                thread: replace(channel.thread),
             });
             this.messaging.models['MessageSeenIndicator'].insert({
                 message: insertAndReplace({ id: last_message_id }),
-                thread: replace(channel),
+                thread: replace(channel.thread),
             });
         },
         /**
@@ -195,13 +192,13 @@ registerModel({
          * @param {boolean} [payload.open_chat_window] if true, will pin the channel
          */
         _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId, open_chat_window: openChatWindow }) {
-            const channel = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
+            const { channel } = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
             if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
                 this.messaging.notify({
                     message: sprintf(
                         this.env._t("You have been invited to #%s"),
-                        channel.displayName
+                        channel.thread.displayName
                     ),
                     type: 'info',
                 });
@@ -209,8 +206,8 @@ registerModel({
 
             if (openChatWindow) {
                 // open chat upon being invited (if it was not already opened or folded)
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(channel);
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.thread.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(channel.thread);
                 }
             }
         },
@@ -286,13 +283,13 @@ registerModel({
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
+                if (channel.model === 'mail.channel' && channel.channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
+                if (channel.channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
                     this.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -312,10 +309,7 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -329,15 +323,15 @@ registerModel({
                 this.messaging.models['ThreadPartnerSeenInfo'].insert({
                     lastSeenMessage: replace(lastMessage),
                     partner: insertAndReplace({ id: partner_id }),
-                    thread: replace(channel),
+                    thread: replace(channel.thread),
                 });
                 this.messaging.models['MessageSeenIndicator'].insert({
                     message: replace(lastMessage),
-                    thread: replace(channel),
+                    thread: replace(channel.thread),
                 });
             }
             if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
-                channel.update({
+                channel.thread.update({
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
                 });
@@ -649,7 +643,7 @@ registerModel({
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                if (channel.channel_type === 'channel') {
+                if (channel.channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
                     // from component

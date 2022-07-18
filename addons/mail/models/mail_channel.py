@@ -776,14 +776,14 @@ class Channel(models.Model):
                 'uuid': channel.uuid,
                 'state': 'open',
                 'is_minimized': False,
-                'channel_type': channel.channel_type,
                 'public': channel.public,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
                 'authorizedGroupFullName': channel.group_public_id.full_name,
                 'channel': [('insert-and-replace', {
                     'avatarCacheKey': channel._get_avatar_cache_key(),
-                    'id': channel.id
+                    'channel_type': channel.channel_type,
+                    'id': channel.id,
                 })],
             }
             # add last message preview (only used in mobile)
