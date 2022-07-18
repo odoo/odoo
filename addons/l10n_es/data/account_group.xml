@@ -16,6 +16,11 @@
         <field name="code_prefix_start">100</field>
         <field name="name">Capital social</field>
     </record>
+    <record id="account_group_1020" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">10020</field>
+        <field name="name">Capital social cooperativo: socios colaboradores y asociados o adheridos</field>
+    </record>
     <record id="account_group_101" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">101</field>
@@ -55,6 +60,11 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">1044</field>
         <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
+    </record>
+    <record id="account_group_107" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">108</field>
+        <field name="name">Fondo de participaciones y otros fondos subordinados con vencimiento en la liquidación</field>
     </record>
     <record id="account_group_108" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -130,6 +140,11 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">1144</field>
         <field name="name">Reservas por acciones propias aceptadas en garantía</field>
+    </record>
+    <record id="account_group_1145" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">1145</field>
+        <field name="name">Fondo de Reembolso o Actualización</field>
     </record>
     <record id="account_group_115" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -271,6 +286,11 @@
         <field name="code_prefix_start">147</field>
         <field name="name">Provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
     </record>
+    <record id="account_group_148" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">148</field>
+        <field name="name">Fondo de Educación, Formación y Promoción a largo plazo</field>
+    </record>
     <record id="account_group_15" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">15</field>
@@ -281,10 +301,20 @@
         <field name="code_prefix_start">150</field>
         <field name="name">Acciones o participaciones a largo plazo consideradas como pasivos financieros</field>
     </record>
+    <record id="account_group_1502" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">1502</field>
+        <field name="name">Capital social cooperativo a largo plazo considerado pasivo financiero: socios colaboradores y asociados o adheridos</field>
+    </record>
     <record id="account_group_153" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">153</field>
         <field name="name">Desembolsos no exigidos por acciones o participaciones consideradas como pasivos financieros</field>
+    </record>
+    <record id="account_group_1530" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">1530</field>
+        <field name="name">Desembolso no exigidos por Capital social cooperativo considerado como pasivo financiero</field>
     </record>
     <record id="account_group_1533" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -1176,6 +1206,11 @@
         <field name="code_prefix_start">31</field>
         <field name="name">Materias primas</field>
     </record>
+    <record id="account_group_307" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">307</field>
+        <field name="name">Mercaderías adquiridas a socios</field>
+    </record>
     <record id="account_group_310" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">310</field>
@@ -1185,6 +1220,11 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">311</field>
         <field name="name">Materias primas B</field>
+    </record>
+    <record id="account_group_317" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">317</field>
+        <field name="name">Materias primas adquiridas a socios</field>
     </record>
     <record id="account_group_32" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -2126,6 +2166,11 @@
         <field name="code_prefix_start">5297</field>
         <field name="name">Provisión a corto plazo por transacciones con pagos basados en instrumentos de patrimonio</field>
     </record>
+    <record id="account_group_5298" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">5298</field>
+        <field name="name">Fondo de Educacion, Formacion y Promocion a corto plazo</field>
+    </record>
     <record id="account_group_53" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">53</field>
@@ -2731,6 +2776,11 @@
         <field name="code_prefix_start">602</field>
         <field name="name">Compras de otros aprovisionamientos</field>
     </record>
+    <record id="account_group_605" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">605</field>
+        <field name="name">Compras Efectuadas a socios</field>
+    </record>
     <record id="account_group_606" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">606</field>
@@ -2815,6 +2865,11 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">612</field>
         <field name="name">Variación de existencias de otros aprovisionamientos</field>
+    </record>
+    <record id="account_group_617" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">617</field>
+        <field name="name">Variación de existencias adquiridas a socios</field>
     </record>
     <record id="account_group_62" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -2996,6 +3051,11 @@
         <field name="code_prefix_start">6457</field>
         <field name="name">Retribuciones al personal liquidados en efectivo basado en instrumentos de patrimonio</field>
     </record>
+    <record id="account_group_647" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">647</field>
+        <field name="name">Retribución a los socios trabajadores</field>
+    </record>
     <record id="account_group_649" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">649</field>
@@ -3045,6 +3105,11 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">656</field>
         <field name="name">Resultados de operaciones en común</field>
+    </record>
+    <record id="account_group_657" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">657</field>
+        <field name="name">Dotación al Fondo de Educación, Formación y Promoción</field>
     </record>
     <record id="account_group_658" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -3806,6 +3871,11 @@
         <field name="code_prefix_start">733</field>
         <field name="name">Trabajos realizados para el inmovilizado material en curso</field>
     </record>
+    <record id="account_group_637" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">737</field>
+        <field name="name">Trabajos realizados para el Fondo de Educación, Formación y Promoción</field>
+    </record>
     <record id="account_group_74" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">74</field>
@@ -3865,6 +3935,16 @@
         <field name="chart_template_id" ref="account_chart_template_common"/>
         <field name="code_prefix_start">755</field>
         <field name="name">Ingresos por servicios al personal</field>
+    </record>
+    <record id="account_group_756" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">756</field>
+        <field name="name">Ingresos por operaciones con socios</field>
+    </record>
+    <record id="account_group_757" model="account.group.template">
+        <field name="chart_template_id" ref="account_chart_template_coop_common"/>
+        <field name="code_prefix_start">757</field>
+        <field name="name">Ingresos imputables al Fondo de Educación, Formación y Promoción</field>
     </record>
     <record id="account_group_759" model="account.group.template">
         <field name="chart_template_id" ref="account_chart_template_common"/>
