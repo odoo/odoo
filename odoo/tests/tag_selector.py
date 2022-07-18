@@ -1,25 +1,31 @@
 import re
 import logging
 
+from odoo.tools.misc import OrderedSet
+
 _logger = logging.getLogger(__name__)
 
 
 class TagsSelector(object):
     """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'''^
-        ([+-]?)
-        (\*|\w*)
-        (\/[\w\/\.-]+.py)?
-        (?:\/(\w+))?
-        (?::(\w*))?
-        (?:\.(\w*))?
-        $''',re.VERBOSE)  # [-][tag][/module][:class][.method]
+    filter_spec_re = re.compile(r'''
+                                ^
+                                ([+-]?)                     # operator_re
+                                (\*|\w*)                    # tag_re
+                                (\/[\w\/\.-]+.py)?           # file_re
+                                (?:\/(\w+))?                # module_re
+                                (?::(\w*))?                 # test_class_re
+                                (?:\.(\w*))?                # test_method_re
+                                (?:\[(.*)\])?               # parameters
+                                $''', re.VERBOSE)  # [-][tag][/module][:class][.method][[params]]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        filter_specs = {t.strip() for t in spec.split(',') if t.strip()}
+        parts = re.split(r',(?![^\[]*\])', spec)  # split on all comma not inside [] (not followed by ])
+        filter_specs = [t.strip() for t in parts if t.strip()]
         self.exclude = set()
         self.include = set()
+        self.parameters = OrderedSet()
 
         for filter_spec in filter_specs:
             match = self.filter_spec_re.match(filter_spec)
@@ -27,8 +33,9 @@ class TagsSelector(object):
                 _logger.error('Invalid tag %s', filter_spec)
                 continue
 
-            sign, tag, file_path, module, klass, method = match.groups()
+            sign, tag, file_path, module, klass, method, parameters = match.groups()
             is_include = sign != '-'
+            is_exclude = not is_include
 
             if not tag and is_include:
                 # including /module:class.method implicitly requires 'standard'
@@ -38,12 +45,17 @@ class TagsSelector(object):
                 tag = None
             test_filter = (tag, module, klass, method, file_path)
 
+            if parameters:
+                # we could check here that test supports negated parameters
+                self.parameters.add((test_filter, ('-' if is_exclude else '+', parameters)))
+                is_exclude = False
+
             if is_include:
                 self.include.add(test_filter)
-            else:
+            if is_exclude:
                 self.exclude.add(test_filter)
 
-        if self.exclude and not self.include:
+        if (self.exclude or self.parameters) and not self.include:
             self.include.add(('standard', None, None, None, None))
 
     def check(self, test):
@@ -63,6 +75,8 @@ class TagsSelector(object):
             test_module_path = test_module_path.removeprefix(prefix)
         test_module_path = test_module_path.replace('.', '/') + '.py'
 
+        test._test_params = []
+
         def _is_matching(test_filter):
             (tag, module, klass, method, file_path) = test_filter
             if tag and tag not in test_tags:
@@ -80,7 +94,11 @@ class TagsSelector(object):
         if any(_is_matching(test_filter) for test_filter in self.exclude):
             return False
 
-        if any(_is_matching(test_filter) for test_filter in self.include):
-            return True
+        if not any(_is_matching(test_filter) for test_filter in self.include):
+            return False
+        
+        for test_filter, parameter in self.parameters:
+            if _is_matching(test_filter):
+                test._test_params.append(parameter)
 
-        return False
+        return True
