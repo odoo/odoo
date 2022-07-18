@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mass_mail_confirm" model="ir.ui.view">
+        <field name="name">Confirm Mass Mail</field>
+        <field name="model">mass.mail.confirm</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Sending of Mass Mail">
+                <group>
+                    <div>
+                        Some selected invoice cannot be send and/or print because their EDI is not ready. Confirm sending of those who are available ?
+                    </div>
+                    <field name='test_fields'/>
+                </group>
+                <footer>
+                    <button name="action_confirm_sending" string="Yes" type="object" class="oe_highlight" />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
