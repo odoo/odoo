@@ -8,7 +8,7 @@
                     'bg-100': !categoryItem.isActive,
                     'o-active bg-200': categoryItem.isActive,
                     'o-unread': categoryItem.isUnread,
-                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-thread-local-id="categoryItem.channel.localId" t-att-data-thread-name="categoryItem.channel.displayName"
+                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-thread-local-id="categoryItem.channel.thread.localId" t-att-data-thread-name="categoryItem.channel.thread.displayName"
                 t-ref="root"
             >
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar ms-4">
@@ -20,10 +20,10 @@
                     </div>
                 </div>
                 <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': categoryItem.isUnread }">
-                    <t t-esc="categoryItem.channel.displayName"/>
+                    <t t-esc="categoryItem.channel.thread.displayName"/>
                 </span>
                 <div class="o_DiscussSidebarCategoryItem_item flex-grow-1"/>
-                <div t-attf-class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands ms-1 {{ categoryItem.channel and categoryItem.channel.rtcSessions.length ? 'me-1' : 'me-3' }}">
+                <div t-attf-class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands ms-1 {{ categoryItem.channel and categoryItem.channel.thread.rtcSessions.length ? 'me-1' : 'me-3' }}">
                     <t t-if="categoryItem.hasSettingsCommand">
                         <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandSettings fa fa-cog {{ o_DiscussSidebarCategoryItem_hoverItem }}" t-on-click="categoryItem.onClickCommandSettings" title="Channel settings" role="img"/>
                     </t>
@@ -34,8 +34,8 @@
                         <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandUnpin fa fa-times {{ o_DiscussSidebarCategoryItem_hoverItem }} ms-1" t-on-click="categoryItem.onClickCommandUnpin" title="Unpin Conversation" role="img"/>
                     </t>
                 </div>
-                <t t-if="categoryItem.channel and categoryItem.channel.rtcSessions.length">
-                    <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up ms-1 me-3" t-att-class="{ 'o-isCalling text-danger': categoryItem.channel.rtc }"/>
+                <t t-if="categoryItem.channel and categoryItem.channel.thread.rtcSessions.length">
+                    <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up ms-1 me-3" t-att-class="{ 'o-isCalling text-danger': categoryItem.channel.thread.rtc }"/>
                 </t>
                 <t t-if="categoryItem.counter > 0">
                     <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge rounded-pill text-bg-primary ms-1 me-3">

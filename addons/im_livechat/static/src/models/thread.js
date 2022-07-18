@@ -122,14 +122,4 @@ patchRecordMethods('Thread', {
     _computeIsChatChannel() {
         return this.channel && this.channel.channel_type === 'livechat' || this._super();
     },
-    /**
-     * @override
-     */
-    _getDiscussSidebarCategory() {
-        switch (this.channel.channel_type) {
-            case 'livechat':
-                return this.messaging.discuss.categoryLivechat;
-        }
-        return this._super();
-    }
 });

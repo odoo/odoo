@@ -9,9 +9,9 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeAvatarUrl() {
-        if (this.channel.channel.channel_type === 'livechat') {
-            if (this.channel.channel.correspondent && this.channel.channel.correspondent.id > 0) {
-                return this.channel.channel.correspondent.avatarUrl;
+        if (this.channel.channel_type === 'livechat') {
+            if (this.channel.correspondent && this.channel.correspondent.id > 0) {
+                return this.channel.correspondent.avatarUrl;
             }
         }
         return this._super();
@@ -20,9 +20,9 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeCategoryCounterContribution() {
-        switch (this.channel.channel.channel_type) {
+        switch (this.channel.channel_type) {
             case 'livechat':
-                return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
+                return this.channel.thread.localMessageUnreadCounter > 0 ? 1 : 0;
         }
         return this._super();
     },
@@ -30,8 +30,8 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeCounter() {
-        if (this.channel.channel.channel_type === 'livechat') {
-            return this.channel.localMessageUnreadCounter;
+        if (this.channel.channel_type === 'livechat') {
+            return this.channel.thread.localMessageUnreadCounter;
         }
         return this._super();
     },
@@ -39,8 +39,8 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeHasUnpinCommand() {
-        if (this.channel.channel.channel_type === 'livechat') {
-            return !this.channel.localMessageUnreadCounter;
+        if (this.channel.channel_type === 'livechat') {
+            return !this.channel.thread.localMessageUnreadCounter;
         }
         return this._super();
     },
@@ -48,7 +48,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      * @override
      */
     _computeHasThreadIcon() {
-        if (this.channel.channel.channel_type === 'livechat') {
+        if (this.channel.channel_type === 'livechat') {
             return false;
         }
         return this._super();

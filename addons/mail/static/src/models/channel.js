@@ -79,6 +79,23 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeDiscussSidebarCategoryItem() {
+            if (!this.thread.isPinned) {
+                return clear();
+            }
+            if (!this.messaging.discuss) {
+                return clear();
+            }
+            const discussSidebarCategory = this._getDiscussSidebarCategory();
+            if (!discussSidebarCategory) {
+                return clear();
+            }
+            return insertAndReplace({ category: replace(discussSidebarCategory) });
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             return insertAndReplace({
                 id: this.id,
@@ -91,6 +108,22 @@ registerModel({
          */
         _computeUnknownMemberCount() {
             return this.memberCount - this.channelMembers.length;
+        },
+        /**
+         * Returns the discuss sidebar category that corresponds to this channel
+         * type.
+         *
+         * @private
+         * @returns {DiscussSidebarCategory}
+         */
+        _getDiscussSidebarCategory() {
+            switch (this.channel_type) {
+                case 'channel':
+                    return this.messaging.discuss.categoryChannel;
+                case 'chat':
+                case 'group':
+                    return this.messaging.discuss.categoryChat;
+            }
         },
         /**
          * @private
@@ -139,6 +172,16 @@ registerModel({
         correspondentOfDmChat: one('Partner', {
             compute: '_computeCorrespondentOfDmChat',
             inverse: 'dmChatWithCurrentPartner',
+        }),
+        /**
+         * Determines the discuss sidebar category item that displays this
+         * channel.
+         */
+        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
+            compute: '_computeDiscussSidebarCategoryItem',
+            inverse: 'channel',
+            isCausal: true,
+            readonly: true,
         }),
         id: attr({
             readonly: true,

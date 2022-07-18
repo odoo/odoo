@@ -15,13 +15,13 @@ registerModel({
          * @returns {string}
          */
         _computeAvatarUrl() {
-            switch (this.channel.channel.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'channel':
                 case 'group':
-                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.channel.avatarCacheKey}`;
+                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
                 case 'chat':
-                    if (this.channel.channel.correspondent) {
-                        return this.channel.channel.correspondent.avatarUrl;
+                    if (this.channel.correspondent) {
+                        return this.channel.correspondent.avatarUrl;
                     }
             }
             return '/mail/static/src/img/smiley/avatar.jpg';
@@ -31,12 +31,12 @@ registerModel({
          * @returns {integer}
          */
         _computeCategoryCounterContribution() {
-            switch (this.channel.channel.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'channel':
-                    return this.channel.message_needaction_counter > 0 ? 1 : 0;
+                    return this.channel.thread.message_needaction_counter > 0 ? 1 : 0;
                 case 'chat':
                 case 'group':
-                    return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
+                    return this.channel.thread.localMessageUnreadCounter > 0 ? 1 : 0;
             }
         },
         /**
@@ -44,12 +44,12 @@ registerModel({
          * @returns {integer}
          */
         _computeCounter() {
-            switch (this.channel.channel.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'channel':
-                    return this.channel.message_needaction_counter;
+                    return this.channel.thread.message_needaction_counter;
                 case 'chat':
                 case 'group':
-                    return this.channel.localMessageUnreadCounter;
+                    return this.channel.thread.localMessageUnreadCounter;
             }
         },
         /**
@@ -58,9 +58,9 @@ registerModel({
          */
         _computeHasLeaveCommand() {
             return (
-                ['channel', 'group'].includes(this.channel.channel.channel_type) &&
-                !this.channel.message_needaction_counter &&
-                !this.channel.group_based_subscription
+                ['channel', 'group'].includes(this.channel.channel_type) &&
+                !this.channel.thread.message_needaction_counter &&
+                !this.channel.thread.group_based_subscription
             );
         },
         /**
@@ -68,21 +68,21 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasSettingsCommand() {
-            return this.channel.channel.channel_type === 'channel';
+            return this.channel.channel_type === 'channel';
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasUnpinCommand() {
-            return this.channel.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
+            return this.channel.channel_type === 'chat' && !this.channel.thread.localMessageUnreadCounter;
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsActive() {
-            return this.messaging.discuss && this.channel === this.messaging.discuss.thread;
+            return this.messaging.discuss && this.channel.thread === this.messaging.discuss.thread;
         },
         /**
          * @private
@@ -92,16 +92,16 @@ registerModel({
             if (!this.channel) {
                 return clear();
             }
-            return this.channel.localMessageUnreadCounter > 0;
+            return this.channel.thread.localMessageUnreadCounter > 0;
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasThreadIcon() {
-            switch (this.channel.channel.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'channel':
-                    return ['private', 'public'].includes(this.channel.public);
+                    return ['private', 'public'].includes(this.channel.thread.public);
                 case 'chat':
                     return true;
                 case 'group':
@@ -112,20 +112,20 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            this.channel.open();
+            this.channel.thread.open();
         },
         /**
          * @param {MouseEvent} ev
          */
         async onClickCommandLeave(ev) {
             ev.stopPropagation();
-            if (this.channel.channel.channel_type !== 'group' && this.channel.creator === this.messaging.currentUser) {
+            if (this.channel.channel_type !== 'group' && this.channel.thread.creator === this.messaging.currentUser) {
                 await this._askAdminConfirmation();
             }
-            if (this.channel.channel.channel_type === 'group') {
+            if (this.channel.channel_type === 'group') {
                 await this._askLeaveGroupConfirmation();
             }
-            this.channel.leave();
+            this.channel.thread.leave();
         },
         /**
          * Redirects to channel form page when `settings` command is clicked.
@@ -136,7 +136,7 @@ registerModel({
             ev.stopPropagation();
             return this.env.services.action.doAction({
                 type: 'ir.actions.act_window',
-                res_model: this.channel.model,
+                res_model: 'mail.channel',
                 res_id: this.channel.id,
                 views: [[false, 'form']],
                 target: 'current',
@@ -147,7 +147,7 @@ registerModel({
          */
         onClickCommandUnpin(ev) {
             ev.stopPropagation();
-            this.channel.unsubscribe();
+            this.channel.thread.unsubscribe();
         },
         /**
          * @private
@@ -202,7 +202,7 @@ registerModel({
     },
     fields: {
         /**
-         * Image URL for the related channel thread.
+         * Image URL for the related channel.
          */
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
@@ -266,9 +266,9 @@ registerModel({
             compute: '_computeIsUnread',
         }),
         /**
-         * The related channel thread.
+         * The related channel.
          */
-        channel: one('Thread', {
+        channel: one('Channel', {
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,

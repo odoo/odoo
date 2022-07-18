@@ -15,4 +15,13 @@ patchRecordMethods('Channel', {
         }
         return this._super();
     },
+    /**
+     * @override
+     */
+    _getDiscussSidebarCategory() {
+        if (this.channel_type === 'livechat') {
+            return this.messaging.discuss.categoryLivechat;
+        }
+        return this._super();
+    }
 });
