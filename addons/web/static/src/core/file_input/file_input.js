@@ -54,7 +54,7 @@ export class FileInput extends Component {
         if (resModel) {
             params.model = resModel;
         }
-        if (resId) {
+        if (resId !== undefined) {
             params.id = resId;
         }
         const fileData = await this.http.post(route, params, "text");

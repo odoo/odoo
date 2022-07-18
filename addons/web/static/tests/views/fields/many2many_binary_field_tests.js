@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
-import { FileUploader } from "@web/views/fields/file_handler";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
+
+const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -49,18 +51,31 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("Many2ManyBinaryField");
 
     QUnit.test("widget many2many_binary", async function (assert) {
-        assert.expect(23);
+        assert.expect(24);
 
-        patchWithCleanup(FileUploader.prototype, {
-            async onFileChange(ev) {
-                const file = new File([ev.target.value], ev.target.value + ".tiff", {
-                    type: "text/plain",
-                });
-                await this._super({
-                    target: { files: [file] },
-                });
+        const fakeHTTPService = {
+            start() {
+                return {
+                    post: (route, params) => {
+                        assert.strictEqual(route, "/web/binary/upload_attachment");
+                        assert.strictEqual(
+                            params.ufile[0].name,
+                            "fake_file.tiff",
+                            "file is correctly uploaded to the server"
+                        );
+                        const file = {
+                            id: 10,
+                            name: params.ufile[0].name,
+                            mimetype: "text/plain",
+                        };
+                        serverData.models["ir.attachment"].records.push(file);
+                        return JSON.stringify([file]);
+                    },
+                };
             },
-        });
+        };
+        serviceRegistry.add("http", fakeHTTPService);
+
         serverData.views = {
             "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
         };
@@ -130,21 +145,14 @@ QUnit.module("Fields", (hooks) => {
             "/web/dataset/call_kw/ir.attachment/read",
         ]);
 
-        const input = target.querySelector(".o_field_many2many_binary input");
-        // We need to convert the input type since we can't programmatically set
-        // the value of a file input. The patch of the onFileChange will create
-        // a file object to be used by the component.
-        input.setAttribute("type", "text");
-        input.value = "fake_file";
-        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-        await nextTick();
+        // Set and trigger the change of a file for the input
+        const fileInput = target.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(new File(["fake_file"], "fake_file.tiff", { type: "text/plain" }));
+        fileInput.files = dataTransfer.files;
+        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
         await nextTick();
 
-        assert.verifySteps([
-            "/web/dataset/call_kw/ir.attachment/name_create",
-            "/web/dataset/call_kw/ir.attachment/read",
-        ]);
         assert.strictEqual(
             target.querySelector(".o_attachment:nth-child(2) .caption a").textContent,
             "fake_file.tiff",
@@ -154,6 +162,11 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_attachment:nth-child(2) .caption.small a").textContent,
             "tiff",
             "file extension should be correct"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_attachment:nth-child(2) .o_image.o_hover").dataset.mimetype,
+            "text/plain",
+            "preview displays the right mimetype"
         );
 
         // delete the attachment
@@ -170,9 +183,116 @@ QUnit.module("Fields", (hooks) => {
             "there should be only one attachment left"
         );
         assert.verifySteps([
+            "/web/dataset/call_kw/ir.attachment/read",
             "/web/dataset/call_kw/turtle/write",
             "/web/dataset/call_kw/turtle/read",
             "/web/dataset/call_kw/ir.attachment/read",
         ]);
+    });
+
+    QUnit.test("widget many2many_binary displays notification on error", async function (assert) {
+        assert.expect(12);
+
+        const fakeHTTPService = {
+            start() {
+                return {
+                    post: (route, params) => {
+                        assert.strictEqual(route, "/web/binary/upload_attachment");
+                        assert.deepEqual(
+                            [params.ufile[0].name, params.ufile[1].name],
+                            ["good_file.txt", "bad_file.txt"],
+                            "files are correctly sent to the server"
+                        );
+                        const files = [
+                            {
+                                id: 10,
+                                name: params.ufile[0].name,
+                                mimetype: "text/plain",
+                            },
+                            {
+                                id: 11,
+                                name: params.ufile[1].name,
+                                mimetype: "text/plain",
+                                error: `Error on file: ${params.ufile[1].name}`,
+                            },
+                        ];
+                        serverData.models["ir.attachment"].records.push(files[0]);
+                        return JSON.stringify(files);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("http", fakeHTTPService);
+
+        serverData.views = {
+            "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
+        };
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "turtle",
+            arch: `
+                <form>
+                    <group>
+                        <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                    </group>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(
+            target,
+            "div.o_field_widget .oe_fileupload",
+            "there should be the attachment widget"
+        );
+        assert.containsOnce(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachments",
+            "there should be one attachment"
+        );
+        assert.containsNone(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attach",
+            "there should not be an Add button (readonly)"
+        );
+        assert.containsNone(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
+            "there should not be a Delete button (readonly)"
+        );
+
+        // to edit mode
+        await click(target, ".o_form_button_edit");
+
+        // Set and trigger the import of 2 files in the input
+        const fileInput = target.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(new File(["good_file"], "good_file.txt", { type: "text/plain" }));
+        dataTransfer.items.add(new File(["bad_file"], "bad_file.txt", { type: "text/plain" }));
+        fileInput.files = dataTransfer.files;
+        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+        await nextTick();
+
+        assert.strictEqual(
+            target.querySelector(".o_attachment:nth-child(2) .caption a").textContent,
+            "good_file.txt",
+            'value of attachment should be "good_file.txt"'
+        );
+        assert.containsOnce(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachments",
+            "there should be only one attachment uploaded"
+        );
+        assert.containsOnce(target, ".o_notification");
+        assert.strictEqual(
+            target.querySelector(".o_notification_title").textContent,
+            "Uploading error"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_notification_content").textContent,
+            "Error on file: bad_file.txt"
+        );
+        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
     });
 });
