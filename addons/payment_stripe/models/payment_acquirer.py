@@ -313,7 +313,10 @@ class PaymentAcquirer(models.Model):
             'jsonrpc': '2.0',
             'id': uuid.uuid4().hex,
             'method': 'call',
-            'params': {'payload': payload},
+            'params': {
+                'payload': payload,  # Stripe data.
+                'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=payload),
+            },
         }
         url = url_join(PROXY_URL, f'{version}/{endpoint}')
         try:
@@ -336,3 +339,17 @@ class PaymentAcquirer(models.Model):
             raise ValidationError(_("Stripe Proxy error: %(error)s", error=error_data['message']))
 
         return response_content.get('result', {})
+
+    def _stripe_prepare_proxy_data(self, stripe_payload=None):
+        """ Prepare the contextual data passed to the proxy when making a request.
+
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
+        Note: self.ensure_one()
+
+        :param dict stripe_payload: The part of the request payload to be forwarded to Stripe.
+        :return: The proxy data.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        return {}
