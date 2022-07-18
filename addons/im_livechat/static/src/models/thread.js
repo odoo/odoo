@@ -110,15 +110,6 @@ patchRecordMethods('Thread', {
     /**
      * @override
      */
-    _computeHasMemberListFeature() {
-        if (this.channel && this.channel.channel_type === 'livechat') {
-            return true;
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
     _computeIsChatChannel() {
         return this.channel && this.channel.channel_type === 'livechat' || this._super();
     },

@@ -94,6 +94,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasMemberListFeature() {
+            const typesOfChannelWithMemberListFeature = new Set([
+                'channel',
+                'group',
+            ]);
+            return typesOfChannelWithMemberListFeature.has(this.channel_type);
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeInvitationLink() {
@@ -198,6 +209,13 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
             readonly: true,
+        }),
+        /**
+         * Determines whether it makes sense for this channel to have a member
+         * list.
+         */
+        hasMemberListFeature: attr({
+            compute: '_computeHasMemberListFeature',
         }),
         id: attr({
             readonly: true,

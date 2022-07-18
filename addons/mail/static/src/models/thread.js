@@ -1173,16 +1173,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeHasMemberListFeature() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['channel', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
          * @returns {boolean|FieldCommand}
          */
         _computeIsChatChannel() {
@@ -1817,13 +1807,6 @@ registerModel({
          */
         hasInviteFeature: attr({
             compute: '_computeHasInviteFeature',
-        }),
-        /**
-         * Determines whether it makes sense for this thread to have a member list.
-         */
-        hasMemberListFeature: attr({
-            compute: '_computeHasMemberListFeature',
-            default: false,
         }),
         /**
          * States whether there is a server request for joining or leaving the RTC session.

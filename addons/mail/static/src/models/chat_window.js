@@ -347,7 +347,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeChannelMemberListView() {
-            if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
+            if (this.thread && this.thread.channel && this.thread.channel.hasMemberListFeature && this.isMemberListOpened) {
                 return insertAndReplace();
             }
             return clear();
@@ -640,7 +640,7 @@ registerModel({
         }),
         /**
          * Determines whether the member list of this chat window is opened.
-         * Only makes sense if this thread hasMemberListFeature is true.
+         * Only makes sense if this channel hasMemberListFeature is true.
          */
         isMemberListOpened: attr({
             default: false,

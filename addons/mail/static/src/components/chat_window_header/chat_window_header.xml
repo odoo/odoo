@@ -45,12 +45,12 @@
                             </div>
                         </t>
                     </t>
-                    <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and !chatWindow.isMemberListOpened">
+                    <t t-if="chatWindow.thread and chatWindow.thread.channel and chatWindow.thread.channel.hasMemberListFeature and !chatWindow.isMemberListOpened">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
-                    <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
+                    <t t-if="chatWindow.thread and chatWindow.thread.channel and chatWindow.thread.channel.hasMemberListFeature and chatWindow.isMemberListOpened">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList">
                             <i class="fa fa-users"/>
                         </div>

@@ -97,7 +97,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeChannelMemberListView() {
-            if (this.thread && this.thread.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
+            if (this.thread && this.thread.channel && this.thread.channel.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
                 return insertAndReplace();
             }
             return clear();
@@ -366,7 +366,7 @@ registerModel({
         }),
         /**
          * Determines whether this thread viewer has a member list.
-         * Only makes sense if thread.hasMemberListFeature is true.
+         * Only makes sense if channel.hasMemberListFeature is true.
          */
         hasMemberList: attr({
             related: 'threadViewer.hasMemberList',
