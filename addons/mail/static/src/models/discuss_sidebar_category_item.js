@@ -20,8 +20,8 @@ registerModel({
                 case 'group':
                     return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.channel.avatarCacheKey}`;
                 case 'chat':
-                    if (this.channel.correspondent) {
-                        return this.channel.correspondent.avatarUrl;
+                    if (this.channel.channel.correspondent) {
+                        return this.channel.channel.correspondent.avatarUrl;
                     }
             }
             return '/mail/static/src/img/smiley/avatar.jpg';

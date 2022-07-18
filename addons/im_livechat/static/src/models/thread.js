@@ -65,11 +65,11 @@ patchModelMethods('Thread', {
                     )
                 );
                 data2.members.push(link(partner));
-                data2.correspondent = replace(partner);
+                data2.channel[0][1].correspondent = replace(partner);
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(insert(partnerData));
-                data2.correspondent = insert(partnerData);
+                data2.channel[0][1].correspondent = insert(partnerData);
             }
         }
         return data2;
@@ -89,22 +89,12 @@ patchRecordMethods('Thread', {
     /**
      * @override
      */
-    _computeCorrespondent() {
-        if (this.channel && this.channel.channel_type === 'livechat') {
-            // livechat correspondent never change: always the public member.
-            return;
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
     _computeDisplayName() {
-        if (this.channel && this.channel.channel_type === 'livechat' && this.correspondent) {
-            if (this.correspondent.country) {
-                return `${this.correspondent.nameOrDisplayName} (${this.correspondent.country.name})`;
+        if (this.channel && this.channel.channel_type === 'livechat' && this.channel.correspondent) {
+            if (this.channel.correspondent.country) {
+                return `${this.channel.correspondent.nameOrDisplayName} (${this.channel.correspondent.country.name})`;
             }
-            return this.correspondent.nameOrDisplayName;
+            return this.channel.correspondent.nameOrDisplayName;
         }
         return this._super();
     },

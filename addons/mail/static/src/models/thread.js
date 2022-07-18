@@ -1065,38 +1065,17 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Partner}
-         */
-        _computeCorrespondent() {
-            if (this.channel && this.channel.channel_type === 'channel') {
-                return clear();
-            }
-            const correspondents = this.members.filter(partner =>
-                partner !== this.messaging.currentPartner
-            );
-            if (correspondents.length === 1) {
-                // 2 members chat
-                return replace(correspondents[0]);
-            }
-            if (this.members.length === 1) {
-                // chat with oneself
-                return replace(this.members[0]);
-            }
-            return clear();
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeCorrespondentOfDmChat() {
             if (
                 this.channel &&
                 this.channel.channel_type === 'chat' &&
-                this.correspondent &&
+                this.channel.correspondent &&
                 this.model === 'mail.channel' &&
                 this.public === 'private'
             ) {
-                return replace(this.correspondent);
+                return replace(this.channel.correspondent);
             }
             return clear();
         },
@@ -1125,8 +1104,8 @@ registerModel({
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel && this.channel.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.correspondent.nameOrDisplayName;
+            if (this.channel && this.channel.channel_type === 'chat' && this.channel.correspondent) {
+                return this.custom_channel_name || this.channel.correspondent.nameOrDisplayName;
             }
             if (this.channel && this.channel.channel_type === 'group' && !this.name) {
                 const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
@@ -1792,9 +1771,6 @@ registerModel({
             inverse: 'thread',
             isCausal: true,
             readonly: true,
-        }),
-        correspondent: one('Partner', {
-            compute: '_computeCorrespondent',
         }),
         correspondentOfDmChat: one('Partner', {
             compute: '_computeCorrespondentOfDmChat',

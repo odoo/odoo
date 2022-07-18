@@ -79,7 +79,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.thread.correspondent && this.thread.correspondent.isImStatusSet ? insertAndReplace() : clear();
+            return this.thread.channel.correspondent && this.thread.channel.correspondent.isImStatusSet ? insertAndReplace() : clear();
         },
     },
     fields: {

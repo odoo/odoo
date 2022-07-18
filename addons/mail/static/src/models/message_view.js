@@ -244,7 +244,8 @@ registerModel({
             if (
                 this.messageListViewMessageViewItemOwner &&
                 this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.correspondent === this.message.author
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel &&
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.correspondent === this.message.author
             ) {
                 return false;
             }

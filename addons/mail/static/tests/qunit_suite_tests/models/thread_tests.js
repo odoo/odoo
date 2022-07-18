@@ -125,7 +125,7 @@ QUnit.test('create (chat)', async function (assert) {
     assert.strictEqual(channel.model, 'mail.channel');
     assert.strictEqual(channel.channel.channel_type, 'chat');
     assert.strictEqual(channel.id, 200);
-    assert.ok(channel.correspondent);
+    assert.ok(channel.channel.correspondent);
     assert.strictEqual(partner, channel.correspondent);
     assert.strictEqual(partner.email, "demo@example.com");
     assert.strictEqual(partner.id, 5);

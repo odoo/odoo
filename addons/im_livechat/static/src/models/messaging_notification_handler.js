@@ -9,10 +9,7 @@ patchRecordMethods('MessagingNotificationHandler', {
      * @override
      */
     _handleNotificationChannelMemberTypingStatus({ channel_id, is_typing, livechat_username, partner_id, partner_name }) {
-        const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-            id: channel_id,
-            model: 'mail.channel',
-        });
+        const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channel_id });
         if (!channel) {
             return;
         }

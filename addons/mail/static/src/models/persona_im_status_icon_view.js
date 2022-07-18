@@ -37,10 +37,10 @@ registerModel({
                 return replace(this.messaging.partnerRoot.persona);
             }
             if (this.threadNeedactionPreviewViewOwner) {
-                return replace(this.threadNeedactionPreviewViewOwner.thread.correspondent.persona);
+                return replace(this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona);
             }
             if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread.correspondent.persona);
+                return replace(this.threadPreviewViewOwner.thread.channel.correspondent.persona);
             }
             return clear();
         },

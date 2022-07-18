@@ -10,8 +10,8 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      */
     _computeAvatarUrl() {
         if (this.channel.channel.channel_type === 'livechat') {
-            if (this.channel.correspondent && this.channel.correspondent.id > 0) {
-                return this.channel.correspondent.avatarUrl;
+            if (this.channel.channel.correspondent && this.channel.channel.correspondent.id > 0) {
+                return this.channel.channel.correspondent.avatarUrl;
             }
         }
         return this._super();

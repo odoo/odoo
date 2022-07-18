@@ -271,8 +271,8 @@ registerModel({
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.correspondent &&
-                channel.correspondent === this.messaging.partnerRoot
+                channel.channel.correspondent &&
+                channel.channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();

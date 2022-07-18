@@ -28,8 +28,8 @@ export class ThreadPreview extends Component {
         if (!this.threadPreviewView.thread.channel) {
             return '/mail/static/src/img/smiley/avatar.jpg';
         }
-        if (this.threadPreviewView.thread.correspondent) {
-            return this.threadPreviewView.thread.correspondent.avatarUrl;
+        if (this.threadPreviewView.thread.channel.correspondent) {
+            return this.threadPreviewView.thread.channel.correspondent.avatarUrl;
         }
         return `/web/image/mail.channel/${this.threadPreviewView.thread.id}/avatar_128?unique=${this.threadPreviewView.thread.channel.avatarCacheKey}`;
     }

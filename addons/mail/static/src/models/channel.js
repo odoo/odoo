@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one, many } from '@mail/model/model_field';
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Channel',
@@ -39,6 +39,27 @@ registerModel({
                 callParticipants.push(rtcSession.channelMember);
             }
             return replace(callParticipants);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeCorrespondent() {
+            if (this.channel_type === 'channel') {
+                return clear();
+            }
+            const correspondents = this.thread.members.filter(partner =>
+                partner !== this.messaging.currentPartner
+            );
+            if (correspondents.length === 1) {
+                // 2 members chat
+                return replace(correspondents[0]);
+            }
+            if (this.thread.members.length === 1) {
+                // chat with oneself
+                return replace(this.thread.members[0]);
+            }
+            return clear();
         },
         /**
          * @private
@@ -98,6 +119,9 @@ registerModel({
          * Either 'channel', 'chat', 'group', or 'livechat'.
          */
         channel_type: attr(),
+        correspondent: one('Partner', {
+            compute: '_computeCorrespondent',
+        }),
         id: attr({
             readonly: true,
             required: true,
