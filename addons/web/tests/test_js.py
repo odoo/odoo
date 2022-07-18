@@ -6,6 +6,7 @@ from contextlib import suppress
 
 import odoo.tests
 from odoo.tools.misc import file_open
+from werkzeug.urls import url_quote_plus
 
 RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 
@@ -25,12 +26,72 @@ def qunit_error_checker(message):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class WebSuite(odoo.tests.HttpCase):
+class WebsuiteCommon(odoo.tests.HttpCase):
+    def get_filter(self, test_params):
+        positive = []
+        negative = []
+        for sign, param in test_params:
+            filters = param.split(',')
+            for filter in filters:
+                filter = filter.strip()
+                if not filter:
+                    continue
+                negate = sign == '-'
+                if filter.startswith('-'):
+                    negate = not negate
+                    filter = filter[1:]
+                if negate:
+                    negative.append(f'({re.escape(filter)}.*)')
+                else:
+                    positive.append(f'({re.escape(filter)}.*)')
+        filter = ''
+        if positive or negative:
+            positive_re = '|'.join(positive) or '.*'
+            negative_re = '|'.join(negative)
+            negative_re = f'(?!{negative_re})' if negative_re else ''
+            filter = f'^({negative_re})({positive_re})$'
+        return filter
+
+    def test_get_filter(self):
+        f1 = self.get_filter([('+', 'utils,mail,-utils > bl1,-utils > bl2')])
+        f2 = self.get_filter([('+', 'utils'), ('-', 'utils > bl1,utils > bl2'), ('+', 'mail')])
+        for f in (f1, f2):
+            self.assertRegex('utils', f)
+            self.assertRegex('mail', f)
+            self.assertRegex('utils > something', f)
+
+            self.assertNotRegex('utils > bl1', f)
+            self.assertNotRegex('utils > bl2', f)
+            self.assertNotRegex('web', f)
+
+        f2 = self.get_filter([('+', '-utils > bl1,-utils > bl2')])
+        f3 = self.get_filter([('-', 'utils > bl1,utils > bl2')])
+        for f in (f2, f3):
+            self.assertRegex('utils', f)
+            self.assertRegex('mail', f)
+            self.assertRegex('utils > something', f)
+            self.assertRegex('web', f)
+
+            self.assertNotRegex('utils > bl1', f)
+            self.assertNotRegex('utils > bl2', f)
+
+    def get_filter_param(self):
+        filter_param = ''
+        filter = self.get_filter(self._test_params)
+        if filter:
+            url_filter = url_quote_plus(filter)
+            filter_param = f'&filter=/{url_filter}/'
+        return filter_param
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(WebsuiteCommon):
 
     @odoo.tests.no_retry
     def test_js(self):
+        filter_param = self.get_filter_param()
         # webclient desktop test suite
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
+        self.browser_js('/web/tests?mod=web%s' % filter_param, "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
@@ -57,10 +118,11 @@ class WebSuite(odoo.tests.HttpCase):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class MobileWebSuite(odoo.tests.HttpCase):
+class MobileWebSuite(WebsuiteCommon):
     browser_size = '375x667'
     touch_enabled = True
 
     def test_mobile_js(self):
+        filter_param = self.get_filter_param()
         # webclient mobile test suite
-        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
+        self.browser_js('/web/tests/mobile?mod=web%s' % filter_param, "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
