@@ -3,6 +3,7 @@
 
 import re
 import odoo.tests
+from werkzeug.urls import url_quote_plus
 
 RE_ONLY = re.compile('QUnit\.only\(')
 
@@ -11,8 +12,30 @@ RE_ONLY = re.compile('QUnit\.only\(')
 class WebSuite(odoo.tests.HttpCase):
 
     def test_js(self):
+        # this is just a poc only working if positive tags are before negative tags
+        # usually only negative or positive tags should be used together
+        positive = []
+        negative = []
+        for param in self._test_params:
+            for filter in param.split(','):
+                if not filter:
+                    continue
+                if filter.startswith('-'):
+                    filter = filter[1:]
+                    negative.append(f'(?!.*{re.escape(filter)})')
+                else:
+                    positive.append(f'(.*{re.escape(filter)})')
+
+        filter_param = ''
+        if positive or negative:
+            positive = '|'.join(positive)
+            negative = ''.join(negative)
+            filter = '^({positive}){negative}.*$'
+            url_filter = url_quote_plus(filter)
+            filter_param = f'&filter=/{url_filter}/'
+
         # webclient desktop test suite
-        self.phantom_js('/web/tests?mod=web&failfast', "", "", login='admin', timeout=1800)
+        self.phantom_js('/web/tests?mod=web&failfast%s' % filter_param, "", "", login='admin', timeout=1800)
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
