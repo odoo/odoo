@@ -59,7 +59,11 @@ const MassMailingFullWidthFormController = FormController.extend({
         } else {
             const ref = $iframeDoc.find('#iframe_target')[0];
             if (ref) {
-                this.$iframe.height(Math.max(ref.scrollHeight + VERTICAL_OFFSET, minHeight));
+                this.$iframe.css({
+                    height: this._isFullScreen()
+                        ? $(window).height()
+                        : Math.max(ref.scrollHeight + VERTICAL_OFFSET, minHeight),
+                });
             }
         }
     },
@@ -77,7 +81,6 @@ const MassMailingFullWidthFormController = FormController.extend({
         const isFullscreen =  this._isFullScreen();
         if (isFullscreen) {
             $sidebar.height(windowHeight);
-            this.$iframe.height(windowHeight);
             $sidebar.css({
                 top: '',
                 bottom: '',
