@@ -46,9 +46,6 @@ registerModel({
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
             }
-            if ('defaultDisplayMode' in data) {
-                data2.defaultDisplayMode = data.defaultDisplayMode;
-            }
             if ('description' in data) {
                 data2.description = data.description;
             }
@@ -1764,12 +1761,6 @@ registerModel({
             isCausal: true,
         }),
         custom_channel_name: attr(),
-        /**
-         * Determines the default display mode of this channel. Should contain
-         * either no value (to display the chat), or 'video_full_screen' to
-         * start a call in full screen.
-         */
-        defaultDisplayMode: attr(),
         /**
          * States the description of this thread. Only applies to channels.
          */

@@ -94,7 +94,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeCallDemoView() {
-            return (this.channel && this.channel.thread.defaultDisplayMode === 'video_full_screen')
+            return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
                 ? insertAndReplace()
                 : clear();
         },

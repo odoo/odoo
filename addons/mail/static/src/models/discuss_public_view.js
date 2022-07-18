@@ -26,7 +26,7 @@ registerModel({
                 // Change the URL to avoid leaking the invitation link.
                 window.history.replaceState(window.history.state, null, `/discuss/channel/${this.channel.id}${window.location.search}`);
             }
-            if (this.channel.thread.defaultDisplayMode === 'video_full_screen') {
+            if (this.channel.defaultDisplayMode === 'video_full_screen') {
                 await this.channel.thread.toggleCall({ startWithVideo: true });
                 await this.threadView.callView.activateFullScreen();
             }

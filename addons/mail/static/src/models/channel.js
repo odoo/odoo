@@ -174,6 +174,12 @@ registerModel({
             inverse: 'dmChatWithCurrentPartner',
         }),
         /**
+         * Determines the default display mode of this channel. Should contain
+         * either no value (to display the chat), or 'video_full_screen' to
+         * start a call in full screen.
+         */
+        defaultDisplayMode: attr(),
+        /**
          * Determines the discuss sidebar category item that displays this
          * channel.
          */

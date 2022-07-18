@@ -1008,6 +1008,7 @@ patch(MockServer.prototype, 'mail', {
             const channelData = {
                 avatarCacheKey: channel.avatarCacheKey,
                 channel_type: channel.channel_type,
+                defaultDisplayMode: channel.default_display_mode,
                 id: channel.id,
             };
             const res = Object.assign({}, channel, {

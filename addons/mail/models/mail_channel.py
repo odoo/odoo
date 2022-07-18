@@ -771,7 +771,6 @@ class Channel(models.Model):
             info = {
                 'id': channel.id,
                 'name': channel.name,
-                'defaultDisplayMode': channel.default_display_mode,
                 'description': channel.description,
                 'uuid': channel.uuid,
                 'state': 'open',
@@ -783,6 +782,7 @@ class Channel(models.Model):
                 'channel': [('insert-and-replace', {
                     'avatarCacheKey': channel._get_avatar_cache_key(),
                     'channel_type': channel.channel_type,
+                    'defaultDisplayMode': channel.default_display_mode,
                     'id': channel.id,
                 })],
             }
