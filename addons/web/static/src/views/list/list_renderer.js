@@ -1473,14 +1473,20 @@ export class ListRenderer extends Component {
 
         this.tableRef.el.querySelector("tbody").classList.remove("o_keyboard_navigation");
 
-        if (this.tableRef.el.contains(ev.target)) {
-            return; // ignore clicks inside the table, they are handled directly by the renderer
+        const target = ev.target;
+        if (
+            this.tableRef.el.contains(target) &&
+            (target.closest(".o_data_row") || target.closest(".o_column_sortable"))
+        ) {
+            // ignore clicks inside the table that are originating from a record row
+            // as they are handled directly by the renderer.
+            return;
         }
         if (this.activeElement !== this.uiService.activeElement) {
             return;
         }
         // Legacy DatePicker
-        if (ev.target.closest(".daterangepicker")) {
+        if (target.closest(".daterangepicker")) {
             return;
         }
         this.props.list.unselectRecord(true);
