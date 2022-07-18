@@ -464,7 +464,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self.assertEqual(len(mails), 0)
 
     def assertSentEmail(self, author, recipients, **values):
-        """ Tool method to ease the check of send emails.
+        """ Tool method to ease the check of sent emails (going through the
+        outgoing mail gateway, not actual <mail.mail> records).
 
         :param author: email author, either a string (email), either a partner
           record;
@@ -474,13 +475,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """
         direct_check = ['body_alternative', 'email_from', 'references', 'reply_to', 'subject']
         content_check = ['body_alternative_content', 'body_content', 'references_content']
-        other_check = ['attachments', 'body', 'attachments_info']
+        list_check = ['email_bcc', 'email_cc', 'email_to']
+        other_check = ['attachments', 'attachments_info', 'body']
 
         expected = {}
-        for fname in direct_check + content_check + other_check:
+        for fname in direct_check + content_check + list_check + other_check:
             if fname in values:
                 expected[fname] = values[fname]
-        unknown = set(values.keys()) - set(direct_check + content_check + other_check)
+        unknown = set(values.keys()) - set(direct_check + content_check + list_check + other_check)
         if unknown:
             raise NotImplementedError('Unsupported %s' % ', '.join(unknown))
 
@@ -497,6 +499,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 email_to_list.append(email_to)
         expected['email_to'] = email_to_list
 
+        # fetch mail
         sent_mail = next(
             (mail for mail in self._mails
              if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
@@ -523,6 +526,15 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.assertEqual(len(expected['attachments_info']), len(attachments))
         if 'body' in expected:
             self.assertHtmlEqual(expected['body'], sent_mail['body'], 'Value for %s: expected %s, received %s' % ('body', expected['body'], sent_mail['body']))
+        # beware to avoid list ordering differences (but Falsy values -> compare directly)
+        for val in list_check:
+            if expected.get(val):
+                self.assertEqual(sorted(expected[val]), sorted(sent_mail[val]),
+                                 'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
+            elif val in expected:
+                self.assertEqual(expected[val], sent_mail[val],
+                                 'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
+
         for val in content_check:
             if val in expected:
                 self.assertIn(
