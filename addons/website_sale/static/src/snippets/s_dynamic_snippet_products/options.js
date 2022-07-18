@@ -15,7 +15,9 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     init: function () {
         this._super.apply(this, arguments);
         this.modelNameFilter = 'product.product';
-        const productTemplateId = $("input.product_template_id");
+        // Directly calling $() will not work in this case since we are querying something
+        // in an iframe
+        const productTemplateId = this.$target.closest("#wrapwrap").find("input.product_template_id");
         this.hasProductTemplateId = productTemplateId.val();
         if (!this.hasProductTemplateId) {
             this.contextualFilterDomain.push(['product_cross_selling', '=', false]);
