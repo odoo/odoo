@@ -156,6 +156,38 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             cfi.destroy();
         });
+        QUnit.test('selection field: no value', async function (assert) {
+            assert.expect(2);
+
+            this.fields.color.selection = [];
+            let expectedFilters;
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            // Default value
+            expectedFilters = [{
+                description: 'Color is ""',
+                domain: '[["color","=",""]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        })
 
         QUnit.test('adding a simple filter works', async function (assert) {
             assert.expect(6);

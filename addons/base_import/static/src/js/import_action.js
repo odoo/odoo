@@ -174,9 +174,8 @@ var DataImport = AbstractAction.extend({
         this.setup_date_format_picker();
         this.setup_sheets_picker();
 
-        return Promise.all([
-            this._super(),
-            self.create_model().then(function (id) {
+        return this._super().then(function () {
+            return self.create_model().then(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
 
@@ -185,8 +184,8 @@ var DataImport = AbstractAction.extend({
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.updateControlPanel(status);
-            }),
-        ]);
+            });
+        });
     },
     create_model: function() {
         return this._rpc({
