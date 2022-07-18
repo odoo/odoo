@@ -64,7 +64,7 @@ registerModel({
                 route: '/mail/channel/add_guest_as_member',
                 params: {
                     channel_id: this.channel.id,
-                    channel_uuid: this.channel.uuid,
+                    channel_uuid: this.channel.thread.uuid,
                 },
             });
         },
@@ -80,7 +80,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasGuestNameChanged() {
-            return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+            return Boolean(this.messaging && this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
         },
         /**
          * @private
@@ -94,7 +94,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeCallDemoView() {
-            return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
+            return (this.channel && this.channel.thread.defaultDisplayMode === 'video_full_screen')
                 ? insertAndReplace()
                 : clear();
         },
@@ -128,7 +128,7 @@ registerModel({
          * States the channel to redirect to once the user clicks on the
          * 'joinButton'.
          */
-        channel: one('Thread', {
+        channel: one('Channel', {
             readonly: true,
             required: true,
         }),

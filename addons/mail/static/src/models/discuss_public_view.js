@@ -38,7 +38,7 @@ registerModel({
             this.update({
                 threadViewer: clear(),
                 welcomeView: insertAndReplace({
-                    channel: replace(this.channel.thread),
+                    channel: replace(this.channel),
                     isDoFocusGuestNameInput: true,
                     originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
