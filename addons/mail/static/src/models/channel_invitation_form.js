@@ -17,7 +17,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickCopy(ev) {
-            await navigator.clipboard.writeText(this.thread.invitationLink);
+            await navigator.clipboard.writeText(this.thread.channel.invitationLink);
             this.messaging.notify({
                 message: this.env._t('Link copied!'),
                 type: 'success',

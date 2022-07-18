@@ -1182,15 +1182,6 @@ registerModel({
             return ['channel', 'group'].includes(this.channel.channel_type);
         },
         /**
-         * @returns {string|FieldCommand}
-         */
-        _computeInvitationLink() {
-            if (!this.channel || !this.channel.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
-                return clear();
-            }
-            return `${window.location.origin}/chat/${this.id}/${this.channel.uuid}`;
-        },
-        /**
          * @private
          * @returns {boolean|FieldCommand}
          */
@@ -1859,9 +1850,6 @@ registerModel({
         id: attr({
             readonly: true,
             required: true,
-        }),
-        invitationLink: attr({
-            compute: '_computeInvitationLink',
         }),
         /**
          * List of members that have been invited to the RTC call of this channel.

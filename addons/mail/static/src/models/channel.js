@@ -94,6 +94,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeInvitationLink() {
+            if (!this.uuid || !this.channel_type || this.channel_type === 'chat') {
+                return clear();
+            }
+            return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeThread() {
@@ -192,6 +202,9 @@ registerModel({
         id: attr({
             readonly: true,
             required: true,
+        }),
+        invitationLink: attr({
+            compute: '_computeInvitationLink',
         }),
         memberCount: attr({
             related: 'thread.memberCount',
