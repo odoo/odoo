@@ -199,8 +199,7 @@ class GoogleSync(models.AbstractModel):
             return
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                send_updates = self._context.get('send_updates', True)
-                google_id = google_service.with_context(send_updates=send_updates).insert(values, token=token, timeout=timeout)
+                google_id = google_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'google_id': google_id,
                     'need_sync': False,
