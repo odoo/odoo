@@ -216,6 +216,23 @@ class WebsiteSale(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def _get_search_options(
+        self, category=None, attrib_values=None, pricelist=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
+    ):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'category': str(category.id) if category else None,
+            'min_price': min_price / conversion_rate,
+            'max_price': max_price / conversion_rate,
+            'attrib_values': attrib_values,
+            'display_currency': pricelist.currency_id,
+        }
+
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -276,19 +293,15 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'category': str(category.id) if category else None,
-            'min_price': min_price / conversion_rate,
-            'max_price': max_price / conversion_rate,
-            'attrib_values': attrib_values,
-            'display_currency': pricelist.currency_id,
-        }
+        options = self._get_search_options(
+            category=category,
+            attrib_values=attrib_values,
+            pricelist=pricelist,
+            min_price=min_price,
+            max_price=max_price,
+            conversion_rate=conversion_rate,
+            **post
+        )
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
             limit=None, order=self._get_search_order(post), options=options)
@@ -441,9 +454,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
+        redirect_url = request.httprequest.referrer
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
-            redirect_url = request.httprequest.referrer
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)
                 args = url_decode(decoded_url.query)
@@ -762,14 +775,13 @@ class WebsiteSale(http.Controller):
                 if k not in ('field_required', 'partner_id', 'callback', 'submitted'): # classic case
                     _logger.debug("website_sale postprocess: %s value has been dropped (empty or not writable)" % k)
 
-        new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
-        new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
-
         if request.website.specific_user_account:
             new_values['website_id'] = request.website.id
 
         if mode[0] == 'new':
             new_values['company_id'] = request.website.company_id.id
+            new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
+            new_values['user_id'] = request.website.salesperson_id.id
 
         lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
         if lang:
@@ -824,7 +836,7 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
-        if 'submitted' in kw:
+        if 'submitted' in kw and request.httprequest.method == "POST":
             pre_values = self.values_preprocess(order, mode, kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
@@ -834,6 +846,10 @@ class WebsiteSale(http.Controller):
                 values = kw
             else:
                 partner_id = self._checkout_form_save(mode, post, kw)
+                # We need to validate _checkout_form_save return, because when partner_id not in shippings
+                # it returns Forbidden() instead the partner_id
+                if isinstance(partner_id, Forbidden):
+                    return partner_id
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.with_context(not_self_saleperson=True).onchange_partner_id()
@@ -842,6 +858,10 @@ class WebsiteSale(http.Controller):
                     if not kw.get('use_same'):
                         kw['callback'] = kw.get('callback') or \
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
+                    # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
+                    # We only need to update the pricelist when it is not redirected to /confirm_order
+                    if kw.get('callback', '') != '/shop/confirm_order':
+                        request.website.sale_get_order(update_pricelist=True)
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
@@ -1106,7 +1126,7 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            pdf, _ = request.env.ref('sale.action_report_saleorder').sudo()._render_qweb_pdf([sale_order_id])
+            pdf, _ = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:

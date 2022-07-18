@@ -237,7 +237,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             if (notif.id > self._lastNotificationID) {
                 self._lastNotificationID = notif.id;
             }
-            return [notif.channel, notif.message];
+            return notif.message;
         });
         this.trigger("notification", notifs);
         return notifs;

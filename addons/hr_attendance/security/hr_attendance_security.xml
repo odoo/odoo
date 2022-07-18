@@ -108,5 +108,12 @@
             <field name="perm_unlink" eval="0"/>
             <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         </record>
+
+        <!-- Report -->
+        <record id="hr_attendance_report_rule_multi_company" model="ir.rule">
+            <field name="name">Attendance report multi company rule</field>
+            <field name="model_id" ref="model_hr_attendance_report"/>
+            <field name="domain_force">[('employee_id.company_id', 'in', company_ids)]</field>
+        </record>
     </data>
 </odoo>

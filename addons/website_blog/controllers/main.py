@@ -121,11 +121,20 @@ class WebsiteBlog(http.Controller):
             first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
 
+        url_args = dict()
+        if search:
+            url_args["search"] = search
+
+        if date_begin and date_end:
+            url_args["date_begin"] = date_begin
+            url_args["date_end"] = date_end
+
         pager = request.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             total=total,
             page=page,
             step=self._blog_post_per_page,
+            url_args=url_args,
         )
 
         if not blogs:

@@ -707,6 +707,57 @@ foo3,US,0,persons\n""",
         # if results empty, no errors
         self.assertItemsEqual(results['messages'], [])
 
+    def test_multi_mapping(self):
+        """ Test meant specifically for the '_handle_multi_mapping' that allows mapping multiple
+        columns to the same field and merging the values together.
+
+        It makes sure that values of type Char and Many2many are correctly merged. """
+
+        tag1, tag2, tag3 = self.env['res.partner.category'].create([{
+            'name': 'tag1',
+        }, {
+            'name': 'tag2',
+        }, {
+            'name': 'tag3',
+        }])
+
+        file_partner_values = [
+            ['Mitchel', 'US', 'Admin', 'The Admin User', 'tag1,tag2', 'tag3'],
+            ['Marc', 'US', 'Demo', 'The Demo User', '', 'tag3'],
+            ['Joel', 'US', 'Portal', '', 'tag1', 'tag3'],
+        ]
+
+        existing_partners = self.env['res.partner'].search_read([], ['id'])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': '\n'.join([';'.join(partner_values) for partner_values in file_partner_values]),
+            'file_type': 'text/csv',
+        })
+
+        results = import_wizard.execute_import(
+            ['name', 'country_id', 'name', 'name', 'category_id', 'category_id'],
+            [],
+            {
+                'quoting': '"',
+                'separator': ';',
+            },
+        )
+
+        # if result is empty, no import error
+        self.assertItemsEqual(results['messages'], [])
+
+        partners = self.env['res.partner'].search([
+            ('id', 'not in', [existing_partner['id'] for existing_partner in existing_partners])
+        ], order='id asc')
+
+        self.assertEqual(3, len(partners))
+        self.assertEqual('Mitchel Admin The Admin User', partners[0].name)
+        self.assertEqual('Marc Demo The Demo User', partners[1].name)
+        self.assertEqual('Joel Portal', partners[2].name)
+
+        self.assertEqual(tag1 | tag2 | tag3, partners[0].category_id)
+        self.assertEqual(tag3, partners[1].category_id)
+        self.assertEqual(tag1 | tag3, partners[2].category_id)
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):

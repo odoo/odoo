@@ -95,7 +95,7 @@ class HrEmployeeBase(models.AbstractModel):
                 last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():
-                    employee.last_activity_time = format_time(self.env, last_activity_datetime, time_format='short')
+                    employee.last_activity_time = format_time(self.env, last_presence, time_format='short')
                 else:
                     employee.last_activity_time = False
             else:

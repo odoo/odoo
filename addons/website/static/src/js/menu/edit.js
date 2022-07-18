@@ -51,7 +51,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
-        this.oeCoverSelector = '#wrapwrap [data-res-model][data-name="Cover"]';
+        this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
         if (options.savableSelector) {
             this.savableSelector = options.savableSelector;
         } else {
@@ -69,7 +69,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @override
      */
-    start: function () {
+    start() {
         var def = this._super.apply(this, arguments);
 
         // If we auto start the editor, do not show a welcome message
@@ -103,19 +103,34 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this._saving) {
             return false;
         }
-        this.observer.disconnect();
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
+        }
         var self = this;
         this._saving = true;
-        this.trigger_up('edition_will_stopped');
+        this.trigger_up('edition_will_stopped', {
+            // TODO adapt in master, this was added as a stable fix. This
+            // trigger to 'edition_will_stopped' was left by mistake
+            // during an editor refactoring + revert fail. It stops the public
+            // widgets at the wrong time, potentially dead-locking the editor.
+            // 'ready_to_clean_for_save' is the one in charge of stopping the
+            // widgets at the proper time.
+            noWidgetsStop: true,
+        });
         const destroy = () => {
             self.wysiwyg.destroy();
             self.trigger_up('edition_was_stopped');
             self.destroy();
         };
         if (!this.wysiwyg.isDirty()) {
-            return destroy();
+            destroy();
+            window.location.reload();
+            return;
         }
+        this.wysiwyg.__edition_will_stopped_already_done = true; // TODO adapt in master, see above
         return this.wysiwyg.saveContent(false).then((result) => {
+            delete this.wysiwyg.__edition_will_stopped_already_done;
             var $wrapwrap = $('#wrapwrap');
             self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
             if (reload) {
@@ -205,6 +220,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.editModeEnable) {
             return;
         }
+
+        $.blockUI({overlayCSS: {
+            backgroundColor: '#000',
+            opacity: 0,
+            zIndex: 1050
+        }, message: false});
+
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
@@ -227,6 +249,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if ($loader) {
             $loader.remove();
         }
+
+        $.unblockUI();
 
         return res;
     },
@@ -270,11 +294,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         // 1. Make sure every .o_not_editable is not editable.
         // 2. Observe changes to mark dirty structures and fields.
-        this.observer = new MutationObserver(records => {
-            this.wysiwyg.odooEditor.observerUnactive();
-            $('#wrap').find('.o_not_editable[contenteditable!=false]').attr('contenteditable', false);
-            this.wysiwyg.odooEditor.observerActive();
-
+        const processRecords = (records) => {
             records = this.wysiwyg.odooEditor.filterMutationRecords(records);
             // Skip the step for this stack because if the editor undo the first
             // step that has a dirty element, the following code would have
@@ -288,21 +308,34 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     continue;
                 }
                 $savable.not('.o_dirty').each(function () {
-                    const $el = $(this);
-                    if (!$el.closest('[data-oe-readonly]').length) {
-                        $el.addClass('o_dirty');
+                    if (!this.hasAttribute('data-oe-readonly')) {
+                        this.classList.add('o_dirty');
                     }
                 });
             }
-        });
+        };
+        this.observer = new MutationObserver(processRecords);
+        const observe = () => {
+            if (this.observer) {
+                this.observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeOldValue: true,
+                    characterData: true,
+                });
+            }
+        };
+        observe();
 
-        this.observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeOldValue: true,
-            characterData: true,
+        this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
+            if (this.observer) {
+                processRecords(this.observer.takeRecords());
+                this.observer.disconnect();
+            }
         });
+        this.wysiwyg.odooEditor.addEventListener('observerActive', observe);
+
         $('body').addClass('editor_started');
     },
 
@@ -310,6 +343,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
+    },
+
+    _getReadOnlyAreas () {
+        return [];
     },
     /**
      * Call preventDefault of an event.
@@ -393,11 +430,119 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             isRootEditable: false,
             controlHistoryFromDocument: true,
             getContentEditableAreas: this._getContentEditableAreas.bind(this),
+            powerboxCommands: this._getSnippetsCommands(),
+            bindLinkTool: true,
+            showEmptyElementHint: false,
+            getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),
             ['website.compiled_assets_wysiwyg']
         );
+    },
+    _getSnippetsCommands: function () {
+        const snippetCommandCallback = (selector) => {
+            const $separatorBody = $(selector);
+            const $clonedBody = $separatorBody.clone().removeClass('oe_snippet_body');
+            const range = this.wysiwyg.getDeepRange();
+            const block = this.wysiwyg.closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
+            if (block) {
+                block.after($clonedBody[0]);
+                this.wysiwyg.snippetsMenu.callPostSnippetDrop($clonedBody);
+            }
+        };
+        return [
+            {
+                groupName: 'Website',
+                title: 'Alert',
+                description: 'Insert an alert snippet.',
+                fontawesome: 'fa-info',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Rating',
+                description: 'Insert a rating snippet.',
+                fontawesome: 'fa-star-half-o',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Card',
+                description: 'Insert a card snippet.',
+                fontawesome: 'fa-sticky-note',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Share',
+                description: 'Insert a share snippet.',
+                fontawesome: 'fa-share-square-o',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Text Highlight',
+                description: 'Insert a text Highlight snippet.',
+                fontawesome: 'fa-sticky-note',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Chart',
+                description: 'Insert a chart snippet.',
+                fontawesome: 'fa-bar-chart',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Progress Bar',
+                description: 'Insert a progress bar snippet.',
+                fontawesome: 'fa-spinner',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Badge',
+                description: 'Insert a badge snippet.',
+                fontawesome: 'fa-tags',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Blockquote',
+                description: 'Insert a blockquote snippet.',
+                fontawesome: 'fa-quote-left',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Separator',
+                description: 'Insert an horizontal separator sippet.',
+                fontawesome: 'fa-minus',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
+                },
+            },
+        ];
     },
 
 
@@ -431,18 +576,24 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
     },
     /**
-     * Called when edition will stop. Notifies the
-     * WebsiteRoot that is should stop the public widgets.
+     * Called when edition will stop.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onEditionWillStop: function (ev) {
         this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
-        this.trigger_up('widgets_stop_request', {
-            $target: this._targetForEdition(),
-        });
-        this.observer.disconnect();
+
+        if (!ev.data.noWidgetsStop) { // TODO adapt in master, this was added as a stable fix.
+            this.trigger_up('widgets_stop_request', {
+                $target: this._targetForEdition(),
+            });
+        }
+
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
+        }
     },
     /**
      * Called when edition was stopped. Notifies the

@@ -5,6 +5,8 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
+from odoo.addons.payment_stripe.const import WEBHOOK_HANDLED_EVENTS
 from .common import StripeCommon
 
 
@@ -27,3 +29,39 @@ class StripeTest(StripeCommon):
 
         self.assertEqual(processing_values['publishable_key'], self.stripe.stripe_publishable_key)
         self.assertEqual(processing_values['session_id'], dummy_session_id)
+
+    def test_onboarding_action_redirect_to_url(self):
+        """ Test that the action generate and return an URL when the acquirer is disabled. """
+        with patch.object(
+            type(self.env['payment.acquirer']), '_stripe_fetch_or_create_connected_account',
+            return_value={'id': 'dummy'},
+        ), patch.object(
+            type(self.env['payment.acquirer']), '_stripe_create_account_link',
+            return_value='https://dummy.url',
+        ):
+            onboarding_url = self.stripe.action_stripe_connect_account()
+        self.assertEqual(onboarding_url['url'], 'https://dummy.url')
+
+    def test_only_create_webhook_if_not_already_done(self):
+        """ Test that a webhook is created only if the webhook secret is not already set. """
+        self.stripe.stripe_webhook_secret = False
+        with patch.object(type(self.env['payment.acquirer']), '_stripe_make_request') as mock:
+            self.stripe.action_stripe_create_webhook()
+            self.assertEqual(mock.call_count, 1)
+
+    def test_do_not_create_webhook_if_already_done(self):
+        """ Test that no webhook is created if the webhook secret is already set. """
+        self.stripe.stripe_webhook_secret = 'dummy'
+        with patch.object(type(self.env['payment.acquirer']), '_stripe_make_request') as mock:
+            self.stripe.action_stripe_create_webhook()
+            self.assertEqual(mock.call_count, 0)
+
+    def test_create_account_link_pass_required_parameters(self):
+        """ Test that the generation of an account link includes all the required parameters. """
+        with patch.object(
+            type(self.env['payment.acquirer']), '_stripe_make_proxy_request',
+            return_value={'url': 'https://dummy.url'},
+        ) as mock:
+            self.stripe._stripe_create_account_link('dummy', 'dummy')
+            for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
+                self.assertIn(payload_param, mock.call_args.kwargs['payload'].keys())

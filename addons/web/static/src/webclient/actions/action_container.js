@@ -16,9 +16,9 @@ export class ActionContainer extends Component {
         });
     }
 
-    destroy() {
+    __destroy() {
         this.env.bus.off("ACTION_MANAGER:UPDATE", this);
-        super.destroy();
+        super.__destroy();
     }
 }
 ActionContainer.components = { ActionDialog };

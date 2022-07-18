@@ -9,6 +9,7 @@
         <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="10"/>
+        <field name="formula">(AT_022_tax + AT_029_tax + AT_006_tax + AT_037_tax + AT_052_tax + AT_007_tax + AT_056 + AT_057 + AT_048 + AT_044 + AT_032 + AT_072_tax + AT_073_tax + AT_008_tax + AT_088_tax)</field>
     </record>
 
     <record id="tax_report_line_l10n_at_tva_line_4_1" model="account.tax.report.line">

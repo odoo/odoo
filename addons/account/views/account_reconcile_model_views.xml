@@ -141,16 +141,15 @@
 
                                                 <field name="match_same_currency"
                                                        attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
-                                                
+
                                             </group>
-                                            
+
                                         </group>
 
                                         <group id="right column" class="col">
                                             <group style="width:100% !important"
                                                    attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
-                                                <label for="match_text_location_label"
-                                                       string="Match Invoice/bill with"/>
+                                                <span class="o_form_label o_td_label">Match Invoice/bill with</span>
                                                 <div>
                                                     <span class="o_form_label" style="width: 2% !important">   </span>
                                                     <label for="match_text_location_label" string="Label"/>
@@ -238,18 +237,23 @@
                                                 <field name="account_id"/>
                                                 <field name="amount_type"/>
                                                 <field name="journal_id"
-                                                       attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
+                                                       attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"
+                                                       optional="hide"/>
                                                 <field name="amount_string"/>
                                                 <field name="tax_ids"
-                                                       widget="many2many_tags"/>
+                                                       widget="many2many_tags"
+                                                       optional="hide"/>
                                                 <field name="analytic_account_id"
-                                                       groups="analytic.group_analytic_accounting"/>
+                                                       groups="analytic.group_analytic_accounting"
+                                                       optional="hide"/>
                                                 <field name="analytic_tag_ids"
                                                        widget="many2many_tags"
-                                                       groups="analytic.group_analytic_tags"/>
+                                                       groups="analytic.group_analytic_tags"
+                                                       optional="hide"/>
                                                 <field name="force_tax_included"
                                                        widget="boolean_toggle"
-                                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}"/>
+                                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}"
+                                                       optional="hide"/>
                                                 <field name="label"/>
                                             </tree>
                                         </field>

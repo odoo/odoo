@@ -40,7 +40,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
                 sale_orders.mapped('order_line')._recompute_qty_to_invoice(self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
-            sale_orders._create_invoices(final=self.deduct_down_payments, start_date=self.date_start_invoice_timesheet, end_date=self.date_end_invoice_timesheet)
+            sale_orders.with_context(
+                timesheet_start_date=self.date_start_invoice_timesheet,
+                timesheet_end_date=self.date_end_invoice_timesheet
+            )._create_invoices(final=self.deduct_down_payments)
 
             if self._context.get('open_invoices', False):
                 return sale_orders.action_view_invoice()

@@ -1,0 +1,1149 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* coupon
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%(amount)s %(currency)s discount on total amount"
+msgstr "%(amount)s %(currency)s korting op totaalbedrag"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%(percentage)s%% discount on %(product_name)s"
+msgstr "%(percentage)s%% korting op %(product_name)s"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on cheapest product"
+msgstr "%s %% korting op goedkoopste product"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on products"
+msgstr "%s%% korting op producten"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on total amount"
+msgstr "%s %% korting op totale bedrag"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr "%s, er is een kortingsbon voor jou gegenereerd"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "*Valid for following products:"
+msgstr "*Geldig voor volgende producten:"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "10% korting"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_10_percent_discount
+#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "10.0% koring op totaalbedrag"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid ""
+"<span class=\"o_form_label oe_inline\"> Days</span> <span "
+"class=\"oe_grey\">if 0, infinite use</span>"
+msgstr ""
+"<span class=\"o_form_label oe_inline\"> Dagen</span> <span "
+"class=\"oe_grey\">als 0, eindeloos gebruik</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
+msgstr "<span class=\"oe_grey\"> als 0, geen limiet</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Days</span>\n"
+"                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
+msgstr ""
+"<span> Dagen</span>\n"
+"                    <span class=\"oe_grey\"> als 0, vervalt coupon niet</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Orders</span>\n"
+"                    <span class=\"oe_grey\"> if 0, infinite use</span>"
+msgstr ""
+"<span> Orders</span>\n"
+"                    <span class=\"oe_grey\"> indien 0, eindeloos gebruik</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>Minimum purchase of</span>"
+msgstr "<span>Minimale inkoop van</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>Valid for purchase above</span>"
+msgstr "<span>Geldig voor inkopen boven</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>products</span>"
+msgstr "<span>producten</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid ""
+"<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
+msgstr ""
+"<strong style=\"font-size: 55px; color: #875A7B\">geef gratis "
+"verzenden</strong>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
+msgid "<strong>Active</strong>"
+msgstr "<strong>Actief</strong>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
+msgid "<strong>Coupons</strong>"
+msgstr "<strong>Kortingsbonnen</strong>"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__active
+msgid "A program is available for the customers when active"
+msgstr "Een programma is beschikbaar voor de klant wanneer het actief is"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
+msgid ""
+"A promotion code is a code that is associated with a marketing discount. For"
+" example, a retailer might tell frequent customers to enter the promotion "
+"code 'THX001' to receive a 10%% discount on their whole order."
+msgstr ""
+"Een promotiecode is een code die gekoppeld is aan een marketingkorting. Een "
+"verkoper kan bijvoorbeeld frequente klanten vertellen om de promotiecode "
+"'THX001' in te voeren om 10 %% korting op hun hele order te ontvangen."
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__program_type
+msgid ""
+"A promotional program can be either a limited promotional offer without code (applied automatically)\n"
+"                or with a code (displayed on a magazine for example) that may generate a discount on the current\n"
+"                order or create a coupon for a next order.\n"
+"\n"
+"                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
+"                order or create a coupon for a next order."
+msgstr ""
+"Een promotieprogramma kan een beperkte promotie-aanbieding zonder code zijn (automatisch toegepast)\n"
+"of met een code zijn (weergegeven op een tijdschrift bijvoorbeeld), die een korting op de huidige order kan genereren\n"
+"bestelt of maakt een kortingsbon voor een volgende order.\n"
+"Een kortingsbonprogramma genereert kortingsbonnen met een code die kunnen worden gebruikt om een korting op de huidige order te genereren of maakt een kortingsbon voor een volgende order."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_applicability
+msgid "Applicability"
+msgstr "Toepasbaarheid"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Apply Discount"
+msgstr "Korting toekennen"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
+msgid "Apply On Current Order"
+msgstr "Toepassen op huidige order"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Apply on First"
+msgstr "Toepassen op eerste"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_search
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
+msgid "Automatically Applied"
+msgstr "Automatisch toegepast"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__promo_code_usage
+msgid ""
+"Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
+"Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
+msgstr ""
+"Automatisch toegepast - Er is geen code vereist, als aan de programmaregels is voldaan, wordt de beloning toegepast (Exclusief de globale korting of de gratis verzendkosten die niet cumulatief zijn)\n"
+"Gebruik een code - als aan de programmaregels is voldaan, is een geldige code verplicht om de beloning te ontvangen.\n"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
+msgid "Based on Customers"
+msgstr "Gebaseerd op klanten"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
+msgid "Based on Products"
+msgstr "Gebaseerd op producten"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
+msgid ""
+"Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
+"                You can share promotion codes or grant the promotions automatically if some conditions are met."
+msgstr ""
+"Stel promotieprogramma's op om meer klanten aan te trekken met kortingen, gratis producten, gratis bezorging, enz.\n"
+"Je kunt promotiecodes delen of de promoties automatisch toestaan als aan een aantal voorwaarden is voldaan."
+
+#. module: coupon
+#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Koop 3 grote kasten, krijg er 1 gratis"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__cancel
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
+msgid "Code"
+msgstr "Code"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "Code voor 10% op orders"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Compose Email"
+msgstr "E-mail opstellen"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Conditions"
+msgstr "Voorwaarden"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Congratulations"
+msgstr "Gefeliciteerd"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "Kortingsbon"
+
+#. module: coupon
+#: model:ir.actions.report,name:coupon.report_coupon_code
+msgid "Coupon Code"
+msgstr "Coupon code"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
+msgid "Coupon Count"
+msgstr "Aantal kortingsbonnen"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_program
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Coupon Program"
+msgstr "Kortingsbonnenprogramma"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
+msgid "Coupon Programs"
+msgstr "Kortingsbonnenprogramma's"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "Kortingsbon beloning"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_rule
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
+msgid "Coupon Rule"
+msgstr "Kortingsbonregel"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Coupon Validity"
+msgstr "Geldigheid coupon"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
+msgid "Coupon program end date"
+msgstr "Kortingsbon programma einddatum"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
+msgid "Coupon program start date"
+msgstr "Kortingsbon programma startdatum"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__sequence
+msgid ""
+"Coupon program will be applied based on given sequence if multiple programs "
+"are defined on same condition(For minimum amount)"
+msgstr ""
+"Couponprogramma wordt toegepast op basis van een gegeven reeks als meerdere "
+"programma's op dezelfde voorwaarde zijn gedefinieerd (voor minimale "
+"hoeveelheid)"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
+msgid "Coupon program will work for selected customers only"
+msgstr "Kortingsprogramma werkt enkel voor geselecteerde klanten"
+
+#. module: coupon
+#: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
+#: model:ir.cron,cron_name:coupon.expire_coupon_cron
+#: model:ir.cron,name:coupon.expire_coupon_cron
+msgid "Coupon: expire coupon based on date"
+msgstr "Kortingsbon: Vervaldatum gebaseerd op datum"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_action
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Coupons"
+msgstr "Kortingsbonnen"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
+msgid "Create a new coupon program"
+msgstr "Maak een nieuw kortingsprogramma aan"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
+msgid "Create a new promotion program"
+msgstr "Maak een nieuw kortingsprogramma"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__partners_domain
+msgid "Customer"
+msgstr "Klant"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_uom_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr "Standaard maateenheid gebruikt voor alle voorraadbewegingen."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_percentage
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_percentage
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__discount
+msgid "Discount"
+msgstr "Korting"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_type
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"Korting - Beloning wordt gegeven als korting.\n"
+"Gratis product - Gratis product wordt als beloning gegeven.\n"
+"Gratis verzending - Gratis verzending wordt als beloning gegeven (verzend module is nodig)"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_apply_on
+msgid "Discount Apply On"
+msgstr "Korting toegepast op"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
+msgid "Discount Max Amount"
+msgstr "Max kortingsbedrag"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
+msgid "Discount Type"
+msgstr "Soort korting"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "Discount percentage should be between 1-100"
+msgstr "Kortingspercentage moet tussen 1-100 zijn"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Wizard e-mail opstellen"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_to
+msgid "End Date"
+msgstr "Einddatum"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
+msgid "Expiration Date"
+msgstr "Vervaldatum"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Expired"
+msgstr "Vervallen"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Expired Programs"
+msgstr "Vervallen programma's"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_fixed_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_fixed_amount
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_type__fixed_amount
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Fixed Amount"
+msgstr "Vast bedrag"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
+msgid "For Customer"
+msgstr "Voor klant"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
+msgid "Free Product"
+msgstr "Gratis product"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "Free Product - %s"
+msgstr "Gratis product - %s"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_free_large_cabinet
+#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr "Gratis product - grote kast"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Generate"
+msgstr "Genereren"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_generate_wizard
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid "Generate Coupon"
+msgstr "Genereer kortingsbon"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Generate Coupons"
+msgstr "Genereer kortingsbonnen"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
+msgid ""
+"Generate and share coupon codes with your customers to get discounts or free"
+" products."
+msgstr ""
+"Genereer en deel couponcodes met je klanten om kortingen of gratis producten"
+" te krijgen."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
+msgid "Generated Coupons"
+msgstr "Gegenereerde kortingsbonnen"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
+msgid "Generation Type"
+msgstr "Type generatie"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
+msgid "Has Partner Email"
+msgstr "Heeft relatie e-mail"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Here is your reward from"
+msgstr "Hier is je beloning van"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "Foutieve klant."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Logo"
+msgstr "Logo"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Max Discount Amount"
+msgstr "Max kortingsbedrag"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
+msgid "Maximum Use Number"
+msgstr "Maximaal aantal keer gebruiken"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_max_amount
+msgid "Maximum amount of discount that can be provided"
+msgstr "Maximum hoeveelheid korting dat kan aangeboden worden"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
+msgid "Maximum number of sales orders in which reward can be provided"
+msgstr "Maximaal aantal verkooporders waarop beloning kan toegekend worden"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Minimum Purchase Of"
+msgstr "Minimale inkoop van"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_min_quantity
+msgid "Minimum Quantity"
+msgstr "Minimale hoeveelheid"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "Minimum purchased amount should be greater than 0"
+msgstr "Minimum inkoopbedrag moet groter zijn dan 0"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "Minimum quantity should be greater than 0"
+msgstr "Minimale hoeveelheid moet groter dan 0 zijn"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
+msgid "Minimum required amount to get the reward"
+msgstr "Minimale vereiste hoeveelheid om beloning te krijgen"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
+msgid "Minimum required product quantity to get the reward"
+msgstr "Minimale vereiste product hoeveelheid om beloning te krijgen"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
+msgid "Number of Coupons"
+msgstr "Aantal kortingsbonnen"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_generate_action
+msgid "Number of Coupons To Generate"
+msgstr "Aantal kortingsbonnen om te genereren"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
+msgid "Number of Selected Customers"
+msgstr "Aantal geselecteerde klanten"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
+msgid "Number of coupons"
+msgstr "Aantal kortingsbonnen"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
+msgid "On Cheapest Product"
+msgstr "Op goedkoopste product"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
+msgid "On Order"
+msgstr "Op order"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_apply_on
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_apply_on
+msgid ""
+"On Order - Discount on whole order\n"
+"Cheapest product - Discount on cheapest product of the order\n"
+"Specific products - Discount on selected specific products"
+msgstr ""
+"Op order - Korting op gehele order\n"
+"Goedkoopste product - Korting op goedkoopste product van de order\n"
+"Specifieke producten - Korting op geselecteerd product"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_products_domain
+msgid "On Purchase of selected product, reward will be given"
+msgstr "Bij inkoop van het geselecteerde product wordt de beloning gegeven"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
+msgid "On Specific Products"
+msgstr "Op specifieke producten"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
+msgid "Pending"
+msgstr "In afwachting"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_type__percentage
+msgid "Percentage"
+msgstr "Percentage"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_type
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_type
+msgid ""
+"Percentage - Entered percentage discount will be provided\n"
+"Amount - Entered fixed amount discount will be provided"
+msgstr ""
+"Percentage - Ingevoerde kortingspercentage wordt verstrekt\n"
+"Bedrag - Ingevoerde korting met vast bedrag wordt verstrekt"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr "Producten gebruikt in het verkooporder om korting op toe te passen."
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_line_product_id
+msgid ""
+"Product used in the sales order to apply the discount. Each coupon program "
+"has its own reward product for reporting purpose"
+msgstr ""
+"Producten gebruikt in het verkooporder om korting op toe te passen. Elk "
+"coupon programma heeft een eigen beloningsproduct voor rapportage "
+"doeleinden."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_specific_product_ids
+msgid "Products"
+msgstr "Producten"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_specific_product_ids
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_specific_product_ids
+msgid ""
+"Products that will be discounted if the discount is applied on specific "
+"products"
+msgstr ""
+"Producten die korting krijgen indien de korting wordt toegepast op "
+"specifieke producten"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
+msgid "Program"
+msgstr "Programma"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Program Name"
+msgstr "Programmanaam"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
+msgid "Program Type"
+msgstr "Programmatype"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
+msgid "Promo Code Usage"
+msgstr "Promocode gebruik"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
+msgid "Promotion Code"
+msgstr "Promotiecode"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
+msgid "Promotion Programs"
+msgstr "Promotieprogramma's"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
+msgid "Promotional Program"
+msgstr "Promotie programma"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_quantity
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Quantity"
+msgstr "Aantal"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Reward"
+msgstr "Beloning"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
+msgid "Reward Description"
+msgstr "Beloning omschrijving"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
+msgid "Reward Line Product"
+msgstr "Beloningsregel product"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
+msgid "Reward Product"
+msgstr "Beloningsproduct"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "Type beloning"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
+msgid "Reward product quantity"
+msgstr "Beloningsproduct hoeveelheid"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Rewards"
+msgstr "Beloningen"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount
+msgid "Rule Minimum Amount"
+msgstr "Minimale hoeveelheid regel"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount_tax_inclusion
+msgid "Rule Minimum Amount Tax Inclusion"
+msgstr "Minimale hoeveelheid inclusief BTW bedrag regel"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_report_coupon_report_coupon
+msgid "Sales Coupon Report"
+msgstr "Verkoop kortingscode rapport"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select company"
+msgstr "Selecteer bedrijf"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Select customer"
+msgstr "Selecteer klant"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select product"
+msgstr "Selecteer product"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select products"
+msgstr "Selecteer producten"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select reward product"
+msgstr "Selecteer beloningsproduct"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Send"
+msgstr "Verzenden"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
+msgid "Send a Coupon"
+msgstr "Verzend een kortingsbon"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+msgid "Send by Email"
+msgstr "Verzenden via e-mail"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__sent
+msgid "Sent"
+msgstr "Verzonden"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid ""
+"Some selected customers do not have an email address and will not receive "
+"the coupon."
+msgstr ""
+"Sommige geselecteerde klanten hebben geen e-mailadres en zullen de "
+"kortingsbon niet ontvangen."
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Specify a mail template to send the generated coupons as email."
+msgstr ""
+"Geef een e-mailsjabloon op om de gegenereerde coupons als e-mail te "
+"verzenden."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_from
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
+msgid "State"
+msgstr "Status"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
+msgid "Tax Excluded"
+msgstr "Exclusief BTW"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
+msgid "Tax Included"
+msgstr "Inclusief BTW"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Thank you,"
+msgstr "Bedankt,"
+
+#. module: coupon
+#: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
+msgid "The coupon code must be unique!"
+msgstr "De kortingscode moet uniek zijn!"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr ""
+"Het kortingsprogramma voor %s bevind zich in de fase concept of gesloten"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_fixed_amount
+msgid "The discount in fixed amount"
+msgstr "De korting in vast bedrag"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
+msgid "The discount in percentage, between 1 and 100"
+msgstr "De korting in procenten, tussen de 1 en 100"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_program.py:0
+#, python-format
+msgid "The program code must be unique!"
+msgstr "De programma code moet uniek zijn!"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "The start date must be before the end date"
+msgstr "De startdatum moet voor de einddatum liggen"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr ""
+"Deze kortingsbon %sbestaat maar de originele verkooporder is nog niet "
+"bevestigd."
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr "Deze coupon is al gebruikt (%s)."
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr "Deze kortingsbon is geannuleerd (%s).-"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "Deze coupon is al vervallen (%s)."
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
+msgid "Total Order Count"
+msgstr "Totaal orderbedrag"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
+msgid "Unit of Measure"
+msgstr "Maateenheid"
+
+#. module: coupon
+#: model:product.product,uom_name:coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "Stuks"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
+msgid "Use a code"
+msgstr "Gebruik een code"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__template_id
+msgid "Use template"
+msgstr "Gebruik sjabloon"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Use this promo code before"
+msgstr "Gebruik deze promocode voor"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
+msgid "Used"
+msgstr "Gebruikt"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
+msgid "Valid"
+msgstr "Geldig"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Validity"
+msgstr "Geldig t/m"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid "Validity Duration"
+msgstr "Geldheidsduur"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
+msgid "Validity duration for a coupon after its generation"
+msgstr "Geldigheidsduur nadat een kortingsbon gegenereerd is"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_program.py:0
+#, python-format
+msgid "You can not delete a program in active state"
+msgstr "Je kunt geen programma verwijderen dat zich in de fase actief bevind"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "e.g. 10% Discount"
+msgstr "bijv. 10% korting"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off %s"
+msgstr "korting %s"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on %s"
+msgstr "korting op %s"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on some products*"
+msgstr "korting van sommige producten*"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on the cheapest product"
+msgstr "van het goedkoopste product"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "on your next order"
+msgstr "op je volgende order"

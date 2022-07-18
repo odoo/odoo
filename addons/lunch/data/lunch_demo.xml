@@ -76,6 +76,13 @@
             <field name="name">Office 3</field>
         </record>
 
+        <record id="alert_office_3" model="lunch.alert">
+            <field name="name">Alert for Office 3</field>
+            <field name="message">Please order</field>
+            <field name="location_ids" eval="[(4, ref('location_office_3'))]" />
+            <field name="mode">chat</field>
+        </record>
+
         <record id="base.user_admin" model="res.users">
             <field name="last_lunch_location_id" ref="location_office_2"/>
         </record>

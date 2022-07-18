@@ -89,3 +89,15 @@ class TestHrContracts(TestContractCommon):
         contract = self.create_contract('draft', 'normal', date(2018, 1, 1), date(2018, 1, 2))
         contract.state = 'open'
         self.assertEqual(self.employee.contract_id, contract)
+
+    def test_first_contract_date(self):
+        self.create_contract('open', 'normal', date(2018, 1, 1), date(2018, 1, 31))
+        self.assertEqual(self.employee.first_contract_date, date(2018, 1, 1))
+
+        # New contract, no gap
+        self.create_contract('open', 'normal', date(2017, 1, 1), date(2017, 12, 31))
+        self.assertEqual(self.employee.first_contract_date, date(2017, 1, 1))
+
+        # New contract, with gap
+        self.create_contract('open', 'normal', date(2016, 1, 1), date(2016, 1, 31))
+        self.assertEqual(self.employee.first_contract_date, date(2017, 1, 1))

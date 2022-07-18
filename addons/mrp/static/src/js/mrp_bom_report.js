@@ -137,15 +137,15 @@ var MrpBomReport = stock_report_generic.extend({
         this.$buttonPrint.find('.o_mrp_bom_print_all_variants').on('click', this._onClickPrint.bind(this));
         this.$buttonPrint.find('.o_mrp_bom_print_unfolded').on('click', this._onClickPrint.bind(this));
         this.$searchView = $(QWeb.render('mrp.report_bom_search', _.omit(this.data, 'lines')));
-        this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this));
-        this.$searchView.find('.o_mrp_bom_report_variants').on('change', this._onChangeVariants.bind(this));
+        this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this)).change();
+        this.$searchView.find('.o_mrp_bom_report_variants').on('change', this._onChangeVariants.bind(this)).change();
         this.$searchView.find('.o_mrp_bom_report_type').on('change', this._onChangeType.bind(this));
     },
     _onClickPrint: function (ev) {
         var childBomIDs = _.map(this.$el.find('.o_mrp_bom_foldable').closest('tr'), function (el) {
             return $(el).data('id');
         });
-        framework.blockUI();
+        this.searchModelConfig.env.services.ui.block();
         var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id +
                          '&report_type=' + this.given_context.report_type +
                          '&quantity=' + (this.given_context.searchQty || 1);
@@ -163,8 +163,8 @@ var MrpBomReport = stock_report_generic.extend({
             'report_name': reportname,
             'report_file': 'mrp.report_bom_structure',
         };
-        return this.do_action(action).then(function (){
-            framework.unblockUI();
+        return this.do_action(action).then(() => {
+            this.searchModelConfig.env.services.ui.unblock();
         });
     },
     _onChangeQty: function (ev) {

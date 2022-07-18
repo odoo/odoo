@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -14,7 +15,7 @@ function factory(dependencies) {
             super._created();
             this.onChangeVolume = this.onChangeVolume.bind(this);
             this.onClick = this.onClick.bind(this);
-            this.onClickVideo = this.onClickVideo.bind(this);
+            this.onClickVolumeAnchor = this.onClickVolumeAnchor.bind(this);
         }
 
         //----------------------------------------------------------------------
@@ -32,7 +33,13 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
+            if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
+                return;
+            }
             if (!this.invitedPartner && !this.invitedGuest) {
+                if (!this.isMinimized) {
+                    this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+                }
                 return;
             }
             const channel = this.channel;
@@ -51,23 +58,17 @@ function factory(dependencies) {
         }
 
         /**
+         * Handled by the popover component.
+         *
          * @param {MouseEvent} ev
          */
-        async onClickVideo(ev) {
-            ev.stopPropagation();
-            this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+        async onClickVolumeAnchor(ev) {
+            markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.relationalId}`;
-        }
 
         /**
          * @private
@@ -84,7 +85,7 @@ function factory(dependencies) {
                 return `/mail/channel/${this.channel.id}/partner/${this.invitedPartner.id}/avatar_128`;
             }
             if (this.invitedGuest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128`;
+                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128?unique=${this.invitedGuest.name}`;
             }
         }
 
@@ -184,6 +185,7 @@ function factory(dependencies) {
          * Unique id for this session provided when instantiated.
          */
         relationalId: attr({
+            readonly: true,
             required: true,
         }),
         /**
@@ -203,7 +205,7 @@ function factory(dependencies) {
          */
         rtcSession: many2one('mail.rtc_session'),
     };
-
+    RtcCallParticipantCard.identifyingFields = ['relationalId'];
     RtcCallParticipantCard.modelName = 'mail.rtc_call_participant_card';
 
     return RtcCallParticipantCard;

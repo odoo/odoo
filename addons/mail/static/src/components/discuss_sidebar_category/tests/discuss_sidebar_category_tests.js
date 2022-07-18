@@ -325,16 +325,12 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     await this.start();
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_channel_open: false,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_channel_open: false,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        }]);
     });
     assert.containsNone(
         document.body,
@@ -359,16 +355,12 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     await this.start();
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_channel_open: true,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_channel_open: true,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+            }]);
     });
     assert.containsOnce(
         document.body,
@@ -702,16 +694,12 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     await this.start();
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_chat_open: false,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_chat_open: false,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        }]);
     });
     assert.containsNone(
         document.body,
@@ -741,16 +729,12 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     await this.start();
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_chat_open: true,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_chat_open: true,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        }]);
     });
     assert.containsOnce(
         document.body,

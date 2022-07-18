@@ -968,7 +968,7 @@ class Survey(models.Model):
 
         self.sudo().write({'session_state': False})
         self.user_input_ids.sudo().write({'state': 'done'})
-        self.env['bus.bus'].sendone(self.access_token, {'type': 'end_session'})
+        self.env['bus.bus']._sendone(self.access_token, 'end_session', {})
 
     def get_start_url(self):
         return '/survey/start/%s' % self.access_token

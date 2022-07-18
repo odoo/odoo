@@ -59,6 +59,8 @@ class WebsiteSnippetFilter(models.Model):
                 product = res_product.get('_record')
                 if not is_sample:
                     res_product.update(product._get_combination_info_variant())
+                    if records.env.context.get('add2cart_rerender'):
+                        res_product['_add2cart_rerender'] = True
         return res_products
 
     @api.model
@@ -108,7 +110,7 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', products_ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+                products = self.env['product.product'].with_context(display_default_code=False, add2cart_rerender=True).search(domain, limit=limit)
         return products
 
     def _get_products_recently_sold_with(self, website, limit, domain, context):

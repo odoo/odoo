@@ -315,10 +315,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -620,6 +620,33 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bar2, 'B')
         self.assertEqual(record.bar3, 'C')
         self.assertCountEqual(log, ['compute'])
+
+        # corner case: write on a field that is marked to compute
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': '1/2/3'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar3' must force the computation before updating
+        record.write({'bar3': 'X'})
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+        self.assertEqual(record.foo, '1/2/X')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, 'X')
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': 'A/B/C'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar1', 'bar2', 'bar3' discards the computation
+        record.write({'bar1': 'X', 'bar2': 'Y', 'bar3': 'Z'})
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+        self.assertEqual(record.foo, 'X/Y/Z')
+        self.assertEqual(record.bar1, 'X')
+        self.assertEqual(record.bar2, 'Y')
+        self.assertEqual(record.bar3, 'Z')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
 
     def test_13_inverse_access(self):
         """ test access rights on inverse fields """
@@ -1198,6 +1225,23 @@ class TestFields(TransactionCaseWithUserDemo):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_attributes(self):
+        """ test the attributes of related fields """
+        text = self.registry['test_new_api.foo'].text
+        self.assertFalse(text.trim, "The target field is defined with trim=False")
+
+        # trim=True is the default on the field's class
+        self.assertTrue(type(text).trim, "By default, a Char field has trim=True")
+
+        # the parameter 'trim' is not set in text1's definition, so the field
+        # retrieves its value from text.trim
+        text1 = self.registry['test_new_api.bar'].text1
+        self.assertFalse(text1.trim, "The related field retrieves trim=False from target")
+
+        # text2 is defined with trim=True, so it should get that value
+        text2 = self.registry['test_new_api.bar'].text2
+        self.assertTrue(text2.trim, "The related field was defined with trim=True")
+
     def test_25_related_single(self):
         """ test related fields with a single field in the path. """
         record = self.env['test_new_api.related'].create({'name': 'A'})
@@ -1409,6 +1453,131 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertFalse(company_record.env.user.has_group('base.group_system'))
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
+
+    def test_28_company_dependent_search(self):
+        """ Test the search on company-dependent fields in all corner cases.
+            This assumes that filtered_domain() correctly filters records when
+            its domain refers to company-dependent fields.
+        """
+        Property = self.env['ir.property']
+        Model = self.env['test_new_api.company']
+
+        # create 4 records for all cases: two with explicit truthy values, one
+        # with an explicit falsy value, and one without an explicit value
+        records = Model.create([{}] * 4)
+
+        # For each field, we assign values to the records, and test a number of
+        # searches.  The search cases are given by comparison operators, and for
+        # each operator, we test a number of possible operands.  Every search()
+        # returns a subset of the records, and we compare it to an equivalent
+        # search performed by filtered_domain().
+
+        def test_field(field_name, truthy_values, operations):
+            # set ir.properties to all records except the last one
+            Property._set_multi(
+                field_name, Model._name,
+                {rec.id: val for rec, val in zip(records, truthy_values + [False])},
+                # Using this sentinel for 'default_value' forces the method to
+                # create 'ir.property' records for the value False. Without it,
+                # no property would be created because False is the default
+                # value.
+                default_value=object(),
+            )
+
+            # test without default value
+            test_cases(field_name, operations)
+
+            # set default value to False
+            Property._set_default(field_name, Model._name, False)
+            Property.flush()
+            Property.invalidate_cache()
+            test_cases(field_name, operations, False)
+
+            # set default value to truthy_values[0]
+            Property._set_default(field_name, Model._name, truthy_values[0])
+            Property.flush()
+            Property.invalidate_cache()
+            test_cases(field_name, operations, truthy_values[0])
+
+        def test_cases(field_name, operations, default=None):
+            for operator, values in operations.items():
+                for value in values:
+                    domain = [(field_name, operator, value)]
+                    with self.subTest(domain=domain, default=default):
+                        search_result = Model.search([('id', 'in', records.ids)] + domain)
+                        filter_result = records.filtered_domain(domain)
+                        self.assertEqual(
+                            search_result, filter_result,
+                            f"Got values {[r[field_name] for r in search_result]} "
+                            f"instead of {[r[field_name] for r in filter_result]}",
+                        )
+
+        # boolean fields
+        test_field('truth', [True, True], {
+            '=': (True, False),
+            '!=': (True, False),
+        })
+        # integer fields
+        test_field('count', [10, -2], {
+            '=': (10, -2, 0, False),
+            '!=': (10, -2, 0, False),
+            '<': (10, -2, 0),
+            '>=': (10, -2, 0),
+            '<=': (10, -2, 0),
+            '>': (10, -2, 0),
+        })
+        # float fields
+        test_field('phi', [1.61803, -1], {
+            '=': (1.61803, -1, 0, False),
+            '!=': (1.61803, -1, 0, False),
+            '<': (1.61803, -1, 0),
+            '>=': (1.61803, -1, 0),
+            '<=': (1.61803, -1, 0),
+            '>': (1.61803, -1, 0),
+        })
+        # char fields
+        test_field('foo', ['qwer', 'azer'], {
+            'like': ('qwer', 'azer'),
+            'ilike': ('qwer', 'azer'),
+            'not like': ('qwer', 'azer'),
+            'not ilike': ('qwer', 'azer'),
+            '=': ('qwer', 'azer', False),
+            '!=': ('qwer', 'azer', False),
+            'not in': (['qwer', 'azer'], ['qwer', False], [False], []),
+            'in': (['qwer', 'azer'], ['qwer', False], [False], []),
+        })
+        # date fields
+        date1, date2 = date(2021, 11, 22), date(2021, 11, 23)
+        test_field('date', [date1, date2], {
+            '=': (date1, date2, False),
+            '!=': (date1, date2, False),
+            '<': (date1, date2),
+            '>=': (date1, date2),
+            '<=': (date1, date2),
+            '>': (date1, date2),
+        })
+        # datetime fields
+        moment1, moment2 = datetime(2021, 11, 22), datetime(2021, 11, 23)
+        test_field('moment', [moment1, moment2], {
+            '=': (moment1, moment2, False),
+            '!=': (moment1, moment2, False),
+            '<': (moment1, moment2),
+            '>=': (moment1, moment2),
+            '<=': (moment1, moment2),
+            '>': (moment1, moment2),
+        })
+        # many2one fields
+        tag1, tag2 = self.env['test_new_api.multi.tag'].create([{'name': 'one'}, {'name': 'two'}])
+        test_field('tag_id', [tag1.id, tag2.id], {
+            'like': (tag1.name, tag2.name),
+            'ilike': (tag1.name, tag2.name),
+            'not like': (tag1.name, tag2.name),
+            'not ilike': (tag1.name, tag2.name),
+            '=': (tag1.id, tag2.id, False),
+            '!=': (tag1.id, tag2.id, False),
+            'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+        })
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1940,6 +2109,34 @@ class TestFields(TransactionCaseWithUserDemo):
         moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
         self.assertEqual(moves, move2)
 
+    def test_73_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        discussion1, discussion2 = self.env['test_new_api.discussion'].create([
+            {'name': "discussion1"}, {'name': "discussion2"},
+        ])
+        category1, category2 = self.env['test_new_api.category'].create([
+            {'name': "category1"}, {'name': "category2"},
+        ])
+
+        # assumption: category12 and category21 are in different order, but are
+        # in the same order when put in a set()
+        category12 = category1 + category2
+        category21 = category2 + category1
+        self.assertNotEqual(category12.ids, category21.ids)
+        self.assertEqual(list(set(category12.ids)), list(set(category21.ids)))
+
+        # make sure discussion1.categories is in cache; the write() below should
+        # update the cache of discussion1.categories by appending category12.ids
+        discussion1.categories
+        category12.write({'discussions': [Command.link(discussion1.id)]})
+        self.assertEqual(discussion1.categories.ids, category12.ids)
+
+        # make sure discussion2.categories is in cache; the write() below should
+        # update the cache of discussion2.categories by appending category21.ids
+        discussion2.categories
+        category21.write({'discussions': [Command.link(discussion2.id)]})
+        self.assertEqual(discussion2.categories.ids, category21.ids)
+
     def test_80_copy(self):
         Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2162,7 +2359,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
         # test create inverse no store
-        record = self.env['test_new_api.model_image'].create({
+        record = self.env['test_new_api.model_image'].with_context(image_no_postprocess=True).create({
             'name': 'image',
             'image_256': image_w,
         })
@@ -2332,6 +2529,24 @@ class TestFields(TransactionCaseWithUserDemo):
         # ensure ir.rule is applied even when reading m2m
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
+
+    def test_98_unlink_recompute(self):
+        move = self.env['test_new_api.move'].create({
+            'line_ids': [(0, 0, {'quantity': 42})],
+        })
+        line = move.line_ids
+        self.assertEqual(move.quantity, 42)
+
+        # create an ir.rule for lines that uses move.quantity
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(line._name).id,
+            'domain_force': "[('move_id.quantity', '>=', 0)]",
+        })
+
+        # unlink the line, and check the recomputation of move.quantity
+        user = self.env.ref('base.user_demo')
+        line.with_user(user).unlink()
+        self.assertEqual(move.quantity, 0)
 
 
 class TestX2many(common.TransactionCase):
@@ -2571,12 +2786,12 @@ class TestX2many(common.TransactionCase):
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', [])])
         self.assertEqual(result, recs)
 
-        # these cases are weird
+        # test 'not in' where the lines contain NULL values
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs - recX)
 
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs)
 
         # special case: compare with False
         result = recs.search([('id', 'in', recs.ids), ('lines', '=', False)])
@@ -2602,6 +2817,21 @@ class TestX2many(common.TransactionCase):
             'ttype': 'many2many',
             'relation': 'res.country',
             'store': False,
+        })
+        self.assertTrue(field.unlink())
+
+    def test_custom_m2m_related(self):
+        # this checks the ondelete of a related many2many field
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.partner.category',
+            'related': 'category_id',
+            'readonly': True,
+            'store': True,
         })
         self.assertTrue(field.unlink())
 
@@ -2859,6 +3089,24 @@ class TestParentStore(common.TransactionCase):
         """ Move multiple nodes to create a cycle. """
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+
+    def test_compute_depend_parent_path(self):
+        self.assertEqual(self.cats(7).depth, 3)
+        self.assertEqual(self.cats(8).depth, 3)
+        self.assertEqual(self.cats(9).depth, 3)
+
+        # change parent of node to have 2 parents
+        self.cats(7).parent = self.cats(2)
+        self.assertEqual(self.cats(7).depth, 2)
+
+        # change parent of node to root
+        self.cats(7).parent = False
+        self.assertEqual(self.cats(7).depth, 0)
+
+        # change grand-parent of nodes
+        self.cats(6).parent = self.cats(0)
+        self.assertEqual(self.cats(8).depth, 2)
+        self.assertEqual(self.cats(9).depth, 2)
 
 
 class TestRequiredMany2one(common.TransactionCase):
@@ -3126,6 +3374,20 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
             my_selection = fields.Selection(selection_add=[
                 ('corona', "Corona beers suck"),
             ], ondelete={'corona': 'set default'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(AssertionError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_value_no_valid(self):
+        class Foo(models.Model):
+            _module = None
+            _inherit = self.MODEL_BASE
+
+            my_selection = fields.Selection(selection_add=[
+                ('westvleteren', "Westvleteren beers is overrated"),
+            ], ondelete={'westvleteren': 'set foooo'})
 
         Foo._build_model(self.registry, self.env.cr)
 

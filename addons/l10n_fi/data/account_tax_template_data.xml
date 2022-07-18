@@ -118,12 +118,20 @@
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
             }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -564,12 +572,20 @@
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_sales_goods_eu')],
             }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_sales_goods_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -589,12 +605,20 @@
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_sales_service_eu')],
             }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_sales_service_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -887,13 +911,20 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -944,12 +975,20 @@
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_sales_construct_service')],
             }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_sales_construct_service')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -1049,13 +1088,21 @@
               'factor_percent': 100,
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
-            })
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>
@@ -1215,12 +1262,20 @@
               'repartition_type': 'base',
               'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
             }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
               'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
             }),
         ]"/>
     </record>

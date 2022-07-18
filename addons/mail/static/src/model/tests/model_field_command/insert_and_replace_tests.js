@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, insertAndReplace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -31,7 +31,7 @@ QUnit.test('insertAndReplace: should create and link a new record for an empty x
     await this.start();
 
     const contact = this.messaging.models['test.contact'].create({ id: 10 });
-    contact.update({ address: insertAndReplace({ id: 10 })});
+    contact.update({ address: insertAndReplace({ id: 10 }) });
     const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.address,
@@ -51,7 +51,7 @@ QUnit.test('insertAndReplace: should create and replace a new record for a non-e
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({ id: 10 }),
+        address: insertAndReplace({ id: 10 }),
     });
     const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: insertAndReplace({ id: 20 }) });
@@ -79,7 +79,7 @@ QUnit.test('insertAndReplace: should update the existing record for an x2one fie
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({
+        address: insertAndReplace({
             id: 10,
             addressInfo: 'address 10',
         }),
@@ -109,10 +109,10 @@ QUnit.test('insertAndReplace: should create and replace the records for an x2man
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create({ id: 10 }),
+        tasks: insertAndReplace({ id: 10 }),
     });
     const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
-    contact.update({ tasks: insertAndReplace({ id: 20 })});
+    contact.update({ tasks: insertAndReplace({ id: 20 }) });
     const task20 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.tasks.length,
@@ -142,7 +142,7 @@ QUnit.test('insertAndReplace: should update and replace the records for an x2man
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create([
+        tasks: insertAndReplace([
             { id: 10, title: 'task 10' },
             { id: 20, title: 'task 20' },
         ]),
@@ -171,7 +171,7 @@ QUnit.test('insertAndReplace: should update and replace the records for an x2man
         'the record should be updated'
     );
     assert.strictEqual(
-        task20.contact,
+        task20.responsible,
         undefined,
         'the record should be replaced'
     );

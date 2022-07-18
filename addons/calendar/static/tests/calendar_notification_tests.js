@@ -46,17 +46,17 @@ QUnit.module("Calendar Notification", (hooks) => {
                     return Promise.resolve([
                         {
                             id: "prout",
-                            channel: ["db_name", "calendar.alarm", 7],
-                            message: [
-                                {
+                            message: {
+                                type: "calendar.alarm",
+                                payload: [{
                                     alarm_id: 1,
                                     event_id: 2,
                                     title: "Meeting",
                                     message: "Very old meeting message",
                                     timer: 20 * 60,
                                     notify_at: "1978-04-14 12:45:00",
-                                },
-                            ],
+                                }],
+                            },
                         },
                     ]);
                 }
@@ -104,17 +104,17 @@ QUnit.module("Calendar Notification", (hooks) => {
                     return Promise.resolve([
                         {
                             id: "prout",
-                            channel: ["db_name", "calendar.alarm", 7],
-                            message: [
-                                {
+                            message: {
+                                type: "calendar.alarm",
+                                payload: [{
                                     alarm_id: 1,
                                     event_id: 2,
                                     title: "Meeting",
                                     message: "Very old meeting message",
                                     timer: 20 * 60,
                                     notify_at: "1978-04-14 12:45:00",
-                                },
-                            ],
+                                }],
+                            },
                         },
                     ]);
                 }
@@ -128,7 +128,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                 start() {
                     return {
                         doAction(actionId) {
-                            assert.step(actionId);
+                            assert.step(actionId.type);
                             return Promise.resolve(true);
                         },
                         loadState(state, options) {
@@ -154,7 +154,7 @@ QUnit.module("Calendar Notification", (hooks) => {
             );
 
             await click(webClient.el.querySelectorAll(".o_notification_buttons .btn")[1]);
-            assert.verifySteps(["calendar.action_calendar_event_notify"]);
+            assert.verifySteps(["ir.actions.act_window"]);
             assert.containsNone(webClient.el, ".o_notification");
         }
     );
@@ -173,18 +173,18 @@ QUnit.module("Calendar Notification", (hooks) => {
                     pollNumber++;
                     return Promise.resolve([
                         {
-                            id: "prout",
-                            channel: ["db_name", "calendar.alarm", 7],
-                            message: [
-                                {
+                            message: {
+                                id: "prout",
+                                type: "calendar.alarm",
+                                payload: [{
                                     alarm_id: 1,
                                     event_id: 2,
                                     title: "Meeting",
                                     message: "Very old meeting message",
                                     timer: 20 * 60,
                                     notify_at: "1978-04-14 12:45:00",
-                                },
-                            ],
+                                }],
+                            },
                         },
                     ]);
                 }

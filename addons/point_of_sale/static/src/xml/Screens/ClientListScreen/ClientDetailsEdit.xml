@@ -13,7 +13,7 @@
                 </t>
                 <input type="file" class="image-uploader" t-on-change="uploadImage" />
             </div>
-            <input class="detail client-name" name="name" t-att-value="props.partner.name"
+            <input class="detail client-name" name="name" t-att-value="props.partner.name or ''"
                    placeholder="Name" t-on-change="captureChange" />
             <div class="client-details-box clearfix">
                 <div class="client-details-left">

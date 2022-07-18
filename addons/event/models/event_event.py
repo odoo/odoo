@@ -91,7 +91,9 @@ class EventEvent(models.Model):
         return self.env['event.stage'].search([], limit=1)
 
     def _default_description(self):
-        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+        # avoid template branding with rendering_bundle=True
+        return self.env['ir.ui.view'].with_context(rendering_bundle=True) \
+            ._render_template('event.event_default_descripton')
 
     def _default_event_mail_ids(self):
         return self.env['event.type']._default_event_mail_type_ids()
@@ -232,7 +234,7 @@ class EventEvent(models.Model):
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
-                results[event_id][state_field[state]] += num
+                results[event_id][state_field[state]] = num
 
         # compute seats_available
         for event in self:

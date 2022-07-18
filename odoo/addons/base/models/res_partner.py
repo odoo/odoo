@@ -148,6 +148,10 @@ class Partner(models.Model):
             values['company_id'] = parent.company_id.id
         if 'lang' in default_fields:
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
+        # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
+        if 'type' in default_fields and values.get('type'):
+            if values['type'] not in self._fields['type'].get_values(self.env):
+                values['type'] = None
         return values
 
     name = fields.Char(index=True)
@@ -434,7 +438,7 @@ class Partner(models.Model):
 
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
-        if self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
+        if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
             raise ValidationError('An other user already has this barcode')
 
     def _update_fields_values(self, fields):
@@ -983,17 +987,7 @@ class Partner(models.Model):
     def _get_address_format(self):
         return self.country_id.address_format or self._get_default_address_format()
 
-    def _display_address(self, without_company=False):
-
-        '''
-        The purpose of this function is to build and return an address formatted accordingly to the
-        standards of the country where it belongs.
-
-        :param address: browse record of the res.partner to format
-        :returns: the address formatted in a display that fit its country habits (or the default ones
-            if not country is specified)
-        :rtype: string
-        '''
+    def _prepare_display_address(self, without_company=False):
         # get the information that will be injected into the display format
         # get the address format
         address_format = self._get_address_format()
@@ -1010,13 +1004,25 @@ class Partner(models.Model):
             args['company_name'] = ''
         elif self.commercial_company_name:
             address_format = '%(company_name)s\n' + address_format
+        return address_format, args
+
+    def _display_address(self, without_company=False):
+        '''
+        The purpose of this function is to build and return an address formatted accordingly to the
+        standards of the country where it belongs.
+
+        :param without_company: if address contains company
+        :returns: the address formatted in a display that fit its country habits (or the default ones
+            if not country is specified)
+        :rtype: string
+        '''
+        address_format, args = self._prepare_display_address(without_company)
         return address_format % args
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
         return self._formatting_address_fields() + [
-            'country_id.address_format', 'country_id.code', 'country_id.name',
-            'company_name', 'state_id.code', 'state_id.name',
+            'country_id', 'company_name', 'state_id',
         ]
 
     @api.model

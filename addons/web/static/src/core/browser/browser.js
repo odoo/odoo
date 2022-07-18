@@ -23,14 +23,25 @@ try {
 export const browser = Object.assign({}, owl.browser, {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
+    requestAnimationFrame: window.requestAnimationFrame.bind(window),
+    cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,
-    location: window.location,
     history: window.history,
     navigator: navigator,
     open: window.open.bind(window),
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,
     sessionStorage,
+});
+
+Object.defineProperty(browser, "location", {
+    set(val) {
+        window.location = val;
+    },
+    get() {
+        return window.location;
+    },
+    configurable: true,
 });
 
 // -----------------------------------------------------------------------------

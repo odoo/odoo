@@ -19,7 +19,7 @@ class MailGroupMessageReject(models.TransientModel):
     @api.depends('mail_group_message_id')
     def _compute_subject(self):
         for wizard in self:
-            wizard.subject = _('Re: %s', wizard.mail_group_message_id.subject)
+            wizard.subject = _('Re: %s', wizard.mail_group_message_id.subject or '')
 
     @api.depends('body')
     def _compute_send_email(self):

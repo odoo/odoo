@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import fieldUtils from "web.field_utils";
 
@@ -11,6 +12,7 @@ export class PivotRenderer extends Component {
     setup() {
         this.model = this.props.model;
         this.table = this.model.getTable();
+        this.l10n = localization;
     }
     willUpdateProps() {
         this.table = this.model.getTable();

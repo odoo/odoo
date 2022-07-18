@@ -45,7 +45,7 @@ class Team(models.Model):
                 if domain:
                     self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise exceptions.ValidationEreror(_(
+                raise exceptions.ValidationError(_(
                     'Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted',
                     user=member.user_id.name, team=member.crm_team_id.name
                 ))
@@ -154,7 +154,7 @@ class Team(models.Model):
         leads_done_ids = set()
         counter = 0
         # auto-commit except in testing mode
-        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
         while population:
             counter += 1

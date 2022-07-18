@@ -35,6 +35,9 @@ class ProductTemplate(models.Model):
     def _compute_service_upsell_threshold_ratio(self):
         product_uom_hour = self.env.ref('uom.product_uom_hour')
         for record in self:
+            if not record.uom_id:
+                record.service_upsell_threshold_ratio = False
+                continue
             record.service_upsell_threshold_ratio = f"1 {record.uom_id.name} = {product_uom_hour.factor / record.uom_id.factor:.2f} Hours"
 
     def _compute_visible_expense_policy(self):
@@ -57,7 +60,7 @@ class ProductTemplate(models.Model):
             if product.service_policy:
                 product.invoice_policy, product.service_type = SERVICE_TO_GENERAL.get(product.service_policy, (False, False))
 
-    @api.depends('service_tracking', 'service_policy')
+    @api.depends('service_tracking', 'service_policy', 'type')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
         for record in self.filtered(lambda record: record.type == 'service'):
@@ -138,7 +141,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
@@ -172,7 +175,7 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:

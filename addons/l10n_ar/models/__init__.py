@@ -15,3 +15,4 @@ from . import res_partner_bank
 from . import uom_uom
 from . import account_chart_template
 from . import account_move
+from . import account_move_line

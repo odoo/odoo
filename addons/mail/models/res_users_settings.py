@@ -24,17 +24,18 @@ class ResUsersSettings(models.Model):
 
     @api.model
     def _find_or_create_for_user(self, user):
-        settings = user.res_users_settings_ids
+        settings = user.sudo().res_users_settings_ids
         if not settings:
-            settings = self.create({'user_id': user.id})
+            settings = self.sudo().create({'user_id': user.id})
         return settings
 
     def _res_users_settings_format(self):
         self.ensure_one()
         res = self._read_format(fnames=[name for name, field in self._fields.items() if name == 'id' or not field.automatic])[0]
         res.pop('volume_settings_ids')
+        volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
         res.update({
-            'volume_settings': self.volume_settings_ids._read_format(['id', 'user_setting_id', 'partner_id', 'volume']),
+            'volume_settings': [('insert', volume_settings)] if volume_settings else [],
         })
         return res
 
@@ -45,29 +46,29 @@ class ResUsersSettings(models.Model):
             if setting in self._fields and new_settings[setting] != self[setting]:
                 changed_settings[setting] = new_settings[setting]
         self.write(changed_settings)
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.user_id.partner_id.id), {
-            'type': 'res.users_settings_changed',
-            'payload': changed_settings,
-        })
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/changed', changed_settings)
 
-    def set_volume_setting(self, partner_id, volume):
+    def set_volume_setting(self, partner_id, volume, guest_id=None):
+        """
+        Saves the volume of a guest or a partner.
+        Either partner_id or guest_id must be specified.
+        :param float volume: the selected volume between 0 and 1
+        :param int partner_id:
+        :param int guest_id:
+        """
         self.ensure_one()
-        volume_setting = self.env['res.users.settings.volumes'].search([('user_setting_id', '=', self.id), ('partner_id', '=', partner_id)])
+        volume_setting = self.env['res.users.settings.volumes'].search([
+            ('user_setting_id', '=', self.id), ('partner_id', '=', partner_id), ('guest_id', '=', guest_id)
+        ])
         if volume_setting:
             volume_setting.volume = volume
         else:
-            volume_setting = self.env['res.users.settings.volumes'].create([{
+            volume_setting = self.env['res.users.settings.volumes'].create({
                 'user_setting_id': self.id,
-                'partner_id': partner_id,
                 'volume': volume,
-            }])
-        notification = {
-            'type': 'res_users_settings_volumes_update',
-            'payload': {
-                'volumeSettings': [('insert', {
-                    'id': volume_setting.id,
-                    'volume': volume_setting.volume,
-                })],
-            }
-        }
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.user_id.partner_id.id), notification)
+                'partner_id': partner_id,
+                'guest_id': guest_id,
+            })
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/volumes_update', {
+            'volumeSettings': [('insert', volume_setting._discuss_users_settings_volume_format())],
+        })

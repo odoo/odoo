@@ -276,7 +276,7 @@ odoo.define('web.SearchBar', function (require) {
             // - Selection sources
             // - "no result" items
             if (source.active) {
-                const labelValue = source.label || this.state.inputValue;
+                const labelValue = source.label || this.state.inputValue.trim();
                 this.model.dispatch('addAutoCompletionValues', {
                     filterId: source.filterId,
                     value: "value" in source ? source.value : this._parseWithSource(labelValue, source),

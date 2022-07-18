@@ -89,6 +89,9 @@ body.o_connected_user {
     a:hover, a:focus {
         text-decoration: none;
     }
+    a.dropdown-toggle {
+        outline: none;
+    }
     .dropdown-menu {
         border-top: 0;
         margin-top: 0;
@@ -96,14 +99,13 @@ body.o_connected_user {
         font-size: inherit;
         border-radius: 0;
         color: $dropdown-link-active-color;
+        max-height: 500px; // Fallback
+        max-height: calc(90vh - #{$o-navbar-height});
+        overflow: auto;
     }
     #oe_applications .dropdown-menu {
         // Compensate #oe_applications's padding
         margin-left: $dropdown-item-padding-x * -0.5;
-
-        max-height: 500px; // Fallback
-        max-height: calc(90vh - #{$o-navbar-height});
-        overflow: auto;
     }
 
     .o_menu_sections {
@@ -113,13 +115,17 @@ body.o_connected_user {
         }
     }
     .o_menu_systray {
-        > li > a {
+        > li > a, > div > a {
             &.css_edit_dynamic{
                 padding: 0 $grid-gutter-width/4;
             }
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
                 @include button-variant($o-brand-primary, $o-brand-primary);
+                &.active, &:hover, &:focus, &:active {
+                    outline: none;
+                    box-shadow: none !important;
+                }
             }
 
             &, &:hover, &:focus {
@@ -548,4 +554,21 @@ body .modal {
             background-color: $o-we-bg-lighter;
         }
     }
+}
+
+// Page Properties
+.o_redirect_old_url {
+    @include media-breakpoint-down(sm) {
+        // Because o_technical_modal class class has a higher z-index than $zindex-modal.
+        z-index: $o-we-technical-modal-zindex + ($zindex-popover - $zindex-modal);
+    }
+    .popover-body {
+        overflow-y: auto;
+        max-height: 14.2rem;
+    }
+}
+
+// Post Submit Links
+.post_link:not(.o_post_link_js_loaded) {
+    pointer-events: none;
 }

@@ -257,7 +257,7 @@ class ProjectCreateSalesOrderLine(models.TransientModel):
     _order = 'id,create_date'
 
     wizard_id = fields.Many2one('project.create.sale.order', required=True)
-    product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service",
+    product_id = fields.Many2one('product.product', domain=[('detailed_type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service",
         help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency")

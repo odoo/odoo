@@ -26,7 +26,6 @@ Wysiwyg.include({
         if (this.options.inIframe) {
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
-        this.__extraAssetsForIframe = [];
     },
     /**
      * Load assets to inject into iframe.
@@ -151,13 +150,13 @@ Wysiwyg.include({
                 }
 
                 var iframeContent = qweb.render('wysiwyg.iframeContent', {
-                    assets: assets.concat(self.__extraAssetsForIframe),
+                    assets: assets,
                     updateIframeId: self._onUpdateIframeId,
                     avoidDoubleLoad: _avoidDoubleLoad
                 });
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
-                    .write(iframeContent);
+                    .write(`<!DOCTYPE html><html>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
         });

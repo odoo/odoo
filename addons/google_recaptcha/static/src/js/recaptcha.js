@@ -31,7 +31,7 @@ const ReCaptcha = Class.extend({
     /**
      * Returns an object with the token if reCaptcha call succeeds
      * If no key is set an object with a message is returned
-     * If an error occured an object with the error message is returned
+     * If an error occurred an object with the error message is returned
      *
      * @param {string} action
      * @returns {Promise|Object}

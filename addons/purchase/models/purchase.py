@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
+from functools import partial
+from itertools import groupby
 import json
 
 from markupsafe import escape, Markup
@@ -10,14 +12,15 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, formatLang, get_lang, groupby
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.misc import formatLang, get_lang, format_amount
 
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
 
@@ -122,6 +125,12 @@ class PurchaseOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    tax_country_id = fields.Many2one(
+        comodel_name='res.country',
+        compute='_compute_tax_country_id',
+        # Avoid access error on fiscal position, when reading a purchase order with company != user.company_ids
+        compute_sudo=True,
+        help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
@@ -206,6 +215,14 @@ class PurchaseOrder(models.Model):
             tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
             tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
             order.tax_totals_json = json.dumps(tax_totals)
+
+    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
+    def _compute_tax_country_id(self):
+        for record in self:
+            if record.fiscal_position_id.foreign_vat:
+                record.tax_country_id = record.fiscal_position_id.country_id
+            else:
+                record.tax_country_id = record.company_id.account_fiscal_country_id
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -431,7 +448,7 @@ class PurchaseOrder(models.Model):
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel the related vendor bills."))
 
-        self.write({'state': 'cancel'})
+        self.write({'state': 'cancel', 'mail_reminder_confirmed': False})
 
     def button_unlock(self):
         self.write({'state': 'purchase'})
@@ -492,6 +509,7 @@ class PurchaseOrder(models.Model):
 
         # 1) Prepare invoice vals and clean-up the section lines
         invoice_vals_list = []
+        sequence = 10
         for order in self:
             if order.invoice_status != 'to invoice':
                 continue
@@ -507,9 +525,15 @@ class PurchaseOrder(models.Model):
                     continue
                 if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_account_move_line()))
+                        line_vals = pending_section._prepare_account_move_line()
+                        line_vals.update({'sequence': sequence})
+                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                        sequence += 1
                         pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
+                    line_vals = line._prepare_account_move_line()
+                    line_vals.update({'sequence': sequence})
+                    invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                    sequence += 1
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
@@ -561,6 +585,7 @@ class PurchaseOrder(models.Model):
             raise UserError(_('Please define an accounting purchase journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
         partner_invoice_id = self.partner_id.address_get(['invoice'])['invoice']
+        partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
         invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
@@ -570,7 +595,7 @@ class PurchaseOrder(models.Model):
             'partner_id': partner_invoice_id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(partner_invoice_id)).id,
             'payment_reference': self.partner_ref or '',
-            'partner_bank_id': self.partner_id.bank_ids[:1].id,
+            'partner_bank_id': partner_bank_id.id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
@@ -629,6 +654,16 @@ class PurchaseOrder(models.Model):
         }
 
         one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
+
+        # Get list of translation values
+        Translation = self.env['ir.translation']
+        list_old_value_char = []
+        list_new_value_char = []
+        field_name = 'ir.model.fields.selection,name'
+        for lang in self.env['res.lang'].search_read([], ['code']):
+            list_old_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ'))
+            list_new_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ Sent'))
+
         # This query is brittle since it depends on the label values of a selection field
         # not changing, but we don't have a direct time tracker of when a state changes
         query = """SELECT COUNT(1)
@@ -638,12 +673,12 @@ class PurchaseOrder(models.Model):
                    WHERE m.create_date >= %s
                      AND m.model = 'purchase.order'
                      AND m.message_type = 'notification'
-                     AND v.old_value_char = 'RFQ'
-                     AND v.new_value_char = 'RFQ Sent'
+                     AND v.old_value_char IN %s
+                     AND v.new_value_char IN %s
                      AND po.company_id = %s;
                 """
 
-        self.env.cr.execute(query, (one_week_ago, self.env.company.id))
+        self.env.cr.execute(query, (one_week_ago, tuple(list_old_value_char), tuple(list_new_value_char), self.env.company.id))
         res = self.env.cr.fetchone()
         result['all_sent_rfqs'] = res[0] or 0
 
@@ -662,19 +697,18 @@ class PurchaseOrder(models.Model):
         # This is done via SQL for scalability reasons
         query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
                           AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
-                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END),
-                          MIN(curr.decimal_places)
+                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
                    FROM purchase_order po
                    JOIN res_company comp ON (po.company_id = comp.id)
-                   JOIN res_currency curr ON (comp.currency_id = curr.id)
                    WHERE po.state in ('purchase', 'done')
                      AND po.company_id = %s
                 """
         self._cr.execute(query, (one_week_ago, self.env.company.id))
         res = self.env.cr.fetchone()
-        result['all_avg_order_value'] = round(res[0] or 0, res[3])
         result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
-        result['all_total_last_7_days'] = round(res[2] or 0, res[3])
+        currency = self.env.company.currency_id
+        result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
+        result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
 
         return result
 
@@ -873,8 +907,8 @@ class PurchaseOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
-    account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_analytic_id_and_tag_ids', readonly=False)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_id_and_tag_ids', readonly=False)
+    account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_account_analytic_id', readonly=False)
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_tag_ids', readonly=False)
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', store=True)
 
@@ -1055,23 +1089,35 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
-            date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
-        return self._convert_to_middle_of_day(date_planned)
+            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
     @api.depends('product_id', 'date_order')
-    def _compute_analytic_id_and_tag_ids(self):
+    def _compute_account_analytic_id(self):
         for rec in self:
-            default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
-                product_id=rec.product_id.id,
-                partner_id=rec.order_id.partner_id.id,
-                user_id=rec.env.uid,
-                date=rec.date_order,
-                company_id=rec.company_id.id,
-            )
-            rec.account_analytic_id = rec.account_analytic_id or default_analytic_account.analytic_id
-            rec.analytic_tag_ids = rec.analytic_tag_ids or default_analytic_account.analytic_tag_ids
+            if not rec.account_analytic_id:
+                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
+                    product_id=rec.product_id.id,
+                    partner_id=rec.order_id.partner_id.id,
+                    user_id=rec.env.uid,
+                    date=rec.date_order,
+                    company_id=rec.company_id.id,
+                )
+                rec.account_analytic_id = default_analytic_account.analytic_id
+
+    @api.depends('product_id', 'date_order')
+    def _compute_analytic_tag_ids(self):
+        for rec in self:
+            if not rec.analytic_tag_ids:
+                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
+                    product_id=rec.product_id.id,
+                    partner_id=rec.order_id.partner_id.id,
+                    user_id=rec.env.uid,
+                    date=rec.date_order,
+                    company_id=rec.company_id.id,
+                )
+                rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -1164,6 +1210,16 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+
+        default_names = []
+        vendors = self.product_id._prepare_sellers({})
+        for vendor in vendors:
+            product_ctx = {'seller_id': vendor.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+            default_names.append(self._get_product_purchase_description(self.product_id.with_context(product_ctx)))
+
+        if (self.name in default_names or not self.name):
+            product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+            self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
@@ -1312,7 +1368,7 @@ class PurchaseOrderLine(models.Model):
             lang=partner.lang,
             partner_id=partner.id,
         )
-        name = product_lang.display_name
+        name = product_lang.with_context(seller_id=seller.id).display_name
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 

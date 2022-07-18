@@ -83,6 +83,8 @@ class Partner(models.Model):
             raise ValueError(_('An email is required for find_or_create to work'))
 
         parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
         if parsed_email:
             email_normalized = tools.email_normalize(parsed_email)
             if email_normalized:
@@ -123,7 +125,7 @@ class Partner(models.Model):
         return partners_format
 
     def _message_fetch_failed(self):
-        """Returns all messages, sent by the current partner, that have errors, in
+        """Returns first 100 messages, sent by the current partner, that have errors, in
         the format expected by the web client."""
         self.ensure_one()
         messages = self.env['mail.message'].search([
@@ -132,7 +134,7 @@ class Partner(models.Model):
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=100)
         return messages._message_notification_format()
 
     def _get_channels_as_member(self):
@@ -187,7 +189,7 @@ class Partner(models.Model):
     @api.model
     def get_mention_suggestions(self, search, limit=8, channel_id=None):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
-            Prioritize partners that are also users, and then extend the research to all partners.
+            Prioritize partners that are also (internal) users, and then extend the research to all partners.
             If channel_id is given, only members of this channel are returned.
             The return format is a list of partner data (as per returned by `mail_partner_format()`).
         """
@@ -195,16 +197,18 @@ class Partner(models.Model):
         search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
             search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
-
-        # Search partners that are also users
-        domain = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
-        partners = self.search(domain, limit=limit)
-
-        # Search partners that are not users if less than 'limit' partner that are users found
-        remaining_limit = limit - len(partners)
-        if remaining_limit > 0:
-            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], search_dom]), limit=remaining_limit)
-
+        domain_is_user = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
+        priority_conditions = [
+            expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
+            domain_is_user,  # Search partners that are users
+            search_dom,  # Search partners that are not users
+        ]
+        partners = self.env['res.partner']
+        for domain in priority_conditions:
+            remaining_limit = limit - len(partners)
+            if remaining_limit <= 0:
+                break
+            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
         return list(partners.mail_partner_format().values())
 
     @api.model

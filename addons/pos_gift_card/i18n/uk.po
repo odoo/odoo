@@ -1,0 +1,283 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "<strong>Gift Card Code</strong>"
+msgstr "<strong>Код подарункової картки</strong>"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Amount of the gift card:"
+msgstr "Сума подарункової картки:"
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Barcode"
+msgstr "Штрих-код"
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Правило штрих-коду"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order_line__generated_gift_card_ids
+msgid "Bought Gift Card"
+msgstr "Купив подарункову картку"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__buy_pos_order_line_id
+msgid "Buy Pos Order Line"
+msgstr "Рядок замовлення купівлі точки продажу"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Card expires"
+msgstr "Термін дії картки"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Check a gift card"
+msgstr "Перевірити подарункову картку"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_order_line__gift_card_id
+msgid "Deducted from this Gift Card"
+msgstr "Віднімається з цієї подарункової картки"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_settings
+msgid "Defines the way you want to set your gift cards."
+msgstr "Визначає спосіб встановлення подарункових карток."
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__create_set
+msgid "Generate a new barcode and set a price"
+msgstr "Згенеруйте новий штрих-код і встановіть ціну"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Generate barcode"
+msgstr "Створити штрих-код"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardButton.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: model:ir.actions.report,name:pos_gift_card.gift_card_report_pdf
+#: model:ir.model,name:pos_gift_card.model_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__use_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order_line__gift_card_id
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__barcode_rule__type__gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.res_config_view_form_inherit_pos_coupon
+#, python-format
+msgid "Gift Card"
+msgstr "Подарункова картка"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Gift Card Barcode:"
+msgstr "Штрих-код подарункової картки:"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order__gift_card_count
+msgid "Gift Card Count"
+msgstr "Підрахунок подарункових карт"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift Card Error"
+msgstr "Помилка подарункової картки"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__gift_card_product_id
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+msgid "Gift Card Product"
+msgstr "Товар подарункової картки"
+
+#. module: pos_gift_card
+#: model:ir.ui.menu,name:pos_gift_card.pos_gift_card_menu
+msgid "Gift Cards"
+msgstr "Подарункові картки"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__gift_card_settings
+msgid "Gift Cards settings"
+msgstr "Налаштування подарункової картки"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift card balance is too low."
+msgstr "Баланс подарункової картки занадто низький."
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift card is not valid."
+msgstr "Подарункова картка недійсна."
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+msgid "Gift card settings"
+msgstr "Налаштування подарункової картки"
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Here is your gift card!"
+msgstr "Це ваша подарункова картка!"
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Налаштування точки продажу"
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Рядки замовлення точки продажу"
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Замовлення точки продажу"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_gift_card__buy_pos_order_line_id
+msgid "Pos Order line where this gift card has been bought."
+msgstr ""
+"Рядок замовлення точки продажу, де було придбано цю подарункову картку."
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__redeem_pos_order_line_ids
+msgid "Pos Redeems"
+msgstr "Викуп точки продажу"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Remaining amount of the gift card:"
+msgstr "Залишкова сума подарункової картки:"
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_set
+msgid "Scan an existing barcode and set a price"
+msgstr "Відскануйте існуючий штрих-код і встановіть ціну"
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_use
+msgid "Scan an existing barcode with an existing price"
+msgstr "Відскануйте існуючий штрих-код з існуючою ціною"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Scan and set price on gift card"
+msgstr "Відскануйте та встановіть ціну на подарунковій картці"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Scan gift card"
+msgstr "Відскануйте подарункову картку"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
+#, python-format
+msgid "This gift card has already been sold"
+msgstr "Ця подарункова картка вже продана"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_product_id
+msgid "This product is used as reference on customer receipts."
+msgstr "Цей товар використовується як посилання на чек клієнта."
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_barcode_rule__type
+msgid "Type"
+msgstr "Тип"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Use a gift card"
+msgstr "Використовуйте подарункову картку"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
+#, python-format
+msgid "You cannot sell a gift card that has already been sold"
+msgstr "Ви не можете продати подарункову картку, яка вже була продана"

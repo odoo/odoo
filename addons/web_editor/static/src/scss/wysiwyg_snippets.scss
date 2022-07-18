@@ -176,16 +176,17 @@ body.editor_enable.editor_has_snippets {
 
 %we-generic-tab-button {
     @extend %we-generic-link;
-    @include o-text-overflow(inline-flex);
+    display: inline-flex;
     flex: 1 1 auto;
     justify-content: center;
+    min-width: 0;
     border: none;
     background-color: transparent;
     color: inherit;
     font-weight: normal;
 
     > span {
-        display: inline-block;
+        @include o-text-overflow(inline-block);
         $-r: $o-we-sidebar-tabs-size-ratio;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
     }
@@ -271,10 +272,12 @@ body.editor_enable.editor_has_snippets {
             border-radius: 0;
             padding: 0.375rem 0.75rem;
             font-size: $o-we-font-size;
-            font-family: $o-we-font-family;
             font-weight: 400;
             line-height: 1;
 
+            &:not(.fa) {
+                font-family: $o-we-font-family;
+            }
             &.btn-primary {
                 @include button-variant($o-brand-primary, $o-brand-primary);
             }
@@ -352,6 +355,7 @@ body.editor_enable.editor_has_snippets {
     > #o_scroll {
         background-color: $o-we-sidebar-blocks-content-bg;
         padding: 0 $o-we-sidebar-blocks-content-spacing;
+        height: 100%; // give enough space for tips pointing at snippets after a snippet search
         z-index: 1;
 
         .o_panel, .o_panel_header {
@@ -370,10 +374,7 @@ body.editor_enable.editor_has_snippets {
                 border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
                 margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
                 user-select: none;
-
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .oe_snippet_thumbnail_title {
                     display: block;
@@ -510,8 +511,7 @@ body.editor_enable.editor_has_snippets {
             .btn {
                 @extend %we-generic-button;
                 display: flex;
-                padding-top: $o-we-sidebar-content-field-height * .12;
-                padding-bottom: $o-we-sidebar-content-field-height * .12;
+                padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2);
             }
 
             we-customizeblock-option {
@@ -550,7 +550,7 @@ body.editor_enable.editor_has_snippets {
                         position: absolute !important;
                         padding: 0;
 
-                        we-button {
+                        we-button:not(.fa) {
                             text-align: left;
                             font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
                             font-size: 12px;
@@ -577,6 +577,7 @@ body.editor_enable.editor_has_snippets {
             }
 
             #colorInputButtonGroup {
+                position: static;
                 grid-area: colors;
 
                 .dropdown-toggle:after {
@@ -586,7 +587,7 @@ body.editor_enable.editor_has_snippets {
                 .colorpicker-group {
                     display: flex;
                     align-items: stretch;
-                    position: initial;
+                    position: static;
                 }
 
                 #oe-text-color {
@@ -668,12 +669,17 @@ body.editor_enable.editor_has_snippets {
             }
 
             .dropdown-menu.colorpicker-menu {
+                min-width: 0;
                 max-height: none;
-                left: auto;
-                right: 0;
+                left: $o-we-sidebar-content-indent;
+                right: $o-we-sidebar-content-padding-base;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
                 border-radius: $o-we-item-border-radius;
                 padding: 0;
+            }
+
+            :not(.dropup) > .dropdown-menu.colorpicker-menu {
+                top: 2em; // TODO Ugly and not precise, conflict with row-gap of grid
             }
         }
 
@@ -726,6 +732,7 @@ body.editor_enable.editor_has_snippets {
             + * {
                 display: none !important;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+                border-radius: $o-we-item-border-radius;
                 background-color: $o-we-sidebar-content-field-dropdown-bg;
                 box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
             }
@@ -793,10 +800,15 @@ body.editor_enable.editor_has_snippets {
                     we-button {
                         margin-top: 0 !important;
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
-                        padding: 0 $o-we-sidebar-content-field-multi-spacing;
+                        padding: 0 $o-we-sidebar-content-field-multi-spacing !important;
 
-                        &.fa, &[data-img] {
+                        &.fa, &.o_we_icon_button {
+                            box-sizing: content-box;
+                            width: 1.29em; // Fix width and override potential fa-fw
+                            padding: 0 0.15em !important;
                             margin-left: $o-we-sidebar-content-field-label-spacing;
+                            text-align: center;
+                            justify-content: center;
                         }
                     }
                 }
@@ -862,9 +874,12 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
-        .o_we_large > div {
-            flex: 1 1 auto !important;
-            width: 100%;
+        // TODO: Keep only the first class in master
+        .o_we_large, .o_we_large_input {
+            > div {
+                flex: 1 1 auto !important;
+                width: 100%;
+            }
         }
 
         // Buttons
@@ -888,9 +903,17 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
-        // Buttons with an icon but no text, so no possible overflow
-        we-button.o_we_button_icon {
-            flex: 0 0 auto;
+        we-button {
+            // Prevent icon buttons to shrink
+            &.o_we_icon_button, &.fa {
+                flex: 0 0 auto;
+            }
+            // Buttons being `fa-fw`, prevent font-awesome hardcoded width
+            &.fa-fw {
+                padding: 0 .5em;
+                width: 2.29em; // .fa-fw = 1.28571429em (font-awesome.css)
+                justify-content: center;
+            }
         }
 
         // Checkboxes
@@ -999,6 +1022,7 @@ body.editor_enable.editor_has_snippets {
                     background-clip: padding-box;
                     background-color: $o-we-sidebar-content-field-dropdown-item-bg;
                     color: $o-we-sidebar-content-field-dropdown-item-color;
+                    border-radius: 0;
 
                     > we-title {
                         flex-grow: 1;
@@ -1124,10 +1148,10 @@ body.editor_enable.editor_has_snippets {
                     + we-button {
                         border-left: none;
                     }
-                    &:first-child {
+                    &:first-child, .active:first-child {
                         @include border-left-radius($o-we-sidebar-content-field-border-radius);
                     }
-                    &:last-child {
+                    &:last-child, .active:last-child {
                         @include border-right-radius($o-we-sidebar-content-field-border-radius);
                     }
                 }
@@ -1183,6 +1207,7 @@ body.editor_enable.editor_has_snippets {
                 height: $o-we-sidebar-content-field-colorpicker-size;
                 border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
                 border-radius: 10rem;
+                cursor: pointer;
 
                 &::after {
                     box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
@@ -1727,6 +1752,7 @@ body.editor_enable.editor_has_snippets {
 
     .o_we_colorpicker_switch_pane_btn {
         @extend %we-generic-tab-button;
+        flex: 0 1 auto;
     }
     .o_colorpicker_reset {
         @extend %we-generic-button;
@@ -1808,7 +1834,7 @@ body.editor_enable.editor_has_snippets {
                     grid-column: 1/span 2;
                     grid-row: 3;
                     background: none;
-                    -webkit-appearance: none;
+                    appearance: none;
                     cursor: ew-resize;
                     @supports (-moz-appearance:none) {
                         margin-top: 2px;
@@ -1818,7 +1844,7 @@ body.editor_enable.editor_has_snippets {
                         pointer-events: auto;
                         border: 1.5px solid rgba(255, 255, 255, 0.8);
                         background: currentColor;
-                        -webkit-appearance: none;
+                        appearance: none;
                         box-shadow: 0px 0px 0px #000000;
                         height: 20px;
                         width: 12px;
@@ -1862,6 +1888,7 @@ body.editor_enable.editor_has_snippets {
             .o_remove_color {
                 font-size: 14px !important;
                 text-align: center !important;
+                padding: 0;
             }
         }
     }
@@ -1893,6 +1920,11 @@ body.editor_enable.editor_has_snippets {
             float: left;
             margin: 0 (-$o-we-dropzone-size/2);
         }
+    }
+    &.oe_drop_zone_danger {
+        background-color: rgba($o-we-color-danger, 0.15);
+        color: $o-we-color-danger;
+        border-color: $o-we-color-danger;
     }
 }
 
@@ -2068,16 +2100,14 @@ body.editor_enable.editor_has_snippets {
                 &, > .o_overlay_move_options, .o_overlay_edit_options {
                     display: flex;
                 }
-                > .o_overlay_move_options, .o_overlay_edit_options {
-                    > * {
-                        @extend %we-generic-button;
-                        margin: 0 1px 0;
-                        min-width: 22px;
-                        padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
-                        color: $o-we-fg-lighter;
-                        &.oe_snippet_remove {
-                            background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
-                        }
+                .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                    @extend %we-generic-button;
+                    margin: 0 1px 0;
+                    min-width: 22px;
+                    padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
+                    color: $o-we-fg-lighter;
+                    &.oe_snippet_remove {
+                        background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2089,14 +2119,12 @@ body.editor_enable.editor_has_snippets {
                     background-repeat: no-repeat;
                 }
                 &:hover {
-                    > .o_overlay_move_options, .o_overlay_edit_options {
-                        > * {
-                            @include o-hover-opacity(.6);
+                    .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                        @include o-hover-opacity(.6);
 
-                            &:hover {
-                                border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
-                                background-color: $o-we-sidebar-content-field-pressed-bg;
-                            }
+                        &:hover {
+                            border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
+                            background-color: $o-we-sidebar-content-field-pressed-bg;
                         }
                     }
                 }
@@ -2126,7 +2154,7 @@ body.editor_enable.editor_has_snippets {
             pointer-events: auto;
 
             .o_we_overlay_content {
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .o_we_grabbing {
                     cursor: grabbing;

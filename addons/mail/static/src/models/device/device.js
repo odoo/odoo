@@ -50,6 +50,7 @@ function factory(dependencies) {
                 globalWindowInnerHeight: this.env.browser.innerHeight,
                 globalWindowInnerWidth: this.env.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
+                isMobileDevice: this.env.device.isMobileDevice,
                 sizeClass: this.env.device.size_class,
             });
         }
@@ -58,7 +59,14 @@ function factory(dependencies) {
     Device.fields = {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
+        /**
+         * States whether this device has a small size (note: this field name is not ideal).
+         */
         isMobile: attr(),
+        /**
+         * States whether this device is an actual mobile device.
+         */
+        isMobileDevice: attr(),
         /**
          * Size class of the device.
          *
@@ -69,7 +77,7 @@ function factory(dependencies) {
          */
         sizeClass: attr(),
     };
-
+    Device.identifyingFields = ['messaging'];
     Device.modelName = 'mail.device';
 
     return Device;

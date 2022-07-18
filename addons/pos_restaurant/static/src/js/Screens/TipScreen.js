@@ -42,8 +42,8 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
 
             if (!serverId) {
                 this.showPopup('ErrorPopup', {
-                    title: 'Unsynced order',
-                    body: 'This order is not yet synced to server. Make sure it is synced then try again.',
+                    title: this.env._t('Unsynced order'),
+                    body: this.env._t('This order is not yet synced to server. Make sure it is synced then try again.'),
                 });
                 return;
             }

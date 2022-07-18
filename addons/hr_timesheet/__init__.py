@@ -32,3 +32,19 @@ def create_internal_project(cr, registry):
     } for task in project_ids.task_ids.filtered(lambda t: t.company_id in admin.employee_ids.company_id)])
 
     _check_exists_collaborators_for_project_sharing(env)
+
+def _uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_ids = [
+        'project.open_view_project_all',
+        'project.open_view_project_all_group_stage'
+    ]
+    for xml_id in xml_ids:
+        act_window = env.ref(xml_id, raise_if_not_found=False)
+        if act_window and act_window.domain and 'is_internal_project' in act_window.domain:
+            act_window.domain = []
+
+    # archive the internal projects
+    project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).mapped('internal_project_id')
+    if project_ids:
+        project_ids.write({'active': False})
