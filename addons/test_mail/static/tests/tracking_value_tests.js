@@ -5,7 +5,7 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import { editInput, editSelect, patchWithCleanup, patchTimeZone } from "@web/../tests/helpers/utils";
+import { editInput, editSelect, selectDropdownItem, patchWithCleanup, patchTimeZone } from "@web/../tests/helpers/utils";
 
 import session from 'web.session';
 import testUtils from 'web.test_utils';
@@ -323,6 +323,8 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
 QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
     assert.expect(1);
 
+    patchTimeZone(180)
+
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: '2018-12-14 13:42:28 ' });
     const { click } = await this.start({ res_id: mailTestTrackAllId1 });
@@ -331,7 +333,7 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Datetime:12/14/2018 13:42:28None",
+        "Datetime:12/14/2018 16:42:28None",
         "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Datetime: 12/14/2018 13:42:28 -> None)"
     );
 });
@@ -368,15 +370,14 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
-    // skipWOWL: broken editSelect
+QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ selection_field: 'first' });
     const { click } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await editSelect(document.body, 'div[name=selection_field] select', '');
+    await editSelect(document.body, 'div[name=selection_field] select', false);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -401,8 +402,7 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
-    // skipWOWL: broken editAndTrigger
+QUnit.test('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -410,7 +410,7 @@ QUnit.skipWOWL('rendering of tracked field of type many2one: from having a relat
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ many2one_field_id: resPartnerId1 });
     const { click } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(document.querySelector('.o_field_many2one_selection input'), '', ['keyup']);
+    await editInput(document.body, ".o_field_many2one_selection input", '')
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -419,8 +419,7 @@ QUnit.skipWOWL('rendering of tracked field of type many2one: from having a relat
     );
 });
 
-QUnit.skipWOWL('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
-    // skipWOWL: broken editAndTrigger
+QUnit.test('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -428,8 +427,7 @@ QUnit.skipWOWL('rendering of tracked field of type many2one: from no related rec
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
     const { click } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.many2one.clickOpenDropdown('many2one_field_id');
-    await testUtils.fields.many2one.clickItem('many2one_field_id', 'Marc');
+    await selectDropdownItem(document.body, "many2one_field_id", "Marc")
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
