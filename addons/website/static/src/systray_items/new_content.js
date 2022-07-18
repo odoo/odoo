@@ -152,10 +152,7 @@ export class NewContentModal extends Component {
         });
     }
 
-    async installModule(id, redirectUrl, moduleName) {
-        this.website.showLoader({
-            title: sprintf(this.env._t("Building your %s"), moduleName),
-        });
+    async installModule(id, redirectUrl) {
         await this.orm.silent.call(
             'ir.module.module',
             'button_immediate_install',
@@ -190,9 +187,13 @@ export class NewContentModal extends Component {
                     }
                     return el;
                 });
+                this.website.showLoader({
+                    title: sprintf(this.env._t("Building your %s"), name),
+                });
                 try {
-                    await this.installModule(id, element.redirectUrl, name);
+                    await this.installModule(id, element.redirectUrl);
                 } catch (error) {
+                    this.website.hideLoader();
                     // Update the NewContentElement with failure icon and text.
                     this.state.newContentElements = this.state.newContentElements.map(el => {
                         if (el.moduleXmlId === element.moduleXmlId) {
