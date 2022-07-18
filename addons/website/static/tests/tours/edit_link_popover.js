@@ -1,7 +1,6 @@
 odoo.define("website.tour.edit_link_popover", function (require) {
 "use strict";
 
-const tour = require('web_tour.tour');
 const wTourUtils = require('website.tour_utils');
 
 const FIRST_PARAGRAPH = 'iframe #wrap .s_text_image p:nth-child(2)';
@@ -25,9 +24,10 @@ const clickEditLink = [{
     in_modal: false,
 }];
 
-tour.register('edit_link_popover', {
+wTourUtils.registerEditionTour('edit_link_popover', {
     test: true,
-    url: wTourUtils.getClientActionUrl('/', true),
+    url: '/',
+    edition: true,
 }, [
     // 1. Test links in page content (web_editor)
     wTourUtils.dragNDrop({
