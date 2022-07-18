@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "stop event propagation on click to avoid oppening record on tree view",
+        "stop event propagation on click to avoid opening record on tree view",
         async function (assert) {
             await makeView({
                 type: "list",
@@ -142,24 +142,21 @@ QUnit.module("Fields", (hooks) => {
                 arch: `
                     <tree>
                         <field name="int_field" widget="color_picker"/>
+                        <field name="display_name" />
                     </tree>`,
+                selectRecord() {
+                    assert.step("record selected to open");
+                },
             });
 
             await click(target, ".o_field_color_picker button");
-
-            assert.strictEqual(
-                document.querySelectorAll(".o_list_renderer").length,
-                1,
-                "The current view should still be a list view"
-            );
+            assert.verifySteps([]);
 
             await click(target, ".o_field_color_picker .o_colorlist_item_color_6");
+            assert.verifySteps([]);
 
-            assert.strictEqual(
-                document.querySelectorAll(".o_list_renderer").length,
-                1,
-                "The current view should still be a list view"
-            );
+            await click(target, ".o_data_row .o_data_cell:nth-child(2)");
+            assert.verifySteps(["record selected to open"]);
         }
     );
 
