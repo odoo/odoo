@@ -14065,4 +14065,41 @@ QUnit.module("Views", (hooks) => {
             ["yop", "gnap", "blip", "blip"]
         );
     });
+
+    QUnit.test("editable list header click should unselect record", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list editable="top"><field name="display_name" /></list>`,
+            serverData,
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
+        await editInput(target, ".o_data_cell input", "someInput");
+        await click(target.querySelector("thead th:nth-child(2)"));
+        await triggerEvent(target.querySelector("thead th"), null, "keydown", { key: "ArrowDown" });
+
+        assert.containsNone(target, ".o_selected_row");
+    });
+
+    QUnit.test("editable list group header click should unselect record", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list editable="top"><field name="display_name" /></list>`,
+            serverData,
+            groupBy: ["bar"],
+        });
+
+        await click(target.querySelector(".o_group_header"));
+        await click(target.querySelector(".o_group_header:not(.o_group_open)"));
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
+        await editInput(target, ".o_data_cell input", "someInput");
+        await click(target.querySelectorAll(".o_group_header")[1]);
+
+        assert.containsNone(target, ".o_selected_row");
+    });
 });
