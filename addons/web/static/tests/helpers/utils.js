@@ -171,7 +171,7 @@ function findElement(el, selector) {
 }
 
 function keyboardEventBubble(args) {
-    return Object.assign({}, args, { bubbles: true, keyCode: args.which });
+    return Object.assign({}, args, { bubbles: true, keyCode: args.which, cancelable: true });
 }
 
 function mouseEventMapping(args) {
@@ -278,7 +278,7 @@ function _makeEvent(eventType, eventAttrs) {
     return event;
 }
 
-export async function triggerEvent(el, selector, eventType, eventAttrs = {}, options = {}) {
+export function triggerEvent(el, selector, eventType, eventAttrs = {}, options = {}) {
     const event = _makeEvent(eventType, eventAttrs);
     const target = findElement(el, selector);
     if (!target) {
@@ -296,7 +296,7 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}, opt
     }
     target.dispatchEvent(event);
     if (!options.fast) {
-        await nextTick();
+        return nextTick().then(() => event);
     }
     return event;
 }
