@@ -38,8 +38,9 @@ QUnit.test('create (channel)', async function (assert) {
 
     const thread = messaging.models['Thread'].insert({
         channel: insertAndReplace({
-            id: 100,
             channel_type: 'channel',
+            id: 100,
+            public: 'public',
         }),
         id: 100,
         members: insert([{
@@ -54,7 +55,6 @@ QUnit.test('create (channel)', async function (assert) {
         message_needaction_counter: 6,
         model: 'mail.channel',
         name: "General",
-        public: 'public',
         serverMessageUnreadCounter: 5,
     });
     assert.ok(thread);
@@ -77,7 +77,7 @@ QUnit.test('create (channel)', async function (assert) {
     assert.ok(thread.members.includes(partner10));
     assert.strictEqual(thread.message_needaction_counter, 6);
     assert.strictEqual(thread.name, "General");
-    assert.strictEqual(thread.public, 'public');
+    assert.strictEqual(thread.channel.public, 'public');
     assert.strictEqual(thread.serverMessageUnreadCounter, 5);
     assert.strictEqual(partner9.email, "john@example.com");
     assert.strictEqual(partner9.id, 9);

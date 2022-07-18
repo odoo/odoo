@@ -1010,6 +1010,7 @@ patch(MockServer.prototype, 'mail', {
                 channel_type: channel.channel_type,
                 defaultDisplayMode: channel.default_display_mode,
                 id: channel.id,
+                public: channel.public,
                 uuid: channel.uuid,
             };
             const res = Object.assign({}, channel, {

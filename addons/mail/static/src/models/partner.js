@@ -78,7 +78,7 @@ registerModel({
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
             const kwargs = { search: searchTerm };
-            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            const isNonPublicChannel = thread && thread.channel && thread.channel.public !== 'public';
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
@@ -219,7 +219,7 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let partners;
-            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            const isNonPublicChannel = thread && thread.channel && thread.channel.public !== 'public';
             if (isNonPublicChannel) {
                 // Only return the channel members when in the context of a
                 // non-public channel. Indeed, the message with the mention

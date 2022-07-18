@@ -168,7 +168,7 @@ registerModel({
             }
             if (
                 !this.thread.authorizedGroupFullName ||
-                this.thread.public !== 'groups'
+                this.thread.channel.public !== 'groups'
             ) {
                 return clear();
             }

@@ -107,9 +107,6 @@ registerModel({
             if ('name' in data) {
                 data2.name = data.name;
             }
-            if ('public' in data) {
-                data2.public = data.public;
-            }
             if ('seen_message_id' in data) {
                 data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id || 0;
             }
@@ -447,7 +444,7 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let threads;
-            if (thread && thread.model === 'mail.channel' && thread.public !== 'public') {
+            if (thread && thread.channel && thread.channel.public !== 'public') {
                 // Only return the current channel when in the context of a
                 // non-public channel. Indeed, the message with the mention
                 // would appear in the target channel, so this prevents from
@@ -2103,7 +2100,6 @@ registerModel({
          * server.
          */
         pendingSeenMessageId: attr(),
-        public: attr(),
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */

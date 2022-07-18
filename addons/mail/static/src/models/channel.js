@@ -69,7 +69,7 @@ registerModel({
             if (
                 this.channel_type === 'chat' &&
                 this.correspondent &&
-                this.thread.public === 'private'
+                this.public === 'private'
             ) {
                 return replace(this.correspondent);
             }
@@ -235,6 +235,7 @@ registerModel({
             inverse: 'channelAsOnlineMember',
             sort: '_sortMembers',
         }),
+        public: attr(),
         thread: one('Thread', {
             compute: '_computeThread',
             inverse: 'channel',

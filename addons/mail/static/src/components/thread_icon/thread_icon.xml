@@ -5,13 +5,13 @@
         <t t-if="thread">
             <div class="o_ThreadIcon d-flex justify-content-center flex-shrink-0" t-attf-class="{{ className }}" t-ref="root" name="root">
                 <t t-if="thread.channel and thread.channel.channel_type === 'channel'">
-                    <t t-if="thread.public === 'private'">
+                    <t t-if="thread.channel.public === 'private'">
                         <div class="o_ThreadIcon_channelPrivate fa fa-fw fa-lock" title="Private channel"/>
                     </t>
-                    <t t-if="thread.public === 'public'">
+                    <t t-if="thread.channel.public === 'public'">
                         <div class="o_ThreadIcon_channelPublic fa fa-fw fa-globe" title="Public channel"/>
                     </t>
-                    <t t-if="thread.public === 'groups'">
+                    <t t-if="thread.channel.public === 'groups'">
                         <div class="o_ThreadIcon_channelGroups fa fa-fw fa-hashtag" title="Selected group of users"/>
                     </t>
                 </t>
