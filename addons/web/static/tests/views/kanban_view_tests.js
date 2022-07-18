@@ -9187,7 +9187,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        assert.containsOnce(getCard(0), "div.o_field_boolean .form-check");
+        assert.containsOnce(getCard(0), "div.o_field_boolean .o-checkbox");
     });
 
     QUnit.test("kanban view with boolean toggle widget", async (assert) => {

@@ -43,15 +43,15 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".form-check.o_boolean_toggle .fa-check-circle",
-            "Boolean toggle should have fa-check-circle icon"
+            ".form-check.o_boolean_toggle input:checked",
+            "Boolean toggle should be checked"
         );
 
         await click(target, ".o_field_widget[name='bar'] input");
         assert.containsOnce(
             target,
-            ".form-check.o_boolean_toggle .fa-times-circle",
-            "Boolean toggle should have fa-times-circle icon"
+            ".form-check.o_boolean_toggle input:not(:checked)",
+            "Boolean toggle shouldn't be checked"
         );
     });
 

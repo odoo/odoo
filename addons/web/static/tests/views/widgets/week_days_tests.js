@@ -82,7 +82,7 @@ QUnit.module("Widgets", ({ beforeEach }) => {
 
         assert.containsN(
             fixture,
-            ".custom-control input:disabled",
+            "input:disabled",
             7,
             "all inputs should be disabled in readonly mode"
         );
