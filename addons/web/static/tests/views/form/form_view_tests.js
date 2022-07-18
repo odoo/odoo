@@ -293,7 +293,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_field_one2many table");
         assert.containsOnce(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check input:checked"
+            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked"
         );
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });

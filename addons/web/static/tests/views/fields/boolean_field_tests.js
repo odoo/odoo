@@ -176,13 +176,13 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check",
+            "tbody td:not(.o_list_record_selector) .o-checkbox input",
             5,
             "should have 5 checkboxes"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check input:checked",
+            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
             4,
             "should have 4 checked input"
         );
@@ -190,52 +190,52 @@ QUnit.module("Fields", (hooks) => {
         // Edit a line
         let cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.ok(
-            cell.querySelector(".form-check input:checked").disabled,
+            cell.querySelector(".o-checkbox input:checked").disabled,
             "input should be disabled in readonly mode"
         );
         await click(cell);
         assert.notOk(
-            cell.querySelector(".form-check input:checked").disabled,
+            cell.querySelector(".o-checkbox input:checked").disabled,
             "input should not have the disabled property in edit mode"
         );
-        await click(cell, ".form-check");
+        await click(cell, ".o-checkbox");
 
         // save
         await click(target.querySelector(".o_list_button_save"));
         cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.ok(
-            cell.querySelector(".form-check input:not(:checked)").disabled,
+            cell.querySelector(".o-checkbox input:not(:checked)").disabled,
             "input should be disabled again"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check",
+            "tbody td:not(.o_list_record_selector) .o-checkbox",
             5,
             "should still have 5 checkboxes"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check input:checked",
+            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
             3,
             "should now have only 3 checked input"
         );
 
         // Re-Edit the line and fake-check the checkbox
         await click(cell);
-        await click(cell, ".form-check");
-        await click(cell, ".form-check");
+        await click(cell, ".o-checkbox");
+        await click(cell, ".o-checkbox");
 
         // Save
         await click(target.querySelector(".o_list_button_save"));
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check",
+            "tbody td:not(.o_list_record_selector) .o-checkbox",
             5,
             "should still have 5 checkboxes"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check input:checked",
+            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
             3,
             "should still have only 3 checked input"
         );
@@ -247,18 +247,18 @@ QUnit.module("Fields", (hooks) => {
         await click(cell, ".o_field_boolean");
 
         assert.notOk(
-            cell.querySelector(".form-check input").disabled,
+            cell.querySelector(".o-checkbox input").disabled,
             "input should not have the disabled property in edit mode"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check",
+            "tbody td:not(.o_list_record_selector) .o-checkbox",
             5,
             "should still have 5 checkboxes"
         );
         assert.containsN(
             target,
-            "tbody td:not(.o_list_record_selector) .form-check input:checked",
+            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
             3,
             "should still have only 3 checked input"
         );
@@ -291,7 +291,7 @@ QUnit.module("Fields", (hooks) => {
             "checkbox should still be disabled"
         );
 
-        await click(target, ".o_field_boolean .form-check");
+        await click(target, ".o_field_boolean .o-checkbox");
         assert.containsOnce(
             target,
             ".o_field_boolean input:checked",

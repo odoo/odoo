@@ -261,7 +261,7 @@ export class ListRenderer extends Component {
         table.classList.add("o_list_computing_widths");
 
         const headers = [...table.querySelectorAll("thead th")];
-        const columnWidths = headers.map((th) => th.offsetWidth);
+        const columnWidths = headers.map((th) => Math.floor(th.getBoundingClientRect().width));
         const getWidth = (th) => columnWidths[headers.indexOf(th)] || 0;
         const getTotalWidth = () => columnWidths.reduce((tot, width) => tot + width, 0);
         const shrinkColumns = (thsToShrink, shrinkAmount) => {
