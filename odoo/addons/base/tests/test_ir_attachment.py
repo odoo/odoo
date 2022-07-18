@@ -7,6 +7,7 @@ import os
 
 from PIL import Image
 
+import odoo
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 from odoo.tools import image_to_base64
@@ -230,6 +231,34 @@ class TestIrAttachment(TransactionCase):
         self.assertEqual(document3.db_datas, False)
         self.assertEqual(document3.store_fname, self.blob1_fname)
         self.assertEqual(document3.checksum, self.blob1_hash)
+
+    def test_12_gc(self):
+        # the data needs to be unique so that no other attachment link
+        # the file so that the gc removes it
+        unique_blob = os.urandom(16)
+        a1 = self.Attachment.create({'name': 'a1', 'raw': unique_blob})
+        store_path = os.path.join(self.filestore, a1.store_fname)
+        self.assertTrue(os.path.isfile(store_path), 'file exists')
+        a1.unlink()
+        self.Attachment._gc_file_store_unsafe()
+        self.assertFalse(os.path.isfile(store_path), 'file removed')
+
+    def test_13_rollback(self):
+        self.registry.enter_test_mode(self.cr)
+        self.addCleanup(self.registry.leave_test_mode)
+        self.cr = self.registry.cursor()
+        self.addCleanup(self.cr.close)
+        self.env = odoo.api.Environment(self.cr, odoo.SUPERUSER_ID, {})
+
+        # the data needs to be unique so that no other attachment link
+        # the file so that the gc removes it
+        unique_blob = os.urandom(16)
+        a1 = self.Attachment.create({'name': 'a1', 'raw': unique_blob})
+        store_path = os.path.join(self.filestore, a1.store_fname)
+        self.assertTrue(os.path.isfile(store_path), 'file exists')
+        self.env.cr.rollback()
+        self.Attachment._gc_file_store_unsafe()
+        self.assertFalse(os.path.isfile(store_path), 'file removed')
 
 
 class TestPermissions(TransactionCase):

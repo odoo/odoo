@@ -174,6 +174,12 @@ class IrAttachment(models.Model):
         cr.execute("SET LOCAL lock_timeout TO '10s'")
         cr.execute("LOCK ir_attachment IN SHARE MODE")
 
+        self._gc_file_store_unsafe()
+
+        # commit to release the lock
+        cr.commit()
+
+    def _gc_file_store_unsafe(self):
         # retrieve the file names from the checklist
         checklist = {}
         for dirpath, _, filenames in os.walk(self._full_path('checklist')):
@@ -185,10 +191,10 @@ class IrAttachment(models.Model):
         # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
         # for each chunk.
         removed = 0
-        for names in cr.split_for_in_conditions(checklist):
+        for names in self.env.cr.split_for_in_conditions(checklist):
             # determine which files to keep among the checklist
-            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist = set(row[0] for row in cr.fetchall())
+            self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+            whitelist = set(row[0] for row in self.env.cr.fetchall())
 
             # remove garbage files, and clean up checklist
             for fname in names:
@@ -203,8 +209,6 @@ class IrAttachment(models.Model):
                 with tools.ignore(OSError):
                     os.unlink(filepath)
 
-        # commit to release the lock
-        cr.commit()
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
     @api.depends('store_fname', 'db_datas', 'file_size')
