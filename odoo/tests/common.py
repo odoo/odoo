@@ -38,7 +38,7 @@ from lxml import etree, html
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.tools import float_compare, single_email_re
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import find_in_path, OrderedSet
 from odoo.tools.safe_eval import safe_eval
 
 try:
@@ -2432,15 +2432,45 @@ def tagged(*tags):
     return tags_decorator
 
 
+def split_parts(command):
+    # split on ',' but not inside '[]'
+    parts = []
+    part = ''
+    level = 0
+    for component in re.split('([\[\],])', command):
+        if level == 0 and component == ',':
+            parts.append(part)
+            part = ''
+        else:
+            part += component
+            if component == '[':
+                level += 1
+            elif component == ']':
+                level -= 1
+        assert level >= 0
+    parts.append(part)
+    assert level == 0
+    return parts
+        
 class TagsSelector(object):
     """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
+    filter_spec_re = re.compile(r"""
+        ^
+        ([+-]?)        #operator_re
+        (\*|\w*)       #tag_re
+        (?:/(\w*))?    #module_re
+        (?::(\w*))?    #test_class_re
+        (?:\.(\w*))?   #test_method_re
+        (?:\[(.*)\])?  #parameters
+        $
+    """, re.VERBOSE)
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        filter_specs = {t.strip() for t in spec.split(',') if t.strip()}
-        self.exclude = set()
-        self.include = set()
+        parts = split_parts(spec)
+        filter_specs = [t.strip() for t in parts if t.strip()]
+        self.exclude = OrderedSet()
+        self.include = OrderedSet()
 
         for filter_spec in filter_specs:
             match = self.filter_spec_re.match(filter_spec)
@@ -2448,7 +2478,7 @@ class TagsSelector(object):
                 _logger.error('Invalid tag %s', filter_spec)
                 continue
 
-            sign, tag, module, klass, method = match.groups()
+            sign, tag, module, klass, method, parameters = match.groups()
             is_include = sign != '-'
 
             if not tag and is_include:
@@ -2457,7 +2487,10 @@ class TagsSelector(object):
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
-            test_filter = (tag, module, klass, method)
+
+            if parameters and not is_include:
+                _logger.warning('Negative tag with parameters makes no sense %s', filter_spec)
+            test_filter = (tag, module, klass, method, parameters)
 
             if is_include:
                 self.include.add(test_filter)
@@ -2465,7 +2498,7 @@ class TagsSelector(object):
                 self.exclude.add(test_filter)
 
         if self.exclude and not self.include:
-            self.include.add(('standard', None, None, None))
+            self.include.add(('standard', None, None, None, None))
 
     def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
@@ -2480,8 +2513,10 @@ class TagsSelector(object):
         test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
         test_method = getattr(test, '_testMethodName', None)
 
-        def _is_matching(test_filter):
-            (tag, module, klass, method) = test_filter
+        test._test_params = []
+
+        def _match(test_filter):
+            (tag, module, klass, method, parameter) = test_filter
             if tag and tag not in test_tags:
                 return False
             elif module and module != test_module:
@@ -2490,12 +2525,16 @@ class TagsSelector(object):
                 return False
             elif method and test_method and method != test_method:
                 return False
+            if parameter:
+                test._test_params.append(parameter)
             return True
 
-        if any(_is_matching(test_filter) for test_filter in self.exclude):
+        if any(_match(test_filter) for test_filter in self.exclude):
             return False
 
-        if any(_is_matching(test_filter) for test_filter in self.include):
-            return True
+        matched = False
 
-        return False
+        for test_filter in self.include:
+            matched |= _match(test_filter)  # iterate on all tags to accumulate all parameters
+
+        return matched
