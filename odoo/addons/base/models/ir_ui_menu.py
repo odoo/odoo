@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from collections import defaultdict
-import operator
+from collections import defaultdict, namedtuple
 import re
 
 from odoo import api, fields, models, tools, _
@@ -14,6 +13,8 @@ from odoo.osv import expression
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
+MODEL_TO_MENU_ACTION_VIEW_MODE_PREFERRED = re.compile(r"kanban|tree|form")
+MenuRootInfo = namedtuple("MenuRootInfo", "menu_id menu_root_id preference")
 
 
 class IrUiMenu(models.Model):
@@ -314,3 +315,54 @@ class IrUiMenu(models.Model):
             menu.res_id: menu.complete_name
             for menu in menuitems
         }
+
+    @api.model
+    @tools.ormcache()
+    def _get_model_to_menu_root_info(self):
+        """ Get intermediate cached data useful to determine the best root menu for a given model.
+
+        The mapping is built from the models associated with ir.actions.act_window linked to menu items and propagated
+        to the root menus.
+
+        :return (dict): model name to list of tuples (menu_id, menu_root_id) ordered by decreasing preference
+        """
+        menus = self.with_context({'ir.ui.menu.full_list': True}).search(
+            [('action', 'like', 'ir.actions.act_window,%')]).sudo()
+
+        # Build a nested dict that maps menu action model to menu root id while keeping the menu.id linked to the action
+        model_to_menu_info = defaultdict(list)
+        for menu in menus:
+            action = menu.action
+            preference = 0 if re.match(MODEL_TO_MENU_ACTION_VIEW_MODE_PREFERRED, action.view_mode) else -5
+            # number of : in context =~ number of variable in the context (dictionary)
+            preference -= action.context.count(':') if action.context else 0
+            # number of , (+1) /3 in domain =~ number of condition
+            preference -= (action.domain.count(',') + 1) // 3 if action.domain else 0
+            menu_root_id = int(menu.parent_path[:menu.parent_path.index('/')])
+            model_to_menu_info[action.res_model].append(MenuRootInfo(menu.id, menu_root_id, preference))
+        return {model: [(menu_info.menu_id, menu_info.menu_root_id)
+                        for menu_info in sorted(menu_infos, key=lambda menu_info: menu_info.preference, reverse=True)]
+                for model, menu_infos in model_to_menu_info.items()}
+
+    @api.model
+    def _get_best_menu_root_for_model(self, res_model):
+        """Get the best menu root id for the given res_model and the access rights of the user.
+
+        When a link to a model was sent to a user it was targeting a page without menu, so it was hard for the user to
+        act on it. The goal of this method is to find the best suited menu to display on a page of a given model.
+
+        Technically, the method tries to find a menu root which has a sub menu visible to the user that has an action
+        linked to the given model. If there are more than one possibility, it uses a simple heuristic to returns the
+        best one.
+
+        :param str res_model: the model name for which we want to find the best menu root
+        :return (int): the best menu root id or None if not found
+        """
+        # Get menu_ids linked to res_model (through action) and visible by the user
+        self_sudo = self.sudo()
+        visible_menu_ids = self_sudo._visible_menu_ids()
+        # Iterate the menu root info by decreasing preference and return the first one visible to the user
+        for menu_id, menu_root_id in self_sudo._get_model_to_menu_root_info().get(res_model, {}):
+            if menu_id in visible_menu_ids:
+                return menu_root_id
+        # No root menu found for the given model

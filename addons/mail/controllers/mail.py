@@ -123,6 +123,9 @@ class MailController(http.Controller):
             'active_id': res_id,
             'action': record_action.get('id'),
         }
+        menu_id = request.env['ir.ui.menu']._get_best_menu_root_for_model(model)
+        if menu_id:
+            url_params['menu_id'] = menu_id
         view_id = record_sudo.get_formview_id()
         if view_id:
             url_params['view_id'] = view_id
