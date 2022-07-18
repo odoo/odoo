@@ -3,16 +3,20 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
-import { FileUploader } from "../file_handler";
+import { FileInput } from "@web/core/file_input/file_input";
+import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-const { Component, useState } = owl;
+const { Component } = owl;
 
 export class Many2ManyBinaryField extends Component {
     setup() {
-        this.state = useState({
-            files: this.props.value.records.map((record) => record.data),
-        });
         this.orm = useService("orm");
+        this.notification = useService("notification");
+        this.operations = useX2ManyCrud(() => this.props.value, true);
+    }
+
+    get files() {
+        return this.props.value.records.map((record) => record.data);
     }
 
     getUrl(id) {
@@ -23,29 +27,27 @@ export class Many2ManyBinaryField extends Component {
         return file.name.replace(/^.*\./, "");
     }
 
-    async onFileUploaded(file) {
-        const data = await this.orm.call("ir.attachment", "name_create", [file], {
-            context: this.props.context,
-        });
-        const ids = [...this.props.value.currentIds, data[0]];
-        this.props.value.replaceWith(ids);
-
-        const res = {
-            ...data[1],
-            id: data[0],
-        };
-        this.state.files.push(res);
+    async onFileUploaded(files) {
+        for (const file of files) {
+            if (file.error) {
+                return this.notification.add(file.error, {
+                    title: this.env._t("Uploading error"),
+                    type: "danger",
+                });
+            }
+            await this.operations.saveRecord([file.id]);
+        }
     }
 
-    async onFileRemove(ev) {
-        const ids = this.props.value.currentIds.filter((id) => id !== Number(ev.target.dataset.id));
-        this.props.value.replaceWith(ids);
+    async onFileRemove(deleteId) {
+        const record = this.props.value.records.find((record) => record.data.id === deleteId);
+        this.operations.removeRecord(record);
     }
 }
 
 Many2ManyBinaryField.template = "web.Many2ManyBinaryField";
 Many2ManyBinaryField.components = {
-    FileUploader,
+    FileInput,
 };
 Many2ManyBinaryField.props = {
     ...standardFieldProps,
