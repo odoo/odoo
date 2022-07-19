@@ -55,12 +55,27 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.promo_programs |= self.auto_promo_program_next
 
+        self.code_promo_program_free_product = self.env["coupon.program"].create(
+            {
+                "name": "Promo Program - Buy 3 Whiteboard Pen, Get 1 Magnetic Board",
+                "program_type": "promotion_program",
+                "rule_products_domain": "[('name', '=', 'Whiteboard Pen')]",
+                "promo_code_usage": "code_needed",
+                "promo_code": "board",
+                "reward_type": "product",
+                "rule_min_quantity": 3,
+                "reward_product_id": self.magnetic_board.id,
+                "reward_product_quantity": 1,
+            }
+        )
+        self.promo_programs |= self.code_promo_program_free_product
+
         # coupon program -> free product
         self.coupon_program = self.env["coupon.program"].create(
             {
                 "name": "Coupon Program - Buy 3 Take 2 Free Product",
                 "program_type": "coupon_program",
-                "rule_products_domain": "[('name', 'ilike', 'Desk Organizer')]",
+                "rule_products_domain": "[('name', '=', 'Desk Organizer')]",
                 "reward_type": "product",
                 "rule_min_quantity": 3,
                 "reward_product_id": self.desk_organizer.id,
@@ -124,16 +139,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             msg="`5678` coupon code is used but was eventually freed.",
         )
         # check pos_order_count in each program
-        self.assertEqual(self.auto_promo_program_current.pos_order_count, 3)
+        self.assertEqual(self.auto_promo_program_current.pos_order_count, 4)
         self.assertEqual(self.auto_promo_program_next.pos_order_count, 0)
         self.assertEqual(self.code_promo_program.pos_order_count, 1)
+        self.assertEqual(self.code_promo_program_free_product.pos_order_count, 1)
         self.assertEqual(self.coupon_program.pos_order_count, 1)
         # check number of generated coupons
-        self.assertEqual(len(self.auto_promo_program_next.coupon_ids), 5)
+        self.assertEqual(len(self.auto_promo_program_next.coupon_ids), 6)
         # check number of orders in the session
         pos_session = self.main_pos_config.current_session_id
         self.assertEqual(
-            len(pos_session.order_ids), 5, msg="5 orders were made in tour part1."
+            len(pos_session.order_ids), 6, msg="6 orders were made in tour part1."
         )
 
         ##
@@ -164,7 +180,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(self.coupon4.state, "new")
         self.assertEqual(promo_coupon4.state, "new")
         # check pos_order_count in each program
-        self.assertEqual(self.auto_promo_program_current.pos_order_count, 5)
+        self.assertEqual(self.auto_promo_program_current.pos_order_count, 6)
         self.assertEqual(self.auto_promo_program_next.pos_order_count, 2)
         self.assertEqual(self.code_promo_program.pos_order_count, 2)
         self.assertEqual(self.coupon_program.pos_order_count, 3)
