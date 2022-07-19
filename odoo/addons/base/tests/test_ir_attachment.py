@@ -205,6 +205,12 @@ class TestIrAttachment(TransactionCase):
         attach.raw = img_bin
         self.assertApproximately(attach.raw, fullsize)
 
+        # no resize of gif
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0x0')
+        gif_bin = b'GIF89a\x01\x00\x01\x00\x00\xff\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x00;'
+        attach.raw = gif_bin
+        self.assertEqual(attach.raw, gif_bin)
+
     def test_11_copy(self):
         """
         Copying an attachment preserves the data

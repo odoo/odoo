@@ -303,7 +303,7 @@ class IrAttachment(models.Model):
 
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo().get_param
-        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,gif,bmp,tif').split(',')
+        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         _type, _subtype = mimetype.split('/')
@@ -315,20 +315,22 @@ class IrAttachment(models.Model):
             max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
             if str2bool(max_resolution, True):
                 try:
-                    img = fn_quality = False
+                    img = False
                     if is_raw:
                         img = ImageProcess(values['raw'], verify_resolution=False)
-                        fn_quality = img.image_quality
                     else:  # datas
                         img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
-                        fn_quality = lambda **args: base64.b64encode(img.image_quality(**args))
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
-                        img.resize(nw, nh)
+                        img = img.resize(nw, nh)
                         quality = int(ICP('base.image_autoresize_quality', 80))
-                        values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
+                        image_data = img.image_quality(quality=quality)
+                        if is_raw:
+                            values['raw'] = image_data
+                        else:
+                            values['datas'] = base64.b64encode(image_data)
                 except UserError as e:
                     # Catch error during test where we provide fake image
                     # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
