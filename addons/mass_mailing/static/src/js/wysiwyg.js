@@ -37,9 +37,10 @@ const MassMailingWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
-    _getCommands: function () {
-        const commands = this._super();
-        const linkCommands = commands.filter(command => command.title === 'Link' || command.title === 'Button');
+    _getPowerboxOptions: function () {
+        const options = this._super();
+        const {commands} = options;
+        const linkCommands = commands.filter(command => command.name === 'Link' || command.name === 'Button');
         for (const linkCommand of linkCommands) {
             // Don't open the dialog: use the link tools.
             linkCommand.callback = () => this.toggleLinkTools({forceDialog: false});
@@ -55,7 +56,7 @@ const MassMailingWysiwyg = Wysiwyg.extend({
                 }
             }
         }
-        return commands;
+        return {...options, commands};
     },
     /**
      * @override
