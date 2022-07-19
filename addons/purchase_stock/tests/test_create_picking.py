@@ -604,8 +604,8 @@ class TestCreatePicking(common.TestProductCommon):
     def test_update_qty_purchased(self):
         """
             Test that the price unit in the purchase order line and the move is updated
-            according to the pricelist defined in the product, and that the "stock.moves"
-            are merged correctly when changing the qty purchased.
+            according to the price defined in the PO line when the PO is confirmed,
+            and that the "stock.moves" are merged correctly when changing the qty purchased.
         """
         # add vendor to the product
         self.product_id_1.seller_ids = [(0, 0, {
@@ -634,10 +634,11 @@ class TestCreatePicking(common.TestProductCommon):
         # update the product qty purchased
         with po_form.order_line.edit(0) as po_line:
             po_line.product_qty = 9
+            po_line.price_unit = 10
         purchase_order = po_form.save()
         # verify that the move for the decreased qty has been merged with the initial move
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_ids), 1)
         # check that the price has been updated in the purchase order line and in the stock.move
-        self.assertEqual(purchase_order.order_line.price_unit, 0)
-        self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 0)
+        self.assertEqual(purchase_order.order_line.price_unit, 10)
+        self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 10)
