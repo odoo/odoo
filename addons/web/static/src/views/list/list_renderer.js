@@ -1377,6 +1377,44 @@ export class ListRenderer extends Component {
         return false;
     }
 
+    async onCreateAction(context) {
+        // TO DISCUSS: is it a use case for owl `batched()` ?
+        if (this.createProm) {
+            return;
+        }
+        this.props.onAdd({ context });
+        this.createProm = Promise.resolve();
+        this.createProm.then(() => {
+            this.lastCreatingAction = true;
+        });
+        await this.createProm;
+        this.createProm = null;
+    }
+
+    /**
+     * @param {FocusEvent & {
+     *  target: HTMLElement,
+     *  relatedTarget: HTMLElement | null
+     * }} ev
+     */
+    onFocusIn(ev) {
+        const { relatedTarget, target } = ev;
+        const fromOutside = !this.rootRef.el.contains(relatedTarget);
+        if (!fromOutside) {
+            return;
+        }
+
+        const isX2MRowAdder =
+            target.tagName === "A" &&
+            target.parentElement.classList.contains("o_field_x2many_list_row_add");
+        const withinSameUIActiveElement =
+            this.uiService.getActiveElementOf(relatedTarget) === this.activeElement;
+        if (withinSameUIActiveElement && isX2MRowAdder) {
+            const { context } = this.creates[0];
+            this.onCreateAction(context);
+        }
+    }
+
     setDirty(isDirty) {
         this.lastIsDirty = isDirty;
     }
