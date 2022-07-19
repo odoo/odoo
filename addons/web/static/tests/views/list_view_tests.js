@@ -6750,8 +6750,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         //it will not create a new line unless a modification is made
-        document.activeElement.value = "blip-changed";
-        await triggerEvent(document.activeElement, null, "change");
+        await editInput(document.activeElement, null, "blip-changed");
         triggerHotkey("Tab");
         await nextTick();
         assert.strictEqual(

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { HtmlField } from "@web/views/fields/html/html_field";
@@ -52,15 +52,11 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.ok(textarea, "should have a text area");
         assert.strictEqual(textarea.value, RED_TEXT);
 
-        textarea.value = GREEN_TEXT;
-        await triggerEvent(textarea, null, "change");
-
+        await editInput(textarea, null, GREEN_TEXT);
         assert.strictEqual(textarea.value, GREEN_TEXT);
         assert.containsNone(target.querySelector(".o_field_html"), ".kek");
 
-        textarea.value = /* html */ BLUE_TEXT;
-        await triggerEvent(textarea, null, "change");
-
+        await editInput(textarea, null, BLUE_TEXT);
         assert.strictEqual(textarea.value, BLUE_TEXT);
 
         await click(target, ".o_form_button_save");

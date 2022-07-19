@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 const serviceRegistry = registry.category("services");
@@ -94,13 +94,10 @@ QUnit.module("Fields", (hooks) => {
         assert.ok(textarea, "should have a text area");
         assert.strictEqual(textarea.value, "yop", "should still be 'yop' in edit");
 
-        textarea.value = "hello";
-        await triggerEvent(textarea, null, "change");
+        await editInput(textarea, null, "hello");
         assert.strictEqual(textarea.value, "hello", "should be 'hello' after first edition");
 
-        textarea.value = "hello world";
-        await triggerEvent(textarea, null, "change");
-
+        await editInput(textarea, null, "hello world");
         assert.strictEqual(
             textarea.value,
             "hello world",
@@ -198,8 +195,7 @@ QUnit.module("Fields", (hooks) => {
         let textarea = target.querySelector(".o_field_widget[name='txt'] textarea");
         const initialHeight = textarea.offsetHeight;
 
-        textarea.value = "Short value";
-        await triggerEvent(textarea, null, "change");
+        await editInput(textarea, null, "Short value");
 
         assert.ok(textarea.offsetHeight < initialHeight, "Textarea height should have shrank");
 

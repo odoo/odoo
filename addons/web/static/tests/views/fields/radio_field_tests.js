@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -347,9 +347,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // trigger an onchange that will update the domain
-            const input = target.querySelector(".o_field_widget[name='int_field'] input");
-            input.value = "2";
-            await triggerEvent(input, null, "change");
+            await editInput(target, ".o_field_widget[name='int_field'] input", "2");
             assert.containsNone(
                 target,
                 ".o_field_widget[name='trululu'] .o_radio_item",
