@@ -11,8 +11,10 @@
                     context="{'default_model': model_name}"
                     attrs="{'invisible': [('state', '!=', 'sms')],
                             'required': [('state', '=', 'sms')]}"/>
-                <field name="sms_mass_keep_log"
-                    attrs="{'invisible': [('state', '!=', 'sms')]}"/>
+                <field name="sms_method"
+                       string="Send as"
+                       attrs="{'invisible': [('state', '!=', 'sms')],
+                               'required': [('state', '=', 'sms')]}"/>
             </xpath>
         </field>
     </record>
