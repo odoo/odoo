@@ -13,8 +13,9 @@ function cycle(num, max) {
 
 /**
  * interface PowerboxCommand {
- *     groupName: string;
- *     title: string;
+ *     category: string;
+ *     name: string;
+ *     priority: number;
  *     description: string;
  *     fontawesome: string; // a fontawesome class name
  *     callback: () => void; // to execute when the command is picked
@@ -24,9 +25,10 @@ function cycle(num, max) {
 
 export class Powerbox {
     constructor({
-        commands, commandFilters, editable, getContextFromParentRect,
+        categories, commands, commandFilters, editable, getContextFromParentRect,
         onOpen, onShow, onStop, beforeCommand, afterCommand
     } = {}) {
+        this.categories = categories;
         this.commands = commands;
         this.commandFilters = commandFilters || [];
         this.editable = editable;
@@ -41,11 +43,11 @@ export class Powerbox {
 
         // Draw the powerbox.
         this.el = document.createElement('div');
-        this.el.className = 'oe-commandbar-wrapper';
+        this.el.className = 'oe-powerbox-wrapper';
         this.el.style.display = 'none';
         document.body.append(this.el);
         this._mainWrapperElement = document.createElement('div');
-        this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
+        this._mainWrapperElement.className = 'oe-powerbox-mainWrapper';
         this.el.append(this._mainWrapperElement);
         this.el.addEventListener('mousedown', ev => ev.stopPropagation());
 
@@ -84,19 +86,24 @@ export class Powerbox {
      * Open the Powerbox with the given commands or with all instance commands.
      *
      * @param {PowerboxCommand[]} [commands=this.commands]
+     * @param {Array<{name: string, priority: number}} [categories=this.categories]
      */
-    open(commands=this.commands) {
+    open(commands=this.commands, categories=this.categories) {
         if (this.onOpen) {
             this.onOpen();
         }
-        commands = this._getCurrentCommands(commands);
+        // Remove duplicate category names, keeping only last declared version.
+        categories = [...categories].reverse().filter((category, index, cats) => (
+            cats.findIndex(cat => cat.name === category.name) === index
+        ));
+        commands = this._getCurrentCommands(this._orderByPriority(commands), this._orderByPriority(categories));
         this._context = {
-            commands, filteredCommands: commands, selectedCommand: undefined,
+            commands, categories, filteredCommands: commands, selectedCommand: undefined,
             initialTarget: this.editable, initialValue: this.editable.textContent,
             lastText: undefined,
         }
         this.isOpen = true;
-        this._render(this._context.commands);
+        this._render(this._context.commands, this._context.categories);
         this._bindEvents();
         this.show();
     }
@@ -136,43 +143,44 @@ export class Powerbox {
     // -------------------------------------------------------------------------
 
     /**
-     * Render the Powerbox with the given commands, grouped by `groupName`.
+     * Render the Powerbox with the given commands, grouped by `category`.
      *
      * @private
      * @param {PowerboxCommand[]} commands
+     * @param {Array<{name: string, priority: number}} categories
      */
-    _render(commands) {
+    _render(commands, categories) {
         const parser = new DOMParser();
         this._mainWrapperElement.innerHTML = '';
         this._hoverActive = false;
-        this._mainWrapperElement.classList.toggle('oe-commandbar-noResult', commands.length === 0);
+        this._mainWrapperElement.classList.toggle('oe-powerbox-noResult', commands.length === 0);
         this._context.selectedCommand = commands.find(command => command === this._context.selectedCommand) || commands[0];
-        for (const [groupName, groupCommands] of Object.entries(this._groupCommands(commands))) {
-            const groupWrapperEl = parser.parseFromString(`
-                <div class="oe-commandbar-groupWrapper">
-                    <div class="oe-commandbar-groupName"></div>
+        for (const [category, categoryCommands] of this._groupCommands(commands, categories)) {
+            const categoryWrapperEl = parser.parseFromString(`
+                <div class="oe-powerbox-categoryWrapper">
+                    <div class="oe-powerbox-category"></div>
                 </div>`, 'text/html').body.firstChild;
-            this._mainWrapperElement.append(groupWrapperEl);
-            groupWrapperEl.firstElementChild.innerText = groupName;
-            for (const command of groupCommands) {
+            this._mainWrapperElement.append(categoryWrapperEl);
+            categoryWrapperEl.firstElementChild.innerText = category;
+            for (const command of categoryCommands) {
                 const commandElWrapper = document.createElement('div');
-                commandElWrapper.className = 'oe-commandbar-commandWrapper';
+                commandElWrapper.className = 'oe-powerbox-commandWrapper';
                 commandElWrapper.classList.toggle('active', this._context.selectedCommand === command);
                 commandElWrapper.replaceChildren(...parser.parseFromString(`
-                    <div class="oe-commandbar-commandLeftCol">
-                        <i class="oe-commandbar-commandImg fa"></i>
+                    <div class="oe-powerbox-commandLeftCol">
+                        <i class="oe-powerbox-commandImg fa"></i>
                     </div>
-                    <div class="oe-commandbar-commandRightCol">
-                        <div class="oe-commandbar-commandTitle"></div>
-                        <div class="oe-commandbar-commandDescription"></div>
+                    <div class="oe-powerbox-commandRightCol">
+                        <div class="oe-powerbox-commandName"></div>
+                        <div class="oe-powerbox-commandDescription"></div>
                     </div>`, 'text/html').body.children);
-                commandElWrapper.querySelector('.oe-commandbar-commandImg').classList.add(command.fontawesome);
-                commandElWrapper.querySelector('.oe-commandbar-commandTitle').innerText = command.title;
-                commandElWrapper.querySelector('.oe-commandbar-commandDescription').innerText = command.description;
-                groupWrapperEl.append(commandElWrapper);
+                commandElWrapper.querySelector('.oe-powerbox-commandImg').classList.add(command.fontawesome);
+                commandElWrapper.querySelector('.oe-powerbox-commandName').innerText = command.name;
+                commandElWrapper.querySelector('.oe-powerbox-commandDescription').innerText = command.description;
+                categoryWrapperEl.append(commandElWrapper);
                 // Handle events on command (activate and pick).
                 commandElWrapper.addEventListener('mousemove', () => {
-                    this.el.querySelector('.oe-commandbar-commandWrapper.active').classList.remove('active');
+                    this.el.querySelector('.oe-powerbox-commandWrapper.active').classList.remove('active');
                     this._context.selectedCommand = command;
                     commandElWrapper.classList.add('active');
                 });
@@ -217,7 +225,7 @@ export class Powerbox {
         term = term.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
         if (term.length) {
             const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
-            return commands.filter(command => `${command.groupName} ${command.title}`.toLowerCase().match(regex));
+            return commands.filter(command => `${command.category} ${command.name}`.toLowerCase().match(regex));
         } else {
             return commands;
         }
@@ -225,18 +233,19 @@ export class Powerbox {
     /**
      * Take a list of commands, filter them based on `commandFilters` and
      * `isDisabled`) and return the remaining commands, ordered so that commands
-     * that belong to the same group are grouped together.
+     * that belong to the same category are grouped together.
      * Note: `commandFilters` is on the Powerbox instance and allows the
-     * filtering of several commands at once (eg, a whole group), while
+     * filtering of several commands at once (eg, a whole category), while
      * `isDisabled` is on a specific command and is made to target that command.
      *
      * @see commandFilters {Array<() => PowerboxCommand[]} return commands that can be used.
      * @see command.isDisabled {() => boolean} return true if the command is disabled.
      * @private
      * @param {PowerboxCommand[]} commands
+     * @param {Array<{name: string, priority: number}} categories
      * @returns {PowerboxCommand[]}
      */
-    _getCurrentCommands(commands) {
+    _getCurrentCommands(commands, categories) {
         /**
          * Some available commands may need to be disabled in certain
          * situations. i.e.: in a knowledge article, prevent the usage of the
@@ -247,38 +256,44 @@ export class Powerbox {
         }
         // Do not show disabled commands.
         commands = commands.filter(command => !command.isDisabled || !command.isDisabled());
-        return this._orderCommandsByGroup(commands);
+        // Reorder the commands based on their categories' priorities.
+        return this._groupCommands(commands, categories).flatMap(group => group[1]);
     }
     /**
      * Takes a list of commands and returns an object whose keys are all
-     * existing group names and whose values are each of these groups' commands.
+     * existing category names and whose values are each of these categories'
+     * commands. Categories with no commands are removed.
      *
      * @private
      * @param {PowerboxCommand[]} commands
-     * @returns {{[key: groupName]: PowerboxCommand[]}>}
+     * @param {Array<{name: string, priority: number}} categories
+     * @returns {{Array<[string, PowerboxCommand[]]>}>}
      */
-    _groupCommands(commands) {
-        const groups = {};
-        for (const command of commands) {
-            groups[command.groupName] = [...(groups[command.groupName] || []), command];
+    _groupCommands(commands, categories) {
+        const groups = [];
+        for (const category of categories) {
+            const categoryCommands = commands.filter(command => command.category === category.name);
+            commands = commands.filter(command => command.category !== category.name);
+            groups.push([category.name, categoryCommands]);
         }
-        return groups;
+        // If commands remain, it means they declared categories that didn't
+        // exist. Add these categories alphabetically at the end of the list.
+        const remainingCategories = [...new Set(commands.map(command => command.category))];
+        for (const categoryName of remainingCategories.sort((a, b) => a.localeCompare(b))) {
+            const categoryCommands = commands.filter(command => command.category === categoryName);
+            groups.push([categoryName, categoryCommands]);
+        }
+        return groups.filter(group => group[1].length);
     }
     /**
-     * Take a list of commands and returns them reordered so that commands that
-     * belong to the same group are grouped together.
+     * Take an array of commands or categories and return a reordered copy of
+     * it, based on their respective priorities.
      *
-     * @private
-     * @param {PowerboxCommand[]} commands
-     * @returns {PowerboxCommand[]}
+     * @param {PowerboxCommand[] | Array<{name: string, priority: number}} commandsOrCategories
+     * @returns {PowerboxCommand[] | Array<{name: string, priority: number}}
      */
-    _orderCommandsByGroup(commands) {
-        const groups = this._groupCommands(commands);
-        const reorderedCommands = [];
-        for (const groupCommands of Object.values(groups)) {
-            reorderedCommands.push(...groupCommands);
-        }
-        return reorderedCommands;
+    _orderByPriority(commandsOrCategories) {
+        return commandsOrCategories.sort((a, b) => a.priority - b.priority || a.name.localeCompare(b.name));
     }
     /**
      * Recompute the Powerbox's position base on the selection in the document.
@@ -348,7 +363,7 @@ export class Powerbox {
                 this._context.filteredCommands = this._context.lastText === ''
                     ? this._context.commands
                     : this._filter(this._context.commands, this._context.lastText);
-                this._render(this._context.filteredCommands);
+                this._render(this._context.filteredCommands, this._context.categories);
             }
         }
     }
@@ -383,8 +398,8 @@ export class Powerbox {
             } else {
                 this._context.selectedCommand = undefined;
             }
-            this._render(this._context.filteredCommands);
-            this.el.querySelector('.oe-commandbar-commandWrapper.active').scrollIntoView({block: 'nearest', inline: 'nearest'});
+            this._render(this._context.filteredCommands, this._context.categories);
+            this.el.querySelector('.oe-powerbox-commandWrapper.active').scrollIntoView({block: 'nearest', inline: 'nearest'});
         }
     }
 }
