@@ -171,6 +171,7 @@ registerModel({
         areAllMembersLoaded: attr({
             compute: '_computeAreAllMembersLoaded',
         }),
+        authorizedGroupFullName: attr(),
         /**
          * Cache key to force a reload of the avatar when avatar is changed.
          */

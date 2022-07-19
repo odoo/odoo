@@ -39,9 +39,6 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('authorizedGroupFullName' in data) {
-                data2.authorizedGroupFullName = data.authorizedGroupFullName;
-            }
             if ('channel' in data) {
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
@@ -1663,7 +1660,6 @@ registerModel({
             readonly: true,
             sort: '_sortAttachmentsInWebClientView',
         }),
-        authorizedGroupFullName: attr(),
         cache: one('ThreadCache', {
             default: insertAndReplace(),
             inverse: 'thread',

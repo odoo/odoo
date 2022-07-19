@@ -1006,6 +1006,7 @@ patch(MockServer.prototype, 'mail', {
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
             const channelData = {
+                authorizedGroupFullName: group_public_id ? group_public_id.name : false,
                 avatarCacheKey: channel.avatarCacheKey,
                 channel_type: channel.channel_type,
                 defaultDisplayMode: channel.default_display_mode,
@@ -1018,7 +1019,6 @@ patch(MockServer.prototype, 'mail', {
                 last_message_id: lastMessageId,
                 members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
                 message_needaction_counter: messageNeedactionCounter,
-                authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             });
             if (channel.channel_type === 'channel') {
                 delete res.members;

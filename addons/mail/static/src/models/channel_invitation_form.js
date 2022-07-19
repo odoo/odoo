@@ -167,14 +167,14 @@ registerModel({
                 return clear();
             }
             if (
-                !this.thread.authorizedGroupFullName ||
+                !this.thread.channel.authorizedGroupFullName ||
                 this.thread.channel.public !== 'groups'
             ) {
                 return clear();
             }
             return sprintf(
                 this.env._t('Access restricted to group "%(groupFullName)s"'),
-                { 'groupFullName': this.thread.authorizedGroupFullName }
+                { 'groupFullName': this.thread.channel.authorizedGroupFullName }
             );
         },
         /**

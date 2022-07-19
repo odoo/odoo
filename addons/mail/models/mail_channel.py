@@ -776,8 +776,8 @@ class Channel(models.Model):
                 'is_minimized': False,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
-                'authorizedGroupFullName': channel.group_public_id.full_name,
                 'channel': [('insert-and-replace', {
+                    'authorizedGroupFullName': channel.group_public_id.full_name,
                     'avatarCacheKey': channel._get_avatar_cache_key(),
                     'channel_type': channel.channel_type,
                     'defaultDisplayMode': channel.default_display_mode,
