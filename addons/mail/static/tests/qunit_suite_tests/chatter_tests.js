@@ -492,7 +492,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
 
     await click('.o_form_button_edit');
 
-    assert.hasClass(document.querySelector('.o_form_view'), 'o_form_editable');
+    assert.hasClass(document.querySelector('.o_legacy_form_view'), 'o_form_editable');
 
     // add a record to the relation
     await testUtils.fields.many2one.clickOpenDropdown('partner_ids');

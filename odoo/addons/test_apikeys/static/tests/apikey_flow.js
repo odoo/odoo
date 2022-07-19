@@ -28,7 +28,7 @@ tour.register('apikeys_tour_setup', {
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "Confirm",
@@ -39,7 +39,7 @@ tour.register('apikeys_tour_setup', {
     run: () => {},
 }, {
     content: "Enter description",
-    trigger: 'input[name=name]',
+    trigger: '[name=name] input',
     run: 'text my key',
 }, {
     content: "Confirm key creation",
@@ -48,7 +48,7 @@ tour.register('apikeys_tour_setup', {
     content: "Check that we're on the last step & grab key",
     trigger: 'p:contains("Here is your new API key")',
     run: async () => {
-        const key = $('code span[name=key]').text();
+        const key = $('code [name=key] span').text();
         await ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
@@ -89,7 +89,7 @@ tour.register('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Input password for security mode again",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "And confirm",

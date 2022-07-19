@@ -26,21 +26,10 @@ wTourUtils.registerEditionTour('rte_translator', {
     run: 'text Parseltongue',
 }, {
     content: 'select Parseltongue',
-    trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-    extra_trigger: '.dropdown-item:contains(Parseltongue)',
-    run: function () {
-        // The dropdown element is outside the action manager, and can therefor not
-        // be selected directly by "trigger".
-        // That's why we need to simulate the click in JS
-        const element = $('.dropdown-item:contains(Parseltongue)');
-        if (!element.length) {
-            console.error('Lang not found');
-        }
-        element.click();
-    },
+    trigger: '.dropdown-item:contains(Parseltongue)',
 }, {
     content: "load Parseltongue",
-    trigger: '.modal-footer button:first',
+    trigger: '.modal-footer .btn-primary',
     extra_trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
 }, {
     content: "click language dropdown (2)",

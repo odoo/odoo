@@ -27,18 +27,18 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     content: _t("Let's create your first product."),
     position: 'bottom',
 }, {
-    trigger: 'input[name=name]',
+    trigger: '.o_field_widget[name=name] input',
     extra_trigger: '.o_form_sheet',
     content: _t("Let's enter the name."),
     position: 'left',
     run: 'text the_flow.product',
 }, {
-    trigger: "select[name=detailed_type]",
+    trigger: ".o_field_widget[name=detailed_type] select",
     content: _t("Let's enter the product type"),
     position: 'left',
     run: 'text "product"',
 }, {
-    trigger: '.o_notebook a:contains("Inventory")',
+    trigger: '.o_notebook .nav-link:contains("Inventory")',
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
@@ -54,7 +54,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',
 }, {
-    trigger: '.o_notebook a:contains("General Information")',
+    trigger: '.o_notebook .nav-link:contains("General Information")',
     content: _t('Go to main tab'),
     position: 'top',
 }, {
@@ -77,7 +77,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
 },
 tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 {
-    trigger: ".oe_button_box .oe_stat_button:has(div[name=bom_count])",
+    trigger: ".oe_button_box .oe_stat_button div[name=bom_count]",
     extra_trigger: '.o_form_readonly',
     content: _t('See Bill of material'),
     position: 'bottom',
@@ -115,7 +115,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: '.modal-body .o_form_editable .o_field_widget.o_input[name="name"]',
+    trigger: '.modal-body .o_form_editable .o_field_widget[name="name"] input',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component1",
@@ -126,15 +126,17 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Click here to edit your component"),
     position: "right",
 }, {
-    trigger: '.o_notebook a:contains("Inventory")',
+    trigger: '.o_notebook .nav-link:contains("Inventory")',
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
+    // FIXME WOWL: can't toggle boolean by clicking on label (only with tour helpers, only in dialog ???)
+    // trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
+    trigger: '.o_field_widget[name=route_ids] .form-check:contains("Replenish on Order (MTO)") input',
     content: _t('Check Replenish on Order (MTO)'),
     position: 'right',
 }, {
-    trigger: '.o_notebook a:contains("Purchase")',
+    trigger: '.o_notebook .nav-link:contains("Purchase")',
     content: _t('Go to purchase tab'),
     position: 'top',
 }, {
@@ -179,12 +181,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     run: "text the_flow.vendor",
 }, {
     mobile: true,
-    trigger: '.btn:has(:contains(Save))',
+    trigger: '.o_form_button_save',
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Vendor')",
     content: _t("Save this product and the modifications you've made to it."),
     position: 'right',
 }, {
-    trigger: ".o_field_widget[name=price]",
+    trigger: ".o_field_widget[name=price] input",
     content: _t('Set the cost price'),
     position: 'right',
     run: "text 1",
@@ -202,7 +204,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     mobile: true,
-    trigger: '.o_field_widget[name=code]',
+    trigger: '.o_field_widget[name=code] input',
     extra_trigger: ".o_field_widget[name=product_id] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
@@ -212,7 +214,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
-    trigger: ".modal-footer .btn-primary",
+    trigger: ".modal-footer .o_form_button_save",
     content: _t('Save'),
     position: 'bottom',
 }, {
@@ -241,7 +243,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: ".modal-body .o_form_editable .o_field_widget.o_input[name=\"name\"]",
+    trigger: ".modal-body .o_form_editable .o_field_widget[name=name] input",
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
@@ -263,7 +265,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Click here to edit your component"),
     position: "right",
 }, {
-    trigger: '.o_notebook a:contains("Purchase")',
+    trigger: '.o_notebook .nav-link:contains("Purchase")',
     content: _t('Go to purchase tab'),
     position: 'top',
 }, {
@@ -297,7 +299,8 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     auto: true,
     in_modal: false,
 }, {
-    trigger: ".o_field_widget[name=price]",
+    trigger: ".o_field_widget[name=price] input",
+    extra_trigger: ".o_field_widget[name=partner_id] .o_external_button",
     content: _t('Set the cost price'),
     position: 'right',
     run: "text 1",
@@ -315,7 +318,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     mobile: true,
-    trigger: '.o_field_widget[name=code]',
+    trigger: '.o_field_widget[name=code] input',
     extra_trigger: ".o_field_widget[name=product_id] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
@@ -324,13 +327,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
+    trigger: ".modal-footer .o_form_button_save",
     content: _t('Save'),
     position: 'bottom',
 }, {
     trigger: '.o_form_button_save',
-    extra_trigger: ".o_field_widget[name=bom_line_ids] .o_list_view tr:nth-child(3):has(.o_field_x2many_list_row_add)",
+    extra_trigger: ".o_field_widget[name=bom_line_ids] tr:nth-child(5):has(.o_field_x2many_list_row_add)",
     content: _t('Save the bom.'),
     position: 'bottom',
 }, {
@@ -352,13 +354,13 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Let's create your second product."),
     position: 'bottom',
 }, {
-    trigger: 'input[name=name]',
+    trigger: '.o_field_widget[name=name] input',
     extra_trigger: '.o_form_sheet',
     content: _t("Let's enter the name."),
     position: 'left',
     run: 'text the_flow.service',
 }, {
-    trigger: '.o_field_widget[name=detailed_type]',
+    trigger: '.o_field_widget[name=detailed_type] select',
     content: _t('Set to service'),
     position: 'left',
     run: 'text "service"',
@@ -368,7 +370,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        const $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
+        const $e = $('.o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a');
         if ($e.length) {
             actions.click($e);
         } else {
@@ -376,12 +378,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
         }
     },
 }, {
-    trigger: '.o_field_widget[name=service_policy]',
+    trigger: '.o_field_widget[name=service_policy] select',
     content: _t('Change service policy'),
     position: 'left',
     run: 'text "delivered_timesheet"',
 }, {
-    trigger: '.o_field_widget[name=service_tracking]',
+    trigger: '.o_field_widget[name=service_tracking] select',
     content: _t('Change track service'),
     position: 'left',
     run: 'text "task_global_project"',
@@ -404,14 +406,14 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: 'input[name=name]',
+    trigger: '.o_field_widget[name=name]input',
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Project')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
     run: 'text the_flow.project',
 }, {
     mobile: false,
-    trigger: ".ui-menu-item > a:contains('the_flow.project')",
+    trigger: ".o-autocomplete--dropdown-item > a:contains('the_flow.project')",
     auto: true,
 }, {
     mobile: true,
@@ -530,27 +532,14 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",
-    run: function (actions) {
-        actions.text("the_flow.product", this.$anchor);
-        // fake keydown to trigger search
-        const keyDownEvent = $.Event("keydown");
-        keyDownEvent.which = 42;
-        this.$anchor.trigger(keyDownEvent);
-        const $descriptionElement = $('.o_form_editable textarea[name="name"]');
-        // when description changes, we know the product has been loaded
-        $descriptionElement.on('change', function () {
-            if ($(this).val().indexOf('the_flow.product') !== -1) {
-                $(this).addClass('product_loading_success');
-            }
-        });
-    },
+    run: "text the_flow.product",
 }, {
     mobile: false,
     trigger: ".ui-menu-item > a:contains('the_flow.product')",
 }, {
     mobile: false,
-    trigger: '.o_form_editable textarea[name="name"].product_loading_success',
-    run: function () {} // wait for product loading
+    trigger: ".o_field_widget[name=order_line] .o_external_button",
+    run: () => {},
 }, {
     mobile: true,
     trigger: ".o_field_widget[name=product_id] input",
@@ -581,27 +570,14 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product"),
     position: "right",
-    run: function (actions) {
-        actions.text("the_flow.service", this.$anchor);
-        // fake keydown to trigger search
-        const keyDownEvent = $.Event("keydown");
-        keyDownEvent.which = 42;
-        this.$anchor.trigger(keyDownEvent);
-        const $descriptionElement = $('.o_form_editable textarea[name="name"]');
-        // when description changes, we know the product has been loaded
-        $descriptionElement.on('change', function () {
-            if ($(this).val().indexOf('the_flow.service') !== -1) {
-                $(this).addClass('product_service_loading_success');
-            }
-        });
-    },
+    run: "text the_flow.service",
 }, {
     mobile: false,
     trigger: ".ui-menu-item > a:contains('the_flow.service')",
 }, {
     mobile: false,
-    trigger: '.o_form_editable textarea[name="name"].product_service_loading_success',
-    run: function () {} // wait for product loading
+    trigger: ".o_field_widget[name=order_line] .o_external_button",
+    run: () => {},
 }, {
     mobile: false,
     trigger: 'label:contains("Untaxed Amount")',
@@ -632,7 +608,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Save your changes"),
     position: "bottom",
 }, {
-    trigger: ".modal-footer .btn-primary span:contains('Send')",
+    trigger: ".modal-footer .btn-primary:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
 },
@@ -706,12 +682,14 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
 },
 ...tour.stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.component2'),
 {
-    trigger: ".o_field_widget[name=product_min_qty]",
+    // FIXME WOWL: remove first part of selector when legacy view is dropped
+    trigger: "input.o_field_widget[name=product_min_qty], .o_field_widget[name=product_min_qty] input",
     content: _t("Set the minimum product quantity"),
     position: "right",
     run: 'text 1',
 }, {
-    trigger: ".o_field_widget[name=product_max_qty]",
+    // FIXME WOWL: remove first part of selector when legacy view is dropped
+    trigger: "input.o_field_widget[name=product_max_qty], .o_field_widget[name=product_max_qty] input",
     content: _t("Set the maximum product quantity"),
     position: "right",
     run: 'text 10',
@@ -835,7 +813,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     trigger: ".o_form_button_edit:not(:disabled)",
     content: _t('Edit the production order'),
 }, {
-    trigger: "input[name=qty_producing]",
+    trigger: ".o_field_widget[name=qty_producing] input",
     position: 'left',
     content: _t("Produce"),
     run: "text 1",
@@ -937,7 +915,9 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     position: 'bottom',
 }, {
     // FIXME replace list by kanban + form
-    trigger: '.o_selected_row input[name=name]',
+    // FIXME WOWL: remove first part of selector when legacy view is dropped
+    // (currently, it's anew view in community and a legacy one in enterprise)
+    trigger: '.o_selected_row input[name=name], .o_selected_row .o_field_widget[name=name] input',
     content: _t('Set description'),
     position: 'bottom',
     run: 'text 10 hours',
@@ -957,7 +937,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     content: _t("Select the the_flow.vendor"),
     position: "bottom",
 }, {
-    trigger: '.o_selected_row input[name=unit_amount]',
+    trigger: '.o_selected_row .o_field_widget[name=unit_amount]input',
     content: _t('Set time'),
     position: 'bottom',
     run: 'text 10',
@@ -1004,12 +984,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
+    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'input[name=name]',
+    trigger: '.o_field_widget[name=name] input',
     content: _t("Let's enter the reference."),
     position: 'left',
     run: 'text the_flow.statement',
@@ -1054,7 +1034,8 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
 ...tour.stepUtils.mobileKanbanSearchMany2X('Partner', 'the_flow.customer'),
 {
     edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=payment_ref]",
+    trigger: ".o_selected_row .o_field_widget[name=payment_ref] input",
+    extra_trigger: ".o_selected_row .o_field_widget[name=partner_id] .o_external_button",
     content: _t("Let's enter a name."),
     position: "bottom",
     run: "text the_flow.statement.line",

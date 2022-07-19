@@ -15,11 +15,11 @@ odoo.define('web.test.constraint', function (require) {
         trigger: 'button.o_list_button_add',
     }, {
         content: "insert content",
-        trigger: 'input.o_required_modifier',
+        trigger: '.o_required_modifier input',
         run: 'text Test Category',
     }, { // try to insert a value that will raise the SQL constraint
         content: "insert invalid value",
-        trigger: 'input[name="color"]',
+        trigger: '.o_field_widget[name="color"] input',
         run: 'text -1',
     }, { // save
         content: "save category",

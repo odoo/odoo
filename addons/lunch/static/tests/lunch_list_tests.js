@@ -105,9 +105,9 @@ QUnit.module('LunchListView', {
             "should have a 'lunch filters' column");
         assert.containsOnce(list, '.o_content > .o_lunch_content',
             "should have a 'lunch wrapper' column");
-        assert.containsOnce(list, '.o_lunch_content > .o_list_view',
+        assert.containsOnce(list, '.o_lunch_content > .o_legacy_list_view',
             "should have a 'classical list view' column");
-        assert.hasClass(list.$('.o_list_view'), 'o_lunch_list_view',
+        assert.hasClass(list.$('.o_legacy_list_view'), 'o_lunch_list_view',
             "should have classname 'o_lunch_list_view'");
         assert.containsOnce(list, '.o_lunch_content > span > .o_lunch_banner',
             "should have a 'lunch' banner");
