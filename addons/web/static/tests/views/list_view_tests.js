@@ -14222,4 +14222,32 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["get_views", "web_search_read"]);
         }
     );
+
+    QUnit.test("editable list correctly saves dirty fields ", async (assert) => {
+        serverData.models.foo.records = [serverData.models.foo.records[0]];
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list editable="bottom">
+                    <field name="display_name" />
+                </list>`,
+            serverData,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step("write");
+                    assert.deepEqual(args.args, [[1], { display_name: "test" }]);
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        const input = target.querySelector(".o_data_cell input");
+        input.value = "test";
+        await triggerEvent(input, null, "input");
+        triggerHotkey("Tab");
+        await nextTick();
+
+        assert.verifySteps(["write"]);
+    });
 });
