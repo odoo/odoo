@@ -410,6 +410,13 @@ export class FormController extends Component {
             translateAlertData: toRaw(this.translateAlertData),
         };
     }
+
+    get className() {
+        return {
+            [this.props.className]: true,
+            o_xxs_form_view: this.env.isSmall,
+        };
+    }
 }
 
 FormController.template = `web.FormView`;
