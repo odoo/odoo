@@ -194,7 +194,9 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = self._convert_qty_company_hours(self.company_id)
+        planned_hours = 0.0
+        if self.product_id.service_type not in ['milestones', 'manual']:
+            planned_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
