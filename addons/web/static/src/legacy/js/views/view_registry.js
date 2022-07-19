@@ -33,7 +33,9 @@ var view_registry = require('web.view_registry');
 
 view_registry
     .add('form', FormView)
+    .add('legacy_form', FormView)
     .add('list', ListView)
+    .add('legacy_list', ListView)
     .add('kanban', KanbanView)
     .add('calendar', CalendarView);
 });

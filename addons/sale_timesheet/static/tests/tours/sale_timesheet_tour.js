@@ -47,7 +47,7 @@ tour.register('sale_timesheet_tour', {
     run: 'click',
 }, {
     trigger: 'button.o_form_button_save',
-    extra_trigger: '.o_form_view:not(:has(button[name="action_confirm"]:not(.o_invisible_modifier)))',
+    extra_trigger: '.o_field_widget[name=state] button[data-value=sale].btn-primary',
     content: 'Click on Save button to save the Sales Order.',
     run: 'click',
 }, {
@@ -61,7 +61,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Add a new project.',
     run: 'click',
 }, {
-    trigger: 'input.o_field_widget.o_project_name',
+    trigger: '.o_field_widget.o_project_name input',
     content: 'Select your project name (e.g. Project for Freeman)',
     run: function (actions) {
         actions.text('Project for Freeman', this.$anchor);

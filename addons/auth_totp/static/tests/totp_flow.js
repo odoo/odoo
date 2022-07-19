@@ -46,7 +46,7 @@ tour.register('totp_tour_setup', {
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "Confirm",
@@ -59,14 +59,14 @@ tour.register('totp_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     run(helpers) {
-        const $secret = this.$anchor.closest('div').find('span[name=secret]');
+        const $secret = this.$anchor.closest('div').find('[name=secret] > span');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
         const secret = $secret.text();
         ajax.jsonRpc('/totphook', 'call', {
             secret
         }).then((token) => {
-            helpers._text(helpers._get_action_values('input[name=code]'), token);
+            helpers._text(helpers._get_action_values('[name=code] input'), token);
             helpers._click(helpers._get_action_values('button.btn-primary:contains(Activate)'));
             $('body').addClass('got-token')
         });
@@ -194,7 +194,7 @@ tour.register('totp_login_device', {
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "Confirm",
@@ -283,14 +283,14 @@ tour.register('totp_admin_disables', {
     trigger: 'button.dropdown-toggle:contains("Action")'
 }, {
     content: "Select totp remover",
-    trigger: 'a.dropdown-item:contains(Disable two-factor authentication)'
+    trigger: 'span.dropdown-item:contains(Disable two-factor authentication)'
 }, { // enhanced security yo
     content: "Check that we have to enter enhanced security mode",
 trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text admin', // FIXME: better way to do this?
 }, {
     content: "Confirm",

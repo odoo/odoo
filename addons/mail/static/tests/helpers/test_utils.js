@@ -12,9 +12,12 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
-import { useLegacyViews } from "@web/../tests/legacy/legacy_setup";
 
 import core from 'web.core';
+
+import legacyViewRegistry from "web.view_registry";
+import FormView from 'web.FormView';
+import ListView from 'web.ListView';
 
 const { App, EventBus } = owl;
 const { afterNextRender } = App;
@@ -527,7 +530,12 @@ function getOpenFormView(afterEvent, openView) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
-    useLegacyViews();
+    if (!param0.useWowlListForm) {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+    }
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
         debounce: func => func,
