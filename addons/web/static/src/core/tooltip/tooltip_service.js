@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Tooltip } from "./tooltip";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { whenReady } = owl;
 
@@ -47,6 +48,7 @@ export const tooltipService = {
         let target = null;
         let positionX;
         let positionY;
+        let touchPressed;
         const elementsWithTooltips = new Map();
 
         /**
@@ -69,6 +71,9 @@ export const tooltipService = {
             }
             if (!document.body.contains(target)) {
                 return true; // target is no longer in the DOM
+            }
+            if (hasTouch()) {
+                return !touchPressed;
             }
             const targetRect = target.getBoundingClientRect();
             if (
@@ -120,18 +125,13 @@ export const tooltipService = {
         }
 
         /**
-         * Checks whether there is a tooltip registered on the event target, and
+         * Checks whether there is a tooltip registered on the element, and
          * if there is, creates a timeout to open the corresponding tooltip
          * after a delay.
          *
-         * @param {MouseEvent} ev a "mouseenter" event
+         * @param {HTMLElement} el
          */
-        function onMouseenter(ev) {
-            // set mouse position in case the target contains disabled elements which won't trigger mousemove
-            positionX = ev.x;
-            positionY = ev.y;
-            /** @type {HTMLElement} */
-            const el = ev.target;
+        function openElementsTooltip(el) {
             if (elementsWithTooltips.has(el)) {
                 openTooltip(el, elementsWithTooltips.get(el));
             } else if (el.matches("[data-tooltip], [data-tooltip-template]")) {
@@ -148,6 +148,32 @@ export const tooltipService = {
             }
         }
 
+        /**
+         * Checks whether there is a tooltip registered on the event target, and
+         * if there is, creates a timeout to open the corresponding tooltip
+         * after a delay.
+         *
+         * @param {MouseEvent} ev a "mouseenter" event
+         */
+        function onMouseenter(ev) {
+            // set mouse position in case the target contains disabled elements which won't trigger mousemove
+            positionX = ev.x;
+            positionY = ev.y;
+            openElementsTooltip(ev.target);
+        }
+
+        /**
+         * Checks whether there is a tooltip registered on the event target, and
+         * if there is, creates a timeout to open the corresponding tooltip
+         * after a delay.
+         *
+         * @param {TouchEvent} ev a "touchstart" event
+         */
+        function onTouchStart(ev) {
+            touchPressed = true;
+            openElementsTooltip(ev.target);
+        }
+
         whenReady(() => {
             // Regularly check that the target is still in the DOM and we're still
             // hovering it, because if not, we have to close the tooltipd
@@ -156,6 +182,20 @@ export const tooltipService = {
                     cleanup();
                 }
             }, CLOSE_DELAY);
+
+            if (hasTouch()) {
+                document.body.addEventListener("touchstart", onTouchStart);
+
+                document.body.addEventListener("touchend", () => {
+                    touchPressed = false;
+                });
+
+                document.body.addEventListener("touchcancel", () => {
+                    touchPressed = false;
+                });
+
+                return;
+            }
 
             // Track mouse position to be able to detect that we are no longer hovering
             // the target, thus that we should close the tooltip
