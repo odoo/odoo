@@ -157,11 +157,11 @@ class TestSMSComposerBatch(test_mail_full_common.BaseFunctionalTest, sms_common.
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
     def test_composer_batch_active_ids(self):
@@ -177,11 +177,11 @@ class TestSMSComposerBatch(test_mail_full_common.BaseFunctionalTest, sms_common.
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
     def test_composer_batch_domain(self):
@@ -198,11 +198,11 @@ class TestSMSComposerBatch(test_mail_full_common.BaseFunctionalTest, sms_common.
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
     def test_composer_batch_res_ids(self):
@@ -218,11 +218,11 @@ class TestSMSComposerBatch(test_mail_full_common.BaseFunctionalTest, sms_common.
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
 
