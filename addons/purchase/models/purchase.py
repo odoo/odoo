@@ -1207,7 +1207,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
-        if not self.product_id:
+        if not self.product_id or self.state in ('purchase', 'done'):
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
