@@ -1796,10 +1796,15 @@ export class OdooEditor extends EventTarget {
             });
         });
 
+        const mainCategories = [
+            { name: 'Format', priority: 30 },
+            { name: 'Structure', priority: 20 },
+            { name: 'Widgets', priority: 10 },
+        ];
         const mainCommands = [
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Heading 1'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Heading 1'),
                 description: this.options._t('Big section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
@@ -1807,8 +1812,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Heading 2'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Heading 2'),
                 description: this.options._t('Medium section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
@@ -1816,8 +1821,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Heading 3'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Heading 3'),
                 description: this.options._t('Small section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
@@ -1825,8 +1830,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Text'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Text'),
                 description: this.options._t('Paragraph block.'),
                 fontawesome: 'fa-paragraph',
                 callback: () => {
@@ -1834,8 +1839,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Bulleted list'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Bulleted list'),
                 description: this.options._t('Create a simple bulleted list.'),
                 fontawesome: 'fa-list-ul',
                 callback: () => {
@@ -1843,8 +1848,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Numbered list'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Numbered list'),
                 description: this.options._t('Create a list with numbering.'),
                 fontawesome: 'fa-list-ol',
                 callback: () => {
@@ -1852,8 +1857,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Checklist'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Checklist'),
                 description: this.options._t('Track tasks with a checklist.'),
                 fontawesome: 'fa-check-square-o',
                 callback: () => {
@@ -1861,8 +1866,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Separator'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Separator'),
                 description: this.options._t('Insert an horizontal rule separator.'),
                 fontawesome: 'fa-minus',
                 callback: () => {
@@ -1870,8 +1875,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Table'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Table'),
                 description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
                 callback: () => {
@@ -1879,8 +1884,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: this.options._t('Basic blocks'),
-                title: this.options._t('Switch direction'),
+                category: this.options._t('Basic blocks'),
+                name: this.options._t('Switch direction'),
                 description: this.options._t('Switch the text\'s direction.'),
                 fontawesome: 'fa-exchange',
                 callback: () => {
@@ -1888,8 +1893,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Widgets',
-                title: '3 Stars',
+                category: 'Widgets',
+                name: '3 Stars',
                 description: 'Insert a rating over 3 stars.',
                 fontawesome: 'fa-star-o',
                 callback: () => {
@@ -1900,8 +1905,8 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Widgets',
-                title: '5 Stars',
+                category: 'Widgets',
+                name: '5 Stars',
                 description: 'Insert a rating over 5 stars.',
                 fontawesome: 'fa-star',
                 callback: () => {
@@ -1939,6 +1944,7 @@ export class OdooEditor extends EventTarget {
                 this.historyStep(true);
                 this._isPowerboxOpenOnInput = false;
             },
+            categories: [...mainCategories, ...(this.options.categories || [])],
             commands: [...mainCommands, ...(this.options.commands || [])],
         });
     }
@@ -3154,8 +3160,8 @@ export class OdooEditor extends EventTarget {
                 if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
                     const baseEmbedCommand = [
                         {
-                            groupName: 'paste',
-                            title: this.options._t('Paste as URL'),
+                            category: this.options._t('Paste'),
+                            name: this.options._t('Paste as URL'),
                             description: this.options._t('Create an URL.'),
                             fontawesome: 'fa-link',
                             callback: () => {
@@ -3177,8 +3183,8 @@ export class OdooEditor extends EventTarget {
                             },
                         },
                         {
-                            groupName: 'paste',
-                            title: this.options._t('Paste as text'),
+                            category: this.options._t('Paste'),
+                            name: this.options._t('Paste as text'),
                             description: this.options._t('Simple text paste.'),
                             fontawesome: 'fa-font',
                             callback: () => {},
@@ -3200,8 +3206,8 @@ export class OdooEditor extends EventTarget {
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.powerbox.open([
                             {
-                                groupName: this.options._t('Embed'),
-                                title: this.options._t('Embed Image'),
+                                category: this.options._t('Embed'),
+                                name: this.options._t('Embed Image'),
                                 description: this.options._t('Embed the image in the document.'),
                                 fontawesome: 'fa-image',
                                 callback: () => {
@@ -3226,8 +3232,8 @@ export class OdooEditor extends EventTarget {
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.powerbox.open([
                             {
-                                groupName: this.options._t('Embed'),
-                                title: this.options._t('Embed Youtube Video'),
+                                category: this.options._t('Embed'),
+                                name: this.options._t('Embed Youtube Video'),
                                 description: this.options._t('Embed the youtube video in the document.'),
                                 fontawesome: 'fa-youtube-play',
                                 callback: async () => {
