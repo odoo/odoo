@@ -1797,50 +1797,15 @@ export class OdooEditor extends EventTarget {
         });
 
         const mainCategories = [
-            { name: 'Format', priority: 30 },
-            { name: 'Structure', priority: 20 },
-            { name: 'Widgets', priority: 10 },
+            { name: this.options._t('Structure'), priority: 70 },
+            { name: this.options._t('Format'), priority: 60 },
+            { name: this.options._t('Widgets'), priority: 30 },
         ];
         const mainCommands = [
             {
-                category: this.options._t('Basic blocks'),
-                name: this.options._t('Heading 1'),
-                description: this.options._t('Big section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H1');
-                },
-            },
-            {
-                category: this.options._t('Basic blocks'),
-                name: this.options._t('Heading 2'),
-                description: this.options._t('Medium section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H2');
-                },
-            },
-            {
-                category: this.options._t('Basic blocks'),
-                name: this.options._t('Heading 3'),
-                description: this.options._t('Small section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H3');
-                },
-            },
-            {
-                category: this.options._t('Basic blocks'),
-                name: this.options._t('Text'),
-                description: this.options._t('Paragraph block.'),
-                fontawesome: 'fa-paragraph',
-                callback: () => {
-                    this.execCommand('setTag', 'P');
-                },
-            },
-            {
-                category: this.options._t('Basic blocks'),
+                category: this.options._t('Structure'),
                 name: this.options._t('Bulleted list'),
+                priority: 110,
                 description: this.options._t('Create a simple bulleted list.'),
                 fontawesome: 'fa-list-ul',
                 callback: () => {
@@ -1848,8 +1813,9 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: this.options._t('Basic blocks'),
+                category: this.options._t('Structure'),
                 name: this.options._t('Numbered list'),
+                priority: 100,
                 description: this.options._t('Create a list with numbering.'),
                 fontawesome: 'fa-list-ol',
                 callback: () => {
@@ -1857,8 +1823,9 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: this.options._t('Basic blocks'),
+                category: this.options._t('Structure'),
                 name: this.options._t('Checklist'),
+                priority: 90,
                 description: this.options._t('Track tasks with a checklist.'),
                 fontawesome: 'fa-check-square-o',
                 callback: () => {
@@ -1866,17 +1833,9 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: this.options._t('Basic blocks'),
-                name: this.options._t('Separator'),
-                description: this.options._t('Insert an horizontal rule separator.'),
-                fontawesome: 'fa-minus',
-                callback: () => {
-                    this.execCommand('insertHorizontalRule');
-                },
-            },
-            {
-                category: this.options._t('Basic blocks'),
+                category: this.options._t('Structure'),
                 name: this.options._t('Table'),
+                priority: 80,
                 description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
                 callback: () => {
@@ -1884,8 +1843,49 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: this.options._t('Basic blocks'),
+                category: this.options._t('Structure'),
+                name: this.options._t('Separator'),
+                priority: 40,
+                description: this.options._t('Insert an horizontal rule separator.'),
+                fontawesome: 'fa-minus',
+                callback: () => {
+                    this.execCommand('insertHorizontalRule');
+                },
+            },
+            {
+                category: this.options._t('Format'),
+                name: this.options._t('Heading 1'),
+                priority: 50,
+                description: this.options._t('Big section heading.'),
+                fontawesome: 'fa-header',
+                callback: () => {
+                    this.execCommand('setTag', 'H1');
+                },
+            },
+            {
+                category: this.options._t('Format'),
+                name: this.options._t('Heading 2'),
+                priority: 40,
+                description: this.options._t('Medium section heading.'),
+                fontawesome: 'fa-header',
+                callback: () => {
+                    this.execCommand('setTag', 'H2');
+                },
+            },
+            {
+                category: this.options._t('Format'),
+                name: this.options._t('Heading 3'),
+                priority: 30,
+                description: this.options._t('Small section heading.'),
+                fontawesome: 'fa-header',
+                callback: () => {
+                    this.execCommand('setTag', 'H3');
+                },
+            },
+            {
+                category: this.options._t('Format'),
                 name: this.options._t('Switch direction'),
+                priority: 20,
                 description: this.options._t('Switch the text\'s direction.'),
                 fontawesome: 'fa-exchange',
                 callback: () => {
@@ -1893,9 +1893,20 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: 'Widgets',
-                name: '3 Stars',
-                description: 'Insert a rating over 3 stars.',
+                category: this.options._t('Format'),
+                name: this.options._t('Text'),
+                priority: 10,
+                description: this.options._t('Paragraph block.'),
+                fontawesome: 'fa-paragraph',
+                callback: () => {
+                    this.execCommand('setTag', 'P');
+                },
+            },
+            {
+                category: this.options._t('Widgets'),
+                name: this.options._t('3 Stars'),
+                priority: 20,
+                description: this.options._t('Insert a rating over 3 stars.'),
                 fontawesome: 'fa-star-o',
                 callback: () => {
                     let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
@@ -1905,9 +1916,10 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                category: 'Widgets',
-                name: '5 Stars',
-                description: 'Insert a rating over 5 stars.',
+                category: this.options._t('Widgets'),
+                name: this.options._t('5 Stars'),
+                priority: 10,
+                description: this.options._t('Insert a rating over 5 stars.'),
                 fontawesome: 'fa-star',
                 callback: () => {
                     let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';

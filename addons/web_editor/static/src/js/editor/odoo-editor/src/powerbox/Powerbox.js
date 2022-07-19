@@ -89,14 +89,23 @@ export class Powerbox {
      * @param {Array<{name: string, priority: number}} [categories=this.categories]
      */
     open(commands=this.commands, categories=this.categories) {
+        const order = (a, b) => b.priority - a.priority || a.name.localeCompare(b.name);
         if (this.onOpen) {
             this.onOpen();
         }
-        // Remove duplicate category names, keeping only last declared version.
+        // Remove duplicate category names, keeping only last declared version,
+        // and order them.
         categories = [...categories].reverse().filter((category, index, cats) => (
             cats.findIndex(cat => cat.name === category.name) === index
-        ));
-        commands = this._getCurrentCommands(this._orderByPriority(commands), this._orderByPriority(categories));
+        )).sort(order);
+
+        // Apply optional filters to disable commands, then order them.
+        for (let filter of this.commandFilters) {
+            commands = filter(commands);
+        }
+        commands = commands.filter(command => !command.isDisabled || !command.isDisabled()).sort(order);
+        commands = this._groupCommands(commands, categories).flatMap(group => group[1]);
+
         this._context = {
             commands, categories, filteredCommands: commands, selectedCommand: undefined,
             initialTarget: this.editable, initialValue: this.editable.textContent,
@@ -214,52 +223,6 @@ export class Powerbox {
         this.close();
     };
     /**
-     * Filter an array of commands based on the given term using fuzzy matching.
-     *
-     * @private
-     * @param {PowerboxCommand[]} commands
-     * @param {string} term
-     * @returns {PowerboxCommand[]}
-     */
-    _filter(commands, term) {
-        term = term.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
-        if (term.length) {
-            const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
-            return commands.filter(command => `${command.category} ${command.name}`.toLowerCase().match(regex));
-        } else {
-            return commands;
-        }
-    }
-    /**
-     * Take a list of commands, filter them based on `commandFilters` and
-     * `isDisabled`) and return the remaining commands, ordered so that commands
-     * that belong to the same category are grouped together.
-     * Note: `commandFilters` is on the Powerbox instance and allows the
-     * filtering of several commands at once (eg, a whole category), while
-     * `isDisabled` is on a specific command and is made to target that command.
-     *
-     * @see commandFilters {Array<() => PowerboxCommand[]} return commands that can be used.
-     * @see command.isDisabled {() => boolean} return true if the command is disabled.
-     * @private
-     * @param {PowerboxCommand[]} commands
-     * @param {Array<{name: string, priority: number}} categories
-     * @returns {PowerboxCommand[]}
-     */
-    _getCurrentCommands(commands, categories) {
-        /**
-         * Some available commands may need to be disabled in certain
-         * situations. i.e.: in a knowledge article, prevent the usage of the
-         * /template command inside a /template block.
-         */
-        for (let filter of this.commandFilters) {
-            commands = filter(commands);
-        }
-        // Do not show disabled commands.
-        commands = commands.filter(command => !command.isDisabled || !command.isDisabled());
-        // Reorder the commands based on their categories' priorities.
-        return this._groupCommands(commands, categories).flatMap(group => group[1]);
-    }
-    /**
      * Takes a list of commands and returns an object whose keys are all
      * existing category names and whose values are each of these categories'
      * commands. Categories with no commands are removed.
@@ -293,7 +256,7 @@ export class Powerbox {
      * @returns {PowerboxCommand[] | Array<{name: string, priority: number}}
      */
     _orderByPriority(commandsOrCategories) {
-        return commandsOrCategories.sort((a, b) => a.priority - b.priority || a.name.localeCompare(b.name));
+        return [...commandsOrCategories].sort((a, b) => b.priority - a.priority || a.name.localeCompare(b.name));
     }
     /**
      * Recompute the Powerbox's position base on the selection in the document.
@@ -360,9 +323,15 @@ export class Powerbox {
             if (this._context.lastText.match(/\s/)) {
                 this.close();
             } else {
-                this._context.filteredCommands = this._context.lastText === ''
-                    ? this._context.commands
-                    : this._filter(this._context.commands, this._context.lastText);
+                const term = this._context.lastText.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
+                if (term.length) {
+                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
+                    this._context.filteredCommands = this._context.commands.filter(command => (
+                        `${command.category} ${command.name}`.toLowerCase().match(regex)
+                    ));
+                } else {
+                    this._context.filteredCommands = this._context.commands;
+                }
                 this._render(this._context.filteredCommands, this._context.categories);
             }
         }
