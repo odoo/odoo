@@ -1,149 +1,93 @@
-odoo.define('account.payment', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var field_utils = require('web.field_utils');
+import { registry } from "@web/core/registry";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
+import { localization } from "@web/core/l10n/localization";
+import { parseDate, formatDate } from "@web/core/l10n/dates";
 
-var QWeb = core.qweb;
-var _t = core._t;
+import { formatMonetary } from "@web/views/fields/formatters";
 
-var ShowPaymentLineWidget = AbstractField.extend({
-    events: _.extend({
-        'click .outstanding_credit_assign': '_onOutstandingCreditAssign',
-        'click .open_account_move': '_onOpenPaymentOrMove',
-    }, AbstractField.prototype.events),
-    supportedFieldTypes: ['char'],
+const { Component, onWillUpdateProps } = owl;
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+class AccountPaymentPopOver extends Component {}
+AccountPaymentPopOver.template = "account.AccountPaymentPopOver";
 
-    /**
-     * @override
-     * @returns {boolean}
-     */
-    isSet: function() {
-        return true;
-    },
+export class AccountPaymentField extends Component {
+    setup() {
+        this.popover = usePopover();
+        this.orm = useService("orm");
+        this.action = useService("action");
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+        this.formatData(this.props);
+        onWillUpdateProps((nextProps) => this.formatData(nextProps));
+    }
 
-    /**
-     * @private
-     * @override
-     */
-    _render: function() {
-        this.viewAlreadyOpened = false;
-        var self = this;
-        var info = this.value;
-        if (!info) {
-            this.$el.html('');
-            return;
-        }
-        _.each(info.content, function (k, v){
-            k.index = v;
-            k.amount = field_utils.format.float(k.amount, {digits: k.digits});
-            if (k.date){
-                k.date = field_utils.format.date(field_utils.parse.date(k.date, {}, {isUTC: true}));
+    formatData(props) {
+        const info = props.value || {
+            content: [],
+            outstanding: false,
+            title: "",
+            move_id: this.props.record.data.id,
+        };
+        for (let [key, value] of Object.entries(info.content)) {
+            value.index = key;
+            value.amount_formatted = formatMonetary(value.amount, { currencyId: value.currency_id });
+            if (value.date) {
+                // value.date is a string, parse to date and format to the users date format
+                value.date = formatDate(parseDate(value.date));
             }
-        });
-        this.$el.html(QWeb.render('ShowPaymentInfo', {
-            lines: info.content,
-            outstanding: info.outstanding,
-            title: info.title
-        }));
-        _.each(this.$('.js_payment_info'), function (k, v){
-            var isRTL = _t.database.parameters.direction === "rtl";
-            var content = info.content[v];
-            var options = {
-                content: function () {
-                    var $content = $(QWeb.render('PaymentPopOver', content));
-                    $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
-
-                    $content.filter('.js_open_payment').on('click', self._onOpenPaymentOrMove.bind(self));
-                    return $content;
-                },
-                html: true,
-                placement: isRTL ? 'bottom' : 'left',
-                title: 'Payment Information',
-                trigger: 'focus',
-                delay: { "show": 0, "hide": 100 },
-                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
-            };
-            $(k).popover(options);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onOpenPaymentOrMove: function (event) {
-        var moveId = parseInt($(event.target).attr('move-id'));
-        if (!this.viewAlreadyOpened && moveId !== undefined && !isNaN(moveId)) {
-            this.viewAlreadyOpened = true;
-            var self = this;
-            this._rpc({
-                model: 'account.move',
-                method: 'open_move',
-                args: [moveId],
-            }).then(function (actionData) {
-                return self.do_action(actionData);
-            });
         }
-    },
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onOutstandingCreditAssign: function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var self = this;
-        var id = $(event.target).data('id') || false;
-        this._rpc({
-                model: 'account.move',
-                method: 'js_assign_outstanding_line',
-                args: [this.value.move_id, id],
-            }).then(function () {
-                self.trigger_up('reload');
-            });
-    },
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onRemoveMoveReconcile: function (event) {
-        var self = this;
-        var moveId = parseInt($(event.target).attr('move-id'));
-        var partialId = parseInt($(event.target).attr('partial-id'));
-        if (partialId !== undefined && !isNaN(partialId)){
-            this._rpc({
-                model: 'account.move',
-                method: 'js_remove_outstanding_partial',
-                args: [moveId, partialId],
-            }).then(function () {
-                self.trigger_up('reload');
-            });
+        this.lines = info.content;
+        this.outstanding = info.outstanding;
+        this.title = info.title;
+        this.move_id = info.move_id;
+    }
+
+    onInfoClick(ev, idx) {
+        if (this.popoverCloseFn) {
+            this.closePopover();
         }
-    },
-});
+        this.popoverCloseFn = this.popover.add(
+            ev.currentTarget,
+            AccountPaymentPopOver,
+            {
+                title: this.env._t("Journal Entry Info"),
+                ...this.lines[idx],
+                _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
+                _onOpenMove: this.openMove.bind(this),
+                onClose: this.closePopover,
+            },
+            {
+                position: localization.direction === "rtl" ? "bottom" : "left",
+            },
+        );
+    }
 
-field_registry.add('payment', ShowPaymentLineWidget);
+    closePopover() {
+        this.popoverCloseFn();
+        this.popoverCloseFn = null;
+    }
 
-return {
-    ShowPaymentLineWidget: ShowPaymentLineWidget
-};
+    async assignOutstandingCredit(id) {
+        await this.orm.call(this.props.record.resModel, 'js_assign_outstanding_line', [this.move_id, id], {});
+        await this.props.record.model.root.load();
+        this.props.record.model.notify();
+    }
 
-});
+    async removeMoveReconcile(moveId, partialId) {
+        this.closePopover();
+        await this.orm.call(this.props.record.resModel, 'js_remove_outstanding_partial', [moveId, partialId], {});
+        await this.props.record.model.root.load();
+        this.props.record.model.notify();
+    }
+
+    async openMove(moveId) {
+        const action = await this.orm.call(this.props.record.resModel, 'open_move', [moveId], {});
+        this.action.doAction(action);
+    }
+}
+AccountPaymentField.template = "account.AccountPaymentField";
+AccountPaymentField.supportedTypes = ["char"];
+
+registry.category("fields").add("payment", AccountPaymentField);

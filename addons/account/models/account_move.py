@@ -1069,11 +1069,9 @@ class AccountMove(models.Model):
                 payments_widget_vals['content'].append({
                     'journal_name': line.ref or line.move_id.name,
                     'amount': amount,
-                    'currency': move.currency_id.symbol,
+                    'currency_id': move.currency_id.id,
                     'id': line.id,
                     'move_id': line.move_id.id,
-                    'position': move.currency_id.position,
-                    'digits': [69, move.currency_id.decimal_places],
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
                 })
@@ -1103,9 +1101,7 @@ class AccountMove(models.Model):
                         'name': counterpart_line.name,
                         'journal_name': counterpart_line.journal_id.name,
                         'amount': reconciled_partial['amount'],
-                        'currency': reconciled_partial['currency'].symbol,
-                        'digits': [69, reconciled_partial['currency'].decimal_places],
-                        'position': reconciled_partial['currency'].position,
+                        'currency_id': reconciled_partial['currency'].id,
                         'date': counterpart_line.date,
                         'partial_id': reconciled_partial['partial_id'],
                         'account_payment_id': counterpart_line.payment_id.id,
