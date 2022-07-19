@@ -2,7 +2,7 @@
 
 import { busService } from "@bus/services/bus_service";
 import { presenceService } from "@bus/services/presence_service";
-import { multiTabService } from "@bus/services/multi_tab_service";
+import { multiTabService } from "@bus/multi_tab_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
@@ -21,7 +21,7 @@ QUnit.module("Calendar Notification", (hooks) => {
         serviceRegistry.add("calendarNotification", calendarNotificationService);
         serviceRegistry.add("bus_service", busService);
         serviceRegistry.add("presence", presenceService);
-        serviceRegistry.add("multiTab", multiTabService);
+        serviceRegistry.add("multi_tab", multiTabService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
                 this._super(fn, 0);

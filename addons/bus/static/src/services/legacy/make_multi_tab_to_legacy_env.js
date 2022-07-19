@@ -4,9 +4,9 @@ import { registry } from '@web/core/registry';
 
 export function makeMultiTabToLegacyEnv(legacyEnv) {
     return {
-        dependencies: ['multiTab'],
-        start(_, { multiTab }) {
-            legacyEnv.services['multiTab'] = multiTab;
+        dependencies: ['multi_tab'],
+        start(_, { multi_tab }) {
+            legacyEnv.services['multi_tab'] = multi_tab;
         },
     };
 }
