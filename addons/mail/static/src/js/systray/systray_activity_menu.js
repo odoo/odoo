@@ -3,7 +3,6 @@
 import { qweb as QWeb } from 'web.core';
 import config from "web.config";
 import session  from 'web.session';
-import SystrayMenu from 'web.SystrayMenu';
 import Widget from 'web.Widget';
 import Time from 'web.time';
 
@@ -196,7 +195,5 @@ var ActivityMenu = Widget.extend({
         document.body.classList.remove('modal-open');
     },
 });
-
-SystrayMenu.Items.push(ActivityMenu);
 
 export default ActivityMenu;
