@@ -116,8 +116,11 @@ class SetupBarBankConfigWizard(models.TransientModel):
             record.linked_journal_id = record.journal_id and record.journal_id[0] or record.default_linked_journal_id()
 
     def default_linked_journal_id(self):
-        default = self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False)], limit=1)
-        return default[:1].id
+        for journal_id in self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False)]):
+            empty_journal_count = self.env['account.move'].search_count([('journal_id', '=', journal_id.id)])
+            if empty_journal_count == 0:
+                return journal_id.id
+        return False
 
     def set_linked_journal_id(self):
         """ Called when saving the wizard.

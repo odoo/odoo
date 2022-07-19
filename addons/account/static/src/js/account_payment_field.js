@@ -88,28 +88,16 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOpenPaymentOrMove: function (event) {
-        var paymentId = parseInt($(event.target).attr('payment-id'));
         var moveId = parseInt($(event.target).attr('move-id'));
-        var resModel;
-        var id;
-        if (paymentId !== undefined && !isNaN(paymentId)){
-            resModel = "account.payment";
-            id = paymentId;
-        } else if (moveId !== undefined && !isNaN(moveId)){
-            resModel = "account.move";
-            id = moveId;
-        }
-        //Open form view of account.move with id = move_id
-        //viewAlreadyopened is a flag to prevent the user from clicking on another account.move/account.payment
-        //while the first one he clicked on is loading
-        if (!this.viewAlreadyOpened && resModel && id) {
+        if (!this.viewAlreadyOpened && moveId !== undefined && !isNaN(moveId)) {
             this.viewAlreadyOpened = true;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: resModel,
-                res_id: id,
-                views: [[false, 'form']],
-                target: 'current'
+            var self = this;
+            this._rpc({
+                model: 'account.move',
+                method: 'open_move',
+                args: [moveId],
+            }).then(function (actionData) {
+                return self.do_action(actionData);
             });
         }
     },
