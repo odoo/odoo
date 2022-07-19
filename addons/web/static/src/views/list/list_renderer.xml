@@ -6,7 +6,6 @@
             class="o_list_renderer"
             t-att-class="{'table-responsive': showTable}"
             t-attf-class="{{ props.archInfo.className or '' }}"
-            t-on-focusin="onFocusIn"
             tabindex="-1"
             t-ref="root"
         >
@@ -48,7 +47,7 @@
                                     role="button"
                                     t-att-class="create_index !== 0 ? 'ml16' : ''"
                                     t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
-                                    t-on-click.stop.prevent="() => this.onCreateAction(create.context)"
+                                    t-on-click.stop.prevent="() => this.props.onAdd({context: create.context})"
                                 >
                                     <t t-esc="create.description"/>
                                 </a>
