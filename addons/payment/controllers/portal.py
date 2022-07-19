@@ -367,7 +367,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @http.route('/payment/confirmation', type='http', methods=['GET'], auth='public', website=True)
     def payment_confirm(self, tx_id, access_token, **kwargs):
-        """ Display the payment confirmation page with the appropriate status message to the user.
+        """ Display the payment confirmation page to the user.
 
         :param str tx_id: The transaction to confirm, as a `payment.transaction` id
         :param str access_token: The access token used to verify the user
@@ -384,36 +384,11 @@ class PaymentPortal(portal.CustomerPortal):
             ):
                 raise werkzeug.exceptions.NotFound  # Don't leak info about existence of an id
 
-            # Fetch the appropriate status message configured on the acquirer
-            if tx_sudo.state == 'draft':
-                status = 'info'
-                message = tx_sudo.state_message \
-                          or _("This payment has not been processed yet.")
-            elif tx_sudo.state == 'pending':
-                status = 'warning'
-                message = tx_sudo.acquirer_id.pending_msg
-            elif tx_sudo.state == 'authorized':
-                status = 'success'
-                message = tx_sudo.acquirer_id.auth_msg
-            elif tx_sudo.state == 'done':
-                status = 'success'
-                message = tx_sudo.acquirer_id.done_msg
-            elif tx_sudo.state == 'cancel':
-                status = 'danger'
-                message = tx_sudo.acquirer_id.cancel_msg
-            else:
-                status = 'danger'
-                message = tx_sudo.state_message \
-                          or _("An error occurred during the processing of this payment.")
+            # Stop monitoring the transaction now that it reached a final state.
+            PaymentPostProcessing.remove_transactions(tx_sudo)
 
             # Display the payment confirmation page to the user
-            PaymentPostProcessing.remove_transactions(tx_sudo)
-            render_values = {
-                'tx': tx_sudo,
-                'status': status,
-                'message': message
-            }
-            return request.render('payment.confirm', render_values)
+            return request.render('payment.confirm', qcontext={'tx': tx_sudo})
         else:
             # Display the portal homepage to the user
             return request.redirect('/my/home')
