@@ -2,16 +2,21 @@
 
 <templates>
 
-    <t t-name="accountTypeSelection">
-        <t t-foreach="widget.hierarchyGroups" t-as="group">
-            <optgroup t-att-label="group.name">
-                <t t-if="group.children">
-                    <t t-foreach="group.children" t-as="child">
-                        <option t-att-value="JSON.stringify(child[0])" t-out="child[1]"/>
+    <t t-name="account.AccountTypeSelection" t-inherit="web.SelectionField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-foreach='options']" position="replace">
+            <t t-foreach="hierarchyOptions" t-as="group" t-key="group_index">
+                <optgroup t-att-label="group.name">
+                    <t t-if="!!group.children">
+                        <t t-foreach="group.children" t-as="child" t-key="child[0]">
+                            <option
+                                t-att-selected="child[0] === value"
+                                t-att-value="stringify(child[0])"
+                                t-esc="child[1]"/>
+                        </t>
                     </t>
-                </t>
-            </optgroup>
-        </t>
+                </optgroup>
+            </t>
+        </xpath>
     </t>
 
 </templates>

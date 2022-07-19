@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="accountTypeSelection">
+        <t t-foreach="widget.hierarchyGroups" t-as="group">
+            <optgroup t-att-label="group.name">
+                <t t-if="group.children">
+                    <t t-foreach="group.children" t-as="child">
+                        <option t-att-value="JSON.stringify(child[0])" t-out="child[1]"/>
+                    </t>
+                </t>
+            </optgroup>
+        </t>
+    </t>
+
+</templates>
