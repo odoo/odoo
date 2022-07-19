@@ -217,7 +217,7 @@
     function makePropSetter(name) {
         return function setProp(value) {
             // support 0, fallback to empty string for other falsy values
-            this[name] = value === 0 ? 0 : value || "";
+            this[name] = value === 0 ? 0 : value ? value.valueOf() : "";
         };
     }
     function isProp(tag, key) {
@@ -3906,13 +3906,18 @@
                     attrs["block-attribute-" + idx] = attrName;
                 }
                 else if (key.startsWith("t-att")) {
+                    attrName = key === "t-att" ? null : key.slice(6);
                     expr = compileExpr(ast.attrs[key]);
+                    if (attrName && isProp(ast.tag, attrName)) {
+                        // we force a new string or new boolean to bypass the equality check in blockdom when patching same value
+                        const C = attrName === "value" ? "String" : "Boolean";
+                        expr = `new ${C}(${expr})`;
+                    }
                     const idx = block.insertData(expr, "attr");
                     if (key === "t-att") {
                         attrs[`block-attributes`] = String(idx);
                     }
                     else {
-                        attrName = key.slice(6);
                         attrs[`block-attribute-${idx}`] = attrName;
                     }
                 }
@@ -5755,9 +5760,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-12';
-    __info__.date = '2022-06-29T09:13:44.802Z';
-    __info__.hash = '6c72e0a';
+    __info__.version = '2.0.0-beta-14';
+    __info__.date = '2022-07-08T14:18:04.914Z';
+    __info__.hash = 'd111845';
     __info__.url = 'https://github.com/odoo/owl';
 
 

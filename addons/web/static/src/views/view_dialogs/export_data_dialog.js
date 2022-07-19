@@ -183,7 +183,7 @@ export class ExportDataDialog extends Component {
     }
 
     async loadExportList(value) {
-        this.state.templateId = value;
+        this.state.templateId = value === "new_template" ? value : Number(value);
         this.state.isEditingTemplate = value === "new_template";
         if (!value || value === "new_template") {
             return;
