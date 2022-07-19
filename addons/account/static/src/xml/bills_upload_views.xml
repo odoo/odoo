@@ -1,37 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="account.DocumentsHiddenUploadForm">
-        <div class="d-none o_account_document_upload">
-            <t t-call="HiddenInputFile">
-                <t t-set="multi_upload" t-value="true"/>
-                <t t-set="fileupload_id" t-value="widget.fileUploadID"/>
-                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                <input type="hidden" name="model" value=""/>
-                <input type="hidden" name="id" value="0"/>
-            </t>
-        </div>
-    </t>
-
-    <t t-extend="ListView.buttons" t-name="DocumentsListView.buttons">
-        <t t-jquery="button.o_list_button_add" t-operation="after">
-            <button type="button" class="btn btn-secondary o_button_upload_document">
-                Upload
-            </button>
-        </t>
-    </t>
-
-    <t t-extend="KanbanView.buttons" t-name="DocumentsKanbanView.buttons">
-        <t t-jquery="button" t-operation="after">
-            <button type="button" class="btn btn-secondary o_button_upload_document">
-                Upload
-            </button>
-        </t>
-    </t>
-
-    <t t-name="account.DocumentDropZone">
-        <div class="o_drop_area">
+    <t t-name="account.DropZone" owl="1">
+        <div
+            t-ref="account_drop_zone"
+            t-attf-class="o_drop_area {{props.visibilityClass}}"
+            t-on-dragleave="props.dragLeave"
+            t-on-dragover.prevent="()=>{}"
+            t-on-drop="props.drop">
             <i class="fa fa-upload fa-10x"></i>
+            <t t-slot="default"/>
         </div>
     </t>
+
+    <t t-name="account.HiddenFileUploader" owl="1">
+        <div>
+            <FileUploader
+                acceptedFileExtensions="props.acceptedFileExtensions"
+                fileUploadClass="'account_file_uploader'"
+                multiUpload="true"
+                onUploaded.bind="onFileUploaded"
+                onUploadComplete.bind="onUploadComplete">
+                <t t-set-slot="toggler">
+                    <t t-slot="toggleButton"/>
+                </t>
+            </FileUploader>
+        </div>
+    </t>
+
+    <t t-name="account.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@t-ref='root']" position="before">
+            <AccountDropZone
+                visibilityClass="dzState.dzClass"
+                drop.bind="onDrop"
+                dragLeave.bind="hideDropZone"/>
+        </xpath>
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="t-on-dragenter.stop.prevent">(ev) => this.showDropZone(ev)</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@t-ref='root']" position="before">
+            <AccountDropZone
+                visibilityClass="dzState.dzClass"
+                drop.bind="onDrop"
+                dragLeave.bind="hideDropZone"/>
+        </xpath>
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="t-on-dragenter.stop.prevent">showDropZone</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="after">
+            <AccountFileUploader extraContext="props.context">
+                <t t-set-slot="toggleButton">
+                    <button type="button" class="btn btn-secondary o_button_upload_bill">
+                        Upload
+                    </button>
+                </t>
+            </AccountFileUploader>
+        </xpath>
+    </t>
+
+    <t t-name="account.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//*[@class='btn btn-primary o-kanban-button-new']" position="after">
+            <AccountFileUploader extraContext="props.context">
+                <t t-set-slot="toggleButton">
+                    <button type="button" class="btn btn-secondary o_button_upload_bill">
+                        Upload
+                    </button>
+                </t>
+            </AccountFileUploader>
+        </xpath>
+    </t>
+
+    <t t-name="account.DashboardKanbanRecord" owl="1">
+        <div
+            role="article"
+            t-att-class="getRecordClasses()"
+            t-att-data-id="props.canResequence and props.record.id"
+            t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+            t-on-click="onGlobalClick"
+            t-on-dragenter.stop.prevent="(ev) => this.showDropZone(ev)"
+            t-ref="root">
+            <t t-call="{{ templates['kanban-box'] }}"/>
+        </div>
+    </t>
+
 </templates>

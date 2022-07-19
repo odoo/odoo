@@ -19,6 +19,7 @@
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
+                            <t t-call="AccountDropZoneUploader"/>
                             <div t-att-class="'container o_kanban_card_content' + (dashboard.is_sample_data ? ' o_sample_data' : '')">
                                 <div class="row">
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
@@ -34,6 +35,19 @@
                                 <t t-call="JournalManage"/>
                             </div>
                         </div>
+                    </t>
+
+                    <t t-name="AccountDropZoneUploader" owl="1">
+                        <AccountDropZone
+                            visibilityClass="dzState.dzClass"
+                            drop.bind="onDrop"
+                            dragLeave.bind="hideDropZone">
+                            <AccountFileUploader
+                                extraContext="{
+                                    default_journal_id: record.id.raw_value,
+                                    default_move_type: journal_type == 'sale' and 'out_invoice' or journal_type == 'purchase' and 'in_invoice' or 'entry'
+                                }"/>
+                        </AccountDropZone>
                     </t>
 
                     <t t-name="JournalTop">

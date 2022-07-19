@@ -110,6 +110,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/legacy_section_and_note_fields_backend.js',
             'account/static/src/js/tours/account.js',
             'account/static/src/js/bills_upload.js',
+            'account/static/src/js/legacy_bills_upload.js',
             'account/static/src/js/account_selection.js',
             'account/static/src/js/open_move_widget.js',
         ],
