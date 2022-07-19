@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
 const { useComponent, useEffect, useRef, useEnv } = owl;
@@ -52,25 +53,33 @@ export function useInputField(params) {
      * However, if the field is invalid, the new value will not be committed to the model.
      */
     function onChange(ev) {
-        isDirty = false;
-        isInvalid = false;
-        let val = ev.target.value;
-        if (params.parse) {
-            try {
-                val = params.parse(val);
-            } catch (_e) {
-                component.props.record.setInvalidField(component.props.name);
-                isInvalid = true;
+        if (isDirty) {
+            isDirty = false;
+            isInvalid = false;
+            let val = ev.target.value;
+            if (params.parse) {
+                try {
+                    val = params.parse(val);
+                } catch (_e) {
+                    component.props.record.setInvalidField(component.props.name);
+                    isInvalid = true;
+                }
+            }
+
+            if (!isInvalid) {
+                component.props.update(val);
+                lastSetValue = ev.target.value;
+            }
+
+            if (component.props.setDirty) {
+                component.props.setDirty(isDirty);
             }
         }
-
-        if (!isInvalid) {
-            component.props.update(val);
-            lastSetValue = ev.target.value;
-        }
-
-        if (component.props.setDirty) {
-            component.props.setDirty(isDirty);
+    }
+    function onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (["enter", "tab", "shift+tab"].includes(hotkey)) {
+            commitChanges(false);
         }
     }
 
@@ -79,9 +88,11 @@ export function useInputField(params) {
             if (inputEl) {
                 inputEl.addEventListener("input", onInput);
                 inputEl.addEventListener("change", onChange);
+                inputEl.addEventListener("keydown", onKeydown);
                 return () => {
                     inputEl.removeEventListener("input", onInput);
                     inputEl.removeEventListener("change", onChange);
+                    inputEl.removeEventListener("keydown", onKeydown);
                 };
             }
         },
@@ -102,12 +113,11 @@ export function useInputField(params) {
     });
 
     useBus(env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => commitChanges(true));
-    useBus(env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", () => commitChanges(false));
 
     /**
      * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
      */
-    function commitChanges(urgent) {
+    async function commitChanges(urgent) {
         if (!inputRef.el) {
             return;
         }
@@ -134,17 +144,16 @@ export function useInputField(params) {
                 }
             }
 
-            if (component.props.setDirty) {
-                component.props.setDirty(isDirty);
-            }
-
             if (isInvalid) {
                 return;
             }
 
             if (val !== component.props.value) {
-                component.props.update(val);
+                await component.props.update(val);
                 lastSetValue = inputRef.el.value;
+                if (component.props.setDirty) {
+                    component.props.setDirty(isDirty);
+                }
             }
         }
     }
