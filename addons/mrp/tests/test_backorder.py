@@ -467,6 +467,45 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(backorder.state, 'confirmed')
         self.assertEqual(backorder.reserve_visible, False)
 
+    def test_create_backorder_setting(self):
+        """Create 3 MO with each has different backorder settings on its
+        picking type. Check the backorder behavior for each MO.
+        """
+        def create_mo():
+            mo = self.generate_mo(qty_final=5)[0]
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1
+            mo = mo_form.save()
+            return mo
+
+        picking_type_ask = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')], limit=1)
+        picking_type_ask.create_backorder = 'ask'
+        picking_type_always = picking_type_ask.copy({
+            'sequence_code': 'always',
+            'create_backorder': 'always',
+        })
+        picking_type_never = picking_type_ask.copy({
+            'sequence_code': 'never',
+            'create_backorder': 'never',
+        })
+        mo_ask = create_mo()
+        mo_ask.picking_type_id = picking_type_ask.id
+
+        mo_always = create_mo()
+        mo_always.picking_type_id = picking_type_always.id
+
+        mo_never = create_mo()
+        mo_never.picking_type_id = picking_type_never.id
+
+        productions = mo_ask | mo_always | mo_never
+        action = productions.button_mark_done()
+
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
+        self.assertEqual(backorder.mrp_production_ids, mo_ask, "Only Ask for backorder where picking type configred as ask for create backorder")
+        backorder.action_backorder()
+        self.assertEqual((mo_ask.procurement_group_id.mrp_production_ids - mo_ask).product_qty, 4)
+        self.assertEqual((mo_always.procurement_group_id.mrp_production_ids - mo_always).product_qty, 4)
+        self.assertEqual((mo_never.procurement_group_id.mrp_production_ids - mo_never).product_qty, 0)
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
