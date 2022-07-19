@@ -1964,7 +1964,6 @@ registerModel({
          */
         memberCount: attr(),
         members: many('Partner', {
-            inverse: 'memberThreads',
             sort: '_sortPartnerMembers',
         }),
         /**
