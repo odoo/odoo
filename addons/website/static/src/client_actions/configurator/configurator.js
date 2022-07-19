@@ -378,7 +378,9 @@ class ApplyConfiguratorScreen extends Component {
                     'industry_id': this.state.selectedIndustry.id,
                     'selected_palette': selectedPalette,
                     'theme_name': themeName,
-                    'website_purpose': WEBSITE_PURPOSES[this.state.selectedPurpose].name,
+                    'website_purpose': WEBSITE_PURPOSES[
+                        this.state.selectedPurpose || this.state.formerSelectedPurpose
+                    ].name,
                     'website_type': WEBSITE_TYPES[this.state.selectedType].name,
                     'logo_attachment_id': this.state.logoAttachmentId,
                 });
@@ -512,6 +514,12 @@ class Store {
     }
 
     selectWebsitePurpose(id) {
+        // Keep track or the former selection in order to be able to keep
+        // the auto-advance navigation scheme while being able to use the
+        // browser's back and forward buttons.
+        if (!id && this.selectedPurpose) {
+            this.formerSelectedPurpose = this.selectedPurpose;
+        }
         Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
             feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
@@ -696,6 +704,7 @@ class Configurator extends Component {
         return Object.assign(r, {
             selectedType: undefined,
             selectedPurpose: undefined,
+            formerSelectedPurpose: undefined,
             selectedIndustry: undefined,
             selectedPalette: undefined,
             recommendedPalette: undefined,
@@ -716,6 +725,7 @@ class Configurator extends Component {
             selectedIndustry: state.selectedIndustry,
             selectedPalette: state.selectedPalette,
             selectedPurpose: state.selectedPurpose,
+            formerSelectedPurpose: state.formerSelectedPurpose,
             selectedType: state.selectedType,
             recommendedPalette: state.recommendedPalette,
         });
