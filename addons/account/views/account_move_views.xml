@@ -816,7 +816,6 @@
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 <div class="d-flex" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
                                     <field name="invoice_date_due" force_save="1"
-                                           placeholder="Date"
                                            attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
                                     <span class="o_form_label mx-3 oe_edit_only"
                                           attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>

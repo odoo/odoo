@@ -387,7 +387,7 @@
                         </div>
                     </t>
                     <t t-name="JournalBodyGraph">
-                        <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
+                        <field name="kanban_dashboard_graph" t-att-graph_type="['cash','bank'].includes(journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
                     </t>
             </templates>
             </kanban>
