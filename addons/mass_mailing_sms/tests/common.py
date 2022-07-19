@@ -6,11 +6,12 @@ import re
 import werkzeug
 
 from odoo import tools
+from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.sms.tests.common import SMSCase, SMSCommon
 
 
-class MassSMSCase(SMSCase):
+class MassSMSCase(SMSCase, MockLinkTracker):
 
     # ------------------------------------------------------------
     # ASSERTS
@@ -155,7 +156,7 @@ class MassSMSCase(SMSCase):
                 )
 
 
-class MassSMSCommon(MassMailCommon, SMSCommon, MassSMSCase):
+class MassSMSCommon(SMSCommon, MassSMSCase, MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
