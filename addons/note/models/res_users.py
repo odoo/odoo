@@ -61,6 +61,7 @@ GROUP BY id"""
                 activities[note_index]['name'] = note_label
             else:
                 activities.append({
+                    'id': self.env['ir.model']._get('note.note').id,
                     'type': 'activity',
                     'name': note_label,
                     'model': 'note.note',

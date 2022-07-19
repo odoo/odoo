@@ -61,6 +61,7 @@ patch(MockServer.prototype, 'note', {
                 activities[noteIndex]['name'] = 'Notes';
             } else {
                 activities.push({
+                    id: 'note.note', // for simplicity
                     type: 'activity',
                     name: 'Notes',
                     model: 'note.note',

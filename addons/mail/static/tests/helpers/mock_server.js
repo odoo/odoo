@@ -2193,6 +2193,7 @@ patch(MockServer.prototype, 'mail', {
             const modelName = activity['res_model'];
             if (!userActivitiesByModelName[modelName]) {
                 userActivitiesByModelName[modelName] = {
+                    id: modelName, // for simplicity
                     model: modelName,
                     name: modelName,
                     overdue_count: 0,

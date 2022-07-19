@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityMenuView" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ActivityMenuView_activityGroupTitle')]" position="after">
+            <div t-if="activityGroupView.activityGroup.type == 'meeting'">
+                <t t-set="is_next_meeting" t-value="true"/>
+                <t t-foreach="activityGroupView.activityGroup.meetings" t-as="meeting" t-key="meeting.localId">
+                    <div class="d-flex">
+                        <span class="flex-grow-1" t-att-class="!meeting.allday and is_next_meeting ? 'o_meeting_filter o_meeting_bold' : 'o_meeting_filter'" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-res_id="meeting.id" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" t-att-title="meeting.name">
+                            <span><t t-esc="meeting.name"/></span>
+                        </span>
+                        <span t-if="meeting.formattedStart">
+                            <t t-if="meeting.allday">All Day</t>
+                            <t t-else=''>
+                                <t t-set="is_next_meeting" t-value="false"/>
+                                <t t-esc="meeting.formattedStart"/>
+                            </t>
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

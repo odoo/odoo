@@ -89,8 +89,17 @@ registerModel({
                             return this._handleNotificationChannelLeave(message.payload);
                         case 'res.users/connection':
                             return this._handleNotificationPartnerUserConnection(message.payload);
-                        case 'mail.activity/updated':
-                            return owl.Component.env.bus.trigger('activity_updated', message.payload);
+                        case 'mail.activity/updated': {
+                            for (const activityMenuView of this.messaging.models['ActivityMenuView'].all()) {
+                                if (message.payload.activity_created) {
+                                    activityMenuView.update({ extraCount: increment() });
+                                }
+                                if (message.payload.activity_deleted) {
+                                    activityMenuView.update({ extraCount: decrement() });
+                                }
+                            }
+                            return;
+                        }
                         case 'mail.channel/unpin':
                             return this._handleNotificationChannelUnpin(message.payload);
                         case 'mail.channel/joined':

@@ -1,26 +1,27 @@
 /** @odoo-module **/
 
-import ActivityMenu from '@mail/js/systray/systray_activity_menu';
-
-import { ComponentAdapter } from "web.OwlCompatibility";
+// ensure components are registered beforehand.
+import '@mail/components/activity_menu_view/activity_menu_view';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component } = owl;
 
-class ActivityMenuAdapter extends ComponentAdapter {
-    setup() {
-        this.env = owl.Component.env;
-        super.setup();
-    }
-}
-
 export class ActivityMenuContainer extends Component {
-    get activityMenuWidget() {
-        return ActivityMenu;
-    }
-}
 
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+            this.activityMenuView = this.env.services.messaging.modelManager.messaging.models['ActivityMenuView'].insert();
+            this.render();
+        });
+    }
+
+}
 
 Object.assign(ActivityMenuContainer, {
-    components: { ActivityMenuAdapter },
+    components: { ActivityMenuView: getMessagingComponent('ActivityMenuView') },
     template: 'mail.ActivityMenuContainer',
 });
