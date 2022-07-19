@@ -19,6 +19,7 @@ class Http(models.AbstractModel):
             for company in company_ids:
                 result["user_companies"]["allowed_companies"][company.id].update({
                     "timesheet_uom_id": company.timesheet_encode_uom_id.id,
+                    "is_timesheet_day_uom": not company._is_timesheet_hour_uom(),
                     "timesheet_uom_factor": company.project_time_mode_id._compute_quantity(
                         1.0,
                         company.timesheet_encode_uom_id,
