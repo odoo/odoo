@@ -194,7 +194,7 @@
 }
 /* Content styling */
 
-.oe-commandbar-wrapper {
+.oe-powerbox-wrapper {
     position: absolute;
     z-index: 1051;
     border: black;
@@ -207,37 +207,37 @@
     overflow: hidden;
     display: flex;
 }
-.oe-commandbar-mainWrapper {
+.oe-powerbox-mainWrapper {
     flex: 1 1 auto;
     overflow: auto;
     padding: 5px 0;
     overscroll-behavior: contain;
 }
 
-.oe-commandbar-groupName,  .oe-commandbar-noResult {
+.oe-powerbox-category,  .oe-powerbox-noResult {
     margin: 10px;
     color: rgba(0, 0, 0, 0.6);
     font-size: 11px;
 }
-.oe-commandbar-groupName {
+.oe-powerbox-category {
     text-transform: uppercase;
     margin: 5px 12px;
 }
-.oe-commandbar-noResult {
+.oe-powerbox-noResult {
     display: none;
 }
 
-.oe-commandbar-commandWrapper {
+.oe-powerbox-commandWrapper {
     display: flex;
     padding: 6px 12px;
     cursor: pointer;
 }
 
-.oe-commandbar-commandWrapper.active {
+.oe-powerbox-commandWrapper.active {
     background: #EFEFEE;
 }
 
-i.oe-commandbar-commandImg {
+i.oe-powerbox-commandImg {
     display: flex;
     height: 30px;
     width: 30px;
@@ -250,30 +250,30 @@ i.oe-commandbar-commandImg {
     font-size: 15px;
 }
 
-.oe-commandbar-commandTitle {
+.oe-powerbox-commandName {
     font-size: 13px;
 }
 
-.oe-commandbar-commandDescription {
+.oe-powerbox-commandDescription {
     color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
 }
 
-.oe-commandbar-commandRightCol {
+.oe-powerbox-commandRightCol {
     margin: 0 10px;
 }
 
-.oe-commandbar-wrapper ::-webkit-scrollbar {
+.oe-powerbox-wrapper ::-webkit-scrollbar {
     background: transparent;
 }
-.oe-commandbar-wrapper ::-webkit-scrollbar {
+.oe-powerbox-wrapper ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
-.oe-commandbar-wrapper ::-webkit-scrollbar-thumb {
+.oe-powerbox-wrapper ::-webkit-scrollbar-thumb {
     background: #D3D1CB;
 }
-.oe-commandbar-wrapper ::-webkit-scrollbar-track {
+.oe-powerbox-wrapper ::-webkit-scrollbar-track {
     background: #EDECE9;
 }
 
