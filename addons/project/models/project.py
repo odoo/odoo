@@ -142,6 +142,11 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+    @api.constrains('user_id', 'project_ids')
+    def _check_personal_stage_not_linked_to_projects(self):
+        if any(stage.user_id and stage.project_ids for stage in self):
+            raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
+
     def remove_personal_stage(self):
         """
         Remove a personal stage, tasks using that stage will move to the first
