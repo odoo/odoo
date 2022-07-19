@@ -94,7 +94,7 @@ class TestDigest(mail_test.MailCommon):
         self.assertEqual(mail.email_from, self.company_admin.email_formatted)
         self.assertEqual(mail.state, 'outgoing', 'Mail should use the queue')
 
-        kpi_message_values = html.fromstring(mail.body_html).xpath('//div[@data-field="kpi_mail_message_total"]//*[hasclass("kpi_value")]/text()')
+        kpi_message_values = html.fromstring(mail.body_html).xpath('//table[@data-field="kpi_mail_message_total"]//*[hasclass("kpi_value")]/text()')
         self.assertEqual(
             [t.strip() for t in kpi_message_values],
             ['3', '8', '15']
