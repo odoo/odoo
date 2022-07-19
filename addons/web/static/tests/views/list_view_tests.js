@@ -57,7 +57,6 @@ import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { TextField } from "@web/views/fields/text/text_field";
-import { registerCleanup } from "../helpers/cleanup";
 
 const { onWillStart } = owl;
 
@@ -9921,11 +9920,7 @@ QUnit.module("Views", (hooks) => {
         "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
-            if (registry.category("fields").contains("html")) {
-                throw new Error("Time to remove this hack!");
-            }
-            registry.category("fields").add("html", TextField);
-            registerCleanup(() => registry.category("fields").remove("html"));
+            registry.category("fields").add("html", TextField, { force: true });
 
             await makeView({
                 type: "form",
@@ -13129,7 +13124,7 @@ QUnit.module("Views", (hooks) => {
         // Target handle
         const th = target.querySelector("th:nth-child(2)");
         const optionalDropdown = target.querySelector(".o_optional_columns_dropdown");
-        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const optionalInitialX = Math.floor(optionalDropdown.getBoundingClientRect().x);
         const resizeHandle = th.querySelector(".o_resize");
         const originalWidth = th.offsetWidth;
         const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
@@ -13820,6 +13815,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "selecting a row after another one containing a table within an html field should be the correct one",
         async function (assert) {
+            // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
+            registry.category("fields").add("html", TextField, { force: true });
             serverData.models.foo.fields.html = { string: "HTML field", type: "html" };
             serverData.models.foo.records[0].html = `
                 <table class="table table-bordered">

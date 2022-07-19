@@ -50,7 +50,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
     });
 
-    QUnit.skipWOWL("change setting on nav bar click in base settings", async function (assert) {
+    QUnit.test("change setting on nav bar click in base settings", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
@@ -252,7 +252,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("hide / show setting tips properly", async function (assert) {
+    QUnit.test("hide / show setting tips properly", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
@@ -478,7 +478,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.notOk(webClient.env.services.router.current.hash.id);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "settings views can search when coming back in breadcrumbs",
         async function (assert) {
             serverData.actions = {
@@ -647,7 +647,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("settings view does not display o_not_app settings", async function (assert) {
+    QUnit.test("settings view does not display o_not_app settings", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
