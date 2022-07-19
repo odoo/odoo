@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { busService } from '@bus/services/bus_service';
-import { multiTabService } from '@bus/services/multi_tab_service';
+import { multiTabService } from '@bus/multi_tab_service';
 import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
 import { makeMultiTabToLegacyEnv } from '@bus/services/legacy/make_multi_tab_to_legacy_env';
 import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
@@ -106,7 +106,7 @@ function setupMessagingServiceRegistries({
             isOdooFocused: () => true,
         }),
         systrayService,
-        multiTab: multiTabService,
+        multi_tab: multiTabService,
         ...services,
     };
 

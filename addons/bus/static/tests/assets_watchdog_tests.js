@@ -2,7 +2,7 @@
 
 import { busService } from "@bus/services/bus_service";
 import { presenceService } from "@bus/services/presence_service";
-import { multiTabService } from "@bus/services/multi_tab_service";
+import { multiTabService } from "@bus/multi_tab_service";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
@@ -18,7 +18,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
         serviceRegistry.add("bus_service", busService);
         serviceRegistry.add("presence", presenceService);
-        serviceRegistry.add("multiTab", multiTabService);
+        serviceRegistry.add("multi_tab", multiTabService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
                 return this._super(fn, 0);
