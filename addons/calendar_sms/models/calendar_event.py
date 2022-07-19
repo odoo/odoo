@@ -36,7 +36,7 @@ class CalendarEvent(models.Model):
                 'default_composition_mode': 'mass',
                 'default_res_model': 'res.partner',
                 'default_res_ids': self.partner_ids.ids,
-                'default_sms_mass_keep_log': True,
+                'default_mass_keep_log': True,
             },
         }
 
