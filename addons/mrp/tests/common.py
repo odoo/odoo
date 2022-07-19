@@ -228,3 +228,11 @@ class TestMrpCommon(common2.TestStockCommon):
             'tracking': 'none',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        domain = [
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', cls.env.company.ids),
+        ]
+        cls.picking_type_always = cls.env['stock.picking.type'].search(domain, limit=1).copy({
+            'sequence_code': 'always',
+            'create_backorder': 'always',
+        })
