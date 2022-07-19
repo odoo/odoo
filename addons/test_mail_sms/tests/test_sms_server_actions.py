@@ -2,8 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_sms.tests.common import TestSMSCommon, TestSMSRecipients
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
+@tagged('ir_actions')
 class TestServerAction(TestSMSCommon, TestSMSRecipients):
 
     @classmethod
@@ -24,6 +27,7 @@ class TestServerAction(TestSMSCommon, TestSMSRecipients):
             'name': 'Test SMS Action',
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'state': 'sms',
+            'sms_method': 'sms',
             'sms_template_id': cls.sms_template.id,
             'groups_id': cls.env.ref('base.group_user'),
         })
@@ -51,7 +55,7 @@ class TestServerAction(TestSMSCommon, TestSMSRecipients):
         self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
 
     def test_action_sms_w_log(self):
-        self.action.sms_mass_keep_log = True
+        self.action.sms_method = 'note'
         context = {
             'active_model': 'mail.test.sms',
             'active_ids': (self.test_record | self.test_record_2).ids,
@@ -65,3 +69,26 @@ class TestServerAction(TestSMSCommon, TestSMSRecipients):
 
         self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], content='Dear %s this is an SMS.' % self.test_record_2.display_name)
         self.assertSMSLogged(self.test_record_2, 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+
+    @mute_logger('odoo.addons.sms.models.sms_sms')
+    def test_action_sms_w_post(self):
+        self.action.sms_method = 'comment'
+        context = {
+            'active_model': 'mail.test.sms',
+            'active_ids': (self.test_record | self.test_record_2).ids,
+        }
+
+        with self.with_user('employee'), self.mockSMSGateway():
+            self.action.with_user(self.env.user).with_context(**context).run()
+
+        self.assertSMSNotification(
+            [{'partner': self.test_record.customer_id}],
+            'Dear %s this is an SMS.' % self.test_record.display_name,
+            messages=self.test_record.message_ids[-1]
+        )
+        self.assertSMSNotification(
+            [{'partner': self.env['res.partner'],
+              'number': self.test_numbers_san[0]}],
+            'Dear %s this is an SMS.' % self.test_record_2.display_name,
+            messages=self.test_record_2.message_ids[-1]
+        )
