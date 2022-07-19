@@ -229,11 +229,11 @@ class TestSMSComposerBatch(TestMailFullCommon):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
     def test_composer_batch_res_ids(self):
@@ -249,11 +249,11 @@ class TestSMSComposerBatch(TestMailFullCommon):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        for record in self.records:
+        for record, message in zip(self.records, messages):
             self.assertSMSNotification(
                 [{'partner': record.customer_id}],
-                'Hello ${object.name} zizisse an SMS.',
-                messages
+                'Hello %s zizisse an SMS.' % record.name,
+                message
             )
 
 
