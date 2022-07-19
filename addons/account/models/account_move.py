@@ -1818,7 +1818,6 @@ class AccountMove(models.Model):
                 'digits': [69, reconciled_partial['currency'].decimal_places],
                 'position': reconciled_partial['currency'].position,
                 'date': counterpart_line.date,
-                'payment_id': counterpart_line.id,
                 'partial_id': reconciled_partial['partial_id'],
                 'account_payment_id': counterpart_line.payment_id.id,
                 'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
@@ -2945,6 +2944,18 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.tax_cash_basis_created_move_ids.ids)],
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
         }
+
+    def open_move(self):
+        if self.payment_id:
+            return self.open_payment_view()
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'view_mode': 'form',
+                'res_id': self.id,
+                'views': [(False, 'form')],
+            }
 
     def post(self):
         warnings.warn(
@@ -6068,23 +6079,7 @@ class AccountMoveLine(models.Model):
         return action
 
     def open_move(self):
-        if self.payment_id:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'account.payment',
-                'view_mode': 'form',
-                'res_id': self.payment_id.id,
-                'views': [(False, 'form')],
-            }
-        else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'account.move',
-                'view_mode': 'form',
-                'res_id': self.move_id.id,
-                'views': [(False, 'form')],
-            }
-
+        return self.move_id.open_move()
 
     def action_automatic_entry(self):
         action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')
