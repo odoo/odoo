@@ -1489,7 +1489,7 @@ class Orderline extends PosModel {
 
         // Set the quantity of the line based on number of pack lots.
         if(!this.product.to_weight){
-            this.pack_lot_lines.set_quantity_by_lot();
+            this.set_quantity_by_lot();
         }
     }
     set_product_lot(product){
