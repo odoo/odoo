@@ -66,13 +66,13 @@
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name" string="Currency" filter_domain="('|','|','|','|',
+                    <field name="name" string="Currency" filter_domain="['|','|','|','|',
                                                                         ('name', 'ilike', self),
                                                                         ('full_name', 'ilike', self),
                                                                         ('symbol', 'ilike', self),
                                                                         ('currency_unit_label', 'ilike', self),
                                                                         ('currency_subunit_label', 'ilike', self),
-                                                                        )"/>
+                                                                        ]"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
