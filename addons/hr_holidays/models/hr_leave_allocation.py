@@ -379,12 +379,19 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         if level.is_based_on_worked_time:
             start_dt = datetime.combine(start_date, datetime.min.time())
-            end_dt = datetime.combine(end_date, datetime.max.time())
+            end_dt = datetime.combine(end_date, datetime.min.time())
             worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                 [self.employee_id.id]['hours']
+            if start_period != start_date or end_period != end_date:
+                start_dt = datetime.combine(start_period, datetime.min.time())
+                end_dt = datetime.combine(end_period, datetime.min.time())
+                planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+                    [self.employee_id.id]['hours']
+            else:
+                planned_worked = worked
             left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
                 domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
-            work_entry_prorata = worked / (left + worked) if worked else 0
+            work_entry_prorata = worked / (left + planned_worked) if (left + planned_worked) else 0
             added_value = work_entry_prorata * level.added_value
         else:
             added_value = level.added_value
@@ -392,7 +399,7 @@ class HolidaysAllocation(models.Model):
         if level.added_value_type == 'hours':
             added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
         period_prorata = 1
-        if start_period != start_date or end_period != end_date:
+        if (start_period != start_date or end_period != end_date) and not level.is_based_on_worked_time:
             period_days = (end_period - start_period)
             call_days = (end_date - start_date)
             period_prorata = min(1, call_days / period_days) if period_days else 1
