@@ -18,6 +18,7 @@ export class AutoComplete extends Component {
             optionsRev: 0,
             open: false,
             activeSourceOption: null,
+            value: this.props.value,
         });
 
         this.inputRef = useRef("input");
@@ -31,6 +32,7 @@ export class AutoComplete extends Component {
         owl.onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value || this.forceValFromProp) {
                 this.forceValFromProp = false;
+                this.state.value = nextProps.value;
                 this.inputRef.el.value = nextProps.value;
                 this.close();
             }
