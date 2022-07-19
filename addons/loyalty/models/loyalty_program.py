@@ -77,10 +77,6 @@ class LoyaltyProgram(models.Model):
 
     @api.constrains('reward_ids')
     def _constrains_reward_ids(self):
-        for program in self:
-            print("\n\nCOUCOU\n\n")
-            print(len(program.reward_ids))
-            print(len(program.rule_ids))
         if any(not program.reward_ids for program in self):
             raise ValidationError(_('A program must have at least one reward.'))
 

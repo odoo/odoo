@@ -178,7 +178,6 @@ class LoyaltyReward(models.Model):
             for reward in self:
                 reward.discount_line_product_id.write({'name': reward.description})
         return res
-        
 
     def unlink(self):
         programs = self.program_id
