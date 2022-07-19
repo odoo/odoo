@@ -38,7 +38,7 @@ class MrpProduction(models.Model):
     def action_merge(self):
         if any(production._get_subcontract_move() for production in self):
             raise ValidationError(_("Subcontracted manufacturing orders cannot be merged."))
-        super().action_merge()
+        return super().action_merge()
 
     def subcontracting_record_component(self):
         self.ensure_one()
