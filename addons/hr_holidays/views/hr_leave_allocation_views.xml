@@ -156,6 +156,8 @@
                 <button string="Validate" name="action_validate" states="confirm" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate'))]}"/>
+                <button string="Reset accrual" name="action_reset_accrual" type="object" groups="base.group_no_one"
+                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate'))]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
             </xpath>
