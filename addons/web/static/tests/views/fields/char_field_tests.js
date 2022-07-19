@@ -182,9 +182,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value in edit mode
-        const input = target.querySelector(".o_field_widget input[type='text']");
-        input.value = "limbo";
-        await triggerEvent(input, null, "change");
+        await editInput(target, ".o_field_widget input[type='text']", "limbo");
 
         // save
         await click(target, ".o_form_button_save");
@@ -222,9 +220,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_form_button_edit");
 
-            const input = target.querySelector(".o_field_widget input[type='text']");
-            input.value = "";
-            await triggerEvent(input, null, "change");
+            await editInput(target, ".o_field_widget input[type='text']", "");
 
             // save
             await click(target, ".o_form_button_save");
@@ -287,9 +283,7 @@ QUnit.module("Fields", (hooks) => {
             "should have the corect value in internal input"
         );
 
-        const input = cell.querySelector("input");
-        input.value = "brolo";
-        await triggerEvent(input, null, "change");
+        await editInput(cell, "input", "brolo");
 
         // save
         await click(target, ".o_list_button_save");
@@ -583,9 +577,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_form_button_edit");
-        const input = target.querySelector("input");
-        input.value = "<script>throw Error();</script>";
-        await triggerEvent(input, null, "change");
+        await editInput(target, "[name='foo'] input", "<script>throw Error();</script>");
 
         await click(target, ".o_form_button_save");
         assert.strictEqual(
@@ -616,13 +608,9 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
-        let input = target.querySelector(".o_field_widget[name='foo'] input");
-        input.value = "  abc  ";
-        await triggerEvent(input, null, "change");
+        await editInput(target, ".o_field_widget[name='foo'] input", "  abc  ");
 
-        input = target.querySelector(".o_field_widget[name='foo2'] input");
-        input.value = "  def  ";
-        await triggerEvent(input, null, "change");
+        await editInput(target, ".o_field_widget[name='foo2'] input", "  def  ");
 
         await click(target, ".o_form_button_save");
 

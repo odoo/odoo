@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickSave, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -209,10 +209,7 @@ QUnit.module("Fields", (hooks) => {
                 "goldsilver"
             );
 
-            const input = target.querySelector(".o_field_widget[name='int_field'] input");
-            input.value = 13;
-            await triggerEvent(input, null, "change");
-
+            await editInput(target, ".o_field_widget[name='int_field'] input", 13);
             assert.containsOnce(target, ".o_field_widget[name='timmy'] .form-check");
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name='timmy']").textContent,

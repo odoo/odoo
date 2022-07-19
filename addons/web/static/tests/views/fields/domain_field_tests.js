@@ -248,10 +248,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Now change the value of the "bar" field to "partner_type"
-        const input = target.querySelector(".o_field_widget[name='bar'] input");
-        await click(input);
-        input.value = "partner_type";
-        await triggerEvent(input, null, "change");
+        await editInput(target, ".o_field_widget[name='bar'] input", "partner_type");
 
         // Refocusing the field selector input should open the popover again
         await click(target.querySelector(".o_field_selector"));
@@ -305,10 +302,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // update display_name to trigger the onchange and reset foo
-            const input = target.querySelector(".o_field_widget[name='display_name'] input");
-            input.value = "new value";
-            await triggerEvent(input, null, "change");
-
+            await editInput(target, ".o_field_widget[name='display_name'] input", "new value");
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "1 record(s)",

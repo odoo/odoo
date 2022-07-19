@@ -9380,10 +9380,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        const input = target.querySelector(".o_field_widget[name=foo] input");
-        input.value = "some foo value";
-        await triggerEvent(input, null, "input");
-
+        await editInput(target, ".o_field_widget[name=foo] input", "some foo value");
         await click(target.querySelector(".o_form_button_save"));
 
         assert.containsOnce(target, ".o_form_readonly", "form view should be in readonly");
