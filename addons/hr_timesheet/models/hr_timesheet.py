@@ -17,6 +17,11 @@ class AccountAnalyticLine(models.Model):
         result = super(AccountAnalyticLine, self).default_get(field_list)
         if 'encoding_uom_id' in field_list:
             result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
+        employee_id = self._context.get('default_employee_id')
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            if 'user_id' not in result or employee.user_id.id != result.get('user_id'):
+                result['user_id'] = employee.user_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
         return result
