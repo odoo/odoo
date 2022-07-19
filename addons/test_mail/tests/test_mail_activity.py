@@ -78,6 +78,7 @@ class TestActivityRights(TestActivityCommon):
             'user_id': self.user_admin.id,
             'summary': 'Summary',
         })
+        test_activity.flush_recordset()
 
         # can _search activities if access to the document
         self.env['mail.activity'].with_user(self.user_employee)._search(
@@ -529,6 +530,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(activity_2.state, 'overdue')
             self.assertEqual(activity_3.state, 'today')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_basic(self):
         """Test the search method on the "activity_state".
 
@@ -626,6 +628,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertTrue(len(result) > 0)
             self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state in ('today', False)))
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_different_day_but_close_time(self):
         """Test the case where there's less than 24 hours between the deadline and now_tz,
         but one day of difference (e.g. 23h 01/01/2020 & 1h 02/02/2020). So the state

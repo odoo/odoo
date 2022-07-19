@@ -249,7 +249,7 @@ class SMSCase(MockSMS):
             self.assertEqual(tools.html2plaintext(message.body).rstrip('\n'), body)
 
 
-class SMSCommon(MailCommon, MockSMS):
+class SMSCommon(MailCommon, SMSCase):
 
     @classmethod
     def setUpClass(cls):

@@ -62,7 +62,7 @@ class TestMailMail(TestMailCommon):
     def _reset_data(self):
         self._init_mail_mock()
         self.test_mail.write({'failure_reason': False, 'failure_type': False, 'state': 'outgoing'})
-        self.test_notification.write({'failure_type': False, 'notification_status': 'ready'})
+        self.test_notification.write({'failure_reason': False, 'failure_type': False, 'notification_status': 'ready'})
 
     @users('admin')
     def test_mail_mail_attachment_access(self):
@@ -151,6 +151,46 @@ class TestMailMail(TestMailCommon):
         self.assertEqual(len(self._mails), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_recipients_cc(self):
+        """ Partner_ids is a field used from mail_message, but not from mail_mail. """
+        mail = self.env['mail.mail'].sudo().create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@example.com, "Herbert" <test.cc.2@example.com>',
+            'email_to': 'test.rec.1@example.com, "Raoul" <test.rec.2@example.com>',
+            'recipient_ids': [(4, self.user_employee.partner_id.id)],
+        })
+
+        with self.mock_mail_gateway():
+            mail.send()
+        # note that formatting is lost for cc
+        self.assertSentEmail(mail.env.user.partner_id,
+                             ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
+                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+        # Mail: currently cc are put as copy of all sent emails (aka spam)
+        self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
+                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+        self.assertEqual(len(self._mails), 2)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_recipients_formatting(self):
+        """ Check support of email / formatted email """
+        mail = self.env['mail.mail'].sudo().create({
+            'author_id': False,
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@example.com, "Herbert" <test.cc.2@example.com>',
+            'email_from': '"Ignasse" <test.from@example.com>',
+            'email_to': 'test.rec.1@example.com, "Raoul" <test.rec.2@example.com>',
+        })
+
+        with self.mock_mail_gateway():
+            mail.send()
+        # note that formatting is lost for cc
+        self.assertSentEmail('"Ignasse" <test.from@example.com>',
+                             ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
+                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+        self.assertEqual(len(self._mails), 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_return_path(self):
         # mail without thread-enabled record
         base_values = {
@@ -235,11 +275,14 @@ class TestMailMail(TestMailCommon):
         with self.mock_mail_gateway(), mute_logger('odoo.addons.mail.models.mail_mail'):
             mail.send(raise_exception=False)
         self.assertFalse(self._mails[0]['email_from'])
-        self.assertIn(
-            'You must either provide a sender address explicitly or configure using the combination of `mail.catchall.domain` and `mail.default.from` ICPs',
-            mail.failure_reason)
+        self.assertEqual(
+            mail.failure_reason,
+            'You must either provide a sender address explicitly or configure using the combination of `mail.catchall.domain` and `mail.default.from` ICPs, in the server configuration file or with the --email-from startup parameter.')
         self.assertFalse(mail.failure_type, 'Mail: void from: no failure type, should be updated')
         self.assertEqual(mail.state, 'exception')
+        self.assertEqual(
+            notification.failure_reason,
+            'You must either provide a sender address explicitly or configure using the combination of `mail.catchall.domain` and `mail.default.from` ICPs, in the server configuration file or with the --email-from startup parameter.')
         self.assertEqual(notification.failure_type, 'unknown', 'Mail: void from: unknown failure type, should be updated')
         self.assertEqual(notification.notification_status, 'exception')
 
@@ -254,6 +297,7 @@ class TestMailMail(TestMailCommon):
         self.assertIn('Codepoint U+00A2 at position', mail.failure_reason)
         self.assertFalse(mail.failure_type, 'Mail: bugged from (ascii): no failure type, should be updated')
         self.assertEqual(mail.state, 'exception')
+        self.assertIn('Codepoint U+00A2 at position', notification.failure_reason)
         self.assertEqual(notification.failure_type, 'unknown', 'Mail: bugged from (ascii): unknown failure type, should be updated')
         self.assertEqual(notification.notification_status, 'exception')
 
@@ -267,6 +311,7 @@ class TestMailMail(TestMailCommon):
         self.assertIn('Codepoint U+00A2 at position', mail.failure_reason)
         self.assertFalse(mail.failure_type, 'Mail: bugged catchall domain (ascii): no failure type, should be updated')
         self.assertEqual(mail.state, 'exception')
+        self.assertIn('Codepoint U+00A2 at position', notification.failure_reason)
         self.assertEqual(notification.failure_type, 'unknown', 'Mail: bugged catchall domain (ascii): unknown failure type, should be updated')
         self.assertEqual(notification.notification_status, 'exception')
 
@@ -277,9 +322,10 @@ class TestMailMail(TestMailCommon):
         with self.mock_mail_gateway():
             mail.send(raise_exception=False)
         self.assertEqual(self._mails[0]['email_from'], 'robert')
-        self.assertIn("Malformed 'Return-Path' or 'From' address: robert", mail.failure_reason)
+        self.assertEqual(mail.failure_reason, "Malformed 'Return-Path' or 'From' address: robert - It should contain one valid plain ASCII email")
         self.assertFalse(mail.failure_type, 'Mail: bugged from (ascii): no failure type, should be updated')
         self.assertEqual(mail.state, 'exception')
+        self.assertEqual(notification.failure_reason, "Malformed 'Return-Path' or 'From' address: robert - It should contain one valid plain ASCII email")
         self.assertEqual(notification.failure_type, 'unknown', 'Mail: bugged from (ascii): unknown failure type, should be updated')
         self.assertEqual(notification.notification_status, 'exception')
 
@@ -298,13 +344,15 @@ class TestMailMail(TestMailCommon):
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertIn('Error without exception. Probably due to sending an email without computed recipients.', mail.failure_reason)
+            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: missing email_to: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
             if email_to == ' ':
+                self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
                 self.assertEqual(notification.failure_type, 'mail_email_missing')
                 self.assertEqual(notification.notification_status, 'exception')
             else:
+                self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
                 self.assertEqual(notification.failure_type, False, 'Mail: missing email_to: notification is wrongly set as sent')
                 self.assertEqual(notification.notification_status, 'sent', 'Mail: missing email_to: notification is wrongly set as sent')
 
@@ -315,9 +363,10 @@ class TestMailMail(TestMailCommon):
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertIn('Error without exception. Probably due to sending an email without computed recipients.', mail.failure_reason)
+            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: invalid email_to: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
+            self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
             self.assertEqual(notification.failure_type, failure_type, 'Mail: invalid email_to: missing instead of invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -330,6 +379,7 @@ class TestMailMail(TestMailCommon):
             self.assertIn('Codepoint U+00A2 at position', mail.failure_reason)
             self.assertFalse(mail.failure_type, 'Mail: invalid (ascii) recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
+            self.assertIn('Codepoint U+00A2 at position', notification.failure_reason)
             self.assertEqual(notification.failure_type, 'unknown', 'Mail: invalid (ascii) recipient partner: unknown failure type, should be updated')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -342,6 +392,7 @@ class TestMailMail(TestMailCommon):
             self.assertFalse(mail.failure_reason)
             self.assertFalse(mail.failure_type)
             self.assertEqual(mail.state, 'sent')
+            self.assertFalse(notification.failure_reason)
             self.assertFalse(notification.failure_type)
             self.assertEqual(notification.notification_status, 'sent')
 
@@ -379,6 +430,7 @@ class TestMailMail(TestMailCommon):
             self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: void recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
+            self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
             self.assertEqual(notification.failure_type, 'mail_email_invalid', 'Mail: void recipient partner: should be missing, not invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -392,6 +444,7 @@ class TestMailMail(TestMailCommon):
             self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: invalid recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
+            self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
             self.assertEqual(notification.failure_type, 'mail_email_invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -405,6 +458,7 @@ class TestMailMail(TestMailCommon):
             self.assertIn('Codepoint U+00A2 at position', mail.failure_reason)
             self.assertFalse(mail.failure_type, 'Mail: invalid (ascii) recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
+            self.assertIn('Codepoint U+00A2 at position', notification.failure_reason)
             self.assertEqual(notification.failure_type, 'unknown', 'Mail: invalid (ascii) recipient partner: unknown failure type, should be updated')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -418,6 +472,7 @@ class TestMailMail(TestMailCommon):
             self.assertFalse(mail.failure_reason)
             self.assertFalse(mail.failure_type)
             self.assertEqual(mail.state, 'sent')
+            self.assertFalse(notification.failure_reason)
             self.assertFalse(notification.failure_type)
             self.assertEqual(notification.notification_status, 'sent')
 
@@ -451,6 +506,7 @@ class TestMailMail(TestMailCommon):
             self.assertFalse(mail.failure_reason, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertFalse(mail.failure_type, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertEqual(mail.state, 'sent', 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
+            self.assertFalse(notification.failure_reason, 'Mail: void email considered as invalid')
             self.assertEqual(notification.failure_type, 'mail_email_invalid', 'Mail: void email considered as invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
@@ -468,30 +524,34 @@ class TestMailMail(TestMailCommon):
         # missing to / invalid to
         for email_to in self.emails_falsy + self.emails_invalid:
             self._reset_data()
-            notification2.write({'failure_type': False, 'notification_status': 'ready'})
+            notification2.write({'failure_reason': False, 'failure_type': False, 'notification_status': 'ready'})
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
             self.assertFalse(mail.failure_reason, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertFalse(mail.failure_type, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertEqual(mail.state, 'sent', 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
+            self.assertFalse(notification.failure_reason)
             self.assertFalse(notification.failure_type)
             self.assertEqual(notification.notification_status, 'sent')
+            self.assertFalse(notification2.failure_reason)
             self.assertEqual(notification2.failure_type, 'mail_email_invalid')
             self.assertEqual(notification2.notification_status, 'exception')
 
         # buggy to (ascii)
         for email_to in self.emails_invalid_ascii:
             self._reset_data()
-            notification2.write({'failure_type': False, 'notification_status': 'ready'})
+            notification2.write({'failure_reason': False, 'failure_type': False, 'notification_status': 'ready'})
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
             self.assertIn('Codepoint U+00A2 at position', mail.failure_reason)
             self.assertFalse(mail.failure_type, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertEqual(mail.state, 'exception')
+            self.assertIn('Codepoint U+00A2 at position', notification.failure_reason)
             self.assertEqual(notification.failure_type, 'unknown')
             self.assertEqual(notification.notification_status, 'exception')
+            self.assertIn('Codepoint U+00A2 at position', notification2.failure_reason)
             self.assertEqual(notification2.failure_type, 'unknown')
             self.assertEqual(notification2.notification_status, 'exception')
 
@@ -521,9 +581,10 @@ class TestMailMail(TestMailCommon):
                 self.connect_mocked.side_effect = _connect
 
                 mail.send(raise_exception=False)
-                self.assertFalse(mail.failure_type)
                 self.assertEqual(mail.failure_reason, msg)
+                self.assertFalse(mail.failure_type)
                 self.assertEqual(mail.state, 'exception')
+                self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
                 self.assertEqual(notification.failure_type, 'mail_smtp')
                 self.assertEqual(notification.notification_status, 'exception')
                 self._reset_data()
@@ -549,6 +610,7 @@ class TestMailMail(TestMailCommon):
                 self.assertFalse(mail.failure_reason, 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
                 self.assertFalse(mail.failure_type, 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
                 self.assertEqual(mail.state, 'outgoing', 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
+                self.assertFalse(notification.failure_reason, 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
                 self.assertFalse(notification.failure_type, 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
                 self.assertEqual(notification.notification_status, 'ready', 'SMTPServerDisconnected/MemoryError during Send raises and lead to a rollback')
 
@@ -566,6 +628,7 @@ class TestMailMail(TestMailCommon):
                 self.assertEqual(mail.failure_reason, msg)
                 self.assertFalse(mail.failure_type, 'Mail: unlogged failure type to fix')
                 self.assertEqual(mail.state, 'exception')
+                self.assertEqual(notification.failure_reason, msg)
                 self.assertEqual(notification.failure_type, 'unknown', 'Mail: generic failure type')
                 self.assertEqual(notification.notification_status, 'exception')
 
