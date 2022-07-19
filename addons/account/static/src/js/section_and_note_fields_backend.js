@@ -1,106 +1,79 @@
+/** @odoo-module **/
 
-odoo.define('account.section_and_note_backend', function (require) {
-// The goal of this file is to contain JS hacks related to allowing
-// section and note on sale order and invoice.
+import { registry } from "@web/core/registry";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { TextField } from "@web/views/fields/text/text_field";
+import { CharField } from "@web/views/fields/char/char_field";
 
-// [UPDATED] now also allows configuring products on sale order.
+const { Component, useEffect } = owl;
 
-"use strict";
-var FieldChar = require('web.basic_fields').FieldChar;
-var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
-var fieldRegistry = require('web.field_registry');
-var ListFieldText = require('web.basic_fields').ListFieldText;
-var ListRenderer = require('web.ListRenderer');
-
-var SectionAndNoteListRenderer = ListRenderer.extend({
+export class SectionAndNoteListRenderer extends ListRenderer {
     /**
-     * We want section and note to take the whole line (except handle and trash)
-     * to look better and to hide the unnecessary fields.
+     * The purpose of this extension is to allow sections and notes in the one2many list
+     * primarily used on Sales Orders and Invoices
      *
      * @override
      */
-    _renderBodyCell: function (record, node, index, options) {
-        var $cell = this._super.apply(this, arguments);
-
-        var isSection = record.data.display_type === 'line_section';
-        var isNote = record.data.display_type === 'line_note';
-
-        if (isSection || isNote) {
-            if (node.attrs.widget === "handle") {
-                return $cell;
-            } else if (node.attrs.name === "name") {
-                var nbrColumns = this._getNumberOfCols();
-                if (this.handleField) {
-                    nbrColumns--;
-                }
-                if (this.addTrashIcon) {
-                    nbrColumns--;
-                }
-                $cell.attr('colspan', nbrColumns);
-            } else {
-                $cell.removeClass('o_invisible_modifier');
-                return $cell.addClass('o_hidden');
-            }
-        }
-
-        return $cell;
-    },
-    /**
-     * We add the o_is_{display_type} class to allow custom behaviour both in JS and CSS.
-     *
-     * @override
-     */
-    _renderRow: function (record, index) {
-        var $row = this._super.apply(this, arguments);
-
-        if (record.data.display_type) {
-            $row.addClass('o_is_' + record.data.display_type);
-        }
-
-        return $row;
-    },
-    /**
-     * We want to add .o_section_and_note_list_view on the table to have stronger CSS.
-     *
-     * @override
-     * @private
-     */
-    _renderView: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.$('.o_list_table').addClass('o_section_and_note_list_view');
-        });
+    setup() {
+        super.setup();
+        useEffect(
+            () => this.focusToName(this.props.list.editedRecord),
+            () => [this.props.list.editedRecord]
+        )
     }
-});
 
-// We create a custom widget because this is the cleanest way to do it:
-// to be sure this custom code will only impact selected fields having the widget
-// and not applied to any other existing ListRenderer.
-var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
-    /**
-     * We want to use our custom renderer for the list.
-     *
-     * @override
-     */
-    _getRenderer: function () {
-        if (this.view.arch.tag === 'tree') {
-            return SectionAndNoteListRenderer;
+    focusToName(editRec) {
+        if (editRec && editRec.isVirtual && this.isSectionOrNote(editRec)) {
+            const col = this.state.columns.find((c) => c.name === "name");
+            this.focusCell(col, null);
         }
-        return this._super.apply(this, arguments);
-    },
-});
+    }
 
-// This is a merge between a FieldText and a FieldChar.
-// We want a FieldChar for section,
-// and a FieldText for the rest (product and note).
-var SectionAndNoteFieldText = function (parent, name, record, options) {
-    var isSection = record.data.display_type === 'line_section';
-    var Constructor = isSection ? FieldChar : ListFieldText;
-    return new Constructor(parent, name, record, options);
-};
+    isSectionOrNote(record=null) {
+        record = record || this.record;
+        return ['line_section', 'line_note'].includes(record.data.display_type);
+    }
 
-fieldRegistry.add('section_and_note_one2many', SectionAndNoteFieldOne2Many);
-fieldRegistry.add('section_and_note_text', SectionAndNoteFieldText);
+    getRowClass(record) {
+        const existingClasses = super.getRowClass(record);
+        return `${existingClasses} o_is_${record.data.display_type}`;
+    }
 
-return SectionAndNoteListRenderer;
-});
+    getCellClass(column, record) {
+        const classNames = super.getCellClass(column, record);
+        if (this.isSectionOrNote(record) && column.widget !== "handle" && column.name !== "name") {
+            return `${classNames} o_hidden`;
+        }
+        return classNames;
+    }
+
+    getCellColspan(column) {
+        if (!this.isSectionOrNote() || column.widget === "handle") {
+            return 1;
+        }
+        let nbrColumns = this.withHandleColumn ? this.state.columns.length + 1 : this.state.columns.length;
+        let withTrashColumn = this.props.activeActions && (this.props.activeActions.canDelete || this.props.activeActions.canUnlink || 0);
+        return nbrColumns - this.withHandleColumn - withTrashColumn;
+    }
+}
+SectionAndNoteListRenderer.template = "account.sectionAndNoteListRenderer";
+
+export class SectionAndNoteFieldOne2Many extends X2ManyField {
+    setup() {
+        super.setup();
+        if (this.viewMode === 'list') {
+            this.Renderer = SectionAndNoteListRenderer;
+        }
+    }
+}
+
+export class SectionAndNoteText extends Component {
+    get componentToUse() {
+        return this.props.record.data.display_type === 'line_section' ? CharField : TextField;
+    }
+}
+SectionAndNoteText.template = "account.SectionAndNoteText";
+
+registry.category("fields").add("section_and_note_one2many", SectionAndNoteFieldOne2Many);
+registry.category("fields").add("section_and_note_text", SectionAndNoteText);
