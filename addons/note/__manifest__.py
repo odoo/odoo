@@ -25,15 +25,18 @@
     'installable': True,
     'application': True,
     'assets': {
+        'mail.assets_messaging': [
+            'note/static/src/models/*.js',
+        ],
         'web.assets_backend': [
+            'note/static/src/components/*/*.js',
             'note/static/src/scss/note.scss',
-            'note/static/src/js/systray_activity_menu.js',
         ],
         'web.qunit_suite_tests': [
             'note/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'note/static/src/xml/**/*',
+            'note/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

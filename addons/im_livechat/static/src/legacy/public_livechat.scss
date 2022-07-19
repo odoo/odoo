@@ -96,7 +96,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_thread_window_buttons {
             flex: 0 0 auto;
-            .o_thread_window_close, .o_thread_window_expand {
+            .o_thread_window_close {
                 color: white;
                 padding: 0px 3px;
                 margin-left: 5px;
@@ -161,7 +161,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             font-size: smaller;
         }
     }
-    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
+    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter {
         display: none;
     }
 
@@ -191,10 +191,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     // will disappear under the thread windows but this is not really an issue as
     // there should not be any at that time).
     z-index: 1101; // blockUI's z-index is 1100
-}
-
-.o_no_thread_window .o_thread_window {
-    display: none;
 }
 
 //-------------------------------------

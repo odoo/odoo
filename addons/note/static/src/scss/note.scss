@@ -51,11 +51,11 @@
 }
 
 // Quick create notes from systray
-.o_note.o_mail_preview {
+.o_note.o_ActivityMenuView_activityGroup {
     background-color: white;
-    .o_preview_info {
-        .o_preview_title {
-            .o_preview_name {
+    .o_ActivityMenuView_activityGroupInfo {
+        .o_ActivityMenuView_activityGroupTitle {
+            .o_ActivityMenuView_activityGroupName {
                 flex: 1 1 100%;
             }
         }
@@ -73,21 +73,5 @@
     }
     .o_note_input {
         border: none;
-    }
-    .o_note_datetime {
-        .o_datepicker {
-            .o_datepicker_input {
-                float: right;
-                text-align: right;
-                border: none;
-                font-size: 11px;
-            }
-            .o_datepicker_button {
-                display: none;
-            }
-        }
-    }
-    .o_note_set_datetime {
-        color: $text-muted;
     }
 }

@@ -49,6 +49,7 @@ class Users(models.Model):
                         icon = module and modules.module.get_module_icon(module)
                         res_ids = set()
                         user_activities[act['mailing_type']] = {
+                            'id': self.env['ir.model']._get('mailing.mailing').id,
                             'name': name,
                             'model': 'mailing.mailing',
                             'type': 'activity',
