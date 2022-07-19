@@ -512,6 +512,12 @@ class Store {
     }
 
     selectWebsitePurpose(id) {
+        // Keep track or the former selection in order to be able to keep
+        // the auto-advance navigation scheme while being able to use the
+        // browser's back and forward buttons.
+        if (!id && this.selectedPurpose) {
+            this.formerSelectedPurpose = this.selectedPurpose;
+        }
         Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
             feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
@@ -641,6 +647,7 @@ async function getInitialState(services) {
     return Object.assign(r, {
         selectedType: undefined,
         selectedPurpose: undefined,
+        formerSelectedPurpose: undefined,
         selectedIndustry: undefined,
         selectedPalette: undefined,
         recommendedPalette: undefined,
@@ -699,7 +706,9 @@ async function applyConfigurator(self, themeName) {
                 'industry_id': self.state.selectedIndustry.id,
                 'selected_palette': selectedPalette,
                 'theme_name': themeName,
-                'website_purpose': WEBSITE_PURPOSES[self.state.selectedPurpose].name,
+                'website_purpose': WEBSITE_PURPOSES[
+                    self.state.selectedPurpose || self.state.formerSelectedPurpose
+                ].name,
                 'website_type': WEBSITE_TYPES[self.state.selectedType].name,
                 'logo_attachment_id': self.state.logoAttachmentId,
             },
@@ -718,6 +727,7 @@ function updateStorage(state) {
         selectedIndustry: state.selectedIndustry,
         selectedPalette: state.selectedPalette,
         selectedPurpose: state.selectedPurpose,
+        formerSelectedPurpose: state.formerSelectedPurpose,
         selectedType: state.selectedType,
         recommendedPalette: state.recommendedPalette,
     });
