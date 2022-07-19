@@ -1792,6 +1792,13 @@ export class DynamicRecordList extends DynamicList {
         this.count = 0;
     }
 
+    exportState() {
+        return {
+            ...super.exportState(),
+            offset: this.offset,
+        };
+    }
+
     /**
      * Performs a search_count with the current domain to set the count. This is
      * useful as web_search_read limits the count for performance reasons, so it
