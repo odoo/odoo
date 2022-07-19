@@ -3,7 +3,7 @@ odoo.define('web.bus_tests', function (require) {
 
 var { busService } = require('@bus/services/bus_service');
 const { presenceService } = require('@bus/services/presence_service');
-const { multiTabService } = require('@bus/services/multi_tab_service');
+const { multiTabService } = require('@bus/multi_tab_service');
 
 var { CrossTab } = require('@bus/crosstab_bus');
 var testUtils = require('web.test_utils');
@@ -26,7 +26,7 @@ QUnit.module('Bus', {
         };
         registry.category('services').add('bus_service', busService);
         registry.category('services').add('presence', presenceService);
-        registry.category('services').add('multiTab', customMultiTabService);
+        registry.category('services').add('multi_tab', customMultiTabService);
     },
 }, function () {
     QUnit.test('notifications received from the longpolling channel', async function (assert) {
@@ -220,6 +220,15 @@ QUnit.module('Bus', {
 
         // slave
         var pollPromiseSlave = testUtils.makeTestPromise();
+        // prevent slave tab from receiving unload event.
+        patchWithCleanup(browser, {
+            addEventListener(eventName, callback) {
+                if (eventName === 'unload') {
+                    return;
+                }
+                this._super(eventName, callback);
+            },
+        });
         const slaveEnv = await makeTestEnv({
             mockRPC(route, args) {
                 if (route === '/longpolling/poll') {
@@ -242,7 +251,7 @@ QUnit.module('Bus', {
         await testUtils.nextTick();
 
         // simulate unloading master
-        masterEnv.services['multiTab']._onUnload();
+        window.dispatchEvent(new Event('unload'));
 
         pollPromiseSlave.resolve([{
             id: 2,

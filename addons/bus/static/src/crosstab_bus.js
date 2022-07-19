@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from '@web/core/browser/browser';
-import session from 'web.session';
 
 import { Longpolling } from '@bus/longpolling_bus';
 
@@ -9,14 +8,14 @@ import { Longpolling } from '@bus/longpolling_bus';
  * CrossTab
  *
  * This is an extension of the longpolling bus with browser cross-tab synchronization.
- * It uses the multiTab service.
+ * It uses the multi_tab service.
  * - only the main tab handles longpolling.
- * - tabs are synchronized by means of the local storage.
+ * - tabs are synchronized by means of the multi_tab service.
  *
- * localStorage used keys are:
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.channels : shared public channel list to listen during the poll
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.options : shared options
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.notification : the received notifications from the last poll
+ * multi_tab shared values are:
+ * - channels : shared public channel list to listen during the poll
+ * - options : shared options
+ * - notification : the received notifications from the last poll
  *
  * trigger:
  * - notification : when a notification is receive from the long polling
@@ -24,26 +23,21 @@ import { Longpolling } from '@bus/longpolling_bus';
 export class CrossTab extends Longpolling {
     constructor(env, services) {
         super(env, services);
-        this.LOCAL_STORAGE_PREFIX = 'bus';
 
         // properties
         this._isRegistered = false;
 
         var now = new Date().getTime();
-        // used to prefix localStorage keys
-        this._sanitizedOrigin = session.origin.replace(/:\/{0,2}/g, '_');
         this._currentTabChannels = new Set();
-        // prevents collisions between different tabs and in tests
-        this._id = _.uniqueId(this.LOCAL_STORAGE_PREFIX) + ':' + now;
-        if (this._callLocalStorage('getItem', 'last_ts', 0) + 50000 < now) {
-            this._callLocalStorage('removeItem', 'last');
+        if (this.env.services['multi_tab'].getSharedValue('last_ts', 0) + 50000 < now) {
+            this.env.services['multi_tab'].removeSharedValue('last');
         }
-        this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
+        this._lastNotificationID = this.env.services['multi_tab'].getSharedValue('last', 0);
         this._registerWindowUnload();
-        browser.addEventListener('storage', this._onStorage.bind(this));
 
-        env.bus.addEventListener('no_longer_main_tab', () => this.stopPolling());
-        env.bus.addEventListener('become_main_tab', () => this.startPolling());
+        services['multi_tab'].bus.addEventListener('shared_value_updated', this._onSharedValueUpdated.bind(this));
+        services['multi_tab'].bus.addEventListener('no_longer_main_tab', () => this.stopPolling());
+        services['multi_tab'].bus.addEventListener('become_main_tab', () => this.startPolling());
     }
 
     //--------------------------------------------------------------------------
@@ -73,13 +67,6 @@ export class CrossTab extends Longpolling {
     }
 
     /**
-     * @return {string}
-     */
-    getTabId() {
-        return this._id;
-    }
-
-    /**
      * Use the local storage to share the long polling from the master tab.
      *
      * @override
@@ -88,15 +75,15 @@ export class CrossTab extends Longpolling {
         if (!this._isRegistered) {
             this._isRegistered = true;
 
-            if (this.env.services['multiTab'].isOnMainTab()) {
-                this._callLocalStorage('setItem', 'options', this._options);
+            if (this.env.services['multi_tab'].isOnMainTab()) {
+                this.env.services['multi_tab'].setSharedValue('options', this._options);
             } else {
-                this._options = this._callLocalStorage('getItem', 'options', this._options);
+                this._options = this.env.services['multi_tab'].getSharedValue('options', this._options);
             }
             this._updateChannels();
         }
 
-        if (this.env.services['multiTab'].isOnMainTab()) {
+        if (this.env.services['multi_tab'].isOnMainTab()) {
             super.startPolling();
         }
     }
@@ -108,46 +95,12 @@ export class CrossTab extends Longpolling {
      */
     updateOption(key, value) {
         super.updateOption(key, value);
-        this._callLocalStorage('setItem', 'options', this._options);
+        this.env.services['multi_tab'].setSharedValue('options', this._options);
     }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Call browser localStorage.
-     *
-     * @private
-     * @param {string} method (getItem, setItem, removeItem, on)
-     * @param {string} key
-     * @param {any} param
-     * @returns service information
-     */
-    _callLocalStorage(method, key, param) {
-        if (method === 'setItem') {
-            param = JSON.stringify(param);
-        }
-        const result = browser.localStorage[method](this._generateKey(key), param);
-        if (method === 'getItem') {
-            return result ? JSON.parse(result) : param;
-        }
-
-    }
-
-    /**
-     * Generates localStorage keys prefixed by bus. (LOCAL_STORAGE_PREFIX = the name
-     * of this addon), and the sanitized origin, to prevent keys from
-     * conflicting when several bus instances (polling different origins)
-     * co-exist.
-     *
-     * @private
-     * @param {string} key
-     * @returns key prefixed with the origin
-     */
-    _generateKey(key) {
-        return this.LOCAL_STORAGE_PREFIX + '.' + this._sanitizedOrigin + '.' + key;
-    }
 
     /**
      * @private
@@ -163,8 +116,8 @@ export class CrossTab extends Longpolling {
      * @return {boolean} true if the aggregated channels has changed.
      */
     _updateChannels() {
-        const currentPeerIds = new Set(this.env.services['multiTab'].getAllTabIds());
-        const peerChannels = this._callLocalStorage('getItem', 'channels')  || {};
+        const currentPeerIds = new Set(Object.keys(this.env.services['multi_tab'].getSharedValue('lastPresenceByTab', {})));
+        const peerChannels = this.env.services['multi_tab'].getSharedValue('channels', {});
         const peerChannelsBefore = JSON.stringify(peerChannels);
         peerChannels[this._id] = Array.from(this._currentTabChannels);
 
@@ -179,7 +132,7 @@ export class CrossTab extends Longpolling {
         if (peerChannelsBefore === peerChannelsAfter) {
             return false;
         }
-        this._callLocalStorage('setItem', 'channels', peerChannels);
+        this.env.services['multi_tab'].setSharedValue('channels', peerChannels);
 
         const allChannels = new Set();
         for (const channels of Object.values(peerChannels)) {
@@ -208,46 +161,44 @@ export class CrossTab extends Longpolling {
      */
     _onPoll(notifications) {
         var notifs = super._onPoll(notifications);
-        if (this.env.services['multiTab'].isOnMainTab() && notifs.length) {
-            this._callLocalStorage('setItem', 'last', this._lastNotificationID);
-            this._callLocalStorage('setItem', 'last_ts', new Date().getTime());
-            this._callLocalStorage('setItem', 'notification', notifs);
+        if (this.env.services['multi_tab'].isOnMainTab() && notifs.length) {
+            this.env.services['multi_tab'].setSharedValue('last', this._lastNotificationID);
+            this.env.services['multi_tab'].setSharedValue('last_ts', new Date().getTime());
+            this.env.services['multi_tab'].setSharedValue('notification', notifs);
         }
     }
 
     /**
-     * Handler when the local storage is updated
+     * Handler when a shared value is updated.
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {string} event.key
-     * @param {string} event.newValue
+     * @param {CustomEvent} ev
+     * @param {object} [ev.detail]
+     * @param {string} [ev.detail.key] Key of the value that have changed.
+     * @param {any} [ev.detail.newValue] New value associated to the key.
      */
-    _onStorage(e) {
-        if (!e.key || !e.key.includes(this.LOCAL_STORAGE_PREFIX)) {
-            return;
-        }
-        var value = JSON.parse(e.newValue);
-        var key = e.key;
+    _onSharedValueUpdated({ detail }) {
+        const { key, newValue } = detail;
+        const value = JSON.parse(newValue);
 
         // last notification id changed
-        if (key === this._generateKey('last')) {
+        if (key === 'last') {
             this._lastNotificationID = value || 0;
         }
         // notifications changed
-        else if (key === this._generateKey('notification')) {
-            if (!this.env.services['multiTab'].isOnMainTab()) {
+        else if (key === 'notification') {
+            if (!this.env.services['multi_tab'].isOnMainTab()) {
                 this.trigger("notification", value);
             }
         }
         // update channels
-        else if (key === this._generateKey('channels')) {
+        else if (key === 'channels') {
             if (this._updateChannels()) {
                 this._restartPolling();
             };
         }
         // update options
-        else if (key === this._generateKey('options')) {
+        else if (key === 'options') {
             this._options = value;
         }
     }
