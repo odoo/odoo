@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 import AbstractAction from "web.AbstractAction";
 import core from "web.core";
 import testUtils from "web.test_utils";
@@ -22,6 +24,7 @@ import {
 } from "./../helpers";
 import * as cpHelpers from "@web/../tests/search/helpers";
 import { listView } from "@web/views/list/list_view";
+import { companyService } from "@web/webclient/company_service";
 
 let serverData;
 let target;
@@ -544,6 +547,53 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
             assert.containsN(document.body, ".modal .o_form_view", 2);
+        }
+    );
+
+    QUnit.test(
+        "retrieving a stored action should remove 'allowed_company_ids' from its context",
+        async function (assert) {
+            // Prepare a multi company scenario
+            session.user_companies = {
+                allowed_companies: {
+                    3: { id: 3, name: "Hermit", sequence: 1 },
+                    2: { id: 2, name: "Herman's", sequence: 2 },
+                    1: { id: 1, name: "Heroes TM", sequence: 3 },
+                },
+                current_company: 3,
+            };
+            registry.category("services").add("company", companyService);
+
+            // Prepare a stored action
+            browser.sessionStorage.setItem(
+                "current_action",
+                JSON.stringify({
+                    ...serverData.actions[1],
+                    context: {
+                        someKey: 44,
+                        allowed_company_ids: [1, 2],
+                        lang: "not_en",
+                        tz: "not_taht",
+                        uid: 42,
+                    },
+                })
+            );
+
+            // Prepare the URL hash to make sure the stored action will get executed.
+            browser.location.hash = "#model=partner&view_type=kanban";
+
+            // Create the web client. It should execute the stored action.
+            const webClient = await createWebClient({ serverData });
+
+            // Check the current action context
+            assert.deepEqual(webClient.env.services.action.currentController.action.context, {
+                // action context
+                someKey: 44,
+                lang: "not_en",
+                tz: "not_taht",
+                uid: 42,
+                // note there is no 'allowed_company_ids' in the action context
+            });
         }
     );
 });
