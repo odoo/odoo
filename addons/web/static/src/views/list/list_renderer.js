@@ -1489,6 +1489,10 @@ export class ListRenderer extends Component {
         if (target.closest(".daterangepicker")) {
             return;
         }
+        // Legacy autocomplete
+        if (ev.target.closest(".ui-autocomplete")) {
+            return;
+        }
         this.props.list.unselectRecord(true);
     }
 
