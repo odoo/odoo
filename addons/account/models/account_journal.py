@@ -538,9 +538,7 @@ class AccountJournal(models.Model):
                 if journal.bank_account_id:
                     journal.bank_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals:
-                if not vals.get('bank_account_id'):
-                    raise UserError(_('You cannot remove the bank account from the journal once set.'))
-                else:
+                if vals.get('bank_account_id'):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))

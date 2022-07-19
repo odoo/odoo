@@ -25,7 +25,7 @@ QUnit.module('account', {
 }, function () {
     QUnit.module('Reconciliation');
 
-    QUnit.test('Reconciliation form field', async function (assert) {
+    QUnit.test('Reconciliation form field [REQUIRES FOCUS]', async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -46,19 +46,11 @@ QUnit.module('account', {
                     assert.deepEqual(args.args, [4, 20], "should call js_assign_outstanding_line {warning: required focus}");
                     return Promise.resolve();
                 }
+                if (args.method === 'open_move') {
+                    assert.deepEqual(args.args, [10], "should call open_move {warning: required focus}");
+                    return Promise.resolve();
+                }
                 return this._super.apply(this, arguments);
-            },
-            intercepts: {
-                do_action: function (event) {
-                    assert.deepEqual(event.data.action, {
-                            'type': 'ir.actions.act_window',
-                            'res_model': 'account.move',
-                            'res_id': 10,
-                            'views': [[false, 'form']],
-                            'target': 'current'
-                        },
-                        "should open the form view");
-                },
             },
         });
 
@@ -66,17 +58,19 @@ QUnit.module('account', {
             " Paid on 04/25/2017 $ 555.00 ",
             "should display payment information");
 
-        form.$('.o_field_widget[name="outstanding_credits_debits_widget"] .outstanding_credit_assign').trigger('click');
+        await testUtils.dom.click(form.$('.o_field_widget[name="outstanding_credits_debits_widget"] .outstanding_credit_assign'));
 
         assert.strictEqual(form.$('.o_field_widget[name="outstanding_credits_debits_widget"]').text().replace(/[\s\n\r]+/g, ' '),
             " Outstanding credits Add INV/2017/0004 $ 100.00 ",
             "should display outstanding information");
 
-        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');
-        form.$('.popover .js_open_payment').trigger('click');
+        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').focus();
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('.popover .js_open_payment'));
 
-        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');
-        form.$('.popover .js_unreconcile_payment').trigger('click');
+        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').focus();
+        await testUtils.nextTick();
+        await testUtils.dom.click(form.$('.popover .js_unreconcile_payment'));
 
         form.destroy();
     });
