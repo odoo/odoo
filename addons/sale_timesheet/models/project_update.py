@@ -14,12 +14,13 @@ class ProjectUpdate(models.Model):
         template_values = super(ProjectUpdate, self)._get_template_values(project)
         services = self._get_services_values(project)
         profitability = self._get_profitability_values(project)
+        show_profitability = bool(profitability and profitability.get('analytic_account_id') and (profitability.get('costs') or profitability.get('revenues')))
         show_sold = template_values['project'].allow_billable and len(services.get('data', [])) > 0
         return {
             **template_values,
             'show_sold': show_sold,
-            'show_profitability': bool(profitability),
-            'show_activities': template_values['show_activities'] or show_sold or bool(profitability),
+            'show_profitability': show_profitability,
+            'show_activities': template_values['show_activities'] or show_profitability or show_sold,
             'services': services,
             'profitability': profitability,
             'format_value': lambda value, is_hour: str(round(value, 2)) if not is_hour else format_duration(value),
