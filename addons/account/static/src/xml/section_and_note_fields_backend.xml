@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account.sectionAndNoteListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-att-class">'o_section_and_note_list_view'</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.ListRenderer.Rows']" position="attributes">
+            <attribute name="t-call">account.SectionAndNoteListRenderer.Rows</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.SectionAndNoteListRenderer.Rows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ListRenderer.RecordRow']" position="attributes">
+            <attribute name="t-call">account.SectionAndNoteListRenderer.RecordRow</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.SectionAndNoteListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary" owl="1">
+        <xpath expr="//td[@class='o_data_cell']" position="attributes">
+            <attribute name="t-att-colspan">getCellColspan(column)</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.SectionAndNoteText" owl="1">
+        <t t-component="componentToUse" t-props="props"/>
+    </t>
+
+</templates>
