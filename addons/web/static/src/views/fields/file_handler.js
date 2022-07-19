@@ -72,7 +72,7 @@ export class FileUploader extends Component {
                     }
                 );
             }
-            this.props.onUploaded({
+            await this.props.onUploaded({
                 name: file.name,
                 size: file.size,
                 type: file.type,
@@ -80,6 +80,9 @@ export class FileUploader extends Component {
                 objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
             });
             this.state.isUploading = false;
+        }
+        if (this.props.multiUpload && this.props.onUploadComplete) {
+            this.props.onUploadComplete({});
         }
     }
 
