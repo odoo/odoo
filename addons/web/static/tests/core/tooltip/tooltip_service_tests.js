@@ -41,6 +41,7 @@ export async function makeParent(Child, options = {}) {
         clearTimeout: options.mockClearTimeout || (() => {}),
         setInterval: options.mockSetInterval || ((fn) => fn()),
         clearInterval: options.mockClearInterval || (() => {}),
+        ontouchstart: options.mockOnTouchStart || undefined,
     });
 
     registry.category("services").add("popover", popoverService);
@@ -374,5 +375,39 @@ QUnit.module("Tooltip service", (hooks) => {
         await makeParent(MyComponent, { mockSetTimeout });
         target.querySelector("button").dispatchEvent(new Event("mouseenter"));
         await nextTick();
+    });
+
+    QUnit.test("touch rendering", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
+        let simulateTimeout;
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        let simulateInterval;
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        const mockOnTouchStart = () => {};
+        await makeParent(MyComponent, { mockSetTimeout, mockSetInterval, mockOnTouchStart });
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        await triggerEvent(target, "button", "touchstart");
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        assert.strictEqual(
+            target.querySelector(".o_popover_container .o_popover").innerText,
+            "hello"
+        );
+
+        await triggerEvent(target, "button", "touchend");
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        simulateInterval();
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
     });
 });

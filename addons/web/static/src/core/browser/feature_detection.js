@@ -20,8 +20,10 @@ export function isAndroid() {
 }
 
 export function isIOS() {
-    return /(iPad|iPhone|iPod)/i.test(browser.navigator.userAgent) ||
-        (browser.navigator.platform === 'MacIntel' && maxTouchPoints() > 1);
+    return (
+        /(iPad|iPhone|iPod)/i.test(browser.navigator.userAgent) ||
+        (browser.navigator.platform === "MacIntel" && maxTouchPoints() > 1)
+    );
 }
 
 export function isOtherMobileOS() {
@@ -41,7 +43,7 @@ export function isIosApp() {
 }
 
 export function hasTouch() {
-    return "ontouchstart" in window || "onmsgesturechange" in window;
+    return browser.ontouchstart !== undefined;
 }
 
 export function maxTouchPoints() {

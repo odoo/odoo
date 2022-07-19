@@ -78,6 +78,7 @@ class TestUi(BaseTestUi):
 class TestUiMobile(BaseTestUi):
 
     browser_size = '375x667'
+    touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
 
