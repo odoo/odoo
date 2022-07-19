@@ -100,6 +100,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/bills_upload.scss',
             'account/static/src/scss/group_view_widget.scss',
             'account/static/src/js/account_payment_field.js',
+            'account/static/src/js/legacy_account_payment_field.js',
             'account/static/src/js/account_resequence_field.js',
             'account/static/src/js/grouped_view_widget.js',
             'account/static/src/js/mail_activity.js',

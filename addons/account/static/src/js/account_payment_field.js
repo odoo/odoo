@@ -1,161 +1,105 @@
-odoo.define('account.payment', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var field_utils = require('web.field_utils');
+import { registry } from "@web/core/registry";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
-var QWeb = core.qweb;
-var _t = core._t;
+import { parseDate, formatDate } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 
-var ShowPaymentLineWidget = AbstractField.extend({
-    events: _.extend({
-        'click .outstanding_credit_assign': '_onOutstandingCreditAssign',
-        'click .open_account_move': '_onOpenPaymentOrMove',
-    }, AbstractField.prototype.events),
-    supportedFieldTypes: ['char'],
+import { formatFloat } from "@web/views/fields/formatters";
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+const { Component, onWillUpdateProps } = owl;
 
-    /**
-     * @override
-     * @returns {boolean}
-     */
-    isSet: function() {
-        return true;
-    },
+class PaymentPopOver extends Component {}
+PaymentPopOver.template = "AccountPaymentPopOver";
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+export class AccountPaymentField extends Component {
+    setup() {
+        this.popover = usePopover();
+        this.orm = useService("orm");
+        this.action = useService("action");
 
-    /**
-     * @private
-     * @override
-     */
-    _render: function() {
-        this.viewAlreadyOpened = false;
-        var self = this;
-        var info = JSON.parse(this.value);
-        if (!info) {
-            this.$el.html('');
-            return;
+        this.formatData(this.props);
+        onWillUpdateProps((nextProps) => this.formatData(nextProps));
+    }
+
+    formatData(props) {
+        let info = JSON.parse(props.value) || {
+            content: [],
+            outstanding: false,
+            title: "",
+            move_id: this.props.record.data.id
+        };
+        for (let [k, v] of Object.entries(info.content)) {
+            v.index = k;
+            v.amount = formatFloat(v.amount, {digits: v.digits});
+            if (v.date) v.date = formatDate(parseDate(v.date));
         }
-        _.each(info.content, function (k, v){
-            k.index = v;
-            k.amount = field_utils.format.float(k.amount, {digits: k.digits});
-            if (k.date){
-                k.date = field_utils.format.date(field_utils.parse.date(k.date, {}, {isUTC: true}));
-            }
-        });
-        this.$el.html(QWeb.render('ShowPaymentInfo', {
-            lines: info.content,
-            outstanding: info.outstanding,
-            title: info.title
-        }));
-        _.each(this.$('.js_payment_info'), function (k, v){
-            var isRTL = _t.database.parameters.direction === "rtl";
-            var content = info.content[v];
-            var options = {
-                content: function () {
-                    var $content = $(QWeb.render('PaymentPopOver', content));
-                    $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
+        this.lines = info.content;
+        this.outstanding = info.outstanding;
+        this.title = info.title;
+        this.move_id = info.move_id;
+    }
 
-                    $content.filter('.js_open_payment').on('click', self._onOpenPaymentOrMove.bind(self));
-                    return $content;
+    onInfoClick(ev, idx) {
+        const isClosed = !document.querySelector(".o_payment_popover");
+        if (isClosed) {
+            this.currentPopoverEl = null;
+        }
+        if (this.popoverCloseFn) {
+            this.closePopover();
+        }
+        if (isClosed || this.currentPopoverEl !== ev.currentTarget) {
+            this.currentPopoverEl = ev.currentTarget;
+            this.popoverCloseFn = this.popover.add(
+                ev.currentTarget,
+                this.constructor.components.Popover,
+                {
+                    title: this.env._t("Journal Entry Info"),
+                    ...this.lines[idx],
+                    _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
+                    _onOpenPaymentOrMove: this.openPaymentOrMove.bind(this),
                 },
-                html: true,
-                placement: isRTL ? 'bottom' : 'left',
-                title: 'Payment Information',
-                trigger: 'focus',
-                delay: { "show": 0, "hide": 100 },
-                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
-            };
-            $(k).popover(options);
+                {
+                    position: localization.direction === "rtl" ? "bottom" : "left",
+                },
+            );
+        }
+    }
+
+    closePopover() {
+        this.popoverCloseFn();
+        this.popoverCloseFn = null;
+    }
+
+    async outstandingCreditAssign(id) {
+        await this.orm.call(this.props.record.resModel, 'js_assign_outstanding_line', [this.move_id, id], {});
+        await this.props.record.model.root.load();
+        this.props.record.model.notify();
+    }
+
+    async removeMoveReconcile(move_id, partial_id) {
+        this.closePopover();
+        await this.orm.call(this.props.record.resModel, 'js_remove_outstanding_partial', [move_id, partial_id], {});
+        await this.props.record.model.root.load();
+        this.props.record.model.notify();
+    }
+
+    async openPaymentOrMove(model, id) {
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: model,
+            res_id: id,
+            views: [[false, 'form']],
+            target: 'current'
         });
-    },
+    }
+}
+AccountPaymentField.template = "AccountPaymentInfo";
+AccountPaymentField.supportedTypes = ["char"];
+AccountPaymentField.components = {
+    Popover: PaymentPopOver,
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onOpenPaymentOrMove: function (event) {
-        var paymentId = parseInt($(event.target).attr('payment-id'));
-        var moveId = parseInt($(event.target).attr('move-id'));
-        var resModel;
-        var id;
-        if (paymentId !== undefined && !isNaN(paymentId)){
-            resModel = "account.payment";
-            id = paymentId;
-        } else if (moveId !== undefined && !isNaN(moveId)){
-            resModel = "account.move";
-            id = moveId;
-        }
-        //Open form view of account.move with id = move_id
-        //viewAlreadyopened is a flag to prevent the user from clicking on another account.move/account.payment
-        //while the first one he clicked on is loading
-        if (!this.viewAlreadyOpened && resModel && id) {
-            this.viewAlreadyOpened = true;
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: resModel,
-                res_id: id,
-                views: [[false, 'form']],
-                target: 'current'
-            });
-        }
-    },
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onOutstandingCreditAssign: function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var self = this;
-        var id = $(event.target).data('id') || false;
-        this._rpc({
-                model: 'account.move',
-                method: 'js_assign_outstanding_line',
-                args: [JSON.parse(this.value).move_id, id],
-            }).then(function () {
-                self.trigger_up('reload');
-            });
-    },
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} event
-     */
-    _onRemoveMoveReconcile: function (event) {
-        var self = this;
-        var moveId = parseInt($(event.target).attr('move-id'));
-        var partialId = parseInt($(event.target).attr('partial-id'));
-        if (partialId !== undefined && !isNaN(partialId)){
-            this._rpc({
-                model: 'account.move',
-                method: 'js_remove_outstanding_partial',
-                args: [moveId, partialId],
-            }).then(function () {
-                self.trigger_up('reload');
-            });
-        }
-    },
-});
-
-field_registry.add('payment', ShowPaymentLineWidget);
-
-return {
-    ShowPaymentLineWidget: ShowPaymentLineWidget
-};
-
-});
+registry.category("fields").add("payment", AccountPaymentField);
