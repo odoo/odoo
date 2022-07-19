@@ -8,7 +8,7 @@
     </template>
 
     <template id="transfer_transaction_status" inherit_id="payment.transaction_status">
-        <xpath expr="//span[@t-out='tx.acquirer_id.sudo().pending_msg']" position="after">
+        <xpath expr="//div[@id='o_payment_status_alert']" position="inside">
             <t t-if="tx.acquirer_id.sudo().provider == 'transfer'">
                 <div t-if="tx.reference">
                     <strong>Communication: </strong><span t-esc="tx.reference"/>
