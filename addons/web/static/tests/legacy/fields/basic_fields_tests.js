@@ -276,12 +276,12 @@ QUnit.module('Legacy basic_fields', {
             "checkbox should now be unchecked");
 
         // check the checkbox by clicking on label
-        await testUtils.dom.click(form.$('.o_form_view label:first'));
+        await testUtils.dom.click(form.$('.o_legacy_form_view label:first'));
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should now be checked");
 
         // uncheck it back
-        await testUtils.dom.click(form.$('.o_form_view label:first'));
+        await testUtils.dom.click(form.$('.o_legacy_form_view label:first'));
         assert.containsNone(form, '.o_field_boolean input:checked',
             "checkbox should now be unchecked");
 
@@ -517,17 +517,17 @@ QUnit.module('Legacy basic_fields', {
         assert.containsOnce(list, 'button i.fa.fa-circle.text-muted',
             "should have 1 muted button");
 
-        assert.hasAttrValue(list.$('.o_list_view button').first(), 'title',
+        assert.hasAttrValue(list.$('.o_legacy_list_view button').first(), 'title',
             "Reported in last payslips", "active buttons should have proper tooltip");
-        assert.hasAttrValue(list.$('.o_list_view button').last(), 'title',
+        assert.hasAttrValue(list.$('.o_legacy_list_view button').last(), 'title',
             "To Report in Payslip", "inactive buttons should have proper tooltip");
 
         // clicking on first button to check the state is properly changed
-        await testUtils.dom.click(list.$('.o_list_view button').first());
+        await testUtils.dom.click(list.$('.o_legacy_list_view button').first());
         assert.containsN(list, 'button i.fa.fa-circle.o_toggle_button_success', 3,
             "should have 3 green buttons");
 
-        await testUtils.dom.click(list.$('.o_list_view button').first());
+        await testUtils.dom.click(list.$('.o_legacy_list_view button').first());
         assert.containsN(list, 'button i.fa.fa-circle.o_toggle_button_success', 4,
             "should have 4 green buttons");
         list.destroy();
@@ -900,14 +900,14 @@ QUnit.module('Legacy basic_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name=qux]'), '=abc');
         await testUtils.form.clickSave(form);
-        assert.hasClass(form.$('.o_form_view'),'o_form_editable',
+        assert.hasClass(form.$('.o_legacy_form_view'),'o_form_editable',
             "form view should still be editable");
         assert.hasClass(form.$('input[name=qux]'),'o_field_invalid',
             "fload field should be displayed as invalid");
 
         await testUtils.fields.editInput(form.$('input[name=qux]'), '=3:2?+4');
         await testUtils.form.clickSave(form);
-        assert.hasClass(form.$('.o_form_view'),'o_form_editable',
+        assert.hasClass(form.$('.o_legacy_form_view'),'o_form_editable',
             "form view should still be editable");
         assert.hasClass(form.$('input[name=qux]'),'o_field_invalid',
             "float field should be displayed as invalid");
@@ -3307,7 +3307,7 @@ QUnit.module('Legacy basic_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.hasClass(form.$('.o_form_view'),'o_form_editable',
+        assert.hasClass(form.$('.o_legacy_form_view'),'o_form_editable',
             "form view should still be editable");
         assert.hasClass(form.$('.o_field_widget'),'o_field_invalid',
             "image field should be displayed as invalid");
@@ -5458,7 +5458,7 @@ QUnit.module('Legacy basic_fields', {
         // in edit mode, this widget should be editable.
         await testUtils.form.clickEdit(form);
 
-        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.hasClass(form.$('.o_legacy_form_view'), 'o_form_editable');
         assert.containsOnce(form, 'div.o_field_widget[name=date] .o_datepicker');
 
         await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
@@ -5502,7 +5502,7 @@ QUnit.module('Legacy basic_fields', {
         // in edit mode, this widget should be editable.
         await testUtils.form.clickEdit(form);
 
-        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.hasClass(form.$('.o_legacy_form_view'), 'o_form_editable');
         assert.containsOnce(form, 'div.o_field_widget[name=datetime] .o_datepicker');
 
         await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
@@ -6334,7 +6334,7 @@ QUnit.module('Legacy basic_fields', {
             },
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
         assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8069',
             'Integer value must not be formatted');
         await testUtils.form.clickEdit(form);
@@ -6366,7 +6366,7 @@ QUnit.module('Legacy basic_fields', {
                 grouping: [3, 0],
             },
         });
-        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
         assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8,069',
             'Integer value must be formatted by default');
         await testUtils.form.clickEdit(form);
@@ -8197,13 +8197,13 @@ QUnit.module('Legacy basic_fields', {
 
         // open the selection
         await testUtils.dom.click(form.$(".o_domain_show_selection_button"));
-        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 2,
+        assert.strictEqual($('.modal .o_legacy_list_view .o_data_row').length, 2,
             "should have open a list view with 2 records in a dialog");
 
         // click on a record -> should not open the record
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
-        await testUtils.dom.click($('.modal .o_list_view .o_data_row:first .o_data_cell'));
+        await testUtils.dom.click($('.modal .o_legacy_list_view .o_data_row:first .o_data_cell'));
 
         form.destroy();
     });
@@ -8332,7 +8332,7 @@ QUnit.module('Legacy basic_fields', {
 
         await testUtils.form.clickSave(form);
         assert.hasClass(form.$(".o_field_domain"), "o_field_invalid", "the field is marked as invalid");
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "the view is still in edit mode");
+        assert.hasClass(form.$(".o_legacy_form_view"), "o_form_editable", "the view is still in edit mode");
         assert.verifySteps(["[[\"abc\"]]"]);
 
         form.destroy();
@@ -8593,7 +8593,7 @@ QUnit.module('Legacy basic_fields', {
         var $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99%',
             'Initial value should be correct')
@@ -8645,7 +8645,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99%',
             'Initial value should be correct');
@@ -8690,7 +8690,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99 / 0',
             'Initial value should be correct');
@@ -8735,7 +8735,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99 / 0',
             'Initial value should be correct');
@@ -8774,7 +8774,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99 / 0',
             'Initial value should be correct');
@@ -8810,7 +8810,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99 / 0',
             'Initial value should be correct');
@@ -8849,7 +8849,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99%',
             'Initial value should be correct');
@@ -8895,7 +8895,7 @@ QUnit.module('Legacy basic_fields', {
             }
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99%',
             'Initial value should be correct');
@@ -8943,7 +8943,7 @@ QUnit.module('Legacy basic_fields', {
             },
         });
 
-        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+        assert.ok(form.$('.o_legacy_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
         assert.strictEqual(form.$('.o_progressbar_value').text(), '99%',
             'Initial value should be correct');

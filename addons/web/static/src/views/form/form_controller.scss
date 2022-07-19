@@ -36,7 +36,7 @@
 }
 $o-form-label-margin-right: 0px;
 
-.o_wowl_form_view {
+.o_form_view {
     background-color: $o-view-background-color;
 
     // Utility classes
@@ -214,7 +214,7 @@ $o-form-label-margin-right: 0px;
         > .o_statusbar_buttons {
             flex-flow: row wrap;
 
-            > .btn {
+            > .btn, .o_widget > .btn {
                 $o-statusbar-buttons-vmargin: 4px;
                 min-height: $o-statusbar-height - 2 * $o-statusbar-buttons-vmargin;
                 margin: $o-statusbar-buttons-vmargin 3px $o-statusbar-buttons-vmargin 0;
@@ -898,7 +898,7 @@ $o-form-label-margin-right: 0px;
 
 // Overridden style when form view in modal
 .modal .modal-dialog {
-    .o_wowl_form_view {
+    .o_form_view {
         .o_statusbar_buttons > .btn {
             /**
              * Override to prevent the status bar from increasing height when
@@ -941,7 +941,7 @@ $o-form-label-margin-right: 0px;
             }
         }
     }
-    &:not(.modal-lg) .o_wowl_form_view {
+    &:not(.modal-lg) .o_form_view {
         .o_group {
             width: 100%;
         }
@@ -1010,7 +1010,7 @@ $o-form-label-margin-right: 0px;
         }
     }
 }
-.o_wowl_form_view.o_xxs_form_view {
+.o_form_view.o_xxs_form_view {
     .oe_title {
         word-break: break-all;
     }
@@ -1035,39 +1035,40 @@ $o-form-label-margin-right: 0px;
     .o_setting_box:visible:nth-child(odd) {
         clear: left;
     }
-    .o_setting_box {
-        margin-bottom: 8px;
-        margin-top: 8px;
-        .o_setting_left_pane {
-            width: 24px;
-            float: left;
-            .o_enterprise_label {
-                position: absolute;
-                top: 0px;
-                right: 40px;
+}
+
+.o_setting_box {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    .o_setting_left_pane {
+        width: 24px;
+        float: left;
+        .o_enterprise_label {
+            position: absolute;
+            top: 0px;
+            right: 40px;
+        }
+    }
+    .o_setting_right_pane {
+        margin-left: 24px;
+        border-left: 1px solid $border-color;
+        padding-left: 12px;
+        .o_input_dropdown > .o_input {
+            width: 100%;
+        }
+        .o_field_widget {
+            width: 50%;
+            flex: 0 0 auto;
+
+            &.o_field_many2manytags > .o_field_widget {
+                flex: 1 0 50px;
             }
         }
-        .o_setting_right_pane {
-            margin-left: 24px;
-            border-left: 1px solid $border-color;
-            padding-left: 12px;
-            .o_input_dropdown > .o_input {
-                width: 100%;
-            }
-            .o_field_widget {
-                width: 50%;
-                flex: 0 0 auto;
-
-                &.o_field_many2manytags > .o_field_widget {
-                    flex: 1 0 50px;
-                }
-            }
-            button.btn-link:first-child {
-                padding: 0;
-            }
-            a.oe-link {
-                font-size: 12px;
-            }
+        button.btn-link:first-child {
+            padding: 0;
+        }
+        a.oe-link {
+            font-size: 12px;
         }
     }
 }

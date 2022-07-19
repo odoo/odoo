@@ -70,7 +70,7 @@ class FieldAdapter extends ComponentAdapter {
             return this.widget._widgetRenderAndInsert(() => {});
         } else {
             // the mode is the same, simply reset the FieldWidget with the new record
-            return this.widget.reset(record, this.lastFieldChangedEvent);
+            return this.widget.reset(record, this.lastFieldChangedEvent, true);
         }
     }
 
@@ -343,6 +343,9 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
     LegacyField.useSubView = LegacyFieldWidget.prototype.useSubview;
     if (!fieldRegistry.contains(name)) {
+        if (odoo.debug) {
+            console.log(`Fields: using legacy ${name} FieldWidget`);
+        }
         fieldRegistry.add(name, LegacyField);
     }
 }

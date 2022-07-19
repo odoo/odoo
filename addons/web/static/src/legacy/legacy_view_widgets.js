@@ -89,7 +89,9 @@ function registerWidget(name, LegacyWidgetWidget) {
     LegacyViewWidget.template = legacyWidgetTemplate;
     LegacyViewWidget.components = { ViewWidgetAdapter };
     if (!viewWidgetRegistry.contains(name)) {
-        console.log(`View widgets: using legacy ${name} Widget`);
+        if (odoo.debug) {
+            console.log(`View widgets: using legacy ${name} Widget`);
+        }
         viewWidgetRegistry.add(name, LegacyViewWidget);
     }
 }
