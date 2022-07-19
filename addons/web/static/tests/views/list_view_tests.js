@@ -4401,6 +4401,34 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
     });
 
+    QUnit.test("list keeps offset on switchView", async (assert) => {
+        assert.expect(3);
+        serverData.views = {
+            "foo,false,search": `<search />`,
+            "foo,99,list": `<list limit="1"><field name="display_name" /></list>`,
+            "foo,100,form": `<form><field name="display_name" /></form>`,
+        };
+
+        const offsets = [0, 1, 1];
+        const mockRPC = async (route, args) => {
+            if (args.method === "web_search_read") {
+                assert.strictEqual(args.kwargs.offset, offsets.shift());
+            }
+        };
+        const wc = await createWebClient({ serverData, mockRPC });
+        await doAction(wc, {
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [
+                [99, "list"],
+                [100, "form"],
+            ],
+        });
+        await click(target, ".o_pager_next");
+        await click(target, ".o_data_cell");
+        await click(target, ".o_back_button");
+    });
+
     QUnit.test("can sort records when clicking on header", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
 
