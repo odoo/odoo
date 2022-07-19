@@ -895,6 +895,9 @@ export class ModelManager {
                     listener,
                     reason: `first call on ${record}`,
                 });
+                if (!record.exists()) {
+                    break; // onChange might have deleted the record, other onChange shouldn't be executed
+                }
             }
         }
     }

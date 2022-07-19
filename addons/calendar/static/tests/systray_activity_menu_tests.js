@@ -2,7 +2,6 @@
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
-import testUtils from 'web.test_utils';
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('calendar', {}, function () {
@@ -28,21 +27,22 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
             attendee_ids: [calendarAttendeeId1],
         },
     ]);
-    const { env } = await start();
-    assert.containsOnce(document.body, '.o_mail_systray_item', 'should contain an instance of widget');
+    const { click, env } = await start();
+    assert.containsOnce(document.body, '.o_ActivityMenuView', 'should contain an instance of widget');
 
-    await testUtils.dom.click(document.querySelector('.dropdown-toggle[title="Activities"]'));
+    await click('.dropdown-toggle[title="Activities"]');
 
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.strictEqual(action, "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
         },
     });
-    await testUtils.dom.click(document.querySelector('.o_mail_preview'));
 
     assert.ok(document.querySelector('.o_meeting_filter'), "should be a meeting");
     assert.containsN(document.body, '.o_meeting_filter', 2, 'there should be 2 meetings');
     assert.hasClass(document.querySelector('.o_meeting_filter'), 'o_meeting_bold', 'this meeting is yet to start');
     assert.doesNotHaveClass(document.querySelectorAll('.o_meeting_filter')[1], 'o_meeting_bold', 'this meeting has been started');
+
+    await click('.o_ActivityMenuView_activityGroup');
 });
 });

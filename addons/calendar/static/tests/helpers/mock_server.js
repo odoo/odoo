@@ -81,7 +81,8 @@ patch(MockServer.prototype, 'calendar', {
         ).filter(meetingLine => meetingLine['attendee_status'] !== 'declined');
         if (meetingsLines.length) {
             activities.unshift({
-                meetings: meetingsLines,
+                id: 'calendar.event', // for simplicity
+                meetings: [['insert-and-replace', meetingsLines]],
                 model: 'calendar.event',
                 name: 'Today\'s Meetings',
                 type: 'meeting',

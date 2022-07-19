@@ -265,7 +265,9 @@ registerModel({
             inverse: 'activity',
             isCausal: true,
         }),
-        assignee: one('User'),
+        assignee: one('User', {
+            inverse: 'activitiesAsAssignee',
+        }),
         attachments: many('Attachment', {
             inverse: 'activities',
         }),
