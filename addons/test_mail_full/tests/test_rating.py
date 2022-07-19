@@ -122,35 +122,34 @@ class TestRatingFlow(TestRatingCommon):
         self.assertEqual(record_rating.rating_last_value, 5, "The last rating is kept.")
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
 
-        with self.profile():
-            RECORD_COUNT = 100
-            partners = self.env['res.partner'].create([
-                {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
-            # 3713 requests if only test_mail_full is installed
-            # 4110 runbot community
-            # 4510 runbot enterprise
-            with self.assertQueryCount(__system__=4511):
-                record_ratings = self.env['mail.test.rating'].create([{
-                    'customer_id': partners[idx].id,
-                    'name': 'Test Rating',
-                    'user_id': self.user_admin.id,
-                } for idx in range(RECORD_COUNT)])
-                for record in record_ratings:
-                    access_token = record._rating_get_access_token()
-                    record.rating_apply(1, token=access_token)
+        RECORD_COUNT = 100
+        partners = self.env['res.partner'].create([
+            {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
+        # 3713 requests if only test_mail_full is installed
+        # 4110 runbot community
+        # 4510 runbot enterprise
+        with self.assertQueryCount(__system__=4511):
+            record_ratings = self.env['mail.test.rating'].create([{
+                'customer_id': partners[idx].id,
+                'name': 'Test Rating',
+                'user_id': self.user_admin.id,
+            } for idx in range(RECORD_COUNT)])
+            for record in record_ratings:
+                access_token = record._rating_get_access_token()
+                record.rating_apply(1, token=access_token)
 
-                record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
-                for record in record_ratings:
-                    access_token = record._rating_get_access_token()
-                    record.rating_apply(5, token=access_token)
+            record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
+            for record in record_ratings:
+                access_token = record._rating_get_access_token()
+                record.rating_apply(5, token=access_token)
 
-            new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
-            new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
-            new_ratings.flush(['write_date'])
-            with self.assertQueryCount(__system__=2):
-                record_ratings._compute_rating_last_value()
-                vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]
-                self.assertTrue(all(vals), "The last rating is kept.")
+        new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
+        new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
+        new_ratings.flush(['write_date'])
+        with self.assertQueryCount(__system__=2):
+            record_ratings._compute_rating_last_value()
+            vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]
+            self.assertTrue(all(vals), "The last rating is kept.")
 
 
 @tagged('rating')
