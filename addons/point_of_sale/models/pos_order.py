@@ -598,6 +598,16 @@ class PosOrder(models.Model):
             'amount_paid': 0,
         }
 
+    def _prepare_mail_values(self, name, message, client, receipt):
+        return {
+            'subject': _('Receipt %s', name),
+            'body_html': message,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
+            'email_to': client['email'],
+            'attachment_ids': [(4, receipt.id)],
+        }
+
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
@@ -644,14 +654,8 @@ class PosOrder(models.Model):
             'res_id': self.ids[0],
             'mimetype': 'image/jpeg',
         })
-        mail_values = {
-            'subject': _('Receipt %s', name),
-            'body_html': message,
-            'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email'],
-            'attachment_ids': [(4, receipt.id)],
-        }
+
+        mail_values = self._prepare_mail_values(name, message, client, receipt)
 
         if self.mapped('account_move'):
             report = self.env.ref('point_of_sale.pos_invoice_report')._render_qweb_pdf(self.ids[0])
