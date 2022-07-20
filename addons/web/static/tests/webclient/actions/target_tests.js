@@ -354,7 +354,7 @@ QUnit.module("ActionManager", (hooks) => {
                         { onClose: () => assert.step("failing dialog closed") }
                     );
                 } catch (e) {
-                    assert.strictEqual(e.message, "my error");
+                    assert.strictEqual(e.cause.message, "my error");
                 }
             }
         }
