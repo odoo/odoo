@@ -17,10 +17,8 @@ wTourUtils.registerEditionTour("website_style_edition", {
     content: "Change font size",
     trigger: '[data-variable="font-size-base"] input',
     run: `text_blur ${TARGET_FONT_SIZE}`,
-}, {
-    content: "Save",
-    trigger: '[data-action="save"]',
-}, {
+},
+...wTourUtils.clickOnSave(), {
     content: "Check the font size was properly adapted",
     trigger: 'iframe body:not(.editor_enable) #wrapwrap',
     run: function (actions) {
@@ -29,5 +27,15 @@ wTourUtils.registerEditionTour("website_style_edition", {
             console.error(`Expected the font-size to be equal to ${TARGET_FONT_SIZE}px but found ${style.fontSize} instead`);
         }
     },
+},
+wTourUtils.clickOnEdit(),
+wTourUtils.goToTheme(), {
+    content: "Click on the Background Image selection",
+    trigger: '[data-customize-body-bg-type="\'image\'"]:not(.active)',
+    extra_trigger: '[data-customize-body-bg-type="NONE"].active',
+}, {
+    content: "The media dialog should open",
+    trigger: '.o_select_media_dialog',
+    run: () => {}, // It's a check.
 }]);
 });
