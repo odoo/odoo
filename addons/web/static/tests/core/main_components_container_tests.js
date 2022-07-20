@@ -66,6 +66,7 @@ QUnit.module("Components", (hooks) => {
 
         const handler = (ev) => {
             assert.step(ev.reason.message);
+            assert.step(ev.reason.cause.message);
             // need to preventDefault to remove error from console (so python test pass)
             ev.preventDefault();
         };
@@ -78,7 +79,10 @@ QUnit.module("Components", (hooks) => {
         window.removeEventListener("unhandledrejection", handler);
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
-        assert.verifySteps(["BOOM"]);
+        assert.verifySteps([
+            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
+            "BOOM"
+        ]);
 
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,
@@ -115,6 +119,7 @@ QUnit.module("Components", (hooks) => {
 
         const handler = (ev) => {
             assert.step(ev.reason.message);
+            assert.step(ev.reason.cause.message);
             // need to preventDefault to remove error from console (so python test pass)
             ev.preventDefault();
         };
@@ -127,8 +132,10 @@ QUnit.module("Components", (hooks) => {
         window.removeEventListener("unhandledrejection", handler);
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
-        assert.verifySteps(["BOOM"]);
-
+        assert.verifySteps([
+            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
+            "BOOM"
+        ]);
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,
             "<span>MainComponentA</span>"
