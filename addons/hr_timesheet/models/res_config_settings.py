@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
     module_project_timesheet_holidays = fields.Boolean("Time Off",
         compute="_compute_timesheet_modules", store=True, readonly=False)
     reminder_user_allow = fields.Boolean(string="Employee Reminder")
-    reminder_manager_allow = fields.Boolean(string="Manager Reminder")
+    reminder_allow = fields.Boolean(string="Approver Reminder")
     project_time_mode_id = fields.Many2one(
         'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', readonly=False,
         help="This will set the unit of measure used in projects and tasks.\n"
