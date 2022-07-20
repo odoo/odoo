@@ -985,9 +985,19 @@ class PurchaseOrderLine(models.Model):
             amount_tax = totals['amount_tax']
 
             line.update({
+<<<<<<< HEAD
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
+||||||| parent of baf6896e2ee (temp)
+                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+=======
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+>>>>>>> baf6896e2ee (temp)
             })
 
     def _convert_to_tax_base_line_dict(self):
