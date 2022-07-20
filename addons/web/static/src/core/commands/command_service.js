@@ -14,6 +14,7 @@ const { Component, xml, EventBus } = owl;
  *  name: string;
  *  action: ()=>(void | CommandPaletteConfig);
  *  category?: string;
+ *  href?: string;
  * }} Command
  */
 

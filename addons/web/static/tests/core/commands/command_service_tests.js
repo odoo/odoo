@@ -913,7 +913,7 @@ QUnit.test("data-command-category", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Robert baratheon", "Joffrey baratheon"]
@@ -921,7 +921,7 @@ QUnit.test("data-command-category", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(2) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Aria stark", "Bran stark"]

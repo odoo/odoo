@@ -40,6 +40,7 @@ commandProviderRegistry.add("menu", {
                     },
                     category: "menu_items",
                     name: menu.parents + " / " + menu.label,
+                    href: menu.href || `#menu_id=${menu.id}&amp;action_id=${menu.actionID}`,
                 });
             });
         }
@@ -63,6 +64,7 @@ commandProviderRegistry.add("menu", {
                 },
                 category: "apps",
                 name: menu.label,
+                href: menu.href || `#menu_id=${menu.id}&amp;action_id=${menu.actionID}`,
                 props,
             });
         });
