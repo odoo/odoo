@@ -1115,16 +1115,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsChatChannel() {
-            if (!this.channel) {
-                return clear();
-            }
-            return this.channel.channel_type === 'chat' || this.channel.channel_type === 'group';
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeIsCurrentPartnerFollowing() {
@@ -1775,16 +1765,6 @@ registerModel({
          * List of members that have been invited to the RTC call of this channel.
          */
         invitedMembers: many('ChannelMember'),
-        /**
-         * States whether this thread is a `mail.channel` qualified as chat.
-         *
-         * Useful to list chat channels, like in messaging menu with the filter
-         * 'chat'.
-         */
-        isChatChannel: attr({
-            compute: '_computeIsChatChannel',
-            default: false,
-        }),
         isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,

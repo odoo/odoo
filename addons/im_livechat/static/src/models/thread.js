@@ -107,10 +107,4 @@ patchRecordMethods('Thread', {
         }
         return this._super();
     },
-    /**
-     * @override
-     */
-    _computeIsChatChannel() {
-        return this.channel && this.channel.channel_type === 'livechat' || this._super();
-    },
 });

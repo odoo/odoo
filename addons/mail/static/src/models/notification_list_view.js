@@ -68,9 +68,9 @@ registerModel({
                 case 'chat': {
                     return replace(this.messaging.models['Thread']
                         .all(thread =>
-                            thread.isChatChannel &&
-                            thread.isPinned &&
-                            thread.model === 'mail.channel'
+                            thread.channel &&
+                            thread.channel.isChat &&
+                            thread.isPinned
                         )
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
                     );

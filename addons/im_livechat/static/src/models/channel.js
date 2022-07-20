@@ -24,6 +24,12 @@ patchRecordMethods('Channel', {
     /**
      * @override
      */
+    _computeIsChat() {
+        return this.channel_type === 'livechat' || this._super();
+    },
+    /**
+     * @override
+     */
     _getDiscussSidebarCategory() {
         if (this.channel_type === 'livechat') {
             return this.messaging.discuss.categoryLivechat;

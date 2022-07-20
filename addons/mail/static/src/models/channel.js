@@ -128,6 +128,13 @@ registerModel({
             return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
         },
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsChat() {
+            return this.channel_type === 'chat' || this.channel_type === 'group';
+        },
+        /**
         * @private
         * @returns {boolean}
         */
@@ -272,6 +279,15 @@ registerModel({
         }),
         invitationLink: attr({
             compute: '_computeInvitationLink',
+        }),
+        /**
+         * States whether this channel is qualified as chat.
+         *
+         * Useful to list chat channels, like in messaging menu with the filter
+         * 'chat'.
+         */
+        isChat: attr({
+            compute: '_computeIsChat',
         }),
         isDescriptionEditable: attr({
             compute: '_computeIsDescriptionEditable',
