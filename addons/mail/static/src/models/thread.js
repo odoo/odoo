@@ -43,9 +43,6 @@ registerModel({
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
             }
-            if ('description' in data) {
-                data2.description = data.description;
-            }
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -459,21 +456,6 @@ registerModel({
         },
     },
     recordMethods: {
-        /**
-         * Changes description of the thread to the given new description.
-         * Only makes sense for channels.
-         *
-         * @param {string} description
-         */
-        async changeDescription(description) {
-            this.update({ description });
-            return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_change_description',
-                args: [[this.id]],
-                kwargs: { description },
-            });
-        },
         /**
          * Client-side ending of the call.
          */
@@ -1729,10 +1711,6 @@ registerModel({
             isCausal: true,
         }),
         custom_channel_name: attr(),
-        /**
-         * States the description of this thread. Only applies to channels.
-         */
-        description: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
         }),

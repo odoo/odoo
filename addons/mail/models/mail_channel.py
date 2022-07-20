@@ -777,7 +777,6 @@ class Channel(models.Model):
             info = {
                 'id': channel.id,
                 'name': channel.name,
-                'description': channel.description,
                 'state': 'open',
                 'is_minimized': False,
                 'group_based_subscription': bool(channel.group_ids),
@@ -787,6 +786,7 @@ class Channel(models.Model):
                     'avatarCacheKey': channel._get_avatar_cache_key(),
                     'channel_type': channel.channel_type,
                     'defaultDisplayMode': channel.default_display_mode,
+                    'description': channel.description,
                     'id': channel.id,
                     'memberCount': channel.member_count,
                     'public': channel.public,
@@ -1035,8 +1035,11 @@ class Channel(models.Model):
         self.ensure_one()
         self.write({'description': description})
         self.env['bus.bus']._sendone(self, 'mail.channel/insert', {
+            'channel': [('insert', {
+                'description': description,
+                'id': self.id,
+            })],
             'id': self.id,
-            'description': description
         })
 
     def notify_typing(self, is_typing):

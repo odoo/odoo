@@ -114,7 +114,7 @@ registerModel({
                 doSetSelectionStartOnThreadDescriptionInput: Math.min(selection.focusOffset, selection.anchorOffset),
                 isEditingThreadDescription: true,
                 isMouseOverThreadDescription: false,
-                pendingThreadDescription: this.thread.description || "",
+                pendingThreadDescription: this.thread.channel.description || "",
             });
         },
         /**
@@ -384,8 +384,8 @@ registerModel({
                 isEditingThreadDescription: false,
                 pendingThreadDescription: clear(),
             });
-            if (newDescription !== this.thread.description) {
-                this.thread.changeDescription(newDescription);
+            if (newDescription !== this.thread.channel.description) {
+                this.thread.channel.changeDescription(newDescription);
             }
         },
         /**
@@ -419,7 +419,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasDescriptionArea() {
-            return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
+            return Boolean(this.thread && this.thread.channel && (this.thread.channel.description || this.thread.isDescriptionEditableByCurrentUser));
         },
         /**
          * @private

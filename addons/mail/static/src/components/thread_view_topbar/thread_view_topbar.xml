@@ -26,12 +26,12 @@
                     <t t-if="threadViewTopbar.hasDescriptionArea">
                         <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-if="!threadViewTopbar.isEditingThreadDescription">
-                            <t t-if="threadViewTopbar.thread.description">
-                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem px-1 border text-truncate" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-attf-class="{{ threadViewTopbar.isDescriptionHighlighted ? 'o-threadDescriptionEditable bg-white' : 'border-light' }}">
-                                    <t t-esc="threadViewTopbar.thread.description"/>
+                            <t t-if="threadViewTopbar.thread.channel.description">
+                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem px-1 border text-truncate" t-att-title="threadViewTopbar.thread.channel.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-attf-class="{{ threadViewTopbar.isDescriptionHighlighted ? 'o-threadDescriptionEditable bg-white' : 'border-light' }}">
+                                    <t t-esc="threadViewTopbar.thread.channel.description"/>
                                 </div>
                             </t>
-                            <t t-if="!threadViewTopbar.thread.description">
+                            <t t-if="!threadViewTopbar.thread.channel.description">
                                 <div class="o_ThreadViewTopbar_threadAddDescriptionEmptyLabel text-truncate text-900 opacity-50 opacity-100-hover cursor-pointer" t-on-click="threadViewTopbar.onClickTopbarThreadDescription">
                                     Add a description
                                 </div>

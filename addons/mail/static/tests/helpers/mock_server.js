@@ -1010,6 +1010,7 @@ patch(MockServer.prototype, 'mail', {
                 avatarCacheKey: channel.avatarCacheKey,
                 channel_type: channel.channel_type,
                 defaultDisplayMode: channel.default_display_mode,
+                description: channel.description,
                 id: channel.id,
                 memberCount: channel.member_count,
                 public: channel.public,
