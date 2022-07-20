@@ -21,16 +21,6 @@
                     </div>
                 </button>
             </div>
-            <page name="tickets" position="after">
-                <page string="Booths" groups="base.group_no_one">
-                    <!-- The booths created from 'event_type_id' won't be saved if invisible attr is set. -->
-                    <field name="event_booth_ids"
-                        context="{
-                            'form_view_ref': 'event_booth.event_booth_view_form_simple_from_event',
-                            'tree_view_ref': 'event_booth.event_booth_view_tree_from_event',
-                        }"/>
-                </page>
-            </page>
         </field>
     </record>
 

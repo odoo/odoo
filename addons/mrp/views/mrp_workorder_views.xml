@@ -96,6 +96,7 @@
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
+                        title="Open Work Order"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
                 <field name="json_popover" widget="mrp_workorder_popover" string=" " width="0.1" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>

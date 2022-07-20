@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_pos_si_trans" model="ir.sequence">
+            <field name="name">Si/Trans Receipt Number</field>
+            <field name="code">pos.order.si.tra</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+    </data>
+
+
+<!--    change page title-->
+    <template id="web_layout_title_pogi" name="change title" inherit_id="web.layout">
+      <xpath expr="//title" position="replace">
+        <title>POGI</title>
+      </xpath>
+    </template>
+
+    <template id="mail_discuss_public_layout_title_pogi" inherit_id="mail.discuss_public_layout">
+        <xpath expr="//title" position="replace">
+            <title>POGI</title>
+        </xpath>
+    </template>
+
+    <template id="point_of_sale_index_title_pogi" inherit_id="point_of_sale.index">
+        <xpath expr="//title" position="replace">
+            <title>POGI POS</title>
+        </xpath>
+    </template>
+</odoo>

@@ -22,6 +22,7 @@ import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
+from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -89,6 +90,63 @@ def check(f, self, *args, **kwargs):
         raise psycopg2.OperationalError('Unable to use a closed cursor.')
     return f(self, *args, **kwargs)
 
+class Savepoint:
+    """ Reifies an active breakpoint, allows :meth:`BaseCursor.savepoint` users
+    to internally rollback the savepoint (as many times as they want) without
+    having to implement their own savepointing, or triggering exceptions.
+
+    Should normally be created using :meth:`BaseCursor.savepoint` rather than
+    directly.
+
+    The savepoint will be rolled back on unsuccessful context exits
+    (exceptions). It will be released ("committed") on successful context exit.
+    The savepoint object can be wrapped in ``contextlib.closing`` to
+    unconditionally roll it back.
+
+    The savepoint can also safely be explicitly closed during context body. This
+    will rollback by default.
+
+    :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
+    """
+    def __init__(self, cr):
+        self.name = str(uuid.uuid1())
+        self._name = Identifier(self.name)
+        self._cr = cr
+        self.closed = False
+        cr.execute(SQL('SAVEPOINT {}').format(self._name))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close(rollback=exc_type is not None)
+
+    def close(self, *, rollback=True):
+        if not self.closed:
+            self._close(rollback)
+
+    def rollback(self):
+        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT {}').format(self._name))
+
+    def _close(self, rollback):
+        if rollback:
+            self.rollback()
+        self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
+        self.closed = True
+
+class _FlushingSavepoint(Savepoint):
+    def __init__(self, cr):
+        cr.flush()
+        super().__init__(cr)
+
+    def rollback(self):
+        self._cr.clear()
+        super().rollback()
+
+    def _close(self, rollback):
+        if not rollback:
+            self._cr.flush()
+        super()._close(rollback)
 
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
@@ -122,25 +180,17 @@ class BaseCursor:
         if self.transaction is not None:
             self.transaction.reset()
 
-    @contextmanager
     @check
-    def savepoint(self, flush=True):
-        """context manager entering in a new savepoint"""
-        name = uuid.uuid1().hex
+    def savepoint(self, flush=True) -> Savepoint:
+        """context manager entering in a new savepoint
+
+        With ``flush`` (the default), will automatically run (or clear) the
+        relevant hooks.
+        """
         if flush:
-            self.flush()
-        self.execute('SAVEPOINT "%s"' % name)
-        try:
-            yield
-            if flush:
-                self.flush()
-        except Exception:
-            if flush:
-                self.clear()
-            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
-            raise
+            return _FlushingSavepoint(self)
         else:
-            self.execute('RELEASE SAVEPOINT "%s"' % name)
+            return Savepoint(self)
 
     def __enter__(self):
         """ Using the cursor as a contextmanager automatically commits and
@@ -374,6 +424,21 @@ class Cursor(BaseCursor):
         self.sql_log_count = 0
         self.sql_log = False
 
+    @contextmanager
+    def _enable_logging(self):
+        """ Forcefully enables logging for this cursor, restores it afterwards.
+
+        Updates the logger in-place, so not thread-safe.
+        """
+        previous, self.sql_log = self.sql_log, True
+        level = _logger.level
+        _logger.setLevel(logging.DEBUG)
+        try:
+            yield
+        finally:
+            _logger.setLevel(level)
+            self.sql_log = previous
+
     @check
     def close(self):
         return self._close(False)
@@ -513,16 +578,15 @@ class TestCursor(BaseCursor):
                                     |
               cr.execute(query)     | query
                                     |
-              cr.commit()           | SAVEPOINT test_cursor_N
+              cr.commit()           | RELEASE SAVEPOINT test_cursor_N
+                                    | SAVEPOINT test_cursor_N (lazy)
                                     |
-              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N
+              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
                                     |
-              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
-
+              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
+                                    | RELEASE SAVEPOINT test_cursor_N (if savepoint)
     """
-    _savepoint_seq = itertools.count()
-
+    _cursors_stack = []
     def __init__(self, cursor, lock):
         super().__init__()
         self._closed = False
@@ -530,15 +594,29 @@ class TestCursor(BaseCursor):
         # we use a lock to serialize concurrent requests
         self._lock = lock
         self._lock.acquire()
+        self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
-        # savepoint at its last commit
-        self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        # savepoint at its last commit, the savepoint is created lazily
+        self._savepoint = self._cursor.savepoint(flush=False)
+
+    @check
+    def execute(self, *args, **kwargs):
+        if not self._savepoint:
+            self._savepoint = self._cursor.savepoint(flush=False)
+
+        return self._cursor.execute(*args, **kwargs)
 
     def close(self):
         if not self._closed:
             self.rollback()
             self._closed = True
+            if self._savepoint:
+                self._savepoint.close(rollback=False)
+
+            tos = self._cursors_stack.pop()
+            if tos is not self:
+                _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+
             self._lock.release()
 
     def autocommit(self, on):
@@ -548,7 +626,9 @@ class TestCursor(BaseCursor):
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        if self._savepoint:
+            self._savepoint.close(rollback=False)
+            self._savepoint = None
         self.clear()
         self.prerollback.clear()
         self.postrollback.clear()
@@ -560,7 +640,8 @@ class TestCursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+        if self._savepoint:
+            self._savepoint.rollback()
         self.postrollback.run()
 
     def __getattr__(self, name):

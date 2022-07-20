@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from itertools import groupby
-from operator import itemgetter
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -47,7 +45,7 @@ class StockPackageLevel(models.Model):
             if package_level.is_fresh_package:
                 package_level.is_done = True
             else:
-                package_level.is_done = package_level._check_move_lines_map_quant_package(package_level.package_id)
+                package_level.is_done = package_level._check_move_lines_map_quant_package(package_level.package_id, 'qty_done')
 
     def _set_is_done(self):
         for package_level in self:
@@ -168,27 +166,8 @@ class StockPackageLevel(models.Model):
         self.mapped('move_line_ids').write({'result_package_id': False})
         return super(StockPackageLevel, self).unlink()
 
-    def _check_move_lines_map_quant_package(self, package, field='qty_done'):
-        """ should compare in good uom """
-        all_in = True
-        pack_move_lines = self.move_line_ids
-        keys = ['product_id', 'lot_id']
-
-        def sorted_key(object):
-            object.ensure_one()
-            return [object.product_id.id, object.lot_id.id]
-
-        grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=sorted_key), key=itemgetter(*keys)):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
-
-        grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=sorted_key), key=itemgetter(*keys)):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped(field))
-        if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
-                or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):
-            all_in = False
-        return all_in
+    def _check_move_lines_map_quant_package(self, package, field):
+        return package._check_move_lines_map_quant(self.move_line_ids, field)
 
     @api.depends('package_id', 'state', 'is_fresh_package', 'move_ids', 'move_line_ids')
     def _compute_location_id(self):

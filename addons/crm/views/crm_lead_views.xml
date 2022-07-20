@@ -95,6 +95,7 @@
                         <group>
                             <group name="lead_partner" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <!-- Preload all the partner's information -->
+                                <field name="is_partner_visible" invisible='1'/>
                                 <field name="partner_id" widget="res_partner_many2one"
                                     context="{
                                         'default_name': contact_name,
@@ -113,7 +114,7 @@
                                         'default_team_id': team_id,
                                         'default_website': website,
                                         'show_vat': True
-                                    }" groups="base.group_no_one"/>
+                                    }" attrs="{'invisible': [('is_partner_visible', '=', False)]}"/>
                                 <field name="partner_name"/>
                                 <label for="street" string="Address"/>
                                 <div class="o_address_format">
@@ -261,7 +262,7 @@
                                     <group string="Email" groups="base.group_no_one">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
-                                    <group string="Tracking" name="categorization">
+                                    <group string="Marketing" name="categorization">
                                         <field name="company_id"
                                             groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
@@ -312,11 +313,11 @@
                                         <field name="campaign_id" />
                                         <field name="medium_id" />
                                         <field name="source_id" />
-                                    </group>
-                                    <group string="Misc" name="Misc">
-                                        <field name="day_open" groups="base.group_no_one"/>
-                                        <field name="day_close" groups="base.group_no_one"/>
                                         <field name="referred"/>
+                                    </group>
+                                    <group string="Tracking" name="Misc" groups="base.group_no_one">
+                                        <field name="day_open" />
+                                        <field name="day_close"/>
                                         <field name="type" invisible="1"/>
                                     </group>
                                 </group>

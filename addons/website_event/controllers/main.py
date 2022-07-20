@@ -37,7 +37,7 @@ class WebsiteEventController(http.Controller):
         SudoEventType = request.env['event.type'].sudo()
 
         searches.setdefault('search', '')
-        searches.setdefault('date', 'all')
+        searches.setdefault('date', 'upcoming')
         searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
@@ -59,7 +59,7 @@ class WebsiteEventController(http.Controller):
             'country': searches.get('country'),
         }
         order = 'date_begin'
-        if searches.get('date', 'all') == 'old':
+        if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
         order = 'is_published desc, ' + order
         search = searches.get('search')
@@ -75,7 +75,7 @@ class WebsiteEventController(http.Controller):
         no_date_domain = event_details['no_date_domain']
         dates = event_details['dates']
         for date in dates:
-            if date[0] != 'old':
+            if date[0] not in ['all', 'old']:
                 date[3] = Event.search_count(expression.AND(no_date_domain) + domain_search + date[2])
 
         no_country_domain = event_details['no_country_domain']
@@ -105,7 +105,11 @@ class WebsiteEventController(http.Controller):
             step=step,
             scope=5)
 
-        keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
+        keep = QueryURL('/event', **{
+            key: value for key, value in searches.items() if (
+                key == 'search' or
+                (value != 'upcoming' if key == 'date' else value != 'all'))
+            })
 
         searches['search'] = fuzzy_search_term or search
 

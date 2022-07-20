@@ -48,6 +48,7 @@ registerInstancePatchModel('mail.notification_group', 'sms/static/src/models/not
                 target: 'current',
                 res_model: this.res_model,
                 domain: [['message_has_sms_error', '=', true]],
+                context: { create: false },
             },
         });
         if (this.messaging.device.isMobile) {

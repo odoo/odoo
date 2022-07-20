@@ -1,15 +1,22 @@
 odoo.define('website_event_booth.booth_registration', function (require) {
 'use strict';
 
+var core = require('web.core');
 var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
+var QWeb = core.qweb;
+var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',
+    xmlDependencies: [
+        '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
+    ],
     events: {
         'change input[name="booth_category_id"]': '_onChangeBoothType',
         'change .custom-checkbox > input[type="checkbox"]': '_onChangeBooth',
-        'click .o_wbooth_registration_submit': '_onSubmitClick',
+        'click .o_wbooth_registration_submit': '_onSubmitBoothSelectionClick',
+        'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
     },
 
     start() {
@@ -65,9 +72,62 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         });
     },
 
+    /**
+     * Check if the confirmation form is valid by testing each of its inputs
+     *
+     * @private
+     * @param $form
+     * @return {boolean} - true if no errors else false
+     */
+    _isConfirmationFormValid($form) {
+        const formErrors = [];
+
+        $form.find('.form-group').each(function (index, field) {
+            let $field = $(field);
+            let input = $field.find('.form-control');
+
+            input.removeClass('is-invalid');
+            if (input.length && !input[0].checkValidity()) {
+                input.addClass('is-invalid');
+                formErrors.push('invalidFormInputs');
+            }
+        });
+
+        this._updateErrorDisplay(formErrors);
+        return formErrors.length === 0;
+    },
+
     _showBoothCategoryDescription() {
         this.$('.o_wbooth_booth_description').addClass('d-none');
         this.$('#o_wbooth_booth_description_' + this.activeType).removeClass('d-none');
+    },
+
+    /**
+     * Display the errors with a custom message when confirming
+     * the registration if there is any.
+     *
+     * @private
+     * @param errors
+     */
+    _updateErrorDisplay(errors) {
+        this.$('.o_wbooth_registration_error_section').toggleClass('d-none', !errors.length);
+
+        let errorMessages = [];
+        let $errorMessage = this.$('.o_wbooth_registration_error_message');
+
+        if (errors.includes('invalidFormInputs')) {
+            errorMessages.push(_t("Please fill out the form correctly."));
+        }
+
+        if (errors.includes('boothError')) {
+            errorMessages.push(_t("Booth registration failed."));
+        }
+
+        if (errors.includes('boothCategoryError')) {
+            errorMessages.push(_t("The booth category doesn't exist."));
+        }
+
+        $errorMessage.text(errorMessages.join(' ')).change();
     },
 
     _updateUiAfterBoothCategoryChange() {
@@ -120,7 +180,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         }
     },
 
-    async _onSubmitClick(ev) {
+    async _onSubmitBoothSelectionClick(ev) {
         ev.preventDefault();
         let $form = this.$('.o_wbooth_registration_form');
         let event_booth_ids = this.$('input[name=event_booth_ids]:checked').map(function () {
@@ -129,6 +189,48 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         if (await this._check_booths_availability(event_booth_ids)) {
             $form.submit();
         }
+    },
+
+    /**
+     * Submit the confirmation form if no errors are present after validation.
+     *
+     * If the submission succeed, we replace the form with a success message template.
+     *
+     * @param ev
+     * @return {Promise<void>}
+     * @private
+     */
+    async _onConfirmRegistrationClick(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        $(ev.currentTarget).addClass('disabled').attr('disabled', 'disabled');
+
+        const $form = this.$('#o_wbooth_contact_details_form');
+        if (this._isConfirmationFormValid($form)) {
+            const formData = new FormData($form[0]);
+            const response = await $.ajax({
+                url: `/event/${this.$el.data('eventId')}/booth/confirm`,
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+            });
+
+            const jsonResponse = response && JSON.parse(response);
+            if (jsonResponse.success) {
+                $form.replaceWith($(QWeb.render('event_booth_registration_complete', {
+                    'event_name': jsonResponse.event_name,
+                    'contact': jsonResponse.contact,
+                })));
+            } else if (jsonResponse.redirect) {
+                window.location.href = jsonResponse.redirect;
+            } else if (jsonResponse.error) {
+                this._updateErrorDisplay(jsonResponse.error);
+            }
+        }
+
+        $(ev.currentTarget).removeClass('disabled').removeAttr('disabled');
     },
 
 });

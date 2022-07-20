@@ -1078,14 +1078,13 @@ class BaseModel(metaclass=MetaModel):
         self = self.with_context(_import_current_module=current_module)
 
         cr = self._cr
-        cr.execute('SAVEPOINT model_load')
+        sp = cr.savepoint(flush=False)
 
         fields = [fix_import_export_id_paths(f) for f in fields]
         fg = self.fields_get()
 
         ids = []
         messages = []
-        ModelData = self.env['ir.model.data']
 
         # list of (xid, vals, info) for records to be created in batch
         batch = []
@@ -1204,10 +1203,11 @@ class BaseModel(metaclass=MetaModel):
 
         flush()
         if any(message['type'] == 'error' for message in messages):
-            cr.execute('ROLLBACK TO SAVEPOINT model_load')
+            sp.rollback()
             ids = False
             # cancel all changes done to the registry/ormcache
             self.pool.reset_changes()
+        sp.close(rollback=False)
 
         nextrow = info['rows']['to'] + 1
         if nextrow < limit:
@@ -1832,13 +1832,18 @@ class BaseModel(metaclass=MetaModel):
             record.display_name = names.get(record.id, False)
 
     def name_get(self):
-        """ name_get() -> [(id, name), ...]
+        """Returns a textual representation for the records in ``self``, with
+        one item output per input record, in the same order.
 
-        Returns a textual representation for the records in ``self``.
-        By default this is the value of the ``display_name`` field.
+        .. warning::
+
+            Although :meth:`~.name_get` can use context data for richer
+            contextual formatting, as it is the default implementation for
+            :attr:`~.display_name` it is important that it resets to the
+            "default" behaviour if the context keys are empty / missing.
 
         :return: list of pairs ``(id, text_repr)`` for each records
-        :rtype: list(tuple)
+        :rtype: list[(int, str)]
         """
         result = []
         name = self._rec_name
@@ -2817,8 +2822,9 @@ class BaseModel(metaclass=MetaModel):
 
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_path'):
-                    self._create_parent_columns()
+                    tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
                     parent_path_compute = True
+                self._check_parent_path()
 
             if not must_create_table:
                 self._check_removed_columns(log=False)
@@ -2861,12 +2867,14 @@ class BaseModel(metaclass=MetaModel):
         """
         pass
 
-    def _create_parent_columns(self):
-        tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
-        if 'parent_path' not in self._fields:
-            _logger.error("add a field parent_path on model %s: parent_path = fields.Char(index=True)", self._name)
-        elif not self._fields['parent_path'].index:
-            _logger.error('parent_path field on model %s must be indexed! Add index=True to the field definition)', self._name)
+    def _check_parent_path(self):
+        field = self._fields.get('parent_path')
+        if field is None:
+            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True, unaccent=False)`.", self._name)
+        elif not field.index:
+            _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
+        elif field.unaccent:
+            _logger.warning("parent_path field on model %r should have unaccent disabled. Add `unaccent=False` to the field definition.", self._name)
 
     def _add_sql_constraints(self):
         """

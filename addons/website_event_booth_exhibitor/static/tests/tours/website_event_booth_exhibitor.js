@@ -35,7 +35,7 @@ odoo.define("website_event_booth_exhibitor.tour", function (require) {
         trigger: 'a:contains("Get A Booth")',
     }, {
         content: 'Choose Premium Booths',
-        trigger: 'img[title="Premium Booth"]',
+        trigger: 'img[alt="Premium Booth"]',
     }, {
         content: 'Choose Booth',
         trigger: 'div:contains("OpenWood Demonstrator 2") input',

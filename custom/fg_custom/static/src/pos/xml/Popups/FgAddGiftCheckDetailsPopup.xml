@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="fg_custom.FgGiftCheckDetailsPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup drag-handle">
+                    <main class="body">
+                        <div class="fg-custom-pos-payment">
+                            <div class="gift_check_number">
+                                <span class="input-type">
+                                    Gift Check Voucher No:
+                                </span>
+                                <div class="input-field">
+                                     <input style="text-align:center" type="text" name="x_gc_voucher_no" t-model="state.x_gc_voucher_no"/>
+                                </div>
+                            </div>
+                            <div class="gift_check_name">
+                                <span class="input-type">
+                                    Gift Check Voucher Name:
+                                </span>
+                                <div class="input-field">
+                                     <input style="text-align:center" type="text" name="x_gc_voucher_name" t-model="state.x_gc_voucher_name"/>
+                                </div>
+                            </div>
+                            <div class="gift_check_cust">
+                                <span class="input-type">
+                                    Gift Check Customer:
+                                </span>
+                                <div class="input-field">
+                                     <input style="text-align:center" type="text" name="x_gc_voucher_cust" t-model="state.x_gc_voucher_cust"/>
+                                </div>
+                            </div>
+                            <span t-if="state.inputHasError" class="error-message">
+                                <t t-esc="errorMessage" />
+                            </span>
+                        </div>
+                    </main>
+                    <footer class="footer">
+                        <div class="button confirm disable" t-on-click="confirm">
+                            Confirm
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

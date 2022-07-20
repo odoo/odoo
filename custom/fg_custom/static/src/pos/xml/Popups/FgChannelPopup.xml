@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FgChannelPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup drag-handle">
+                    <main class="body">
+                        <div class="fg-custom-pos-payment">
+                            <div class="card_number">
+                                <div class="input-field" style="width: 100%;">
+                                    <span class="input-type" style="width: 40%;float: left;">
+                                        Channel
+                                    </span>
+                                    <select t-on-change="channelFgChange" style="width: 45%;" class="detail" name="x_ext_source" t-model="state.x_ext_source">
+                                        <option value = "Food Service">Food Service</option>
+                                        <option value = "Lazada">Lazada</option>
+                                        <option value = "Reseller">Reseller</option>
+                                        <option value = "Retail">Retail</option>
+                                        <option value = "Shopee">Shopee</option>
+                                        <option value = "Traders">Traders</option>
+                                        <option value = "Website">Website</option>
+                                        <option value = "MetroMart">MetroMart</option>
+                                        <option value = "Grab">Grab</option>
+                                        <option value = "FoodPanda">FoodPanda</option>
+                                        <option value = "Pickaroo">Pickaroo</option>
+                                    </select>
+                                </div>
+                                <div class="input-field website_order_id" style="display: none;width: 100%;margin-top: 4%;">
+                                    <span class="input-type" style="width: 40%;float: left;">
+                                        Website Order ID
+                                    </span>
+                                    <input style="width: 45%;min-height: 30px !important;height: 10px;" name="website_order_id" type="text" t-model="state.website_order_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <footer class="footer">
+                        <div class="button confirm disable" t-on-click="confirm">
+                            Confirm
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

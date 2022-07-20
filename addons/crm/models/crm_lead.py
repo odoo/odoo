@@ -228,6 +228,7 @@ class Lead(models.Model):
     # UX
     partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
     partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
+    is_partner_visible = fields.Boolean('Is Partner Visible', compute='_compute_is_partner_visible')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -590,6 +591,24 @@ class Lead(models.Model):
     def _compute_partner_phone_update(self):
         for lead in self:
             lead.partner_phone_update = lead._get_partner_phone_update()
+
+    @api.depends_context('uid')
+    @api.depends('partner_id', 'type')
+    def _compute_is_partner_visible(self):
+        """ When the crm.lead is of type 'lead', we don't want to display the "Customer" field on the form view
+        unless it's set (or debug mode).
+
+        Indeed, most of the times leads will not have this information set, since when we assign a Customer we
+        usually convert the lead to an opportunity as well.
+
+        This means that on the lead form, we don't want to display this field since it may be misleading for the
+        end user.
+        When it's set however, we want to display it, mainly because there are a few automatic synchronizations between
+        the lead and its partner (phone and email for examples), and this needs to be clear that modifying
+        one of those fields will in turn modify the linked partner."""
+        is_debug_mode = self.user_has_groups('base.group_no_one')
+        for lead in self:
+            lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
@@ -1304,54 +1323,6 @@ class Lead(models.Model):
 
         return data
 
-    def _merge_notify_get_merged_fields_message(self):
-        """ Generate the message body with the changed values
-
-        :param fields : list of fields to track
-        :returns a list of message bodies for the corresponding leads
-        """
-        bodies = []
-        for lead in self:
-            title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
-            body = [title]
-            _fields = self.env['ir.model.fields'].sudo().search([
-                ('name', 'in', self._merge_get_fields()),
-                ('model_id.model', '=', lead._name),
-            ])
-            for field in _fields:
-                value = getattr(lead, field.name, False)
-                if field.ttype == 'selection':
-                    selections = lead.fields_get()[field.name]['selection']
-                    value = next((v[1] for v in selections if v[0] == value), value)
-                elif field.ttype == 'many2one':
-                    if value:
-                        value = value.sudo().display_name
-                elif field.ttype == 'many2many':
-                    if value:
-                        value = ','.join(
-                            val.display_name
-                            for val in value.sudo()
-                        )
-                body.append("%s: %s" % (field.field_description, value or ''))
-            bodies.append("<br/>".join(body + ['<br/>']))
-        return bodies
-
-    def _merge_notify(self, opportunities):
-        """ Post a message gathering merged leads/opps informations. It explains
-        which fields has been merged and their new value. `self` is the resulting
-        merge crm.lead record.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        # TODO JEM: mail template should be used instead of fix body, subject text
-        self.ensure_one()
-        merge_message = _('Merged leads') if self.type == 'lead' else _('Merged opportunities')
-        subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
-        # message bodies
-        message_bodies = opportunities._merge_notify_get_merged_fields_message()
-        message_body = "\n\n".join(message_bodies)
-        return self.message_post(body=message_body, subject=subject)
-
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
@@ -1395,7 +1366,14 @@ class Lead(models.Model):
             merged_data['team_id'] = team_id
 
         # log merge message
-        opportunities_head._merge_notify(opportunities_tail)
+        opportunities_head.message_post_with_view(
+            "crm.crm_lead_merge_summary",
+            values={
+                "opportunities": opportunities_tail,
+                "is_html_empty": is_html_empty
+            },
+            subtype_id=self.env.ref('mail.mt_note').id
+        )
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head._merge_dependences(opportunities_tail)
 

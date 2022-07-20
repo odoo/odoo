@@ -3,6 +3,7 @@
 
 import datetime
 import logging
+
 from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models, tools
@@ -19,10 +20,6 @@ class Lead(models.Model):
 
     @api.depends('email_from', 'probability', 'iap_enrich_done', 'reveal_id')
     def _compute_show_enrich_button(self):
-        config = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'manual')
-        if not config or config != 'manual':
-            self.show_enrich_button = False
-            return
         for lead in self:
             if not lead.active or not lead.email_from or lead.email_state == 'incorrect' or lead.iap_enrich_done or lead.reveal_id or lead.probability == 100:
                 lead.show_enrich_button = False
@@ -36,10 +33,20 @@ class Lead(models.Model):
         leads = self.search([
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
-            ('probability', '<', 100),
+            '|', ('probability', '<', 100), ('probability', '=', False),
             ('create_date', '>', timeDelta)
         ])
         leads.iap_enrich(from_cron=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super(Lead, self).create(vals_list)
+        enrich_mode = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'auto')
+        if enrich_mode == 'auto':
+            cron = self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
+            if cron:
+                cron._trigger()
+        return leads
 
     def iap_enrich(self, from_cron=False):
         # Split self in a list of sub-recordsets or 50 records to prevent timeouts
@@ -54,6 +61,9 @@ class Lead(models.Model):
                     for lead in leads:
                         # If lead is lost, active == False, but is anyway removed from the search in the cron.
                         if lead.probability == 100 or lead.iap_enrich_done:
+                            continue
+                        # Skip if no email (different from wrong email leading to no email_normalized)
+                        if not lead.email_from:
                             continue
 
                         normalized_email = tools.email_normalize(lead.email_from)
@@ -82,10 +92,14 @@ class Lead(models.Model):
                                 data = {
                                     'url': self.env['iap.account'].get_credits_url('reveal'),
                                 }
-                                leads[0].message_post_with_view(
-                                    'crm_iap_enrich.mail_message_lead_enrich_no_credit',
-                                    values=data,
-                                    subtype_id=self.env.ref('mail.mt_note').id)
+                                self.env['bus.bus'].sendone(
+                                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                                    {
+                                        'type': 'simple_notification',
+                                        'message': self.env.ref('crm_iap_enrich.mail_message_lead_enrich_no_credit')._render(data),
+                                        'message_is_html': True,
+                                    }
+                                )
                             # Since there are no credits left, there is no point to process the other batches
                             break
                         except Exception as e:

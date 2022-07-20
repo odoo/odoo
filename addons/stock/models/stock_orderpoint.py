@@ -5,7 +5,6 @@ import logging
 from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
-from itertools import groupby
 from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry

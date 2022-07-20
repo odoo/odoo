@@ -123,10 +123,6 @@ class StockPicking(models.Model):
         new and old quantity as value. eg: {move_1 : (4, 5)}
         """
 
-        def _keys_in_sorted(sale_line):
-            """ sort by order_id and the sale_person on the order """
-            return (sale_line.order_id.id, sale_line.order_id.user_id.id)
-
         def _keys_in_groupby(sale_line):
             """ group by order_id and the sale_person on the order """
             return (sale_line.order_id, sale_line.order_id.user_id)
@@ -151,7 +147,7 @@ class StockPicking(models.Model):
             }
             return self.env.ref('sale_stock.exception_on_picking')._render(values=values)
 
-        documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_groupby)
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)

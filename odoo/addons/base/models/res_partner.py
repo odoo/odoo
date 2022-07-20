@@ -80,7 +80,7 @@ class PartnerCategory(models.Model):
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
 
     @api.constrains('parent_id')
@@ -279,8 +279,8 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
-        names = dict(self.with_context(**diff).name_get())
+        # retrieve name_get() without any fancy feature
+        names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
 

@@ -14,10 +14,6 @@ class StockRule(models.Model):
         """
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
-    @api.model
-    def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_sorted(procurement)
-
 
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"

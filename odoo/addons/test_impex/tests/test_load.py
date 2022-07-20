@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import contextlib
 import json
 import pkgutil
 import re
@@ -579,18 +579,17 @@ class test_m2o(ImporterCase):
 
         # preheat the oven
         for _ in range(5):
-            self.env.cr.execute('SAVEPOINT xxx')
-            self.import_(['value'], [[name1], [name1], [name2]])
-            self.env.cr.execute('ROLLBACK TO SAVEPOINT xxx')
-            self.env.cr.execute('RELEASE SAVEPOINT xxx')
+            with contextlib.closing(self.env.cr.savepoint(flush=False)):
+                self.import_(['value'], [[name1], [name1], [name2]])
 
-        # 1 x SAVEPOINT model_load
+        # 1 x SAVEPOINT load
         # 3 x name_search
-        # 1 x SAVEPOINT
+        # 1 x SAVEPOINT _load_records
         # 3 x insert
-        # 1 x RELEASE SAVEPOINT
-        # => 9
-        with self.assertQueryCount(9):
+        # 1 x RELEASE SAVEPOINT _load_records
+        # 1 x RELEASE SAVEPOINT load
+        # => 10
+        with self.assertQueryCount(10):
             result = self.import_(['value'], [
                 # import by name_get
                 [name1],

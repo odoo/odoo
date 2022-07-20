@@ -5,7 +5,7 @@
         <t t-call="website_event_booth.event_booth_layout">
             <form method="post"
                 id="o_wbooth_contact_details_form"
-                t-attf-action="/event/#{slug(event)}/booth/confirm"
+                t-att-data-event-id="event.id"
                 class="col-12 px-5 py-2 js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="booth_category_id" t-att-value="booth_category.id"/>
@@ -49,42 +49,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="o_wbooth_registration_error_section alert alert-danger d-none mt-4" role="alert">
+                    <i class="fa fa-exclamation-triangle mr-2" role="img" aria-label="Error" title="Error"/>
+                    <span class="o_wbooth_registration_error_message"/>
+                </div>
                 <div class="form-group">
                     <div class="col-sm-6 offset-sm-3 mt-5">
-                        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Book my Booths</button>
+                        <button type="submit" class="btn btn-primary btn-block font-weight-bold o_wbooth_registration_confirm">
+                            Book my Booths
+                        </button>
                     </div>
                 </div>
             </form>
-        </t>
-    </template>
-
-    <template id="event_booth_registration_complete" name="Event Booth Registration Complete">
-        <t t-call="website_event_booth.event_booth_layout">
-            <div class="col-12 p-5">
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <h3>Booth Registration completed!</h3>
-                        <span class="h4 text-muted" t-esc="event.name"/>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <span t-if="contact_name" class="font-weight-bold">
-                        <t t-esc="contact_name"/>
-                    </span>
-                    <span t-if="contact_email">
-                        <i class="fa fa-fw fa-envelope mr-2"/>
-                        <t t-esc="contact_email"/>
-                    </span>
-                    <span t-if="contact_phone">
-                        <i class="fa fa-fw fa-phone mr-2"/>
-                        <t t-esc="contact_phone"/>
-                    </span>
-                    <span t-if="contact_mobile">
-                        <i class="fa fa-fw fa-mobile mr-2"/>
-                        <t t-esc="contact_mobile"/>
-                    </span>
-                </div>
-            </div>
         </t>
     </template>
 

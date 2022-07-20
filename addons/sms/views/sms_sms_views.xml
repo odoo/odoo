@@ -34,11 +34,14 @@
         <field name="name">sms.sms.view.tree</field>
         <field name="model">sms.sms</field>
         <field name="arch" type="xml">
-            <tree string="SMS Templates" decoration-muted="state == 'canceled'" decoration-info="state == 'outgoing'" decoration-danger="state == 'error'">
+            <tree string="SMS Templates">
                 <field name="number"/>
                 <field name="partner_id"/>
-                <field name="state"/>
                 <field name="failure_type"/>
+                <field name="state" widget="badge" decoration-info="state == 'outgoing'" decoration-muted="state == 'canceled'" decoration-success="state == 'sent'" decoration-danger="state == 'error'"/>
+                <button name="send" string="Send Now" type="object" icon="fa-paper-plane" states="outgoing"/>
+                <button name="action_set_outgoing" string="Retry" type="object" icon="fa-repeat" states="error,canceled"/>
+                <button name="action_set_canceled" string="Cancel" type="object" icon="fa-times-circle" states="error,outgoing"/>
             </tree>
         </field>
     </record>

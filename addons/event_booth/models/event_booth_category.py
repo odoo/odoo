@@ -14,4 +14,5 @@ class EventBoothCategory(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', default=10)
     description = fields.Html(string='Description', translate=True)
-    booth_ids = fields.One2many('event.booth', 'booth_category_id', string='Booths')
+    booth_ids = fields.One2many(
+        'event.booth', 'booth_category_id', string='Booths', groups='event.group_event_registration_desk')

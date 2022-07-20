@@ -467,6 +467,9 @@ export class Message extends Component {
         if (!this._prettyBodyRef.el) {
             this._lastPrettyBody = undefined;
         }
+        if (!this._prettyBodyRef.el) {
+            this._lastPrettyBody = undefined;
+        }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
         // which are not sync with Owl.

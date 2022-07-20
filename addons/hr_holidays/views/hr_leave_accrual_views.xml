@@ -74,6 +74,7 @@
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
             <form string="Accrual Plan">
+                <field name="show_transition_mode" invisible="1" />
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('id', '=', False)]}">
                         <button name="action_open_accrual_plan_employees" type="object" class="oe_stat_button" icon="fa-users">
@@ -88,7 +89,7 @@
                             <field name="time_off_type_id"/>
                         </group>
                         <group>
-                            <field name="transition_mode" widget="radio"/>
+                            <field name="transition_mode" widget="radio" attrs="{'invisible': [('show_transition_mode', '=', False)]}"/>
                         </group>
                     </group>
                     <span class="oe_grey" invisible="1">

@@ -29,7 +29,7 @@ class FleetVehicleLogServices(models.Model):
     notes = fields.Text()
     service_type_id = fields.Many2one(
         'fleet.service.type', 'Service Type', required=True,
-        default=lambda self: self.env.ref('fleet.type_service_service_8', raise_if_not_found=False),
+        default=lambda self: self.env.ref('fleet.type_service_service_7', raise_if_not_found=False),
     )
     state = fields.Selection([
         ('new', 'New'),
