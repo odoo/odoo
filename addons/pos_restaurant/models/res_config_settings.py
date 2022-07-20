@@ -10,13 +10,13 @@ class ResConfigSettings(models.TransientModel):
         return ['|', ('pos_config_id', 'in', self.pos_config_id.ids), ('pos_config_id', '=', False)]
 
     pos_floor_ids = fields.One2many(related='pos_config_id.floor_ids', readonly=False, domain=lambda self: self._get_floors_domain())
-    pos_iface_orderline_notes = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False, pos='iface_orderline_notes')
-    pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False, pos='iface_printbill')
-    pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False, pos='iface_splitbill')
-    pos_is_order_printer = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False, pos='is_order_printer')
-    pos_is_table_management = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False, pos='is_table_management')
+    pos_iface_orderline_notes = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
+    pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
+    pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
+    pos_is_order_printer = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
+    pos_is_table_management = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
-    pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False, pos='set_tip_after_payment')
+    pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_module_pos_restaurant(self):

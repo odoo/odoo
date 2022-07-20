@@ -9,7 +9,7 @@ class ResConfigSettings(models.TransientModel):
 
     # pos.config fields
     pos_discount_pc = fields.Float(related='pos_config_id.discount_pc', readonly=False)
-    pos_discount_product_id = fields.Many2one('product.product', compute='_compute_pos_discount_product_id', store=True, readonly=False, pos='discount_product_id')
+    pos_discount_product_id = fields.Many2one('product.product', compute='_compute_pos_discount_product_id', store=True, readonly=False)
 
     @api.depends('company_id', 'pos_module_pos_discount', 'pos_config_id')
     def _compute_pos_discount_product_id(self):

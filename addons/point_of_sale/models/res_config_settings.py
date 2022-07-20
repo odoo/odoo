@@ -10,10 +10,9 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     """
     NOTES
-    1. Fields with 'pos' attributes are removed from the vals before super call to `create`.
+    1. Fields with name starting with 'pos_' are removed from the vals before super call to `create`.
        Values of these fields are written to `pos_config_id` record after the super call.
-       So, if we want to make an atomic write to some set of fields, we need to redefine those
-       fields to have compute, readonly=False, store=True, and pos='<pos.config.field.name>'.
+       This is done so that these fields are written at the same time to the active pos.config record.
     2. During `creation` of this record, each related field is written to the source record
        *one after the other*, so constraints on the source record that are based on multiple
        fields might not work properly. However, only the *modified* related fields are written
@@ -22,10 +21,6 @@ class ResConfigSettings(models.TransientModel):
        super call, then the number of fields is reduced after.
     """
     _inherit = 'res.config.settings'
-
-    def _valid_field_parameter(self, field, name):
-        """Introduce 'pos' attribute to allow atomic write for the destination pos.config record."""
-        return name == 'pos' or super()._valid_field_parameter(field, name)
 
     def _default_pos_config(self):
         # Default to the last modified pos.config.
@@ -49,26 +44,26 @@ class ResConfigSettings(models.TransientModel):
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
-    pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_available_pricelist_ids', readonly=False, store=True, pos='available_pricelist_ids')
+    pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_available_pricelist_ids', readonly=False, store=True)
     pos_barcode_nomenclature_id = fields.Many2one(related='pos_config_id.barcode_nomenclature_id', readonly=False)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
     pos_default_bill_ids = fields.Many2many(related='pos_config_id.default_bill_ids', readonly=False)
-    pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True, pos='default_fiscal_position_id')
-    pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True, pos='fiscal_position_ids')
+    pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True)
+    pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True)
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
-    pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True, pos='iface_available_categ_ids')
+    pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
-    pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True, pos='iface_cashdrawer')
+    pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_customer_facing_display_local = fields.Boolean(related='pos_config_id.iface_customer_facing_display_local', readonly=False)
-    pos_iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', compute='_compute_pos_iface_customer_facing_display_via_proxy', readonly=False, store=True, pos='iface_customer_facing_display_via_proxy')
-    pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True, pos='iface_electronic_scale')
+    pos_iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', compute='_compute_pos_iface_customer_facing_display_via_proxy', readonly=False, store=True)
+    pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
-    pos_iface_print_via_proxy = fields.Boolean(string='Print via Proxy', compute='_compute_pos_iface_print_via_proxy', readonly=False, store=True, pos='iface_print_via_proxy')
-    pos_iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', compute='_compute_pos_iface_scan_via_proxy', readonly=False, store=True, pos='iface_scan_via_proxy')
-    pos_iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category', compute='_compute_pos_iface_start_categ_id', readonly=False, store=True, pos='iface_start_categ_id')
+    pos_iface_print_via_proxy = fields.Boolean(string='Print via Proxy', compute='_compute_pos_iface_print_via_proxy', readonly=False, store=True)
+    pos_iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', compute='_compute_pos_iface_scan_via_proxy', readonly=False, store=True)
+    pos_iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category', compute='_compute_pos_iface_start_categ_id', readonly=False, store=True)
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
     pos_iface_tipproduct = fields.Boolean(related='pos_config_id.iface_tipproduct', readonly=False)
     pos_invoice_journal_id = fields.Many2one(related='pos_config_id.invoice_journal_id', readonly=False)
@@ -88,11 +83,11 @@ class ResConfigSettings(models.TransientModel):
     pos_payment_method_ids = fields.Many2many(related='pos_config_id.payment_method_ids', readonly=False)
     pos_picking_policy = fields.Selection(related='pos_config_id.picking_policy', readonly=False)
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
-    pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True, pos='pricelist_id')
+    pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_product_load_background = fields.Boolean(related='pos_config_id.product_load_background', readonly=False)
-    pos_proxy_ip = fields.Char(string='IP Address', compute='_compute_pos_proxy_ip', readonly=False, store=True, pos='proxy_ip')
-    pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True, pos='receipt_footer')
-    pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True, pos='receipt_header')
+    pos_proxy_ip = fields.Char(string='IP Address', compute='_compute_pos_proxy_ip', readonly=False, store=True)
+    pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
+    pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
     pos_restrict_price_control = fields.Boolean(related='pos_config_id.restrict_price_control', readonly=False)
     pos_rounding_method = fields.Many2one(related='pos_config_id.rounding_method', readonly=False)
     pos_route_id = fields.Many2one(related='pos_config_id.route_id', readonly=False)
@@ -102,7 +97,7 @@ class ResConfigSettings(models.TransientModel):
     pos_ship_later = fields.Boolean(related='pos_config_id.ship_later', readonly=False)
     pos_start_category = fields.Boolean(related='pos_config_id.start_category', readonly=False)
     pos_tax_regime_selection = fields.Boolean(related='pos_config_id.tax_regime_selection', readonly=False)
-    pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True, pos='tip_product_id')
+    pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
 
@@ -117,13 +112,16 @@ class ResConfigSettings(models.TransientModel):
             if pos_config_id:
                 pos_fields_vals = {}
                 for field in self._fields.values():
+                    if field.name == 'pos_config_id':
+                        continue
+
                     val = vals.get(field.name)
 
                     # Add only to pos_fields_vals if
                     #   1. _field is in vals -- meaning, the _field is in view.
-                    #   2. _field has 'pos' attribute
-                    if hasattr(field, 'pos') and val is not None:
-                        pos_config_field_name = field.pos
+                    #   2. _field starts with 'pos_' -- meaning, the _field is a pos field.
+                    if field.name.startswith('pos_') and val is not None:
+                        pos_config_field_name = field.name[4:]
                         if not pos_config_field_name in self.env['pos.config']._fields:
                             _logger.warning("The value of '%s' is not properly saved to the pos_config_id field because the destination"
                                 " field '%s' is not a valid field in the pos.config model.", field.name, pos_config_field_name)
