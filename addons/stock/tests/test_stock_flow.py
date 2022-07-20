@@ -1329,7 +1329,7 @@ class TestStockFlow(TestStockCommon):
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
         picking_in.move_line_ids[0].result_package_id = pack1
         picking_in.move_line_ids[0].qty_done = 4
-        packop2 = picking_in.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'reserved_uom_qty': 0})
+        packop2 = picking_in.move_line_ids[0].copy({'reserved_uom_qty': 0})
         packop2.qty_done = 6
         packop2.result_package_id = pack2
         picking_in._action_done()
@@ -1353,7 +1353,7 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_confirm()
         picking_out.action_assign()
         packout1 = picking_out.move_line_ids[0]
-        packout2 = picking_out.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'reserved_uom_qty': 0})
+        packout2 = picking_out.move_line_ids[0].copy({'reserved_uom_qty': 0})
         packout1.qty_done = 2
         packout1.package_id = pack1
         packout2.package_id = pack2
@@ -1387,7 +1387,7 @@ class TestStockFlow(TestStockCommon):
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
         picking_in.move_line_ids[0].result_package_id = pack1
         picking_in.move_line_ids[0].qty_done = 120
-        packop2 = picking_in.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'reserved_uom_qty': 0})
+        packop2 = picking_in.move_line_ids[0].copy({'reserved_uom_qty': 0})
         packop2.qty_done = 80
         packop2.result_package_id = pack2
         picking_in._action_done()

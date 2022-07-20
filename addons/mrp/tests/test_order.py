@@ -966,19 +966,19 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity_done, 0)
-        self.assertEqual(len(move_byproduct_1.move_line_ids), 0)
+        self.assertEqual(len(move_byproduct_1.move_line_ids), 2)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity_done, 0)
-        self.assertEqual(len(move_byproduct_2.move_line_ids), 0)
+        self.assertEqual(len(move_byproduct_2.move_line_ids), 1)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity_done, 0)
         self.assertEqual(move_byproduct_3.product_uom, dozen)
-        self.assertEqual(len(move_byproduct_3.move_line_ids), 0)
+        self.assertEqual(len(move_byproduct_3.move_line_ids), 1)
 
         mo_form = Form(mo)
         mo_form.qty_producing = 1.0
@@ -1004,7 +1004,7 @@ class TestMrpOrder(TestMrpCommon):
             ml.qty_done = 1
         details_operation_form.save()
         details_operation_form = Form(move_byproduct_2, view=self.env.ref('stock.view_stock_move_operations'))
-        with details_operation_form.move_line_ids.new() as ml:
+        with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = self.lot_1
             ml.qty_done = 2
         details_operation_form.save()

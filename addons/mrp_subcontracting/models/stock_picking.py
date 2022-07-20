@@ -70,6 +70,7 @@ class StockPicking(models.Model):
             amounts = [move_line.qty_done for move_line in move.move_line_ids]
             len_amounts = len(amounts)
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
+            productions.move_finished_ids.move_line_ids.write({'qty_done': 0})
             for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id

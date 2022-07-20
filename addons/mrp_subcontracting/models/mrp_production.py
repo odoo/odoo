@@ -137,11 +137,11 @@ class MrpProduction(models.Model):
                         'qty_done': new_quantity_done,
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     }
-                    ml.copy(default=default)
-                    ml.with_context(bypass_reservation_update=True).write({
+                    ml.write({
                         'reserved_uom_qty': new_qty_reserved,
                         'qty_done': 0
                     })
+                    ml.copy(default=default)
 
             if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
                 self.env['stock.move.line'].create({

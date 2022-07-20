@@ -451,11 +451,6 @@ class StockMove(models.Model):
             return True
         return False
 
-    def _should_bypass_reservation(self, forced_location=False):
-        res = super(StockMove, self)._should_bypass_reservation(
-            forced_location=forced_location)
-        return bool(res and not self.production_id)
-
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)

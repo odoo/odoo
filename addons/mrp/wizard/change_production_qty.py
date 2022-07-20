@@ -45,7 +45,8 @@ class ChangeProductionQty(models.TransientModel):
                 move.write({'product_uom_qty': move.product_uom_qty + qty})
 
         if push_moves:
-            push_moves._action_confirm()._action_assign()
+            push_moves._action_confirm()
+        production.move_finished_ids._action_assign()
 
         return modification
 
