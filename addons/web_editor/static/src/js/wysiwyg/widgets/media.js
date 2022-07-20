@@ -1439,7 +1439,7 @@ var VideoWidget = MediaWidget.extend({
             type = 'vine';
         } else if (matches.vimeo && matches.vimeo[3].length) {
             const vimeoAutoplay = autoplay.replace('mute', 'muted');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
+            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');
