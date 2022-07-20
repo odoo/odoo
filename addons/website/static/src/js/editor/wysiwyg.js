@@ -271,14 +271,6 @@ snippetsEditor.SnippetsMenu.include({
         const _super = this._super(...arguments);
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.on('click.snippets_menu', '*', this._onClick);
-
-            // As there is now one document for the SnippetsMenu and another one
-            // for the snippets, clicking on one should blur and remove the
-            // selection of the other one.
-            this._blurSnippetsSelection = this._blurSnippetsSelection.bind(this);
-            this._blurSnippetsMenuSelection = this._blurSnippetsMenuSelection.bind(this);
-            this.$body[0].ownerDocument.addEventListener('click', this._blurSnippetsMenuSelection);
-            this.$el[0].addEventListener('click', this._blurSnippetsSelection);
         }
         return _super;
     },
@@ -288,8 +280,6 @@ snippetsEditor.SnippetsMenu.include({
     destroy() {
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.off('.snippets_menu');
-            this.$body[0].ownerDocument.removeEventListener('click', this._blurSnippetsMenuSelection);
-            this.$el[0].removeEventListener('click', this._blurSnippetsSelection);
         }
         return this._super(...arguments);
     },
@@ -308,38 +298,6 @@ snippetsEditor.SnippetsMenu.include({
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
     },
-    /**
-     * @private
-     */
-     _blurDocumentSelection(document) {
-        const selection = document.getSelection();
-        selection.removeAllRanges();
-    },
-
-    //--------------------------------------------------------------------------
-    // Handler
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _blurSnippetsSelection(ev) {
-        // The selection should be kept for the toolbar buttons, as they are
-        // related to the text's style edition. It should be blurred for the
-        // link tools, as they modify the element itself.
-        const shouldKeepFocus = ev.target.closest('.oe-toolbar') && !ev.target.closest('#create-link');
-        if (shouldKeepFocus) {
-            return;
-        }
-        this._blurDocumentSelection(this.$body[0].ownerDocument);
-    },
-    /**
-     * @private
-     */
-    _blurSnippetsMenuSelection(ev) {
-        this._blurDocumentSelection(this.ownerDocument);
-    },
-
 });
 
 return WebsiteWysiwyg;
