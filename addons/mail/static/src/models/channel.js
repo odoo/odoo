@@ -128,6 +128,17 @@ registerModel({
             return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
         },
         /**
+        * @private
+        * @returns {boolean}
+        */
+        _computeIsDescriptionEditable() {
+            const typesOfChannelWithEditableDescription = new Set([
+                'channel',
+                'group',
+            ]);
+            return typesOfChannelWithEditableDescription.has(this.channel_type);
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
@@ -239,6 +250,9 @@ registerModel({
         }),
         invitationLink: attr({
             compute: '_computeInvitationLink',
+        }),
+        isDescriptionEditable: attr({
+            compute: '_computeIsDescriptionEditable',
         }),
         /**
          * States the number of members in this channel according to the server.
