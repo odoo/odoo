@@ -10660,4 +10660,67 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test("fieldDependencies support for fields", async (assert) => {
+        class CustomField extends Component {}
+        CustomField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
+        registry.category("fields").add("custom_field", CustomField);
+
+        await makeView({
+            resModel: "partner",
+            type: "kanban",
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" widget="custom_field"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            serverData,
+        });
+
+        assert.strictEqual(target.querySelector("[name=foo] span").innerText, "10");
+    });
+
+    QUnit.test(
+        "fieldDependencies support for fields: dependence on a relational field",
+        async (assert) => {
+            class CustomField extends Component {}
+            CustomField.fieldDependencies = {
+                product_id: { type: "many2one", relation: "product" },
+            };
+            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+            registry.category("fields").add("custom_field", CustomField);
+
+            await makeView({
+                resModel: "partner",
+                type: "kanban",
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo" widget="custom_field"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                serverData,
+                mockRPC: (route, args) => {
+                    assert.step(args.method);
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name=foo] span").innerText, "hello");
+            assert.verifySteps(["get_views", "web_search_read"]);
+        }
+    );
 });
