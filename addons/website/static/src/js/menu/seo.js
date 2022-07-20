@@ -362,7 +362,7 @@ var MetaTitleDescription = Widget.extend({
         if (!this.canEditDescription) {
             this.$description.attr('disabled', true);
         }
-        if (this.htmlPage.title().trim() !== this.htmlPage.defaultTitle.trim()) {
+        if (!this.htmlPage.defaultTitle || this.htmlPage.title().trim() !== this.htmlPage.defaultTitle.trim()) {
             this.$title.val(this.htmlPage.title());
         }
         if (this.htmlPage.description().trim() !== this.previewDescription) {
