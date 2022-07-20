@@ -40,6 +40,7 @@ var RunningTourActionHelper = core.Class.extend({
     keydown: function (keyCodes, element) {
         this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
     },
+    check() {},
     auto: function (element) {
         var values = this._get_action_values(element);
         if (values.consume_event === "input") {

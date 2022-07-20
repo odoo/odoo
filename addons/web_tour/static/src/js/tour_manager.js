@@ -89,6 +89,16 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
+        const last_step = steps[steps.length - 1];
+        if (!(last_step.run === 'check' || /\{\s*\}$/.test(last_step.run))) {
+            const step_json = JSON.stringify(
+                last_step,
+                (k, v) => typeof v === 'function' ? v.toString() : v,
+                2
+            );
+            console.warn(`Tour ${options.saveAs || name} has a non-check last step: ${step_json}.`);
+        }
+
         var tour = {
             name: options.saveAs || name,
             steps: steps,
@@ -529,6 +539,15 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
             var tour = self.tours[tour_name];
+            if (tour.current_step === tour.steps.length - 1) {
+                if (!(tip.run === 'check' || /\{\s*\}$/.test(tour.run))) {
+                    throw new Error(`\
+                        Tour ${tour_name} has an action last step: ${self._describeTip(tip)}\
+                        \n\n\
+                        The final step of a tour should be a "check".\
+                    `);
+                }
+            }
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
@@ -539,8 +558,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                     console.error(`Tour ${tour_name} failed at step ${self._describeTip(tip)}: ${e.message}`);
                     throw e;
                 }
-            } else if (tour.current_step === tour.steps.length - 1) {
-                console.log('Tour %s: ignoring action (auto) of last step', tour_name);
             } else {
                 action_helper.auto();
             }
