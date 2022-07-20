@@ -10,7 +10,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
     @classmethod
@@ -38,7 +38,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         self.flush_tracking()
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestBaseMailPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -179,7 +179,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
             })
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMailAPIPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -665,7 +665,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMailComplexPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -1086,7 +1086,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             self.assertEqual(len(res), 6)
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMailHeavyPerformancePost(BaseMailPerformance):
 
     def setUp(self):

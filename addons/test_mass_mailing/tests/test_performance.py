@@ -22,7 +22,7 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
             signature='--\nMartial'
         )
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -54,7 +54,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         self.assertEqual(mailing.delivered, 50)
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
