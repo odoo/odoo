@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
 
     def setUp(self):
@@ -35,7 +35,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
-        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=26):  # test_mail_enterprise: 26
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=26):
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -73,7 +73,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
         self.assertSMSNotification([{'partner': self.customer}], 'Performance Test', messages, sent_unlink=True)
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
 
     def setUp(self):
