@@ -435,7 +435,7 @@ export class ListRenderer extends Component {
         return this.allColumns
             .filter((col) => col.optional)
             .map((col) => ({
-                string: col.string,
+                label: col.label,
                 name: col.name,
                 value: this.optionalActiveFields[col.name],
             }));

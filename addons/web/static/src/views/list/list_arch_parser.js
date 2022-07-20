@@ -86,7 +86,7 @@ export class ListArchParser extends XMLParser {
                 }
                 addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
                 if (!invisible || !archParseBoolean(invisible)) {
-                    const displayName = fieldInfo.FieldComponent.displayName;
+                    const label = fieldInfo.FieldComponent.label;
                     columns.push({
                         ...fieldInfo,
                         id: `column_${nextId++}`,
@@ -94,9 +94,7 @@ export class ListArchParser extends XMLParser {
                         optional: node.getAttribute("optional") || false,
                         type: "field",
                         hasLabel: !(fieldInfo.noLabel || fieldInfo.FieldComponent.noLabel),
-                        label:
-                            (fieldInfo.widget && displayName && displayName.toString()) ||
-                            fieldInfo.string,
+                        label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                     });
                 }
                 return false;
