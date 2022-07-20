@@ -410,15 +410,15 @@ class StockQuant(TransactionCase):
         })
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 2)
-        with self.assertRaises(UserError):
-            self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 10.0)
+        reserved_quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 10.0)
+        self.assertFalse(reserved_quants)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
 
     def test_increase_reserved_quantity_5(self):
         """ Decrease the available quantity when no quant are in a location.
         """
-        with self.assertRaises(UserError):
-            self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
+        reserved_quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
+        self.assertFalse(reserved_quants)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
 
     def test_decrease_reserved_quantity_1(self):
@@ -437,8 +437,7 @@ class StockQuant(TransactionCase):
     def test_increase_decrease_reserved_quantity_1(self):
         """ Decrease then increase reserved quantity when no quant are in a location.
         """
-        with self.assertRaises(UserError):
-            self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
+        self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, -1.0, strict=True)
