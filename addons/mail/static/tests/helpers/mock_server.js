@@ -1011,6 +1011,7 @@ patch(MockServer.prototype, 'mail', {
                 channel_type: channel.channel_type,
                 defaultDisplayMode: channel.default_display_mode,
                 id: channel.id,
+                memberCount: channel.member_count,
                 public: channel.public,
                 uuid: channel.uuid,
             };

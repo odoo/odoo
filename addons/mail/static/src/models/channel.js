@@ -225,9 +225,10 @@ registerModel({
         invitationLink: attr({
             compute: '_computeInvitationLink',
         }),
-        memberCount: attr({
-            related: 'thread.memberCount',
-        }),
+        /**
+         * States the number of members in this channel according to the server.
+         */
+        memberCount: attr(),
         orderedOfflineMembers: many('ChannelMember', {
             inverse: 'channelAsOfflineMember',
             sort: '_sortMembers',

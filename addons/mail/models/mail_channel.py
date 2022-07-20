@@ -335,8 +335,11 @@ class Channel(models.Model):
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.channel/insert', {
+            'channel': [('insert', {
+                'id': self.id,
+                'memberCount': self.member_count,
+            })],
             'id': self.id,
-            'memberCount': self.member_count,
             'members': [('insert-and-unlink', {'id': partner.id})],
         })
         return result
@@ -417,9 +420,12 @@ class Channel(models.Model):
                         'channel': member.channel_id.sudo().channel_info()[0],
                     }))
             notifications.append((channel, 'mail.channel/insert', {
+                'channel': [('insert', {
+                    'id': channel.id,
+                    'memberCount': channel.member_count,
+                })],
                 'id': channel.id,
                 'guestMembers': [('insert', guest_members_data)],
-                'memberCount': channel.member_count,
                 'members': [('insert', members_data)],
             }))
         if invite_to_rtc_call:
@@ -782,13 +788,13 @@ class Channel(models.Model):
                     'channel_type': channel.channel_type,
                     'defaultDisplayMode': channel.default_display_mode,
                     'id': channel.id,
+                    'memberCount': channel.member_count,
                     'public': channel.public,
                     'uuid': channel.uuid,
                 })],
             }
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
-            info['memberCount'] = channel.member_count
             # find the channel member state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter

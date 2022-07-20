@@ -92,9 +92,6 @@ registerModel({
                 });
                 data2.serverLastMessage = insert(messageData);
             }
-            if ('memberCount' in data) {
-                data2.memberCount = data.memberCount;
-            }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
@@ -1957,12 +1954,6 @@ registerModel({
             compute: '_computeLocalMessageUnreadCounter',
         }),
         mainAttachment: one('Attachment'),
-        /**
-         * States the number of members in this thread according to the server.
-         * Guests are excluded from the count.
-         * Only makes sense if this thread is a channel.
-         */
-        memberCount: attr(),
         members: many('Partner', {
             sort: '_sortPartnerMembers',
         }),
