@@ -43,10 +43,6 @@ Widget.template = xml/*xml*/ `
 
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
-    const component = findWidgetComponent(name);
-    return {
-        name,
-        component,
-        fieldDependencies: { ...component.fieldDependencies },
-    };
+    const WidgetComponent = findWidgetComponent(name);
+    return { WidgetComponent };
 };

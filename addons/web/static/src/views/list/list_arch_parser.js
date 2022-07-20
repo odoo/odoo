@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import { XMLParser } from "@web/core/utils/xml";
-import { Field } from "@web/views/fields/field";
 import {
+    addFieldDependencies,
     archParseBoolean,
     getActiveActions,
     getDecoration,
     processButton,
     stringToOrderBy,
 } from "@web/views/utils";
-import { Widget } from "@web/views/widgets/widget";
+import { Field } from "@web/views/fields/field";
+import { XMLParser } from "@web/core/utils/xml";
 
 export class GroupListArchParser extends XMLParser {
     parse(arch, models, modelName, jsClass) {
@@ -84,6 +84,7 @@ export class ListArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
+                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
                 if (!invisible || !archParseBoolean(invisible)) {
                     const displayName = fieldInfo.FieldComponent.displayName;
                     columns.push({
@@ -97,15 +98,6 @@ export class ListArchParser extends XMLParser {
                             (fieldInfo.widget && displayName && displayName.toString()) ||
                             fieldInfo.string,
                     });
-                }
-                return false;
-            } else if (node.tagName === "widget") {
-                const widgetInfo = Widget.parseWidgetNode(node);
-                for (const [name, field] of Object.entries(widgetInfo.fieldDependencies)) {
-                    activeFields[name] = {
-                        name,
-                        type: field.type,
-                    };
                 }
                 return false;
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {

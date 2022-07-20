@@ -35,6 +35,8 @@ const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 const widgetRegistry = registry.category("view_widgets");
 
+const { Component, xml } = owl;
+
 let target;
 let serverData;
 
@@ -10960,6 +10962,63 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".modal-footer .btn-primary.o_form_button_save"));
 
             await click(target.querySelector(".o_form_button_save")); // save the record
+        }
+    );
+
+    QUnit.test("fieldDependencies support for fields", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, int_field: 2 }];
+
+        class CustomField extends Component {}
+        CustomField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
+        registry.category("fields").add("custom_field", CustomField);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="foo" widget="custom_field"/>
+                </form>
+            `,
+            serverData,
+        });
+
+        assert.strictEqual(target.querySelector("[name=foo] span").innerText, "2");
+    });
+
+    QUnit.test(
+        "fieldDependencies support for fields: dependence on a relational field",
+        async (assert) => {
+            serverData.models.partner.records[0].product_id = 37;
+
+            class CustomField extends Component {}
+            CustomField.fieldDependencies = {
+                product_id: { type: "many2one", relation: "product" },
+            };
+            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+            registry.category("fields").add("custom_field", CustomField);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="foo" widget="custom_field"/>
+                    </form>
+                `,
+                serverData,
+                mockRPC: (route, args) => {
+                    assert.step(args.method);
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name=foo] span").innerText, "xphone");
+            assert.verifySteps(["get_views", "read"]);
         }
     );
 });

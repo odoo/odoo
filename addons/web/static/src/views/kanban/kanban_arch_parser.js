@@ -1,8 +1,13 @@
 /** @odoo-module **/
 
+import {
+    addFieldDependencies,
+    archParseBoolean,
+    getActiveActions,
+    stringToOrderBy,
+} from "@web/views/utils";
 import { extractAttributes, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
-import { archParseBoolean, getActiveActions, stringToOrderBy } from "@web/views/utils";
 import { Widget } from "@web/views/widgets/widget";
 
 /**
@@ -52,7 +57,6 @@ export class KanbanArchParser extends XMLParser {
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
         const activeFields = {};
-
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
@@ -76,15 +80,11 @@ export class KanbanArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = name;
                 }
+                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
             }
             if (node.tagName === "widget") {
-                const widgetInfo = Widget.parseWidgetNode(node);
-                for (const [name, field] of Object.entries(widgetInfo.fieldDependencies)) {
-                    activeFields[name] = {
-                        name,
-                        type: field.type,
-                    };
-                }
+                const { WidgetComponent } = Widget.parseWidgetNode(node);
+                addFieldDependencies(activeFields, WidgetComponent.fieldDependencies);
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
