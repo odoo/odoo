@@ -407,6 +407,31 @@ function _getColorClass(el, colorNames, prefix) {
     const prefixedColorNames = _computeColorClasses(colorNames, prefix);
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
+/**
+ * Returns the smallest parent that is common to the highest number of
+ * elements that match a selector, excluding another selector.
+ *
+ * @private
+ * @param {Element} el element from which to determine the common parent
+ * @param {string} includeSelector identifying the common elements
+ * @param {string} excludeSelector identifying unwanted elements
+ * @returns {Object} {el: common parent or null if not found,
+ *                    count: number of common elements in parent}
+ */
+function _getCommonParent(el, includeSelector, excludeSelector) {
+    let bestEl = null;
+    let bestCount = 0;
+    el = el.parentElement;
+    while (el && !el.querySelector(excludeSelector)) {
+        const count = el.querySelectorAll(includeSelector).length;
+        if (count > bestCount) {
+            bestCount = count;
+            bestEl = el;
+        }
+        el = el.parentElement;
+    }
+    return {el: bestEl, count: bestCount};
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -430,4 +455,5 @@ export default {
     generateHTMLId: _generateHTMLId,
     getColorClass: _getColorClass,
     setEditableWindow: _setEditableWindow,
+    getCommonParent: _getCommonParent,
 };

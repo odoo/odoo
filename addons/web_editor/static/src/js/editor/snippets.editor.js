@@ -9,7 +9,7 @@ import Widget from "web.Widget";
 import options from "web_editor.snippets.options";
 import {ColorPaletteWidget} from "web_editor.ColorPalette";
 import SmoothScrollOnDrag from "web.smooth_scroll_on_drag";
-import {getCSSVariableValue} from "web_editor.utils";
+import {getCSSVariableValue, getCommonParent} from "web_editor.utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 const QWeb = core.qweb;
 import {closestElement} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
@@ -2390,6 +2390,32 @@ var SnippetsMenu = Widget.extend({
             });
         }
 
+        // Handle one by one because further non-drop zones might be removed.
+        let nonDropZoneEl = $editableArea.find('.o_non_drop_zone')[0];
+        while (nonDropZoneEl) {
+            // Locate highest parent that does not contain a drop zone.
+            const isVertical = nonDropZoneEl.classList.contains('oe_vertical');
+            const commonParentInfo = getCommonParent(nonDropZoneEl,
+                isVertical ? '.o_non_drop_zone.oe_vertical' : '.o_non_drop_zone:not(.oe_vertical)',
+                isVertical ? '.oe_drop_zone:not(.o_non_drop_zone), .o_non_drop_zone:not(.oe_vertical)'
+                    : '.oe_drop_zone:not(.o_non_drop_zone), .o_non_drop_zone.oe_vertical'
+            );
+            if (commonParentInfo.count > 1) {
+                // Remove all other nested hooks.
+                for (const el of commonParentInfo.el.querySelectorAll('.o_non_drop_zone')) {
+                    el.parentElement.removeChild(el);
+                }
+                // Move non-drop zone to common parent and span block over parent.
+                const commonParentSize = commonParentInfo.el.getBoundingClientRect();
+                nonDropZoneEl.style['height'] = `${commonParentSize.height}px`;
+                nonDropZoneEl.style['width'] = `${commonParentSize.width}px`;
+                nonDropZoneEl.style['position'] = 'absolute';
+                commonParentInfo.el.insertBefore(nonDropZoneEl, commonParentInfo.el.childNodes[0]);
+            }
+            nonDropZoneEl.classList.remove('o_non_drop_zone');
+            nonDropZoneEl = $editableArea.find('.o_non_drop_zone')[0];
+        }
+
         var count;
         var $zones;
         do {
@@ -3123,7 +3149,7 @@ var SnippetsMenu = Widget.extend({
         }
         var $dropzone = $('<div/>', {
             'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') +
-                (forbidSanitize ? ' text-center oe_drop_zone_danger' : ''),
+                (forbidSanitize ? ' text-center oe_drop_zone_danger o_non_drop_zone' : ''),
         });
         if (style) {
             $dropzone.css(style);
