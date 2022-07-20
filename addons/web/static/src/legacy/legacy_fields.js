@@ -340,6 +340,7 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.template = legacyFieldTemplate;
     LegacyField.components = { FieldAdapter };
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
+    LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
     if (!fieldRegistry.contains(name)) {
         fieldRegistry.add(name, LegacyField);
     }
