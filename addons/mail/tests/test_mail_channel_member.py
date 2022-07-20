@@ -176,7 +176,7 @@ class TestMailChannelMembers(MailCommon):
     # GROUP BASED CHANNELS
     # ------------------------------------------------------------
 
-    def test_channel_group(self):
+    def test_group_restricted_channel(self):
         """Test basics on group channel."""
         channel_members = self.env['mail.channel.member'].search([('channel_id', '=', self.group_channel.id)])
         self.assertFalse(channel_members)
@@ -212,7 +212,7 @@ class TestMailChannelMembers(MailCommon):
     # PUBLIC CHANNELS
     # ------------------------------------------------------------
 
-    def test_channel_public(self):
+    def test_public_channel(self):
         """ Test access on public channels """
         channel_members = self.env['mail.channel.member'].search([('channel_id', '=', self.public_channel.id)])
         self.assertFalse(channel_members)
