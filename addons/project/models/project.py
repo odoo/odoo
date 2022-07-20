@@ -2038,10 +2038,10 @@ class Task(models.Model):
             'done': 'project.mt_task_ready',
             'normal': 'project.mt_task_progress',
         }
-        if 'kanban_state_label' in init_values and self.kanban_state in mail_message_subtype_per_kanban_state:
-            return self.env.ref(mail_message_subtype_per_kanban_state[self.kanban_state])
-        elif 'stage_id' in init_values:
+        if 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
+        elif 'kanban_state_label' in init_values and self.kanban_state in mail_message_subtype_per_kanban_state:
+            return self.env.ref(mail_message_subtype_per_kanban_state[self.kanban_state])
         return super(Task, self)._track_subtype(init_values)
 
     def _mail_get_message_subtypes(self):
