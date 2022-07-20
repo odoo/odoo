@@ -1236,6 +1236,7 @@ export class SearchModel extends EventBus {
                     [category.fieldName],
                     {
                         category_domain: this._getCategoryDomain(category.id),
+                        context: this.globalContext,
                         enable_counters: category.enableCounters,
                         expand: category.expand,
                         filter_domain: filterDomain,
@@ -1271,6 +1272,7 @@ export class SearchModel extends EventBus {
                     {
                         category_domain: categoryDomain,
                         comodel_domain: new Domain(filter.domain).toList(evalContext),
+                        context: this.globalContext,
                         enable_counters: filter.enableCounters,
                         filter_domain: this._getFilterDomain(filter.id),
                         expand: filter.expand,

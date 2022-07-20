@@ -3402,4 +3402,36 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getCategoriesContent(target), ["All", "gold", "silver"]);
     });
+
+    QUnit.test("Category with counters and filter with domain", async (assert) => {
+        serverData.views["partner,false,search"] = /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="category_id"/>
+                    <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]"/>
+                </searchpanel>
+            </search>`;
+
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+            mockRPC: (route, args) => {
+                if (
+                    ["search_panel_select_range", "search_panel_select_multi_range"].includes(
+                        args.method
+                    )
+                ) {
+                    assert.step(args.kwargs.context.special_key);
+                }
+            },
+            context: {
+                special_key: "special_key",
+            },
+        });
+
+        assert.verifySteps(["special_key", "special_key"]);
+    });
 });
