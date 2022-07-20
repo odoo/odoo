@@ -10,7 +10,9 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'website_name'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
+    slide_id = fields.Many2one(
+        'slide.slide', string="Presentation",
+        required=True, index=True, ondelete='cascade')
     url = fields.Char('Third Party Website URL')
     website_name = fields.Char('Website', compute='_compute_website_name')
     count_views = fields.Integer('# Views', default=1)
