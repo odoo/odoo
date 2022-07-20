@@ -485,7 +485,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         """
 
         self.warehouse.mto_pull_id.route_id.active = True
-        # Creating complex product which trigger another manifacture
+        # Creating complex product which trigger another manufacture
 
         routes = self.warehouse.manufacture_pull_id.route_id + self.warehouse.mto_pull_id.route_id
         self.complex_product = self.env['product.product'].create({
@@ -525,6 +525,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         production_form.picking_type_id = self.warehouse.manu_type_id
         production = production_form.save()
         production.action_confirm()
+        self.env.invalidate_all()
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)

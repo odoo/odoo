@@ -1262,10 +1262,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so = so_form.save()
         so.action_confirm()
 
-        pick_picking, pack_picking, _ = so.picking_ids
+        _, pack_picking, pick_picking = so.picking_ids
         (pick_picking + pack_picking).move_ids.quantity_done = 5
         (pick_picking + pack_picking).button_validate()
-
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 3
