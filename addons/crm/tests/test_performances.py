@@ -8,7 +8,7 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('lead_assign', 'crm_performance')
+@tagged('lead_assign', 'crm_performance', 'post_install', '-at_install')
 class TestLeadAssignPerf(TestLeadAssignCommon):
     """ Test performances of lead assignment feature added in saas-14.2
 
@@ -47,8 +47,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=1289):  # 1281-1289 generally - crm only: 1204
+            with self.assertQueryCount(user_sales_manager=1206):  # crm 1205
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -91,8 +92,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=589):  # 584-585 generally, sometimes 589
+            with self.assertQueryCount(user_sales_manager=586):  # crm 585
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -173,8 +175,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 17 queries
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6549):  # 6540-6547 generally / sometimes +1/+2 on nightly
+            with self.assertQueryCount(user_sales_manager=6546):  # crm 6501 - com 6546
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign
