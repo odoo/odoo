@@ -142,11 +142,15 @@
                                 </t>
 
                                 <t t-if="record.reward_type.raw_value === 'product'" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
+
+                                    <a>Free product</a>                                    
                                     <br/>
                                     <br/>
+
                                     <div class="o_kanban_record_title">
-                                        Free product :
+                                        <a>Applied to:</a>
                                     </div>
+
                                     <t t-if="record.reward_product_id">
                                         <a><i class="fa fa-cube fa-fw" title="Product Domain"/><field name="reward_product_id"/> <t t-if="record.reward_product_qty.raw_value > 1">x <field name="reward_product_qty"/></t></a>
                                         <br/>

@@ -14,9 +14,6 @@
                         <field name="customer_tag_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}" options="{'color_field': 'color'}"/>
                         <separator/>
                         <field name="coupon_qty" attrs="{'readonly': [('mode', '=', 'selected')], 'required': [('mode', '=', 'anonymous')]}"/>
-
-                        <!-- <field name="name"/> -->
-
                         <label for="points_granted" string="Coupon value" groups="base.group_no_one"/>
                         <span>
                             <field name="points_granted" class="oe_inline"/>

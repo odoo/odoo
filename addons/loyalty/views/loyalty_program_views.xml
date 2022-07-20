@@ -32,7 +32,7 @@
                     <div class="oe_title">
                         <label for="name" string="Program Name"/>
                         <h1>
-                            <field name="name" class="text-break" placeholder="e.g. 10% discount on laptops"/>
+                            <field name="name" placeholder="e.g. 10% discount on laptops"/>
                         </h1>
                     </div>
                     <group>
@@ -71,9 +71,8 @@
                             <label for="portal_visible" string="Show points" groups="base.group_no_one"/>
                             <span groups="base.group_no_one">
                                 <field name="portal_visible" class="oe_inline"/>
-                                <span attrs="{'invisible': [('portal_visible', '=', False)]}"> as <field name="portal_point_name" class="oe_inline"/></span>
+                                <span attrs="{'invisible': [('portal_visible', '=', False)]}">as <field name="portal_point_name" class="oe_inline"/></span>
                             </span>
-
                         </group>
                         <group>
                             <field name="date_to"/>
@@ -144,7 +143,7 @@
         <field name="help" type="html">
             <div class="o_loyalty_not_found container">
                 <h1>No loyalty program found.</h1>
-                <p class="lead fw-light">Create a new one from scratch, or use one of the templates below.</p>
+                <p class="lead font-weight-light">Create a new one from scratch, or use one of the templates below.</p>
             </div>
         </field>
     </record>

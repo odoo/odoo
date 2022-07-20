@@ -11,7 +11,7 @@
                             <field name="minimum_qty"/>
                             <label for="minimum_amount"/>
                             <div class="o_row">
-                                <field name="minimum_amount" class="oe_inline pe-2"/>
+                                <field name="minimum_amount" class="oe_inline pr-2"/>
                                 <span>tax</span>
                                 <field name="minimum_amount_tax_mode" class="oe_inline"/>
                             </div>
@@ -78,12 +78,12 @@
 
                             <div class="o_loyalty_kanban_card_left">
                                 <a>
-                                    <t t-if="record.minimum_qty.raw_value > 1 || record.minimum_amount.raw_value">
+                                    <t t-if="record.minimum_qty.raw_value > 0 || record.minimum_amount.raw_value">
                                         <t t-set="qty" t-value="record.minimum_qty.raw_value"/>
                                         <t t-set="amt" t-value="record.minimum_amount.raw_value"/>
                                         <t t-set="tax_mode" t-value="record.minimum_amount_tax_mode.raw_value"/>
-                                        <span>If<t t-if="qty > 1"> minimum <field name="minimum_qty"/> PCE</t>
-                                            <t t-if="amt"><t t-if="qty > 1">and</t> minimum <field name="minimum_amount"/><t t-if="tax_mode === 'excl'"> (tax excluded)</t></t>
+                                        <span>If<t t-if="qty > 0"> minimum <field name="minimum_qty"/> PCE</t>
+                                            <t t-if="amt"><t t-if="qty > 0">and</t> minimum <field name="minimum_amount"/><t t-if="tax_mode === 'excl'"> (tax excluded)</t></t>
                                         </span>
                                         <br/>
                                     </t>
@@ -103,7 +103,6 @@
                                 <t t-if="record.product_ids.raw_value.length > 0">
                                     <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags" class="d-inline"/></div>
                                 </t>
-
                                 <t t-if="record.product_category_id.raw_value">
                                     <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id"/>
                                     <br/>

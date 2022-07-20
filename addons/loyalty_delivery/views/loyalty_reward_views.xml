@@ -5,13 +5,11 @@
         <field name="model">loyalty.reward</field>
         <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@id='reward_type_group']" position="after">
+            <xpath expr="//group[@id='product_group']" position="after">
                 <group id="shipping" attrs="{'invisible': [('reward_type', '!=', 'shipping')]}">
                     <field name="discount_max_amount"/>
                 </group>
             </xpath>
         </field>
     </record>
-
-    
 </odoo>
