@@ -6,6 +6,9 @@ import { _lt } from "../l10n/translation";
 const { Component } = owl;
 
 export class ConfirmationDialog extends Component {
+    setup() {
+        this.env.dialogData.close = () => this._cancel();
+    }
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();
