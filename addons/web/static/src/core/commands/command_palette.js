@@ -8,7 +8,8 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { escapeRegExp } from "../utils/strings";
+import { isMacOS, isMobileOS } from "@web/core/browser/feature_detection";
+import { escapeRegExp } from "@web/core/utils/strings";
 
 const {
     Component,
@@ -103,6 +104,9 @@ export class CommandPalette extends Component {
         this.inputRef = useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
+        useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
+            bypassEditableProtection: true,
+        });
         useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
             bypassEditableProtection: true,
             allowRepeat: true,
@@ -245,9 +249,11 @@ export class CommandPalette extends Component {
         scrollTo(command, { scrollable: this.listboxRef.el });
     }
 
-    onCommandClicked(index) {
+    onCommandClicked(event, index) {
+        event.preventDefault(); // Prevent redirect for commands with href
         this.selectCommand(index);
-        this.executeSelectedCommand();
+        const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey;
+        this.executeSelectedCommand(ctrlKey);
     }
 
     /**
@@ -265,10 +271,15 @@ export class CommandPalette extends Component {
         }
     }
 
-    async executeSelectedCommand() {
+    async executeSelectedCommand(ctrlKey) {
         await this.searchValuePromise;
-        if (this.state.selectedCommand) {
-            this.executeCommand(this.state.selectedCommand);
+        const selectedCommand = this.state.selectedCommand;
+        if (selectedCommand) {
+            if (!ctrlKey) {
+                this.executeCommand(selectedCommand);
+            } else if (selectedCommand.href) {
+                window.open(selectedCommand.href, "_blank");
+            }
         }
     }
 
@@ -345,6 +356,13 @@ export class CommandPalette extends Component {
             searchValue = searchValue.slice(1);
         }
         return { namespace, searchValue };
+    }
+
+    get isMacOS() {
+        return isMacOS();
+    }
+    get isMobileOS() {
+        return isMobileOS();
     }
 }
 CommandPalette.lastSessionId = 0;
