@@ -79,7 +79,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickTopbarThreadName(ev) {
-            if (!this.thread || !this.thread.isChannelRenamable) {
+            if (!this.thread || !this.thread.channel.isRenamable) {
                 return;
             }
             // Guests cannot edit thread name
@@ -285,7 +285,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterTopbarThreadName(ev) {
-            if (!this.thread || !this.thread.isChannelRenamable) {
+            if (!this.thread || !this.thread.channel || !this.thread.channel.isRenamable) {
                 return;
             }
             this.update({ isMouseOverThreadName: true });

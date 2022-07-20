@@ -1115,16 +1115,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeIsChannelRenamable() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['chat', 'channel', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
          * @returns {boolean|FieldCommand}
          */
         _computeIsChatChannel() {
@@ -1785,14 +1775,6 @@ registerModel({
          * List of members that have been invited to the RTC call of this channel.
          */
         invitedMembers: many('ChannelMember'),
-        /**
-         * Determines whether this thread can be renamed.
-         * Only makes sense for channels.
-         */
-        isChannelRenamable: attr({
-            compute: '_computeIsChannelRenamable',
-            default: false,
-        }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
          *

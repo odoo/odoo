@@ -150,6 +150,18 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsRenamable() {
+            const typesOfRenamableChannel = new Set([
+                'channel',
+                'chat',
+                'group',
+            ]);
+            return typesOfRenamableChannel.has(this.channel_type);
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeThread() {
@@ -266,6 +278,10 @@ registerModel({
         }),
         isDescriptionEditableByCurrentUser: attr({
             compute: '_computeIsDescriptionEditableByCurrentUser',
+        }),
+        isRenamable: attr({
+            compute: '_computeIsRenamable',
+            default: false,
         }),
         /**
          * States the number of members in this channel according to the server.
