@@ -101,7 +101,7 @@ const ReplenishReport = clientAction.extend({
         // Hack to put the res_model on the url. This way, the report always know on with res_model it refers.
         if (location.href.indexOf('active_model') === -1) {
             const url = window.location.href + `&active_model=${this.resModel}`;
-            window.history.pushState({}, "", url);
+            window.history.replaceState({}, "", url);
         }
     },
 
