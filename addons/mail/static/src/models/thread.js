@@ -1124,13 +1124,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeIsPinned() {
-            return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
-        },
-        /**
-         * @private
          * @returns {Message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
@@ -1297,7 +1290,7 @@ registerModel({
             if (!this.messaging.messagingMenu) {
                 return clear();
             }
-            return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
+            return (this.channel && this.channel.isPinned && this.localMessageUnreadCounter > 0)
                 ? replace(this.messaging.messagingMenu)
                 : clear();
         },
@@ -1787,13 +1780,6 @@ registerModel({
          * interface and to notify the server of the new state.
          */
         isPendingPinned: attr(),
-        /**
-         * Boolean that determines whether this thread is pinned
-         * in discuss and present in the messaging menu.
-         */
-        isPinned: attr({
-            compute: '_computeIsPinned',
-        }),
         /**
          * Determine the last pin state known by the server, which is the pin
          * state displayed after initialization or when the last pending

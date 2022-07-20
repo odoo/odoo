@@ -92,7 +92,7 @@ registerModel({
             }
             // in other cases a chat would be valid, find it or try to create it
             let chat = this.partner.dmChatWithCurrentPartner.thread;
-            if (!chat || !chat.isPinned) {
+            if (!chat || !chat.channel.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.messaging.models['Thread'].performRpcCreateChat({

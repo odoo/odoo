@@ -94,7 +94,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeDiscussSidebarCategoryItem() {
-            if (!this.thread.isPinned) {
+            if (!this.isPinned) {
                 return clear();
             }
             if (!this.messaging.discuss) {
@@ -154,6 +154,16 @@ registerModel({
                 return false;
             }
             return this.isDescriptionEditable;
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsPinned() {
+            if (this.thread.isPendingPinned) {
+                return this.thread.isPendingPinned;
+            }
+            return this.thread.isServerPinned;
         },
         /**
          * @private
@@ -294,6 +304,13 @@ registerModel({
         }),
         isDescriptionEditableByCurrentUser: attr({
             compute: '_computeIsDescriptionEditableByCurrentUser',
+        }),
+        /**
+         * Determines whether this channel is pinned in Discuss and present in
+         * the messaging menu.
+         */
+        isPinned: attr({
+            compute: '_computeIsPinned',
         }),
         isRenamable: attr({
             compute: '_computeIsRenamable',

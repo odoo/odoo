@@ -13,8 +13,7 @@ patchRecordMethods('NotificationListView', {
             return replace(this.messaging.models['Thread'].all(thread =>
                 thread.channel &&
                 thread.channel.channel_type === 'livechat' &&
-                thread.isPinned &&
-                thread.model === 'mail.channel'
+                thread.channel.isPinned
             ));
         }
         return this._super();

@@ -24,19 +24,16 @@ registerModel({
             this.messaging.update({
                 history: insertAndReplace({
                     id: 'history',
-                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("History"),
                 }),
                 inbox: insertAndReplace({
                     id: 'inbox',
-                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("Inbox"),
                 }),
                 starred: insertAndReplace({
                     id: 'starred',
-                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("Starred"),
                 }),
@@ -154,13 +151,13 @@ registerModel({
                         convertedData.guestMembers = link(this.messaging.currentGuest);
                     }
                 }
-                const channel = this.messaging.models['Thread'].insert(
+                const thread = this.messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
                 // considered pinned. task-2284357
-                if (!channel.isPinned) {
-                    channel.pin();
+                if (!thread.channel.isPinned) {
+                    thread.channel.pin();
                 }
             }));
         },

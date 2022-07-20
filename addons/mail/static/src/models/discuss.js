@@ -293,7 +293,7 @@ registerModel({
                 return clear();
             }
             const orderedMailboxes = this.messaging.models['Thread']
-                .all(thread => thread.isPinned && thread.model === 'mail.box')
+                .all(thread => thread.model === 'mail.box')
                 .sort((mailbox1, mailbox2) => {
                     if (mailbox1 === this.messaging.inbox) {
                         return -1;
@@ -314,13 +314,17 @@ registerModel({
             return replace(orderedMailboxes);
         },
         /**
-         * Only pinned threads are allowed in discuss.
+         * Only mailboxes and pinned channels are allowed in Discuss.
          *
          * @private
-         * @returns {Thread|undefined}
+         * @returns {FieldCommand|undefined}
          */
         _computeThread() {
-            if (!this.thread || !this.thread.isPinned) {
+            if (
+                !this.thread ||
+                (this.thread.channel && !this.thread.channel.isPinned) &&
+                this.thread.model !== 'mail.box'
+            ) {
                 return clear();
             }
         },

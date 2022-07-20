@@ -34,7 +34,7 @@ registerModel({
             switch (this.filter) {
                 case 'mailbox': {
                     return replace(this.messaging.models['Thread']
-                        .all(thread => thread.isPinned && thread.model === 'mail.box')
+                        .all(thread => thread.model === 'mail.box')
                         .sort((mailbox1, mailbox2) => {
                             if (mailbox1 === this.messaging.inbox) {
                                 return -1;
@@ -59,8 +59,7 @@ registerModel({
                         .all(thread =>
                             thread.channel &&
                             thread.channel.channel_type === 'channel' &&
-                            thread.isPinned &&
-                            thread.model === 'mail.channel'
+                            thread.channel.isPinned
                         )
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
                     );
@@ -70,7 +69,7 @@ registerModel({
                         .all(thread =>
                             thread.channel &&
                             thread.channel.isChat &&
-                            thread.isPinned
+                            thread.channel.isPinned
                         )
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
                     );
@@ -78,7 +77,7 @@ registerModel({
                 case 'all': {
                     // "All" filter is for channels and chats
                     return replace(this.messaging.models['Thread']
-                        .all(thread => thread.isPinned && thread.model === 'mail.channel')
+                        .all(thread => thread.channel && thread.channel.isPinned)
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
                     );
                 }

@@ -256,8 +256,8 @@ registerModel({
                 }
                 channel = res[0];
             }
-            if (!channel.isPinned) {
-                channel.pin();
+            if (!channel.channel.isPinned) {
+                channel.channel.pin();
             }
 
             const message = this.messaging.models['Message'].insert(convertedData);
