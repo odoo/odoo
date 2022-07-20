@@ -262,24 +262,21 @@ class TestMessageAccess(TestMailCommon):
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         Channel = cls.env['mail.channel'].with_context(cls._test_context)
-        # Pigs: base group for tests
-        cls.group_pigs = Channel.create({
-            'name': 'Pigs',
+        cls.group_restricted_channel = Channel.create({
+            'name': 'Channel for Groups',
             'public': 'groups',
             'group_public_id': cls.env.ref('base.group_user').id})
-        # Jobs: public group
-        cls.group_public = Channel.create({
-            'name': 'Jobs',
+        cls.public_channel = Channel.create({
+            'name': 'Public Channel',
             'description': 'NotFalse',
             'public': 'public'})
-        # Private: private gtroup
-        cls.group_private = Channel.create({
-            'name': 'Private',
+        cls.private_group = Channel.create({
+            'name': 'Group',
             'public': 'private'})
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',
             'model': 'mail.channel',
-            'res_id': cls.group_private.id,
+            'res_id': cls.private_group.id,
         })
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -292,18 +289,18 @@ class TestMessageAccess(TestMailCommon):
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg3 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Pigs', 'subtype_id': False,
-            'model': 'mail.channel', 'res_id': self.group_pigs.id})
+            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id})
         msg4 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.group_pigs.id,
+            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id,
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg5 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.group_pigs.id,
+            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id,
             'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
         msg6 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.group_private.id})
+            'model': 'mail.channel', 'res_id': self.private_group.id})
         msg7 = self.env['mail.message'].with_user(self.user_employee).create({
             'subject': '_ZTest', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
         msg8 = self.env['mail.message'].with_user(self.user_employee).create({
@@ -314,11 +311,11 @@ class TestMessageAccess(TestMailCommon):
         messages = self.env['mail.message'].with_user(self.user_public).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg2 | msg4)
 
-        # Test: Employee: 3 messages on Pigs Raoul can read (employee can read group with default values)
+        # Test: Employee: 3 messages on Channel Employee can read (employee can read group with default values)
         messages = self.env['mail.message'].with_user(self.user_employee).search([('subject', 'like', '_ZTest'), ('body', 'ilike', 'A')])
         self.assertEqual(messages, msg3 | msg4 | msg5)
 
-        # Test: Raoul: 3 messages on Pigs Raoul can read (employee can read group with default values), 0 on Birds (private group) + 2 messages as author
+        # Test: Employee: 3 messages on Channel Employee can read (employee can read group with default values), 0 on Birds (private group) + 2 messages as author
         messages = self.env['mail.message'].with_user(self.user_employee).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg3 | msg4 | msg5 | msg7 | msg8)
 
@@ -331,7 +328,7 @@ class TestMessageAccess(TestMailCommon):
         self.assertFalse(messages)
 
         # Test: Portal: 2 messages (public group with a subtype)
-        self.group_pigs.write({'public': 'public'})
+        self.group_restricted_channel.write({'public': 'public'})
         messages = self.env['mail.message'].with_user(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg4 | msg5)
 
@@ -350,7 +347,7 @@ class TestMessageAccess(TestMailCommon):
             self.message.with_user(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_ok_portal(self):
-        self.message.write({'subtype_id': self.ref('mail.mt_comment'), 'res_id': self.group_public.id})
+        self.message.write({'subtype_id': self.ref('mail.mt_comment'), 'res_id': self.public_channel.id})
         self.message.with_user(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_notification(self):
@@ -363,7 +360,7 @@ class TestMessageAccess(TestMailCommon):
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.message.with_user(self.user_employee).read()
-        # Test: Bert has access to attachment, ok because they can read message
+        # Test: Employee has access to attachment, ok because they can read message
         attachment.with_user(self.user_employee).read(['name', 'datas'])
 
     def test_mail_message_access_read_author(self):
@@ -371,38 +368,38 @@ class TestMessageAccess(TestMailCommon):
         self.message.with_user(self.user_employee).read()
 
     def test_mail_message_access_read_doc(self):
-        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id})
-        # Test: Bert reads the message, ok because linked to a doc they are allowed to read
+        self.message.write({'model': 'mail.channel', 'res_id': self.public_channel.id})
+        # Test: Employee reads the message, ok because linked to a doc they are allowed to read
         self.message.with_user(self.user_employee).read()
 
     # --------------------------------------------------
     # CREATE
     # --------------------------------------------------
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_mail_message_access_create_crash_public(self):
-        # Do: Bert creates a message on Pigs -> ko, no creation rights
+        # Public creates a message on Channel for groups -> ko, no enter rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_pigs.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_restricted_channel.id, 'body': 'Test'})
 
-        # Do: Bert create a message on Jobs -> ko, no creation rights
+        # Public create a message on Public Channel -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_crash(self):
-        # Do: Bert create a private message -> ko, no creation rights
+        # Do: Employee create a private message -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_doc(self):
         Message = self.env['mail.message'].with_user(self.user_employee)
-        # Do: Raoul creates a message on Jobs -> ok, write access to the related document
-        Message.create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
-        # Do: Raoul creates a message on Priv -> ko, no write access to the related document
+        # Do: Employee creates a message on Public Channel -> ok, write access to the related document
+        Message.create({'model': 'mail.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
+        # Do: Employee creates a message on Group -> ko, no write access to the related document
         with self.assertRaises(AccessError):
-            Message.create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
+            Message.create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test'})
 
     def test_mail_message_access_create_private(self):
         self.env['mail.message'].with_user(self.user_employee).create({'body': 'Test'})
@@ -411,7 +408,7 @@ class TestMessageAccess(TestMailCommon):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
-        self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
+        self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_mail_message_access_create_wo_parent_access(self):
         """ Purpose is to test posting a message on a record whose first message / parent
