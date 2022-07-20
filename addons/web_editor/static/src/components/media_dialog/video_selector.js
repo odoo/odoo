@@ -35,7 +35,7 @@ export class VideoSelector extends Component {
             },
             hide_controls: {
                 label: this.env._t("Hide player controls"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
                 urlParameter: 'controls=0',
             },
             hide_fullscreen: {
