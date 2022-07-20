@@ -7,10 +7,10 @@
                 <t t-if="callInviteRequestPopup.thread.rtcInvitingSession">
                     <div class="o_CallInviteRequestPopup_partnerInfo d-flex flex-column justify-content-around align-items-center text-nowrap">
                         <img class="o_CallInviteRequestPopup_partnerInfoImage mb-2 rounded-circle o_cursor_pointer"
-                            t-att-src="callInviteRequestPopup.thread.rtcInvitingSession.avatarUrl"
+                            t-att-src="callInviteRequestPopup.thread.rtcInvitingSession.channelMember.avatarUrl"
                             t-on-click="callInviteRequestPopup.onClickAvatar"
                             alt="Avatar"/>
-                        <span class="o_CallInviteRequestPopup_partnerInfoName w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="callInviteRequestPopup.thread.rtcInvitingSession.name"/>
+                        <span class="o_CallInviteRequestPopup_partnerInfoName w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="callInviteRequestPopup.thread.rtcInvitingSession.channelMember.persona.name"/>
                         <span class="o_CallInviteRequestPopup_partnerInfoText fst-italic opacity-75">Incoming Call...</span>
                     </div>
                 </t>
