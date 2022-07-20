@@ -89,7 +89,7 @@
                                 <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
                                     <field name="date_deadline" widget="remaining_days"/>
                                 </div>
-                                <div t-if="record.displayed_image_id.value">
+                                <div t-if="record.displayed_image_id.value" groups="base.group_user">
                                     <field name="displayed_image_id" widget="attachment_image"/>
                                 </div>
                             </div>
