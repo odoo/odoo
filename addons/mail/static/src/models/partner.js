@@ -444,9 +444,6 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        rtcSessions: many('RtcSession', {
-            inverse: 'partner',
-        }),
         suggestable: one('ComposerSuggestable', {
             default: insertAndReplace(),
             inverse: 'partner',
