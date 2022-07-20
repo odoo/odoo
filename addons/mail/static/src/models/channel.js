@@ -140,6 +140,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsDescriptionEditableByCurrentUser() {
+            if (!this.messaging.currentUser || !this.messaging.currentUser.isInternalUser) {
+                return false;
+            }
+            return this.isDescriptionEditable;
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeThread() {
@@ -253,6 +263,9 @@ registerModel({
         }),
         isDescriptionEditable: attr({
             compute: '_computeIsDescriptionEditable',
+        }),
+        isDescriptionEditableByCurrentUser: attr({
+            compute: '_computeIsDescriptionEditableByCurrentUser',
         }),
         /**
          * States the number of members in this channel according to the server.

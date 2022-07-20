@@ -103,7 +103,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickTopbarThreadDescription(ev) {
-            if (!this.thread || !this.thread.isDescriptionEditableByCurrentUser) {
+            if (!this.thread || !this.thread.channel || !this.thread.channel.isDescriptionEditableByCurrentUser) {
                 return;
             }
             const selection = window.getSelection();
@@ -419,17 +419,17 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasDescriptionArea() {
-            return Boolean(this.thread && this.thread.channel && (this.thread.channel.description || this.thread.isDescriptionEditableByCurrentUser));
+            if (!this.thread || !this.thread.channel) {
+                return clear();
+            }
+            return Boolean(this.thread.channel.description) || this.thread.channel.isDescriptionEditableByCurrentUser;
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsDescriptionHighlighted() {
-            return Boolean(
-                this.isMouseOverThreadDescription &&
-                this.thread.isDescriptionEditableByCurrentUser
-            );
+            return this.isMouseOverThreadDescription && this.thread.channel.isDescriptionEditableByCurrentUser;
         },
         /**
          * @private
@@ -591,6 +591,7 @@ registerModel({
          */
         hasDescriptionArea: attr({
             compute: '_computeHasDescriptionArea',
+            default: false,
         }),
         /**
          * Determines whether the guest is currently being renamed.
