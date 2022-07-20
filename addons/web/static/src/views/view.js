@@ -85,6 +85,7 @@ export function getDefaultConfig() {
  *
  *  @property {boolean} [activateFavorite]
  *  @property {Object[]} [dynamicFilters]
+ *  @property {boolean} [hideCustomGroupBy]
  *  @property {string[]} [searchMenuTypes]
  *  @property {Object} [globalState]
  */
@@ -123,6 +124,7 @@ const STANDARD_PROPS = [
 
     "activateFavorite",
     "dynamicFilters",
+    "hideCustomGroupBy",
     "searchMenuTypes",
 
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)
@@ -321,6 +323,7 @@ export class View extends Component {
         this.componentProps = finalProps;
         this.withSearchProps = {
             ...toRaw(props),
+            hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
             searchMenuTypes,
             SearchModel: descr.SearchModel,
         };

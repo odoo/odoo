@@ -86,5 +86,6 @@ WithSearch.props = {
     // extra options
     activateFavorite: { type: Boolean, optional: true },
     dynamicFilters: { type: Array, element: Object, optional: true },
+    hideCustomGroupBy: { type: Boolean, optional: true },
     searchMenuTypes: { type: Array, element: String, optional: true },
 };
