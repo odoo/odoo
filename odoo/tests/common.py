@@ -916,11 +916,15 @@ class ChromeBrowser:
         self._responses = {}
         # maps frame ids to callbacks
         self._frames = {}
+        self._requests = {}
         self._handlers = {
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
             'Page.screencastFrame': self._handle_screencast_frame,
+            'Network.requestWilBeSent': lambda requestId, request, **_: self._handlers.__setitem__(requestId, request),
+            'Network.responseReceived': lambda requestId, **_: self._handlers.pop(requestId, None),
+            'Network.loadingFailed': lambda requestId, **_: self._handlers.pop(requestId, None),
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -932,6 +936,8 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        self._logger.info("Chrome headless enable network notifications")
+        self._websocket_send('Network.enable')
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
@@ -1240,7 +1246,20 @@ class ChromeBrowser:
                     message, self._result
                 )
         elif 'test successful' in message:
-            self._result.set_result(True)
+            self._websocket_send('Network.setBlockedURLs', params={
+                'urls': ['*']
+            })
+
+            reqs = self._requests.copy()
+            if reqs:
+                self._result.set_exception(ChromeBrowserException(
+                    "Test finished with in-flight requests:\n%s" % '\n'.join(map(
+                        "- {method} {url}".format_map,
+                        reqs.values()
+                    ))
+                ))
+            else:
+                self._result.set_result(True)
 
     def _handle_exception(self, exceptionDetails, timestamp):
         message = exceptionDetails['text']
@@ -1439,6 +1458,7 @@ class ChromeBrowser:
         self._websocket_request('Network.clearBrowserCache')
         self._websocket_request('Network.clearBrowserCookies')
         self._websocket_request('Runtime.evaluate', params={'expression': 'try {localStorage.clear(); sessionStorage.clear();} catch(e) {}'})
+        self._websocket_request('Network.setBlockedURLs', params={'urls': []})
         self.navigate_to('about:blank', wait_stop=True)
         # hopefully after navigating to about:blank there's no event left
         self._frames.clear()
@@ -1446,6 +1466,7 @@ class ChromeBrowser:
         wait(self._responses.values())
         self._responses.clear()
         self._result.cancel()
+        self._requests.clear()
         self._result = Future()
 
     def _from_remoteobject(self, arg):
