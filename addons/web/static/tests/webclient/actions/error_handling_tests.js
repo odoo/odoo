@@ -34,7 +34,7 @@ QUnit.module("ActionManager", (hooks) => {
         try {
             await doAction(webClient, "Boom");
         } catch (e) {
-            assert.ok(e instanceof TypeError);
+            assert.ok(e.cause instanceof TypeError);
         }
         assert.strictEqual(target.querySelector(".o_action_manager").innerHTML, contents);
     });

@@ -80,6 +80,68 @@
         return new VToggler(key, child);
     }
 
+    // Custom error class that wraps error that happen in the owl lifecycle
+    class OwlError extends Error {
+    }
+    // Maps fibers to thrown errors
+    const fibersInError = new WeakMap();
+    const nodeErrorHandlers = new WeakMap();
+    function _handleError(node, error) {
+        if (!node) {
+            return false;
+        }
+        const fiber = node.fiber;
+        if (fiber) {
+            fibersInError.set(fiber, error);
+        }
+        const errorHandlers = nodeErrorHandlers.get(node);
+        if (errorHandlers) {
+            let handled = false;
+            // execute in the opposite order
+            for (let i = errorHandlers.length - 1; i >= 0; i--) {
+                try {
+                    errorHandlers[i](error);
+                    handled = true;
+                    break;
+                }
+                catch (e) {
+                    error = e;
+                }
+            }
+            if (handled) {
+                return true;
+            }
+        }
+        return _handleError(node.parent, error);
+    }
+    function handleError(params) {
+        let { error } = params;
+        // Wrap error if it wasn't wrapped by wrapError (ie when not in dev mode)
+        if (!(error instanceof OwlError)) {
+            error = Object.assign(new OwlError(`An error occured in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
+        }
+        const node = "node" in params ? params.node : params.fiber.node;
+        const fiber = "fiber" in params ? params.fiber : node.fiber;
+        // resets the fibers on components if possible. This is important so that
+        // new renderings can be properly included in the initial one, if any.
+        let current = fiber;
+        do {
+            current.node.fiber = current;
+            current = current.parent;
+        } while (current);
+        fibersInError.set(fiber.root, error);
+        const handled = _handleError(node, error);
+        if (!handled) {
+            console.warn(`[Owl] Unhandled error. Destroying the root component`);
+            try {
+                node.app.destroy();
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
     const { setAttribute: elemSetAttribute, removeAttribute } = Element.prototype;
     const tokenList = DOMTokenList.prototype;
     const tokenListAdd = tokenList.add;
@@ -701,7 +763,7 @@
                 };
             }
         }
-        throw new Error("boom");
+        throw new OwlError("boom");
     }
     function addRef(tree) {
         tree.isRef = true;
@@ -1385,61 +1447,6 @@
         vnode.remove();
     }
 
-    // Maps fibers to thrown errors
-    const fibersInError = new WeakMap();
-    const nodeErrorHandlers = new WeakMap();
-    function _handleError(node, error) {
-        if (!node) {
-            return false;
-        }
-        const fiber = node.fiber;
-        if (fiber) {
-            fibersInError.set(fiber, error);
-        }
-        const errorHandlers = nodeErrorHandlers.get(node);
-        if (errorHandlers) {
-            let handled = false;
-            // execute in the opposite order
-            for (let i = errorHandlers.length - 1; i >= 0; i--) {
-                try {
-                    errorHandlers[i](error);
-                    handled = true;
-                    break;
-                }
-                catch (e) {
-                    error = e;
-                }
-            }
-            if (handled) {
-                return true;
-            }
-        }
-        return _handleError(node.parent, error);
-    }
-    function handleError(params) {
-        const error = params.error;
-        const node = "node" in params ? params.node : params.fiber.node;
-        const fiber = "fiber" in params ? params.fiber : node.fiber;
-        // resets the fibers on components if possible. This is important so that
-        // new renderings can be properly included in the initial one, if any.
-        let current = fiber;
-        do {
-            current.node.fiber = current;
-            current = current.parent;
-        } while (current);
-        fibersInError.set(fiber.root, error);
-        const handled = _handleError(node, error);
-        if (!handled) {
-            console.warn(`[Owl] Unhandled error. Destroying the root component`);
-            try {
-                node.app.destroy();
-            }
-            catch (e) {
-                console.error(e);
-            }
-        }
-    }
-
     function makeChildFiber(node, parent) {
         let current = node.fiber;
         if (current) {
@@ -1478,7 +1485,7 @@
         return fiber;
     }
     function throwOnRender() {
-        throw new Error("Attempted to render cancelled fiber");
+        throw new OwlError("Attempted to render cancelled fiber");
     }
     /**
      * @returns number of not-yet rendered fibers cancelled
@@ -1855,7 +1862,7 @@
      */
     function reactive(target, callback = () => { }) {
         if (!canBeMadeReactive(target)) {
-            throw new Error(`Cannot make the given value reactive`);
+            throw new OwlError(`Cannot make the given value reactive`);
         }
         if (SKIP in target) {
             return target;
@@ -2124,10 +2131,10 @@
     }
     function validateTarget(target) {
         if (!(target instanceof HTMLElement)) {
-            throw new Error("Cannot mount component: the target is not a valid DOM element");
+            throw new OwlError("Cannot mount component: the target is not a valid DOM element");
         }
         if (!document.body.contains(target)) {
-            throw new Error("Cannot mount a component on a detached dom node");
+            throw new OwlError("Cannot mount a component on a detached dom node");
         }
     }
     class EventBus extends EventTarget {
@@ -2148,7 +2155,7 @@
     async function loadFile(url) {
         const result = await fetch(url);
         if (!result.ok) {
-            throw new Error("Error while fetching xml templates");
+            throw new OwlError("Error while fetching xml templates");
         }
         return await result.text();
     }
@@ -2170,7 +2177,7 @@
     let currentNode = null;
     function getCurrent() {
         if (!currentNode) {
-            throw new Error("No active component (a hook function should only be called in 'setup')");
+            throw new OwlError("No active component (a hook function should only be called in 'setup')");
         }
         return currentNode;
     }
@@ -2232,7 +2239,6 @@
             this.parent = parent;
             this.props = props;
             this.parentKey = parentKey;
-            this.level = parent ? parent.level + 1 : 0;
             const defaultProps = C.defaultProps;
             props = Object.assign({}, props);
             if (defaultProps) {
@@ -2465,17 +2471,27 @@
 
     const TIMEOUT = Symbol("timeout");
     function wrapError(fn, hookName) {
-        const error = new Error(`The following error occurred in ${hookName}: `);
-        const timeoutError = new Error(`${hookName}'s promise hasn't resolved after 3 seconds`);
+        const error = new OwlError(`The following error occurred in ${hookName}: `);
+        const timeoutError = new OwlError(`${hookName}'s promise hasn't resolved after 3 seconds`);
         const node = getCurrent();
         return (...args) => {
+            const onError = (cause) => {
+                error.cause = cause;
+                if (cause instanceof Error) {
+                    error.message += `"${cause.message}"`;
+                }
+                else {
+                    error.message = `Something that is not an Error was thrown in ${hookName} (see this Error's "cause" property)`;
+                }
+                throw error;
+            };
             try {
                 const result = fn(...args);
                 if (result instanceof Promise) {
                     if (hookName === "onWillStart" || hookName === "onWillUpdateProps") {
                         const fiber = node.fiber;
                         Promise.race([
-                            result,
+                            result.catch(() => { }),
                             new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
                         ]).then((res) => {
                             if (res === TIMEOUT && node.fiber === fiber) {
@@ -2483,21 +2499,12 @@
                             }
                         });
                     }
-                    return result.catch((cause) => {
-                        error.cause = cause;
-                        if (cause instanceof Error) {
-                            error.message += `"${cause.message}"`;
-                        }
-                        throw error;
-                    });
+                    return result.catch(onError);
                 }
                 return result;
             }
             catch (cause) {
-                if (cause instanceof Error) {
-                    error.message += `"${cause.message}"`;
-                }
-                throw error;
+                onError(cause);
             }
         };
     }
@@ -2601,7 +2608,7 @@
                 }
                 this.target = el && el.querySelector(this.selector);
                 if (!this.target) {
-                    throw new Error("invalid portal target");
+                    throw new OwlError("invalid portal target");
                 }
             }
             this.realBDom.mount(this.target, null);
@@ -2695,7 +2702,7 @@
     function validate(obj, spec) {
         let errors = validateSchema(obj, spec);
         if (errors.length) {
-            throw new Error("Invalid object: " + errors.join(", "));
+            throw new OwlError("Invalid object: " + errors.join(", "));
         }
     }
     /**
@@ -2848,7 +2855,7 @@
             keys = Object.values(collection);
         }
         else {
-            throw new Error("Invalid loop expression");
+            throw new OwlError("Invalid loop expression");
         }
         const n = values.length;
         return [keys, values, n, new Array(n)];
@@ -2954,7 +2961,7 @@
             if (el) {
                 count++;
                 if (count > 1) {
-                    throw new Error("Cannot have 2 elements with same ref name at the same time");
+                    throw new OwlError("Cannot have 2 elements with same ref name at the same time");
                 }
             }
             if (count === 0 || el) {
@@ -2991,13 +2998,13 @@
                 : name in schema && !("*" in schema) && !isOptional(schema[name]);
             for (let p in defaultProps) {
                 if (isMandatory(p)) {
-                    throw new Error(`A default value cannot be defined for a mandatory prop (name: '${p}', component: ${ComponentClass.name})`);
+                    throw new OwlError(`A default value cannot be defined for a mandatory prop (name: '${p}', component: ${ComponentClass.name})`);
                 }
             }
         }
         const errors = validateSchema(props, schema);
         if (errors.length) {
-            throw new Error(`Invalid props for component '${ComponentClass.name}': ` + errors.join(", "));
+            throw new OwlError(`Invalid props for component '${ComponentClass.name}': ` + errors.join(", "));
         }
     }
     const helpers = {
@@ -3018,6 +3025,7 @@
         bind,
         createCatcher,
         markRaw,
+        OwlError,
     };
 
     const bdom = { text, createBlock, list, multi, html, toggler, comment };
@@ -3045,7 +3053,7 @@
                     }
                 }
             }
-            throw new Error(msg);
+            throw new OwlError(msg);
         }
         return doc;
     }
@@ -3076,7 +3084,7 @@
                 if (currentAsString === newAsString) {
                     return;
                 }
-                throw new Error(`Template ${name} already defined with different content`);
+                throw new OwlError(`Template ${name} already defined with different content`);
             }
             this.rawTemplates[name] = template;
         }
@@ -3101,7 +3109,7 @@
                         extraInfo = ` (for component "${componentName}")`;
                     }
                     catch { }
-                    throw new Error(`Missing template: "${name}"${extraInfo}`);
+                    throw new OwlError(`Missing template: "${name}"${extraInfo}`);
                 }
                 const isFn = typeof rawTemplate === "function" && !(rawTemplate instanceof Element);
                 const templateFn = isFn ? rawTemplate : this._compileTemplate(name, rawTemplate);
@@ -3117,7 +3125,7 @@
             return this.templates[name];
         }
         _compileTemplate(name, template) {
-            throw new Error(`Unable to compile a template. Please use owl full build instead`);
+            throw new OwlError(`Unable to compile a template. Please use owl full build instead`);
         }
         callTemplate(owner, subTemplate, ctx, parent, key) {
             const template = this.getTemplate(subTemplate);
@@ -3199,14 +3207,14 @@
                 i++;
                 cur = expr[i];
                 if (!cur) {
-                    throw new Error("Invalid expression");
+                    throw new OwlError("Invalid expression");
                 }
                 s += cur;
             }
             i++;
         }
         if (expr[i] !== start) {
-            throw new Error("Invalid expression");
+            throw new OwlError("Invalid expression");
         }
         s += start;
         if (start === "`") {
@@ -3313,7 +3321,7 @@
             error = e; // Silence all errors and throw a generic error below
         }
         if (current.length || error) {
-            throw new Error(`Tokenizer error: could not tokenize \`${expr}\``);
+            throw new OwlError(`Tokenizer error: could not tokenize \`${expr}\``);
         }
         return result;
     }
@@ -3864,7 +3872,7 @@
                 .slice(1)
                 .map((m) => {
                 if (!MODS.has(m)) {
-                    throw new Error(`Unknown event modifier: '${m}'`);
+                    throw new OwlError(`Unknown event modifier: '${m}'`);
                 }
                 return `"${m}"`;
             });
@@ -4185,7 +4193,8 @@
             this.define(`key${this.target.loopLevel}`, ast.key ? compileExpr(ast.key) : loopVar);
             if (this.dev) {
                 // Throw error on duplicate keys in dev mode
-                this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new Error(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
+                this.helpers.add("OwlError");
+                this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new OwlError(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
                 this.addLine(`keys${block.id}.add(key${this.target.loopLevel});`);
             }
             let id;
@@ -4399,7 +4408,7 @@
                     value = `bind(ctx, ${value || undefined})`;
                 }
                 else {
-                    throw new Error("Invalid prop suffix");
+                    throw new OwlError("Invalid prop suffix");
                 }
             }
             name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
@@ -4593,9 +4602,6 @@
     }
 
     // -----------------------------------------------------------------------------
-    // AST Type definition
-    // -----------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------
     // Parser
     // -----------------------------------------------------------------------------
     const cache = new WeakMap();
@@ -4703,7 +4709,7 @@
             return null;
         }
         if (tagName.startsWith("block-")) {
-            throw new Error(`Invalid tag name: '${tagName}'`);
+            throw new OwlError(`Invalid tag name: '${tagName}'`);
         }
         ctx = Object.assign({}, ctx);
         if (tagName === "pre") {
@@ -4722,14 +4728,14 @@
             const value = node.getAttribute(attr);
             if (attr.startsWith("t-on")) {
                 if (attr === "t-on") {
-                    throw new Error("Missing event name with t-on directive");
+                    throw new OwlError("Missing event name with t-on directive");
                 }
                 on = on || {};
                 on[attr.slice(5)] = value;
             }
             else if (attr.startsWith("t-model")) {
                 if (!["input", "select", "textarea"].includes(tagName)) {
-                    throw new Error("The t-model directive only works with <input>, <textarea> and <select>");
+                    throw new OwlError("The t-model directive only works with <input>, <textarea> and <select>");
                 }
                 let baseExpr, expr;
                 if (hasDotAtTheEnd.test(value)) {
@@ -4743,7 +4749,7 @@
                     expr = value.slice(index + 1, -1);
                 }
                 else {
-                    throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+                    throw new OwlError(`Invalid t-model expression: "${value}" (it should be assignable)`);
                 }
                 const typeAttr = node.getAttribute("type");
                 const isInput = tagName === "input";
@@ -4773,11 +4779,11 @@
                 }
             }
             else if (attr.startsWith("block-")) {
-                throw new Error(`Invalid attribute: '${attr}'`);
+                throw new OwlError(`Invalid attribute: '${attr}'`);
             }
             else if (attr !== "t-name") {
                 if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
-                    throw new Error(`Unknown QWeb directive: '${attr}'`);
+                    throw new OwlError(`Unknown QWeb directive: '${attr}'`);
                 }
                 const tModel = ctx.tModelInfo;
                 if (tModel && ["t-att-value", "t-attf-value"].includes(attr)) {
@@ -4828,7 +4834,7 @@
             };
         }
         if (ast.type === 11 /* TComponent */) {
-            throw new Error("t-esc is not supported on Component nodes");
+            throw new OwlError("t-esc is not supported on Component nodes");
         }
         return tesc;
     }
@@ -4876,7 +4882,7 @@
         node.removeAttribute("t-as");
         const key = node.getAttribute("t-key");
         if (!key) {
-            throw new Error(`"Directive t-foreach should always be used with a t-key!" (expression: t-foreach="${collection}" t-as="${elem}")`);
+            throw new OwlError(`"Directive t-foreach should always be used with a t-key!" (expression: t-foreach="${collection}" t-as="${elem}")`);
         }
         node.removeAttribute("t-key");
         const memo = node.getAttribute("t-memo") || "";
@@ -5036,7 +5042,7 @@
         const firstLetter = name[0];
         let isDynamic = node.hasAttribute("t-component");
         if (isDynamic && name !== "t") {
-            throw new Error(`Directive 't-component' can only be used on <t> nodes (used on a <${name}>)`);
+            throw new OwlError(`Directive 't-component' can only be used on <t> nodes (used on a <${name}>)`);
         }
         if (!(firstLetter === firstLetter.toUpperCase() || isDynamic)) {
             return null;
@@ -5060,7 +5066,7 @@
                 }
                 else {
                     const message = directiveErrorMap.get(name.split("-").slice(0, 2).join("-"));
-                    throw new Error(message || `unsupported directive on Component: ${name}`);
+                    throw new OwlError(message || `unsupported directive on Component: ${name}`);
                 }
             }
             else {
@@ -5075,7 +5081,7 @@
             const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
             for (let slotNode of slotNodes) {
                 if (slotNode.tagName !== "t") {
-                    throw new Error(`Directive 't-set-slot' can only be used on <t> nodes (used on a <${slotNode.tagName}>)`);
+                    throw new OwlError(`Directive 't-set-slot' can only be used on <t> nodes (used on a <${slotNode.tagName}>)`);
                 }
                 const name = slotNode.getAttribute("t-set-slot");
                 // check if this is defined in a sub component (in which case it should
@@ -5240,25 +5246,25 @@
             let nattr = (name) => +!!node.getAttribute(name);
             if (prevElem && (pattr("t-if") || pattr("t-elif"))) {
                 if (pattr("t-foreach")) {
-                    throw new Error("t-if cannot stay at the same level as t-foreach when using t-elif or t-else");
+                    throw new OwlError("t-if cannot stay at the same level as t-foreach when using t-elif or t-else");
                 }
                 if (["t-if", "t-elif", "t-else"].map(nattr).reduce(function (a, b) {
                     return a + b;
                 }) > 1) {
-                    throw new Error("Only one conditional branching directive is allowed per node");
+                    throw new OwlError("Only one conditional branching directive is allowed per node");
                 }
                 // All text (with only spaces) and comment nodes (nodeType 8) between
                 // branch nodes are removed
                 let textNode;
                 while ((textNode = node.previousSibling) !== prevElem) {
                     if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
-                        throw new Error("text is not allowed between branching directives");
+                        throw new OwlError("text is not allowed between branching directives");
                     }
                     textNode.remove();
                 }
             }
             else {
-                throw new Error("t-elif and t-else directives must be preceded by a t-if or t-elif directive");
+                throw new OwlError("t-elif and t-else directives must be preceded by a t-if or t-elif directive");
             }
         }
     }
@@ -5274,7 +5280,7 @@
         const elements = [...el.querySelectorAll("[t-esc]")].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
         for (const el of elements) {
             if (el.childNodes.length) {
-                throw new Error("Cannot have t-esc on a component that already has content");
+                throw new OwlError("Cannot have t-esc on a component that already has content");
             }
             const value = el.getAttribute("t-esc");
             el.removeAttribute("t-esc");
@@ -5326,7 +5332,7 @@
                     }
                 }
             }
-            throw new Error(msg);
+            throw new OwlError(msg);
         }
         return doc;
     }
@@ -5380,7 +5386,7 @@
         if (Object.hasOwnProperty.call(data, 0)) {
             const handler = data[0];
             if (typeof handler !== "function") {
-                throw new Error(`Invalid handler (expected a function, received: '${handler}')`);
+                throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
             }
             let node = data[1] ? data[1].__owl__ : null;
             if (node ? node.status === 1 /* MOUNTED */ : true) {
@@ -5564,10 +5570,10 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                     if (isStatic) {
                         C = parent.constructor.components[name];
                         if (!C) {
-                            throw new Error(`Cannot find the definition of component "${name}"`);
+                            throw new OwlError(`Cannot find the definition of component "${name}"`);
                         }
                         else if (!(C.prototype instanceof Component)) {
-                            throw new Error(`"${name}" is not a Component. It must inherit from the Component class`);
+                            throw new OwlError(`"${name}" is not a Component. It must inherit from the Component class`);
                         }
                     }
                     node = new ComponentNode(C, props, this, ctx, key);
@@ -5726,6 +5732,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.App = App;
     exports.Component = Component;
     exports.EventBus = EventBus;
+    exports.OwlError = OwlError;
     exports.__info__ = __info__;
     exports.blockDom = blockDom;
     exports.loadFile = loadFile;
@@ -5760,9 +5767,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-14';
-    __info__.date = '2022-07-08T14:18:04.914Z';
-    __info__.hash = 'd111845';
+    __info__.version = '2.0.0-beta-16';
+    __info__.date = '2022-07-22T07:45:33.825Z';
+    __info__.hash = 'b90aa0e';
     __info__.url = 'https://github.com/odoo/owl';
 
 
