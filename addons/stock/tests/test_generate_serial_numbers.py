@@ -36,6 +36,7 @@ class StockGenerate(TransactionCase):
 
     def get_new_move(self, nbre_of_lines):
         move_lines_val = []
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.location, nbre_of_lines)
         for i in range(nbre_of_lines):
             move_lines_val.append({
                 'product_id': self.product_serial.id,
