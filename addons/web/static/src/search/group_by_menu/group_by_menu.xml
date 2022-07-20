@@ -43,7 +43,7 @@
                 </t>
                 <t t-set="currentGroup" t-value="item.groupNumber"/>
             </t>
-            <t t-if="fields.length">
+            <t t-if="!hideCustomGroupBy and fields.length">
                 <div t-if="items.length" role="separator" class="dropdown-divider"/>
                 <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroup"/>
             </t>

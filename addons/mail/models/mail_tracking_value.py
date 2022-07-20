@@ -12,7 +12,7 @@ class MailTracking(models.Model):
     _rec_name = 'field'
     _order = 'tracking_sequence asc'
 
-    field = fields.Many2one('ir.model.fields', required=True, readonly=1, ondelete='cascade')
+    field = fields.Many2one('ir.model.fields', required=True, readonly=1, index=True, ondelete='cascade')
     field_desc = fields.Char('Field Description', required=True, readonly=1)
     field_type = fields.Char('Field Type')
     field_groups = fields.Char(compute='_compute_field_groups')

@@ -95,10 +95,7 @@ export class ControlPanel extends Component {
 }
 
 ControlPanel.components = {
-    ComparisonMenu,
-    FavoriteMenu,
-    FilterMenu,
-    GroupByMenu,
+    ...Object.values(MAPPING),
     Pager,
     SearchBar,
 };

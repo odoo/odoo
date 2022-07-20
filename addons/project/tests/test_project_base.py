@@ -3,6 +3,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
+
 class TestProjectCommon(TransactionCase):
 
     @classmethod
@@ -93,6 +94,9 @@ class TestProjectCommon(TransactionCase):
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+
+class TestProjectBase(TestProjectCommon):
 
     def test_delete_project_with_tasks(self):
         """User should never be able to delete a project with tasks"""
