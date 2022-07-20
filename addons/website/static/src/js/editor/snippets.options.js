@@ -1261,7 +1261,7 @@ options.registry.OptionsTab = options.Class.extend({
      */
     async _computeWidgetState(methodName, params) {
         if (methodName === 'customizeBodyBgType') {
-            const bgImage = $('#wrapwrap').css('background-image');
+            const bgImage = getComputedStyle(this.ownerDocument.querySelector('#wrapwrap'))['background-image'];
             if (bgImage === 'none') {
                 return "NONE";
             }
