@@ -161,6 +161,7 @@ class PosGlobalState extends PosModel {
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
+<<<<<<< HEAD
     }
 
     async load_server_data(){
@@ -168,6 +169,73 @@ class PosGlobalState extends PosModel {
             model: 'pos.session',
             method: 'load_pos_data',
             args: [[odoo.pos_session_id]],
+=======
+
+        if(this.config.limited_products_loading) {
+            await this.loadLimitedProducts();
+            if(this.config.product_load_background)
+                this.loadProductsBackground();
+        }
+        if(this.config.partner_load_background )
+            this.loadPartnersBackground();
+
+        if(this.config.use_proxy){
+            if (this.config.iface_customer_facing_display) {
+                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+            }
+
+            return this.connect_to_proxy();
+        }
+
+        return Promise.resolve();
+    },
+    // releases ressources holds by the model at the end of life of the posmodel
+    destroy: function(){
+        // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
+        // this.flush();
+        this.proxy.disconnect();
+        this.barcode_reader.disconnect_from_proxy();
+    },
+
+    connect_to_proxy: function () {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.barcode_reader.disconnect_from_proxy();
+            self.setLoadingMessage(_t('Connecting to the IoT Box'), 0);
+            self.showLoadingSkip(function () {
+                self.proxy.stop_searching();
+            });
+            self.proxy.autoconnect({
+                force_ip: self.config.proxy_ip || undefined,
+                progress: function(prog){
+                    self.setLoadingProgress(prog);
+                },
+            }).then(
+                function () {
+                    if (self.config.iface_scan_via_proxy) {
+                        self.barcode_reader.connect_to_proxy();
+                    }
+                    resolve();
+                },
+                function (statusText, url) {
+                    // this should reject so that it can be captured when we wait for pos.ready
+                    // in the chrome component.
+                    // then, if it got really rejected, we can show the error.
+                    if (statusText == 'error' && window.location.protocol == 'https:') {
+                        reject({
+                            title: _t('HTTPS connection to IoT Box failed'),
+                            body: _.str.sprintf(
+                              _t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
+                              url
+                            ),
+                            popup: 'alert',
+                        });
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+>>>>>>> 27c54d60e9c... temp
         });
         await this._processData(loadedData);
         return this.after_load_server_data();
