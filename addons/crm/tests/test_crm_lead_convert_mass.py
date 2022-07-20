@@ -5,7 +5,7 @@ from odoo.addons.crm.tests import common as crm_common
 from odoo.tests.common import tagged, users
 
 
-@tagged('lead_manage', 'crm_performance')
+@tagged('lead_manage', 'crm_performance', 'post_install', '-at_install')
 class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
     @classmethod
@@ -18,13 +18,14 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
     @users('user_sales_manager')
     def test_assignment_salesmen(self):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
+        test_leads.flush()
         user_ids = self.assign_users.ids
         self.assertEqual(test_leads.user_id, self.env['res.users'])
 
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=254):  # often 251, sometimes +3 on runbot
+        with self.assertQueryCount(user_sales_manager=709):  # crm 659 / com 658 / ent 709
             test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=False)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
@@ -35,6 +36,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
     @users('user_sales_manager')
     def test_assignment_salesmen_wteam(self):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
+        test_leads.flush()
         user_ids = self.assign_users.ids
         team_id = self.sales_team_convert.id
         self.assertEqual(test_leads.user_id, self.env['res.users'])
@@ -42,7 +44,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=221):  # crm only: 215 - generally 218, sometimes +2/+3 on runbot
+        with self.assertQueryCount(user_sales_manager=639):  # crm 638 / com 638 / ent 639
             test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
@@ -164,9 +166,11 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
     @users('user_sales_manager')
     def test_mass_convert_performances(self):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
+        test_leads.flush()
         user_ids = self.assign_users.ids
 
-        with self.assertQueryCount(user_sales_manager=1361):  # still some randomness (1360 spotted) - crm only: 1352
+        # non deterministic (+1)
+        with self.assertQueryCount(user_sales_manager=2014):  # crm: 1724 / com 2006 / ent 2013
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
