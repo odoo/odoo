@@ -90,7 +90,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         const last_step = steps[steps.length - 1];
-        if (!(last_step.run === 'check' || /\{\s*\}$/.test(last_step.run))) {
+        if (!(last_step.run === 'check' || /null|\{\s*\}$/.test(last_step.run))) {
             const step_json = JSON.stringify(
                 last_step,
                 (k, v) => typeof v === 'function' ? v.toString() : v,
