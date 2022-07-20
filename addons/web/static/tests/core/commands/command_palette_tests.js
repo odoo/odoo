@@ -832,7 +832,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command1"]
@@ -840,7 +840,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(2) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command2"]
@@ -848,7 +848,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(3) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(3) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command3"]
@@ -865,7 +865,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command6", "Command7"]
@@ -873,7 +873,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(2) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command5"]
@@ -881,7 +881,7 @@ QUnit.test("multi provider with categories", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(3) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(3) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command4"]
@@ -943,7 +943,7 @@ QUnit.test("don't display by categories if there is a search value", async (asse
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Command1", "Command2", "Command3"]
@@ -1546,4 +1546,52 @@ QUnit.test("generate new session id when opened", async (assert) => {
     });
     await nextTick();
     assert.equal(lastSessionId, 1);
+});
+
+QUnit.test("checks that href is correctly used", async (assert) => {
+    await mount(TestComponent, target, { env });
+    const providers = [
+        {
+            namespace: "@",
+            provide: () => [
+                {
+                    name: "Command with link",
+                    action: () => {
+                        assert.step("command_with_link_clicked");
+                    },
+                    href: "https://www.odoo.com",
+                },
+                {
+                    name: "Command without link",
+                    action: () => {},
+                },
+            ],
+        },
+    ];
+    const config = {providers};
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+    patchWithCleanup(window, {
+        open: (href) => {
+            assert.step(href.toString());
+        }
+    });
+    await nextTick();
+    await editSearchBar("@");
+    const command = target.querySelector(".o_command_palette .o_command");
+    // Check that command has link inside it
+    assert.strictEqual(command.querySelector("a").getAttribute("href"), "https://www.odoo.com");
+    // Check that we get url when doing ctrl+enter on a command having a link inside it
+    triggerHotkey("control+enter");
+    await nextTick();
+    assert.verifySteps(["https://www.odoo.com"]);
+    // Check that command has no link inside it
+    const commandWithoutLink = target.querySelector(".o_command_palette .o_command:nth-child(2)");
+    assert.strictEqual(commandWithoutLink.querySelector("a").getAttribute("href"), null);
+    // Check that clicking on a command having a link inside it triggers the command action
+    // instead of redirecting to the href (last step because it closes the command palette).
+    await click(command);
+    await nextTick();
+    assert.verifySteps(["command_with_link_clicked"]);
 });
