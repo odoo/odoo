@@ -1241,6 +1241,7 @@ class ChromeBrowser:
             except CancelledError:
                 ...
             except InvalidStateError:
+                print(args, stackTrace, kw, flush=True)
                 self._logger.warning(
                     "Trying to set result to failed (%s) but found the future settled (%s)",
                     message, self._result
