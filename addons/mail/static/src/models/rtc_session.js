@@ -74,18 +74,18 @@ registerModel({
             if (this.isOwnSession) {
                 return;
             }
-            if (this.partner && this.partner.volumeSetting) {
-                this.partner.volumeSetting.update({ volume });
+            if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
+                this.channelMember.persona.partner.volumeSetting.update({ volume });
             }
-            if (this.guest && this.guest.volumeSetting) {
-                this.guest.volumeSetting.update({ volume });
+            if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
+                this.channelMember.persona.guest.volumeSetting.update({ volume });
             }
             if (this.messaging.isCurrentUserGuest) {
                 return;
             }
             this.messaging.userSetting.saveVolumeSetting({
-                partnerId: this.partner && this.partner.id,
-                guestId: this.guest && this.guest.id,
+                partnerId: this.channelMember.persona.partner && this.channelMember.persona.partner.id,
+                guestId: this.channelMember.persona.guest && this.channelMember.persona.guest.id,
                 volume,
             });
         },
@@ -164,21 +164,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeAvatarUrl() {
-            if (!this.channel) {
-                return;
-            }
-            if (this.partner) {
-                return `/mail/channel/${this.channel.id}/partner/${this.partner.id}/avatar_128`;
-            }
-            if (this.guest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.guest.id}/avatar_128?unique=${this.guest.name}`;
-            }
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeIsMute() {
@@ -189,11 +174,11 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsOwnSession() {
-            if (!this.messaging) {
+            if (!this.messaging || !this.channelMember) {
                 return;
             }
-            return (this.partner && this.messaging.currentPartner === this.partner) ||
-                (this.guest && this.messaging.currentGuest === this.guest);
+            return (this.channelMember.persona.partner && this.messaging.currentPartner === this.channelMember.persona.partner) ||
+                (this.channelMember.persona.guest && this.messaging.currentGuest === this.channelMember.persona.guest);
         },
         /**
          * Updates the track that is broadcasted to the remote of this session.
@@ -249,18 +234,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (this.partner) {
-                return this.partner.name;
-            }
-            if (this.guest) {
-                return this.guest.name;
-            }
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeRtcAsConnectedSession() {
@@ -284,10 +257,12 @@ registerModel({
          * @returns {number} float
          */
         _computeVolume() {
-            if (this.partner && this.partner.volumeSetting) {
-                return this.partner.volumeSetting.volume;
-            } else if (this.guest && this.guest.volumeSetting) {
-                return this.guest.volumeSetting.volume;
+            if (this.channelMember) {
+                if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
+                    return this.channelMember.persona.partner.volumeSetting.volume;
+                } else if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
+                    return this.channelMember.persona.guest.volumeSetting.volume;
+                }
             }
             if (this.audioElement) {
                 return this.audioElement.volume;
@@ -333,10 +308,10 @@ registerModel({
                 console.error(error);
             }
             audioElement.load();
-            if (this.partner && this.partner.volumeSetting) {
-                audioElement.volume = this.partner.volumeSetting.volume;
-            } else if (this.guest && this.guest.volumeSetting) {
-                audioElement.volume = this.guest.volumeSetting.volume;
+            if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
+                audioElement.volume = this.channelMember.persona.partner.volumeSetting.volume;
+            } else if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
+                audioElement.volume = this.channelMember.persona.guest.volumeSetting.volume;
             } else {
                 audioElement.volume = this.volume;
             }
@@ -379,12 +354,6 @@ registerModel({
          * MediaStream
          */
         audioStream: attr(),
-        /**
-         * The relative url of the image that represents the session.
-         */
-        avatarUrl: attr({
-            compute: '_computeAvatarUrl',
-        }),
         broadcastTimer: one('Timer', {
             inverse: 'rtcSessionOwnerAsBroadcast',
             isCausal: true,
@@ -396,6 +365,7 @@ registerModel({
         channel: one('Thread', {
             inverse: 'rtcSessions',
         }),
+        channelMember: one('ChannelMember'),
         connectionRecoveryTimeout: attr(),
         /**
          * State of the connection with this session, uses RTCPeerConnection.iceConnectionState
@@ -403,9 +373,6 @@ registerModel({
          */
         connectionState: attr({
             default: 'Waiting for the peer to send a RTC offer',
-        }),
-        guest: one('Guest', {
-            inverse: 'rtcSessions',
         }),
         /**
          * Id of the record on the server.
@@ -499,21 +466,6 @@ registerModel({
          * RTCIceCandidate.type String
          */
         localCandidateType: attr(),
-        /**
-         * Name of the session, based on the partner name if set.
-         */
-        name: attr({
-            compute: '_computeName',
-        }),
-        /**
-         * If set, the partner who owns this rtc session,
-         * there can be multiple rtc sessions per partner if the partner
-         * has open sessions in multiple channels, but only one session per
-         * channel is allowed.
-         */
-        partner: one('Partner', {
-            inverse: 'rtcSessions',
-        }),
         /**
          * Token to identify the session, it is currently just the toString
          * id of the record.

@@ -47,14 +47,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': channel_member.rtc_session_ids.id + 1,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         }])],
                     },
                 },
@@ -66,14 +73,21 @@ class TestChannelInternals(MailCommon):
             'rtcSessions': [
                 ('insert', [{
                     'id': channel_member.rtc_session_ids.id,
+                    'channelMember': [("insert-and-replace", {
+                        "id": channel_member.id,
+                        "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                        "persona": [("insert-and-replace", {
+                            "partner": [("insert-and-replace", {
+                                "id": channel_member.partner_id.id,
+                                "name": channel_member.partner_id.name,
+                                "im_status": channel_member.partner_id.im_status,
+                            })],
+                        })],
+                    })],
                     'isCameraOn': False,
                     'isDeaf': False,
                     'isSelfMuted': False,
                     'isScreenSharingOn': False,
-                    'partner': [('insert', {
-                        'id': self.user_employee.partner_id.id,
-                        'name': "Ernest Employee",
-                    })],
                 }]),
                 ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id - 1}]),
             ],
@@ -108,14 +122,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         }])],
                     },
                 },
@@ -184,14 +205,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         }])],
                     },
                 },
@@ -201,14 +229,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         }])],
                     },
                 },
@@ -319,14 +354,21 @@ class TestChannelInternals(MailCommon):
                         'rtcSessions': [('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 1,
+                                'channelMember': [("insert-and-replace", {
+                                    "id": channel_member_test_user.id,
+                                    "channel": [("insert-and-replace", {"id": channel_member_test_user.channel_id.id})],
+                                    "persona": [("insert-and-replace", {
+                                        "partner": [("insert-and-replace", {
+                                            "id": channel_member_test_user.partner_id.id,
+                                            "name": channel_member_test_user.partner_id.name,
+                                            "im_status": channel_member_test_user.partner_id.im_status,
+                                        })],
+                                    })],
+                                })],
                                 'isCameraOn': False,
                                 'isDeaf': False,
                                 'isSelfMuted': False,
                                 'isScreenSharingOn': False,
-                                'partner': [('insert', {
-                                    'id': test_user.partner_id.id,
-                                    'name': 'Test User',
-                                })],
                             },
                         ])],
                     },
@@ -374,14 +416,20 @@ class TestChannelInternals(MailCommon):
                         'rtcSessions': [('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 2,
+                                'channelMember': [("insert-and-replace", {
+                                    "id": channel_member_test_guest.id,
+                                    "channel": [("insert-and-replace", {"id": channel_member_test_guest.channel_id.id})],
+                                    "persona": [("insert-and-replace", {
+                                        "guest": [("insert-and-replace", {
+                                            "id": channel_member_test_guest.guest_id.id,
+                                            "name": channel_member_test_guest.guest_id.name,
+                                        })],
+                                    })],
+                                })],
                                 'isCameraOn': False,
                                 'isDeaf': False,
                                 'isSelfMuted': False,
                                 'isScreenSharingOn': False,
-                                'guest': [('insert', {
-                                    'id': test_guest.id,
-                                    'name': 'Test Guest',
-                                })],
                             },
                         ])],
                     },
@@ -591,14 +639,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         })],
                     },
                 },
@@ -608,14 +663,21 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
+                            'channelMember': [("insert-and-replace", {
+                                "id": channel_member.id,
+                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
+                                "persona": [("insert-and-replace", {
+                                    "partner": [("insert-and-replace", {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                    })],
+                                })],
+                            })],
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                            'partner': [('insert', {
-                                'id': self.user_employee.partner_id.id,
-                                'name': "Ernest Employee",
-                            })],
                         })],
                     },
                 },

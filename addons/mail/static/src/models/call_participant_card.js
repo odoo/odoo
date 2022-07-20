@@ -75,7 +75,7 @@ registerModel({
                 return;
             }
             if (this.rtcSession) {
-                return this.rtcSession.avatarUrl;
+                return this.rtcSession.channelMember.avatarUrl;
             }
             if (this.invitedMember) {
                 return this.invitedMember.avatarUrl;
@@ -136,7 +136,7 @@ registerModel({
          */
         _computeName() {
             if (this.rtcSession) {
-                return this.rtcSession.name;
+                return this.rtcSession.channelMember.persona.name;
             }
             if (this.invitedMember) {
                 return this.invitedMember.name;

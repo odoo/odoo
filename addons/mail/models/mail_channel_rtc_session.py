@@ -99,6 +99,7 @@ class MailRtcSession(models.Model):
         self.ensure_one()
         vals = {
             'id': self.id,
+            'channelMember': [('insert-and-replace', self.channel_member_id.mail_channel_member_format()[0])],
         }
         if complete_info:
             vals.update({
@@ -107,16 +108,6 @@ class MailRtcSession(models.Model):
                 'isSelfMuted': self.is_muted,
                 'isScreenSharingOn': self.is_screen_sharing_on,
             })
-        if self.guest_id:
-            vals['guest'] = [('insert', {
-                'id': self.guest_id.id,
-                'name': self.guest_id.name,
-            })]
-        else:
-            vals['partner'] = [('insert', {
-                'id': self.partner_id.id,
-                'name': self.partner_id.name,
-            })]
         return vals
 
     def _mail_rtc_session_format_by_channel(self):
