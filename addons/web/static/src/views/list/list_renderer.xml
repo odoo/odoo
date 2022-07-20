@@ -80,7 +80,7 @@
                                 value="field.value"
                                 name="field.name"
                             >
-                                <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                                <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
                             </CheckBox>
                         </DropdownItem>
                     </t>

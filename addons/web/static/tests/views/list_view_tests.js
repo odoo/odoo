@@ -846,7 +846,7 @@ QUnit.module("Views", (hooks) => {
         fieldRegistry.add("nolabel_char", NoLabelCharField);
 
         class LabelCharField extends CharField {}
-        LabelCharField.displayName = "Some static label";
+        LabelCharField.label = "Some static label";
         fieldRegistry.add("label_char", LabelCharField);
 
         await makeView({
@@ -855,10 +855,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <tree>
-                    <field name="display_name" widget="nolabel_char"/>
-                    <field name="foo" widget="label_char"/>
-                    <field name="int_field" string="My custom label"/>
-                    <field name="text"/>
+                    <field name="display_name" widget="nolabel_char" optional="show"/>
+                    <field name="foo" widget="label_char" optional="show"/>
+                    <field name="int_field" string="My custom label" optional="show"/>
+                    <field name="text" optional="show"/>
                 </tree>`,
         });
 
@@ -866,6 +866,17 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(columnLabels, [
             "",
             "",
+            "Some static label",
+            "My custom label",
+            "text field",
+        ]);
+
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        const optionalColumnLabels = [
+            ...target.querySelectorAll(".o_optional_columns_dropdown .dropdown-item"),
+        ].map((item) => item.textContent.trim());
+        assert.deepEqual(optionalColumnLabels, [
+            "Display Name",
             "Some static label",
             "My custom label",
             "text field",
