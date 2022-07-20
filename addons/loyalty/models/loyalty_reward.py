@@ -65,7 +65,7 @@ class LoyaltyReward(models.Model):
     reward_product_ids = fields.Many2many(
         'product.product', string="Reward Products", compute='_compute_multi_product',
         help="These are the products that can be claimed with this rule.")
-    reward_product_qty = fields.Integer(default=1)
+    reward_product_qty = fields.Integer(default=1, string="Reward product quantity")
     reward_product_uom_id = fields.Many2one('uom.uom', compute='_compute_reward_product_uom_id')
 
     required_points = fields.Float('Points needed', default=1)

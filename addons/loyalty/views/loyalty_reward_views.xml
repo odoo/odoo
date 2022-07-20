@@ -7,10 +7,10 @@
             <form>
                 <sheet>
                     <group>
-                        <group string="Reward" col="1">
-                            <group id="reward_type_group">
+                        <group id="reward_type_group" string="Reward" col="1">
+                            <group>
                                 <field name="reward_type" widget="radio"/>
-                            </group>
+                            </group>   
                             <group id="discount_group" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
                                 <label for="discount"/>
                                 <div class="o_row">
@@ -23,8 +23,11 @@
                                 <field name="multi_product" invisible="1"/>
                                 <label for="discount_applicability" string=""/>
                                 <field name="discount_applicability" nolabel="1" widget="radio"/>
-                            </group>                    
+                            </group>                             
+
                         </group>
+
+
 
                         <group string="Discount applied to" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
                             <field name="all_discount_product_ids" invisible="1"/>
@@ -76,11 +79,9 @@
                 <field name="discount"/>
                 <field name="discount_mode"/>
                 <field name="discount_applicability"/>
-
                 <field name="discount_product_domain"/>
                 <field name="discount_product_category_id"/>
                 <field name="discount_product_tag_id"/>
-
                 <field name="discount_max_amount"/>
                 <field name="discount_line_product_id"/>
                 <field name="reward_product_id"/>
@@ -94,11 +95,8 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click_edit mx-0">
-                            
-                            
                             <div class="o_loyalty_kanban_card_left">
                                 <t t-if="record.reward_type.raw_value === 'discount'">
-
                                     <t t-if="record.discount">
                                         <a><field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t></a>
                                         <br/>
@@ -110,8 +108,6 @@
                                     </div>
 
                                     <t t-if="record.discount_applicability.raw_value === 'specific'">
-
-
                                         <t t-if="record.discount_product_ids.raw_value.length > 0">
                                             <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags" class="d-inline"/><br/></div>
                                         </t>
@@ -138,7 +134,6 @@
                                         Order
                                         <br/>
                                     </t>
-
                                 </t>
 
                                 <t t-if="record.reward_type.raw_value === 'product'" t-attf-style="display: -webkit-box; -webkit-box-pack: center; -webkit-box-orient: vertical;">
