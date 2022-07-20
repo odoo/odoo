@@ -1344,7 +1344,6 @@ class DynamicList extends DataPoint {
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
-        this.loadedCount = state.loadedCount || 0;
         this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
@@ -1442,7 +1441,6 @@ class DynamicList extends DataPoint {
     exportState() {
         return {
             limit: this.limit,
-            loadedCount: this.records.length,
             orderBy: this.orderBy,
             previousParams: this.currentParams,
         };
@@ -1839,6 +1837,8 @@ export class DynamicRecordList extends DynamicList {
     async loadMore() {
         this.offset = this.records.length;
         const nextRecords = await this._loadRecords();
+        this.limit = this.limit + nextRecords.length;
+        this.offset = 0;
         for (const record of nextRecords) {
             this.addRecord(record);
         }
@@ -1905,13 +1905,6 @@ export class DynamicRecordList extends DynamicList {
             order: orderByToString(this.orderBy),
             count_limit: this.countLimit + 1,
         };
-        if (this.loadedCount > this.limit) {
-            // This condition means that we are reloading a list of records
-            // that has been manually extended: we need to load exactly the
-            // same amount of records.
-            options.limit = this.loadedCount;
-            options.offset = 0;
-        }
         const { records: rawRecords, length } =
             this.data ||
             (await this.model.orm.webSearchRead(
@@ -1969,6 +1962,7 @@ export class DynamicGroupList extends DynamicList {
         this.limitByGroup = this.limit;
         this.limit =
             params.groupsLimit ||
+            state.groupsLimit ||
             (this.expand ? this.constructor.DEFAULT_LOAD_LIMIT : this.constructor.DEFAULT_LIMIT);
         this.onCreateRecord =
             params.onCreateRecord ||
@@ -2093,6 +2087,7 @@ export class DynamicGroupList extends DynamicList {
         return {
             ...super.exportState(),
             groups: this.groups,
+            groupsLimit: this.limit,
         };
     }
 
@@ -2380,7 +2375,7 @@ export class Group extends DataPoint {
             resModel: params.resModel,
             activeFields: params.activeFields,
             fields: params.fields,
-            limit: params.limit,
+            limit: state.listState ? state.listState.limit : params.limit,
             groupByInfo: params.groupByInfo,
             onCreateRecord: params.onCreateRecord,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
@@ -3273,8 +3268,22 @@ export class RelationalModel extends Model {
                 return makeContext([rootParams.context], {});
             },
         };
-        const state = this.root ? this.root.exportState() : this.initialRootState;
-        const newRoot = this.createDataPoint(this.rootType, rootParams, state);
+        const loadParams = Object.assign({}, rootParams);
+        let state;
+        if (this.root) {
+            state = this.root.exportState();
+            if (this.rootType === "list" && !("limit" in params)) {
+                if (this.root instanceof DynamicRecordList) {
+                    delete loadParams.limit;
+                }
+                if ((params.groupBy || []).length) {
+                    loadParams.limit = state.limitByGroup;
+                }
+            }
+        } else {
+            state = this.initialRootState;
+        }
+        const newRoot = this.createDataPoint(this.rootType, loadParams, state);
         await this.keepLast.add(newRoot.load({ values: this.initialValues }));
         this.root = newRoot;
         this.rootParams = rootParams;

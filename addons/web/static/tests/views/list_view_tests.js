@@ -37,6 +37,7 @@ import {
 } from "../helpers/utils";
 import {
     editFavoriteName,
+    editPager,
     getButtons,
     getFacetTexts,
     getPagerLimit,
@@ -44,6 +45,7 @@ import {
     groupByMenu,
     pagerNext,
     pagerPrevious,
+    removeFacet,
     saveFavorite,
     toggleActionMenu,
     toggleFavoriteMenu,
@@ -14188,6 +14190,157 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_selected_row");
     });
+
+    QUnit.test("keep custom limit when changing search", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list limit="1"><field name="display_name" /></list>`,
+            serverData,
+            mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                }
+            },
+        });
+        assert.verifySteps(["web_search_read limit: 1"]);
+        await editPager(target, "1-2");
+        assert.verifySteps(["web_search_read limit: 2"]);
+        await validateSearch(target);
+        assert.verifySteps(["web_search_read limit: 2"]);
+    });
+
+    QUnit.test("keep multiple custom limits when changing search", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list limit="3"><field name="display_name" /></list>`,
+            serverData,
+            mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                }
+            },
+        });
+        assert.verifySteps(["web_search_read limit: 3"]);
+
+        await editPager(target, "1-2");
+        assert.verifySteps(["web_search_read limit: 2"]);
+
+        await validateSearch(target);
+        assert.verifySteps(["web_search_read limit: 2"]);
+
+        await editPager(target, "1-1");
+        assert.verifySteps(["web_search_read limit: 1"]);
+
+        await validateSearch(target);
+        assert.verifySteps(["web_search_read limit: 1"]);
+
+        // the limit will be 4 as there are max 4 records to fetch
+        await editPager(target, "1-5");
+        assert.verifySteps(["web_search_read limit: 4"]);
+
+        await validateSearch(target);
+        assert.verifySteps(["web_search_read limit: 4"]);
+    });
+
+    QUnit.test("keep custom limit when changing search (grouped list)", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list limit="1"><field name="display_name" /></list>`,
+            serverData,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "web_read_group") {
+                    assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                }
+                if (args.method === "web_search_read") {
+                    assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                }
+            },
+        });
+        assert.verifySteps(["web_read_group limit: 80"]);
+
+        await editPager(target, "1-2");
+        assert.verifySteps(["web_read_group limit: 2"]);
+
+        await validateSearch(target);
+        assert.verifySteps(["web_read_group limit: 2"]);
+
+        for (const el of target.querySelectorAll(".o_group_header")) {
+            await click(el);
+        }
+        assert.verifySteps(["web_search_read limit: 1", "web_search_read limit: 1"]);
+    });
+
+    QUnit.test(
+        "keep custom limit when changing search (ungrouped to grouped list)",
+        async (assert) => {
+            serverData.models.foo.fields.bar.sortable = true;
+            await makeView({
+                resModel: "foo",
+                type: "list",
+                arch: `<list limit="1"><field name="display_name" /></list>`,
+                serverData,
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                    }
+                    if (args.method === "web_search_read") {
+                        assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                    }
+                },
+            });
+            assert.verifySteps(["web_search_read limit: 1"]);
+
+            await editPager(target, "1-2");
+            assert.verifySteps(["web_search_read limit: 2"]);
+
+            await groupByMenu(target, "bar");
+            assert.verifySteps(["web_read_group limit: 80"]);
+
+            await validateSearch(target);
+            assert.verifySteps(["web_read_group limit: 80"]);
+
+            for (const el of target.querySelectorAll(".o_group_header")) {
+                await click(el);
+            }
+
+            assert.verifySteps(["web_search_read limit: 2", "web_search_read limit: 2"]);
+        }
+    );
+
+    QUnit.test(
+        "keep custom limit when changing search (ungrouped list to grouped to ungrouped list)",
+        async (assert) => {
+            serverData.models.foo.fields.bar.sortable = true;
+            await makeView({
+                resModel: "foo",
+                type: "list",
+                arch: `<list limit="1"><field name="display_name" /></list>`,
+                serverData,
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                    }
+                    if (args.method === "web_search_read") {
+                        assert.step(`${args.method} limit: ${args.kwargs.limit}`);
+                    }
+                },
+            });
+            assert.verifySteps(["web_search_read limit: 1"]);
+
+            await editPager(target, "1-2");
+            assert.verifySteps(["web_search_read limit: 2"]);
+
+            await groupByMenu(target, "bar");
+            assert.verifySteps(["web_read_group limit: 80"]);
+
+            await removeFacet(target);
+            assert.verifySteps(["web_search_read limit: 1"]);
+        }
+    );
 
     QUnit.test("renders banner_route", async (assert) => {
         await makeView({
