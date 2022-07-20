@@ -11130,4 +11130,23 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_kanban_view");
     });
+
+    QUnit.test("legacy one2many with no inlive view", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        serverData.views = {
+            "partner,false,list": `<tree><field name="foo"/></tree>`,
+        };
+        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" mode="tree" widget="legacy_one2many"/>
+                    </form>`,
+        });
+        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
+    });
 });

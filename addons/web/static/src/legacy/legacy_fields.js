@@ -341,6 +341,7 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.components = { FieldAdapter };
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
     LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
+    LegacyField.useSubView = LegacyFieldWidget.prototype.useSubview;
     if (!fieldRegistry.contains(name)) {
         fieldRegistry.add(name, LegacyField);
     }
