@@ -152,13 +152,7 @@ exports.PosModel = Backbone.Model.extend({
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
-        if(this.config.use_proxy){
-            if (this.config.iface_customer_facing_display) {
-                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
-            }
 
-            return this.connect_to_proxy();
-        }
         if(this.config.limited_products_loading) {
             await this.loadLimitedProducts();
             if(this.config.product_load_background)
@@ -166,6 +160,15 @@ exports.PosModel = Backbone.Model.extend({
         }
         if(this.config.partner_load_background )
             this.loadPartnersBackground();
+
+        if(this.config.use_proxy){
+            if (this.config.iface_customer_facing_display) {
+                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+            }
+
+            return this.connect_to_proxy();
+        }
+
         return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
