@@ -1001,7 +1001,8 @@ var SnippetEditor = Widget.extend({
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
-            var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
+            const { nearest } = this.$body[0].ownerDocument.defaultView.$;
+            let $el = nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
