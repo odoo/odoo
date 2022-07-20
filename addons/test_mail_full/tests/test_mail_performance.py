@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMailPerformance(BaseMailPerformance):
 
     @classmethod
