@@ -76,6 +76,14 @@ export class WebsitePreview extends Component {
 
         useEffect(() => {
             this.websiteService.currentWebsiteId = this.websiteId;
+
+            // The params used to configure the context should be ignored when
+            // the action is restored (example: click on the breadcrumb).
+            const isRestored = this.props.action.jsId === this.websiteService.actionJsId;
+            this.websiteService.actionJsId = this.props.action.jsId;
+            if (isRestored) {
+                return;
+            }
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
             this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
             this.websiteService.context.translation = this.props.action.context.params && !!this.props.action.context.params.edit_translations;
