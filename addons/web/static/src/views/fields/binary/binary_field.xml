@@ -39,7 +39,10 @@
             </t>
         </t>
         <t t-elif="file.data and isDownloadable">
-            <FileDownloader file="file" onDownload.bind="onFileDownload"/>
+            <span t-esc="file.name"/>
+            <a class="o_form_uri mx-2" href="javascript:void(0)" t-on-click.prevent="onFileDownload">
+                <span class="fa fa-download"/>
+            </a>
         </t>
     </t>
 

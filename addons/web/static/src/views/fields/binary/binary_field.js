@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
-import { FileDownloader, FileUploader } from "../file_handler";
+import { FileUploader } from "../file_handler";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, onWillUpdateProps, useState } = owl;
@@ -83,7 +83,6 @@ export class BinaryField extends Component {
 
 BinaryField.template = "web.BinaryField";
 BinaryField.components = {
-    FileDownloader,
     FileUploader,
 };
 BinaryField.props = {
