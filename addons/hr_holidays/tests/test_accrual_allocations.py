@@ -592,7 +592,54 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_validate()
         with freeze_time('2022-1-10'):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 30.79, 2, "Invalid number of days")
+        self.assertAlmostEqual(allocation.number_of_days, 30.82, 2, "Invalid number of days")
+
+    def test_three_levels_accrual(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 2,
+                'start_type': 'month',
+                'added_value': 3,
+                'added_value_type': 'days',
+                'frequency': 'monthly',
+                'maximum_leave': 3,
+                'action_with_unused_accruals': 'postponed',
+                'first_day': 31,
+            }), (0, 0, {
+                'start_count': 3,
+                'start_type': 'month',
+                'added_value': 6,
+                'added_value_type': 'days',
+                'frequency': 'monthly',
+                'maximum_leave': 6,
+                'action_with_unused_accruals': 'postponed',
+                'first_day': 31,
+            }), (0, 0, {
+                'start_count': 4,
+                'start_type': 'month',
+                'added_value': 1,
+                'added_value_type': 'days',
+                'frequency': 'monthly',
+                'maximum_leave': 100,
+                'action_with_unused_accruals': 'postponed',
+                'first_day': 31,
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual Allocation - Test',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': datetime.date(2022, 1, 31),
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        with freeze_time('2022-7-20'):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 10)
 
     def test_accrual_lost(self):
         # Test that when an allocation is made in the past and the second level is technically reached
