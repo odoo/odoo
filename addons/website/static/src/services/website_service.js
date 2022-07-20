@@ -38,6 +38,7 @@ export const websiteService = {
         let isPublisher;
         let isDesigner;
         let hasMultiWebsites;
+        let actionJsId;
         const context = reactive({
             showNewContentModal: false,
             showAceEditor: false,
@@ -150,6 +151,12 @@ export const websiteService = {
             },
             get hasMultiWebsites() {
                 return hasMultiWebsites === true;
+            },
+            get actionJsId() {
+                return actionJsId;
+            },
+            set actionJsId(jsId) {
+                actionJsId = jsId;
             },
             openMenuDialog(Component, props) {
                 return dialog.add(Component, props);
