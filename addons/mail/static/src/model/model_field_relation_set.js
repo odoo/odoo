@@ -69,6 +69,9 @@ export class RelationSet {
                             const valB = followRelations(b, relatedPath);
                             switch (compareMethod) {
                                 case 'truthy-first': {
+                                    if (valA === valB) {
+                                        break;
+                                    }
                                     if (!valA) {
                                         return 1;
                                     }
@@ -78,6 +81,9 @@ export class RelationSet {
                                     break;
                                 }
                                 case 'falsy-first': {
+                                    if (valA === valB) {
+                                        break;
+                                    }
                                     if (!valA) {
                                         return -1;
                                     }
