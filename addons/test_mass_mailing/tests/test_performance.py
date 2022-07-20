@@ -22,7 +22,7 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
             signature='--\nMartial'
         )
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -47,21 +47,21 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +2 compared to local
-        with self.assertQueryCount(__system__=426, marketing=427):
+        with self.assertQueryCount(__system__=426, marketing=427):  # tm 424/425
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
 
         # runbot needs +3 compared to local
-        with self.assertQueryCount(__system__=69, marketing=67):
+        with self.assertQueryCount(__system__=69, marketing=67):  # tm 65/65
             self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
 
         mails = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])
         self.assertFalse(mails, 'Should have auto-deleted the <mail.mail>')
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -94,14 +94,14 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +2 compared to local
-        with self.assertQueryCount(__system__=488, marketing=489):
+        with self.assertQueryCount(__system__=488, marketing=489):  # tm 486/487
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
 
         # runbot needs +3 compared to local
-        with self.assertQueryCount(__system__=69, marketing=67):
+        with self.assertQueryCount(__system__=69, marketing=67):  # tm 65/65
             self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
 
         cancelled_mail_count = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])

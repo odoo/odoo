@@ -101,6 +101,10 @@ class TestRatingFlow(TestRatingCommon):
         self.assertEqual(rating.rating, 1)
         self.assertEqual(record_rating.rating_last_value, 1)
 
+
+@tagged('rating', 'mail_performance', 'post_install', '-at_install')
+class TestRatingPerformance(TestRatingCommon):
+
     @users('__system__')
     @warmup
     def test_rating_last_value_perfs(self):
@@ -126,10 +130,8 @@ class TestRatingFlow(TestRatingCommon):
         RECORD_COUNT = 100
         partners = self.env['res.partner'].create([
             {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
-        # 3713 requests if only test_mail_full is installed
-        # 4510 runbot community
-        # 4910 runbot enterprise
-        with self.assertQueryCount(__system__=4910):
+
+        with self.assertQueryCount(__system__=5910):  # tmf 4710 / com 5510
             record_ratings = self.env['mail.test.rating'].create([{
                 'customer_id': partners[idx].id,
                 'name': 'Test Rating',
