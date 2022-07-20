@@ -3,13 +3,7 @@
     <t t-name="OrderReceipt" t-extend="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
     	<xpath expr="//t[@t-if='receipt.company.logo']" position="replace" />
 
-    	<xpath expr="//t[@t-if='!receipt.company.logo']" position="replace" >
-            <t t-if="receipt.x_receipt_printed">
-                <br/>
-                <div style="text-align:center"><b>RE-PRINT COPY</b></div>
-            </t>
-        </xpath>
-
+    	<xpath expr="//t[@t-if='!receipt.company.logo']" position="replace" />
 
         <xpath expr="//div[@class='orderlines']" position="replace" />
 
@@ -61,6 +55,7 @@
 <!--        </xpath>-->
 
         <xpath expr="//div[@class='pos-receipt-contact']" position="replace">
+
                 <div class="pos-receipt-contact" style="font-size: 75%;">
 <!--                    THE GOOD MEAT-->
 <!--Pilmico Animal Nutrition Corporation Suite 1-B PARC Plaza Bldg Libis QC-->
@@ -98,7 +93,10 @@
 <!--                        </div>-->
 <!--                    </t>-->
                 </div>
-
+                <t t-if="receipt.x_receipt_printed">
+                    <br/>
+                    <div style="text-align:center"><b>* * *  REPRINT  * * *</b></div>
+                </t>
                 <div class="date_and_time" style="font-size: 75%;">
                     <div style="margin-top: 2%;overflow: hidden;">========================================================</div>
                     <div style="width:100%;">
