@@ -8,6 +8,22 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_account_tour(self):
+        # This tour doesn't work with demo data on runbot
+        all_moves = self.env['account.move'].search([('move_type', '!=', 'entry')])
+        all_moves.button_draft()
+        all_moves.with_context(force_delete=True).unlink()
+
+        Journal = self.env['account.journal']
+        journal_ids = Journal.search([('company_id', '=', self.env.company.id)])
+        journal_ids.write({'active': False})
+        # Since demo data removed/archived, must add a Sale Journal to make the tour work
+        Journal.create({
+            'name': 'test_out_invoice_journal',
+            'code': 'XXXXX',
+            'type': 'sale',
+            'company_id':  self.env.company.id,
+        })
+
         # Reset country and fiscal country, so that fields added by localizations are
         # hidden and non-required, and don't make the tour crash.
         # Also remove default taxes from the company and its accounts, to avoid inconsistencies
@@ -21,8 +37,5 @@ class TestUi(odoo.tests.HttpCase):
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
         })
-        # This tour doesn't work with demo data on runbot
-        all_moves = self.env['account.move'].search([('move_type', '!=', 'entry')])
-        all_moves.button_draft()
-        all_moves.with_context(force_delete=True).unlink()
+
         self.start_tour("/web", 'account_tour', login="admin")
