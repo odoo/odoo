@@ -89,15 +89,3 @@ export class FileUploader extends Component {
 }
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
-
-export class FileDownloader extends Component {
-    onDownloadButtonClick() {
-        this.props.onDownload();
-    }
-}
-FileDownloader.props = {
-    file: { type: Object, optional: true },
-    fileDownloadAction: { type: String, optional: true },
-    onDownload: Function,
-};
-FileDownloader.template = "web.FileDownloader";
