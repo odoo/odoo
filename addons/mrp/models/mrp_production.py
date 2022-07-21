@@ -1553,10 +1553,12 @@ class MrpProduction(models.Model):
 
         backorder_vals_list = []
         initial_qty_by_production = {}
+        initial_duration_expected_by_production = {}
 
         # Create the backorders.
         for production in self:
             initial_qty_by_production[production] = production.product_qty
+            initial_duration_expected_by_production[production] = {workorder: workorder.duration_expected for workorder in production.workorder_ids}
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
@@ -1714,10 +1716,11 @@ class MrpProduction(models.Model):
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
             bo = production_to_backorders[production]
+            initial_duration_expected = initial_duration_expected_by_production[production]
 
             # Adapt duration
-            for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder.duration_expected * workorder.production_id.product_qty / initial_qty
+            for workorder in (production | bo).workorder_ids:
+                workorder.duration_expected = (workorder in initial_duration_expected and initial_duration_expected[workorder] or workorder.duration_expected * workorder.production_id.product_qty) / initial_qty
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
