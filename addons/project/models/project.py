@@ -339,7 +339,7 @@ class Project(models.Model):
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
-    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count')
+    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True)
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
