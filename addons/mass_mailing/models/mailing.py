@@ -571,7 +571,7 @@ class MassMailing(models.Model):
 
     def action_test(self):
         self.ensure_one()
-        ctx = dict(self.env.context, default_mass_mailing_id=self.id)
+        ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='medium')
         return {
             'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',
@@ -590,7 +590,7 @@ class MassMailing(models.Model):
         if self.schedule_date and self.schedule_date > fields.Datetime.now():
             return self.action_put_in_queue()
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
-        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='medium')
         return action
 
     def action_put_in_queue(self):
