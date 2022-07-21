@@ -179,7 +179,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         var products = [this.rootProduct];
         this.$modal.find('.js_product.in_cart:not(.main_product)').each(function () {
             var $item = $(this);
-            var quantity = parseInt($item.find('input[name="add_qty"]').val(), 10);
+            var quantity = parseFloat($item.find('input[name="add_qty"]').val().replace(',', '.') || 1);
             var parentUniqueId = this.dataset.parentUniqueId;
             var uniqueId = this.dataset.uniqueId;
             var productCustomVariantValues = self.getCustomVariantValues($(this));
@@ -472,7 +472,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         if (this.$modal.find('.js_price_total').length) {
             var price = 0;
             this.$modal.find('.js_product.in_cart').each(function () {
-                var quantity = parseInt($(this).find('input[name="add_qty"]').first().val(), 10);
+                var quantity = parseFloat($(this).find('input[name="add_qty"]').first().val().replace(',', '.') || 1);
                 price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
             });
 

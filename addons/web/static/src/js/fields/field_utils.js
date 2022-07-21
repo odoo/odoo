@@ -23,6 +23,8 @@ var utils = require('web.utils');
 
 var _t = core._t;
 
+const NBSP = "\u00a0";
+
 //------------------------------------------------------------------------------
 // Formatting
 //------------------------------------------------------------------------------
@@ -353,9 +355,9 @@ function formatMonetary(value, field, options) {
         return formatted_value;
     }
     if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
+        return formatted_value += NBSP + currency.symbol;
     } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
+        return currency.symbol + NBSP + formatted_value;
     }
 }
 /**
@@ -552,6 +554,9 @@ function parseFloat(value) {
  */
 function parseMonetary(value, field, options) {
     var values = value.split('&nbsp;');
+    if (values.length === 1) {
+        values = value.split(NBSP);
+    }
     if (values.length === 1) {
         return parseFloat(value);
     }

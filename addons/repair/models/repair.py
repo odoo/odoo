@@ -321,6 +321,7 @@ class Repair(models.Model):
 
             if not group or len(current_invoices_list) == 0:
                 fp_id = repair.partner_id.property_account_position_id.id or self.env['account.fiscal.position'].get_fiscal_position(repair.partner_id.id, delivery_id=repair.address_id.id)
+                fp = self.env['account.fiscal.position'].browse(fp_id)
                 invoice_vals = {
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
@@ -352,7 +353,7 @@ class Repair(models.Model):
                 else:
                     name = operation.name
 
-                account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = operation.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fp)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
 
@@ -394,7 +395,7 @@ class Repair(models.Model):
                 if not fee.product_id:
                     raise UserError(_('No product defined on fees.'))
 
-                account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = fee.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fp)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
