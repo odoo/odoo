@@ -152,13 +152,7 @@ exports.PosModel = Backbone.Model.extend({
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
-        if(this.config.use_proxy){
-            if (this.config.iface_customer_facing_display) {
-                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
-            }
 
-            return this.connect_to_proxy();
-        }
         if(this.config.limited_products_loading) {
             await this.loadLimitedProducts();
             if(this.config.product_load_background)
@@ -166,6 +160,15 @@ exports.PosModel = Backbone.Model.extend({
         }
         if(this.config.partner_load_background )
             this.loadPartnersBackground();
+
+        if(this.config.use_proxy){
+            if (this.config.iface_customer_facing_display) {
+                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+            }
+
+            return this.connect_to_proxy();
+        }
+
         return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
@@ -2329,7 +2332,7 @@ exports.Orderline = Backbone.Model.extend({
     can_be_merged_with: function(orderline){
         var price = parseFloat(round_di(this.price || 0, this.pos.dp['Product Price']).toFixed(this.pos.dp['Product Price']));
         var order_line_price = orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity());
-        order_line_price = orderline.compute_fixed_price(order_line_price);
+        order_line_price = round_di(orderline.compute_fixed_price(order_line_price), this.pos.currency.decimals);
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){

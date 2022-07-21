@@ -89,4 +89,4 @@ class Product(models.Model):
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
-        return self.user_has_groups('base.group_system') or (self.sale_ok and self.website_published)
+        return self.user_has_groups('base.group_system') or (self.active and self.sale_ok and self.website_published)
