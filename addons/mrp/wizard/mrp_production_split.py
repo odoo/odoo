@@ -19,6 +19,9 @@ class MrpProductionSplit(models.TransientModel):
     production_split_multi_id = fields.Many2one('mrp.production.split.multi', 'Split Productions')
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', readonly=True)
     product_id = fields.Many2one(related='production_id.product_id')
+    state = fields.Selection(related="production_id.state")
+    company_id = fields.Many2one(related="production_id.company_id")
+    product_tracking = fields.Selection(related='production_id.product_id.tracking')
     product_qty = fields.Float(related='production_id.product_qty')
     product_uom_id = fields.Many2one(related='production_id.product_uom_id')
     production_capacity = fields.Float(related='production_id.production_capacity')
@@ -65,11 +68,17 @@ class MrpProductionSplit(models.TransientModel):
             if wizard.production_detailed_vals_ids:
                 wizard.valid_details = float_compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity')), precision_rounding=wizard.product_uom_id.rounding) == 0
 
+    @api.onchange('counter')
+    def _onchange_counter(self):
+        if self.production_detailed_vals_ids:
+            self.production_detailed_vals_ids[0].lot_producing_id = self.production_id.lot_producing_id
+
     def action_split(self):
         productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
             production.date_planned_start = detail.date
+            production.lot_producing_id = detail.lot_producing_id
         if self.production_split_multi_id:
             saved_production_split_multi_id = self.production_split_multi_id.id
             self.production_split_multi_id.production_ids = [Command.unlink(self.id)]
@@ -101,3 +110,4 @@ class MrpProductionSplitLine(models.TransientModel):
         'res.users', 'Responsible', required=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     date = fields.Datetime('Schedule Date')
+    lot_producing_id = fields.Many2one('stock.lot', string='Lot/Serial Number', copy=False)
