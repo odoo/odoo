@@ -1743,6 +1743,11 @@ class MrpProduction(models.Model):
         workorders_to_cancel.action_cancel()
         backorders.workorder_ids._action_confirm()
 
+        if amounts:
+            refs = [backorder._get_html_link() for backorder in backorders]
+            message = _("This Manufacturing Orders is splited to: %s") % ', '.join(refs)
+            self.message_post(body=message)
+
         return self.env['mrp.production'].browse(production_ids)
 
     def button_mark_done(self):

@@ -19,6 +19,9 @@ class MrpProductionSplit(models.TransientModel):
     production_split_multi_id = fields.Many2one('mrp.production.split.multi', 'Split Productions')
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', readonly=True)
     product_id = fields.Many2one(related='production_id.product_id')
+    state = fields.Selection(related="production_id.state")
+    company_id = fields.Many2one(related="production_id.company_id")
+    product_tracking = fields.Selection(related='production_id.product_id.tracking')
     product_qty = fields.Float(related='production_id.product_qty')
     product_uom_id = fields.Many2one(related='production_id.product_uom_id')
     production_capacity = fields.Float(related='production_id.production_capacity')
@@ -49,12 +52,14 @@ class MrpProductionSplit(models.TransientModel):
                     'quantity': quantity,
                     'user_id': wizard.production_id.user_id,
                     'date': wizard.production_id.date_planned_start,
+                    'lot_producing_id': wizard.production_id.lot_producing_id,
                 }))
                 remaining_quantity = float_round(remaining_quantity - quantity, precision_rounding=wizard.product_uom_id.rounding)
             commands.append(Command.create({
                 'quantity': remaining_quantity,
                 'user_id': wizard.production_id.user_id,
                 'date': wizard.production_id.date_planned_start,
+                'lot_producing_id': wizard.production_id.lot_producing_id,
             }))
             wizard.production_detailed_vals_ids = commands
 
@@ -70,6 +75,7 @@ class MrpProductionSplit(models.TransientModel):
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
             production.date_planned_start = detail.date
+            production.lot_producing_id = detail.lot_producing_id
         if self.production_split_multi_id:
             saved_production_split_multi_id = self.production_split_multi_id.id
             self.production_split_multi_id.production_ids = [Command.unlink(self.id)]
@@ -101,3 +107,4 @@ class MrpProductionSplitLine(models.TransientModel):
         'res.users', 'Responsible', required=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     date = fields.Datetime('Schedule Date')
+    lot_producing_id = fields.Many2one('stock.lot', string='Lot/Serial Number', copy=False)
