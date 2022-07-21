@@ -1544,7 +1544,9 @@ const Wysiwyg = Widget.extend({
                             oldColorpicker.destroy();
                         }
                         manualOpening = true;
-                        $dropdown.children('.dropdown-toggle').dropdown('show');
+                        const $childElement = $dropdown.children('.dropdown-toggle');
+                        const dropdownToggle = new Dropdown($childElement);
+                        dropdownToggle.show();
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
                         const toolbarContainerTop = dom.closestScrollable(this.toolbar.el).getBoundingClientRect().top;
