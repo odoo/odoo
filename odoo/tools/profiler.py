@@ -585,7 +585,7 @@ class Profiler:
         This is mainly useful to uniquify a path between executions.
         """
         return path.format(
-            time=real_datetime_now.strftime("%Y%m%d-%H%M%S"),
+            time=real_datetime_now().strftime("%Y%m%d-%H%M%S"),
             len=self.entry_count(),
             desc=re.sub("[^0-9a-zA-Z-]+", "_", self.description)
         )
@@ -605,7 +605,7 @@ class Profiler:
         return json.dumps({
             "name": self.description,
             "session": self.profile_session,
-            "create_date": real_datetime_now.strftime("%Y%m%d-%H%M%S"),
+            "create_date": real_datetime_now().strftime("%Y%m%d-%H%M%S"),
             "init_stack_trace": _format_stack(self.init_stack_trace),
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
