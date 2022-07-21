@@ -14,8 +14,10 @@
 # Susanna Pujol, 2020
 # AncesLatino2004, 2022
 # Jonatan Gk, 2022
-# jabelchi, 2022
 # marcescu, 2022
+# jabelchi, 2022
+# oscaryuu, 2022
+# CristianCruzParra, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: CristianCruzParra, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +91,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr ""
+msgstr "<b>Puntuació predictiva d'iniciatives</b>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -166,6 +168,10 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
+"<p class='o_view_nocontent_smiling_face'>Afegir oportunitats noves</p><p>\n"
+"    Sembla que no sou membre d'un equip de vendes. Cal que us afegiu\n"
+"    com a membre d'un dels equips.\n"
+"</p>"
 
 #. module: crm
 #. openerp-web
@@ -187,6 +193,8 @@ msgid ""
 "<p>As you don't belong to any Sales Team, Odoo opens the first one by "
 "default.</p>"
 msgstr ""
+"<p>Com que no pertanyeu a cap equip de vendes, Odoo obre el primer per "
+"defecte.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -655,6 +663,8 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
+"Convertiu els visitants del vostre lloc web en clients potencials i "
+"realitzeu l'enriquiment de dades en funció de la seva adreça IP"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -945,17 +955,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "Enriquir automàticament totes les iniciatives"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "Enriquir automàticament la iniciativa"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr ""
+msgstr "Enriquir les iniciatives només per petició"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -963,6 +973,8 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address"
 msgstr ""
+"Enriquiu automàticament les iniciatives amb dades de la empresa basades en "
+"la seva adreça de correu electrònic."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_enrich
@@ -970,6 +982,8 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
+"Enriquiu automàticament les iniciatives amb dades de la empresa basades en "
+"la seva adreça de correu electrònic."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1028,7 +1042,7 @@ msgstr "Camp d'Etiqueta"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr ""
+msgstr "Camps que es poder fer servir pel càlcul de la puntuació predictiva"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1085,12 +1099,12 @@ msgstr "Activitats Futures"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr ""
+msgstr "Generar noves iniciatives en base al país, sector, mida, etc."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr ""
+msgstr "Generar noves iniciatives en base al país, sector, mida, etc."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1101,6 +1115,8 @@ msgstr "Posa la raó de la pèrdua"
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
+"Doneu al vostre equip els requisits per passar una oportunitat a aquesta "
+"etapa."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1256,7 +1272,7 @@ msgstr "Estat kanban"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "Kpi Crm Lead Created Value"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
@@ -1369,12 +1385,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr ""
+msgstr "Freqüència de puntuació de plom"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr ""
+msgstr "Camps de freqüència de puntuació de clients potencials"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
@@ -1389,7 +1405,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr ""
+msgstr "Data d'inici de la puntuació de clients potencials a la cadena"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
@@ -1512,6 +1528,9 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Soci vinculat (opcional). Normalment es crea en convertir el client "
+"potencial. Podeu trobar un soci pel seu nom, TIN, correu electrònic o "
+"referència interna."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
@@ -1943,7 +1962,7 @@ msgstr "Oportunitat perduda"
 #: model:mail.message.subtype,name:crm.mt_lead_restored
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_restored
 msgid "Opportunity Restored"
-msgstr ""
+msgstr "Oportunitat restaurada"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -2461,6 +2480,8 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"La direcció d'email associat amb aquest canal. Els nous email rebuts crearan"
+" automàticament una nova guia per al canal."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -2692,6 +2713,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Utilitzeu clients potencials si necessiteu un pas de qualificació abans de "
+"crear una oportunitat o un client. Pot ser una targeta de visita que heu "
+"rebut, un formulari de contacte emplenat al vostre lloc web o un fitxer de "
+"clients potencials no qualificats que importeu, etc. Un cop qualificat, el "
+"client es pot convertir en una oportunitat de negoci i/o un nou client a la "
+"vostra llibreta d'adreces. ."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2816,7 +2843,7 @@ msgstr "Triomfs en objectius d'oportunitats"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "Sí! Oferta dels últims 7 dies per a l'equip."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2828,13 +2855,13 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
-msgstr ""
+msgstr "Acabes de batre el teu rècord personal de fa 30 dies."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
-msgstr ""
+msgstr "Acabes de batre el teu rècord personal de fa 7 dies."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities

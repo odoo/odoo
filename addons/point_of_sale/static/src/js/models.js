@@ -1796,7 +1796,7 @@ exports.Orderline = Backbone.Model.extend({
     can_be_merged_with: function(orderline){
         var price = parseFloat(round_di(this.price || 0, this.pos.dp['Product Price']).toFixed(this.pos.dp['Product Price']));
         var order_line_price = orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity());
-        order_line_price = orderline.compute_fixed_price(order_line_price);
+        order_line_price = round_di(orderline.compute_fixed_price(order_line_price), this.pos.currency.decimals);
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){

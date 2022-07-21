@@ -48,7 +48,7 @@
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|','|', ('active','=',False), ('probability', '=', 100), ('type', '=', 'lead')]}"/>
                         <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
-                            type="action" class="oe_highlight" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'),('active', '=', False),('probability', '&lt;', 100)]}"/>
+                            type="action" class="oe_highlight" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'), '&amp;',('active', '=', False),('probability', '&lt;', 100)]}"/>
                         <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity"
                             class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'opportunity'), ('active', '=', False)]}"/>
                         <button name="toggle_active" string="Restore" type="object"
