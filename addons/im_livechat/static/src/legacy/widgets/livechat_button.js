@@ -257,7 +257,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._thread._folded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
+        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
         this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._messages = this.messaging.publicLivechatGlobal.livechatButtonView.messages;
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
