@@ -40,8 +40,6 @@ const PublicLivechatWindow = Widget.extend({
         this.messaging = messaging;
         this.options = options;
 
-        this._thread = thread;
-
         this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
     },
     /**
@@ -54,14 +52,14 @@ const PublicLivechatWindow = Widget.extend({
         const options = {
             displayMarkAsRead: false,
         };
-        if (this._thread && this._thread._type === 'document_thread') {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._type === 'document_thread') {
             options.displayDocumentLinks = false;
         }
         this._publicLivechatView = new PublicLivechatView(this, this.messaging, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
-        if (this._thread._folded) {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded) {
             this.$el.css('height', this.HEIGHT_FOLDED);
         } else {
             this._focusInput();
@@ -107,7 +105,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     render() {
         this.renderHeader();
-        this._publicLivechatView.render(this._thread, { displayLoadMore: false });
+        this._publicLivechatView.render(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat, { displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
@@ -120,7 +118,7 @@ const PublicLivechatWindow = Widget.extend({
         this.$header.html(
             qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
                 status: this.messaging.publicLivechatGlobal.publicLivechat.status,
-                thread: this._thread,
+                thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
                 title: this.messaging.publicLivechatGlobal.publicLivechat.name,
                 unreadCounter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
                 widget: this,
@@ -159,11 +157,11 @@ const PublicLivechatWindow = Widget.extend({
      * that has been changed.
      */
     updateVisualFoldState() {
-        if (!this._thread._folded) {
+        if (!this.messaging.publicLivechatGlobal.publicLivechat.isFolded) {
             this._publicLivechatView.scrollToBottom();
             this._focusInput();
         }
-        const height = this._thread._folded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        const height = this.messaging.publicLivechatGlobal.publicLivechat.isFolded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
         this.$el.css({ height });
     },
 
@@ -206,7 +204,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     _postMessage(messageData) {
         this.trigger_up('post_message_chat_window', { messageData });
-        this._thread.postMessage(messageData)
+        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.postMessage(messageData)
             .then(() => {
                 this._publicLivechatView.scrollToBottom();
             });
@@ -228,9 +226,9 @@ const PublicLivechatWindow = Widget.extend({
         ev.preventDefault();
         if (
             this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0 &&
-            !this._thread._folded
+            !this.messaging.publicLivechatGlobal.publicLivechat.isFolded
         ) {
-            this._thread.markAsRead();
+            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
         }
         this.close();
     },
@@ -271,7 +269,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     _onInput() {
         const isTyping = this.$input.val().length > 0;
-        this._thread.setMyselfTyping({ typing: isTyping });
+        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.setMyselfTyping({ typing: isTyping });
     },
     /**
      * Called when typing something on the composer of this thread window.
@@ -307,7 +305,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     _onScroll() {
         if (this._publicLivechatView.isAtBottom()) {
-            this._thread.markAsRead();
+            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
         }
     },
     /**

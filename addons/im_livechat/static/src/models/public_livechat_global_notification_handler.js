@@ -66,7 +66,7 @@ registerModel({
                     }
                     notificationData.body = utils.Markup(notificationData.body);
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget._addMessage(notificationData);
-                    if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._thread._folded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
+                    if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
                         this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
                     }
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
