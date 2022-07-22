@@ -30,7 +30,7 @@ patch(NavBar.prototype, 'website_navbar', {
         this.websiteEditingMenus = {
             'website.menu_edit_menu': {
                 Component: EditMenuDialog,
-                isDisplayed: () => !!this.websiteService.currentWebsite,
+                isDisplayed: () => !!this.websiteService.currentWebsite && this.websiteService.isDesigner,
             },
             'website.menu_optimize_seo': {
                 Component: OptimizeSEODialog,
