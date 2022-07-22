@@ -4,12 +4,6 @@
 from odoo import fields, models
 
 
-class ContractType(models.Model):
-    _name = 'hr.contract.type'
-    _description = 'Contract Type'
-
-    name = fields.Char(required=True, translate=True)
-
 class HrPayrollStructureType(models.Model):
     _name = 'hr.payroll.structure.type'
     _description = 'Salary Structure Type'
