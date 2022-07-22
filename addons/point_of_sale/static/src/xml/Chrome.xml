@@ -18,7 +18,7 @@
                     <div class="search-bar-portal search-bar-container sb-product" />
                     <div class="status-buttons" t-if="state.uiState === 'READY'" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }">
                         <CashierName />
-                        <SaleDetailsButton t-if="env.proxy.printer" />
+                        <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                         <SyncNotification />
