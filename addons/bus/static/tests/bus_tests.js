@@ -431,6 +431,55 @@ QUnit.module('Bus', {
         parentTab1.destroy();
         parentTab2.destroy();
     });
+
+    QUnit.test('two tabs adding channels', async function (assert) {
+        assert.expect(4);
+        const parentTab1 = new Widget();
+        let pollPromise;
+        await testUtils.mock.addMockEnvironment(parentTab1, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    assert.step(args.channels.join())
+                    pollPromise = testUtils.makeTestPromise();
+                    pollPromise.abort = (function () {
+                        this.reject({message: 'XmlHttpRequestError abort'});
+                    }).bind(pollPromise);
+                    return pollPromise;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        const parentTab2 = new Widget();
+        await testUtils.mock.addMockEnvironment(parentTab2, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    throw new Error("slave tab should not use the polling route")
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        const tab1 = new CrossTabBus(parentTab1);
+        const tab2 = new CrossTabBus(parentTab2);
+        tab1.addChannel("alpha");
+        await nextTick();
+        assert.verifySteps(["alpha"]);
+
+        tab2.addChannel("beta");
+        await nextTick();
+        assert.verifySteps(["alpha,beta"]);
+
+        parentTab1.destroy();
+        parentTab2.destroy();
+    });
 });
 
 });
