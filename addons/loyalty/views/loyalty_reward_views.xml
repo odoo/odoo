@@ -5,51 +5,55 @@
         <field name="model">loyalty.reward</field>
         <field name="arch" type="xml">
             <form>
+                <field name="program_type" invisible="1"/>
+                <field name="user_has_debug" invisible="1"/>
+                <field name="multi_product" invisible="1"/>
+                <field name="reward_product_ids" invisible="1"/>
+                <field name="all_discount_product_ids" invisible="1"/>
                 <sheet>
                     <group>
-                        <group>
-                            <field name="reward_type" widget="radio"/>
-                        </group>
-                        <group id="discount_group" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
-                            <label for="discount"/>
-                            <div class="o_row">
-                                <field name="discount" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
-                                <field name="discount_mode" class="oe_edit_only col-4 oe_inline pe-2"/>
-                                <field name="discount" class="oe_read_only"/>
-                                <field name="discount_mode" class="oe_read_only"/>
+                        <group string="Reward" id="reward_type_group">
+                            <field name="reward_type" widget="selection" attrs="{'readonly' : [('program_type', '=', 'buy_x_get_y')]}"/>
+                            <label for="discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
+                            <div class="d-flex flex-row" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
+                                <field name="discount" class="oe_inline me-1"/>
+                                <field name="discount_mode" no_label="1" class="w-auto me-1"/>
                                 <span>on</span>
                             </div>
-                            <!-- Align right -->
-                            <field name="all_discount_product_ids" invisible="1"/>
-                            <label for="discount_applicability" string=""/>
-                            <field name="discount_applicability" nolabel="1" widget="radio"/>
-                            <field name="discount_product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
-                            <field name="discount_product_ids" widget="many2many_tags"
-                                attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
-                            <field name="discount_product_category_id" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
-                            <field name="discount_product_tag_id" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
-                            <field name="discount_max_amount"/>
+                            <label for="discount_applicability" string="" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
+                            <field name="discount_applicability" nolabel="1" widget="radio" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
                         </group>
-                        <group id="product_group" attrs="{'invisible': [('reward_type', '!=', 'product')]}">
-                            <field name="multi_product" invisible="1"/>
-                            <field name="reward_product_ids" invisible="1"/>
+
+                        <group string="Among" attrs="{'invisible': [('reward_type', '!=', 'product')]}">
+                            <field name="reward_product_qty" string="Quantity rewarded"/>
                             <field name="reward_product_id" attrs="{'required': [('reward_type', '=', 'product'), ('reward_product_ids', '=', [])]}"/>
                             <field name="reward_product_tag_id" attrs="{'required': [('reward_type', '=', 'product'), ('reward_product_ids', '=', [])]}"/>
-                            <label for="reward_product_qty"/>
-                            <div class="row m-0">
-                                <field name="reward_product_qty" class="oe_inline"/>
-                                <field name="reward_product_uom_id" class="oe_inline" attrs="{'invisible': [('multi_product', '=', True)]}"/>
-                            </div>
                         </group>
+
+                        <group string="Discount" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
+                            <field name="discount_max_amount"/>
+                            <field name="discount_product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
+                            <field name="discount_product_ids" widget="many2many_tags" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
+                            <field name="discount_product_category_id" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
+                            <field name="discount_product_tag_id" attrs="{'invisible': [('discount_applicability', '!=', 'specific')]}"/>
+                        </group>
+                    </group>
+                    <group string="Points" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'not in', ('loyalty', 'buy_x_get_y'))]}">
                         <group>
-                            <field name="required_points"/>
-                            <field name="clear_wallet"/>
+                            <label for="required_points" string="In exchange of"/>
+                            <div class="o_row">
+                                <field name="required_points" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
+                                <field name="point_name" no_label="1"/>
+                                <span attrs="{'invisible': [('clear_wallet', '!=', True)]}"> (or more)</span>
+                            </div>
+                            <label for="clear_wallet" string="Clear all promo point(s)" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y'))]}"/>
+                            <div class="o_row" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'in', ('loyalty', 'buy_x_get_y'))]}">
+                                <field name="clear_wallet"/>
+                            </div>
                         </group>
                     </group>
                     <group>
-                        <group>
-                            <field name="description"/>
-                        </group>
+                        <field name="description" string="Description on order"/>
                     </group>
                 </sheet>
             </form>
@@ -70,6 +74,8 @@
                 <field name="discount_mode"/>
                 <field name="discount_applicability"/>
                 <field name="discount_product_domain"/>
+                <field name="discount_product_category_id"/>
+                <field name="discount_product_tag_id"/>
                 <field name="discount_max_amount"/>
                 <field name="discount_line_product_id"/>
                 <field name="reward_product_id"/>
@@ -80,27 +86,74 @@
                 <field name="required_points"/>
                 <field name="point_name"/>
                 <field name="clear_wallet"/>
+                <field name="program_type"/>
+                <field name="user_has_debug"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click_edit mx-0">
-                            <field name="description"/>
-                            <t t-if="record.reward_type.raw_value === 'discount' &amp;&amp; record.discount_applicability.raw_value === 'specific'">
-                                <t t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one">
-                                    <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain"/></a>
+                        <div class="oe_kanban_global_click_edit mx-0 d-flex flex-row">
+                            <div class="o_loyalty_kanban_card_left mw-75 flex-grow-1" id="reward_info">
+                                <t t-if="record.reward_type.raw_value === 'discount'">
+
+                                    <t t-if="record.discount">
+                                        <a><field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t></a>
+                                    </t> 
+
+                                    <t t-if="record.discount_applicability.raw_value === 'specific'">
+                                        <br/>
+                                        <br/>
+
+                                        <span class="fw-bold text-decoration-underline">Applied to:</span>
+
+                                        <t t-if="record.discount_product_ids.raw_value.length > 0">
+                                            <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags" class="d-inline"/></div>
+                                        </t>
+                                        <t t-if="record.discount_product_category_id.raw_value">
+                                            <div class="d-flex"><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id" class="d-inline"/></div>
+                                        </t>
+                                        <t t-if="record.discount_product_tag_id.raw_value">
+                                            <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id" class="d-inline"/></div>
+                                        </t>  
+                                        <t t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one">
+                                            <div class="d-flex"><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain" class="d-inline"/></div>
+                                        </t>
+                                    </t>
+
+                                    <t t-elif="record.discount_applicability.raw_value === 'cheapest'">
+                                        on the cheapest product
+                                        <br/>
+                                    </t>
+
+                                    <t t-elif="record.discount_applicability.raw_value === 'order'">
+                                        on your order
+                                        <br/>
+                                    </t>
                                 </t>
-                                <t t-if="record.discount_product_ids.raw_value.length > 0">
-                                    <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags" class="d-inline"/></div>
-                                </t>
-                                <t t-if="record.discount_product_category_id.raw_value">
-                                    <a><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id"/></a>
+
+                                <t t-if="record.reward_type.raw_value === 'product'">
+                                    <a>Free product</a>
                                     <br/>
-                                </t>
-                                <t t-if="record.discount_product_tag_id.raw_value">
-                                    <a><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id"/></a>
                                     <br/>
+                                    <t t-if="record.reward_product_id.raw_value">
+                                        <div class="d-flex"><i class="fa fa-cube fa-fw" title="Product Domain"/><field name="reward_product_id"/> <t t-if="record.reward_product_qty.raw_value > 1"><span> x </span><field name="reward_product_qty"/></t></div>
+                                    </t>
+                                    <t t-if="record.reward_product_tag_id.raw_value">
+                                        <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id" class="d-inline"/></div>
+                                    </t> 
                                 </t>
-                            </t>
-                            <p class="m-0">With <field name="required_points"/> <field name="point_name"/><t t-if="record.clear_wallet.raw_value"> (or more)</t></p>
+                            </div>
+
+                            <div class="o_loyalty_kanban_card_right" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'not in', ('loyalty', 'buy_x_get_y'))]}">
+                                <p class="text-muted">
+                                    <span class="fw-bold text-decoration-underline">In exchange of</span>
+                                    <br/>
+                                    <t t-if="record.clear_wallet.raw_value">
+                                        all <field name="point_name"/> (if at least <field name="required_points"/> <field name="point_name"/>)
+                                    </t>
+                                    <t t-else="">
+                                        <field name="required_points"/> <field name="point_name"/>
+                                    </t>
+                                </p>
+                            </div>
                         </div>
                     </t>
                 </templates>

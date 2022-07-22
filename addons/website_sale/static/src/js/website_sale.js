@@ -762,7 +762,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @param {Event} ev
      */
     _onClickShowCoupon: function (ev) {
-        $(ev.currentTarget).hide();
+        $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
     },
     /**

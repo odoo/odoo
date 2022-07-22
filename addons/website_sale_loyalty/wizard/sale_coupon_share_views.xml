@@ -7,20 +7,21 @@
             <form string="Share Loyalty Card" edit="1" create="0">
                 <field name="website_id" invisible="1"/>
                 <field name="program_website_id" invisible="1"/>
-                <group attrs="{'invisible': [('website_id', '=', False)]}">
+                <group>
                     <div colspan="2">
                         <p>
                             You can share this promotion with your customers.
                             It will be applied at checkout when the customer uses this link.
                         </p>
                     </div>
-                    <field name="share_link" widget="CopyClipboardURL" nolabel="1"/>
+                    <field name="share_link" widget="CopyClipboardURL" no_label="1"/>
                 </group>
-                <hr attrs="{'invisible': ['|', ('website_id', '=', False), ('id', '!=', False)]}"/>
                 <group attrs="{'invisible': [('id', '!=', False)]}">
-                    <field name="website_id" groups="website.group_multi_website" widget="selection"
-                           attrs="{'invisible': [('program_website_id', '!=', False)]}"/>
-                    <field name="redirect"/>
+                    <group>
+                        <field name="website_id" groups="website.group_multi_website" widget="selection"
+                            attrs="{'invisible': [('program_website_id', '!=', False)]}"/>
+                        <field name="redirect"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="Done" class="btn-primary" special="cancel" data-hotkey="z"/>

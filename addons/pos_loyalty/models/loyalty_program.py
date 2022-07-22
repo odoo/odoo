@@ -9,6 +9,7 @@ class LoyaltyProgram(models.Model):
 
     pos_config_ids = fields.Many2many('pos.config', string="Point of Sales", readonly=True)
     pos_order_count = fields.Integer("PoS Order Count", compute='_compute_pos_order_count')
+    pos_ok = fields.Boolean("Point of Sale", default=True)
 
     def _compute_pos_order_count(self):
         read_group_res = self.env['pos.order.line']._read_group(

@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem
-        id="menu_promotion_type_config"
-        action="loyalty.loyalty_program_action"
-        name="Coupons &amp; Loyalty"
+        id="menu_discount_loyalty_type_config"
+        action="loyalty.loyalty_program_discount_loyalty_action"
+        name="Discount &amp; Loyalty"
         parent="website_sale.menu_catalog"
         groups="sales_team.group_sale_manager"
         sequence="50"
     />
 
+    <menuitem
+        id="menu_gift_ewallet_type_config"
+        action="loyalty.loyalty_program_gift_ewallet_action"
+        name="Gift cards &amp; eWallet"
+        parent="website_sale.menu_catalog"
+        groups="sales_team.group_sale_manager"
+        sequence="51"
+    />
+
     <record id="loyalty_program_view_form_inherit_website_sale_loyalty" model="ir.ui.view">
         <field name="name">loyalty.program.view.form.inherit.website.sale.loyalty</field>
         <field name="model">loyalty.program</field>
-        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="inherit_id" ref="sale_loyalty.loyalty_program_view_form_inherit_sale_loyalty"/>
         <field name="arch" type="xml">
-            <field name="currency_id" position="after">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-            </field>
+            <xpath expr="//label[@for='available_on']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="inside">
+                <span class="d-inline-block">
+                    <field name="ecommerce_ok" class="w-auto"/>
+                    <label for="ecommerce_ok" string="Website"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
+                <field name="website_id" attrs="{'invisible': [('ecommerce_ok', '=', False)]}" options="{'no_create': True}" groups="website.group_multi_website" placeholder="All websites"/>
+            </xpath>
         </field>
     </record>
 
@@ -25,11 +46,12 @@
         <field name="model">loyalty.program</field>
         <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
-                <button name="action_program_share" string="Share" type="object" icon="fa-share-alt"/>
+            <field name="coupon_count_display" position="after">
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            </field>
+            <field name="company_id" position="after">
+                <button name="action_program_share" string="Share" type="object" icon="fa-share-alt" attrs="{ 'invisible' : [('program_type', '!=', 'promo_code')]}"/>
             </field>
         </field>
     </record>
-
 </odoo>

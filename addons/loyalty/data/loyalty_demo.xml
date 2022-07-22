@@ -3,8 +3,10 @@
     <!-- 10 percent with code -->
     <record id="10_percent_with_code" model="loyalty.program">
         <field name="name">Code for 10% on orders</field>
-        <field name="program_type">promotion</field>
+        <field name="program_type">promo_code</field>
         <field name="trigger">with_code</field>
+        <field name="portal_visible">False</field>
+        <field name="portal_point_name">Discount point(s)</field>
     </record>
 
     <record id="10_percent_with_code_rule" model="loyalty.rule">
@@ -20,13 +22,14 @@
         <field name="discount_applicability">order</field>
         <field name="program_id" ref="loyalty.10_percent_with_code"/>
     </record>
-
-
     <!-- 3 cabinet + 1 free -->
     <record id="3_cabinets_plus_1_free" model="loyalty.program">
         <field name="name">Buy 3 large cabinets, get one for free</field>
-        <field name="program_type">promotion</field>
+        <field name="program_type">buy_x_get_y</field>
+        <field name="applies_on">current</field>
         <field name="trigger">auto</field>
+        <field name="portal_visible">False</field>
+        <field name="portal_point_name">Credit(s)</field>
     </record>
 
     <record id="3_cabinets_plus_1_free_rule" model="loyalty.rule">
@@ -35,7 +38,7 @@
         <field name="reward_point_amount">1</field>
         <field name="product_ids" eval="[(4, ref('product.product_product_6'))]"/>
         <field name="program_id" ref="loyalty.3_cabinets_plus_1_free"/>
-    </record>    
+    </record>
 
     <record id="3_cabinets_plus_1_free_reward" model="loyalty.reward">
         <field name="reward_type">product</field>
@@ -43,12 +46,13 @@
         <field name="required_points">3</field>
         <field name="program_id" ref="loyalty.3_cabinets_plus_1_free"/>
     </record>    
-
     <!-- 10 percent coupons -->
     <record id="10_percent_coupon" model="loyalty.program">
-        <field name="name">10% Discount</field>
-        <field name="applies_on">future</field>
+        <field name="name">10% Discount Coupons</field>
+        <field name="program_type">coupons</field>
+        <field name="applies_on">current</field>
         <field name="trigger">with_code</field>
+        <field name="portal_point_name">Coupon points</field>
     </record>
 
     <record id="10_percent_coupon_rule" model="loyalty.rule">
@@ -68,13 +72,14 @@
         <field name="mail_template_id" ref="loyalty.mail_template_loyalty_card"/>
         <field name="program_id" ref="loyalty.10_percent_coupon"/>
     </record>
-
     <!-- Gift Cards -->
     <record id="gift_card_program" model="loyalty.program">
         <field name="name">Gift Cards</field>
         <field name="program_type">gift_card</field>
         <field name="applies_on">future</field>
         <field name="trigger">auto</field>
+        <field name="portal_visible">True</field>
+        <field name="portal_point_name">$</field>
     </record>
 
     <record id="gift_card_program_rule" model="loyalty.rule">
@@ -93,5 +98,4 @@
         <field name="required_points">1</field>
         <field name="program_id" ref="loyalty.gift_card_program"/>
     </record>
-
 </odoo>

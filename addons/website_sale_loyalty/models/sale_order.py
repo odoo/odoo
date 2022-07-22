@@ -3,6 +3,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.http import request
 
@@ -12,10 +13,24 @@ class SaleOrder(models.Model):
 
     def _get_program_domain(self):
         res = super()._get_program_domain()
+        # Replace `sale_ok` leaf with `ecommerce_ok` if order is linked to a website
+        if self.website_id:
+            for idx, leaf in enumerate(res):
+                if leaf[0] != 'sale_ok':
+                    continue
+                res[idx] = ('ecommerce_ok', '=', True)
+                break
         return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
 
     def _get_trigger_domain(self):
         res = super()._get_trigger_domain()
+        # Replace `sale_ok` leaf with `ecommerce_ok` if order is linked to a website
+        if self.website_id:
+            for idx, leaf in enumerate(res):
+                if leaf[0] != 'program_id.sale_ok':
+                    continue
+                res[idx] = ('program_id.ecommerce_ok', '=', True)
+                break
         return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
 
     def _try_pending_coupon(self):
@@ -59,9 +74,12 @@ class SaleOrder(models.Model):
                 coupon.program_id.is_nominative or\
                 (rewards.reward_type == 'product' and rewards.multi_product):
                 continue
-            res = self._apply_program_reward(rewards, coupon)
-            if 'error' not in res:
-                claimed_reward_count += 1
+            try:
+                res = self._apply_program_reward(rewards, coupon)
+                if 'error' not in res:
+                    claimed_reward_count += 1
+            except UserError:
+                pass
 
         return bool(claimed_reward_count)
 

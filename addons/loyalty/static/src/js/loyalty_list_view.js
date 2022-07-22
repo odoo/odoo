@@ -16,6 +16,10 @@ export class LoyaltyActionHelper extends Component {
             this.loyaltyTemplateData = await this.orm.call(
                 "loyalty.program",
                 "get_program_templates",
+                [],
+                {
+                    context: this.env.model.root.context,
+                },
             );
         });
     }
@@ -36,7 +40,10 @@ LoyaltyActionHelper.template = "loyalty.LoyaltyActionHelper";
 
 export class LoyaltyListRenderer extends ListRenderer {};
 LoyaltyListRenderer.template = "loyalty.LoyaltyListRenderer";
-LoyaltyListRenderer.components.LoyaltyActionHelper = LoyaltyActionHelper;
+LoyaltyListRenderer.components = {
+    ...LoyaltyListRenderer.components,
+    LoyaltyActionHelper,
+};
 
 export const LoyaltyListView = {
     ...listView,

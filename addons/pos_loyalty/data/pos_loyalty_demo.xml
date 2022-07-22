@@ -4,9 +4,11 @@
         <!-- 15% next order -->
         <record id="15_pc_on_next_order" model="loyalty.program">
             <field name="name">15% on next order</field>
-            <field name="program_type">promotion</field>
+            <field name="program_type">next_order_coupons</field>
             <field name="trigger">auto</field>
             <field name="applies_on">future</field>
+            <field name="portal_visible">True</field>
+            <field name="portal_point_name">Coupon point(s)</field>
         </record>
 
         <record id="15_pc_on_next_order_rule" model="loyalty.rule">
@@ -62,8 +64,10 @@
     <record id="loyalty_program" model="loyalty.program">
         <field name="name">Loyalty Program</field>
         <field name="program_type">loyalty</field>
-        <field name="trigger">auto</field>
         <field name="applies_on">both</field>
+        <field name="trigger">auto</field>
+        <field name="portal_visible">True</field>
+        <field name="portal_point_name">Loyalty Points</field>
     </record>
 
     <record id="loyalty_program_rule" model="loyalty.rule">

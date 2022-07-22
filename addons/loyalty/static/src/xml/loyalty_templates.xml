@@ -14,7 +14,7 @@
                 <t t-out="props.noContentHelp"/>
             </div>
             <div class="container">
-                <div class="row loyalty-templates-container">
+                <div class="row justify-content-center loyalty-templates-container">
                     <t t-foreach="Object.entries(loyaltyTemplateData)" t-as="data" t-key="data[0]">
                         <t t-set="loyalty_el_icon" t-value="data[1].icon"/>
                         <t t-set="loyalty_el_title" t-value="data[1].title"/>

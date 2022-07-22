@@ -26,6 +26,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
     points_granted = fields.Float('Grant', required=True, default=1)
     points_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     valid_until = fields.Date()
+    will_send_mail = fields.Boolean(compute='_compute_will_send_mail')
 
     def _get_partners(self):
         self.ensure_one()
@@ -45,6 +46,11 @@ class LoyaltyGenerateWizard(models.TransientModel):
                 wizard.coupon_qty = len(wizard._get_partners())
             else:
                 wizard.coupon_qty = wizard.coupon_qty or 0
+
+    @api.depends("mode", "program_id")
+    def _compute_will_send_mail(self):
+        for wizard in self:
+            wizard.will_send_mail = wizard.mode == 'selected' and 'create' in wizard.program_id.mapped('communication_plan_ids.trigger')
 
     def _get_coupon_values(self, partner):
         self.ensure_one()
