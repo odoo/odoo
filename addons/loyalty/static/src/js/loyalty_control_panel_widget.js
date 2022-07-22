@@ -7,3 +7,4 @@ export class LoyaltyX2ManyField extends X2ManyField {};
 LoyaltyX2ManyField.template = "loyalty.LoyaltyX2ManyField";
 
 registry.category("fields").add("loyalty_one2many", LoyaltyX2ManyField);
+

@@ -29,6 +29,7 @@ class LoyaltyCard(models.Model):
     partner_id = fields.Many2one('res.partner', index=True)
     points = fields.Float(tracking=True)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
+    concatenate_points = fields.Char(compute='_compute_concatenate_points')
 
     code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True, index=True)
     expiration_date = fields.Date()
@@ -44,6 +45,11 @@ class LoyaltyCard(models.Model):
         # Prevent a coupon from having the same code a program
         if self.env['loyalty.rule'].search_count([('mode', '=', 'with_code'), ('code', 'in', self.mapped('code'))]):
             raise ValidationError(_('A trigger with the same code as one of your coupon already exists.'))
+
+    @api.depends('points', 'point_name')
+    def _compute_concatenate_points(self):
+        for card in self:
+            card.concatenate_points = "%.2f %s" % (card.points or 0, card.point_name or '')
 
     # Meant to be overriden
     def _compute_use_count(self):

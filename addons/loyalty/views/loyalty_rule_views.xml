@@ -5,38 +5,66 @@
         <field name="model">loyalty.rule</field>
         <field name="arch" type="xml">
             <form class="loyalty-rule-form">
+                <field name="program_type" invisible="1"/> 
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
-                            <field name="product_ids" widget="many2many_tags"/>
-                            <field name="product_category_id"/>
-                            <field name="product_tag_id"/>
+                    <group col="2">
+                        <group colspan="2" attrs="{ 'invisible' : [('program_type' ,'!=', 'promo_code')]}">
+                            <field name="code" attrs="{ 'required' : [('program_type', '=', 'promo_code')]}"/>
                         </group>
-                        <group>
-                            <label for="reward_point_amount"/>
-                            <span>
-                                <field name="reward_point_amount" class="oe_inline"/>
-                                <field name="reward_point_name" class="oe_inline"/>
-                            </span>
-                            <label for="reward_point_mode" string=""/>
-                            <field name="reward_point_mode" widget="radio" nolabel="1"/>
+                        <group colspan="1" col="1" string="Conditions">
+                            <group>
+                                <field name="minimum_qty"/>
+                            </group>
+                            <group attrs="{'invisible': [('program_type', '=', 'buy_two_get_one')]}">
+                                <label for="minimum_amount"/>
+                                <div class="o_row">
+                                    <field name="minimum_amount" class="oe_inline pe-2"/>
+                                    <field name="currency_id"/>
+                                    <span>tax</span>
+                                    <field name="minimum_amount_tax_mode" class="oe_inline"/>
+                                </div>
+                            </group>
+                        </group>  
+                        <group col="1" string="Among">
+                            <group>
+                                <field name="product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                                <field name="product_ids" widget="many2many_tags"/>                            
+                            </group>
+                            <group>
+                                <field name="product_category_id"/>
+                                <field name="product_tag_id"/>
+                            </group> 
                         </group>
-                        <group>
-                            <field name="minimum_qty"/>
-                            <label for="minimum_amount"/>
-                            <div class="o_row">
-                                <field name="minimum_amount" class="oe_inline pe-2"/>
-                                <span>tax</span>
-                                <field name="minimum_amount_tax_mode" class="oe_inline"/>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="mode" widget="radio"/>
-                            <field name="code"
-                                attrs="{'invisible': [('mode', '!=', 'with_code')],
-                                    'required': [('mode', '=', 'with_code')]}"/>
-                        </group>
+                        <group col="1" colspan="2">
+                            <group string="Point(s)" attrs="{'invisible': [('program_type', '!=', 'coupons')]}" groups="base.group_no_one">
+                                <a>Grant the amount of coupon points defined as the coupon value</a> 
+                            </group>
+                            <group string="Point(s)" attrs="{'invisible': ['&amp;' ,('program_type', '!=', 'promotion'), '&amp;', ('program_type', '!=', 'promo_code'), ('program_type', '!=', 'next_order_coupons')]}" groups="base.group_no_one">
+                                <group>
+                                    <div class="o_row">
+                                        Grant
+                                        <field name="reward_point_amount" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
+                                        <field name="reward_point_name" class="oe_edit_only col-4 oe_inline pe-2"/>
+                                        <field name="reward_point_amount" class="oe_read_only"/>
+                                        <field name="reward_point_name" class="oe_read_only"/>
+                                    </div>
+                                    <field name="reward_point_mode" widget="radio" nolabel="1"/>                                    
+                                </group>
+                            </group>                            
+                            <group string="Point(s)" attrs="{'invisible': ['&amp;', ('program_type', '!=', 'loyalty'), ('program_type', '!=', 'buy_two_get_one')]}">
+                                <group>
+                                    <div class="o_row">
+                                        Grant
+                                        <field name="reward_point_amount" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
+                                        <field name="reward_point_name" class="oe_edit_only col-4 oe_inline pe-2"/>
+                                        <field name="reward_point_amount" class="oe_read_only"/>
+                                        <field name="reward_point_name" class="oe_read_only"/>
+                                    </div>
+                                    <field name="reward_point_mode" widget="radio" nolabel="1"/>                                
+                                </group>
+                            </group>
+                        </group> 
+
                     </group>
                 </sheet>
             </form>
@@ -64,43 +92,67 @@
                 <field name="minimum_amount_tax_mode"/>
                 <field name="mode"/>
                 <field name="code"/>
+                <field name="program_type" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click_edit mx-0">
-                            <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
-                                <a><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/></a>
-                            </t>
-                            <t t-if="record.product_ids.raw_value.length > 0">
-                                <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags" class="d-inline"/></div>
-                            </t>
-                            <t t-if="record.product_category_id.raw_value">
-                                <a><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id"/></a>
+                            <div class="o_loyalty_kanban_card_left">
+                                <t t-if="record.code.raw_value"><span>Discount code <field name="code"/></span><br/></t>
+                                <t t-if="record.minimum_qty.raw_value > 0"><span>If minimum <field name="minimum_qty"/> item(s) bought</span><br/></t>
+                                <t t-if="record.minimum_amount.raw_value > 0"><span>If minimum <field name="minimum_amount"/> spent<t t-if="record.minimum_amount_tax_mode.raw_value === 'excl'"> (tax excluded)</t></span><br/></t>
                                 <br/>
-                            </t>
-                            <t t-if="record.product_tag_id.raw_value">
-                                <a><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="product_tag_id"/></a>
-                                <br/>
-                            </t>
-                            <t t-if="record.product_ids.raw_value.length === 0 &amp;&amp; !record.product_category_id.raw_value &amp;&amp; !record.product_tag_id.raw_value">
-                                <a><i class="fa fa-cube fa-fw" title="Products"/> All Products</a>
-                                <br/>
-                            </t>
-                            <a>
-                                <t t-if="record.minimum_qty.raw_value > 1 || record.minimum_amount.raw_value">
-                                    <t t-set="qty" t-value="record.minimum_qty.raw_value"/>
-                                    <t t-set="amt" t-value="record.minimum_amount.raw_value"/>
-                                    <t t-set="tax_mode" t-value="record.minimum_amount_tax_mode.raw_value"/>
-                                    <span>If<t t-if="qty > 1"> minimum <field name="minimum_qty"/> PCE</t>
-                                        <t t-if="amt"><t t-if="qty > 1">and</t> minimum <field name="minimum_amount"/><t t-if="tax_mode === 'excl'"> (tax excluded)</t></t>
-                                    </span>
+
+                                <t t-if="record.product_ids.raw_value.length != 0 || record.product_category_id.raw_value || record.product_tag_id.raw_value">
+                                    <span style="text-decoration: underline; font-weight: bold">Among:</span>
                                     <br/>
+
+                                    <t t-if="record.product_ids.raw_value.length > 0">
+                                        <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags" class="d-inline"/></div>
+                                    </t>
+                                    <t t-if="record.product_category_id.raw_value">
+                                        <div class="d-flex"><i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id" class="d-inline"/></div>
+                                    </t>
+                                    <t t-if="record.product_tag_id.raw_value">
+                                        <div class="d-flex"><i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="product_tag_id" class="d-inline"/></div>
+                                    </t>
+                                    <t t-if="record.product_ids.raw_value.length === 0 &amp;&amp; !record.product_category_id.raw_value &amp;&amp; !record.product_tag_id.raw_value">
+                                        <div class="d-flex"><i class="fa fa-cube fa-fw" title="Products"/><span>All Products</span></div>
+                                    </t>
+                                    <t t-if="record.product_domain.raw_value &amp;&amp; record.product_domain.raw_value !== '[]'" groups="base.group_no_one">
+                                        <div class="d-flex"><i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain" class="d-inline"/></div>
+                                    </t>
                                 </t>
-                            </a>
-                            <t t-if="record.code.raw_value">
-                                <a><i class="fa fa-pencil-square-o fa-fw" title="Code"/>With Code: <field name="code"/></a>
-                                <br/>
-                            </t>
-                            <i class="fa fa-gift fa-fw" title="conditions"/> <span>Reward <field name="reward_point_amount"/> <field name="reward_point_name"/> <field name="reward_point_mode"/></span>
+                            </div>
+                            
+                            <div class="o_loyalty_kanban_card_right" groups="base.group_no_one" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">
+                                <p class="text-muted">
+                                    <span style="text-decoration: underline; font-weight: bold">Grant</span>
+                                    <br/>
+                                    the value of the coupon
+                                </p>
+                            </div>
+                            <div class="o_loyalty_kanban_card_right" groups="base.group_no_one" attrs="{'invisible': ['&amp;', ('program_type', '!=', 'promotion'), '&amp;', ('program_type', '!=', 'promo_code'), ('program_type', '!=', 'next_order_coupons')]}">
+                                <p class="text-muted">
+                                    <span style="text-decoration: underline; font-weight: bold">Grant</span>
+                                    <br/>
+                                    <field name="reward_point_amount" class="oe_read_only"/>
+                                    <soan> </soan>
+                                    <field name="reward_point_name" class="oe_read_only"/>
+                                    <soan> </soan>
+                                    <field name="reward_point_mode" class="oe_read_only"/>
+                                </p>
+                            </div>
+                            <div class="o_loyalty_kanban_card_right" attrs="{'invisible': ['&amp;', ('program_type', '!=', 'loyalty'), ('program_type', '!=', 'buy_two_get_one')]}">
+                                <p class="text-muted">
+                                    <span style="text-decoration: underline; font-weight: bold">Grant</span>   
+                                    <br/>
+                                    <field name="reward_point_amount" class="oe_read_only"/>
+                                    <soan> </soan>
+                                    <field name="reward_point_name" class="oe_read_only"/>
+                                    <soan> </soan>                                    
+                                    <field name="reward_point_mode" class="oe_read_only"/>
+                                </p>
+                            </div>
                         </div>
                     </t>
                 </templates>

@@ -23,6 +23,7 @@ class LoyaltyRule(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
+    program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
@@ -52,7 +53,7 @@ class LoyaltyRule(models.Model):
         ('auto', 'Automatic'),
         ('with_code', 'With a promotion code'),
     ], string="Application", default="auto")
-    code = fields.Char(string='Promotion Code', compute='_compute_code', store=True, readonly=False)
+    code = fields.Char(string='Discount code', compute='_compute_code', store=True, readonly=False)
 
     _sql_constraints = [
         ('reward_point_amount_positive', 'CHECK (reward_point_amount > 0)', 'Rule points reward must be strictly positive.'),

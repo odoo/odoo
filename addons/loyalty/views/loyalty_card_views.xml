@@ -7,10 +7,17 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="code"/>
-                        <field name="expiration_date"/>
-                        <field name="partner_id"/>
-                        <field name="points"/>
+                        <group>
+                            <field name="code"/>
+                            <field name="expiration_date"/>
+                            <field name="partner_id"/>
+                            <label string="Balance" for="points"/>
+                            <div class="o_row">
+                                <field name="points" class="oe_edit_only col-2 oe_inline text-center pe-2"/>
+                                <field name="points" class="oe_read_only"/>                                    
+                                <field name="point_name" no_label="1"/>
+                            </div>
+                        </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -26,7 +33,8 @@
         <field name="arch" type="xml">
             <tree string="Coupons" create="false" edit="false" delete="false">
                 <field name="code"/>
-                <field name="points" string="Balance"/>
+                <field name="create_date" optional="hide"/>
+                <field name="concatenate_points" string="Balance"/>
                 <field name="expiration_date"/>
                 <field name="program_id"/>
                 <field name="partner_id"/>
@@ -35,8 +43,19 @@
         </field>
     </record>
 
+    <record id="loyalty_card_view_search" model="ir.ui.view">
+        <field name="name">loyalty.card.view.search</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="active" string="Active" domain="['&amp;', ('points', '>', 0), '|', ('expiration_date', '>=', context_today().strftime('%Y-%m-%d 00:00:00')), ('expiration_date', '=', False)]"/>
+                <filter name="inactive" string="Inactive" domain="['|', ('points', '&lt;=', 0), ('expiration_date', '&lt;', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="loyalty_card_action" model="ir.actions.act_window">
-        <field name="name">Coupons</field>
+        <field name="name">Items</field>
         <field name="res_model">loyalty.card</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('program_id', '=', active_id)]</field>

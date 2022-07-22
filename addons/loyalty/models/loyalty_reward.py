@@ -27,6 +27,7 @@ class LoyaltyReward(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
+    program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
@@ -116,9 +117,13 @@ class LoyaltyReward(models.Model):
     def _compute_description(self):
         for reward in self:
             reward_string = ""
-            if reward.reward_type == 'product':
+            if reward.description == _('Gift Card') or reward.description == _('eWallet'):
+                return
+            elif reward.reward_type == 'product':
                 products = reward.reward_product_ids
-                if len(products) == 1:
+                if len(products) == 0:
+                    reward_string = _('Free Product')
+                elif len(products) == 1:
                     reward_string = _('Free Product - %s', reward.reward_product_id.name)
                 else:
                     reward_string = _('Free Product - [%s]', ', '.join(products.mapped('name')))

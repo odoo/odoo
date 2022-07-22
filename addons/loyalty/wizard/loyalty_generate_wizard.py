@@ -25,6 +25,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
         compute='_compute_coupon_qty', readonly=False, store=True)
     points_granted = fields.Float('Grant', required=True, default=1)
     points_name = fields.Char(related='program_id.portal_point_name', readonly=True)
+    currency_symbol = fields.Char(related='program_id.currency_symbol', readonly=True)
     valid_until = fields.Date()
 
     def _get_partners(self):
