@@ -15,7 +15,7 @@ class TestHttpCase(HttpCase):
                 with patch('odoo.tests.common.ChromeBrowser.take_screenshot', return_value=None):
                     self.browser_js(url_path='about:blank', code=code)
             # second line must contains error message
-            self.assertEqual(error_catcher.exception.args[0].splitlines()[1], "test error message")
+            self.assertEqual(error_catcher.exception.args[0].splitlines()[-1], "test error message")
         self.assertEqual(len(log_catcher.output), 1)
         self.assertIn('test error message', log_catcher.output[0])
 
@@ -26,7 +26,7 @@ class TestHttpCase(HttpCase):
                 with patch('odoo.tests.common.ChromeBrowser.take_screenshot', return_value=None):
                     self.browser_js(url_path='about:blank', code=code)
             # second line must contains error message
-            self.assertEqual(error_catcher.exception.args[0].splitlines()[1:3],
+            self.assertEqual(error_catcher.exception.args[0].splitlines()[-2:],
             ['TypeError: test error message', '    at <anonymous>:1:15'])
         self.assertEqual(len(log_catcher.output), 1)
         self.assertIn('TypeError: test error message\n    at <anonymous>:1:15', log_catcher.output[0])

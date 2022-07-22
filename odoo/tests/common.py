@@ -882,13 +882,52 @@ class SingleTransactionCase(BaseCase):
 class ChromeBrowserException(Exception):
     pass
 
+def fmap(future, map_fun):
+    """Maps a future's result through a callback.
+
+    Resolves to the application of ``map_fun`` to the result of ``future``.
+
+    .. warning:: this does *not* recursively resolve futures, if that's what
+                 you need see :func:`fchain`
+    """
+    fmap_future = Future()
+    @future.add_done_callback
+    def _(f):
+        try:
+            fmap_future.set_result(map_fun(f.result()))
+        except Exception as e:
+            fmap_future.set_exception(e)
+    return fmap_future
+
+def fchain(future, next_callback):
+    """Chains a future's result to a new future through a callback.
+
+    Corresponds to the ``bind`` monadic operation (aka flatmap aka then...
+    kinda).
+    """
+    new_future = Future()
+    @future.add_done_callback
+    def _(f):
+        try:
+            n = next_callback(f.result())
+            @n.add_done_callback
+            def _(f):
+                try:
+                    new_future.set_result(f.result())
+                except Exception as e:
+                    new_future.set_exception(e)
+
+        except Exception as e:
+            new_future.set_exception(e)
+
+    return new_future
 
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, logger, window_size, touch_enabled, test_class):
-        self._logger = logger
+    def __init__(self, test_class):
+        self._logger = test_class._logger
         self.test_class = test_class
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
@@ -910,8 +949,8 @@ class ChromeBrowser:
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
-        self.window_size = window_size
-        self.touch_enabled = touch_enabled
+        self.window_size = test_class.browser_size
+        self.touch_enabled = test_class.touch_enabled
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
@@ -1247,7 +1286,41 @@ class ChromeBrowser:
                     message, self._result
                 )
         elif 'test successful' in message:
-            self._result.set_result(True)
+            if self.test_class.allow_end_on_form:
+                self._result.set_result(True)
+                return
+
+            qs = fchain(
+                self._websocket_send('DOM.getDocument', params={'depth': 0}, with_future=True),
+                lambda d: self._websocket_send("DOM.querySelector", params={
+                    'nodeId': d['root']['nodeId'],
+                    'selector': '.o_form_editable',
+                }, with_future=True)
+            )
+            @qs.add_done_callback
+            def _qs_result(fut):
+                # stupid dumbass chrome returns a nodeid of 0 when nothing
+                # is found
+                if fut.result()['nodeId']:
+                    self.take_screenshot("unsaved_form_")
+                    self._result.set_exception(ChromeBrowserException("""\
+Tour finished with an open form view in edition mode.
+
+Form views in edition mode are automatically saved when the page is closed, \
+which leads to stray network requests and inconsistencies."""))
+                    return
+
+                try:
+                    self._result.set_result(True)
+                except Exception:
+                    # if the future was already failed, we're happy,
+                    # otherwise swap for a new failed
+                    if self._result.exception() is None:
+                        self._result = Future()
+                        self._result.set_exception(ChromeBrowserException(
+                            "Tried to make the tour successful twice."
+                        ))
+
 
     def _handle_exception(self, exceptionDetails, timestamp):
         message = exceptionDetails['text']
@@ -1307,7 +1380,7 @@ class ChromeBrowser:
             decoded = base64.b64decode(base_png, validate=True)
             fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(
                 prefix, datetime.now(),
-                suffix or '_%s' % self.test_class)
+                suffix or '_%s' % self.test_class.__name__)
             full_path = os.path.join(self.screenshots_dir, fname)
             with open(full_path, 'wb') as f:
                 f.write(decoded)
@@ -1567,6 +1640,7 @@ class HttpCase(TransactionCase):
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
+    allow_end_on_form = False
 
     _logger: logging.Logger = None
 
@@ -1597,7 +1671,7 @@ class HttpCase(TransactionCase):
     def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.touch_enabled, cls.__name__)
+            cls.browser = ChromeBrowser(cls)
             cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
@@ -1747,7 +1821,7 @@ class HttpCase(TransactionCase):
                     message = 'The test code "%s" failed' % code
                 else:
                     message = "Some js test failed"
-                self.fail('%s\n%s' % (message, error))
+                self.fail('%s\n\n%s' % (message, error))
 
         finally:
             # clear browser to make it stop sending requests, in case we call
