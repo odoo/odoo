@@ -1097,13 +1097,13 @@ class MrpProduction(models.Model):
         self.ensure_one()
         procurement_moves = self.procurement_group_id.stock_move_ids
         child_moves = procurement_moves.move_orig_ids
-        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids - self
+        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def _get_sources(self):
         self.ensure_one()
         dest_moves = self.procurement_group_id.mrp_production_ids.move_dest_ids
         parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
-        return (dest_moves | parent_moves).group_id.mrp_production_ids - self
+        return (dest_moves | parent_moves).group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
