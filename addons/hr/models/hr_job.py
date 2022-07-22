@@ -27,6 +27,7 @@ class Job(models.Model):
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),

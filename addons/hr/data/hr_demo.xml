@@ -26,6 +26,23 @@
           <field name="name">Professional Services</field>
       </record>
 
+
+      <!-- Contract Types -->
+      <record id="contract_type_permanent" model="hr.contract.type">
+          <field name="name">Permanent</field>
+          <field name="sequence">1</field>
+      </record>
+
+      <record id="contract_type_temporary" model="hr.contract.type">
+          <field name="name">Temporary</field>
+          <field name="sequence">2</field>
+      </record>
+
+      <record id="contract_type_interim" model="hr.contract.type">
+          <field name="name">Interim</field>
+          <field name="sequence">3</field>
+      </record>
+
     <!--Jobs-->
 
       <record id="job_ceo" model="hr.job">
@@ -48,6 +65,7 @@ Candidate should be able to work in “start- up” fast paced environment,hands
 Honest,approachable and fun team player.
 Result driven.
 Excellent analytical skills, ability to think logically and "out of the box"</field>
+          <field name="contract_type_id" ref="contract_type_permanent"/>
       </record>
 
       <record id="job_cto" model="hr.job">
@@ -73,18 +91,21 @@ Good knowledge of HTML and Javascript
 Knowledge of UML-like modeling
 Good language skills, other than English (Dutch and French preferred, others welcome)
           </field>
+          <field name="contract_type_id" ref="contract_type_permanent"/>
       </record>
 
       <record id="job_consultant" model="hr.job">
           <field name="name">Consultant</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="no_of_recruitment">5</field>
+          <field name="contract_type_id" ref="contract_type_interim"/>
       </record>
 
       <record id="job_developer" model="hr.job">
           <field name="name">Experienced Developer</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="no_of_recruitment">5</field>
+          <field name="contract_type_id" ref="contract_type_permanent"/>
       </record>
 
       <record id="job_hrm" model="hr.job">
@@ -92,6 +113,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
           <field name="department_id" ref="dep_administration"/>
           <field name="description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</field>
           <field name="requirements">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</field>
+          <field name="contract_type_id" ref="contract_type_permanent"/>
       </record>
 
       <record id="job_marketing" model="hr.job">

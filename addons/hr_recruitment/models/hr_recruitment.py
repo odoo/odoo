@@ -193,6 +193,7 @@ class Applicant(models.Model):
     interviewer_id = fields.Many2one(
         'res.users', string='Interviewer', index=True, tracking=True,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+    linkedin_profile = fields.Char('LinkedIn Profile')
 
     @api.onchange('job_id')
     def _onchange_job_id(self):

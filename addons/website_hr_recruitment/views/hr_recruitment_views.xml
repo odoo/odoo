@@ -46,9 +46,9 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after">
+            <group name="recruitment2" position="inside">
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
-            </field>
+            </group>
             <field name="description" position="attributes">
                 <attribute name="placeholder">You can write here a short description of your Job Description that will be displayed on the main Jobs' list page.</attribute>
             </field>

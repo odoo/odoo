@@ -7,4 +7,4 @@ from . import hr_contract
 from . import res_users
 from . import resource
 from . import resource_resource
-from . import hr_contract_type
+from . import hr_payroll_structure_type
