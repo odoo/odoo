@@ -97,7 +97,7 @@ const LivechatButton = Widget.extend({
      */
     _addMessage(data, options) {
         options = Object.assign({}, this.options, options);
-        const message = new PublicLivechatMessage(this, this.messaging, data, options);
+        const message = new PublicLivechatMessage(this, this.messaging, data);
 
         const hasAlreadyMessage = _.some(this.messaging.livechatButtonView.messages, function (msg) {
             return message.getID() === msg.getID();

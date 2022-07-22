@@ -29,10 +29,8 @@ const PublicLivechatMessage = Class.extend({
      * @param {boolean} [data.is_discussion = false]
      * @param {boolean} [data.is_notification = false]
      * @param {string} [data.message_type = undefined]
-     * @param {Object} options
-     * @param {string} options.default_username
      */
-    init(parent, messaging, data, options) {
+    init(parent, messaging, data) {
         this.messaging = messaging;
         // Attachments are not supported in (public) livechat.
         // We ignore data from server, otherwise field commands
@@ -51,7 +49,7 @@ const PublicLivechatMessage = Class.extend({
         this._attachmentIDs.forEach(function (attachment) {
             attachment.filename = attachment.filename || attachment.name || _t("unnamed");
         });
-        this._defaultUsername = options.default_username;
+        this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
         this._serverURL = this.messaging.livechatButtonView.serverUrl;
 
         if (parent.messaging.livechatButtonView.isChatbot) {
