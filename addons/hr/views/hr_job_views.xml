@@ -15,14 +15,15 @@
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
-                        <notebook> 
+                        <notebook>
                             <page string="Recruitment" name="recruitment_page">
                                 <group>
                                     <group name="recruitment">
                                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                         <field name="department_id"/>
+                                        <field name="contract_type_id"/>
                                     </group>
-                                    <group>
+                                    <group name="recruitment2">
                                         <label for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
                                             <field name="no_of_recruitment" class="col-3 ps-0"/>
@@ -99,6 +100,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Employment Type" name="employment_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
                     </group>
                 </search>
             </field>
