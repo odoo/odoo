@@ -232,30 +232,6 @@ const PublicLivechatView = Widget.extend({
         return bottomHiddenHeight < 5;
     },
     /**
-     * Removes a message and re-renders the thread
-     *
-     * @param {integer} [messageID] the id of the removed message
-     * @param {mail.model.AbstractThread} thread the thread which contains
-     *   updated list of messages (so it does not contain any message with ID
-     *   `messageID`).
-     * @param {Object} [options] options for the thread rendering
-     */
-     removeMessageAndRender(messageID, thread, options) {
-        this._currentThreadID = thread._id;
-        return new Promise((resolve, reject) => {
-            this.$('.o_thread_message[data-message-id="' + messageID + '"]')
-            .fadeOut({
-                done: () => {
-                    if (this._currentThreadID === thread._id) {
-                        this.render(thread, options);
-                    }
-                    resolve();
-                },
-                duration: 200,
-            });
-        });
-    },
-    /**
      * Scroll to the bottom of the thread
      */
     scrollToBottom() {
