@@ -31,7 +31,6 @@ const LivechatButton = Widget.extend({
     init(parent, messaging) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = _.defaults(this.messaging.publicLivechatGlobal.options || {});
     },
     async willStart() {
         this.messaging.livechatButtonView.update({ widget: this });
@@ -96,7 +95,6 @@ const LivechatButton = Widget.extend({
      * @param {Object} [options={}]
      */
     _addMessage(data, options) {
-        options = Object.assign({}, this.options, options);
         const message = new PublicLivechatMessage(this, this.messaging, data);
 
         const hasAlreadyMessage = _.some(this.messaging.livechatButtonView.messages, function (msg) {
