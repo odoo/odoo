@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <div t-name="account.GroupedListTemplate" owl="1" class="d-block">
+    <t t-name="account.GroupedListTemplate" owl="1">
         <table t-if="data.groups_vals.length" class="table table-sm o_list_table table table-sm table-hover table-striped o_list_table_grouped">
             <thead><tr>
                 <t t-foreach="data.options.columns" t-as="col" t-key="col_index">
@@ -14,7 +14,7 @@
         <t t-if="data.options.discarded_number">
             <span><t t-esc="data.options.discarded_number"/> are not shown in the preview</span>
         </t>
-    </div>
+    </t>
 
     <tbody t-name="account.GroupedItemsTemplate" owl="1">
         <tr style="background-color: #dee2e6;">

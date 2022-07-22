@@ -51,7 +51,7 @@ function mapWowlValueToLegacy(value, type) {
     }
 }
 
-function mapViews(views) {
+function mapViews(views, env) {
     const res = {};
     for (const [viewType, viewDescr] of Object.entries(views || {})) {
         const arch = parseArch(viewDescr.__rawArch);
@@ -72,7 +72,7 @@ function mapViews(views) {
             arch,
             fields,
             type: viewType,
-            fieldsInfo: mapActiveFieldsToFieldsInfo(viewDescr.activeFields, fields, viewType),
+            fieldsInfo: mapActiveFieldsToFieldsInfo(viewDescr.activeFields, fields, viewType, env),
         };
         for (const fieldName in res[viewType].fieldsInfo[viewType]) {
             if (!res[viewType].fields[fieldName]) {
@@ -86,11 +86,11 @@ function mapViews(views) {
     return res;
 }
 
-function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
+function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env) {
     const fieldsInfo = {};
     fieldsInfo[viewType] = {};
     for (const [fieldName, fieldDescr] of Object.entries(activeFields)) {
-        const views = mapViews(fieldDescr.views);
+        const views = mapViews(fieldDescr.views, env);
         const field = fields[fieldName];
         let Widget;
         if (fieldDescr.widget) {
@@ -103,13 +103,17 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
         if (fieldDescr.domain && fieldDescr.domain.toString() !== "[]") {
             domain = fieldDescr.domain.toString();
         }
+        let mode = fieldDescr.viewMode;
+        if (mode && mode.split(",").length !== 1) {
+            mode = env.isSmall ? "kanban" : "list";
+        }
         const fieldInfo = {
             Widget,
             domain,
             context: fieldDescr.context,
             fieldDependencies: {}, // ??
             force_save: fieldDescr.forceSave,
-            mode: fieldDescr.viewMode,
+            mode,
             modifiers: fieldDescr.modifiers,
             name: fieldName,
             options: fieldDescr.options,
@@ -207,16 +211,7 @@ class DataPoint {
 
     get evalContext() {
         const datapoint = this.model.__bm__.localData[this.__bm_handle__];
-        const evalContext = this.model.__bm__._getEvalContext(datapoint);
-        // FIXME: in the basic model, we set the toJSON function on x2many values
-        // s.t. we send commands to the server. In wowl Domain, we JSON.stringify
-        // values to compare them, so it doesn't work as expected.
-        for (const key in evalContext) {
-            if (evalContext[key]) {
-                delete evalContext[key].toJSON;
-            }
-        }
-        return evalContext;
+        return this.model.__bm__._getLazyEvalContext(datapoint);
     }
 
     get fieldNames() {
@@ -353,6 +348,7 @@ export class Record extends DataPoint {
                 case "boolean":
                 case "float":
                 case "integer":
+                case "monetary":
                     continue;
                 case "one2many":
                 case "many2many":
@@ -1147,7 +1143,7 @@ export class RelationalModel extends Model {
 
     async duplicateDatapoint(record, params) {
         const bm = this.__bm__;
-        const fieldsInfo = mapViews(params.views);
+        const fieldsInfo = mapViews(params.views, this.env);
         const handle = record.__bm_handle__;
 
         // Sync with the mutex to wait for potential onchanges
@@ -1308,7 +1304,8 @@ export class RelationalModel extends Model {
             this.__bm_load_params__.fieldsInfo = mapActiveFieldsToFieldsInfo(
                 this.__activeFields || {},
                 this.__fields || {},
-                "form"
+                "form",
+                this.env
             );
         }
         const loadParams = { ...this.__bm_load_params__ };
@@ -1381,7 +1378,8 @@ export class RelationalModel extends Model {
         const fieldsInfo = mapActiveFieldsToFieldsInfo(
             params.activeFields,
             params.fields,
-            params.viewType
+            params.viewType,
+            this.env
         );
         params = Object.assign({}, params, {
             __bm_load_params__: {

@@ -277,9 +277,9 @@ QUnit.module('LegacyViews', {
         await testUtils.nextTick();
 
         // click on the first row to see if the list is editable
-        await testUtils.dom.click(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first'));
+        await testUtils.dom.click(dialog.$('.o_legacy_list_view tbody tr:first td:not(.o_list_record_selector):first'));
 
-        assert.equal(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first input').length, 0,
+        assert.equal(dialog.$('.o_legacy_list_view tbody tr:first td:not(.o_list_record_selector):first input').length, 0,
             "list view should not be editable in a SelectCreateDialog");
 
         parent.destroy();

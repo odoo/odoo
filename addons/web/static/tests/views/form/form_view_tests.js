@@ -17,6 +17,8 @@ import {
     selectDropdownItem,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { FieldOne2Many } from "web.relational_fields";
+import * as legacyFieldRegistry from "web.field_registry";
 import { toggleActionMenu, toggleGroupByMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -34,6 +36,8 @@ import { localization } from "@web/core/l10n/localization";
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 const widgetRegistry = registry.category("view_widgets");
+
+const { Component, xml } = owl;
 
 let target;
 let serverData;
@@ -291,6 +295,83 @@ QUnit.module("Views", (hooks) => {
             "tbody td:not(.o_list_record_selector) .form-check input:checked"
         );
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
+    });
+
+    QUnit.test("status bar rendering without buttons", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><header/><sheet/></form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_form_sheet_bg > .o_form_statusbar > .o_statusbar_buttons");
+    });
+
+    QUnit.test("button box rendering on small screen", async (assert) => {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    size: 0,
+                    isSmall: true,
+                };
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><sheet><div name="button_box"><button id="btn1">MyButton</button><button id="btn2">MyButton2</button><button id="btn3">MyButton3</button></div></sheet></form>`,
+            resId: 2,
+        });
+
+        assert.containsN(target, ".o-form-buttonbox > button", 2);
+        assert.containsOnce(target, ".o-dropdown.oe_stat_button .o_button_more");
+        await click(target, ".o-dropdown.oe_stat_button .o_button_more");
+
+        assert.containsOnce(target, ".o-dropdown--menu #btn3");
+    });
+
+    QUnit.test("button box rendering on big screen", async (assert) => {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    size: 9,
+                    isSmall: false,
+                };
+            },
+        });
+
+        let btnString = "";
+        for (let i = 0; i < 9; i++) {
+            btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><sheet><div name="button_box">${btnString}</div></sheet></form>`,
+            resId: 2,
+        });
+
+        assert.containsN(target, ".o-form-buttonbox > button", 7);
+        assert.containsOnce(target, ".o-form-buttonbox > .oe_stat_button.o-dropdown");
+
+        const buttonBox = target.querySelector(".o-form-buttonbox");
+        const buttonBoxRect = buttonBox.getBoundingClientRect();
+
+        for (const btn of buttonBox.children) {
+            assert.strictEqual(btn.getBoundingClientRect().top, buttonBoxRect.top);
+        }
     });
 
     QUnit.test("duplicate fields rendered properly", async function (assert) {
@@ -1457,6 +1538,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "label.o_form_label");
         assert.strictEqual(target.querySelector("label.o_form_label").textContent, "customstring");
     });
+
+    QUnit.test(
+        "label is not rendered when invisible and not at top-level in a group",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <div>
+                                <label for="bar" attrs='{"invisible": [["bar", "=", True]]}'/>
+                                <field name="bar" />
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+                resId: 2,
+            });
+            assert.containsNone(target, "label.o_form_label");
+        }
+    );
 
     QUnit.test(
         "input ids for multiple occurrences of fields in form view",
@@ -5899,9 +6004,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.isVisible(target.querySelector(".o_field_widget[name=foo]"));
             assert.isVisible(target.querySelector(".o_form_label"));
-            // WOWL-KANBAN: relies on o_form_view scss rules which do not apply for now
-            // assert.isNotVisible(target.querySelector(".o_field_widget[name=bar]"));
-            // assert.isNotVisible(target.querySelectorAll(".o_form_label")[1]);
+            assert.isNotVisible(target.querySelector(".o_field_widget[name=bar]"));
+            assert.isNotVisible(target.querySelectorAll(".o_form_label")[1]);
 
             await click(target.querySelector(".o_form_button_edit"));
             assert.containsOnce(
@@ -5909,9 +6013,8 @@ QUnit.module("Views", (hooks) => {
                 ".o_form_view .o_form_editable",
                 "form should be in readonly mode"
             );
-            // WOWL-KANBAN: relies on o_form_view scss rules which do not apply for now
-            // assert.isNotVisible(target.querySelector(".o_field_widget[name=foo]"));
-            // assert.isNotVisible(target.querySelector(".o_form_label"));
+            assert.isNotVisible(target.querySelector(".o_field_widget[name=foo]"));
+            assert.isNotVisible(target.querySelector(".o_form_label"));
             assert.isVisible(target.querySelector(".o_field_widget[name=bar]"));
             assert.isVisible(target.querySelectorAll(".o_form_label")[1]);
         }
@@ -6661,7 +6764,7 @@ QUnit.module("Views", (hooks) => {
             </button>`);
 
         // legacySelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
-        const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o_dropdown_more)";
+        const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o-dropdown)";
 
         const formView = await makeView({
             type: "form",
@@ -10861,4 +10964,187 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_save")); // save the record
         }
     );
+
+    QUnit.test("fieldDependencies support for fields", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, int_field: 2 }];
+
+        class CustomField extends Component {}
+        CustomField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
+        registry.category("fields").add("custom_field", CustomField);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="foo" widget="custom_field"/>
+                </form>
+            `,
+            serverData,
+        });
+
+        assert.strictEqual(target.querySelector("[name=foo] span").innerText, "2");
+    });
+
+    QUnit.test(
+        "fieldDependencies support for fields: dependence on a relational field",
+        async (assert) => {
+            serverData.models.partner.records[0].product_id = 37;
+
+            class CustomField extends Component {}
+            CustomField.fieldDependencies = {
+                product_id: { type: "many2one", relation: "product" },
+            };
+            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+            registry.category("fields").add("custom_field", CustomField);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="foo" widget="custom_field"/>
+                    </form>
+                `,
+                serverData,
+                mockRPC: (route, args) => {
+                    assert.step(args.method);
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name=foo] span").innerText, "xphone");
+            assert.verifySteps(["get_views", "read"]);
+        }
+    );
+
+    QUnit.test("legacy one2many view mode", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" mode="tree,kanban" widget="legacy_one2many">
+                            <form><field name="display_name"/></form>
+                            <tree><field name="foo"/></tree>
+                            <kanban>
+                                <field name="display_name"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div><t t-esc="record.display_name"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </form>`,
+        });
+        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
+    });
+
+    QUnit.test("legacy one2many view mode in small env", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
+        const fakeUIService = {
+            start(env) {
+                let ui = {};
+                Object.defineProperty(env, "isSmall", {
+                    get() {
+                        return true;
+                    },
+                });
+
+                return ui;
+            },
+        };
+        registry.category("services").add("ui", fakeUIService);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" mode="tree,kanban" widget="legacy_one2many">
+                            <form><field name="display_name"/></form>
+                            <tree><field name="foo"/></tree>
+                            <kanban>
+                                <field name="display_name"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div><t t-esc="record.display_name"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </form>`,
+        });
+        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_kanban_view");
+    });
+
+    QUnit.test("legacy one2many view mode in small env (2)", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
+        const fakeUIService = {
+            start(env) {
+                let ui = {};
+                Object.defineProperty(env, "isSmall", {
+                    get() {
+                        return true;
+                    },
+                });
+
+                return ui;
+            },
+        };
+        registry.category("services").add("ui", fakeUIService);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" widget="legacy_one2many">
+                            <form><field name="display_name"/></form>
+                            <tree><field name="foo"/></tree>
+                            <kanban>
+                                <field name="display_name"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div><t t-esc="record.display_name"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </form>`,
+        });
+        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_kanban_view");
+    });
+
+    QUnit.test("legacy one2many with no inlive view", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        serverData.views = {
+            "partner,false,list": `<tree><field name="foo"/></tree>`,
+        };
+        legacyFieldRegistry.add("legacy_one2many", FieldOne2Many);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" mode="tree" widget="legacy_one2many"/>
+                    </form>`,
+        });
+        assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
+    });
 });

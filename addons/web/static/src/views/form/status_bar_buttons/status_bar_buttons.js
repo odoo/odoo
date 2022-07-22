@@ -7,9 +7,13 @@ const { Component } = owl;
 
 export class StatusBarButtons extends Component {
     get visibleSlotNames() {
+        if (!this.props.slots) {
+            return [];
+        }
         return Object.entries(this.props.slots)
             .filter(
-                (entry) => entry[1].isVisible && (entry[1].displayInReadOnly ? this.props.readonly : true)
+                (entry) =>
+                    entry[1].isVisible && (entry[1].displayInReadOnly ? this.props.readonly : true)
             )
             .map((entry) => entry[0]);
     }

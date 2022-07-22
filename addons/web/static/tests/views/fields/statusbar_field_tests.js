@@ -166,6 +166,37 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "folded statusbar widget on selection field has selected value in the toggler",
+        async function (assert) {
+            registry.category("services").add("ui", {
+                start(env) {
+                    Object.defineProperty(env, "isSmall", {
+                        value: true,
+                    });
+                    return {
+                        size: 0,
+                        isSmall: true,
+                    };
+                },
+            });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <header>
+                        <field name="color" widget="statusbar" />
+                    </header>
+                </form>`,
+            });
+
+            assert.containsOnce(target, ".o_statusbar_status button.dropdown-toggle:contains(Red)");
+        }
+    );
+
     QUnit.test("static statusbar widget on many2one field with domain", async function (assert) {
         assert.expect(1);
 

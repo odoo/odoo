@@ -57,7 +57,7 @@ export class WebClientViewAttachmentViewContainer extends Component {
      */
     async _insertFromProps(props) {
         const messaging = await this.env.services.messaging.get();
-        if (this.__owl__.status === 5 /* destroyed */) {
+        if (owl.status(this) === "destroyed") {
             this._deleteRecord();
             return;
         }

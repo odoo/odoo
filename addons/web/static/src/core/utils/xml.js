@@ -148,3 +148,13 @@ export function getTag(node, lower = false) {
     const tag = (node && node.nodeName) || "";
     return lower ? tag.toLowerCase() : tag;
 }
+
+/**
+ * @param {Node} node
+ * @param {Object} attributes
+ */
+export function setAttributes(node, attributes) {
+    for (const [name, value] of Object.entries(attributes)) {
+        node.setAttribute(name, value);
+    }
+}

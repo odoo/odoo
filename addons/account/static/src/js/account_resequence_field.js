@@ -1,31 +1,24 @@
-odoo.define('account.ShowResequenceRenderer', function (require) {
-"use strict";
+/** @odoo-module */
 
-const AbstractFieldOwl = require('web.AbstractFieldOwl');
-const field_registry = require('web.field_registry_owl');
+import { registry } from "@web/core/registry";
 
 const { Component, onWillUpdateProps } = owl;
 
-class ChangeLine extends Component { }
-ChangeLine.template = 'account.ResequenceChangeLine';
-ChangeLine.props = ["changeLine", 'ordering'];
+class ChangeLine extends Component {}
+ChangeLine.template = "account.ResequenceChangeLine";
+ChangeLine.props = ["changeLine", "ordering"];
 
-
-class ShowResequenceRenderer extends AbstractFieldOwl {
+class ShowResequenceRenderer extends Component {
     setup() {
-        super.setup();
-        this.data = this.value ? JSON.parse(this.value) : {
-            changeLines: [],
-            ordering: 'date',
-        };
-        onWillUpdateProps(() => {
-            Object.assign(this.data, JSON.parse(this.value));
-        });
+        this.formatData(this.props);
+        onWillUpdateProps((nextProps) => this.formatData(nextProps));
+    }
+
+    formatData(props) {
+        this.data = props.value ? JSON.parse(props.value) : { changeLines: [], ordering: "date" };
     }
 }
-ShowResequenceRenderer.template = 'account.ResequenceRenderer';
-ShowResequenceRenderer.components = { ChangeLine }
+ShowResequenceRenderer.template = "account.ResequenceRenderer";
+ShowResequenceRenderer.components = { ChangeLine };
 
-field_registry.add('account_resequence_widget', ShowResequenceRenderer);
-return ShowResequenceRenderer;
-});
+registry.category("fields").add("account_resequence_widget", ShowResequenceRenderer);

@@ -12,6 +12,7 @@ import { toStringExpression } from "./utils";
 /**
  * @typedef Compiler
  * @property {string} selector
+ * @property {string} [class]
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 
@@ -33,6 +34,9 @@ const BUTTON_CLICK_PARAMS = [
     // WOWL SAD: is adding the support for debounce attribute here justified or should we
     // just override compileButton in kanban compiler to add the debounce?
     "debounce",
+    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
+    // This should be refactor someday
+    "noSaveDialog",
 ];
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;

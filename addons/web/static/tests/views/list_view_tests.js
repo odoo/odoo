@@ -58,9 +58,8 @@ import { makeView, setupViewRegistries } from "./helpers";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { TextField } from "@web/views/fields/text/text_field";
 import { DynamicRecordList } from "@web/views/relational_model";
-import { registerCleanup } from "../helpers/cleanup";
 
-const { onWillStart } = owl;
+const { Component, onWillStart, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 
@@ -269,6 +268,17 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(target.querySelector(".o_list_button_add"));
         assert.isNotVisible(target.querySelector(".o_list_button_save"));
         assert.isNotVisible(target.querySelector(".o_list_button_discard"));
+    });
+
+    QUnit.test("list with class", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree class="myClass"><field name="foo"/></tree>',
+        });
+
+        assert.hasClass(target.querySelector(".o_list_renderer"), "myClass");
     });
 
     QUnit.test('list with create="0"', async function (assert) {
@@ -10050,11 +10060,7 @@ QUnit.module("Views", (hooks) => {
         "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
-            if (registry.category("fields").contains("html")) {
-                throw new Error("Time to remove this hack!");
-            }
-            registry.category("fields").add("html", TextField);
-            registerCleanup(() => registry.category("fields").remove("html"));
+            registry.category("fields").add("html", TextField, { force: true });
 
             await makeView({
                 type: "form",
@@ -13258,7 +13264,7 @@ QUnit.module("Views", (hooks) => {
         // Target handle
         const th = target.querySelector("th:nth-child(2)");
         const optionalDropdown = target.querySelector(".o_optional_columns_dropdown");
-        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const optionalInitialX = Math.floor(optionalDropdown.getBoundingClientRect().x);
         const resizeHandle = th.querySelector(".o_resize");
         const originalWidth = th.offsetWidth;
         const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
@@ -13949,6 +13955,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "selecting a row after another one containing a table within an html field should be the correct one",
         async function (assert) {
+            // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
+            registry.category("fields").add("html", TextField, { force: true });
             serverData.models.foo.fields.html = { string: "HTML field", type: "html" };
             serverData.models.foo.records[0].html = `
                 <table class="table table-bordered">
@@ -14151,4 +14159,57 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test("fieldDependencies support for fields", async (assert) => {
+        serverData.models.foo.records = [{ id: 1, int_field: 2 }];
+
+        class CustomField extends Component {}
+        CustomField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
+        registry.category("fields").add("custom_field", CustomField);
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `
+                <list>
+                    <field name="foo" widget="custom_field"/>
+                </list>
+            `,
+            serverData,
+        });
+
+        assert.strictEqual(target.querySelector("[name=foo] span").innerText, "2");
+    });
+
+    QUnit.test(
+        "fieldDependencies support for fields: dependence on a relational field",
+        async (assert) => {
+            class CustomField extends Component {}
+            CustomField.fieldDependencies = {
+                m2o: { type: "many2one", relation: "bar" },
+            };
+            CustomField.template = xml`<span t-esc="props.record.data.m2o[0]"/>`;
+            registry.category("fields").add("custom_field", CustomField);
+
+            await makeView({
+                resModel: "foo",
+                type: "list",
+                arch: `
+                    <list>
+                        <field name="foo" widget="custom_field"/>
+                    </list>
+                `,
+                serverData,
+                mockRPC: (route, args) => {
+                    assert.step(args.method);
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name=foo] span").innerText, "1");
+            assert.verifySteps(["get_views", "web_search_read"]);
+        }
+    );
 });

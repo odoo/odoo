@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-// import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
 import { FormRenderer } from "./form_renderer";
 import { RelationalModel } from "../basic_relational_model";
 import { FormArchParser } from "./form_arch_parser";
@@ -36,4 +36,4 @@ export const formView = {
     },
 };
 
-// registry.category("views").add("form", formView);
+registry.category("views").add("form", formView);

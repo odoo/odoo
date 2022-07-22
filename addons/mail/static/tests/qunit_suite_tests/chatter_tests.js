@@ -4,8 +4,8 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import { WEBCLIENT_LOAD_ROUTES } from '@mail/../tests/helpers/webclient_setup';
 
 import testUtils from 'web.test_utils';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
-import { ViewAdapter } from "@web/legacy/action_adapters";
+import { clickEdit, patchWithCleanup, selectDropdownItem } from '@web/../tests/helpers/utils';
+import { ListController } from "@web/views/list/list_controller";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter');
@@ -37,7 +37,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, '');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
 QUnit.test('list activity widget with activities', async function (assert) {
@@ -90,7 +90,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.containsOnce(secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual(secondRow.querySelector('.o_activity_summary').innerText, 'Type 2');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
 QUnit.test('list activity widget with exception', async function (assert) {
@@ -130,7 +130,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.containsOnce(document.body, '.o_activity_color_today.text-warning.fa-warning');
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Warning');
 
-    assert.verifySteps(['/web/dataset/search_read']);
+    assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
 
 QUnit.test('list activity widget: open dropdown', async function (assert) {
@@ -190,7 +190,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         serverData: { views },
     });
 
-    patchWithCleanup(ViewAdapter.prototype, {
+    patchWithCleanup(ListController.prototype, {
         setup() {
             this._super();
             const selectRecord = this.props.selectRecord;
@@ -223,8 +223,8 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Meet FP');
 
     assert.verifySteps([
-        '/web/dataset/search_read',
-        'select_record [2,{\"mode\":\"readonly\"}]',
+        'web_search_read',
+        'select_record [2,{"activeIds":[2]}]',
         'open dropdown',
         'activity_format',
         'action_feedback',
@@ -283,9 +283,9 @@ QUnit.test('list activity exception widget with activity', async function (asser
     });
 
     assert.containsN(document.body, '.o_data_row', 2, "should have two records");
-    assert.doesNotHaveClass(document.querySelector('.o_data_row .o_activity_exception_cell div'), 'fa-warning',
+    assert.doesNotHaveClass(document.querySelector('.o_data_row .o_activity_exception_cell div div'), 'fa-warning',
         "there is no any exception activity on record");
-    assert.hasClass(document.querySelectorAll('.o_data_row .o_activity_exception_cell div')[1], 'fa-warning',
+    assert.hasClass(document.querySelectorAll('.o_data_row .o_activity_exception_cell div div')[1], 'fa-warning',
         "there is an exception on a record");
 });
 
@@ -479,7 +479,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
     const views = {
         'mail.message,false,form': '<form><field name="partner_ids" widget="many2many_tags"/></form>',
     };
-    var { click, openView } = await start({
+    var { openView } = await start({
         serverData: { views },
     });
     await openView({
@@ -490,13 +490,12 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
 
     assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);
 
-    await click('.o_form_button_edit');
+    await clickEdit(document.body);
 
-    assert.hasClass(document.querySelector('.o_form_view'), 'o_form_editable');
+    assert.containsOnce(document.body, '.o_form_editable');
 
     // add a record to the relation
-    await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
-    await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
+    await selectDropdownItem(document.body, 'partner_ids', "Public user");
 
     assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 101);
 });
