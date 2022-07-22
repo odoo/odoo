@@ -311,7 +311,7 @@ const LivechatButton = Widget.extend({
                 body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id,
+                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             }, { prepend: true });
         }
     },

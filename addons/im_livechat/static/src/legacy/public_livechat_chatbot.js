@@ -766,7 +766,7 @@ const QWeb = core.qweb;
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
                 message_type: "comment",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id,
+                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             });
         }
 

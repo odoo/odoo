@@ -110,10 +110,10 @@ const PublicLivechatView = Widget.extend({
      */
     render(options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id && this.isAtBottom()) {
+        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.id && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
-        this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id;
+        this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
         const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.getMessages());

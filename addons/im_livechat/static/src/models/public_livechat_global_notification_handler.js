@@ -27,7 +27,7 @@ registerModel({
         _handleNotification({ payload, type }) {
             switch (type) {
                 case 'im_livechat.history_command': {
-                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id) {
+                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
                     const cookie = utils.get_cookie(this.messaging.publicLivechatGlobal.LIVECHAT_COOKIE_HISTORY);
@@ -40,7 +40,7 @@ registerModel({
                     return;
                 }
                 case 'mail.channel.member/typing_status': {
-                    if (payload.channel_id !== this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id) {
+                    if (payload.channel_id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
                     const partnerID = payload.partner_id;
@@ -56,7 +56,7 @@ registerModel({
                     return;
                 }
                 case 'mail.channel/new_message': {
-                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id) {
+                    if (payload.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
                     const notificationData = payload.message;
