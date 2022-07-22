@@ -1798,7 +1798,7 @@ export class OdooEditor extends EventTarget {
 
         const mainCommands = [
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Heading 1'),
                 description: this.options._t('Big section heading.'),
                 fontawesome: 'fa-header',
@@ -1807,7 +1807,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Heading 2'),
                 description: this.options._t('Medium section heading.'),
                 fontawesome: 'fa-header',
@@ -1816,7 +1816,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Heading 3'),
                 description: this.options._t('Small section heading.'),
                 fontawesome: 'fa-header',
@@ -1825,7 +1825,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Text'),
                 description: this.options._t('Paragraph block.'),
                 fontawesome: 'fa-paragraph',
@@ -1834,7 +1834,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Bulleted list'),
                 description: this.options._t('Create a simple bulleted list.'),
                 fontawesome: 'fa-list-ul',
@@ -1843,7 +1843,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Numbered list'),
                 description: this.options._t('Create a list with numbering.'),
                 fontawesome: 'fa-list-ol',
@@ -1852,7 +1852,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Checklist'),
                 description: this.options._t('Track tasks with a checklist.'),
                 fontawesome: 'fa-check-square-o',
@@ -1861,7 +1861,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Separator'),
                 description: this.options._t('Insert an horizontal rule separator.'),
                 fontawesome: 'fa-minus',
@@ -1870,7 +1870,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Table'),
                 description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
@@ -1879,7 +1879,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Switch direction'),
                 description: this.options._t('Switch the text\'s direction.'),
                 fontawesome: 'fa-exchange',
@@ -3145,8 +3145,8 @@ export class OdooEditor extends EventTarget {
                     const baseEmbedCommand = [
                         {
                             groupName: 'paste',
-                            title: 'Paste as URL',
-                            description: 'Create an URL.',
+                            title: this.options._t('Paste as URL'),
+                            description: this.options._t('Create an URL.'),
                             fontawesome: 'fa-link',
                             callback: () => {
                                 this.historyUndo();
@@ -3168,8 +3168,8 @@ export class OdooEditor extends EventTarget {
                         },
                         {
                             groupName: 'paste',
-                            title: 'Paste as text',
-                            description: 'Simple text paste.',
+                            title: this.options._t('Paste as text'),
+                            description: this.options._t('Simple text paste.'),
                             fontawesome: 'fa-font',
                             callback: () => {},
                         },
@@ -3191,9 +3191,9 @@ export class OdooEditor extends EventTarget {
                         this.commandBar.open({
                             commands: [
                                 {
-                                    groupName: 'Embed',
-                                    title: 'Embed Image',
-                                    description: 'Embed the image in the document.',
+                                    groupName: this.options._t('Embed'),
+                                    title: this.options._t('Embed Image'),
+                                    description: this.options._t('Embed the image in the document.'),
                                     fontawesome: 'fa-image',
                                     shouldPreValidate: () => false,
                                     callback: () => {
@@ -3219,9 +3219,9 @@ export class OdooEditor extends EventTarget {
                         this.commandBar.open({
                             commands: [
                                 {
-                                    groupName: 'Embed',
-                                    title: 'Embed Youtube Video',
-                                    description: 'Embed the youtube video in the document.',
+                                    groupName: this.options._t('Embed'),
+                                    title: this.options._t('Embed Youtube Video'),
+                                    description: this.options._t('Embed the youtube video in the document.'),
                                     fontawesome: 'fa-youtube-play',
                                     shouldPreValidate: () => false,
                                     callback: async () => {
