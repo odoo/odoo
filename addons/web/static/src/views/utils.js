@@ -8,6 +8,22 @@ const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
 
 /**
+ * Add dependencies to activeFields
+ *
+ * @param {Object} activeFields
+ * @param {Object} [dependencies={}]
+ */
+export function addFieldDependencies(activeFields, dependencies = {}) {
+    for (const [name, dependency] of Object.entries(dependencies)) {
+        if (!(name in activeFields)) {
+            activeFields[name] = Object.assign({ name, rawAttrs: {} }, dependency, {
+                modifiers: { invisible: true },
+            });
+        }
+    }
+}
+
+/**
  * Parse the arch to check if is true or false
  * If the string is empty, 0, False or false it's considered as false
  * The rest is considered as true

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormView" owl="1">
-        <div t-att-class="props.className" t-ref="root">
+        <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-if="showingTranslateAlert[model.root.resId]" t-call="web.TranslateAlert" />
                 <t t-set-slot="layout-buttons">

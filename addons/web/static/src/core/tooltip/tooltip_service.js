@@ -120,6 +120,8 @@ export const tooltipService = {
                         { tooltip, template, info },
                         { position }
                     );
+                    // Prevent title from showing on a parent at the same time
+                    target.title = "";
                 }
             }, delay);
         }

@@ -49,8 +49,8 @@ tour.register('totp_admin_self_invite', {
     content: "check that user cannot invite themselves to use 2FA.",
     trigger: "body",
     run: function () {
-        var $inviteBtn = $('button:contains(Invite to use 2FA)');
-        if ($inviteBtn.hasClass('o_invisible_modifier')) {
+        const inviteBtn = $('button:contains(Invite to use 2FA)')[0];
+        if (!inviteBtn) {
             $('body').addClass('CannotInviteYourself');
         }
     }

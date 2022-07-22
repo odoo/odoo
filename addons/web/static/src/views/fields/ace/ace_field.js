@@ -25,10 +25,13 @@ export class AceField extends Component {
             return Promise.all(proms);
         });
 
-        useEffect(() => {
-            this.setupAce();
-            return () => this.destroyAce();
-        });
+        useEffect(
+            () => {
+                this.setupAce();
+                return () => this.destroyAce();
+            },
+            () => [this.editorRef.el]
+        );
     }
 
     get aceSession() {

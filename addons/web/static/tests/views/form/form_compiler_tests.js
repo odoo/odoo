@@ -32,7 +32,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -44,7 +44,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
                         <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
@@ -119,6 +119,53 @@ QUnit.module("Form Compiler", () => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
+    QUnit.test("properly compile no sheet", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header>someHeader</header>
+            <div>someDiv</div>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <t>
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                <div>someDiv</div>
+            </div>
+            </t>`;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile sheet", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header>someHeader</header>
+            <div>someDiv</div>
+            <sheet>
+                <div>inside sheet</div>
+            </sheet>
+            <div>after sheet</div>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <t>
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" t-ref="compiled_view_root">
+                <div class="o_form_sheet_bg">
+                    <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                    <div>someDiv</div>
+                    <div class="o_form_sheet">
+                        <div>inside sheet</div>
+                    </div>
+                </div>
+                <div>after sheet</div>
+            </div>
+            </t>
+        `;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
     QUnit.test("properly compile invisible", async (assert) => {
         // cf python side: def transfer_node_to_modifiers
         // modifiers' string are evaluated to their boolean or array form
@@ -155,6 +202,38 @@ QUnit.module("Form Compiler", () => {
             <div class="visible3" />
             <div t-if="!evalDomainFromRecord(props.record,&quot;[['display_name','=','take']]&quot;)" />
         `;
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile status bar with content", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header><div>someDiv</div></header>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="o_form_statusbar">
+               <StatusBarButtons readonly="!props.record.isInEdition">
+                  <t t-set-slot="button_0" isVisible="true" displayInReadOnly="false">
+                     <div>someDiv</div>
+                  </t>
+               </StatusBarButtons>
+            </div>`;
+
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile status bar without content", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+            <header></header>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="o_form_statusbar">
+               <StatusBarButtons readonly="!props.record.isInEdition"/>
+            </div>`;
+
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 });

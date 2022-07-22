@@ -20,8 +20,17 @@ export class StatusBarField extends Component {
     }
 
     get currentName() {
-        const item = this.options.find((item) => item.isSelected);
-        return item ? item.name : "";
+        switch (this.props.record.fields[this.props.name].type) {
+            case "many2one": {
+                const item = this.options.find((item) => item.isSelected);
+                return item ? item.name : "";
+            }
+            case "selection": {
+                const item = this.options.find((item) => item[0] === this.props.value);
+                return item ? item[1] : "";
+            }
+        }
+        throw new Error("Unsupported field type for StatusBarField");
     }
     get options() {
         switch (this.props.record.fields[this.props.name].type) {

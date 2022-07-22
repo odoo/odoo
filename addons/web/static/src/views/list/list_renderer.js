@@ -441,6 +441,10 @@ export class ListRenderer extends Component {
             }));
     }
 
+    get displayOptionalFields() {
+        return this.getOptionalFields.length;
+    }
+
     nbRecordsInGroup(group) {
         if (group.isFolded) {
             return 0;
@@ -768,7 +772,10 @@ export class ListRenderer extends Component {
         }
     }
 
-    async onCellClicked(record, column) {
+    async onCellClicked(record, column, ev) {
+        if (ev.target.special_click) {
+            return;
+        }
         const recordAfterResequence = async () => {
             const recordIndex = this.props.list.records.indexOf(record);
             await this.resequencePromise;
@@ -1134,7 +1141,7 @@ export class ListRenderer extends Component {
                         // add a line
                         if (record.checkValidity()) {
                             const { context } = this.creates[0];
-                            this.props.onAdd(context);
+                            this.props.onAdd({ context });
                         }
                     } else if (
                         activeActions.create &&
@@ -1487,6 +1494,10 @@ export class ListRenderer extends Component {
         }
         // Legacy DatePicker
         if (target.closest(".daterangepicker")) {
+            return;
+        }
+        // Legacy autocomplete
+        if (ev.target.closest(".ui-autocomplete")) {
             return;
         }
         this.props.list.unselectRecord(true);

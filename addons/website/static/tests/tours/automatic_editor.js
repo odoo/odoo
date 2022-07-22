@@ -23,23 +23,13 @@ wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
     },
     {
         content: 'select Parseltongue',
-        trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-        extra_trigger: '.dropdown-item:contains(Parseltongue)',
-        run: function () {
-            // The dropdown element is outside the action manager, and can therefor not
-            // be selected directly by "trigger".
-            // That's why we need to simulate the click in JS
-            const element = $('.dropdown-item:contains(Parseltongue)');
-            if (!element.length) {
-                console.error('Lang not found');
-            }
-            element.click();
-        },
+        trigger: '.dropdown-item:contains(Parseltongue)',
+        in_modal: false,
     },
     {
         content: "load parseltongue",
         extra_trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
-        trigger: '.modal-footer button:first',
+        trigger: '.modal-footer button[name=lang_install]',
     },
     {
         content: "Select the language dropdown",
@@ -66,7 +56,7 @@ wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
     },
     {
         content: "insert website name",
-        trigger: 'input[name="name"]',
+        trigger: 'div[name="name"] input',
         run: 'text Website EN'
     },
     {

@@ -47,7 +47,7 @@ up a management by affair.
     'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web.assets_backend': [
-            'hr_timesheet/static/src/scss/timesheets_task_form.scss',
+            'hr_timesheet/static/src/**/*.scss',
             'hr_timesheet/static/src/**/*.js',
             ('remove', 'hr_timesheet/static/src/js/*_legacy.js')
         ],
@@ -58,7 +58,7 @@ up a management by affair.
             'hr_timesheet/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'hr_timesheet/static/src/xml/**/*',
+            'hr_timesheet/static/src/**/*.xml',
         ],
     },
     'license': 'LGPL-3',

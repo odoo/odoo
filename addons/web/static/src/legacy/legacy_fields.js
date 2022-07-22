@@ -2,10 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
+import { evalDomain } from "@web/views/utils";
 import { Domain } from "web.Domain";
 import legacyFieldRegistry from "web.field_registry";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import viewUtils from "web.viewUtils";
+import { useWowlService } from "@web/legacy/utils";
+import { RPCError } from "@web/core/network/rpc_service";
 
 const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
@@ -22,7 +25,11 @@ class FieldAdapter extends ComponentAdapter {
         super.setup();
         this.wowlEnv = this.env;
         this.env = Component.env;
+        this.orm = useWowlService("orm");
         useEffect(() => {
+            if (!this.widgetEl || !this.widgetEl.parentElement) {
+                return;
+            }
             // if classNames are given to the field, we only want
             // to add those classes to the legacy field without
             // the parent element affecting the style of the field
@@ -63,7 +70,7 @@ class FieldAdapter extends ComponentAdapter {
             return this.widget._widgetRenderAndInsert(() => {});
         } else {
             // the mode is the same, simply reset the FieldWidget with the new record
-            return this.widget.reset(record, this.lastFieldChangedEvent);
+            return this.widget.reset(record, this.lastFieldChangedEvent, true);
         }
     }
 
@@ -104,8 +111,35 @@ class FieldAdapter extends ComponentAdapter {
                             } else if (valueIds.length && "id" in valueIds[0]) {
                                 newIds = valueIds.map((r) => r.id);
                             }
-                        } else if ("id" in valueIds) {
+                        } else if ("id" in valueIds && valueIds.id) {
                             newIds = [valueIds.id];
+                        } else if ("id" in valueIds) {
+                            const fieldName = this.props.fieldParams.name;
+                            let newId;
+                            try {
+                                [newId] = await this.orm.call(
+                                    this.props.record.fields[fieldName].relation,
+                                    "name_create",
+                                    [valueIds.display_name],
+                                    {
+                                        context: this.props.record.getFieldContext(fieldName),
+                                    }
+                                );
+                            } catch (e) {
+                                if (!(e instanceof RPCError)) {
+                                    throw e;
+                                }
+                                if (payload.onFailure) {
+                                    // wrap error for guardedCatch compatibility in legacy code
+                                    payload.onFailure({
+                                        message: e,
+                                        event: $.Event(),
+                                        legacy: true,
+                                    });
+                                }
+                                return;
+                            }
+                            newIds = [newId];
                         }
                         value = {
                             resIds: [...record.data[name].res_ids, ...newIds],
@@ -181,6 +215,7 @@ function mapStaticListDatapoint(staticList) {
         data: staticList.records.map(mapRecordDatapoint),
         groupedBy: [],
         orderedBy: staticList.orderBy,
+        count: staticList.count,
     };
 }
 
@@ -254,10 +289,11 @@ function registerField(name, LegacyFieldWidget) {
             const { name, record } = this.props;
             if (record.model.__bm__) {
                 const legacyRecord = record.model.__bm__.get(record.__bm_handle__);
+                const hasReadonlyModifier = record.isReadonly(name);
                 const options = {
                     viewType: legacyRecord.viewType,
-                    hasReadonlyModifier: record.isReadonly(name),
-                    mode: record.mode,
+                    hasReadonlyModifier,
+                    mode: hasReadonlyModifier ? "readonly" : record.mode,
                 };
                 return { name, record: legacyRecord, options };
             } else {
@@ -276,16 +312,19 @@ function registerField(name, LegacyFieldWidget) {
                         arch: viewUtils.parseArch(arch),
                     };
                 }
+                const modifiers = JSON.parse(fieldInfo.rawAttrs.modifiers || "{}");
+                let hasReadonlyModifier = evalDomain(modifiers.readonly, record.evalContext);
                 const options = {
                     attrs: {
                         ...fieldInfo.rawAttrs,
-                        modifiers: JSON.parse(fieldInfo.rawAttrs.modifiers || "{}"),
+                        modifiers,
                         options: fieldInfo.options,
                         widget: fieldInfo.widget,
                         views,
                         mode: fieldInfo.viewMode,
                     },
-                    mode: record.mode,
+                    mode: hasReadonlyModifier ? "readonly" : record.mode,
+                    hasReadonlyModifier,
                 };
                 return { name, record: legacyRecord, options };
             }
@@ -302,7 +341,12 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.template = legacyFieldTemplate;
     LegacyField.components = { FieldAdapter };
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
+    LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
+    LegacyField.useSubView = LegacyFieldWidget.prototype.useSubview;
     if (!fieldRegistry.contains(name)) {
+        if (odoo.debug) {
+            console.log(`Fields: using legacy ${name} FieldWidget`);
+        }
         fieldRegistry.add(name, LegacyField);
     }
 }

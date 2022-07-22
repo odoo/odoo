@@ -9337,6 +9337,45 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("o2m add a line custom control create editable with 'tab'", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <control>
+                                    <create string="Add soft shell turtle" context="{'default_turtle_foo': 'soft'}"/>
+                                </control>
+                                <field name="turtle_foo"/>
+                                </tree>
+                        </field>
+                    </group>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                const { method, kwargs } = args;
+                if (method === "onchange") {
+                    assert.step("onchange");
+                    assert.strictEqual(kwargs.context.default_turtle_foo, "soft");
+                }
+            },
+        });
+        await clickEdit(target);
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, "[name='turtle_foo'] input", "Test");
+        assert.containsOnce(target, ".o_data_row");
+
+        triggerHotkey("Tab");
+        await nextTick();
+        assert.containsN(target, ".o_data_row", 2);
+        assert.verifySteps(["onchange"]);
+    });
+
     QUnit.test("one2many with onchange, required field, shortcut enter", async function (assert) {
         serverData.models.turtle.onchanges = {
             turtle_foo: function () {},
@@ -11918,4 +11957,30 @@ QUnit.module("Fields", (hooks) => {
             "should have the correct values in the many2many tag widget"
         );
     });
+
+    QUnit.test(
+        "does not crash when you parse a tree arch containing another tree arch",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="turtles">
+                                <tree>
+                                    <field name="turtle_foo"/>
+                                </tree>
+                            </field>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.containsOnce(target, ".o_list_renderer");
+        }
+    );
 });

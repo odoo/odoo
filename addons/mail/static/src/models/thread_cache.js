@@ -298,6 +298,7 @@ registerModel({
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }
+            this.messaging.messagingBus.trigger('o-thread-loaded-messages', { thread: this.thread });
         },
     },
     fields: {

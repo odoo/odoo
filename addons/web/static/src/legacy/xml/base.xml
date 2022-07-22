@@ -549,7 +549,7 @@
 </t>
 
 <form t-name="ChangePassword" name="change_password_form" method="POST" aria-atomic="true">
-    <div class="o_form_view">
+    <div class="o_legacy_form_view">
         <table class="o_group o_inner_group o_label_nowrap">
             <tr>
                 <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
@@ -1540,21 +1540,6 @@
         <div class="col-6">
             <img class="img-fluid" t-att-src='_s + "/web/static/img/enterprise_upgrade.jpg"' draggable="false" alt="Upgrade to enterprise"/>
         </div>
-    </div>
-</t>
-
-<t t-name="BaseSetting.Tabs">
-    <t t-foreach="tabItems" t-as="tab" t-key="tab_index">
-        <div class="tab" t-attf-data-key="#{tab.key}" role="tab">
-            <div class="icon d-none d-md-block" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
-        </div>
-    </t>
-</t>
-
-<t t-name="BaseSetting.SearchHeader">
-    <div class="settingSearchHeader o_hidden h4" role="search">
-        <img class="icon" t-att-src="imgurl" alt="Search"></img>
-        <span class="appName"><t t-esc="string"/></span>
     </div>
 </t>
 

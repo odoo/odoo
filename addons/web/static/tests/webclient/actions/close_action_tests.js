@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
 import testUtils from "web.test_utils";
+import { registerCleanup } from "../../helpers/cleanup";
 import {
     click,
     getFixture,
     legacyExtraNextTick,
     nextTick,
-    patchWithCleanup,
+    patchWithCleanup
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
@@ -186,7 +187,18 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("web client is not deadlocked when a view crashes", async function (assert) {
-        assert.expect(3);
+        assert.expect(6);
+        const handler = (ev) => {
+            assert.step("error");
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
         const readOnFirstRecordDef = testUtils.makeTestPromise();
         const mockRPC = (route, args) => {
             if (args.method === "read" && args.args[0][0] === 1) {
@@ -198,9 +210,11 @@ QUnit.module("ActionManager", (hooks) => {
         // open first record in form view. this will crash and will not
         // display a form view
         await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
+        assert.verifySteps([]);
         await legacyExtraNextTick();
-        readOnFirstRecordDef.reject("not working as intended");
+        readOnFirstRecordDef.reject(new Error("not working as intended"));
         await nextTick();
+        assert.verifySteps(["error"])
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         // open another record, the read will not crash
         await testUtils.dom.click(

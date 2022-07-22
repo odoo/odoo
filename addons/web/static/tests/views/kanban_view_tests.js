@@ -1256,7 +1256,7 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.containsOnce(quickCreate, ".o_wowl_form_view.o_xxs_form_view");
+        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
         assert.containsOnce(quickCreate, "input");
         assert.containsOnce(
             quickCreate,
@@ -1329,7 +1329,7 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.containsOnce(quickCreate, ".o_wowl_form_view.o_xxs_form_view");
+        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
         assert.containsOnce(
             target,
             ".o_control_panel",
@@ -1746,13 +1746,13 @@ QUnit.module("Views", (hooks) => {
 
         await quickCreateRecord();
         assert.hasClass(
-            target.querySelector(".o_kanban_quick_create .o_wowl_form_view"),
+            target.querySelector(".o_kanban_quick_create .o_form_view"),
             "o_xxs_form_view"
         );
 
         await triggerEvent(window, "", "resize");
         assert.hasClass(
-            target.querySelector(".o_kanban_quick_create .o_wowl_form_view"),
+            target.querySelector(".o_kanban_quick_create .o_form_view"),
             "o_xxs_form_view"
         );
     });
@@ -2700,20 +2700,16 @@ QUnit.module("Views", (hooks) => {
 
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
         // specify a name and save
-        await editInput(target, ".modal .o_field_widget[name=foo]", "test");
-        await click(target, ".modal .modal-footer .btn-primary");
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "test");
+        await click(target, ".modal .o_form_button_save");
         assert.containsNone(target, ".modal");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
-        // FIXME: the new record should normally be the first one, but this behavior is temporarily
-        // broken, until we activate the new owl form view
-        const lastRecord = target.querySelectorAll(".o_kanban_group .o_kanban_record")[2];
-        assert.strictEqual(lastRecord.innerText, "test");
-        // const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
-        // assert.strictEqual(firstRecord.innerText, "test");
+        const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
+        assert.strictEqual(firstRecord.innerText, "test");
         assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
     });
 
@@ -2759,9 +2755,9 @@ QUnit.module("Views", (hooks) => {
 
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
 
-        await click(target.querySelector(".modal .modal-footer .btn-secondary"));
+        await click(target.querySelector(".modal .o_form_button_cancel"));
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
@@ -2815,9 +2811,12 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
-        assert.strictEqual(target.querySelector(".modal .o_field_widget[name=foo]").value, "blip");
-        await click(target, ".modal .modal-footer .btn-primary");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=foo] input").value,
+            "blip"
+        );
+        await click(target, ".modal .o_form_button_save");
 
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
@@ -2871,13 +2870,13 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
-        assert.containsOnce(target, ".modal .o_form_view.o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name=state]").value,
+            target.querySelector(".modal .o_field_widget[name=state] select").value,
             '"abc"'
         );
 
-        await click(target, ".modal .modal-footer .btn-primary");
+        await click(target, ".modal .o_form_button_save");
 
         assert.containsNone(target, ".modal .o_form_view .o_form_editable");
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
@@ -3429,7 +3428,7 @@ QUnit.module("Views", (hooks) => {
         blockGetViews = true;
         await quickCreateRecord();
 
-        assert.containsNone(target, ".o_wowl_form_view");
+        assert.containsNone(target, ".o_form_view");
 
         // click to fold the first column
         const clickColumnAction = await toggleColumnActions(0);
@@ -3440,7 +3439,7 @@ QUnit.module("Views", (hooks) => {
         prom.resolve();
         await nextTick();
 
-        assert.containsNone(target, ".o_wowl_form_view");
+        assert.containsNone(target, ".o_form_view");
         assert.containsOnce(target, ".o_column_folded");
     });
 
@@ -5000,7 +4999,7 @@ QUnit.module("Views", (hooks) => {
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(target, ".modal .modal-footer .btn-primary"); // click on save
+        await click(target, ".modal .o_form_button_save"); // click on save
 
         assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(
@@ -10660,4 +10659,67 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test("fieldDependencies support for fields", async (assert) => {
+        class CustomField extends Component {}
+        CustomField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
+        registry.category("fields").add("custom_field", CustomField);
+
+        await makeView({
+            resModel: "partner",
+            type: "kanban",
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" widget="custom_field"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            serverData,
+        });
+
+        assert.strictEqual(target.querySelector("[name=foo] span").innerText, "10");
+    });
+
+    QUnit.test(
+        "fieldDependencies support for fields: dependence on a relational field",
+        async (assert) => {
+            class CustomField extends Component {}
+            CustomField.fieldDependencies = {
+                product_id: { type: "many2one", relation: "product" },
+            };
+            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+            registry.category("fields").add("custom_field", CustomField);
+
+            await makeView({
+                resModel: "partner",
+                type: "kanban",
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo" widget="custom_field"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                serverData,
+                mockRPC: (route, args) => {
+                    assert.step(args.method);
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name=foo] span").innerText, "hello");
+            assert.verifySteps(["get_views", "web_search_read"]);
+        }
+    );
 });

@@ -657,7 +657,7 @@ QUnit.module('LegacyViews', {
 
         assert.strictEqual($quickCreate.length, 1,
             "should have a quick create element in the first column");
-        assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,
+        assert.strictEqual($quickCreate.find('.o_legacy_form_view.o_xxs_form_view').length, 1,
             "should have rendered an XXS form view");
         assert.strictEqual($quickCreate.find('input').length, 1,
             "should have only one input");
@@ -729,7 +729,7 @@ QUnit.module('LegacyViews', {
 
         assert.strictEqual($quickCreate.length, 1,
             "should have a quick create element in the first column");
-        assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,
+        assert.strictEqual($quickCreate.find('.o_legacy_form_view.o_xxs_form_view').length, 1,
             "should have rendered an XXS form view");
         assert.containsOnce(kanban, '.o_control_panel', 'should not have instantiated an extra control panel');
         assert.strictEqual($quickCreate.find('input').length, 2,
@@ -1050,11 +1050,11 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click(kanban.el.querySelector('.o_kanban_header .o_kanban_quick_add i'));
 
         const quickCreate = kanban.el.querySelector('.o_kanban_quick_create');
-        assert.hasClass(quickCreate.querySelector('.o_form_view'), "o_xxs_form_view");
+        assert.hasClass(quickCreate.querySelector('.o_legacy_form_view'), "o_xxs_form_view");
 
         // trigger window resize explicitly to call _applyFormSizeClass
         window.dispatchEvent(new Event('resize'));
-        assert.hasClass(quickCreate.querySelector('.o_form_view'), 'o_xxs_form_view');
+        assert.hasClass(quickCreate.querySelector('.o_legacy_form_view'), 'o_xxs_form_view');
 
         kanban.destroy();
         testUtils.mock.unpatch(FormRenderer);
@@ -1905,7 +1905,7 @@ QUnit.module('LegacyViews', {
 
         await testUtils.kanban.quickCreate(kanban, 'test');
 
-        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal .o_legacy_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
         assert.strictEqual($('.modal .o_field_many2one input').val(), 'hello',
             "the correct product_id should already be set");
@@ -1967,7 +1967,7 @@ QUnit.module('LegacyViews', {
 
         await testUtils.kanban.quickCreate(kanban, 'test');
 
-        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal .o_legacy_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
 
         await testUtils.modal.clickButton('Discard');
@@ -2025,7 +2025,7 @@ QUnit.module('LegacyViews', {
         await testUtils.fields.editInput(kanban.$('.o_kanban_quick_create input'), 'test');
         await testUtils.dom.click(kanban.$('.o_kanban_add'));
 
-        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal .o_legacy_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
         assert.strictEqual($('.modal .o_field_widget[name=foo]').val(), 'yop',
             "the correct default value for foo should already be set");
@@ -2084,7 +2084,7 @@ QUnit.module('LegacyViews', {
         await testUtils.fields.editInput(kanban.$('.o_kanban_quick_create input'), 'test');
         await testUtils.dom.click(kanban.$('.o_kanban_add'));
 
-        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal .o_legacy_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
         assert.strictEqual($('.modal .o_field_widget[name=state]').val(), '"abc"',
             "the correct default value for state should already be set");
@@ -2618,7 +2618,7 @@ QUnit.module('LegacyViews', {
         // click to quick create a new record in the first column (this operation is delayed)
         await testUtils.dom.click(kanban.$('.o_kanban_group:first .o_kanban_quick_add'));
 
-        assert.containsNone(kanban, '.o_form_view');
+        assert.containsNone(kanban, '.o_legacy_form_view');
 
         // click to fold the first column
         await testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:first'));
@@ -2629,7 +2629,7 @@ QUnit.module('LegacyViews', {
         def.resolve();
         await testUtils.nextTick();
 
-        assert.containsNone(kanban, '.o_form_view');
+        assert.containsNone(kanban, '.o_legacy_form_view');
         assert.containsOnce(kanban, '.o_column_folded');
 
         kanban.destroy();

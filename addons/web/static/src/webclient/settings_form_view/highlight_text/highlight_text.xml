@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.HighlightText" owl="1">
+        <t t-foreach="splitText" t-as="name" t-key="name_index">
+            <b t-if="name_index % 2" t-out="name" t-att-class="constructor.highlightClass"/>
+            <t t-else="" t-out="name"/>
+        </t>
+    </t>
+</templates>

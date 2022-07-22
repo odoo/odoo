@@ -12,16 +12,7 @@ export class RadioField extends Component {
     }
 
     get items() {
-        switch (this.props.record.fields[this.props.name].type) {
-            case "selection":
-                return this.props.record.fields[this.props.name].selection;
-            case "many2one": {
-                const value = this.props.record.preloadedData[this.props.name] || [];
-                return value.map((item) => [item.id, item.display_name]);
-            }
-            default:
-                return [];
-        }
+        return RadioField.getItems(this.props.name, this.props.record);
     }
     get string() {
         return this.props.record.activeFields[this.props.name].string;
@@ -71,6 +62,19 @@ RadioField.extractProps = ({ attrs }) => {
     return {
         orientation: attrs.options.horizontal ? "horizontal" : "vertical",
     };
+};
+
+RadioField.getItems = (fieldName, record) => {
+    switch (record.fields[fieldName].type) {
+        case "selection":
+            return record.fields[fieldName].selection;
+        case "many2one": {
+            const value = record.preloadedData[fieldName] || [];
+            return value.map((item) => [item.id, item.display_name]);
+        }
+        default:
+            return [];
+    }
 };
 
 registry.category("fields").add("radio", RadioField);

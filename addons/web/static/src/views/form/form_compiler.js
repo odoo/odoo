@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { SIZES } from "@web/core/ui/ui_service";
 import {
     append,
     combineAttributes,
@@ -76,15 +77,21 @@ export class FormCompiler extends ViewCompiler {
             fieldName: `'${fieldName}'`,
             record: `props.record`,
             fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
+            className: `"${label.className}"`,
         };
         let labelText = label.textContent || fieldString;
         labelText = labelText
             ? toStringExpression(labelText)
             : `props.record.fields['${fieldName}'].string`;
-        return createElement("FormLabel", {
+        const formLabel = createElement("FormLabel", {
             "t-props": objectToString(props),
             string: labelText,
         });
+        const condition = label.getAttribute("t-if");
+        if (condition) {
+            formLabel.setAttribute("t-if", condition);
+        }
+        return formLabel;
     }
 
     /**
@@ -181,15 +188,28 @@ export class FormCompiler extends ViewCompiler {
     compileForm(el, params) {
         const form = createElement("div", {
             "t-att-class": "props.class",
-            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}`,
+            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`,
         });
-        let hasSheet = false;
-        for (const child of el.childNodes) {
-            hasSheet = hasSheet || getTag(child, true) === "sheet";
-            append(form, this.compileNode(child, params));
-        }
-        if (!hasSheet) {
+
+        const sheetNode = el.querySelector("sheet");
+        if (!sheetNode) {
+            for (const child of el.childNodes) {
+                append(form, this.compileNode(child, params));
+            }
             form.className = "o_form_nosheet";
+        } else {
+            let compiledList = [];
+            for (const child of el.childNodes) {
+                const compiled = this.compileNode(child, params);
+                if (getTag(child, true) === "sheet") {
+                    append(form, compiled);
+                    compiled.prepend(...compiledList);
+                    compiledList = [];
+                } else if (compiled) {
+                    compiledList.push(compiled);
+                }
+            }
+            append(form, compiledList);
         }
         return form;
     }
@@ -343,23 +363,21 @@ export class FormCompiler extends ViewCompiler {
                 buttons.push(compiled);
             }
         }
-        if (buttons.length) {
-            let slotId = 0;
-            const statusBarButtons = createElement("StatusBarButtons");
-            statusBarButtons.setAttribute("readonly", "!props.record.isInEdition");
-            for (const button of buttons) {
-                const slot = createElement("t", {
-                    "t-set-slot": `button_${slotId++}`,
-                    isVisible: button.getAttribute("t-if") || true,
-                    displayInReadOnly:
-                        button.hasAttribute("className") &&
-                        button.getAttribute("className").includes("oe_read_only"),
-                });
-                append(slot, button);
-                append(statusBarButtons, slot);
-            }
-            append(statusBar, statusBarButtons);
+        let slotId = 0;
+        const statusBarButtons = createElement("StatusBarButtons");
+        statusBarButtons.setAttribute("readonly", "!props.record.isInEdition");
+        for (const button of buttons) {
+            const slot = createElement("t", {
+                "t-set-slot": `button_${slotId++}`,
+                isVisible: button.getAttribute("t-if") || true,
+                displayInReadOnly:
+                    button.hasAttribute("className") &&
+                    button.getAttribute("className").includes("oe_read_only"),
+            });
+            append(slot, button);
+            append(statusBarButtons, slot);
         }
+        append(statusBar, statusBarButtons);
         append(statusBar, others);
         return statusBar;
     }

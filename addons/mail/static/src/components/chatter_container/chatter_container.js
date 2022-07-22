@@ -36,7 +36,7 @@ export class ChatterContainer extends Component {
         this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);
         onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
-        onWillDestroy(this._onWillDestroy);
+        onWillDestroy(() => this._onWillDestroy());
     }
 
     _willUpdateProps(nextProps) {
@@ -61,10 +61,10 @@ export class ChatterContainer extends Component {
      */
     async _insertFromProps(props) {
         const messaging = await this.env.services.messaging.get();
-        if (this.__owl__.status === 5 /* destroyed */) {
+        if (owl.status(this) === "destroyed") {
             return;
         }
-        const values = { id: this.chatterId, ...props };
+        const values = { id: this.chatterId, ...props, className: undefined };
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
@@ -93,6 +93,10 @@ export class ChatterContainer extends Component {
 Object.assign(ChatterContainer, {
     components: { Chatter: getMessagingComponent('Chatter') },
     props: {
+        className: {
+            type: String,
+            optional: true,
+        },
         hasActivities: {
             type: Boolean,
             optional: true,
@@ -142,6 +146,10 @@ Object.assign(ChatterContainer, {
             optional: true,
         },
         threadModel: String,
+        webRecord: {
+            type: Object,
+            optional: true,
+        }
     },
     template: 'mail.ChatterContainer',
 });

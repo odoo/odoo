@@ -20,7 +20,8 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     }, {
         trigger: '.o_control_panel button:contains("' + _t('Print') + '")',
     }, {
-        trigger: '.o_control_panel .o-dropdown-menu a:contains("' + _t('Invoices without Payment') + '")',
+        // TODO: remove the first selector when the "account_invoice_extract_preview" view is converted to owl
+        trigger: '.o_control_panel .o-dropdown-menu a:contains("' + _t('Invoices without Payment') + '"), .o_control_panel .o-dropdown--menu span:contains("' + _t('Invoices without Payment') + '")',
     }, {
         trigger: 'iframe .o_report_layout_standard h2',
         content: 'Primary color is correct',

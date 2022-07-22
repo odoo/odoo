@@ -23,6 +23,13 @@ export class Widget extends Component {
         return findWidgetComponent(this.props.name);
     }
 
+    get classNames() {
+        return {
+            o_widget: true,
+            [`o_widget_${this.props.name}`]: true,
+            [this.props.className]: Boolean(this.props.className),
+        };
+    }
     get widgetProps() {
         const { record, node: rawNode, options, readonly } = this.props;
         const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
@@ -30,16 +37,12 @@ export class Widget extends Component {
     }
 }
 Widget.template = xml/*xml*/ `
-    <div class="o_widget" t-att-class="props.className" t-att-style="props.style">
+    <div t-att-class="classNames" t-att-style="props.style">
         <t t-component="Widget" t-props="widgetProps" />
     </div>`;
 
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
-    const component = findWidgetComponent(name);
-    return {
-        name,
-        component,
-        fieldDependencies: { ...component.fieldDependencies },
-    };
+    const WidgetComponent = findWidgetComponent(name);
+    return { WidgetComponent };
 };

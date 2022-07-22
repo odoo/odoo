@@ -1121,7 +1121,7 @@ QUnit.module('Legacy relational_fields', {
             },
         });
 
-        assert.containsNone(form.$('.o_form_view'), 'select');
+        assert.containsNone(form.$('.o_legacy_form_view'), 'select');
         assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
             "should have rendered the many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=product_id]').attr('raw-value'), '37',
@@ -1135,7 +1135,7 @@ QUnit.module('Legacy relational_fields', {
 
         await testUtils.form.clickEdit(form);
 
-        assert.containsN(form.$('.o_form_view'), 'select', 3);
+        assert.containsN(form.$('.o_legacy_form_view'), 'select', 3);
         assert.containsOnce(form, 'select[name="product_id"] option:contains(xphone)',
             "should have fetched xphone option");
         assert.containsOnce(form, 'select[name="product_id"] option:contains(xpad)',
@@ -1243,7 +1243,7 @@ QUnit.module('Legacy relational_fields', {
             },
         });
 
-        await testUtils.fields.editSelect(form.$('.o_form_view select'), 'false');
+        await testUtils.fields.editSelect(form.$('.o_legacy_form_view select'), 'false');
         await testUtils.form.clickSave(form);
 
         form.destroy();
@@ -1608,7 +1608,7 @@ QUnit.module('Legacy relational_fields', {
                 return this._super.apply(this, arguments);
             }
         });
-        assert.hasClass(form.$('.o_form_view'),'o_form_editable', "form should be in edit mode");
+        assert.hasClass(form.$('.o_legacy_form_view'),'o_form_editable', "form should be in edit mode");
 
         await testUtils.fields.many2one.clickOpenDropdown('timmy');
         assert.strictEqual(form.$('.o_field_many2manytags input').autocomplete('widget').find('li').length, 3,
@@ -1935,20 +1935,20 @@ QUnit.module('Legacy relational_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_legacy_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
             "secondrecordaaa", "the tags should be correctly rendered");
 
         // open the x2m form view
-        await testUtils.dom.click(form.$('.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'));
+        await testUtils.dom.click(form.$('.o_field_one2many[name="turtles"] .o_legacy_list_view td.o_data_cell:first'));
         await testUtils.nextTick(); // wait for quick edit
-        assert.strictEqual($('.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell').text(),
+        assert.strictEqual($('.modal .o_legacy_form_view .o_field_many2many[name="partner_ids"] .o_legacy_list_view .o_data_cell').text(),
             "blipMy little Foo Value", "the list view should be correctly rendered with foo");
 
         await testUtils.dom.click($('.modal button.o_form_button_cancel'));
-        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_legacy_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
             "secondrecordaaa", "the tags should still be correctly rendered");
 
-        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_legacy_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
             "secondrecordaaa", "the tags should still be correctly rendered");
 
         form.destroy();
@@ -3728,7 +3728,7 @@ QUnit.module('Legacy relational_fields', {
         // bar is false so there should be 1 column
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be only 1 column ('foo') in the one2many");
-        assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
+        assert.containsOnce(form, '.o_legacy_list_view .o_data_row', "should contain one row");
 
         await testUtils.form.clickEdit(form);
 
@@ -3869,7 +3869,7 @@ QUnit.module('Legacy relational_fields', {
 
         // check after form reload advanced column hidden or shown are still preserved
         await form.reload();
-        assert.containsN(form.$('.o_field_one2many .o_list_view'), 'th', 3,
+        assert.containsN(form.$('.o_field_one2many .o_legacy_list_view'), 'th', 3,
             "should still have 3 th in the one2many after reloading whole form view");
 
         form.destroy();

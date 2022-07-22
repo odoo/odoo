@@ -725,6 +725,7 @@ export async function dragAndDrop(from, to, position) {
 export async function clickDropdown(target, fieldName) {
     const dropdownInput = target.querySelector(`[name='${fieldName}'] .dropdown input`);
     dropdownInput.focus();
+    await nextTick();
     await click(dropdownInput);
 }
 

@@ -145,6 +145,14 @@
                     height: 1.4em;
                     margin-right: 10px;
                 }
+
+                & + .app_settings_header {
+                    margin-top: -10px;
+                }
+            }
+
+            .app_settings_header {
+                @include o-base-settings-horizontal-padding(0);
             }
 
             .highlighter {
