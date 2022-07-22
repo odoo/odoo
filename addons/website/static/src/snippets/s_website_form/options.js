@@ -1060,10 +1060,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     setVisibility(previewMode, widgetValue, params) {
         if (widgetValue === 'conditional') {
-            // Set a default visibility dependency
-            const firstInputOfForm = this.formEl.querySelector('.s_website_form_field:not(.s_website_form_dnone) input');
-            this._setVisibilityDependency(firstInputOfForm.name);
-            return;
+            const widget = this.findWidget('hidden_condition_opt');
+            const firstValue = widget.getMethodsParams('setVisibilityDependency').possibleValues.find(el => el !== '');
+            if (firstValue) {
+                // Set a default visibility dependency
+                this._setVisibilityDependency(firstValue);
+                return;
+            }
+            Dialog.confirm(this, _t("There is no field available for this option."));
         }
         this._deleteConditionalVisibility(this.$target[0]);
     },
@@ -1189,10 +1193,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         fieldEl.classList.remove('s_website_form_field_hidden_if', 'd-none');
     },
     /**
+     * @param {HTMLElement} [fieldEl]
      * @returns {HTMLElement} The visibility dependency of the field
      */
-    _getDependencyEl() {
-        const dependencyName = this.$target[0].dataset.visibilityDependency;
+    _getDependencyEl(fieldEl = this.$target[0]) {
+        const dependencyName = fieldEl.dataset.visibilityDependency;
         return this.formEl.querySelector(`.s_website_form_input[name="${dependencyName}"]`);
     },
     /**
@@ -1206,6 +1211,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 <we-button data-select-data-attribute="!fileSet">${_t("Is not set")}</we-button>
             </we-select>
         `)[0]);
+        const recursiveFindCircular = (el) => {
+            if (el.dataset.visibilityDependency === this._getFieldName()) {
+                return true;
+            }
+            const dependencyInputEl = this._getDependencyEl(el);
+            if (!dependencyInputEl) {
+                return false;
+            }
+            return recursiveFindCircular(dependencyInputEl.closest('.s_website_form_field'));
+        };
 
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
@@ -1214,7 +1229,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const inputEl = el.querySelector('.s_website_form_input');
             if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
                     && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
-                    && !existingDependencyNames.includes(inputEl.name)) {
+                    && !existingDependencyNames.includes(inputEl.name) && !recursiveFindCircular(el)) {
                 const button = document.createElement('we-button');
                 button.textContent = el.querySelector('.s_website_form_label_content').textContent;
                 button.dataset.setVisibilityDependency = inputEl.name;
