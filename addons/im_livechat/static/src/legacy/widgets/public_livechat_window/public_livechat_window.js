@@ -105,7 +105,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     render() {
         this.renderHeader();
-        this._publicLivechatView.render(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat, { displayLoadMore: false });
+        this._publicLivechatView.render({ displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
