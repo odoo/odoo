@@ -241,6 +241,9 @@ class Field(MetaField('DummyField', (object,), {})):
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one
     translate = False                   # whether the field is translated
+                                        # False: non-tranlatable field
+                                        # True: model translatable field
+                                        # callable: model-term tranlatable field
 
     column_type = None                  # database column type (ident, spec)
     # TODO VSC removing this isn't part of this PR (or should be a separate commit)
@@ -1659,42 +1662,41 @@ class _String(Field):
         if not self.translate:
             return super_convert_to_column(value, record, values, validate)
         cache_value = self.convert_to_cache(value, record, validate)
-        return Json({k: super_convert_to_column(v, record) for k, v in cache_value.items()})
+        return Json(cache_value)
 
     def convert_to_cache(self, value, record, validate=True):
-        # valdiate=False, don't fetch data when cache miss, used in _create
         if not self.translate or not (self.store or self.inherited):
-            return value
+            return None if value is False else value
         if not isinstance(value, dict):
             if not value:
-                return {'en_US': value}
+                return None if value is False or value is None else {'en_US': value}
             value = {record.env.lang or 'en_US': value}
 
         # empty translation for model/model_term translation
-        for v in value.values():
-            if not v:  # set all translations to the first empty value
-                return {'en_US': v}
+        empty_value = next(filter(lambda v: not v, value.values()), True)
+        if not empty_value:
+            return None if empty_value is False or empty_value is None else {'en_US': empty_value}
 
-        old_value = {}
-        if record.id:
+        old_cache_value = {}
+        if record.id:  # when convert_to_cache in create, the record.id is False to bypass the SQL query
             try:
-                old_value = (record.id and record.env.cache.get(record, self)) or {}
+                old_cache_value = record.env.cache.get(record, self) or {}  # change None to {}
             except CacheMiss:
                 record[self.name]  # prefetch all translations
-                old_value = (record.id and record.env.cache.get(record, self)) or {}
+                old_cache_value = record.env.cache.get(record, self) or {}
 
-        if not value:
-            return old_value.copy()
-        if not old_value.get('en_US') and not value.get('en_US'):
-            value['en_US'] = next(filter(lambda v: v, value.values()))
+        if not value:  # field.convert_to_cache({}, record) can be used to get cache value of record
+            return old_cache_value.copy() if old_cache_value else None
 
         # model translation
-        if not callable(self.translate):
-            return {**old_value, **value}
+        if self.translate is True:
+            if not old_cache_value.get('en_US') and not value.get('en_US'):
+                # use the first translation in value for 'en_US' as the fallback translation
+                value['en_US'] = next(iter(value.values()))
+            return {**old_cache_value, **value}
 
         # model term translation
-        if not validate or not old_value.get('en_US'):
-            # translations.keys() == value.keys() is not compared
+        if not validate and not old_cache_value.get('en_US'):
             return value.copy()
 
         new_terms_by_langs = {lang: self.get_trans_terms(v) for lang, v in value.items()}
@@ -1704,27 +1706,33 @@ class _String(Field):
             raise UserError(_('the numbers of terms in input value are not matched'))
         if not len(base_terms):
             return {'en_US': value[base_lang]}
+
+        # create translation_dictionary {from_lang_term: {lang: to_lang_term}}
         next_term = {lang: iter(terms) for lang, terms in new_terms_by_langs.items() if lang != base_lang}
         translation_dictionary = {base_term: {
             lang: next(term) for lang, term in next_term.items()
         } for base_term in base_terms}
 
-        old_terms_by_langs = {lang: self.get_trans_terms(v) for lang, v in old_value.items()}
-        not_matched_indexes = set(i for i in range(len(old_terms_by_langs.get('en_US', []))))
+        # match similar old and new terms to reuse old translations
+        old_terms_by_langs = {lang: self.get_trans_terms(v) for lang, v in old_cache_value.items()}
+        not_matched_indexes = set(range(len(old_terms_by_langs.get('en_US', []))))
         langs = set(value.keys())
+        langs.remove(base_lang)
         matched = False
         for lang, old_terms in old_terms_by_langs.items():
-            if not new_terms_by_langs.get(lang):
+            if not not_matched_indexes:
+                break
+            if lang not in new_terms_by_langs:
                 continue
-            text2old_order = {self.get_text_content(old_terms[i]): i for i in not_matched_indexes}
+            old_text2order = {self.get_text_content(old_terms[i]): i for i in not_matched_indexes}
             for new_term in new_terms_by_langs[lang]:
                 matched_index = -1
                 try:
                     matched_index = old_terms.index(new_term)
                 except ValueError:
-                    matches = get_close_matches(self.get_text_content(new_term), text2old_order, 1, 0.9)
+                    matches = get_close_matches(self.get_text_content(new_term), old_text2order, 1, 0.9)
                     if matches:
-                        matched_index = text2old_order.pop(matches[0])
+                        matched_index = old_text2order.pop(matches[0])
                 if matched_index >= 0 and matched_index in not_matched_indexes:
                     matched = True
                     not_matched_indexes.remove(matched_index)
@@ -1732,14 +1740,13 @@ class _String(Field):
                         lang: old_terms[matched_index] for lang, old_terms in old_terms_by_langs.items() if lang not in value
                     })
         if matched:
-            langs = langs.union(old_value.keys())
+            langs = langs.union(old_cache_value.keys())
 
         ret_value = {lang: self.translate(
             lambda term: translation_dictionary.get(term, {}).get(lang, None),
             value[base_lang]) for lang in langs}
         ret_value[base_lang] = value[base_lang]
-        if 'en_US' not in ret_value:
-            ret_value['en_US'] = value[base_lang]
+        ret_value.setdefault('en_US', value[base_lang])
         return ret_value
 
     # def convert_to_cache_multi(self, value, records, validate=True):
@@ -1898,17 +1905,20 @@ class Char(_String):
                 return pycompat.to_text(value)[:self.size]
         else:
             cache_value = self.convert_to_cache(value, record)
-            return Json({k: pycompat.to_text(v)[:self.size] for k, v in cache_value.items()})
+            return Json(cache_value)
 
     def convert_to_cache(self, value, record, validate=True):
         if not self.translate or not (self.store or self.inherited):
             if value is None or value is False:
                 return None
             return pycompat.to_text(value)[:self.size]
-        if value is None or value is False:
-            return {}
         if isinstance(value, dict):
+            empty_value = next(filter(lambda v: not v, value.values()), True)
+            if not empty_value:
+                return None if empty_value is False or empty_value is None else {'en_US': pycompat.to_text(empty_value)[:self.size]}
             return super().convert_to_cache({lang: pycompat.to_text(v)[:self.size] for lang, v in value.items()}, record, validate)
+        if value is None or value is False:
+            return None
         return super().convert_to_cache(pycompat.to_text(value)[:self.size], record, validate)
 
 
@@ -1935,12 +1945,14 @@ class Text(_String):
         if not self.translate or not (self.store or self.inherited):
             if value is None or value is False:
                 return None
-            else:
-                return ustr(value)
-        if value is None or value is False:
-            return {'en_US': None}
+            return ustr(value)
         if isinstance(value, dict):
+            empty_value = next(filter(lambda v: not v, value.values()), True)
+            if not empty_value:
+                return None if empty_value is False or empty_value is None else {'en_US': ustr(value)}
             return super().convert_to_cache({lang: ustr(v) for lang, v in value.items()}, record, validate)
+        if value is None or value is False:
+            return None
         return super().convert_to_cache(ustr(value), record, validate)
 
 
@@ -2003,14 +2015,12 @@ class Html(_String):
             sanitize_form=self.sanitize_form,
             strip_style=self.strip_style,
             strip_classes=self.strip_classes)) if self.sanitize else lambda v: v
-        super_convert_to_column = super(_String, self).convert_to_column
         if not self.translate:
             if value is None or value is False:
                 return None
-            return super_convert_to_column(sanitize(value), record, values, validate)
-        value = None if value in [False, None] else sanitize(value)
-        cache_value = self.convert_to_cache(value, record, validate=False)
-        return Json({k: super_convert_to_column(v, record) for k, v in cache_value.items()})
+            return sanitize(value)
+        cache_value = self.convert_to_cache(value, record, validate=True)
+        return Json(cache_value)
 
     def convert_to_cache(self, value, record, validate=True):
         sanitize = (lambda v: html_sanitize(
@@ -2025,10 +2035,13 @@ class Html(_String):
             if value is None or value is False:
                 return None
             return sanitize(value) if validate and self.sanitize else value
-        if value is None or value is False:
-            return {}
         if isinstance(value, dict):
+            empty_value = next(filter(lambda v: not v, value.values()), True)
+            if not empty_value:
+                return None if empty_value is False or empty_value is None else {'en_US': sanitize(value)}
             return super().convert_to_cache({lang: sanitize(v) for lang, v in value.items()}, record, validate)
+        if value is None or value is False:
+            return None
         return super().convert_to_cache(sanitize(value), record, validate)
 
     def convert_to_record(self, value, record):

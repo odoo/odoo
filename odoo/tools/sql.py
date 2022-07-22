@@ -142,7 +142,7 @@ def convert_column(cr, tablename, columnname, columntype, fromtype=None):
     if fromtype == 'jsonb':
         query = 'UPDATE "{0}" SET "{1}"="{3}"->>\'en_US\'::{2};'
     elif columntype == 'jsonb':
-        query = 'UPDATE "{0}" SET "{1}"=json_build_object(\'en_US\', {3}::varchar);'
+        query = 'UPDATE "{0}" SET "{1}"=json_build_object(\'en_US\', {3}::varchar) WHERE {3} IS NOT NULL;'
     else:
         query = 'UPDATE "{0}" SET "{1}"= {3}::{2};'
     query += '\nALTER TABLE "{0}" DROP COLUMN {3} CASCADE;'
