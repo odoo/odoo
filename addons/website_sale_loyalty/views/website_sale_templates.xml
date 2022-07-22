@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="pay_with_gift_card_form">
-        <form t-att-action="'/shop/pricelist?gift_card=1%s' % (redirect and '&amp;r=' + redirect or '')" class="mb-2" method="post" name="gift_card_code">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" required="required" placeholder="Gift card code..."/>
-                <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
-            </div>
-        </form>
-    </template>
-    
     <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
         <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
-            <attribute name="placeholder">code...</attribute>
+            <attribute name="placeholder">Gift card or discount code...</attribute>
         </xpath>
         <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
@@ -22,13 +12,6 @@
             <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
                 <td colspan="3" class="text-center text-xl-end border-0">
                     <span class=''>
-                        <t t-set='force_gift_card' t-value="request.params.get('gift_card_error')"/>
-                        <t t-if="not force_gift_card">
-                            <a href="#" class="js_show_gift_card">Use a gift card</a>
-                        </t>
-                        <div t-attf-class="gift_card_form #{not force_gift_card and 'd-none'}">
-                            <t t-call="website_sale_loyalty.pay_with_gift_card_form"/>
-                        </div>
                         <t t-if="request.params.get('code_not_available')">
                             <div class="alert alert-danger text-start mt16" role="alert">
                                 Invalid or expired promo code.
@@ -52,24 +35,26 @@
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="reward" t-att-value="reward.id"/>
                                         <div class="alert alert-success text-start mt16" role="alert">
-                                            <div class="row">
-                                                <div class="col-8">
+                                            <div class="d-flex flex-row">
+                                                <div class="flex-grow-1">
                                                     <strong t-esc="reward.description"/>
+                                                    <div t-if="reward.program_id.portal_visible">
+                                                        <t t-if="not reward.program_id.is_nominative"><span t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/> <span t-out="reward.point_name"/></t>
+                                                        <t t-else="">
+                                                            <span>You have <t t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/></span> <span t-out="reward.point_name"/>
+                                                            <span t-if="reward.program_id.program_type == 'ewallet'"> in your ewallet</span>
+                                                            <t t-if="reward.program_id.program_type != 'ewallet'">
+                                                                <br/>
+                                                                <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
+                                                            </t>
+                                                        </t>
+                                                    </div>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="justify-content-end">
                                                     <a class="btn btn-primary a-submit" href="#" role="button">
                                                         <t t-if="reward.program_id.program_type == 'ewallet'">Pay with eWallet</t>
                                                         <t t-else="">Claim</t>
                                                     </a>
-                                                </div>
-                                                <div t-if="reward.program_id.portal_visible" class="col-12">
-                                                    <t t-if="not reward.program_id.is_nominative"><span t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/> <span t-out="reward.point_name"/></t>
-                                                    <t t-else="">
-                                                        <span>You have <t t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/></span> <span t-out="reward.point_name"/>
-                                                        <span t-if="reward.program_id.program_type == 'ewallet'"> in your ewallet</span>
-                                                        <br/>
-                                                        <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
-                                                    </t>
                                                 </div>
                                             </div>
                                         </div>
@@ -94,7 +79,7 @@
             <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
             <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
             <t t-if="coupon_error and pending_coupon_code">
-                <div class="d-none coupon-message coupon-error-message">
+                <div t-attf-class="d-none coupon-message coupon-{{ request.params.get('coupon_error_type', 'error') }}-message">
                     <span class="coupon-message-title">Could not apply the promo code: <t t-out="pending_coupon_code"/></span>
                     <span class="coupon-message-content" t-out="coupon_error"/>
                 </div>
@@ -126,6 +111,9 @@
         <xpath expr="//t[@t-set='force_coupon']" position="replace">
             <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available') or website_sale_order.get_promo_code_error(delete=False)"/>
         </xpath>
+        <xpath expr="//a" position="replace">
+            <a href="#" class="show_coupon">Discount code or gift card</a>
+        </xpath>
     </template>
 
     <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_summary">
@@ -135,23 +123,18 @@
     </template>
 
     <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
-        <xpath expr="." position="replace">
-            <div>
-                <t t-if="line.is_reward_line">
-                    <strong t-field="line.name"/>
-                </t>
-                <t t-else="">
-                    <a t-att-href="line.product_id.website_url">
-                        <strong t-field="line.name_short"/>
-                    </a>
-                </t>
-            </div>
+        <xpath expr="//a" position="replace">
+            <t t-if="line.is_reward_line">
+                <strong t-field="line.name"/>
+                <t t-call="sale_loyalty.used_gift_card"/>
+            </t>
+            <t t-else="">$0</t>
         </xpath>
     </template>
 
     <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary">
         <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
-            <t t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'" t-call="sale_loyalty.used_gift_card"/>
+            <t t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
 

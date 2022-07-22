@@ -68,7 +68,7 @@ class SaleCouponShare(models.TransientModel):
 
     def action_generate_short_link(self):
         return {
-            'name': _('Share Coupon'),
+            'name': _('Share'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'coupon.share',
@@ -85,7 +85,7 @@ class SaleCouponShare(models.TransientModel):
             raise UserError(_("Provide either a coupon or a program."))
 
         return {
-            'name': _('Share Coupon'),
+            'name': _('Share') + f' {self.env["loyalty.program"]._program_items_name().get((program or coupon).program_type, "")}',
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'coupon.share',

@@ -27,6 +27,7 @@ class LoyaltyReward(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
+    program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
@@ -38,6 +39,7 @@ class LoyaltyReward(models.Model):
         ('discount', 'Discount')],
         default='discount', required=True,
     )
+    user_has_debug = fields.Boolean(compute='_compute_user_has_debug')
 
     # Discount rewards
     discount = fields.Float('Discount', default=10)
@@ -116,9 +118,15 @@ class LoyaltyReward(models.Model):
     def _compute_description(self):
         for reward in self:
             reward_string = ""
-            if reward.reward_type == 'product':
+            if reward.program_type == 'gift_card':
+                reward_string = _("Gift Card")
+            elif reward.program_type == 'ewallet':
+                reward_string = _("eWallet")
+            elif reward.reward_type == 'product':
                 products = reward.reward_product_ids
-                if len(products) == 1:
+                if len(products) == 0:
+                    reward_string = _('Free Product')
+                elif len(products) == 1:
                     reward_string = _('Free Product - %s', reward.reward_product_id.name)
                 else:
                     reward_string = _('Free Product - [%s]', ', '.join(products.mapped('name')))
@@ -156,6 +164,11 @@ class LoyaltyReward(models.Model):
             reward.is_global_discount = reward.reward_type == 'discount' and\
                                         reward.discount_applicability == 'order' and\
                                         reward.discount_mode == 'percent'
+
+    @api.depends_context('uid')
+    @api.depends("reward_type")
+    def _compute_user_has_debug(self):
+        self.user_has_debug = self.user_has_groups('base.group_no_one')
 
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts

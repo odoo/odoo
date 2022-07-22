@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="loyalty_program_view_form_inherit_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.form.inherit.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='available_on']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="inside">
+                <span class="d-inline-block">
+                    <field name="sale_ok" class="w-auto"/>
+                    <label for="sale_ok"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
     <menuitem
-        id="menu_loyalty_config"
-        action="loyalty.loyalty_program_action"
+        id="menu_discount_loyalty_type_config"
+        action="loyalty.loyalty_program_discount_loyalty_action"
+        name="Discount &amp; Loyalty"
         parent="sale.product_menu_catalog"
-        name="Coupons &amp; Loyalty"
         groups="sales_team.group_sale_manager"
         sequence="5"
+    />
+
+    <menuitem
+        id="menu_gift_ewallet_type_config"
+        action="loyalty.loyalty_program_gift_ewallet_action"
+        name="Gift cards &amp; eWallet"
+        parent="sale.product_menu_catalog"
+        groups="sales_team.group_sale_manager"
+        sequence="6"
     />
 </odoo>
