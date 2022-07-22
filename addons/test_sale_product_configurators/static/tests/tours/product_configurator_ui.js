@@ -73,5 +73,5 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'span[name=amount_total]:contains("0.00")',
     in_modal: false,
     run: function (){}
-}
+}, ...tour.stepUtils.discardForm()
 ]);

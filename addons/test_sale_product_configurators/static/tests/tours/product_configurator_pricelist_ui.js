@@ -72,5 +72,5 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "verify SO final price included",
     trigger: 'span[name="amount_total"]:contains("1,437.00")',
-}
+}, ...tour.stepUtils.discardForm()
 ]);

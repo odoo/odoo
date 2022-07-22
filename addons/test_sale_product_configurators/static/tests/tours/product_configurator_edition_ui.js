@@ -141,13 +141,7 @@ tour.register('sale_product_configurator_edition_tour', {
 }, {
     trigger: 'td.o_data_cell:contains("tour success")',
     extra_trigger: 'div[name="order_line"]',
-    run: function (){}
-}, {
-    trigger: 'td.o_data_cell',
-    run: function () {
-        window.location.href = window.location.origin + '/web';
-    },  // Avoid race condition at the end of the tour by returning to the home page.
-}, {
-    trigger: '.o_navbar',
-    run: function() {},  // Check the home page is loaded
-}]);
+    run: function() {},
+},
+    ...tour.stepUtils.discardForm(),
+]);
