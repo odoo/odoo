@@ -172,8 +172,7 @@
     <t t-call="web.layout">
         <t t-set="title">Odoo Editor Tests</t>
         <t t-set="head">
-            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/src/base_style.css"/>
-            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/src/checklist.css"/>
+            <t t-call-assets="web_editor.assets_tests_styles" t-js="false"/>
             <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.css"/>
             <style type="text/css">
                 b.zws {

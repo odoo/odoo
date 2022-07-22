@@ -38,7 +38,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/DOMPurify.js',
 
             # odoo-editor
-            'web_editor/static/src/js/editor/odoo-editor/src/style.css',
             'web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/constants.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js',
@@ -66,6 +65,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web_editor/static/src/js/editor/odoo-editor/src/style.scss',
 
             # integration
             'web_editor/static/src/scss/wysiwyg.scss',
@@ -98,8 +98,12 @@ Odoo Web Editor widget.
             'web_editor/static/src/components/upload_progress_toast/*.js',
             'web_editor/static/src/components/upload_progress_toast/*.scss',
         ],
+        'web_editor.assets_tests_styles': [
+            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
+            'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
+        ],
         'web.assets_common': [
-            'web_editor/static/src/js/editor/odoo-editor/src/base_style.css',
+            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
