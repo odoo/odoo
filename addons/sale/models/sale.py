@@ -395,7 +395,7 @@ class SaleOrder(models.Model):
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
         }
-        user_id = partner_user.id
+        user_id = partner_user.id or self.user_id.id
         if not self.env.context.get('not_self_saleperson'):
             user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
         if user_id and self.user_id.id != user_id:
