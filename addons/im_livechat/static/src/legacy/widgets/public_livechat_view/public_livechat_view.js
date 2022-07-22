@@ -96,7 +96,6 @@ const PublicLivechatView = Widget.extend({
         this._super();
     },
     /**
-     * @param {@im_livechat/legacy/models/public_livechat} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -109,15 +108,15 @@ const PublicLivechatView = Widget.extend({
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
-     render(thread, options) {
+    render(options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === thread._id && this.isAtBottom()) {
+        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.id && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
-        this._currentThreadID = thread._id;
+        this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(thread.getMessages());
+        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.getMessages());
 
         const modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;
@@ -176,7 +175,7 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread,
+            thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
@@ -230,30 +229,6 @@ const PublicLivechatView = Widget.extend({
         const visibleHeight = this.$el.outerHeight();
         const bottomHiddenHeight = fullHeight - topHiddenHeight - visibleHeight;
         return bottomHiddenHeight < 5;
-    },
-    /**
-     * Removes a message and re-renders the thread
-     *
-     * @param {integer} [messageID] the id of the removed message
-     * @param {mail.model.AbstractThread} thread the thread which contains
-     *   updated list of messages (so it does not contain any message with ID
-     *   `messageID`).
-     * @param {Object} [options] options for the thread rendering
-     */
-     removeMessageAndRender(messageID, thread, options) {
-        this._currentThreadID = thread._id;
-        return new Promise((resolve, reject) => {
-            this.$('.o_thread_message[data-message-id="' + messageID + '"]')
-            .fadeOut({
-                done: () => {
-                    if (this._currentThreadID === thread._id) {
-                        this.render(thread, options);
-                    }
-                    resolve();
-                },
-                duration: 200,
-            });
-        });
     },
     /**
      * Scroll to the bottom of the thread
