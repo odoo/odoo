@@ -39,8 +39,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.setParent(params.parent);
         this.messaging = messaging;
 
-        this._id = params.data.id;
-
         /**
          * Initialize the internal data for typing feature on threads.
          *
@@ -293,7 +291,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     toData() {
         return {
             folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
-            id: this._id,
+            id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             message_unread_counter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
             operator_pid: (
                 this.messaging.publicLivechatGlobal.publicLivechat.operator

@@ -9,7 +9,7 @@ import Widget from 'web.Widget';
 
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
-import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -92,34 +92,35 @@ const LivechatButton = Widget.extend({
      * @param {Object} [options={}]
      */
     _addMessage(data, options) {
-        const message = new PublicLivechatMessage(this, this.messaging, data);
+        const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
 
         const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.livechatButtonView.messages, function (msg) {
-            return message.getID() === msg.getID();
+            return legacyMessage.getID() === msg.id;
         });
         if (hasAlreadyMessage) {
             return;
         }
+        const message = this.messaging.models['PublicLivechatMessage'].insert({
+            id: data.id,
+            legacyPublicLivechatMessage: legacyMessage,
+        });
         if (this.messaging.publicLivechatGlobal.publicLivechat) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
-                messages: insert({
-                    id: data.id,
-                    legacyPublicLivechatMessage: message,
-                }),
+                messages: link(message),
             });
         }
 
         if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
-            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(message);
+            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
         }
 
         if (options && options.prepend) {
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                messages: [message, ...this.messaging.publicLivechatGlobal.livechatButtonView.messages],
+                messages: replace([message, ...this.messaging.publicLivechatGlobal.livechatButtonView.messages]),
             });
         } else {
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                messages: [...this.messaging.publicLivechatGlobal.livechatButtonView.messages, message],
+                messages: replace([...this.messaging.publicLivechatGlobal.livechatButtonView.messages, message]),
             });
         }
     },
@@ -257,8 +258,8 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._thread._folded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
-        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._messages = this.messaging.publicLivechatGlobal.livechatButtonView.messages;
+        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
+        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._messages = this.messaging.publicLivechatGlobal.livechatButtonView.messages.map(message => message.legacyPublicLivechatMessage);
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
@@ -311,7 +312,7 @@ const LivechatButton = Widget.extend({
                 body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id,
+                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             }, { prepend: true });
         }
     },
@@ -328,7 +329,7 @@ const LivechatButton = Widget.extend({
         ev.stopPropagation();
         const isComposerDisabled = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(function (message) {
-            return message.getID() !== '_welcome';
+            return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);

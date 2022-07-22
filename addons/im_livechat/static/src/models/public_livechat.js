@@ -25,6 +25,16 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {integer|FieldCommand}
+         */
+        _computeId() {
+            if (!this.data) {
+                return clear();
+            }
+            return this.data.id;
+        },
+        /**
+         * @private
          * @returns {FieldCommand|string}
          */
         _computeName() {
@@ -75,6 +85,9 @@ registerModel({
     },
     fields: {
         data: attr(),
+        id: attr({
+            compute: '_computeId',
+        }),
         isFolded: attr({
             default: false,
         }),

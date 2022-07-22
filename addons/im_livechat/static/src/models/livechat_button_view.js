@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -263,9 +263,7 @@ registerModel({
         localStorageChatbotState: attr({
             compute: '_computeLocalStorageChatbotState',
         }),
-        messages: attr({
-            default: [],
-        }),
+        messages: many('PublicLivechatMessage'),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             inverse: 'livechatButtonView',
             readonly: true,
