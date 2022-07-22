@@ -13,16 +13,16 @@ class PosConfig(models.Model):
     use_coupon_programs = fields.Boolean('Coupons & Promotions',
         help="Use coupon and promotion programs in this PoS configuration.")
     coupon_program_ids = fields.Many2many(
-        'loyalty.program', string="Coupon Programs", domain=[('program_type', '=', 'coupons')],
+        'loyalty.program', string="Coupon Programs", domain=[('pos_ok', '=', True), ('program_type', '=', 'coupons')],
         relation='pos_config_coupon_program_rel')
     promo_program_ids = fields.Many2many(
-        'loyalty.program', string="Promotion Programs", domain=[('program_type', '=', 'promotion')],
+        'loyalty.program', string="Promotion Programs", domain=[('pos_ok', '=', True), ('program_type', 'in', ('promotion', 'buy_x_get_y', 'promo_code', 'next_order_coupons'))],
         relation='pos_config_promo_program_rel')
 
-    loyalty_program_id = fields.Many2one('loyalty.program', "PoS Loyalty Programs", domain=[('program_type', '=', 'loyalty')], default=_default_loyalty_program)
+    loyalty_program_id = fields.Many2one('loyalty.program', "PoS Loyalty Programs", domain=[('pos_ok', '=', True), ('program_type', '=', 'loyalty')], default=_default_loyalty_program)
 
     use_gift_card = fields.Boolean('Gift Cards')
-    gift_card_program_id = fields.Many2one('loyalty.program', "PoS Gift Card Program", domain=[('program_type', '=', 'gift_card')])
+    gift_card_program_id = fields.Many2one('loyalty.program', "PoS Gift Card Program", domain=[('pos_ok', '=', True), ('program_type', '=', 'gift_card')])
     gift_card_settings = fields.Selection(
         [
             ("create_set", "Generate a new barcode and set a price"),

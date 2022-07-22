@@ -4,13 +4,22 @@
 
     .o_kanban_renderer {
         padding: 0px !important;
+
+        .o_kanban_record {
+            margin-right: 0px;
+            margin-left: 0px;
+
+            .o_kanban_tags .o_tag span {
+                // Remove the small ball before the tags
+                width: auto !important;
+                height: auto !important;
+                background-color: none !important;
+            }
+        }
     }
 
-    .o_kanban_record .o_kanban_tags .o_tag span {
-        // Remove the small ball before the tags
-        width: auto !important;
-        height: auto !important;
-        background-color: none !important;
+    .o_loyalty_kanban_card_right {
+        text-align: center;
     }
 }
 
@@ -52,5 +61,11 @@
     // The base width for this field is 100px which is problematic for us.
     .o_field_widget.o_field_monetary.o_input > input {
         width: 100%;
+    }
+}
+
+.loyalty-program-list-view {
+    .o_view_nocontent {
+        top: 10% !important;
     }
 }

@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_loyalty.tests.test_program_numbers import TestSaleCouponProgramNumbers
+from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 from odoo.tests import tagged
+from odoo.tests.common import HttpCase
 
 
 @tagged('-at_install', 'post_install')
-class TestSaleCouponApplyPending(TestSaleCouponProgramNumbers):
+class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
 
     def setUp(self):
         super().setUp()

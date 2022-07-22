@@ -36,7 +36,7 @@ odoo.define('website_sale_delivery.test', function (require) {
             },
             {
                 content: "click on 'Pay with gift card'",
-                trigger: '.js_show_gift_card',
+                trigger: '.show_coupon',
                 run: 'click'
             },
             {
@@ -46,7 +46,7 @@ odoo.define('website_sale_delivery.test', function (require) {
             },
             {
                 content: "click on 'Pay'",
-                trigger: "button[type='submit'].a-submit:contains(Pay)",
+                trigger: "a[role='button'].a-submit:contains(Apply)",
                 run: 'click'
             },
             {
