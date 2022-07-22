@@ -58,4 +58,5 @@ tour.register('sale_product_configurator_optional_products_tour', {
     trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(1) td.o_data_cell:contains("1.0")',
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
-}]);
+}, ...tour.stepUtils.discardForm()
+]);
