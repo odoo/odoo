@@ -96,7 +96,6 @@ const PublicLivechatView = Widget.extend({
         this._super();
     },
     /**
-     * @param {@im_livechat/legacy/models/public_livechat} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -109,15 +108,15 @@ const PublicLivechatView = Widget.extend({
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
-     render(thread, options) {
+    render(options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === thread._id && this.isAtBottom()) {
+        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
-        this._currentThreadID = thread._id;
+        this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(thread.getMessages());
+        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.getMessages());
 
         const modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;
@@ -176,7 +175,7 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread,
+            thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
