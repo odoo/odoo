@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
 import logging
 import re
 
@@ -785,6 +786,17 @@ class SupplierInfo(models.Model):
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
+
+    def _get_next_availability_date(self):
+        return fields.Date.today()
+
+    def _get_delay_days(self):
+        if self:
+            return self[0].delay
+        return 0.0
+
+    def _get_delay_delta(self):
+        return relativedelta(days=self._get_delay_days())
 
     @api.model
     def get_import_templates(self):

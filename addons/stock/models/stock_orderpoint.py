@@ -150,15 +150,23 @@ class StockWarehouseOrderpoint(models.Model):
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
+    def _get_lead_days_date(self):
+        self.ensure_one()
+        rules = self.rule_ids
+        buy_rule = rules.filtered(lambda r: r.action == "buy")
+        seller = self.product_id.with_company(buy_rule.company_id)._select_seller(quantity=None)
+        next_availability = seller._get_next_availability_date()
+        context = {"seller_next_availability_date": next_availability}
+        lead_days, dummy = rules.with_context(context)._get_lead_days(self.product_id)
+        return next_availability + relativedelta.relativedelta(days=lead_days)
+
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
         for orderpoint in self.with_context(bypass_delay_description=True):
             if not orderpoint.product_id or not orderpoint.location_id:
                 orderpoint.lead_days_date = False
                 continue
-            lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
-            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
-            orderpoint.lead_days_date = lead_days_date
+            orderpoint.lead_days_date = orderpoint._get_lead_days_date()
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):

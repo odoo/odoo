@@ -157,7 +157,7 @@ class StockRule(models.Model):
         if not buy_rule or not seller:
             return delay, delay_description
         buy_rule.ensure_one()
-        supplier_delay = seller[0].delay
+        supplier_delay = seller[0]._get_delay_days()
         if supplier_delay and not bypass_delay_description:
             delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
