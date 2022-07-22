@@ -31,7 +31,6 @@ const PublicLivechatMessage = Class.extend({
      * @param {string} [data.message_type = undefined]
      * @param {Object} options
      * @param {string} options.default_username
-     * @param {string} options.serverURL
      */
     init(parent, messaging, data, options) {
         this.messaging = messaging;
@@ -53,7 +52,7 @@ const PublicLivechatMessage = Class.extend({
             attachment.filename = attachment.filename || attachment.name || _t("unnamed");
         });
         this._defaultUsername = options.default_username;
-        this._serverURL = options.serverURL;
+        this._serverURL = this.messaging.livechatButtonView.serverUrl;
 
         if (parent.messaging.livechatButtonView.isChatbot) {
             this._chatbotStepId = data.chatbot_script_step_id;
