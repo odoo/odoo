@@ -17,8 +17,8 @@ LivechatButton.include({
      * from backend to a website visitor.
      */
     willStart: function () {
-        if (this.options.chat_request_session) {
-            utils.set_cookie('im_livechat_session', JSON.stringify(this.options.chat_request_session), 60*60);
+        if (this.messaging.publicLivechatGlobal.options.chat_request_session) {
+            utils.set_cookie('im_livechat_session', JSON.stringify(this.messaging.publicLivechatGlobal.options.chat_request_session), 60*60);
         }
         return this._super();
     },
