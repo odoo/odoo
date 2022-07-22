@@ -82,12 +82,11 @@ tour.register('account_tour', {
         content: _t("Set a price"),
         position: "bottom",
         run: 'text 100',
-    }, {
+    },
+    ...tour.stepUtils.saveForm(),
+    {
         trigger: "button[name=action_post]",
-        // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
-        // because account_invoice_extracts *adds* a js_class on the base view which forces
-        // the use of a legacy view in enterprise only
-        extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
+        extra_trigger: "button.o_form_button_edit",
         content: _t("Once your invoice is ready, press CONFIRM."),
     }, {
         trigger: "button[name=action_invoice_sent]",
@@ -121,6 +120,14 @@ tour.register('account_tour', {
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: _t("Let's send the invoice."),
         position: "top"
+    }, {
+        trigger: "button[name=action_invoice_sent].btn-secondary",
+        content: _t("The invoice having been sent, the button has changed priority."),
+        run() {},
+    }, {
+        trigger: "button[name=action_register_payment]",
+        content: _t("The next step is payment registration."),
+        run() {},
     }
 ]);
 
