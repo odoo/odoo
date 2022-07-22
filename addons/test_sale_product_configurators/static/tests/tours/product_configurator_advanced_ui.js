@@ -116,4 +116,5 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check
-}]);
+}, ...tour.stepUtils.discardForm()
+]);
