@@ -99,7 +99,7 @@ const LivechatButton = Widget.extend({
         options = Object.assign({}, this.options, options, {
             serverURL: this.messaging.livechatButtonView.serverUrl,
         });
-        const message = new PublicLivechatMessage(this, data, options);
+        const message = new PublicLivechatMessage(this, this.messaging, data, options);
 
         const hasAlreadyMessage = _.some(this.messaging.livechatButtonView.messages, function (msg) {
             return message.getID() === msg.getID();

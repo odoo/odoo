@@ -18,6 +18,7 @@ const PublicLivechatMessage = Class.extend({
 
     /**
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
+     * @param {Messaging} messaging
      * @param {Object} data
      * @param {Array} [data.attachment_ids=[]]
      * @param {Array} [data.author_id]
@@ -32,7 +33,8 @@ const PublicLivechatMessage = Class.extend({
      * @param {string} options.default_username
      * @param {string} options.serverURL
      */
-    init(parent, data, options) {
+    init(parent, messaging, data, options) {
+        this.messaging = messaging;
         // Attachments are not supported in (public) livechat.
         // We ignore data from server, otherwise field commands
         // will be wrongly considered as unamed attachments.
