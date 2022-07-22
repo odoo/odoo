@@ -472,13 +472,11 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_field_widget[name=name] input',
         run:     'text {generate_dummy_message}',
     }, {
-        content: "chuck update and new dummy message happened",
+        content: "check update and new dummy message happened",
         trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:containsExact(22)',
         extra_trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:containsExact(22)',
         run: function () {}, // it's a check
-    }, { // cancel
-        content: "cancel change",
-        trigger: '.o_cp_buttons .o_form_button_cancel',
-        run: 'click',
-    }]);
+    },
+    ...tour.stepUtils.discardForm(),
+    ]);
 });
