@@ -7,7 +7,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { clear, increment, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, increment, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -167,11 +167,13 @@ const QWeb = core.qweb;
             chatbot_script_id: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.scriptId,
         });
 
-        const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage._id);
+        const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
         this.messaging.publicLivechatGlobal.livechatButtonView.update({
-            messages: this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
-                !welcomeMessagesIds.includes(message._id);
-            }),
+            messages: replace(
+                this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
+                    !welcomeMessagesIds.includes(message.id);
+                }),
+            ),
         });
 
         postedWelcomeMessages.reverse();
@@ -444,7 +446,7 @@ const QWeb = core.qweb;
                 this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
             ) {
                 const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-                if (lastMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
+                if (lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
                     // we are on the last step of the script, expect a user input and the user has
                     // already answered
                     // -> end the script
@@ -542,7 +544,7 @@ const QWeb = core.qweb;
      */
     _getWelcomeMessages() {
         return this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
-            return message._id && typeof message._id === 'string' && message._id.startsWith('_welcome_');
+            return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
         });
     },
     /**
@@ -552,7 +554,7 @@ const QWeb = core.qweb;
      */
     _isLastMessageFromCustomer() {
         const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0 ? this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1] : null;
-        return lastMessage && lastMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        return lastMessage && lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
      //--------------------------------------------------------------------------
@@ -643,8 +645,8 @@ const QWeb = core.qweb;
 
         if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0) {
             const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-            const stepAnswers = lastMessage.getChatbotStepAnswers();
-            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.getChatbotStepAnswerId()) {
+            const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
+            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
             }
         }
@@ -874,12 +876,12 @@ const QWeb = core.qweb;
             // but here we only care about the very last one (the current step of the script)
             // reversing the this.messages variable seems like a bad idea because it could have
             // bad implications for other flows (as the reverse is in-place, not in a copy)
-            if (message.getChatbotStepId() === stepId) {
+            if (message.legacyPublicLivechatMessage.getChatbotStepId() === stepId) {
                 stepMessage = message;
             }
         }
-        const messageId = stepMessage.getID();
-        stepMessage.setChatbotStepAnswerId(selectedAnswer);
+        const messageId = stepMessage.id;
+        stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
         this._chatbotSaveSession();

@@ -61,7 +61,7 @@ registerModel({
                     }
                     const notificationData = payload.message;
                     // If message from notif is already in chatter messages, stop handling
-                    if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.some(message => message.getID() === notificationData.id)) {
+                    if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.some(message => message.id === notificationData.id)) {
                         return;
                     }
                     notificationData.body = utils.Markup(notificationData.body);
@@ -73,11 +73,11 @@ registerModel({
                     return;
                 }
                 case 'mail.message/insert': {
-                    const message = this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(message => message._id === payload.id);
+                    const message = this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(message => message.id === payload.id);
                     if (!message) {
                         return;
                     }
-                    message._body = utils.Markup(payload.body);
+                    message.legacyPublicLivechatMessage._body = utils.Markup(payload.body);
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
                     return;
                 }
