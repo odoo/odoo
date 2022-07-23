@@ -1,112 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="vat_report" model="account.tax.report">
+    <record id="vat_report" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.fi"/>
-        <field name="root_line_ids">
-            <record id="tax_report_sales_title" model="account.tax.report.line">
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="vat_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_sales_title" model="account.report.line">
                 <field name="name">Vero kotimaan myynneistä verokannoittain</field>
-                <field name="sequence">0</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_sales_24" model="account.tax.report.line">
+                <field name="aggregation_formula">sale_24.balance + sale_14.balance + sale_10.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_sales_24" model="account.report.line">
                         <field name="name">24 %:n vero</field>
                         <field name="code">sale_24</field>
-                        <field name="tag_name">fi_301</field>
-                        <field name="sequence">1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_sales_24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">fi_301</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_sales_14" model="account.tax.report.line">
+                    <record id="tax_report_sales_14" model="account.report.line">
                         <field name="name">14 %:n vero</field>
                         <field name="code">sale_14</field>
-                        <field name="tag_name">fi_302</field>
-                        <field name="sequence">2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_sales_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">fi_302</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_sales_10" model="account.tax.report.line">
+                    <record id="tax_report_sales_10" model="account.report.line">
                         <field name="name">10 %:n vero</field>
                         <field name="code">sale_10</field>
-                        <field name="tag_name">fi_303</field>
-                        <field name="sequence">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_sales_10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">fi_303</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_tax_purchase_goods_eu" model="account.tax.report.line">
+            <record id="tax_report_tax_purchase_goods_eu" model="account.report.line">
                 <field name="name">Vero tavaraostoista muista EU-maista</field>
                 <field name="code">goods_eu</field>
-                <field name="tag_name">fi_305</field>
-                <field name="sequence">4</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_purchase_goods_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_305</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_tax_purchase_service_eu" model="account.tax.report.line">
+            <record id="tax_report_tax_purchase_service_eu" model="account.report.line">
                 <field name="name">Vero palveluostoista muista EU-maista</field>
                 <field name="code">service_eu</field>
-                <field name="tag_name">fi_tax_306</field>
-                <field name="sequence">5</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_purchase_service_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_tax_306</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_tax_import_goods_no_eu" model="account.tax.report.line">
+            <record id="tax_report_tax_import_goods_no_eu" model="account.report.line">
                 <field name="name">Vero tavaroiden maahantuonneista EU:n ulkopuolelta</field>
                 <field name="code">goods_no_eu</field>
-                <field name="tag_name">fi_340</field>
-                <field name="sequence">6</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_import_goods_no_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_340</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_tax_purchase_construct_service" model="account.tax.report.line">
+            <record id="tax_report_tax_purchase_construct_service" model="account.report.line">
                 <field name="name">Vero rakentamispalvelun ja metalliromun ostoista (käännetty verovelvollisuus)</field>
                 <field name="code">construct</field>
-                <field name="tag_name">fi_318</field>
-                <field name="sequence">7</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_purchase_construct_service_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_318</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_deductible" model="account.tax.report.line">
+            <record id="tax_report_deductible" model="account.report.line">
                 <field name="name">Verokauden vähennettävä vero</field>
                 <field name="code">deductible</field>
-                <field name="tag_name">fi_307</field>
-                <field name="sequence">8</field>
+                <field name="expression_ids">
+                    <record id="tax_report_deductible_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_307</field>
+                    </record>
+                </field>
             </record>
-            <record id="vat_report_relief" model="account.tax.report.line">
+            <record id="vat_report_relief" model="account.report.line">
                 <field name="name">Alarajahuojennuksen määrä</field>
-                <field name="tag_name">fi_vat_relief</field>
-                <field name="sequence">9</field>
+                <field name="expression_ids">
+                    <record id="vat_report_relief_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_vat_relief</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_tax_payable" model="account.tax.report.line">
+            <record id="tax_report_tax_payable" model="account.report.line">
                 <field name="name">Maksettava vero / Palautukseen oikeuttava vero (-)</field>
-                <field name="formula">sale_24 + sale_14 + sale_10 + goods_eu + service_eu + goods_no_eu + construct - deductible</field>
-                <field name="sequence">10</field>
+                <field name="aggregation_formula">sale_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
             </record>
-            <record id="tax_report_base_turnover_0_vat" model="account.tax.report.line">
+            <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-verokannan alainen liikevaihto</field>
-                <field name="tag_name">fi_304</field>
-                <field name="sequence">11</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_turnover_0_vat_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_304</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_sales_goods_eu" model="account.tax.report.line">
+            <record id="tax_report_base_sales_goods_eu" model="account.report.line">
                 <field name="name">Tavaroiden myynnit muihin EU-maihin</field>
-                <field name="tag_name">fi_311</field>
-                <field name="sequence">12</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_sales_goods_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_311</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_sales_service_eu" model="account.tax.report.line">
+            <record id="tax_report_base_sales_service_eu" model="account.report.line">
                 <field name="name">Palvelujen myynnit muihin EU-maihin</field>
-                <field name="tag_name">fi_312</field>
-                <field name="sequence">13</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_sales_service_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_312</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_purchase_goods_eu" model="account.tax.report.line">
+            <record id="tax_report_base_purchase_goods_eu" model="account.report.line">
                 <field name="name">Tavaraostot muista EU-maista</field>
-                <field name="tag_name">fi_base_purchase_goods_eu</field>
-                <field name="sequence">14</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_purchase_goods_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_base_purchase_goods_eu</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_purchase_service_eu" model="account.tax.report.line">
+            <record id="tax_report_base_purchase_service_eu" model="account.report.line">
                 <field name="name">Palveluostot muista EU-maista</field>
-                <field name="tag_name">fi_base_306</field>
-                <field name="sequence">15</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_purchase_service_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_base_306</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_import_goods_no_eu" model="account.tax.report.line">
+            <record id="tax_report_base_import_goods_no_eu" model="account.report.line">
                 <field name="name">Tavaroiden maahantuonnit EU:n ulkopuolelta</field>
-                <field name="tag_name">fi_base_340</field>
-                <field name="sequence">16</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_import_goods_no_eu_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_base_340</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_sales_construct_service" model="account.tax.report.line">
+            <record id="tax_report_base_sales_construct_service" model="account.report.line">
                 <field name="name">Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)</field>
-                <field name="tag_name">fi_319</field>
-                <field name="sequence">17</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_sales_construct_service_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_319</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_base_purchase_construct_service" model="account.tax.report.line">
+            <record id="tax_report_base_purchase_construct_service" model="account.report.line">
                 <field name="name">Rakentamispalvelun ja metalliromun ostot (käännetty verovelvollisuus)</field>
-                <field name="tag_name">fi_base_318</field>
-                <field name="sequence">18</field>
+                <field name="expression_ids">
+                    <record id="tax_report_base_purchase_construct_service_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">fi_base_318</field>
+                    </record>
+                </field>
             </record>
         </field>
     </record>

@@ -14,8 +14,7 @@
                             <field name="name"/>
                             <field name="applicability"/>
                             <field name="tax_negate" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('applicability', '!=', 'taxes')], 'readonly': [('tax_report_line_ids', '!=', [])]}"/>
-                            <field name="tax_report_line_ids" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
                         </group>
                     </sheet>
                 </form>

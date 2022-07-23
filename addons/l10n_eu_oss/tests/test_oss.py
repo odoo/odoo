@@ -25,17 +25,17 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0].code
         tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
 
-        for doc_type, report_line_xml_id in (
-                ("invoice", "l10n_be.tax_report_line_47"),
-                ("refund", "l10n_be.tax_report_line_49"),
+        for doc_type, report_expression_xml_id in (
+                ("invoice", "l10n_be.tax_report_line_47_tag"),
+                ("refund", "l10n_be.tax_report_line_49_tag"),
         ):
-            with self.subTest(doc_type=doc_type, report_line_xml_id=report_line_xml_id):
+            with self.subTest(doc_type=doc_type, report_expression_xml_id=report_expression_xml_id):
                 oss_tag_id = tax_oss[f"{doc_type}_repartition_line_ids"]\
                     .filtered(lambda x: x.repartition_type == 'base')\
                     .tag_ids
 
-                expected_tag_id = self.env.ref(report_line_xml_id)\
-                    .tag_ids\
+                expected_tag_id = self.env.ref(report_expression_xml_id)\
+                    ._get_matching_tags()\
                     .filtered(lambda t: not t.tax_negate)
 
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Belgian CoA not correctly linked")

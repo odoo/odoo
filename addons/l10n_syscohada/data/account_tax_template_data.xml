@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!--
     #
     # SYSCOHADA : Définition des taux de TVA SYSCOHADA
@@ -40,7 +39,6 @@
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_purchase_18">
         <field name="name">TVA 18% (achat)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
@@ -71,7 +69,6 @@
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_exonere">
         <field name="name">Exonéré de TVA (vente)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
@@ -99,7 +96,6 @@
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_achat_exonere">
         <field name="name">Exonéré de TVA (achat)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
@@ -127,5 +123,4 @@
             }),
         ]"/>
     </record>
-
 </odoo>

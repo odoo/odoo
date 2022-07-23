@@ -7,8 +7,6 @@ from . import account_account_tag
 from . import account_account
 from . import account_journal
 from . import account_tax
-from . import account_tax_carryover_line
-from . import account_tax_report
 from . import account_reconcile_model
 from . import account_payment_term
 from . import account_move
@@ -34,3 +32,4 @@ from . import ir_actions_report
 from . import res_currency
 from . import res_bank
 from . import mail_thread
+from . import account_report

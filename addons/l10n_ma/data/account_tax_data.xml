@@ -8,9 +8,8 @@
         <field name="property_account_expense_categ_id" ref="pcg_6111"/>
         <field name="income_currency_exchange_account_id" ref="pcg_733"/>
         <field name="expense_currency_exchange_account_id" ref="pcg_633"/>
-        <field name="default_pos_receivable_account_id" ref="pcg_3489" />
+        <field name="default_pos_receivable_account_id" ref="pcg_3489"/>
     </record>
-
     <!-- Account Tax Template -->
     <record model="account.tax.template" id="tva_exo">
         <field name="name">Exonere de TVA VENTES</field>
@@ -28,8 +27,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-            })
-        ]"/>
+            })         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -38,10 +36,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-            })
-        ]"/>
+            })         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_exo1">
         <field name="name">Exonere de TVA ACHATS</field>
         <field name="description">Exonere de TVA ACHATS</field>
@@ -71,7 +67,6 @@
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_vt20">
         <field name="name">TVA 20% VENTES</field>
         <field name="description">TVA 20% VENTES</field>
@@ -84,30 +79,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_taux_normal_20')],
+                'plus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445520'),
-                'plus_report_line_ids': [ref('tax_report_taux_normal_tva_20')],
+                'plus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_taux_normal_20')],
+                'minus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445520'),
-                'minus_report_line_ids': [ref('tax_report_taux_normal_tva_20')],
+                'minus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_vt14">
         <field name="name">TVA 14% VENTES</field>
         <field name="description">TVA 14% VENTES</field>
@@ -120,29 +114,28 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_tauz_reduit_ht_14')],
+                'plus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445514'),
-                'plus_report_line_ids': [ref('tax_report_taux_rediut_tva_14')],
+                'plus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
             }),]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                   'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_tauz_reduit_ht_14')],
+                'minus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445514'),
-                'minus_report_line_ids': [ref('tax_report_taux_rediut_tva_14')],
+                'minus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_vt10">
         <field name="name">TVA 10% VENTES</field>
         <field name="description">TVA 10% VENTES</field>
@@ -155,30 +148,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_report_taux_reduit_base_ht_10')],
+                'plus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445510'),
-                'plus_report_line_ids': [ref('tax_report_taux_reduit_tva_10')],
+                'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_report_taux_reduit_base_ht_10')],
+                'minus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445510'),
-                'minus_report_line_ids': [ref('tax_report_taux_reduit_tva_10')],
+                'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_vt07">
         <field name="name">TVA 7% VENTES</field>
         <field name="description">TVA 7% VENTES</field>
@@ -191,30 +183,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_taux_reduit_ht_7')],
+                'plus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445507'),
-                'plus_report_line_ids': [ref('tax_report_taux_reduit_tva_7')],
+                'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_taux_reduit_ht_7')],
+                'minus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445507'),
-                'minus_report_line_ids': [ref('tax_report_taux_reduit_tva_7')],
+                'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_ac20">
         <field name="name">TVA 20% ACHATS</field>
         <field name="description">TVA 20% ACHATS</field>
@@ -227,30 +218,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_achats_importation_ht_20')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455220'),
-                'plus_report_line_ids': [ref('tax_report_achats_importation_tva_20')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_achats_importation_ht_20')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455220'),
-                'minus_report_line_ids': [ref('tax_report_achats_importation_tva_20')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_acim">
         <field name="name">TVA 20% ACHATS (immobilisation)</field>
         <field name="description">TVA 20% ACHATS (immobilisation)</field>
@@ -263,30 +253,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_immobilisations_base_ht')],
+                'plus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_34551'),
-                'plus_report_line_ids': [ref('tax_report_immobilisations_deductible_tva')],
+                'plus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_immobilisations_base_ht')],
+                'minus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_34551'),
-                'minus_report_line_ids': [ref('tax_report_immobilisations_deductible_tva')],
+                'minus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_ac14">
         <field name="name">TVA 14% ACHATS</field>
         <field name="description">TVA 14% ACHATS</field>
@@ -299,30 +288,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_achats_importation_ht_14')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455214'),
-                'plus_report_line_ids': [ref('tax_report_achats_importation_tva_14')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_achats_importation_ht_14')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455214'),
-                'minus_report_line_ids': [ref('tax_report_achats_importation_tva_14')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_ac10">
         <field name="name">TVA 10% ACHATS</field>
         <field name="description">TVA 10% ACHATS</field>
@@ -335,30 +323,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_achats_importation_ht_10')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455210'),
-                'plus_report_line_ids': [ref('tax_report_achats_importation_tva_10')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_achats_importation_ht_10')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455210'),
-                'minus_report_line_ids': [ref('tax_report_achats_importation_tva_10')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
             }),
         ]"/>
     </record>
-
     <record model="account.tax.template" id="tva_ac07">
         <field name="name">TVA 7% ACHATS</field>
         <field name="description">TVA 7% ACHATS</field>
@@ -371,26 +358,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_achat_importation_ht_7')],
+                'plus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455207'),
-                'plus_report_line_ids': [ref('tax_report_achats_importation_tva_7')],
+                'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_achat_importation_ht_7')],
+                'minus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455207'),
-                'minus_report_line_ids': [ref('tax_report_achats_importation_tva_7')],
+                'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],
             }),
         ]"/>
     </record>

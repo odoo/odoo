@@ -16,6 +16,7 @@ class ResPartner(models.Model):
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
+            ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment")
 
     @api.onchange('company_type')

@@ -69,9 +69,16 @@ class AccountEdiFormat(models.Model):
             We recognize these cases based on the taxes that target the VJ tax grids, which imply
             the use of VAT External Reverse Charge.
         """
-        report_lines_xmlids = invoice.line_ids.tax_tag_ids.tax_report_line_ids.mapped(lambda x: x.get_external_id().get(x.id, ''))
-        return (invoice.is_purchase_document()
-                and any([x.startswith("l10n_it.tax_report_line_vj") for x in report_lines_xmlids]))
+        if not invoice.is_purchase_document():
+            return False
+
+        invoice_lines_tags = invoice.line_ids.tax_tag_ids
+        it_tax_report_vj_lines = self.env['account.report.line'].search([
+            ('report_id.country_id.code', '=', 'IT'),
+            ('code', 'like', 'VJ%'),
+        ])
+        vj_lines_tags = it_tax_report_vj_lines.expression_ids._get_matching_tags()
+        return bool(invoice_lines_tags & vj_lines_tags)
 
     def _l10n_it_edi_check_ordinary_invoice_configuration(self, invoice):
         errors = []
@@ -212,8 +219,13 @@ class AccountEdiFormat(models.Model):
             that are phisically in Italy but are in a VAT deposit, meaning that the goods
             have not passed customs.
         """
-        report_lines_xmlids = invoice.line_ids.tax_tag_ids.tax_report_line_ids.mapped(lambda x: x.get_external_id().get(x.id, ''))
-        return any([x == "l10n_it.tax_report_line_vj3" for x in report_lines_xmlids])
+        invoice_lines_tags = invoice.line_ids.tax_tag_ids
+        it_tax_report_vj3_lines = self.env['account.report.line'].search([
+            ('report_id.country_id.code', '=', 'IT'),
+            ('code', '=', 'VJ3'),
+        ])
+        vj3_lines_tags = it_tax_report_vj3_lines.expression_ids._get_matching_tags()
+        return bool(invoice_lines_tags & vj3_lines_tags)
 
     def _l10n_it_document_type_mapping(self):
         return {

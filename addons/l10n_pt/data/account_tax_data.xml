@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
         <record id="iva23" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA23</field>
@@ -14,13 +13,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_faturas_normal_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_faturas_normal_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
@@ -28,18 +26,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_notas_credito_normal_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_notas_credito_normal_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
-
         <record id="iva22" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA22</field>
@@ -53,7 +49,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -65,7 +60,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -73,7 +67,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva16" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA16</field>
@@ -87,7 +80,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -99,7 +91,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -107,7 +98,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva13" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA13</field>
@@ -121,13 +111,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_faturas_intermedia_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_faturas_intermedia_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
@@ -135,18 +124,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_notas_credito_intermedia_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_notas_credito_intermedia_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
-
         <record id="iva12" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA12</field>
@@ -160,7 +147,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -172,7 +158,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -180,7 +165,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva9" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA9</field>
@@ -194,7 +178,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -206,7 +189,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -214,7 +196,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva6" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA6</field>
@@ -228,13 +209,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_faturas_reduzida_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_faturas_reduzida_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
@@ -242,18 +222,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_notas_credito_reduzida_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_notas_credito_reduzida_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
-
         <record id="iva5" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA5</field>
@@ -267,7 +245,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -279,7 +256,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -287,7 +263,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva4" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA4</field>
@@ -301,7 +276,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -313,7 +287,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -321,7 +294,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="iva0" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA0</field>
@@ -335,13 +307,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_faturas_isento_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_faturas_isento_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
@@ -349,18 +320,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_vendas_notas_credito_isento_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_vendas_notas_credito_isento_tag')],
                     'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
-
         <record id="compiva23" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA23 compra</field>
@@ -373,13 +342,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_faturas_normal_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_faturas_normal_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
@@ -387,18 +355,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_notas_credito_normal_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_normal')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_notas_credito_normal_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-
         <record id="compiva22" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA22 compra</field>
@@ -412,7 +378,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -424,7 +389,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -432,7 +396,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva16" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA16 compra</field>
@@ -446,7 +409,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -458,7 +420,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -466,7 +427,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva13" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA13 compra</field>
@@ -479,13 +439,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_faturas_intermedia_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_faturas_intermedia_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
@@ -493,18 +452,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_notas_credito_intermedia_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_intermedia')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_notas_credito_intermedia_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-
         <record id="compiva12" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA12 compra</field>
@@ -518,7 +475,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -530,7 +486,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -538,7 +493,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva9" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA9 compra</field>
@@ -552,7 +506,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -564,7 +517,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -572,7 +524,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva6" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA6 compra</field>
@@ -585,13 +536,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_faturas_reduzida_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_faturas_reduzida_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
@@ -599,18 +549,16 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_notas_credito_reduzida_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_reduzida')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_notas_credito_reduzida_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-
         <record id="compiva5" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA5 compra</field>
@@ -624,7 +572,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -636,7 +583,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -644,7 +590,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva4" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA4 compra</field>
@@ -658,7 +603,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -670,7 +614,6 @@
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
@@ -678,7 +621,6 @@
                 }),
             ]"/>
         </record>
-
         <record id="compiva0" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA0 compra</field>
@@ -691,13 +633,12 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_faturas_isento_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_faturas_isento_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
@@ -705,17 +646,15 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_base_despesas_notas_credito_isento_tag')],
                 }),
-
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_isento')],
+                    'plus_report_expression_ids': [ref('tax_report_pt_tax_despesas_notas_credito_isento_tag')],
                     'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-
     </data>
 </odoo>

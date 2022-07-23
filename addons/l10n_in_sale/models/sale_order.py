@@ -18,6 +18,7 @@ class SaleOrder(models.Model):
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
+            ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, compute="_compute_l10n_in_gst_treatment", store=True)
 
     @api.depends('partner_id')

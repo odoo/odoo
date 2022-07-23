@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="nz_tax_sale_15" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_nz_chart_template"/>
@@ -14,28 +14,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_box5')],
+                'plus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21310'),
-                'plus_report_line_ids': [ref('tax_report_box5')],
+                'plus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_box5')],
+                'minus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21310'),
-                'minus_report_line_ids': [ref('tax_report_box5')],
+                'minus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
         ]"/>
     </record>
@@ -53,28 +51,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_box5')],
+                'plus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21310'),
-                'plus_report_line_ids': [ref('tax_report_box5')],
+                'plus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_box5')]
+                'minus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21310'),
-                'minus_report_line_ids': [ref('tax_report_box5')],
+                'minus_report_expression_ids': [ref('tax_report_box5_tag')],
             }),
         ]"/>
     </record>
@@ -92,9 +88,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_box5'), ref('tax_report_box6')],
+                'plus_report_expression_ids': [ref('tax_report_box5_tag'), ref('tax_report_box6_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -104,9 +99,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_box5'), ref('tax_report_box6')]
+                'minus_report_expression_ids': [ref('tax_report_box5_tag'), ref('tax_report_box6_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -127,28 +121,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_box11')],
+                'plus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
-                'plus_report_line_ids': [ref('tax_report_box11')],
+                'plus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_box11')],
+                'minus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
-                'minus_report_line_ids': [ref('tax_report_box11')],
+                'minus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
     </record>
@@ -166,28 +158,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_box11')],
+                'plus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
-                'plus_report_line_ids': [ref('tax_report_box11')],
+                'plus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_box11')],
+                'minus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
-                'minus_report_line_ids': [ref('tax_report_box11')],
+                'minus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
     </record>
@@ -206,7 +196,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -217,7 +206,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -239,7 +227,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -250,7 +237,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -281,7 +267,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
@@ -293,7 +278,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',

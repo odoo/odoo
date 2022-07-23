@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-
     <record id="rrif_pdv_25" model="account.tax.template">
         <field name="description">PDV 25%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -15,30 +13,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24003'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24003'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_25usl" model="account.tax.template">
         <field name="description">PDV 25% Usluge</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -52,30 +49,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24003'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24003'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_10" model="account.tax.template">
         <field name="description">PDV 10%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -89,30 +85,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24000'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24000'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_0" model="account.tax.template">
         <field name="description">PDV  0%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -126,7 +121,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -137,7 +132,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -145,7 +140,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_avans_25" model="account.tax.template">
         <field name="description">PDV za predujam 25%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -159,30 +153,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24013'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24013'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_avans_10" model="account.tax.template">
         <field name="description">PDV za predujam 10%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -196,30 +189,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24010'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24010'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_avans_0" model="account.tax.template">
         <field name="description">PDV za predujam 0%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -233,7 +225,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -244,7 +236,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -252,7 +244,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_nezar_isp_25" model="account.tax.template">
         <field name="description">PDV po nezaračunanim isporukama 25%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -266,30 +257,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24033'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24033'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_nezar_isp_10" model="account.tax.template">
         <field name="description">PDV po nezaračunanim isporukama 10%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -303,30 +293,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24030'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_10')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif24030'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_nezar_isp_0" model="account.tax.template">
         <field name="description">PDV po nezaračunanim isporukama 0%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -340,7 +329,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -351,7 +340,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -359,7 +348,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_nepod_0" model="account.tax.template">
         <field name="description">1. KOJE NE PODLIJEŽU OPOREZIVANJU (čl. 2. u svezi s čl. 5 i čl. 8 st. 7 Zakona)</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -373,7 +361,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_koje')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_koje_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -384,7 +372,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_koje')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_koje_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -392,7 +380,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_osl_izvoz_0" model="account.tax.template">
         <field name="description">2.1. IZVOZNE - s pravom na odbitak pretporeza (čl. 13. st. 1. toč. 1. i čl. 14. Zakona)</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -406,7 +393,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izvozne')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izvozne_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -417,7 +404,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_izvozne')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izvozne_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -425,7 +412,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_osl_medpri_0" model="account.tax.template">
         <field name="description">2.2. U VEZI S MEĐUNARODNIM PRIJEVOZOM  (čl. 13.b Zakona)</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -439,7 +425,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -450,7 +436,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_isporuke')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -458,7 +444,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_osl_tuz_0" model="account.tax.template">
         <field name="description">2.3. TUZEMNE - bez prava na odbitak pretporeza (čl. 11. i čl. 11a Zakona)</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -472,7 +457,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_tuzemne')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_tuzemne_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -483,7 +468,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_tuzemne')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_tuzemne_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -491,7 +476,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pdv_osl_ost_0" model="account.tax.template">
         <field name="description">2.4. OSTALO (čl. 13. st. 1. toč. 2. I čl. 13a Zakona) </field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -505,7 +489,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_ostale')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_ostale_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -516,7 +500,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_ostale')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_ostale_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -524,7 +508,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_25" model="account.tax.template">
         <field name="description">Pretporez 25% PDV</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -543,7 +526,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14003'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -555,11 +538,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14003'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_25usl" model="account.tax.template">
         <field name="description">Pretporez 25% PDV Usluge</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -578,7 +560,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14003'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -590,11 +572,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14003'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_10" model="account.tax.template">
         <field name="description">Pretporez 10% PDV</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -608,30 +589,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14000'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14000'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_0" model="account.tax.template">
         <field name="description">Pretporez 0% PDV</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -645,7 +625,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -656,7 +636,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -664,7 +644,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_avans_25" model="account.tax.template">
         <field name="description">Pretporez za predujam 25% PDV</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -683,7 +662,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14013'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -695,11 +674,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14013'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_avans_0" model="account.tax.template">
         <field name="description">Pretporez za predujam 0% PDV</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -713,7 +691,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -724,7 +702,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -732,7 +710,6 @@
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_uvoz_25" model="account.tax.template">
         <field name="description">Plaćeni PDV 25% pri uvozu dobara</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -746,30 +723,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14023'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14023'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_uvoz_10" model="account.tax.template">
         <field name="description">Plaćeni PDV 10% pri uvozu dobara</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -783,30 +759,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14020'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14020'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_uvoz_0" model="account.tax.template">
         <field name="description">Plaćeni PDV 0% pri uvozu dobara</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -820,7 +795,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -831,7 +806,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -839,9 +814,7 @@
             }),
         ]"/>
     </record>
-
-
-     <record id="rrif_pp_ino_25" model="account.tax.template">
+    <record id="rrif_pp_ino_25" model="account.tax.template">
         <field name="description">Plaćeni PDV 25% na usluge inozemnih poduzetnika</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
         <field name="name">25% ino. usluge</field>
@@ -854,30 +827,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14033'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14033'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_ino_10" model="account.tax.template">
         <field name="description">Plaćeni PDV 10% na usluge inozemnih poduzetnika</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -891,30 +863,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14030'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14030'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_ppr2_25" model="account.tax.template">
         <field name="description">25% R-2 dobavljač</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -928,30 +899,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1409'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1409'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_uvoz_samopdv_25" model="account.tax.template">
         <field name="description">Samo PDV kod uvoza 25%</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -965,30 +935,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_pp_uvoz_samopdv_25usl" model="account.tax.template">
         <field name="description">Samo PDV kod uvoza 25% usluge</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -1002,30 +971,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_ppdnp1_3070_1" model="account.tax.template">
         <field name="description">pp 30% Nepriznat 70% Priznat</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -1039,42 +1007,41 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14002'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14002'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_ppdnp1_7030_1" model="account.tax.template">
         <field name="description">pp 70% Nepriznat 30% Priznat</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -1088,42 +1055,41 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_pretporez_25_30')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14002'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_pretporez_25_30')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif14002'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_ppdnp1_3070_1_r2" model="account.tax.template">
         <field name="description">R2 pp 30% Nepriznat 70% Priznat</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -1137,42 +1103,41 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1408'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1408'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
     <record id="rrif_ppdnp1_7030_1_r2" model="account.tax.template">
         <field name="description">R2 pp 70% Nepriznat 30% Priznat</field>
         <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
@@ -1186,40 +1151,39 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_pretporez_25_30')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1408'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'plus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70'),ref('l10n_hr.account_tax_report_line_pretporez_25_30')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
             }),
             (0,0, {
                 'factor_percent': 30,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif1408'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
             }),
             (0,0, {
                 'factor_percent': 70,
                 'repartition_type': 'tax',
                 'account_id': ref('kp_rrif4199'),
-                'minus_report_line_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax')],
+                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
             }),
         ]"/>
     </record>
-
 </odoo>

@@ -16,7 +16,8 @@ class AccountMove(models.Model):
             ('consumer', 'Consumer'),
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
-            ('deemed_export', 'Deemed Export')
+            ('deemed_export', 'Deemed Export'),
+            ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
     l10n_in_gstin = fields.Char(string="GSTIN")

@@ -86,12 +86,6 @@ access_account_tax_repartition_line_user,account.tax repartition.line.user,model
 access_account_tax_repartition_line_readonly,account.tax repartition.line.invoice,model_account_tax_repartition_line,account.group_account_readonly,1,0,0,0
 access_account_tax_repartition_line_invoice,account.tax repartition.line.invoice,model_account_tax_repartition_line,account.group_account_invoice,1,0,0,0
 access_account_tax_repartition_line_manager,account.tax repartition.line.manager,model_account_tax_repartition_line,account.group_account_manager,1,1,1,1
-access_account_tax_report_line_readonly,account.tax.report.line.invoice,model_account_tax_report_line,account.group_account_readonly,1,0,0,0
-access_account_tax_report_line_ac_user,account.tax.report.line.ac.user,model_account_tax_report_line,account.group_account_manager,1,1,1,1
-access_account_tax_carryover_line_readonly,account.tax.carryover.line.invoice,model_account_tax_carryover_line,account.group_account_readonly,1,0,0,0
-access_account_tax_carryover_line_ac_user,account.tax.carryover.line.ac.user,model_account_tax_carryover_line,account.group_account_manager,1,1,1,1
-access_account_tax_report_invoice,account.tax.report.invoice,model_account_tax_report,account.group_account_readonly,1,0,0,0
-access_account_tax_report_ac_user,account.tax.report.ac.user,model_account_tax_report,account.group_account_manager,1,1,1,1
 access_account_tax_group_internal_user,account.tax.group internal user,model_account_tax_group,base.group_user,1,0,0,0
 access_account_tax_group_readonly,account.tax.group,model_account_tax_group,account.group_account_readonly,1,0,0,0
 access_account_tax_group,account.tax.group,model_account_tax_group,account.group_account_invoice,1,0,0,0
@@ -133,11 +127,8 @@ access_validate_account_move,access.validate.account.move,model_validate_account
 access_cash_box_out,access.cash.box.out,model_cash_box_out,account.group_account_user,1,1,1,0
 access_account_move_reversal,access.account.move.reversal,model_account_move_reversal,account.group_account_invoice,1,1,1,0
 access_account_common_report,access.account.common.report,model_account_common_report,account.group_account_user,1,1,1,0
-access_account_common_journal_report,access.account.common.journal.report,model_account_common_journal_report,account.group_account_user,1,1,1,0
-access_account_print_journal,access.account.print.journal,model_account_print_journal,account.group_account_user,1,1,1,0
 access_account_financial_year_op,access.account.financial.year.op,model_account_financial_year_op,account.group_account_manager,1,1,1,0
 access_account_setup_bank_manual_config,access.account.setup.bank.manual.config,model_account_setup_bank_manual_config,account.group_account_manager,1,1,1,0
-access_tax_adjustments_wizard,access.tax.adjustments.wizard,model_tax_adjustments_wizard,account.group_account_user,1,1,1,0
 access_account_invoice_send,access.account.invoice.send,model_account_invoice_send,account.group_account_invoice,1,1,1,0
 
 access_account_analytic_default,account.analytic.default,model_account_analytic_default,account.group_account_readonly,1,0,0,0
@@ -147,3 +138,15 @@ access_account_tour_upload_bill,account.tour.upload.bill,model_account_tour_uplo
 access_account_tour_upload_bill_email_confirm,account.tour.upload.bill.email.confirm,model_account_tour_upload_bill_email_confirm,account.group_account_manager,1,1,1,0
 
 access_account_accrued_orders_wizard,account.account.accrued.orders.wizard,account.model_account_accrued_orders_wizard,group_account_user,1,1,1,0
+
+access_account_report_readonly,account.report.readonly,model_account_report,account.group_account_readonly,1,0,0,0
+access_account_report_ac_user,account.report.ac.user,model_account_report,account.group_account_manager,1,1,1,1
+access_account_report_line_readonly,account.report.line.readonly,model_account_report_line,account.group_account_readonly,1,0,0,0
+access_account_report_line_ac_user,account.report.line.ac.user,model_account_report_line,account.group_account_manager,1,1,1,1
+access_account_report_expression_readonly,account.report.expression.readonly,model_account_report_expression,account.group_account_readonly,1,0,0,0
+access_account_report_expression_ac_user,account.report.expression.ac.user,model_account_report_expression,account.group_account_manager,1,1,1,1
+access_account_report_column_readonly,account.report.column.readonly,model_account_report_column,account.group_account_readonly,1,0,0,0
+access_account_report_column_ac_user,account.report.column.ac.user,model_account_report_column,account.group_account_manager,1,1,1,1
+
+access_account_report_external_value_readonly,account.report.external.value.readonly,model_account_report_external_value,account.group_account_readonly,1,0,0,0
+access_account_report_external_value_ac_user,account.report.external.value.ac.user,model_account_report_external_value,account.group_account_manager,1,1,1,1

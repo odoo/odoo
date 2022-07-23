@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="ST0" model="account.tax.template">
         <field name="description">ST0</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -9,11 +8,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -24,7 +23,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -32,7 +31,6 @@
             }),
         ]"/>
     </record>
-
     <record id="ST2" model="account.tax.template">
         <field name="description">ST2</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -41,11 +39,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -56,7 +54,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -64,7 +62,6 @@
             }),
         ]"/>
     </record>
-
     <record id="PT0" model="account.tax.template">
         <field name="description">PT0</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -73,11 +70,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -88,7 +85,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -96,7 +93,6 @@
             }),
         ]"/>
     </record>
-
     <record id="PT2" model="account.tax.template">
         <field name="description">PT2</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -105,11 +101,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -120,7 +116,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -128,7 +124,6 @@
             }),
         ]"/>
     </record>
-
     <record id="PT8" model="account.tax.template">
         <field name="description">PT8</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -137,46 +132,45 @@
         <field name="amount_type">percent</field>
         <field name="amount">20</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box9_tag'), ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box2_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box9_tag'), ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box2_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT5" model="account.tax.template">
         <field name="description">PT5</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -185,35 +179,34 @@
         <field name="amount_type">percent</field>
         <field name="amount">5</field>
         <field name="tax_group_id" ref="tax_group_5"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
     </record>
-
-	<record id="ST5" model="account.tax.template">
+    <record id="ST5" model="account.tax.template">
         <field name="description">ST5</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">sale</field>
@@ -221,34 +214,33 @@
         <field name="amount_type">percent</field>
         <field name="amount">5</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2200'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box1_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2200'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box1_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST4" model="account.tax.template">
         <field name="description">ST4</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -257,11 +249,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box8_tag'), ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -272,7 +264,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box8_tag'), ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -280,7 +272,6 @@
             }),
         ]"/>
     </record>
-
     <record id="PT7" model="account.tax.template">
         <field name="description">PT7</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -289,11 +280,11 @@
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box9_tag'), ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -304,7 +295,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box9_tag'), ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -312,7 +303,6 @@
             }),
         ]"/>
     </record>
-
     <record id="ST11" model="account.tax.template">
         <field name="description">ST11</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -321,34 +311,33 @@
         <field name="amount_type">percent</field>
         <field name="amount">20</field>
         <field name="tax_group_id" ref="tax_group_20"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2200'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box1_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box6_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2200'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box1_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT11" model="account.tax.template">
         <field name="description">PT11</field>
         <field name="chart_template_id" ref="l10n_uk"/>
@@ -357,32 +346,31 @@
         <field name="amount_type">percent</field>
         <field name="amount">20</field>
         <field name="tax_group_id" ref="tax_group_20"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'plus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_exd_vat_box7_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'minus_report_expression_ids': [ref('account_tax_report_line_vat_box4_tag')],
             }),
         ]"/>
     </record>
-
 </odoo>
