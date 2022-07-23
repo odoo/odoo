@@ -8,14 +8,15 @@
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2022
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2022
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2022
+# Far Har <fhari1234@gmail.com>, 2022
 # Hamid Darabi, 2022
 # arya sadeghi <aryasadeghy@gmail.com>, 2022
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Martin Trigaux, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +157,7 @@ msgid ""
 "                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
 "                                        Extra Price\n"
 "                                    </span>"
-msgstr ""
+msgstr "قیمت اضافی"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -176,7 +177,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>تمام تنضیمات کلی برای این محصول مدیریت می‌شود در</span>"
+msgstr "<span>همه تنظیمات کلی این محصول</span> مدیریت می‌شوند در"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -202,6 +203,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>هشدار</strong>: افزودن یا حذف ویژگی‌ها\n"
+"                         انواع موجود را حذف و دوباره ایجاد می کند و منجر می شود\n"
+"                         به از دست دادن سفارشی سازی های احتمالی آنها."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
@@ -246,7 +250,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "عملیات مورد نیاز است"
+msgstr "اقدام مورد نیاز است"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -300,14 +304,14 @@ msgstr "لیست قیمت های پیشرفته"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
 msgid "Advanced price rules (discounts, formulas)"
-msgstr "قواعد قیمتی پیشرفته (تخفیف‌ها, فرمول‌ها)"
+msgstr "قوانین قیمت پیشرفته (تخفیف، فرمول)"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
 msgid "All Products"
-msgstr "همه محصولات"
+msgstr "همه کالاها"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
@@ -338,7 +342,7 @@ msgstr "قابل اعمال بر"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "Applied On"
-msgstr "اعمال شده روی"
+msgstr "اعمال روی"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -354,7 +358,7 @@ msgstr "اعمال شدن بر"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
-msgstr "بایگانی‌شده"
+msgstr "بایگانی شده"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -387,7 +391,7 @@ msgstr "مشخصه"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr "خط مشخصه"
+msgstr "سطر مشخصه"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -408,7 +412,7 @@ msgstr "مقدار مشخصه"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "مقدار مشخصه"
+msgstr "مقادیر مشخصه"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -420,12 +424,12 @@ msgstr "مشخصه‌ها"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "مشخصه ها و گونه ها"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Availability"
-msgstr "موجود بودن"
+msgstr "دسترسی"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -458,7 +462,7 @@ msgstr "بر پایه"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr "لیست قیمت پایه"
+msgstr "لیست قیمت های اصلی"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -500,7 +504,7 @@ msgstr "میتواند فروخته شود"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category"
-msgstr "دسته‌بندی"
+msgstr "دسته بندی"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -521,7 +525,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "انتخاب اندازه کاغذ برای چاپ لیبل ها"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -541,7 +545,7 @@ msgstr "رنگ"
 #: model:ir.model.fields,field_description:product.field_product_product__color
 #: model:ir.model.fields,field_description:product.field_product_template__color
 msgid "Color Index"
-msgstr "شاخص رنگ"
+msgstr "رنگ پس زمینه"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__columns
@@ -586,7 +590,7 @@ msgstr "محاسبه قیمت"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Conditions"
-msgstr "شروط"
+msgstr "شرایط"
 
 #. module: product
 #: model:product.product,name:product.product_product_11
@@ -634,6 +638,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
+"مواد مصرفی محصولات فیزیکی هستند که شما سطح موجودی آنها را مدیریت نمی کنید: "
+"آنها همیشه در دسترس هستند."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -687,7 +693,7 @@ msgstr "هزینه"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "هقیمت تمام‌شده ارز"
+msgstr "ارز هزینه"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -702,7 +708,7 @@ msgstr "گروه‌های کشور"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr "ساخت یک لیست قیمت جدید"
+msgstr "ایجاد یک لیست قیمت جدید"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -715,7 +721,7 @@ msgstr "ایجاد یک محصول جدید"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "ایجا یک گونه جدید محصول"
+msgstr "ایجاد یک گونه جدید محصول"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -733,7 +739,7 @@ msgstr "ایجا یک گونه جدید محصول"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
 msgid "Created by"
-msgstr "ایجادشده توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
@@ -817,6 +823,7 @@ msgstr "پیش‌فرض %(currency)s لیست قیمت"
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
+"واحد اندازه گیری پیش فرض برای همه عملیات انتقال موجودی استفاده می شود."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -835,12 +842,12 @@ msgstr "تعریف لیست قیمتی فروشنده"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr "تعریف واحد انداره‌گیری حجم "
+msgstr "واحد اندازه گیری حجم خود را تعریف کنید"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr "تعریف واحد انداره‌گیری جرم"
+msgstr "واحد اندازه گیری وزن خود را مشخص کنید"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -851,7 +858,7 @@ msgstr "تاریخ سررسید تحویل"
 #: model:ir.model.fields,field_description:product.field_product_product__description
 #: model:ir.model.fields,field_description:product.field_product_template__description
 msgid "Description"
-msgstr "توضیحات"
+msgstr "توصیف"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
@@ -880,7 +887,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 msgid "Discard"
-msgstr "انصراف"
+msgstr "رها کردن"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
@@ -896,18 +903,18 @@ msgstr "سیاست تخفیف"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
 msgid "Discount included in the price"
-msgstr "تخفیف در قیمت لحاظ شده است"
+msgstr "تخفیف در قیمت گنجانده شده است"
 
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "تخفیف برای هر سطر"
+msgstr "تخفیف روی سطرها"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Discounts"
-msgstr "تخفیفات"
+msgstr "تخفیف ها"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1030,7 +1037,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Extra Fee"
-msgstr ""
+msgstr "هزینه اضافی"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1044,12 +1051,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__priority
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
 msgid "Favorite"
-msgstr "محبوب"
+msgstr "علاقه‌مندی"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Favorites"
-msgstr "علاقه مندی ها"
+msgstr "علاقه‌مندی ها"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1073,7 +1080,7 @@ msgstr "دنبال‌کنندگان"
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (طرف حساب ها)"
+msgstr "پیروان (شرکاء)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
@@ -1091,7 +1098,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
-msgstr "قالب"
+msgstr "فرمت"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
@@ -1128,12 +1135,12 @@ msgstr "ایجاد لیست قیمت"
 #. module: product
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist Report"
-msgstr ""
+msgstr "ایجاد گزارش لیست قیمت"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "تصاویر محصول را با استفاده از بارکد دریافت کنید"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1150,14 +1157,14 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "تصاویر گوگل"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Group By"
-msgstr "گروه بندی بر مبنای"
+msgstr "گروه‌بندی برمبنای"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1168,7 +1175,7 @@ msgstr "شاخص رنگ HTML"
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "دارای پیام"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -1228,7 +1235,8 @@ msgstr "آیکون برای نشان دادن یک فعالیت استثنایی
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "در صورت علامت‌گذاری، پیام‌های جدید نیاز به توجه شما دارند."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
@@ -1349,7 +1357,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "انبارداری"
+msgstr "انبار"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
@@ -1436,7 +1444,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به‌روز‌رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
@@ -1459,7 +1467,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr "فعالیتهای دیر شده"
+msgstr "فعالیتهای اخیر"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -1468,6 +1476,8 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"فاصله زمانی بین تایید سفارش خرید و دریافت محصولات در انبار شما بر حسب روز. "
+"توسط زمانبندی برای محاسبه خودکار برنامه ریزی سفارش خرید استفاده می شود."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1527,12 +1537,12 @@ msgstr "مدیریت بسته بندی محصول"
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "مدیریت گونه‌های محصول"
+msgstr "مدیریت گونه های محصولات"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Margins"
-msgstr "حاشیه‌سود"
+msgstr "حاشیه ها"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1574,7 +1584,7 @@ msgstr "تعداد کمینه"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr "چند قیمتی برای هر محصول"
+msgstr "چند قیمت برای هر محصول"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1582,14 +1592,14 @@ msgid ""
 "Multiple prices: Pricelists with fixed price rules by product,\n"
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
-"چند قیمتی: لیست قیمتی با قیمت مقطوع از محصول طبعیت می‌کند,\n"
-"قواعد پیشرفته: قواعد پیشرفته را برای لیست قیمتی فعال کنید."
+"قیمت های چندگانه: لیست قیمت با قوانین قیمت ثابت بر اساس محصول،\n"
+"قوانین پیشرفته: قوانین قیمت پیشرفته را برای لیست قیمت ها فعال می کند."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "موعد نهایی فعالیت من"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
@@ -1609,13 +1619,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "رویداد تقویم فعالیت بعدی"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "آخرین موعد فعالیت بعدی"
+msgstr "موعد نهایی فعالیت بعدی"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
@@ -1632,7 +1642,7 @@ msgstr "نوع فعالیت بعدی"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr "لیست قیمتی فروشنده یافت نشد"
+msgstr "لیست قیمت فروشنده ای پیدا نشد"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
@@ -1644,7 +1654,7 @@ msgstr "عادی"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Note:"
-msgstr ""
+msgstr "یادداشت:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
@@ -1655,7 +1665,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد عملیات"
+msgstr "تعداد اقدامات"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
@@ -1667,7 +1677,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به اقدام دارد"
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -1679,7 +1689,7 @@ msgstr "تعداد پیام‌های با خطای تحویل"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr "شماره قواعد قیمت"
+msgstr "تعداد قوانین قیمت"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -1744,7 +1754,7 @@ msgstr "بسته‌بندی"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "دسته بندی مادر"
+msgstr "دسته‌بندی مادر"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
@@ -1844,7 +1854,7 @@ msgstr "گردکردن قیمت"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #, python-format
 msgid "Price Rules"
-msgstr "قواعد قیمتی"
+msgstr "قوانین قیمت"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
@@ -1899,7 +1909,7 @@ msgstr "گزارش لیست قیمت"
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr "قواعد لیست قیمت"
+msgstr "قانون لیست قیمت"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -1907,7 +1917,7 @@ msgstr "قواعد لیست قیمت"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_inherit
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "قوانین لیست قیمت"
 
 #. module: product
 #. openerp-web
@@ -1952,7 +1962,7 @@ msgstr "چاپ"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Print Labels"
-msgstr ""
+msgstr "چاپ لیبل ها"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1985,17 +1995,17 @@ msgstr "مشخصه محصول"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "مقدار سفارشی مشخصه‌ محصول"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr ""
+msgstr "مقادیر مشخصه محصول"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "مشخصه محصول و مقادیر"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
@@ -2020,12 +2030,12 @@ msgstr "دسته های محصول"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Category"
-msgstr "دسته بندی محصول"
+msgstr "دسته محصول"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_configurator
 msgid "Product Configurator"
-msgstr "پیکربندی کننده محصول"
+msgstr "پیکربندی محصول"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label
@@ -2069,7 +2079,7 @@ msgstr "بسته‌بندی محصول (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "بسته بندی های محصول"
+msgstr "بسته بندی محصولات"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2132,7 +2142,7 @@ msgstr "گونه محصول"
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "Product Variant Values"
-msgstr "قواعد گونه‌های محصول"
+msgstr "مقادیر گونه های محصول"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2141,7 +2151,7 @@ msgstr "قواعد گونه‌های محصول"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
-msgstr "گونه‌های محصول"
+msgstr "گونه های محصول"
 
 #. module: product
 #: code:addons/product/report/product_label_report.py:0
@@ -2181,7 +2191,7 @@ msgstr "لیست قیمت محصول"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr "جستجو قواعد قیمت محصولات"
+msgstr "جستجو قوانین قیمت محصولات"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2214,7 +2224,7 @@ msgstr "شرح خرید"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "واحد اندازه گیری خرید"
 
 #. module: product
 #. openerp-web
@@ -2227,7 +2237,7 @@ msgstr "تعداد:"
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
 msgid "Quantity"
-msgstr "مقدار"
+msgstr "تعداد"
 
 #. module: product
 #. openerp-web
@@ -2249,7 +2259,7 @@ msgstr "رادیو"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 msgid "Reference"
-msgstr "شماره پیگیری"
+msgstr "مرجع‌"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2257,6 +2267,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"قیمت های درخواستی فروشندگان خود را برای هر محصول بر اساس مقدار و دوره ثبت "
+"کنید."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2388,7 +2400,7 @@ msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل �
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "قیمت و تخفیف عمومی را به مشتری نشان دهید"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -2421,6 +2433,8 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"مقدار ثابتی را برای اضافه یا تفریق (در صورت منفی) به مقدار محاسبه شده با "
+"تخفیف مشخص کنید."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2436,7 +2450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
 msgid "Start Date"
-msgstr "تاریخ شروع"
+msgstr "تاریخ آغاز"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
@@ -2459,10 +2473,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"وضعیت بر اساس فعالیت\n"
-"Overdue: Due date is already passed\n"
-"امروز:تاریخ فعالیت امروز است\n"
-"برنامه‌ریزی شده: برنامه‌های آینده."
+"وضعیت بر اساس فعالیت ها\n"
+"سررسید: تاریخ سررسید گذشته است\n"
+"امروز: تاریخ فعالیت امروز است\n"
+"برنامه ریزی شده: فعالیت های آینده."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
@@ -2500,7 +2514,7 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "مرجع داخلی '%s' از قبل وجود دارد."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2526,7 +2540,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "قیمت محاسبه شده در واحد اندازه گیری پیش فرض محصول بیان می شود"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2660,7 +2674,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "این یادداشت به سفارشات فروش و فاکتورها اضافه می شود."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2818,23 +2832,23 @@ msgstr "واحدهای اندازه گیری"
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread
 #: model:ir.model.fields,field_description:product.field_product_template__message_unread
 msgid "Unread Messages"
-msgstr "پیام‌های خوانده‌‌نشده"
+msgstr "پیام های ناخوانده"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UoM"
-msgstr "واحد"
+msgstr "واحد اندازه گیری"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "فروش بیشتر و فروش متقابل"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -2885,7 +2899,7 @@ msgstr "گونه"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr "تعداد گونه‌"
+msgstr "تعداد گونه"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -2920,7 +2934,7 @@ msgstr "اطلاعات گونه"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "قیمت اضافی گونه"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
@@ -2932,7 +2946,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "مقادیر گونه ها"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2951,7 +2965,7 @@ msgstr "گونه ها"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr ""
+msgstr "حالت ایجاد گونه ها"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2963,7 +2977,7 @@ msgstr "تامین کننده"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr "صورتحسابهای فروشنده"
+msgstr "صورتهای فروشنده"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3020,13 +3034,13 @@ msgstr "حجم"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "واحد اندازه گیری حجم"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "برچسب واحد اندازه گیری حجم"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -3061,13 +3075,13 @@ msgstr "وزن"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "واحد اندازه گیری وزن"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "برچسب واحد اندازه گیری وزن"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3217,8 +3231,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"شما باید برای هر چیزی که می‌فروشید یک محصول تعریف کنید،\n"
-"                چه این محصول فیزیکی باشد، یک کالای مصرفی یا خدمتی که شما به مشتری ارائه می‌دهید."
+"شما باید برای هر چیزی که می فروشید یا می خرید یک محصول تعریف کنید،\n"
+"                 خواه یک محصول قابل ذخیره سازی، یک کالای مصرفی یا یک سرویس باشد."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3228,10 +3242,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"برای هرچیزی باید یک محصول تعریف کنید؛ می‌خرید یا می‌فروشید,\n"
-"                چه یک محصول قابل انبار شدن باشد، مصرفی یا یک خدمت.\n"
-"                محصول از اطلاعات داده شده فرآیند فروش را ساده می‌کند:\n"
-"                قیمت، یادداشت‌ها در فاکتور، اطلاعات حسابداری، روش‌های تدارکات و غیره."
+"شما باید برای هر چیزی که می فروشید یا می خرید یک محصول تعریف کنید،\n"
+"                 خواه یک محصول قابل ذخیره سازی، یک کالای مصرفی یا یک سرویس باشد.\n"
+"                 فرم محصول حاوی اطلاعاتی برای ساده کردن فرآیند فروش است:\n"
+"                 قیمت، یادداشت های موجود در پیش فاکتور، داده های حسابداری، روش های تدارکات و غیره."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3241,12 +3255,16 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"شما باید برای هر چیزی که می فروشید یک محصول تعریف کنید، چه محصول فیزیکی،\n"
+"                 مواد مصرفی یا خدماتی که به مشتریان ارائه می دهید.\n"
+"                 فرم محصول حاوی اطلاعاتی برای ساده کردن فرآیند فروش است:\n"
+"                 قیمت، یادداشت های موجود در پیش فاکتور، داده های حسابداری، روش های تدارکات و غیره."
 
 #. module: product
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "شما باید یک مقدار مثبت تعیین کنید."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3257,7 +3275,7 @@ msgstr "روز"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "به عنوان مثال چراغ سقفی"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -3294,7 +3312,7 @@ msgstr "شرکت مادر"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "قالب محصول."
+msgstr "قالب محصول"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
