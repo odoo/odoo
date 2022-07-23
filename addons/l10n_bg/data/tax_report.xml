@@ -1,289 +1,332 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="l10n_bg_tax_report" model="account.tax.report">
+    <record id="l10n_bg_tax_report" model="account.report">
         <field name="name">Tax report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.bg"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_bg_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_bg_tax_report_a" model="account.report.line">
+                <field name="name">Section A: Data on value added tax charged</field>
+                <field name="children_ids">
+                    <record id="l10n_bg_tax_report_01" model="account.report.line">
+                        <field name="name">[01] Total amount of the tax bases for VAT taxation (amount from class 11 to class 16)</field>
+                        <field name="code">BG_TR_01</field>
+                        <field name="aggregation_formula">BG_TR_11.balance + BG_TR_12.balance + BG_TR_13.balance + BG_TR_14.balance + BG_TR_15.balance + BG_TR_16.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_tax_report_a_1" model="account.report.line">
+                                <field name="name">Tax base subject to taxation at a rate of 20%</field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_tax_report_11" model="account.report.line">
+                                        <field name="name">[11] - tax base of taxable supplies, incl. deliveries under the conditions of distance sales with a place of performance on the territory of the country</field>
+                                        <field name="code">BG_TR_11</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_tax_report_11_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">11</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_bg_tax_report_12" model="account.report.line">
+                                        <field name="name">[12] - tax base of VAT and tax base of received supplies under Article 82, paragraphs 2-6 of the VAT Act</field>
+                                        <field name="code">BG_TR_12</field>
+                                        <field name="aggregation_formula">BG_TR_12_1.balance + BG_TR_12_2.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_bg_tax_report_12_1" model="account.report.line">
+                                                <field name="name">Intra-community acquisitions</field>
+                                                <field name="code">BG_TR_12_1</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_bg_tax_report_12_1_tag" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">12_1</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_bg_tax_report_12_2" model="account.report.line">
+                                                <field name="name">Deliveries under Art. 82, para. 2-6</field>
+                                                <field name="code">BG_TR_12_2</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_bg_tax_report_12_2_tag" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">12_2</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_13" model="account.report.line">
+                                <field name="name">[13] Tax base of taxable supplies at a rate of 9%</field>
+                                <field name="code">BG_TR_13</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">13</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_a_2" model="account.report.line">
+                                <field name="name">Tax base subject to 0% tax</field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_tax_report_14" model="account.report.line">
+                                        <field name="name">[14] Tax base for supplies under Chapter Three of the VAT Act</field>
+                                        <field name="code">BG_TR_14</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_tax_report_14_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">14</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_bg_tax_report_15" model="account.report.line">
+                                        <field name="name">[15] Tax base of AEO of goods</field>
+                                        <field name="code">BG_TR_15</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_tax_report_15_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">15</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_bg_tax_report_16" model="account.report.line">
+                                        <field name="name">[16] Tax base of supplies under Articles 140, 146 and 173 of the VAT Act </field>
+                                        <field name="code">BG_TR_16</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_tax_report_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">16</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_17" model="account.report.line">
+                        <field name="name">[17] Tax base for supplies of services under Article 21, paragraph 2 with a place of performance on the territory of another member state</field>
+                        <field name="code">BG_TR_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_17_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">17</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_18" model="account.report.line">
+                        <field name="name">[18] Tax base of supplies under Article 69, paragraph 2 of the VAT Act, incl. deliveries on the basis of distance selling with a place of performance in the territory of another Member State, as well as deliveries as an intermediary in a tripartite</field>
+                        <field name="code">BG_TR_18</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_19" model="account.report.line">
+                        <field name="name">[19] Tax base of exempt supplies and exempt VOP</field>
+                        <field name="code">BG_TR_19</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">19</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_bg_tax_report_20" model="account.report.line">
+                        <field name="name">[20] All VAT charged (amount from class 21 to class 24)</field>
+                        <field name="code">BG_TR_20</field>
+                        <field name="aggregation_formula">BG_TR_21.balance + BG_TR_22.balance + BG_TR_23.balance + BG_TR_24.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_tax_report_21" model="account.report.line">
+                                <field name="name">[21] VAT charged</field>
+                                <field name="code">BG_TR_21</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_21_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">21</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_22" model="account.report.line">
+                                <field name="name">[22] VAT charged for VAT and for received deliveries under Art. 82, para 2-6</field>
+                                <field name="code">BG_TR_22</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">22</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_23" model="account.report.line">
+                                <field name="name">[23] Tax charged on supplies of goods and services for personal use</field>
+                                <field name="code">BG_TR_23</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_23_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_24" model="account.report.line">
+                                <field name="name">[24] VAT charged (9%)</field>
+                                <field name="code">BG_TR_24</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_24_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">24</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bg_tax_report_b" model="account.report.line">
+                <field name="name">Section B: Data on the exercised right to a tax credit</field>
+                <field name="children_ids">
+                    <record id="l10n_bg_tax_report_30" model="account.report.line">
+                        <field name="name">[30] Tax base and tax on the received deliveries, VAT, the received deliveries under art. 82, para. 2-6 of the VAT Act and imports without the right to a tax credit or without tax</field>
+                        <field name="code">BG_TR_30</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_30_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">30</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_b_2" model="account.report.line">
+                        <field name="name">Tax base of the received deliveries, VAT, the received deliveries under art. 82, para 2-6 of the VAT Act, the import, as well as the tax base of the received deliveries, used for making deliveries under art. 69, para 2 of the VAT Act</field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_tax_report_31" model="account.report.line">
+                                <field name="name">[31] - entitled to a full tax credit</field>
+                                <field name="code">BG_TR_31</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_31_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">31</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_tax_report_32" model="account.report.line">
+                                <field name="name">[32] - with the right to a partial tax credit</field>
+                                <field name="code">BG_TR_32</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_tax_report_32_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">32</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_33" model="account.report.line">
+                        <field name="name">[33] Coefficient under Article 73, paragraph 5 of the VAT Act</field>
+                        <field name="code">BG_TR_33</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_33_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="figure_type">integer</field>
+                                <field name="formula">(BG_TR_11.balance + BG_TR_12_1.balance + BG_TR_13.balance)/(BG_TR_01.balance + BG_TR_17.balance + BG_TR_18.balance + BG_TR_19.balance)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_41" model="account.report.line">
+                        <field name="name">[41] VAT eligible for a full tax credit</field>
+                        <field name="code">BG_TR_41</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_41_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_42" model="account.report.line">
+                        <field name="name">[42] VAT with the right to a partial tax credit</field>
+                        <field name="code">BG_TR_42</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_42_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_43" model="account.report.line">
+                        <field name="name">[43] Annual adjustment under Article 73, paragraph 8 (+/-)</field>
+                        <field name="code">BG_TR_43</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_43_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="figure_type">integer</field>
+                                <field name="formula">BG_TR_42.balance * BG_TR_33.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_40" model="account.report.line">
+                        <field name="name">[40] Total tax credit (41 + 42 x class 33 + 43)</field>
+                        <field name="code">BG_TR_40</field>
+                        <field name="aggregation_formula">BG_TR_41.balance + (BG_TR_42.balance * BG_TR_33.balance) + BG_TR_43.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bg_tax_report_c" model="account.report.line">
+                <field name="name">Section C: Result for the period</field>
+                <field name="children_ids">
+                    <record id="l10n_bg_tax_report_50" model="account.report.line">
+                        <field name="name">[50] VAT to be paid (class 20 - class 40) >= 0</field>
+                        <field name="code">BG_TR_50</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_50_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_20.balance - BG_TR_40.balance</field>
+                                <field name="subformula">if_above(BGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_tax_report_60" model="account.report.line">
+                        <field name="name">[60] VAT for refund (class 20 - class 40) &lt; 0</field>
+                        <field name="code">BG_TR_60</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_tax_report_60_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_20.balance - BG_TR_40.balance</field>
+                                <field name="subformula">if_below(BGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
     </record>
-
-    <record id="l10n_bg_tax_report_a" model="account.tax.report.line">
-        <field name="name">Section A: Data on value added tax charged</field>
-        <field name="report_id" ref="l10n_bg_tax_report"/>
-        <field name="sequence">100000</field>
-    </record>
-
-        <record id="l10n_bg_tax_report_01" model="account.tax.report.line">
-            <field name="name">[01] Total amount of the tax bases for VAT taxation (amount from class 11 to class 16)</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">101000</field>
-            <field name="code">BG_TR_01</field>
-            <field name="formula">BG_TR_11 + BG_TR_12 + BG_TR_13 + BG_TR_14 + BG_TR_15 + BG_TR_16</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_a_1" model="account.tax.report.line">
-            <field name="name">Tax base subject to taxation at a rate of 20%</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">102000</field>
-        </record>
-
-            <record id="l10n_bg_tax_report_11" model="account.tax.report.line">
-                <field name="name">[11] - tax base of taxable supplies, incl. deliveries under the conditions of distance sales with a place of performance on the territory of the country</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_a_1"/>
-                <field name="sequence">102100</field>
-                <field name="code">BG_TR_11</field>
-                <field name="tag_name">11</field>
-            </record>
-
-            <record id="l10n_bg_tax_report_12" model="account.tax.report.line">
-                <field name="name">[12] - tax base of VAT and tax base of received supplies under Article 82, paragraphs 2-6 of the VAT Act</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_a_1"/>
-                <field name="sequence">102200</field>
-                <field name="code">BG_TR_12</field>
-                <field name="formula">BG_TR_12_1 + BG_TR_12_2</field>
-            </record>
-
-                <record id="l10n_bg_tax_report_12_1" model="account.tax.report.line">
-                    <field name="name">Intra-community acquisitions</field>
-                    <field name="report_id" ref="l10n_bg_tax_report"/>
-                    <field name="parent_id" ref="l10n_bg_tax_report_12"/>
-                    <field name="sequence">102210</field>
-                    <field name="code">BG_TR_12_1</field>
-                    <field name="tag_name">12_1</field>
-                </record>
-
-                <record id="l10n_bg_tax_report_12_2" model="account.tax.report.line">
-                    <field name="name">Deliveries under Art. 82, para. 2-6</field>
-                    <field name="report_id" ref="l10n_bg_tax_report"/>
-                    <field name="parent_id" ref="l10n_bg_tax_report_12"/>
-                    <field name="sequence">102220</field>
-                    <field name="code">BG_TR_12_2</field>
-                    <field name="tag_name">12_2</field>
-                </record>
-
-        <record id="l10n_bg_tax_report_13" model="account.tax.report.line">
-            <field name="name">[13] Tax base of taxable supplies at a rate of 9%</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">103000</field>
-            <field name="code">BG_TR_13</field>
-            <field name="tag_name">13</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_a_2" model="account.tax.report.line">
-            <field name="name">Tax base subject to 0% tax</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">104000</field>
-        </record>
-
-            <record id="l10n_bg_tax_report_14" model="account.tax.report.line">
-                <field name="name">[14] Tax base for supplies under Chapter Three of the VAT Act</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_a_2"/>
-                <field name="sequence">104100</field>
-                <field name="code">BG_TR_14</field>
-                <field name="tag_name">14</field>
-            </record>
-
-            <record id="l10n_bg_tax_report_15" model="account.tax.report.line">
-                <field name="name">[15] Tax base of AEO of goods</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_a_2"/>
-                <field name="sequence">104200</field>
-                <field name="code">BG_TR_15</field>
-                <field name="tag_name">15</field>
-            </record>
-
-            <record id="l10n_bg_tax_report_16" model="account.tax.report.line">
-                <field name="name">[16] Tax base of supplies under Articles 140, 146 and 173 of the VAT Act </field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_a_2"/>
-                <field name="sequence">104300</field>
-                <field name="code">BG_TR_16</field>
-                <field name="tag_name">16</field>
-            </record>
-
-        <record id="l10n_bg_tax_report_17" model="account.tax.report.line">
-            <field name="name">[17] Tax base for supplies of services under Article 21, paragraph 2 with a place of performance on the territory of another member state</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">105000</field>
-            <field name="code">BG_TR_17</field>
-            <field name="tag_name">17</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_18" model="account.tax.report.line">
-            <field name="name">[18] Tax base of supplies under Article 69, paragraph 2 of the VAT Act, incl. deliveries on the basis of distance selling with a place of performance in the territory of another Member State, as well as deliveries as an intermediary in a tripartite</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">106000</field>
-            <field name="code">BG_TR_18</field>
-            <field name="tag_name">18</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_19" model="account.tax.report.line">
-            <field name="name">[19] Tax base of exempt supplies and exempt VOP</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">107000</field>
-            <field name="code">BG_TR_19</field>
-            <field name="tag_name">19</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_20" model="account.tax.report.line">
-            <field name="name">[20] All VAT charged (amount from class 21 to class 24)</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">108000</field>
-            <field name="code">BG_TR_20</field>
-            <field name="formula">BG_TR_21 + BG_TR_22 + BG_TR_23 + BG_TR_24</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_21" model="account.tax.report.line">
-            <field name="name">[21] VAT charged</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">109000</field>
-            <field name="code">BG_TR_21</field>
-            <field name="tag_name">21</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_22" model="account.tax.report.line">
-            <field name="name">[22] VAT charged for VAT and for received deliveries under Art. 82, para 2-6</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">110000</field>
-            <field name="code">BG_TR_22</field>
-            <field name="tag_name">22</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_23" model="account.tax.report.line">
-            <field name="name">[23] Tax charged on supplies of goods and services for personal use</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">111000</field>
-            <field name="code">BG_TR_23</field>
-            <field name="tag_name">23</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_24" model="account.tax.report.line">
-            <field name="name">[24] VAT charged (9%)</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_a"/>
-            <field name="sequence">112000</field>
-            <field name="code">BG_TR_24</field>
-            <field name="tag_name">24</field>
-        </record>
-
-    <record id="l10n_bg_tax_report_b" model="account.tax.report.line">
-        <field name="name">Section B: Data on the exercised right to a tax credit</field>
-        <field name="report_id" ref="l10n_bg_tax_report"/>
-        <field name="sequence">200000</field>
-    </record>
-
-        <record id="l10n_bg_tax_report_30" model="account.tax.report.line">
-            <field name="name">[30] Tax base and tax on the received deliveries, VAT, the received deliveries under art. 82, para. 2-6 of the VAT Act and imports without the right to a tax credit or without tax</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">201000</field>
-            <field name="code">BG_TR_30</field>
-            <field name="tag_name">30</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_b_2" model="account.tax.report.line">
-            <field name="name">Tax base of the received deliveries, VAT, the received deliveries under art. 82, para 2-6 of the VAT Act, the import, as well as the tax base of the received deliveries, used for making deliveries under art. 69, para 2 of the VAT Act</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">202000</field>
-        </record>
-
-            <record id="l10n_bg_tax_report_31" model="account.tax.report.line">
-                <field name="name">[31] - entitled to a full tax credit</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_b_2"/>
-                <field name="sequence">202100</field>
-                <field name="code">BG_TR_31</field>
-                <field name="tag_name">31</field>
-            </record>
-
-            <record id="l10n_bg_tax_report_32" model="account.tax.report.line">
-                <field name="name">[32] - with the right to a partial tax credit</field>
-                <field name="report_id" ref="l10n_bg_tax_report"/>
-                <field name="parent_id" ref="l10n_bg_tax_report_b_2"/>
-                <field name="sequence">202200</field>
-                <field name="code">BG_TR_32</field>
-                <field name="tag_name">32</field>
-            </record>
-
-        <record id="l10n_bg_tax_report_33" model="account.tax.report.line">
-            <field name="name">[33] Coefficient under Article 73, paragraph 5 of the VAT Act</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">203000</field>
-            <field name="code">BG_TR_33</field>
-            <field name="formula">(BG_TR_11 + BG_TR_12_1 + BG_TR_13)/(BG_TR_01 + BG_TR_17 + BG_TR_18 + BG_TR_19)</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_41" model="account.tax.report.line">
-            <field name="name">[41] VAT eligible for a full tax credit</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">204000</field>
-            <field name="code">BG_TR_41</field>
-            <field name="tag_name">41</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_42" model="account.tax.report.line">
-            <field name="name">[42] VAT with the right to a partial tax credit</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">205000</field>
-            <field name="code">BG_TR_42</field>
-            <field name="tag_name">42</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_43" model="account.tax.report.line">
-            <field name="name">[43] Annual adjustment under Article 73, paragraph 8 (+/-)</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">206000</field>
-            <field name="code">BG_TR_43</field>
-            <field name="formula">BG_TR_42 * BG_TR_33</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_40" model="account.tax.report.line">
-            <field name="name">[40] Total tax credit (41 + 42 x class 33 + 43)</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_b"/>
-            <field name="sequence">207000</field>
-            <field name="code">BG_TR_40</field>
-            <field name="formula">BG_TR_41 + (BG_TR_42 * BG_TR_33) + BG_TR_43</field>
-        </record>
-
-    <record id="l10n_bg_tax_report_c" model="account.tax.report.line">
-        <field name="name">Section C: Result for the period</field>
-        <field name="report_id" ref="l10n_bg_tax_report"/>
-        <field name="sequence">300000</field>
-    </record>
-
-        <record id="l10n_bg_tax_report_50" model="account.tax.report.line">
-            <field name="name">[50] VAT to be paid (class 20 - class 40) >= 0</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_c"/>
-            <field name="sequence">301000</field>
-            <field name="code">BG_TR_50</field>
-            <field name="formula">((BG_TR_20 - BG_TR_40) >= 0) and (BG_TR_20 - BG_TR_40) or 0</field>
-        </record>
-
-        <record id="l10n_bg_tax_report_60" model="account.tax.report.line">
-            <field name="name">[60] VAT for refund (class 20 - class 40) &lt; 0</field>
-            <field name="report_id" ref="l10n_bg_tax_report"/>
-            <field name="parent_id" ref="l10n_bg_tax_report_c"/>
-            <field name="sequence">302000</field>
-            <field name="code">BG_TR_60</field>
-            <field name="formula">((0 > (BG_TR_20 - BG_TR_40)) and (BG_TR_20 - BG_TR_40)) or 0</field>
-        </record>
 </odoo>

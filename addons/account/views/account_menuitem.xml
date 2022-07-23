@@ -30,15 +30,13 @@
             </menuitem>
             <menuitem id="menu_finance_entries_management" name="Management" sequence="10" groups="account.group_account_invoice,account.group_account_readonly"/>
             <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries"/>
-            <menuitem id="menu_finance_entries_actions" name="Actions" sequence="11" groups="account.group_account_user">
-                <menuitem id="menu_action_tax_adjustment" action="tax_adjustments_form" groups="base.group_no_one" sequence="45"/>
-            </menuitem>
+            <menuitem id="menu_finance_entries_actions" name="Actions" sequence="11" groups="account.group_account_user"/>
         </menuitem>
         <menuitem id="menu_finance_reports" name="Reporting" sequence="20" groups="account.group_account_readonly,account.group_account_invoice">
             <menuitem id="account_reports_management_menu" name="Management" sequence="4">
                 <menuitem id="menu_action_account_invoice_report_all" name="Invoice Analysis" action="action_account_invoice_report_all" sequence="1"/>
             </menuitem>
-            <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" sequence="1" groups="account.group_account_readonly"/>
+            <menuitem id="account_reports_legal_statements_menu" name="Financial Statements" sequence="1" groups="account.group_account_readonly"/>
         </menuitem>
         <menuitem id="menu_finance_configuration" name="Configuration" sequence="35" groups="account.group_account_manager">
             <menuitem id="menu_account_config" name="Settings" action="action_account_config" groups="base.group_system" sequence="0"/>
@@ -64,7 +62,6 @@
             <menuitem id="account_management_menu" name="Management" groups="account.group_account_manager" sequence="5">
                 <menuitem id="menu_product_product_categories" action="product.product_category_action_form" sequence="3"/>
                 <menuitem id="menu_action_rounding_form_view" action="rounding_list_action" groups="account.group_cash_rounding" sequence="4"/>
-                <menuitem id="menu_configure_tax_report" name="Tax Report" action="account.action_configure_tax_report" groups="base.group_no_one" sequence="5"/>
             </menuitem>
             <menuitem id="menu_analytic_accounting" name="Analytic Accounting" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="6">
                 <menuitem id="account_analytic_def_account" action="analytic.action_account_analytic_account_form" groups="analytic.group_analytic_accounting" sequence="1"/>

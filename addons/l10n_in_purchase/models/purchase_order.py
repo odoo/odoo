@@ -17,7 +17,8 @@ class PurchaseOrder(models.Model):
             ('consumer', 'Consumer'),
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
-            ('deemed_export', 'Deemed Export')
+            ('deemed_export', 'Deemed Export'),
+            ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", states=Purchase.READONLY_STATES, compute="_compute_l10n_in_gst_treatment", store=True)
 
     @api.onchange('company_id')

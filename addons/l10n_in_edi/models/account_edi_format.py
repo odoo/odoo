@@ -36,6 +36,7 @@ class AccountEdiFormat(models.Model):
                 "overseas",
                 "special_economic_zone",
                 "deemed_export",
+                "uin_holders",
             )
         return super()._is_required_for_invoice(invoice)
 
@@ -433,19 +434,19 @@ class AccountEdiFormat(models.Model):
             base_line = tax_values["base_line_id"]
             tax_line = tax_values["tax_line_id"]
             line_code = "other"
-            if any(tag in tax_line.tax_tag_ids for tag in self.env.ref("l10n_in.tax_report_line_cess").sudo().tag_ids):
+            if self.env.ref("l10n_in.tax_tag_cess") in tax_line.tax_tag_ids:
                 if tax_line.tax_line_id.amount_type != "percent":
                     line_code = "cess_non_advol"
                 else:
                     line_code = "cess"
-            elif any(tag in tax_line.tax_tag_ids for tag in self.env.ref("l10n_in.tax_report_line_state_cess").sudo().tag_ids):
+            elif self.env.ref("l10n_in.tax_tag_state_cess") in tax_line.tax_tag_ids:
                 if tax_line.tax_line_id.amount_type != "percent":
                     line_code = "state_cess_non_advol"
                 else:
                     line_code = "state_cess"
             else:
                 for gst in ["cgst", "sgst", "igst"]:
-                    if any(tag in tax_line.tax_tag_ids for tag in self.env.ref("l10n_in.tax_report_line_%s"%(gst)).sudo().tag_ids):
+                    if self.env.ref(f"l10n_in.tax_tag_{gst}") in tax_line.tax_tag_ids:
                         line_code = gst
             return {
                 "tax": tax_values["tax_id"],

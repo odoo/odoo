@@ -1,143 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="tax_report" model="account.tax.report">
+    <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.hu"/>
-        <field name="root_line_ids">
-            <record id="tax_report_alap" model="account.tax.report.line">
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_alap" model="account.report.line">
                 <field name="name">ÁFA alap</field>
-                <field name="sequence" eval="1"/>
-                <field name="children_line_ids">
-                    <record id="tax_report_alap_fiz_export" model="account.tax.report.line">
+                <field name="aggregation_formula">ADOALAP__FIZETENDO_AFA_EXPORT.balance + ADOALAP__FIZETENDO_AFA_EU.balance + ADOALAP__FIZETENDO_AFA_TARGYI_ADOMENTES.balance + ADOALAP__FIZETENDO_AFA_ALANYI_ADOMENTES.balance + ADOALAP__FIZETENDO_AFA_KORON_KIVULI.balance + ADOALAP__FIZETENDO_AFA_5.balance + ADOALAP__FIZETENDO_AFA_18.balance + ADOALAP__FIZETENDO_AFA_27.balance + ADOALAP__VISSZAIGENYELHETO_AFA_EU.balance + ADOALAP__IMPORT_AFA.balance + ADOALAP__FORDITOTT_AFA.balance + ADOALAP__VISSZAIGENYELHETO_AFA_ALANYI_ADOMENTES.balance + ADOALAP__VISSZAIGENYELHETO_AFA_TARGYI_ADOMENTES.balance + ADOALAP__VISSZAIGENYELHETO_AFA_KORON_KIVULI.balance + ADOALAP__VISSZAIGENYELHETO_AFA_5.balance + ADOALAP__VISSZAIGENYELHETO_AFA_18.balance + ADOALAP__VISSZAIGENYELHETO_AFA_27.balance + ADOALAP__VISSZAIGENYELHETO_KOMPENZACIOS_FELAR.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_alap_fiz_export" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA Export</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA Export</field>
-                        <field name="sequence" eval="1"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_EXPORT</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_export_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA Export</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_eu" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_eu" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA EU</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA EU</field>
-                        <field name="sequence" eval="2"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_EU</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_eu_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA EU</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_targyi" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_targyi" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA tárgyi adómentes</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA tárgyi adómentes</field>
-                        <field name="sequence" eval="3"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_TARGYI_ADOMENTES</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_targyi_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA tárgyi adómentes</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_alanyi" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_alanyi" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
-                        <field name="sequence" eval="4"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_ALANYI_ADOMENTES</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_alanyi_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_koron_kivuli" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_koron_kivuli" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA körön kívüli</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA körön kívüli</field>
-                        <field name="sequence" eval="5"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_KORON_KIVULI</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_koron_kivuli_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA körön kívüli</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_afa_5" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_afa_5" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 5%</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA 5%</field>
-                        <field name="sequence" eval="6"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_afa_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA 5%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_afa_18" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_afa_18" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 18%</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA 18%</field>
-                        <field name="sequence" eval="7"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_afa_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA 18%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_fiz_afa_27" model="account.tax.report.line">
+                    <record id="tax_report_alap_fiz_afa_27" model="account.report.line">
                         <field name="name">Adóalap - Fizetendő ÁFA 27%</field>
-                        <field name="tag_name">Adóalap - Fizetendő ÁFA 27%</field>
-                        <field name="sequence" eval="8"/>
+                        <field name="code">ADOALAP__FIZETENDO_AFA_27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_fiz_afa_27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Fizetendő ÁFA 27%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA EU</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA EU</field>
-                        <field name="sequence" eval="9"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_EU</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA EU</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_import" model="account.tax.report.line">
+                    <record id="tax_report_alap_import" model="account.report.line">
                         <field name="name">Adóalap – Import ÁFA</field>
-                        <field name="tag_name">Adóalap – Import ÁFA</field>
-                        <field name="sequence" eval="10"/>
+                        <field name="code">ADOALAP__IMPORT_AFA</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_import_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap – Import ÁFA</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_forditott" model="account.tax.report.line">
+                    <record id="tax_report_alap_forditott" model="account.report.line">
                         <field name="name">Adóalap – Fordított ÁFA</field>
-                        <field name="tag_name">Adóalap – Fordított ÁFA</field>
-                        <field name="sequence" eval="11"/>
+                        <field name="code">ADOALAP__FORDITOTT_AFA</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_forditott_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap – Fordított ÁFA</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_alanyi" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_alanyi" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
-                        <field name="sequence" eval="12"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_ALANYI_ADOMENTES</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_alanyi_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_targyi" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_targyi" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
-                        <field name="sequence" eval="13"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_TARGYI_ADOMENTES</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_targyi_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_koron_kivuli" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_koron_kivuli" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA körön kívüli</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA körön kívüli</field>
-                        <field name="sequence" eval="14"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_KORON_KIVULI</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_koron_kivuli_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA körön kívüli</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_5" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_5" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 5%</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 5%</field>
-                        <field name="sequence" eval="15"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA 5%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_18" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_18" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 18%</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 18%</field>
-                        <field name="sequence" eval="16"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA 18%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_viss_27" model="account.tax.report.line">
+                    <record id="tax_report_alap_viss_27" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető ÁFA 27%</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 27%</field>
-                        <field name="sequence" eval="17"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_AFA_27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_viss_27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető ÁFA 27%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_alap_komp" model="account.tax.report.line">
+                    <record id="tax_report_alap_komp" model="account.report.line">
                         <field name="name">Adóalap - Visszaigényelhető kompenzációs felár</field>
-                        <field name="tag_name">Adóalap - Visszaigényelhető kompenzációs felár</field>
-                        <field name="sequence" eval="18"/>
+                        <field name="code">ADOALAP__VISSZAIGENYELHETO_KOMPENZACIOS_FELAR</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_alap_komp_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Adóalap - Visszaigényelhető kompenzációs felár</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_fizetndo" model="account.tax.report.line">
+            <record id="tax_report_fizetndo" model="account.report.line">
                 <field name="name">ÁFA fizetndő / visszaigényelhető</field>
-                <field name="sequence" eval="2"/>
-                <field name="children_line_ids">
-                    <record id="tax_report_fizetndo_5" model="account.tax.report.line">
+                <field name="aggregation_formula">FIZETENDO_AFA_5.balance + FIZETENDO_AFA_18.balance + FIZETENDO_AFA_27.balance + VISSZAIGENYELHETO_AFA_5.balance + VISSZAIGENYELHETO_AFA_18.balance + VISSZAIGENYELHETO_AFA_27.balance + VISSZAIGENYELHETO_KOMPENZACIOS_FELAR.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_fizetndo_5" model="account.report.line">
                         <field name="name">Fizetendő ÁFA 5%</field>
-                        <field name="tag_name">Fizetendő ÁFA 5%</field>
-                        <field name="sequence" eval="1"/>
+                        <field name="code">FIZETENDO_AFA_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Fizetendő ÁFA 5%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_18" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_18" model="account.report.line">
                         <field name="name">Fizetendő ÁFA 18%</field>
-                        <field name="tag_name">Fizetendő ÁFA 18%</field>
-                        <field name="sequence" eval="2"/>
+                        <field name="code">FIZETENDO_AFA_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Fizetendő ÁFA 18%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_27" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_27" model="account.report.line">
                         <field name="name">Fizetendő ÁFA 27%</field>
-                        <field name="tag_name">Fizetendő ÁFA 27%</field>
-                        <field name="sequence" eval="3"/>
+                        <field name="code">FIZETENDO_AFA_27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Fizetendő ÁFA 27%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_viss_5" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_viss_5" model="account.report.line">
                         <field name="name">Visszaigényelhető ÁFA 5%</field>
-                        <field name="tag_name">Visszaigényelhető ÁFA 5%</field>
-                        <field name="sequence" eval="4"/>
+                        <field name="code">VISSZAIGENYELHETO_AFA_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_viss_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Visszaigényelhető ÁFA 5%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_viss_18" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_viss_18" model="account.report.line">
                         <field name="name">Visszaigényelhető ÁFA 18%</field>
-                        <field name="tag_name">Visszaigényelhető ÁFA 18%</field>
-                        <field name="sequence" eval="5"/>
+                        <field name="code">VISSZAIGENYELHETO_AFA_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_viss_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Visszaigényelhető ÁFA 18%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_viss_27" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_viss_27" model="account.report.line">
                         <field name="name">Visszaigényelhető ÁFA 27%</field>
-                        <field name="tag_name">Visszaigényelhető ÁFA 27%</field>
-                        <field name="sequence" eval="6"/>
+                        <field name="code">VISSZAIGENYELHETO_AFA_27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_viss_27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Visszaigényelhető ÁFA 27%</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_fizetndo_viss_komp" model="account.tax.report.line">
+                    <record id="tax_report_fizetndo_viss_komp" model="account.report.line">
                         <field name="name">Visszaigényelhető kompenzációs felár</field>
-                        <field name="tag_name">Visszaigényelhető kompenzációs felár</field>
-                        <field name="sequence" eval="7"/>
+                        <field name="code">VISSZAIGENYELHETO_KOMPENZACIOS_FELAR</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_fizetndo_viss_komp_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Visszaigényelhető kompenzációs felár</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

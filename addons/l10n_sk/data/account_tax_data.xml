@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- VAT domestic sale-->
-
     <record id="vy_tuz_20" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">DPH na výstupe 20%</field>
@@ -35,7 +33,6 @@
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_20"/>
     </record>
-
     <record id="vy_tuz_10" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">DPH na výstupe 10%</field>
@@ -68,7 +65,6 @@
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_10"/>
     </record>
-
     <record id="vy_tuz_0" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">DPH na výstupe 0%</field>
@@ -98,9 +94,7 @@
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
-
     <!-- VAT domestic purchase -->
-
     <record id="vs_tuz_20" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">DPH na vstupe 20%</field>
@@ -133,7 +127,6 @@
             }),
         ]"/>
     </record>
-
     <record id="vs_tuz_10" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">DPH na vstupe 10%</field>
@@ -166,12 +159,8 @@
             }),
         ]"/>
     </record>
-
-
-
     <!-- Eurpean Union -->
     <!-- =========================================================== -->
-
     <record id="vy_dod_eu" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">Dodanie do EU</field>
@@ -189,7 +178,7 @@
                 'repartition_type': 'tax',
             }),
                   ]"/>
-              <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
@@ -201,7 +190,6 @@
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
-
     <record id="vs_nad_eu" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
         <field name="name">Nadobudnutie z EU</field>

@@ -137,7 +137,7 @@ class Company(models.Model):
 
         return {
             repartition_line_key: (
-                self.env.ref(tag_xml_id).tag_ids.filtered(lambda t: not t.tax_negate)
+                self.env.ref(tag_xml_id)._get_matching_tags().filtered(lambda t: not t.tax_negate)
                 if tag_xml_id
                 else self.env['account.account.tag']
             ) + oss_tag
