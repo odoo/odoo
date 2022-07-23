@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.exceptions import AccessError
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _, osv
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
@@ -1232,27 +1232,19 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
     invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on refund invoices. Mutually exclusive with invoice_tax_id")
-    tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
+    tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in domains")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
+
     # These last two fields are helpers used to ease the declaration of account.account.tag objects in XML.
-    # They are directly linked to account.tax.report.line objects, which create corresponding + and - tags
+    # They are directly linked to account.tax.report.expression objects, which create corresponding + and - tags
     # at creation. This way, we avoid declaring + and - separately every time.
-    plus_report_line_ids = fields.Many2many(string="Plus Tax Report Lines", relation='account_tax_repartition_plus_report_line', comodel_name='account.tax.report.line', copy=True, help="Tax report lines whose '+' tag will be assigned to move lines by this repartition line")
-    minus_report_line_ids = fields.Many2many(string="Minus Report Lines", relation='account_tax_repartition_minus_report_line', comodel_name='account.tax.report.line', copy=True, help="Tax report lines whose '-' tag will be assigned to move lines by this repartition line")
+    plus_report_expression_ids = fields.Many2many(string="Plus Tax Report Expressions", relation='account_tax_rep_template_plus', comodel_name='account.report.expression', copy=True, help="Tax report expressions whose '+' tag will be assigned to move lines by this repartition line")
+    minus_report_expression_ids = fields.Many2many(string="Minus Report Expressions", relation='account_tax_rep_template_minus', comodel_name='account.report.expression', copy=True, help="Tax report expressions whose '-' tag will be assigned to move lines by this repartition line")
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('plus_report_line_ids'):
-                vals['plus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
-
-            if vals.get('minus_report_line_ids'):
-                vals['minus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['minus_report_line_ids'])
-
-            if vals.get('tag_ids'):
-                vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
-
             if vals.get('use_in_tax_closing') is None:
                 vals['use_in_tax_closing'] = False
                 if vals.get('account_id'):
@@ -1262,40 +1254,26 @@ class AccountTaxRepartitionLineTemplate(models.Model):
 
         return super().create(vals_list)
 
-    @api.model
-    def _convert_tag_syntax_to_orm(self, tags_list):
-        """ Repartition lines give the possibility to directly give
-        a list of ids to create for tags instead of a list of ORM commands.
-
-        This function checks that tags_list uses this syntactic sugar and returns
-        an ORM-compliant version of it if it does.
-        """
-        if tags_list and all(isinstance(elem, int) for elem in tags_list):
-            return [(6, False, tags_list)]
-        return tags_list
-
     @api.constrains('invoice_tax_id', 'refund_tax_id')
     def validate_tax_template_link(self):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
                 raise ValidationError(_("Tax distribution line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
 
-    @api.constrains('plus_report_line_ids', 'minus_report_line_ids')
-    def validate_tags(self):
-        all_tax_rep_lines = self.mapped('plus_report_line_ids') + self.mapped('minus_report_line_ids')
-        lines_without_tag = all_tax_rep_lines.filtered(lambda x: not x.tag_name)
-        if lines_without_tag:
-            raise ValidationError(_("The following tax report lines are used in some tax distribution template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
+    @api.constrains('plus_report_expression_ids', 'minus_report_expression_ids')
+    def _validate_report_expressions(self):
+        for record in self:
+            all_engines = set((record.plus_report_expression_ids + record.minus_report_expression_ids).mapped('engine'))
+            if all_engines and all_engines != {'tax_tags'}:
+                raise ValidationError(_("Only 'tax_tags' expressions can be linked to a tax repartition line template."))
 
     def get_repartition_line_create_vals(self, company):
-        rslt = [(5, 0, 0)]
+        rslt = [Command.clear()]
         for record in self:
-            tags_to_add = record._get_tags_to_add()
-
-            rslt.append((0, 0, {
+            rslt.append(Command.create({
                 'factor_percent': record.factor_percent,
                 'repartition_type': record.repartition_type,
-                'tag_ids': [(6, 0, tags_to_add.ids)],
+                'tag_ids': [Command.set(record._get_tags_to_add().ids)],
                 'company_id': company.id,
                 'use_in_tax_closing': record.use_in_tax_closing
             }))
@@ -1329,13 +1307,18 @@ class AccountTaxRepartitionLineTemplate(models.Model):
 
     def _get_tags_to_add(self):
         self.ensure_one()
-        tags_to_add = self.env["account.account.tag"]
-        tags_to_add += self.plus_report_line_ids.mapped("tag_ids").filtered(lambda x: not x.tax_negate)
-        tags_to_add += self.minus_report_line_ids.mapped("tag_ids").filtered(lambda x: x.tax_negate)
-        tags_to_add += self.tag_ids
-        return tags_to_add
+        tags_to_add = self.tag_ids
 
-# Fiscal Position Templates
+        domains = []
+        for sign, report_expressions in (('+', self.plus_report_expression_ids), ('-', self.minus_report_expression_ids)):
+            for report_expression in report_expressions:
+                country = report_expression.report_line_id.report_id.country_id
+                domains.append(self.env['account.account.tag']._get_tax_tags_domain(report_expression.formula, country.id, sign=sign))
+
+        if domains:
+            tags_to_add |= self.env['account.account.tag'].search(osv.expression.OR(domains))
+
+        return tags_to_add
 
 class AccountFiscalPositionTemplate(models.Model):
     _name = 'account.fiscal.position.template'

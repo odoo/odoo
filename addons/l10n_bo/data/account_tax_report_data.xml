@@ -1,107 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="tax_report" model="account.tax.report">
+    <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.bo"/>
-        <field name="root_line_ids">
-            <record id="tax_report_impuesto_25" model="account.tax.report.line">
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_impuesto_25" model="account.report.line">
                 <field name="name">Impuesto a las Utilidades de la Empresa IUE (25%)</field>
-                <field name="sequence" eval="1"/>
+                <field name="expression_ids">
+                    <record id="tax_report_impuesto_25_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
             </record>
-            <record id="tax_report_impuesto_trans" model="account.tax.report.line">
+            <record id="tax_report_impuesto_trans" model="account.report.line">
                 <field name="name">Impuesto a las Transacciones IT (3%)</field>
-                <field name="sequence" eval="2"/>
-                <field name="children_line_ids">
-                    <record id="tax_report_impuesto_trans_3" model="account.tax.report.line">
+                <field name="aggregation_formula">IMPUESTO_A_LAS_TRANSACCIONES_IT_3.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_impuesto_trans_3" model="account.report.line">
                         <field name="name">Impuesto a las Transacciones IT (3%)</field>
-                        <field name="tag_name">Impuesto a las Transacciones IT (3%)</field>
-                        <field name="sequence" eval="1"/>
+                        <field name="code">IMPUESTO_A_LAS_TRANSACCIONES_IT_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_impuesto_trans_3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Impuesto a las Transacciones IT (3%)</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_impuesto_ttl" model="account.tax.report.line">
+            <record id="tax_report_impuesto_ttl" model="account.report.line">
                 <field name="name">Impuesto al Valor Agregado (IVA) Total a Pagar</field>
-                <field name="sequence" eval="3"/>
-                <field name="children_line_ids">
-                    <record id="tax_report_impuesto_ttl_cob" model="account.tax.report.line">
+                <field name="aggregation_formula">IMPUESTO_COBRADO.balance + IMPUESTO_PAGADO.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_impuesto_ttl_cob" model="account.report.line">
                         <field name="name">Impuesto Cobrado</field>
-                        <field name="sequence" eval="1"/>
-                        <field name="children_line_ids">
-                            <record id="tax_report_impuesto_ttl_cob_fuera" model="account.tax.report.line">
+                        <field name="code">IMPUESTO_COBRADO</field>
+                        <field name="aggregation_formula">IMPUESTO_COBRADO_FUERA_DE_AMBITO.balance + IMPUESTO_COBRADO_DE_EXONERADOS_AL_IVA.balance + IMPUESTO_COBRADO_IVA.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_impuesto_ttl_cob_fuera" model="account.report.line">
                                 <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
-                                <field name="sequence" eval="1"/>
+                                <field name="code">IMPUESTO_COBRADO_FUERA_DE_AMBITO</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_cob_fuera_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_impuesto_ttl_cob_exon" model="account.tax.report.line">
+                            <record id="tax_report_impuesto_ttl_cob_exon" model="account.report.line">
                                 <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
-                                <field name="sequence" eval="2"/>
+                                <field name="code">IMPUESTO_COBRADO_DE_EXONERADOS_AL_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_cob_exon_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_impuesto_ttl_cob_iva" model="account.tax.report.line">
+                            <record id="tax_report_impuesto_ttl_cob_iva" model="account.report.line">
                                 <field name="name">Impuesto Cobrado IVA</field>
-                                <field name="tag_name">Impuesto Cobrado IVA</field>
-                                <field name="sequence" eval="3"/>
+                                <field name="code">IMPUESTO_COBRADO_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_cob_iva_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Impuesto Cobrado IVA</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_impuesto_ttl_pag" model="account.tax.report.line">
+                    <record id="tax_report_impuesto_ttl_pag" model="account.report.line">
                         <field name="name">Impuesto Pagado</field>
-                        <field name="sequence" eval="2"/>
-                        <field name="children_line_ids">
-                            <record id="tax_report_impuesto_ttl_pag_fuera" model="account.tax.report.line">
+                        <field name="code">IMPUESTO_PAGADO</field>
+                        <field name="aggregation_formula">IMPUESTO_PAGADO_FUERA_DE_AMBITO.balance + IMPUESTO_PAGADO_DE_EXONERADOS_AL_IVA.balance + IMPUESTO_PAGADO_IVA.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_impuesto_ttl_pag_fuera" model="account.report.line">
                                 <field name="name">Impuesto Pagado Fuera de Ámbito</field>
-                                <field name="sequence" eval="1"/>
+                                <field name="code">IMPUESTO_PAGADO_FUERA_DE_AMBITO</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_pag_fuera_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_impuesto_ttl_pag_exon" model="account.tax.report.line">
+                            <record id="tax_report_impuesto_ttl_pag_exon" model="account.report.line">
                                 <field name="name">Impuesto Pagado de Exonerados al IVA</field>
-                                <field name="sequence" eval="2"/>
+                                <field name="code">IMPUESTO_PAGADO_DE_EXONERADOS_AL_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_pag_exon_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_impuesto_ttl_pag_iva" model="account.tax.report.line">
+                            <record id="tax_report_impuesto_ttl_pag_iva" model="account.report.line">
                                 <field name="name">Impuesto Pagado IVA</field>
-                                <field name="tag_name">Impuesto Pagado IVA</field>
-                                <field name="sequence" eval="3"/>
+                                <field name="code">IMPUESTO_PAGADO_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_impuesto_ttl_pag_iva_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Impuesto Pagado IVA</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_base_imponible" model="account.tax.report.line">
+            <record id="tax_report_base_imponible" model="account.report.line">
                 <field name="name">Base Imponible</field>
-                <field name="sequence" eval="4"/>
-                <field name="children_line_ids">
-                    <record id="tax_report_base_imponible_compras" model="account.tax.report.line">
+                <field name="aggregation_formula">BASE_IMPONIBLE__COMPRAS.balance + BASE_IMPONIBLE__VENTAS.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_base_imponible_compras" model="account.report.line">
                         <field name="name">Base Imponible - Compras</field>
-                        <field name="sequence" eval="1"/>
-                        <field name="children_line_ids">
-                            <record id="tax_report_base_imponible_compras_fuera" model="account.tax.report.line">
+                        <field name="code">BASE_IMPONIBLE__COMPRAS</field>
+                        <field name="aggregation_formula">COMPRAS_GRAVADAS_FUERA_DE_AMBITO.balance + COMPRAS_NO_GRAVADAS_EXONERADAS.balance + COMPRAS_GRAVADAS_CON_IVA.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_base_imponible_compras_fuera" model="account.report.line">
                                 <field name="name">Compras Gravadas Fuera de Ámbito</field>
-                                <field name="sequence" eval="1"/>
+                                <field name="code">COMPRAS_GRAVADAS_FUERA_DE_AMBITO</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_compras_fuera_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_base_imponible_compras_gravadas" model="account.tax.report.line">
+                            <record id="tax_report_base_imponible_compras_gravadas" model="account.report.line">
                                 <field name="name">Compras NO Gravadas (Exoneradas)</field>
-                                <field name="sequence" eval="2"/>
+                                <field name="code">COMPRAS_NO_GRAVADAS_EXONERADAS</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_compras_gravadas_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_base_imponible_compras_iva" model="account.tax.report.line">
+                            <record id="tax_report_base_imponible_compras_iva" model="account.report.line">
                                 <field name="name">Compras Gravadas con IVA</field>
-                                <field name="tag_name">Compras Gravadas con IVA</field>
-                                <field name="sequence" eval="3"/>
+                                <field name="code">COMPRAS_GRAVADAS_CON_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_compras_iva_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Compras Gravadas con IVA</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_base_imponible_venras" model="account.tax.report.line">
+                    <record id="tax_report_base_imponible_venras" model="account.report.line">
                         <field name="name">Base Imponible - Ventas</field>
-                        <field name="sequence" eval="2"/>
-                        <field name="children_line_ids">
-                            <record id="tax_report_base_imponible_venras_fuera" model="account.tax.report.line">
+                        <field name="code">BASE_IMPONIBLE__VENTAS</field>
+                        <field name="aggregation_formula">VENTAS_GRAVADAS_FUERA_DE_AMBITO.balance + VENTAS_NO_GRAVADAS_EXONERADAS.balance + IMPUESTO_AL_VALOR_AGREGADO_CON_IVA.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_base_imponible_venras_fuera" model="account.report.line">
                                 <field name="name">Ventas Gravadas Fuera de Ámbito</field>
-                                <field name="sequence" eval="1"/>
+                                <field name="code">VENTAS_GRAVADAS_FUERA_DE_AMBITO</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_venras_fuera_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_base_imponible_venras_exon" model="account.tax.report.line">
+                            <record id="tax_report_base_imponible_venras_exon" model="account.report.line">
                                 <field name="name">Ventas NO Gravadas (Exoneradas)</field>
-                                <field name="sequence" eval="2"/>
+                                <field name="code">VENTAS_NO_GRAVADAS_EXONERADAS</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_venras_exon_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_base_imponible_venras_iva" model="account.tax.report.line">
+                            <record id="tax_report_base_imponible_venras_iva" model="account.report.line">
                                 <field name="name">Impuesto al Valor Agregado con IVA</field>
-                                <field name="tag_name">Impuesto al Valor Agregado con IVA</field>
-                                <field name="sequence" eval="3"/>
+                                <field name="code">IMPUESTO_AL_VALOR_AGREGADO_CON_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_imponible_venras_iva_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Impuesto al Valor Agregado con IVA</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>

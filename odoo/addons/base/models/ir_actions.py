@@ -147,11 +147,17 @@ class IrActions(models.Model):
         """
         record = self.env.ref(full_xml_id)
         assert isinstance(self.env[record._name], type(self))
-        action = record.sudo().read()[0]
+        return record._get_action_dict()
+
+    def _get_action_dict(self):
+        """ Returns the action content for the provided action record.
+        """
+        self.ensure_one()
+        readable_fields = self._get_readable_fields()
         return {
             field: value
-            for field, value in action.items()
-            if field in record._get_readable_fields()
+            for field, value in self.sudo().read()[0].items()
+            if field in readable_fields
         }
 
     def _get_readable_fields(self):

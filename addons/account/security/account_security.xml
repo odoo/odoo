@@ -302,9 +302,9 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record id="account_tax_carryover_line_comp_rule" model="ir.rule">
-        <field name="name">Carry over line multi-company</field>
-        <field name="model_id" ref="model_account_tax_carryover_line"/>
+    <record id="report_external_value_comp_rule" model="ir.rule">
+        <field name="name">Report External Value multi-company</field>
+        <field name="model_id" ref="model_account_report_external_value"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 </data>

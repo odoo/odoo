@@ -20,7 +20,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_24')],
+              'plus_report_expression_ids': [ref('tax_report_sales_24_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -32,7 +32,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_24')],
+              'minus_report_expression_ids': [ref('tax_report_sales_24_tag')],
             }),
         ]"/>
     </record>
@@ -53,7 +53,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_14')],
+              'plus_report_expression_ids': [ref('tax_report_sales_14_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -65,7 +65,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_14')],
+              'minus_report_expression_ids': [ref('tax_report_sales_14_tag')],
             }),
         ]"/>
     </record>
@@ -77,7 +77,6 @@
         <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
@@ -87,7 +86,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_10')],
+              'plus_report_expression_ids': [ref('tax_report_sales_10_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -99,7 +98,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_10')],
+              'minus_report_expression_ids': [ref('tax_report_sales_10_tag')],
             }),
         ]"/>
     </record>
@@ -111,12 +110,11 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'plus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -127,7 +125,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'minus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -135,7 +133,6 @@
             }),
         ]"/>
     </record>
-
     <!-- ### Domestic:sales:service -->
     <record id="tax_dom_sales_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -145,7 +142,6 @@
         <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
@@ -155,7 +151,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_24')],
+              'plus_report_expression_ids': [ref('tax_report_sales_24_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -167,7 +163,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_24')],
+              'minus_report_expression_ids': [ref('tax_report_sales_24_tag')],
             }),
         ]"/>
     </record>
@@ -179,7 +175,6 @@
         <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
@@ -189,7 +184,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_14')],
+              'plus_report_expression_ids': [ref('tax_report_sales_14_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -201,7 +196,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_14')],
+              'minus_report_expression_ids': [ref('tax_report_sales_14_tag')],
             }),
         ]"/>
     </record>
@@ -222,7 +217,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids':  [ref('tax_report_sales_10')],
+              'plus_report_expression_ids': [ref('tax_report_sales_10_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -234,13 +229,11 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids':  [ref('tax_report_sales_10')],
+              'minus_report_expression_ids': [ref('tax_report_sales_10_tag')],
             }),
         ]"/>
     </record>
-
     <!-- ## Domestic:purchase -->
-
     <!-- ### Domestic:purchase:goods -->
     <record id="tax_dom_purchase_goods_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -259,7 +252,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids':  [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -271,7 +264,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids':  [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -292,7 +285,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -304,7 +297,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -325,7 +318,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -337,11 +330,10 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
-
     <!-- ### Domestic:purchase:service -->
     <record id="tax_dom_purchase_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -360,7 +352,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -372,7 +364,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -393,7 +385,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -405,7 +397,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -426,7 +418,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -438,11 +430,10 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
-
     <!-- ### Domestic:purchase:brutto -->
     <record id="tax_dom_purchase_brutto_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -461,7 +452,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -473,7 +464,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -494,7 +485,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -506,7 +497,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -527,7 +518,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -539,11 +530,10 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
-
     <!-- ### Domestic:purchase:no_category -->
     <record id="tax_dom_purchase_0" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -554,7 +544,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
     </record>
-
     <!-- # Europe -->
     <!-- ## Europe:sales -->
     <!-- ### Europe:sales:goods -->
@@ -570,7 +559,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_sales_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_sales_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -581,7 +570,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_sales_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_sales_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -589,7 +578,6 @@
             }),
         ]"/>
     </record>
-
     <!-- ### Europe:sales:service -->
     <record id="tax_eu_sales_service_0" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -603,7 +591,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_sales_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_sales_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -614,7 +602,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_sales_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_sales_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -622,7 +610,6 @@
             }),
         ]"/>
     </record>
-
     <!-- ## Europe:purchase -->
     <!-- ### Europe:purchase:goods -->
     <record id="tax_eu_purchase_goods_24" model="account.tax.template">
@@ -637,13 +624,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -655,13 +642,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -682,13 +669,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -700,13 +687,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -727,13 +714,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -745,13 +732,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_goods_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -760,7 +747,6 @@
             }),
         ]"/>
     </record>
-
     <!-- ### Europe:purchase:service -->
     <record id="tax_eu_purchase_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -774,13 +760,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -792,13 +778,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -819,13 +805,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -837,13 +823,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -864,13 +850,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -882,13 +868,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_purchase_service_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -897,7 +883,6 @@
             }),
         ]"/>
     </record>
-
     <!-- # TRIANGULATION -->
     <record id="vat0triangulation" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -959,7 +944,6 @@
             }),
         ]"/>
     </record>
-
     <!-- # Construct -->
     <record id="tax_construct_sales_0" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -973,7 +957,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_sales_construct_service')],
+              'plus_report_expression_ids': [ref('tax_report_base_sales_construct_service_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -984,7 +968,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_sales_construct_service')],
+              'minus_report_expression_ids': [ref('tax_report_base_sales_construct_service_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -1009,7 +993,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1021,7 +1005,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
@@ -1037,42 +1021,41 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_purchase_construct_service')],
+              'plus_report_expression_ids': [ref('tax_report_base_purchase_construct_service_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'minus_report_line_ids': [ref('tax_report_tax_purchase_construct_service')],
+              'minus_report_expression_ids': [ref('tax_report_tax_purchase_construct_service_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_purchase_construct_service')],
+              'minus_report_expression_ids': [ref('tax_report_base_purchase_construct_service_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
               'account_id': ref('account_2930'),
-              'plus_report_line_ids': [ref('tax_report_tax_purchase_construct_service')],
+              'plus_report_expression_ids': [ref('tax_report_tax_purchase_construct_service_tag')],
             }),
         ]"/>
     </record>
-
     <!-- # Aland -->
     <!-- ## Aland:sales -->
     <record id="aland_sales_0" model="account.tax.template">
@@ -1087,7 +1070,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'plus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -1098,7 +1081,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'minus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -1106,7 +1089,6 @@
             }),
         ]"/>
     </record>
-
     <!-- # Non EU -->
     <!-- ## Non EU:purchase -->
     <!-- ## Non EU:purchase:goods -->
@@ -1122,13 +1104,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1140,13 +1122,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1167,13 +1149,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1185,13 +1167,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1212,13 +1194,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1230,13 +1212,13 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag'), ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': -100,
@@ -1245,7 +1227,6 @@
             }),
         ]"/>
     </record>
-
     <!-- ## Non EU:others -->
     <record id="vat0export" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
@@ -1255,12 +1236,11 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'plus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -1271,7 +1251,7 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids':  [ref('tax_report_base_turnover_0_vat')],
+              'minus_report_expression_ids': [ref('tax_report_base_turnover_0_vat_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
@@ -1291,26 +1271,26 @@
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_tax_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'base',
-              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+              'minus_report_expression_ids': [ref('tax_report_base_import_goods_no_eu_tag')],
             }),
             (0,0, {
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_tax_import_goods_no_eu')],
+              'plus_report_expression_ids': [ref('tax_report_tax_import_goods_no_eu_tag')],
             }),
         ]"/>
     </record>
@@ -1331,7 +1311,7 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'plus_report_line_ids': [ref('tax_report_deductible')],
+              'plus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1343,9 +1323,8 @@
               'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
-              'minus_report_line_ids': [ref('tax_report_deductible')],
+              'minus_report_expression_ids': [ref('tax_report_deductible_tag')],
             }),
         ]"/>
     </record>
-
 </odoo>

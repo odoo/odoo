@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="ST1" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -13,30 +12,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('standard_rate_exclude_capital_goods_service')],
+                'plus_report_expression_ids': [ref('standard_rate_exclude_capital_goods_service_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('standard_rate_exclude_capital_goods_service'), ref('vat_on_standard_rate_exclude_capital_goods_service')],
+                'plus_report_expression_ids': [ref('standard_rate_exclude_capital_goods_service_tag'), ref('vat_on_standard_rate_exclude_capital_goods_service_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('standard_rate_exclude_capital_goods_service')],
+                'minus_report_expression_ids': [ref('standard_rate_exclude_capital_goods_service_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('standard_rate_exclude_capital_goods_service'), ref('vat_on_standard_rate_exclude_capital_goods_service')],
+                'minus_report_expression_ids': [ref('standard_rate_exclude_capital_goods_service_tag'), ref('vat_on_standard_rate_exclude_capital_goods_service_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST1A" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -49,30 +47,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('standard_rate_only_capital_goods_service')],
+                'plus_report_expression_ids': [ref('standard_rate_only_capital_goods_service_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('standard_rate_only_capital_goods_service'), ref('vat_on_standard_rate_only_capital_goods_service')],
+                'plus_report_expression_ids': [ref('standard_rate_only_capital_goods_service_tag'), ref('vat_on_standard_rate_only_capital_goods_service_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('standard_rate_only_capital_goods_service')],
+                'minus_report_expression_ids': [ref('standard_rate_only_capital_goods_service_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('standard_rate_only_capital_goods_service'), ref('vat_on_standard_rate_only_capital_goods_service')],
+                'minus_report_expression_ids': [ref('standard_rate_only_capital_goods_service_tag'), ref('vat_on_standard_rate_only_capital_goods_service_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST2" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -85,7 +82,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('zero_rate_exclude_goods_exported')],
+                'plus_report_expression_ids': [ref('zero_rate_exclude_goods_exported_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -96,7 +93,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('zero_rate_exclude_goods_exported')],
+                'minus_report_expression_ids': [ref('zero_rate_exclude_goods_exported_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -104,7 +101,6 @@
             }),
         ]"/>
     </record>
-
     <record id="ST2A" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -117,7 +113,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('zero_rate_only_goods_exported')],
+                'plus_report_expression_ids': [ref('zero_rate_only_goods_exported_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -128,7 +124,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('zero_rate_only_goods_exported')],
+                'minus_report_expression_ids': [ref('zero_rate_only_goods_exported_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -136,7 +132,6 @@
             }),
         ]"/>
     </record>
-
     <record id="ST3" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -149,7 +144,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('exempt_and_non_supplies')],
+                'plus_report_expression_ids': [ref('exempt_and_non_supplies_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -160,7 +155,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('exempt_and_non_supplies')],
+                'minus_report_expression_ids': [ref('exempt_and_non_supplies_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -168,7 +163,6 @@
             }),
         ]"/>
     </record>
-
     <record id="ST5" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -181,30 +175,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('accomodation_exceeding_28_days')],
+                'plus_report_expression_ids': [ref('accomodation_exceeding_28_days_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('vat_on_accomodation_exceeding_28_days')],
+                'plus_report_expression_ids': [ref('vat_on_accomodation_exceeding_28_days_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('accomodation_exceeding_28_days')],
+                'minus_report_expression_ids': [ref('accomodation_exceeding_28_days_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('vat_on_accomodation_exceeding_28_days')],
+                'minus_report_expression_ids': [ref('vat_on_accomodation_exceeding_28_days_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST7" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -217,30 +210,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('accomodation_under_28_days')],
+                'plus_report_expression_ids': [ref('accomodation_under_28_days_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('vat_on_accomodation_under_28_days')],
+                'plus_report_expression_ids': [ref('vat_on_accomodation_under_28_days_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('accomodation_under_28_days')],
+                'minus_report_expression_ids': [ref('accomodation_under_28_days_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('vat_on_accomodation_under_28_days')],
+                'minus_report_expression_ids': [ref('vat_on_accomodation_under_28_days_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST10" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -253,30 +245,29 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('second_hand_goods_export')],
+                'plus_report_expression_ids': [ref('second_hand_goods_export_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('vat_on_second_hand_goods_export')],
+                'plus_report_expression_ids': [ref('vat_on_second_hand_goods_export_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('second_hand_goods_export')],
+                'minus_report_expression_ids': [ref('second_hand_goods_export_tag')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('vat_on_second_hand_goods_export')],
+                'minus_report_expression_ids': [ref('vat_on_second_hand_goods_export_tag')],
             }),
         ]"/>
     </record>
-
     <record id="ST12" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -294,7 +285,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'plus_report_line_ids': [ref('other_imported_services')],
+                'plus_report_expression_ids': [ref('other_imported_services_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -306,11 +297,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('200060'),
-                'minus_report_line_ids': [ref('other_imported_services')],
+                'minus_report_expression_ids': [ref('other_imported_services_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT15" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -328,7 +318,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('other_goods_services_supplied')],
+                'plus_report_expression_ids': [ref('other_goods_services_supplied_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -340,11 +330,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('other_goods_services_supplied')],
+                'minus_report_expression_ids': [ref('other_goods_services_supplied_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT14" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -362,7 +351,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('capital_goods_services_supplied')],
+                'plus_report_expression_ids': [ref('capital_goods_services_supplied_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -374,11 +363,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('capital_goods_services_supplied')],
+                'minus_report_expression_ids': [ref('capital_goods_services_supplied_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT14A" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -396,7 +384,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('capital_goods_imported')],
+                'plus_report_expression_ids': [ref('capital_goods_imported_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -408,11 +396,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('capital_goods_imported')],
+                'minus_report_expression_ids': [ref('capital_goods_imported_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT15A" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -430,7 +417,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('other_goods_imported')],
+                'plus_report_expression_ids': [ref('other_goods_imported_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -442,11 +429,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('other_goods_imported')],
+                'minus_report_expression_ids': [ref('other_goods_imported_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT16" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -464,7 +450,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('change_in_use')],
+                'plus_report_expression_ids': [ref('change_in_use_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -476,11 +462,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('change_in_use')],
+                'minus_report_expression_ids': [ref('change_in_use_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT17" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -498,7 +483,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('bad_debts')],
+                'plus_report_expression_ids': [ref('bad_debts_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -510,11 +495,10 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('bad_debts')],
+                'minus_report_expression_ids': [ref('bad_debts_tag')],
             }),
         ]"/>
     </record>
-
     <record id="PT18" model="account.tax.template">
         <field name="description">15%</field>
         <field name="chart_template_id" ref="default_chart_template"/>
@@ -532,7 +516,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'plus_report_line_ids': [ref('others')],
+                'plus_report_expression_ids': [ref('others_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -544,9 +528,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('100060'),
-                'minus_report_line_ids': [ref('others')],
+                'minus_report_expression_ids': [ref('others_tag')],
             }),
         ]"/>
     </record>
-
 </odoo>
