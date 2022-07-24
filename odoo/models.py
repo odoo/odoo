@@ -5097,17 +5097,13 @@ class BaseModel(metaclass=MetaModel):
 
             elif field.translate and field.store and name not in excluded and old[name]:
                 # for translatable fields we copy their translations
-                try:
-                    old_cache_value = old.env.cache.get(old, field) or {}
-                except CacheMiss:
-                    old[name]  # prefetch all translations
-                    old_cache_value = old.env.cache.get(old, field) or {}
-                old_cache_value = old_cache_value.copy()
+                old_cache_value = field.convert_to_cache({}, old) or {}
                 old_value_en = old_cache_value.pop('en_US', None)
                 if not old_value_en or not old_cache_value:
                     continue
                 if not callable(field.translate):
-                    new.sudo().update_field_translations(name, old_cache_value)
+                    if old_value_en == new.with_context(lang='en_US')[name]:
+                        new.sudo().update_field_translations(name, old_cache_value)
                 else:
                     translations = defaultdict(dict)
                     # {from_lang_term: {lang: to_lang_term}
