@@ -9,8 +9,8 @@
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
 # Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2382,6 +2382,7 @@ msgstr "Відлік закінчився - Firework"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "Країни"
@@ -3813,6 +3814,23 @@ msgstr "Ключ API Google Maps"
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "Консоль Google Search"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"Google припинив підтримку API «Universal Analytics» і «Google Sign-In». Це "
+"означає, що лише облікові записи та ключі, створені до 2020 року, зможуть "
+"інтегрувати свою інформаційну панель Analytics в Odoo (або будь-який інший "
+"веб-сайт). Це буде можливо лише до середини 2023 року, після чого ці сервіси"
+" взагалі не працюватимуть."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5340,6 +5358,18 @@ msgstr "Сторінка відмови від Network Advertising Initiative"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "Нова"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"Нові облікові записи та ключі Google Analytics тепер використовують Google "
+"Analytics 4, який наразі не можна інтегрувати/вставити на зовнішні веб-"
+"сайти."
 
 #. module: website
 #. openerp-web
@@ -7457,6 +7487,17 @@ msgstr ""
 "Це значення буде екрановано, щоб відповідати всім основним браузерам і "
 "використовуватися в URL-адресі. Залиште його порожнім, щоб використовувати "
 "назву запису за замовчуванням."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"Тепер ці облікові записи мають перевіряти свою інформаційну панель Analytics"
+" безпосередньо на платформі Google."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options

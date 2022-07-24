@@ -7,7 +7,7 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2020
 # Sanna Edelman <direct@generare.com>, 2020
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020
 # Eppu Tuominen <eppu.tuominen@emsystems.fi>, 2020
 # Jussi Lehto <jussi@gulfeo.com>, 2020
@@ -31,9 +31,9 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Odottava tilaus' or Tilaus'} (Viite ${object.name or 'n/a' "
+"'pending') and 'Odottava tilaus' or 'Tilaus'} (Viite ${object.name or 'n/a' "
 "})"
 
 #. module: sale
@@ -1515,7 +1515,7 @@ msgstr "Muokkaa tarjouksia ja tilauksia"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Liitin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4597,6 +4597,17 @@ msgid ""
 msgstr ""
 "Voit asettaa tässä myyntitilauksissa näkyvän viestintyypin. Viestintä "
 "annetaan asiakkaalle, kun hän valitsee maksutavan."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Et voi vaihtaa tuotteen tyyppiä, koska sitä on jo käytetty "
+"myyntitilauksilla."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
