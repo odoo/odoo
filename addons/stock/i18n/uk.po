@@ -3,12 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
-# Zoriana Zaiats, 2018
-# trolka <trolka.olug@gmail.com>, 2018
-# Dmytro Kriesovich <dimscoffer@bigmir.net>, 2018
-# Bohdan Lisnenko, 2021
-# ТАрас <tratatuta@i.ua>, 2021
 # Martin Trigaux, 2022
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
@@ -17,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1048,7 +1042,10 @@ msgid "As soon as possible"
 msgstr "Якомога швидше"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Призначити"
 
@@ -7838,7 +7835,7 @@ msgstr "Назва складу повинна бути унікальною д�
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "Кількість серійних номерів для створення має бути більшою за нуль."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8513,7 +8510,10 @@ msgid "USPS Connector"
 msgstr "Конектор USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Не призначати"
 
@@ -9472,18 +9472,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Вам потрібно надати партійний/серійний номер для товарів %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Не слід використовувати заплановане внутрішнє переміщення для переміщення "
-"деяких товарів між двома складами. Замість цього використовуйте негайне "
-"внутрішнє переміщення або маршрут поповнення."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
