@@ -5,14 +5,16 @@
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
+# Murat Durmuş <muratd@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-03-20 15:00+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,16 +25,23 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Bir Erişim Anahtarı Oluşturun"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
-msgstr ""
+msgstr "Erişim anahtarı"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:57
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "Application ID"
+msgstr "Uygulama Kimliği"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Apply"
 msgstr "Uygula"
@@ -43,123 +52,140 @@ msgid "Config Settings"
 msgstr "Konfigürasyon Ayarları"
 
 #. module: web_unsplash
-#: code:addons/web_unsplash/controllers/main.py:86
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash URL!"
-msgstr ""
+msgstr "HATA: Bilinmeyen Unsplash URL'si!"
 
 #. module: web_unsplash
-#: code:addons/web_unsplash/controllers/main.py:34
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash notify URL!"
-msgstr ""
+msgstr "HATA: Bilinmeyen Unsplash URL'sini bildir!"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:52
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
-msgid "Generate an access key"
-msgstr ""
+msgid "Get an Access key"
+msgstr "Erişim anahtarı alın"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:56
-#, python-format
-msgid "How to find my Unsplash Application ID?"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "Erişim anahtarınızı buraya yapıştırın"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:54
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Paste your application ID here"
-msgstr ""
+msgstr "Uygulama kimliğinizi buraya yapıştırın"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
-msgid "Photos not found"
-msgstr ""
+msgid "Photos (via Unsplash)"
+msgstr "Fotoğraflar (Unsplash aracılığıyla)"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:84
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Please check your Unsplash access key and application ID."
 msgstr ""
+"Lütfen Unsplash erişim anahtarınızı ve uygulama kimliğinizi kontrol edin."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:93
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
-msgstr ""
+msgstr "Lütfen internet bağlantınızı kontrol edin veya yöneticinize başvurun."
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Qweb Alan Resmi"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:17
-#, python-format
-msgid "Search among my images for:"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:21
-#, python-format
-msgid "Search from Unsplash for:"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Search is temporarily unavailable"
-msgstr ""
+msgstr "Arama geçici olarak kullanılamıyor"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:90
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "Setup Unsplash to access royalty free photos."
+msgstr "Telifsiz fotoğraflara erişmek için Unsplash'ı kurun."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "Bir şeyler yanlış gitti"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
 msgstr ""
+"Maksimum arama sayısı aşıldı. Lütfen bir saat içinde tekrar deneyin veya "
+"daha iyi bir hesaba uzatın."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:81
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Unauthorized Key"
-msgstr ""
+msgstr "Yetkisiz Anahtar"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
+#: code:addons/web_unsplash/static/src/js/unsplash_image_widget.js:0
 #, python-format
-msgid "Unsplash requires an access key and an application ID"
-msgstr ""
+msgid "Uploading %s '%s' images."
+msgstr "%s '%s' resim yükleme."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/js/unsplash_image_widget.js:0
+#, python-format
+msgid "Uploading '%s' image."
+msgstr "\"%s\" resmi yükleme."
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_users
 msgid "Users"
 msgstr "Kullanıcılar"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "and paste"
+msgstr "ve yapıştır"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "and paste it here:"
+msgstr "ve buraya yapıştırın:"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "here:"
+msgstr "burada:"
