@@ -26,6 +26,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2021
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9774,6 +9775,12 @@ msgid "Reconciliation Parts"
 msgstr "اجزاء تهاتر"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "ثبت تراکنش ها در ارزهای خارجی"
@@ -12850,7 +12857,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "فرمت توالی تغییر کرده است."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12869,6 +12876,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"دنباله هرگز دوباره راه اندازی نمی شود.\n"
+"عدد افزایشی در این مورد '%(formatted_seq)s' است."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12878,6 +12887,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"این توالی در ابتدای هر ماه در ساعت 1 مجدداً شروع می شود.\n"
+"سال شناسایی شده در اینجا \"%(year)s\" و ماه \"%(month)s\" است.\n"
+"عدد افزایشی در این مورد '%(formatted_seq)s' است."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12887,6 +12899,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"این توالی در ابتدای هر سال در ساعت 1 مجدداً شروع می شود.\n"
+"سال شناسایی شده در اینجا '%(year)s' است.\n"
+"عدد افزایشی در این مورد '%(formatted_seq)s' است."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -14170,6 +14185,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"شما نمی توانید یک روزنامه حاوی پیش نویس ورودی های روزنامه را بایگانی کنید.\n"
+"\n"
+"برای ادامه:\n"
+"1/ از این فرم روزنامه روی دکمه سمت راست بالای \"آیتم های روزنامه\" کلیک کنید\n"
+"2/ سپس ورودی های «پیش نویس» را فیلتر کنید\n"
+"3/ همه آنها را انتخاب کنید و از طریق منوی اکشن پست یا حذف کنید"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -14955,3 +14976,11 @@ msgstr "همراه با پی دی اف فاکتور به عنوان پیوست."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ شمردن"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""

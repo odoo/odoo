@@ -1636,7 +1636,7 @@ msgstr "بنية واجهة العرض الأساسية"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__primary
 msgid "Base view"
-msgstr "عرض القاعدة "
+msgstr "واجهة العرض الأساسية "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2390,6 +2390,7 @@ msgstr "انتهى العد التنازلي - ألعاب نارية "
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "الدول"
@@ -3819,6 +3820,18 @@ msgstr "مفتاح الواجهة البرمجية للتطبيق لخرائط G
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "أداة بحث Google "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5341,6 +5354,15 @@ msgstr "صفحة الانسحاب من مبادرة إعلان الشبكة "
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "جديد"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -7447,6 +7469,15 @@ msgid ""
 msgstr ""
 "سوف يتم تقليص هذه القيمة حتى تكون متوافقة مع كافة المتصفحات الكبرى وحتى يمكن"
 " استخدامها في الروابط. اترك الحقل فارغاً حتى تستخدم الاسم الافتراضي للسجل. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
