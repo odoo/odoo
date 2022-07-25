@@ -114,6 +114,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/account_selection.js',
             'account/static/src/js/legacy_account_selection.js',
             'account/static/src/js/open_move_widget.js',
+            'account/static/src/js/legacy_open_move_widget.js',
         ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',
