@@ -42,7 +42,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
         this._name = params.data.name;
-        this._status = params.data.status || '';
 
         /**
          * Initialize the internal data for typing feature on threads.

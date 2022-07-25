@@ -122,7 +122,7 @@ const PublicLivechatWindow = Widget.extend({
     renderHeader() {
         this.$header.html(
             qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this._thread._status,
+                status: this.messaging.livechatButtonView.publicLivechat.status,
                 thread: this._thread,
                 title: this._thread._name,
                 unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
