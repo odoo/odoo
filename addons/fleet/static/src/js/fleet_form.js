@@ -1,44 +1,40 @@
-odoo.define('fleet.FleetForm', function(require) {
-    "use strict";
+/** @odoo-module **/
 
-    const FormController = require('web.FormController');
-    const FormView = require('web.FormView');
-    const viewRegistry = require('web.view_registry');
-    const Dialog = require('web.Dialog');
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { registry } from "@web/core/registry";
+import { FormController } from "@web/views/form/form_controller";
+import { formView } from "@web/views/form/form_view";
 
-    const core = require('web.core');
-    const _t = core._t;
+export class FleetFormController extends FormController {
+    /**
+     * @override
+     **/
+    getActionMenuItems() {
+        if (this.model.root.isInEdition) {
+            return {};
+        }
 
-    const FleetFormController = FormController.extend({
-        /**
-         * @override
-         * @private
-         **/
-        _getActionMenuItems: function (state) {
-            if (!this.hasActionMenus || this.mode === 'edit') {
-                return null;
-            }
-            var menuItems = this._super.apply(this, arguments);
-            var archiveAction = _.find(menuItems.items.other, (actionItem) => {return actionItem.description === _t("Archive");});
-            if (archiveAction) {
-                archiveAction.callback = () => {
-                    Dialog.confirm(this, _t("Each Services and contracts of this vehicle will be considered as Archived. Are you sure that you want to archive this record?"), {
-                        confirm_callback: () => this._toggleArchiveState(true),
-                    });
+        const menuItems = super.getActionMenuItems();
+        const archiveAction = menuItems.other.find((item) => item.key === "archive");
+        if (archiveAction) {
+            archiveAction.callback = () => {
+                const dialogProps = {
+                    body: this.env._t(
+                        "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+                    ),
+                    confirm: () => this.model.root.archive(),
+                    cancel: () => {},
                 };
-            }
-            return menuItems;
-        },
+                this.dialogService.add(ConfirmationDialog, dialogProps);
+            };
+        }
+        return menuItems;
+    }
+}
 
-    });
+export const fleetFormView = {
+    ...formView,
+    Controller: FleetFormController,
+};
 
-    var FleetFormView = FormView.extend({
-        config: _.extend({}, FormView.prototype.config, {
-            Controller: FleetFormController,
-        }),
-    });
-
-    viewRegistry.add('fleet_form', FleetFormView);
-
-    return FleetFormView;
-});
+registry.category("views").add("fleet_form", fleetFormView);

@@ -214,12 +214,14 @@ export class ListController extends Component {
         const otherActionItems = [];
         if (this.isExportEnable) {
             otherActionItems.push({
+                key: "export",
                 description: this.env._t("Export"),
                 callback: () => this.onExportData(),
             });
         }
         if (this.archiveEnabled && !isM2MGrouped) {
             otherActionItems.push({
+                key: "archive",
                 description: this.env._t("Archive"),
                 callback: () => {
                     const dialogProps = {
@@ -235,12 +237,14 @@ export class ListController extends Component {
                 },
             });
             otherActionItems.push({
+                key: "unarchive",
                 description: this.env._t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
             });
         }
         if (this.activeActions.delete && !isM2MGrouped) {
             otherActionItems.push({
+                key: "delete",
                 description: this.env._t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
             });
