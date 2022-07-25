@@ -458,18 +458,22 @@
         <div class="o_we_image_shape">
             <we-row string="Shape" class="o_we_full_row">
                 <we-select-pager data-name="shape_img_opt" class="o_we_select_grid o_we_fake_transparent_background">
-                    <we-select-page string="Basics" t-if="not no_animations">
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_1" data-select-label="Square 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_2" data-select-label="Square 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_3" data-select-label="Square 3" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_4" data-select-label="Square 4" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_5" data-select-label="Square 5" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_6" data-select-label="Square 6" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_rounded_1" data-select-label="Square Rounded 1" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_square_rounded_2" data-select-label="Square Rounded 2" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_1" data-select-label="Organic Soft" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_2" data-select-label="Organic Medium" data-animated="true"/>
-                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_3" data-select-label="Organic Hard" data-animated="true"/>
+                    <!-- This page only contains animated shapes by default. If
+                    using xpath to add non-animated shapes, also use xpath to
+                    remove the t-if on the page. This is why individual options
+                    also have that t-if.  -->
+                    <we-select-page class="o_we_basic_shapes" string="Basics" t-if="not no_animations">
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_3" data-select-label="Square 3" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_4" data-select-label="Square 4" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_5" data-select-label="Square 5" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_6" data-select-label="Square 6" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_rounded_1" data-select-label="Square Rounded 1" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_square_rounded_2" data-select-label="Square Rounded 2" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_1" data-select-label="Organic Soft" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_2" data-select-label="Organic Medium" data-animated="true"/>
+                        <we-button t-if="not no_animations" data-set-img-shape="web_editor/basic/bsc_organic_3" data-select-label="Organic Hard" data-animated="true"/>
                     </we-select-page>
                     <we-select-page string="Solids">
                         <we-button data-set-img-shape="web_editor/solid/blob_1_solid_rd" data-select-label="Blob Solid 1" />
@@ -588,7 +592,7 @@
         </we-button-group>
     </div>
 
-    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]">
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]" class="o_we_image_options">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
             <we-button data-select-class="float-start" title="Align Left">Left</we-button>
