@@ -1,26 +1,24 @@
-odoo.define('base_setup.ResConfigEdition', function (require) {
-    "use strict";
+/** @odoo-module */
 
-    var Widget = require('web.Widget');
-    var widget_registry = require('web.widget_registry');
-    var session = require ('web.session');
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
-    var ResConfigEdition = Widget.extend({
-        template: 'res_config_edition',
+const { Component } = owl;
+const { DateTime } = luxon;
 
-       /**
-        * @override
-        */
-        init: function () {
-            this._super.apply(this, arguments);
-            this.server_version = session.server_version;
-            this.expiration_date = session.expiration_date
-                ? moment(session.expiration_date)
-                : moment().add(30, 'd');
-        },
-   });
+/**
+ * Widget in the settings that handles a part of the "About" section.
+ * Contains info about the odoo version, database expiration date and copyrights.
+ */
+class ResConfigEdition extends Component {
+    setup() {
+        this.serverVersion = session.server_version;
+        this.expirationDate = session.expiration_date
+            ? DateTime.fromSQL(session.expirationDate).toLocaleString(DateTime.DATE_FULL)
+            : DateTime.now().plus({ days: 30 }).toLocaleString(DateTime.DATE_FULL);
+    }
+}
 
-   widget_registry.add('res_config_edition', ResConfigEdition);
+ResConfigEdition.template = "res_config_edition";
 
-    return ResConfigEdition;
-});
+registry.category("view_widgets").add("res_config_edition", ResConfigEdition);
