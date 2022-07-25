@@ -2482,25 +2482,31 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        assert.hasClass(target.querySelector('button[name="0"]'), "btn btn-secondary");
-        assert.hasClass(target.querySelector('button[name="1"]'), "btn btn-primary");
-        assert.hasClass(target.querySelector('button[name="2"]'), "btn btn-primary");
-        assert.hasClass(target.querySelector('button[name="3"]'), "btn btn-secondary");
-        assert.hasClass(target.querySelector('button[name="4"]'), "btn btn-link");
-        assert.hasClass(target.querySelector('button[name="5"]'), "btn btn-link");
-        assert.hasClass(target.querySelector('button[name="6"]'), "btn btn-success");
-        assert.hasClass(
-            target.querySelector('button[name="7"]'),
+        assert.strictEqual(target.querySelector('button[name="0"]').className, "btn btn-secondary");
+        assert.strictEqual(target.querySelector('button[name="1"]').className, "btn btn-primary");
+        assert.strictEqual(target.querySelector('button[name="2"]').className, "btn btn-primary");
+        assert.strictEqual(target.querySelector('button[name="3"]').className, "btn btn-secondary");
+        assert.strictEqual(target.querySelector('button[name="4"]').className, "btn btn-link");
+        assert.strictEqual(target.querySelector('button[name="5"]').className, "btn btn-link");
+        assert.strictEqual(target.querySelector('button[name="6"]').className, "btn btn-success");
+        assert.strictEqual(
+            target.querySelector('button[name="7"]').className,
             "btn o_this_is_a_button btn-secondary"
         );
-        assert.hasClass(target.querySelector('button[name="8"]'), "btn btn-secondary");
-        assert.hasClass(target.querySelector('button[name="9"]'), "btn btn-primary");
-        assert.hasClass(target.querySelector('button[name="10"]'), "btn btn-primary");
-        assert.hasClass(target.querySelector('button[name="11"]'), "btn btn-secondary");
-        assert.hasClass(target.querySelector('button[name="12"]'), "btn btn-link");
-        assert.hasClass(target.querySelector('button[name="13"]'), "btn btn-link");
-        assert.hasClass(target.querySelector('button[name="14"]'), "btn btn-success");
-        assert.hasClass(target.querySelector('button[name="15"]'), "btn o_this_is_a_button");
+        assert.strictEqual(target.querySelector('button[name="8"]').className, "btn btn-secondary");
+        assert.strictEqual(target.querySelector('button[name="9"]').className, "btn btn-primary");
+        assert.strictEqual(target.querySelector('button[name="10"]').className, "btn btn-primary");
+        assert.strictEqual(
+            target.querySelector('button[name="11"]').className,
+            "btn btn-secondary"
+        );
+        assert.strictEqual(target.querySelector('button[name="12"]').className, "btn btn-link");
+        assert.strictEqual(target.querySelector('button[name="13"]').className, "btn btn-link");
+        assert.strictEqual(target.querySelector('button[name="14"]').className, "btn btn-success");
+        assert.strictEqual(
+            target.querySelector('button[name="15"]').className,
+            "btn o_this_is_a_button"
+        );
     });
 
     QUnit.test("button in form view and long willStart", async function (assert) {
