@@ -16,7 +16,6 @@ registerModel({
                     this.messaging,
                     this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
                     {
-                        headerBackgroundColor: this.livechatButtonViewOwner.headerBackgroundColor,
                         placeholder: this.livechatButtonViewOwner.inputPlaceholder,
                         titleColor: this.livechatButtonViewOwner.titleColor,
                     },

@@ -33,7 +33,6 @@ const PublicLivechatWindow = Widget.extend({
      * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
      * @param {Object} [options={}]
-     * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
      */
     init(parent, messaging, thread, options) {
@@ -77,8 +76,8 @@ const PublicLivechatWindow = Widget.extend({
             this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
-        if (this.options.headerBackgroundColor) {
-            this.$('.o_thread_window_header').css('background-color', this.options.headerBackgroundColor);
+        if (this.messaging.livechatButtonView.headerBackgroundColor) {
+            this.$('.o_thread_window_header').css('background-color', this.messaging.livechatButtonView.headerBackgroundColor);
         }
         if (this.options.titleColor) {
             this.$('.o_thread_window_header').css('color', this.options.titleColor);
