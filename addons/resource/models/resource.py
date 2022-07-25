@@ -446,8 +446,8 @@ class ResourceCalendar(models.Model):
             week_type = ResourceCalendarAttendance.get_week_type(day)
             attendances = attendances_per_day[day.weekday() + 7 * week_type]
             for attendance in attendances:
-                if (attendance.date_from and day < attendance.date_from) or\
-                    (attendance.date_to and attendance.date_to < day):
+                if (attendance.date_from and day.date() < attendance.date_from) or\
+                    (attendance.date_to and attendance.date_to < day.date()):
                     continue
                 day_from = datetime.combine(day, float_to_time(attendance.hour_from))
                 day_to = datetime.combine(day, float_to_time(attendance.hour_to))
