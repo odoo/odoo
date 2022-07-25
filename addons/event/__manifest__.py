@@ -49,13 +49,13 @@ Key Features
     'assets': {
         'web.assets_backend': [
             'event/static/src/scss/event.scss',
-            'event/static/src/js/field_icon_selection.js',
+            'event/static/src/icon_selection_field/icon_selection_field.js',
         ],
         'web.assets_common': [
             'event/static/src/js/tours/**/*',
         ],
         'web.assets_qweb': [
-            'event/static/src/xml/**/*',
+            'event/static/src/**/*',
         ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_foldable_badge_report.scss',
