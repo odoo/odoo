@@ -163,7 +163,7 @@ const QWeb = core.qweb;
         }
 
         const postedWelcomeMessages = await session.rpc('/chatbot/post_welcome_steps', {
-            channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+            channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             chatbot_script_id: this.messaging.livechatButtonView.chatbot.scriptId,
         });
 
@@ -378,7 +378,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotSaveSession() {
-        localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid, JSON.stringify({
+        localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.livechatButtonView.publicLivechat.uuid, JSON.stringify({
             '_chatbot': this.messaging.livechatButtonView.chatbot.data,
             '_chatbotCurrentStep': this.messaging.livechatButtonView.chatbot.currentStep.data,
         }));
@@ -472,7 +472,7 @@ const QWeb = core.qweb;
      */
     async _chatbotValidateEmail() {
         let emailValidResult = await session.rpc('/chatbot/step/validate_email', {
-            channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+            channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
         });
 
         if (emailValidResult.success) {
@@ -511,7 +511,7 @@ const QWeb = core.qweb;
         }
 
         const nextStep = await session.rpc('/chatbot/step/trigger', {
-            channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+            channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             chatbot_script_id: this.messaging.livechatButtonView.chatbot.scriptId,
         });
 
@@ -810,7 +810,7 @@ const QWeb = core.qweb;
         }
 
         const postedMessage = await session.rpc('/chatbot/restart', {
-            channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+            channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             chatbot_script_id: this.messaging.livechatButtonView.chatbot.scriptId,
         });
 
@@ -878,7 +878,7 @@ const QWeb = core.qweb;
         this._chatbotSaveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
-            channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+            channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             message_id: messageId,
             selected_answer_id: selectedAnswer,
         });

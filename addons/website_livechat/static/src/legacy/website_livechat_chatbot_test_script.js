@@ -65,7 +65,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         return this._openChatWindow().then(() => {
             this._sendWelcomeMessage();
             this._renderMessages();
-            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid);
+            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.uuid);
             this.call('bus_service', 'startPolling');
             utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
             this.messaging.livechatButtonView.update({ isOpeningChat: false });

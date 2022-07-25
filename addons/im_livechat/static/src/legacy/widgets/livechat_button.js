@@ -159,7 +159,7 @@ const LivechatButton = Widget.extend({
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
                     pid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0],
-                    channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
+                    channel_uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
                     page_history: history,
                 });
                 return;
@@ -266,7 +266,7 @@ const LivechatButton = Widget.extend({
                         this._sendWelcomeMessage();
                     }
                     this._renderMessages();
-                    this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid);
+                    this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.uuid);
                     this.call('bus_service', 'startPolling');
 
                     utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
@@ -346,7 +346,7 @@ const LivechatButton = Widget.extend({
      _sendMessage(message) {
         this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
         return session
-            .rpc('/mail/chat_post', { uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid, message_content: message.content })
+            .rpc('/mail/chat_post', { uuid: this.messaging.livechatButtonView.publicLivechat.uuid, message_content: message.content })
             .then((messageId) => {
                 if (!messageId) {
                     try {

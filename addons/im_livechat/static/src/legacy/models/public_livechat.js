@@ -120,7 +120,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             id: this._operatorPID[0],
             name: this._operatorPID[1]
         }];
-        this._uuid = params.data.uuid;
 
         if (params.data.message_unread_counter !== undefined) {
             this.messaging.livechatButtonView.publicLivechat.update({
@@ -307,7 +306,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             message_unread_counter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
             operator_pid: this._operatorPID,
             name: this._name,
-            uuid: this._uuid,
+            uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
         };
     },
     /**
@@ -345,7 +344,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _notifyMyselfTyping(params) {
         return session.rpc('/im_livechat/notify_typing', {
-            uuid: this._uuid,
+            uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             is_typing: params.typing,
         }, { shadow: true });
     },

@@ -34,7 +34,6 @@ const Feedback = Widget.extend({
     init(parent, messaging, livechat) {
         this._super(parent);
         this.messaging = messaging;
-        this._livechat = livechat;
         this.server_origin = session.origin;
         this.rating = undefined;
         this.dp = new concurrency.DropPrevious();
@@ -50,7 +49,7 @@ const Feedback = Widget.extend({
      */
      _sendFeedback(reason) {
         const args = {
-            uuid: this._livechat._uuid,
+            uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
             rate: this.rating,
             reason,
         };
@@ -127,7 +126,7 @@ const Feedback = Widget.extend({
             this._rpc({
                 route: '/im_livechat/email_livechat_transcript',
                 params: {
-                    uuid: this._livechat._uuid,
+                    uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
                     email: $email.val(),
                 }
             }).then(() => {
