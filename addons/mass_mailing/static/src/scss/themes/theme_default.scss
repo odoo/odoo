@@ -103,30 +103,6 @@ div.col:not([align]) {
           width: $width;
           height: $height;
         }
-
-        $size: 2rem;
-
-        &.rounded-circle,
-        &.rounded,
-        &.rounded-0,
-        &.rounded-leaf,
-        &.img-thumbnail,
-        &.shadow {
-            display: inline-block;
-            vertical-align: middle;
-            text-align: center;
-            // fa-1x is not ouput
-            width: $size;
-            height: $size;
-            line-height: $size;
-            @for $i from 2 through 5 {
-                &.fa-#{$i}x {
-                    width: $size + $i;
-                    height: $size + $i;
-                    line-height: $size + $i;
-                }
-            }
-        }
     }
     // Background Images
     .oe_img_bg {
