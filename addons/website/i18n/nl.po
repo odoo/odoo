@@ -10,6 +10,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
+# Lukas Van Cauter <cvl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Lukas Van Cauter <cvl@odoo.com>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2593,6 +2594,23 @@ msgid "Google Maps API Key"
 msgstr "Google Maps API sleutel"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"Google zal zowel hun \"Universal Analytics\" als \"Google Sign-In\" APIs "
+"stopzetten. Dit betekent dat enkel accounts en keys aangemaakt voor 2020 hun"
+" Analytics dashboard nog zullen kunnen integreren in Odoo (of op andere "
+"websites). Dit zal enkel nog mogelijk zijn tot midden 2023. Nadien zullen "
+"deze diensten helemaal niet meer werken."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "Waar voor je geld"
@@ -3622,6 +3640,17 @@ msgstr "Nieuw evenement"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Forum"
 msgstr "Nieuw forum"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"Nieuwe Google Analytics accounts en keys gebruiken nu Google Analytics 4. "
+"Deze kunnen, voorlopig, niet geïntegreerd worden in externe websites."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -5021,6 +5050,17 @@ msgstr "Deze pagina is in het menu <b>%s</b>"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "This page will be visible on {{ date_formatted }}"
 msgstr "De pagina wordt zichtbaar op {{ date_formatted }}"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"Deze accounts moeten nu hun Analytics dashboard rechtstreeks op het Google "
+"platform raadplegen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

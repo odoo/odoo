@@ -15,6 +15,7 @@
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
 # Far Har <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +181,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"نمی توان پیدا کرد که این عبارت را در کدام روزنامه وارد کرد. لطفا به صورت "
+"دستی یک روزنامه انتخاب کنید."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
@@ -222,6 +225,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"نمی توان فایل داده شده را معنی کرد.\n"
+"آیا ماژول را برای پشتیبانی از این نوع فایل نصب کردید؟"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -284,7 +289,7 @@ msgstr "دنباله‌ی ورودی"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "فایل ها"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
@@ -317,6 +322,8 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"صورت وضعیت‌های بانکی خود را به صورت الکترونیکی از بانک خود دریافت کرده و در "
+"اینجا انتخاب کنید."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -354,6 +361,7 @@ msgid ""
 "If it contains transactions for more than one account, it must be imported "
 "on each of them."
 msgstr ""
+"اگر دارای تراکنش برای بیش از یک حساب باشد، باید در هر یک از آنها وارد شود."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
@@ -389,7 +397,7 @@ msgstr "ورود از فایل صورتحساب"
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
 msgid "Install Import Format"
-msgstr ""
+msgstr "نصب فرمت ورودی"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
@@ -427,7 +435,7 @@ msgstr "ایجاد روزنامه"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Journal Creation on Bank Statement Import"
-msgstr ""
+msgstr "ایجاد روزنامه در مورد ورود صورت وضعیت بانکی"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
@@ -450,6 +458,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the upload. If this "
 "was a mistake, hit cancel to abort the upload."
 msgstr ""
+"فقط روی OK کلیک کنید تا حساب/روزنامه ایجاد شود و آپلود به پایان برسد. اگر "
+"اشتباه بود، لغو را فشار دهید تا آپلود لغو شود."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -550,7 +560,7 @@ msgstr "شماره بعدی"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "ارزی مطابق با '%s' یافت نشد."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
@@ -623,7 +633,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select Files"
-msgstr ""
+msgstr "فایل ها را انتخاب کنید"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -670,13 +680,15 @@ msgid ""
 "In order to proceed with the upload, you need to create a bank journal for "
 "this account."
 msgstr ""
+"حساب صورت حسابی که بارگذاری می کنید هنوز در Odoo ثبت نشده است. برای ادامه "
+"آپلود، باید یک روزنامه بانکی برای این حساب ایجاد کنید."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "حساب این صورتحساب (%s) با روزنامه(%s) یکسان نیست."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -684,7 +696,7 @@ msgstr ""
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
-msgstr ""
+msgstr "واحد پول صورت وضعیت بانکی (%s) با واحد پول روزنامه (%s) یکسان نیست."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -724,13 +736,13 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "This file doesn't contain any statement for account %s."
-msgstr ""
+msgstr "این فایل شامل هیچ صورتحسابی برای حساب %s ندارد."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "This file doesn't contain any transaction for account %s."
-msgstr ""
+msgstr "این فایل حاوی هیچ تراکنشی برای حساب %s نیست."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -805,7 +817,7 @@ msgstr "آیا این روزنامه باید روی داشبورد نشان د�
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "شما قبلا آن فایل را وارد کرده اید."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
