@@ -11,7 +11,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
             id: record.id, // datapoint_X
             text: record.data.display_name,
             img: `/web/image/${this.props.relation}/${record.resId}/avatar_128`,
-            onDelete: !this.props.readonly ? () => this.onDelete(record.resId) : undefined,
+            onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
         }));
     }
 }

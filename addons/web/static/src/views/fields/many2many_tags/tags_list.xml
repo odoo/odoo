@@ -2,22 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TagsList" owl="1">
-        <span t-if="visibleTags.length" t-attf-class="o_tags_list {{props.className}} d-inline-flex flex-wrap" t-att-name="props.name">
-            <t t-if="props.tags" t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
-                <span t-attf-class="{{`o_tag_color_${ tag.colorIndex or 0 } ${props.displayBadge ? 'badge rounded-pill' : ''}`}} o_tag d-inline-flex align-items-center h-100" tabindex="-1" t-att-data-color="tag.colorIndex" t-att-title="tag.text" t-on-click="(ev) => tag.onClick and tag.onClick(ev)">
-                    <img t-if="tag.img" t-att-src="tag.img" class="o_m2m_avatar rounded-circle"/>
-                    <div t-if="props.displayBadge" class="o_tag_badge_text" t-esc="tag.text" />
-                    <t t-else="">
-                        <span />
-                        <div t-esc="tag.text" />
-                    </t>
-                    <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="fa fa-times o_delete ms-2" title="Delete" aria-label="Delete"></a>
-                </span>
-            </t>
-            <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" t-att-data-tooltip="tooltip">
-                <span t-if="otherTags.length > 9" t-esc="'9+'" />
-                <span t-else="" t-esc="'+' + otherTags.length" />
+        <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <span t-attf-class="{{`o_tag_color_${ tag.colorIndex or 0 } ${props.displayBadge ? 'badge rounded-pill' : ''}`}} o_tag d-inline-flex align-items-center h-100" tabindex="-1" t-att-data-color="tag.colorIndex" t-att-title="tag.text" t-on-click="(ev) => tag.onClick and tag.onClick(ev)">
+                <img t-if="tag.img" t-att-src="tag.img" class="o_m2m_avatar rounded-circle"/>
+                <div t-if="props.displayBadge" class="o_tag_badge_text" t-esc="tag.text" />
+                <t t-else="">
+                    <span />
+                    <div t-esc="tag.text" />
+                </t>
+                <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"></a>
             </span>
+        </t>
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" t-att-data-tooltip="tooltip">
+            <span t-if="otherTags.length > 9" t-esc="'9+'" />
+            <span t-else="" t-esc="'+' + otherTags.length" />
         </span>
     </t>
 
