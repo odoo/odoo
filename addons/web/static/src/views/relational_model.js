@@ -2518,7 +2518,7 @@ export class Group extends DataPoint {
         }
         const saved = await record.save();
         if (saved) {
-            this.addRecord(this.removeRecord(record));
+            this.addRecord(this.removeRecord(record), 0);
             this.count++;
             this.list.count++;
             return record;
