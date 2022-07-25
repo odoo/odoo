@@ -79,6 +79,7 @@ class AccountEdiDocument(models.Model):
         # Classify jobs by (edi_format, edi_doc.state, doc_type, move.company_id, custom_key)
         to_process = {}
         documents = self.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
+        documents = documents.sorted(lambda d: 2 if d.blocking_level else 1)
         for edi_doc in documents:
             move = edi_doc.move_id
             edi_format = edi_doc.edi_format_id
@@ -248,6 +249,11 @@ class AccountEdiDocument(models.Model):
             if with_commit and len(jobs_to_process) > 1:
                 self.env.cr.commit()
 
+        # Re-trigger fail-safe
+        all_jobs_blocking = all(d.blocking_level for job in all_jobs for d in job[0])
+        if all_jobs_blocking:
+            # If all jobs are blocking, do not re-trigger
+            return 0
         return len(all_jobs) - len(jobs_to_process)
 
     @api.model
