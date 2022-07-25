@@ -8,7 +8,6 @@ import utils from 'web.utils';
 import Widget from 'web.Widget';
 
 import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
-import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
 import { clear, increment, insert, insertAndReplace } from '@mail/model/model_field_command';
@@ -135,12 +134,7 @@ const LivechatButton = Widget.extend({
      */
     _askFeedback() {
         this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
-
-        const feedback = new Feedback(this, this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat);
-        this.messaging.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(feedback);
-
-        feedback.on('send_message', this, this._sendMessage);
-        feedback.on('feedback_sent', this, this._closeChat);
+        this.messaging.publicLivechatGlobal.update({ feedbackView: insertAndReplace() });
     },
     /**
      * @private
