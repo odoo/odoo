@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.exceptions import UserError
+
 
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
@@ -18,6 +19,7 @@ class MrpBom(models.Model):
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 
+
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
 
@@ -29,7 +31,7 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         if self.cost_share:
-            return fields.Float.round(self.cost_share/100, 2)
+            return fields.Float.round(self.cost_share / 100, 2)
         bom = self.bom_id
         bom_lines_without_cost_share = bom.bom_line_ids.filtered(lambda bl: not bl.cost_share)
-        return fields.Float.round(1/len(bom_lines_without_cost_share), 2)
+        return fields.Float.round(1 / len(bom_lines_without_cost_share), 2)

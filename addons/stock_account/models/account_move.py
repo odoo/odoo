@@ -256,9 +256,16 @@ class AccountMoveLine(models.Model):
             line = line.with_company(line.company_id)
             move = line.move_id.with_company(line.move_id.company_id)
             po_line = line.purchase_line_id
-            layers = line._get_stock_valuation_layers(move)
-            # Retrieves SVL linked to a return.
             uom = line.product_uom_id or line.product_id.uom_id
+
+            # Don't create value for more quantity than received
+            quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
+            quantity = max(min(line.quantity, quantity), 0)
+            if float_is_zero(quantity, precision_rounding=uom.rounding):
+                continue
+
+            layers = line._get_stock_valuation_layers(move, quantity)
+            # Retrieves SVL linked to a return.
             if not layers:
                 continue
             # Computes price difference between invoice line and SVL.
@@ -296,24 +303,8 @@ class AccountMoveLine(models.Model):
                 price_difference, line.company_id.currency_id, line.company_id, line.date, round=False)
             if float_is_zero(price_difference * line.quantity, precision_rounding=line.currency_id.rounding):
                 continue
-            # Don't create value for more quantity than received
-            quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
-            quantity = max(min(line.quantity, quantity), 0)
-            if float_is_zero(quantity, precision_rounding=uom.rounding):
-                continue
-            receipt_layer = layers.filtered(lambda svl: svl.stock_move_id)[-1:]
-            svl_vals = line.product_id._prepare_in_svl_vals(quantity, price_difference)
-            svl_vals.update(
-                line._prepare_common_svl_vals(),
-                account_move_id=move.id,
-                quantity=0,
-                unit_cost=0,
-                remaining_qty=0,
-                stock_valuation_layer_id=receipt_layer.id,
-            )
-            svl_vals_list.append(svl_vals)
-            # Adds the difference into the last SVL's remaining value.
-            receipt_layer.remaining_value += svl_vals['value']
+
+            svl_vals_list += self._prepare_in_invoice_svl_vals()
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _get_computed_account(self):
@@ -340,13 +331,22 @@ class AccountMoveLine(models.Model):
     def _get_valued_in_moves(self):
         return self.env['stock.move']
 
-    def _get_stock_valuation_layers(self, move):
+    def _get_stock_valuation_layers(self, move, quantity):
         valued_moves = self._get_valued_in_moves()
         if move.move_type == 'in_refund':
             valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
         else:
             valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
         layers = valued_moves.stock_valuation_layer_ids
+        layers_ratio = []
+        already_invoiced_qty = self.qty_invoiced
+        for layer in layers:
+            if already_invoiced_qty > layer.quantity:
+                already_invoiced_qty -= layer.quantity
+                continue
+            ratio = layer.quantity - already_invoiced_qty / quantity
+            layers_ratio.append((layer, ratio))
+
         invoice_layers = layers.stock_valuation_layer_ids.filtered(lambda svl: svl.account_move_line_id)
         layers |= invoice_layers
         return layers
@@ -370,6 +370,22 @@ class AccountMoveLine(models.Model):
             'product_id': self.product_id.id,
             'description': self.move_id.name and '%s - %s' % (self.move_id.name, self.product_id.name) or self.product_id.name,
         }
+
+    def _prepare_in_invoice_svl_vals(self, move, layers, quantity, price_difference):
+        svl_vals_list = []
+        receipt_layers = layers.filtered(lambda svl: svl.stock_move_id)
+        svl_vals = self.product_id._prepare_in_svl_vals(quantity, price_difference)
+        svl_vals.update(
+            self._prepare_common_svl_vals(),
+            account_move_id=move.id,
+            quantity=0,
+            unit_cost=0,
+            remaining_qty=0,
+            stock_valuation_layer_id=receipt_layers.id,
+        )
+        # Adds the difference into the last SVL's remaining value.
+        receipt_layers.remaining_value += svl_vals['value']
+        return svl_vals_list
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
