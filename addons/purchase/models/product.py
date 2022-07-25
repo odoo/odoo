@@ -5,6 +5,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
@@ -48,6 +49,14 @@ class ProductTemplate(models.Model):
         }
         return action
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            po_company_ids = self.env['purchase.order.line'].search([('product_id', 'in', self.product_variant_ids.ids), ('company_id', '!=', self.company_id.id)], limit=1)
+            if po_company_ids:
+                raise ValidationError(_("You may not change the company on this product to %s because it "
+                                        "is already in use by the following Purchase Order within this company:\n%s")
+                                        % (self.company_id.display_name, po_company_ids.order_id.name))
 
 class ProductProduct(models.Model):
     _name = 'product.product'
