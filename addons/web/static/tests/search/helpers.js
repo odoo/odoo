@@ -74,8 +74,9 @@ export async function makeWithSearch(params) {
         </WithSearch>`;
     Parent.components = { Component: params.Component, WithSearch };
 
-    const env = await makeTestEnv({ serverData, mockRPC, config });
-    const parent = await mount(Parent, getFixture(), { env, props });
+    const env = await makeTestEnv({ serverData, mockRPC });
+    const searchEnv = Object.assign(Object.create(env), { config });
+    const parent = await mount(Parent, getFixture(), { env: searchEnv, props });
     const parentNode = parent.__owl__;
     const withSearchNode = getUniqueChild(parentNode);
     const componentNode = getUniqueChild(withSearchNode);
