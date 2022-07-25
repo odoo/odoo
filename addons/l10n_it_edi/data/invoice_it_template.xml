@@ -132,7 +132,7 @@
                     <BolloVirtuale>SI</BolloVirtuale>
                     <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
-                <ImportoTotaleDocumento t-esc="format_monetary(record.amount_total, currency)"/>
+                <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="record.ref">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
