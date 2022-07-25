@@ -9,6 +9,9 @@ import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { evalDomain } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { indentFromString } from "@web/core/utils/xml";
+import { Notebook } from "@web/core/notebook/notebook";
+import { renderToString } from "@web/core/utils/render";
 
 const { Component, onWillStart, useState, xml } = owl;
 
@@ -362,3 +365,50 @@ export function manageAttachments({ component, env }) {
 }
 
 debugRegistry.category("form").add("manageAttachments", manageAttachments);
+
+class DisplayIndentedTemplate extends Component {
+    indent(string) {
+        return indentFromString(string);
+    }
+}
+DisplayIndentedTemplate.template = xml`<pre><code t-esc="indent(props.xml)" /></pre>`;
+
+class ViewOwlTemplateDialog extends Component {
+    get pages() {
+        const pages = [];
+        for (const [name, xml] of Object.entries(this.props.templates)) {
+            pages.push({
+                Component: DisplayIndentedTemplate,
+                props: {
+                    xml,
+                    isVisible: true,
+                    title: name,
+                },
+            });
+        }
+        return pages;
+    }
+}
+ViewOwlTemplateDialog.template = xml`<Dialog title="props.title"><Notebook pages="pages"/></Dialog>`;
+ViewOwlTemplateDialog.components = { Dialog, Notebook };
+
+function viewOwlTemplate({ templates, app, env, title }) {
+    app = app || renderToString.app;
+    const rawTemplates = app.rawTemplates;
+    title = title || env._t("View OWL templates");
+    return {
+        type: "item",
+        description: title,
+        sequence: 360,
+        callback: () => {
+            const _templates = Object.fromEntries(
+                Object.entries(templates).map(([name, templateKey]) => {
+                    return [name, rawTemplates[templateKey]];
+                })
+            );
+            env.services.dialog.add(ViewOwlTemplateDialog, { templates: _templates, title });
+        },
+    };
+}
+
+debugRegistry.category("view_compiler").add("viewOwlTemplate", viewOwlTemplate);

@@ -8,6 +8,7 @@ import {
     getTag,
 } from "@web/core/utils/xml";
 import { toStringExpression } from "./utils";
+import { useDebugCategory } from "@web/core/debug/debug_context";
 
 /**
  * @typedef Compiler
@@ -468,5 +469,7 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
             compiledTemplates[key] = xml`${compiledDoc.outerHTML}`;
         }
     }
+    useDebugCategory("view_compiler", { templates: compiledTemplates });
+
     return { ...compiledTemplates };
 }
