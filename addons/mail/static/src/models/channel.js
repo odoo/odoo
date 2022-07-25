@@ -73,6 +73,15 @@ registerModel({
             });
         },
         /**
+         * Pin this channel and notify server of the change.
+         */
+        async pin() {
+            this.update({ isPendingPinned: true });
+            if (this.messaging.currentUser) {
+                await this.notifyPinStateToServer();
+            }
+        },
+        /**
          * Unpin this thread and notify server of the change.
          */
         async unpin() {

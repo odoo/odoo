@@ -780,16 +780,6 @@ registerModel({
             });
         },
         /**
-         * Pin this thread and notify server of the change.
-         */
-        async pin() {
-            this.channel.update({ isPendingPinned: true });
-            if (this.messaging.currentGuest) {
-                return;
-            }
-            await this.channel.notifyPinStateToServer();
-        },
-        /**
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {

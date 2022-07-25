@@ -151,13 +151,11 @@ registerModel({
                         convertedData.guestMembers = link(this.messaging.currentGuest);
                     }
                 }
-                const thread = this.messaging.models['Thread'].insert(
-                    Object.assign({ model: 'mail.channel' }, convertedData)
-                );
+                const thread = this.messaging.models['Thread'].insert(convertedData);
                 // flux specific: channels received at init have to be
                 // considered pinned. task-2284357
                 if (!thread.channel.isPinned) {
-                    thread.pin();
+                    thread.channel.pin();
                 }
             }));
         },

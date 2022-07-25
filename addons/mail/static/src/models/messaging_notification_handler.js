@@ -235,11 +235,8 @@ registerModel({
          * @param {Object} payload.messageData
          */
         async _handleNotificationChannelMessage({ id: channelId, message: messageData }) {
-            let channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
-            if (!channel && this.messaging.isCurrentUserGuest) {
+            let channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
+            if (!channel && !this.messaging.currentUser) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
             const convertedData = this.messaging.models['Message'].convertData(messageData);
@@ -254,10 +251,10 @@ registerModel({
                 if (!this.exists()) {
                     return;
                 }
-                channel = res[0];
+                channel = res[0].channel;
             }
-            if (!channel.channel.isPinned) {
-                channel.channel.pin();
+            if (!channel.isPinned) {
+                channel.pin();
             }
 
             const message = this.messaging.models['Message'].insert(convertedData);
@@ -271,26 +268,26 @@ registerModel({
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.channel.correspondent &&
-                channel.channel.correspondent === this.messaging.partnerRoot
+                channel.correspondent &&
+                channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();
                 // Notify if out of focus
-                if (!isOdooFocused && channel.channel.isChat) {
+                if (!isOdooFocused && channel.isChat) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
                         channel,
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
+                if (channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
-                    channel.markAsFetched();
+                    channel.thread.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(channel);
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.thread.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(channel.thread);
                 }
             }
         },
@@ -633,15 +630,15 @@ registerModel({
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                if (channel.channel.channel_type === 'channel') {
+                if (channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
                     // from component
                     const channelIcon = renderToString('mail.ThreadIcon', {
                         env: this.env,
-                        thread: channel,
+                        thread: channel.thread,
                     });
-                    const channelName = channel.displayName;
+                    const channelName = channel.thread.displayName;
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = sprintf(
                         this.env._t("%s from %s"),
