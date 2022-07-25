@@ -41,7 +41,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
 
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
-        this._name = params.data.name;
         this._status = params.data.status || '';
 
         /**
@@ -306,7 +305,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             id: this._id,
             message_unread_counter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
             operator_pid: this._operatorPID,
-            name: this._name,
+            name: this.messaging.livechatButtonView.publicLivechat.name,
             uuid: this._uuid,
         };
     },
