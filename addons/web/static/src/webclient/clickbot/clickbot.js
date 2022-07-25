@@ -443,12 +443,11 @@
                 }
                 await testApp(app);
             } else {
-                app = await getNextApp();
-                while (app) {
+                while (app = await getNextApp()) {
                     await testApp(app);
-                    app = await getNextApp();
                 }
             }
+
             console.log("Test took", (performance.now() - startTime) / 1000, "seconds");
             console.log("Successfully tested", testedApps.length, " apps");
             console.log("Successfully tested", testedMenus.length - testedApps.length, "menus");
