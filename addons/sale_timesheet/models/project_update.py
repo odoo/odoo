@@ -32,10 +32,8 @@ class ProjectUpdate(models.Model):
             return {}
 
         services = []
-        total_sold, total_effective, total_remaining = 0, 0, 0
         sols = self.env['sale.order.line'].search(
             project._get_sale_items_domain([
-                ('is_service', '=', True),
                 ('is_downpayment', '=', False),
             ]),
         )
@@ -60,16 +58,9 @@ class ProjectUpdate(models.Model):
                     'is_hour': unit == product_uom_hour,
                     'sol': sol,
                 })
-                if sol.product_uom.category_id == company_uom.category_id:
-                    total_sold += product_uom_qty
-                    total_effective += qty_delivered
-        total_remaining = total_sold - total_effective
 
         return {
             'data': services,
-            'total_sold': total_sold,
-            'total_effective': total_effective,
-            'total_remaining': total_remaining,
             'company_unit_name': company_uom.name,
             'is_hour': company_uom == product_uom_hour,
         }
