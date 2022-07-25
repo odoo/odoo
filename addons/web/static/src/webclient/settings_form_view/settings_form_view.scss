@@ -1,18 +1,59 @@
-.o-settings-form-view {
-   .o_base_settings {
-      height: 100%;
+.o-settings-form-view .o_view_nocontent {
+   position: static;
+}
+
+.o_base_settings {
+   height: 100%;
+   overflow: auto;
+}
+
+.o_setting_container {
+   height: 100%;
+   > * {
       overflow: auto;
+      flex: 1 0 auto;
+   }
+}
+
+.o_setting_box {
+   margin-bottom: 8px;
+   margin-top: 8px;
+}
+
+.o_setting_left_pane {
+   width: 24px;
+   float: left;
+}
+
+.o_setting_right_pane {
+   margin-left: 24px;
+   border-left: 1px solid $border-color;
+   padding-left: 12px;
+
+   .o_input_dropdown > .o_input {
+      width: 100%;
    }
 
-   .o_setting_container {
-      height: 100%;
-         > * {
-            overflow: auto;
-            flex: 1 0 auto;
-         }
+   .o_field_widget {
+      width: 50%;
+      flex: 0 0 auto;
+
+      &.o_field_many2manytags > .o_field_widget {
+         flex: 1 0 50px;
+      }
    }
 
-   .o_view_nocontent {
-      position: static;
+   button.btn-link:first-child {
+      padding: 0;
    }
+
+   a.oe-link {
+      font-size: 12px;
+   }
+}
+
+.o_enterprise_label {
+   position: absolute;
+   top: 0px;
+   right: 40px;
 }
