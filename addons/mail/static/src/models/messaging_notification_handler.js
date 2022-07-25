@@ -573,21 +573,16 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelLeave({ id }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id });
             if (!channel) {
                 return;
             }
-            const message = sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unsubscribed from %s."), channel.thread.displayName);
             this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({
-                isServerPinned: false,
-                members: unlink(this.messaging.currentPartner)
-            });
+            channel.thread.update({ members: unlink(this.messaging.currentPartner) });
+            channel.update({ isServerPinned: false });
         },
         /**
          * @private
@@ -595,21 +590,16 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelUnpin({ id }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id });
             if (!channel) {
                 return;
             }
-            const message = sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unpinned your conversation with %s."), channel.thread.displayName);
             this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({
-                isServerPinned: false,
-                members: unlink(this.messaging.currentPartner)
-            });
+            channel.thread.update({ members: unlink(this.messaging.currentPartner) });
+            channel.update({ isServerPinned: false });
         },
         /**
          * @private

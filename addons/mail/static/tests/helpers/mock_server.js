@@ -1035,10 +1035,10 @@ patch(MockServer.prototype, 'mail', {
             }
             const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
+                res.channel[0][1].isServerPinned = memberOfCurrentUser.is_pinned;
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_minimized: memberOfCurrentUser.is_minimized,
-                    is_pinned: memberOfCurrentUser.is_pinned,
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     state: memberOfCurrentUser.fold_state || 'open',

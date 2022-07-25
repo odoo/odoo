@@ -59,19 +59,19 @@ commandProviderRegistry.add("channel", {
     namespace: "#",
     async provide(newEnv, options) {
         const messaging = await newEnv.services.messaging.get();
-        const channels = await messaging.models['Thread'].searchChannelsToOpen({
+        const threads = await messaging.models['Thread'].searchChannelsToOpen({
             limit: 10,
             searchTerm: options.searchValue,
         });
-        return channels.map((channel) => ({
+        return threads.map((thread) => ({
             async action() {
-                await channel.join();
+                await thread.join();
                 // Channel must be pinned immediately to be able to open it before
                 // the result of join is received on the bus.
-                channel.update({ isServerPinned: true });
-                channel.open();
+                thread.channel.update({ isServerPinned: true });
+                thread.open();
             },
-            name: channel.displayName,
+            name: thread.displayName,
         }));
     },
 });

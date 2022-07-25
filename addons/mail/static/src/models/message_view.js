@@ -31,7 +31,7 @@ registerModel({
                 });
                 if (!thread.channel.isPinned) {
                     await thread.join();
-                    thread.update({ isServerPinned: true });
+                    thread.channel.update({ isServerPinned: true });
                 }
                 thread.open();
                 return;

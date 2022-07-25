@@ -40,21 +40,21 @@ registerModel({
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
-                const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
+                const thread = await this.messaging.models['Thread'].performRpcCreateChannel({
                     name,
                     privacy: ui.item.special === 'private' ? 'private' : 'groups',
                 });
-                channel.open();
+                thread.open();
             } else {
-                const channel = this.messaging.models['Thread'].insert({
+                const thread = this.messaging.models['Thread'].insert({
                     id: ui.item.id,
                     model: 'mail.channel',
                 });
-                await channel.join();
+                await thread.join();
                 // Channel must be pinned immediately to be able to open it before
                 // the result of join is received on the bus.
-                channel.update({ isServerPinned: true });
-                channel.open();
+                thread.channel.update({ isServerPinned: true });
+                thread.open();
             }
         },
         /**

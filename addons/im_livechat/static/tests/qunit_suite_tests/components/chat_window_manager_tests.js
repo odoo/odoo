@@ -41,7 +41,10 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
         args: [mailChannelId1],
     }, { shadow: true });
     assert.strictEqual(
-        channels[0].is_pinned,
+        // weird structure due to the `channel` key containing a field command
+        // expressed with 'list syntax':
+        // channel: [['insert-and-replace', { isServerPinned: false }]]
+        channels[0].channel[0][1].isServerPinned,
         false,
         'Livechat channel should not be pinned',
     );

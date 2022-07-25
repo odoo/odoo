@@ -4,6 +4,7 @@ import { start } from '@mail/../tests/helpers/test_utils';
 
 import { browser } from '@web/core/browser/browser';
 import { patchWithCleanup } from '@web/../tests/helpers/utils';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
@@ -20,8 +21,11 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
     });
     const { messaging } = await start();
     messaging.models['Thread'].insert({
+        channel: insertAndReplace({
+            id: 31,
+            isServerPinned: false,
+        }),
         id: 31,
-        isServerPinned: false,
         model: 'mail.channel',
         serverMessageUnreadCounter: 1,
     });

@@ -805,7 +805,7 @@ class Channel(models.Model):
                     info['is_minimized'] = member.is_minimized
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name
-                    info['is_pinned'] = member.is_pinned
+                    info['channel'][0][1]['isServerPinned'] = member.is_pinned
                     info['last_interest_dt'] = member.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if member.rtc_inviting_session_id:
                         info['rtc_inviting_session'] = {'id': member.rtc_inviting_session_id.id}

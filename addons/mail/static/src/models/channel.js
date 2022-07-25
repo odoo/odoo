@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one, many } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'Channel',
@@ -163,7 +164,7 @@ registerModel({
             if (this.thread.isPendingPinned) {
                 return this.thread.isPendingPinned;
             }
-            return this.thread.isServerPinned;
+            return this.isServerPinned;
         },
         /**
          * @private
@@ -208,6 +209,18 @@ registerModel({
                 case 'chat':
                 case 'group':
                     return this.messaging.discuss.categoryChat;
+            }
+        },
+        /**
+         * Handles change of pinned state coming from the server. Useful to
+         * clear pending state once server acknowledged the change.
+         *
+         * @private
+         * @see isPendingPinned
+         */
+        _onIsServerPinnedChanged() {
+            if (this.isServerPinned === this.thread.isPendingPinned) {
+                this.thread.update({ isPendingPinned: clear() });
             }
         },
         /**
@@ -317,6 +330,18 @@ registerModel({
             default: false,
         }),
         /**
+         * Determines the last pin state known by the server, which is the pin
+         * state displayed after initialization or when the last pending
+         * pin state change was confirmed by the server.
+         *
+         * This field should be considered read only in most situations. Only
+         * the code handling pin state change from the server should typically
+         * update it.
+         */
+        isServerPinned: attr({
+            default: false,
+        }),
+        /**
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
@@ -346,4 +371,10 @@ registerModel({
         }),
         uuid: attr(),
     },
+    onChanges: [
+        new OnChange({
+            dependencies: ['isServerPinned'],
+            methodName: '_onIsServerPinnedChanged',
+        }),
+    ],
 });
