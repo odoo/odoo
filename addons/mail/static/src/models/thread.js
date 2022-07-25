@@ -903,16 +903,6 @@ registerModel({
             await this.followerOfCurrentPartner.remove();
         },
         /**
-         * Unpin this thread and notify server of the change.
-         */
-        async unpin() {
-            this.channel.update({ isPendingPinned: false });
-            if (this.messaging.currentGuest) {
-                return;
-            }
-            await this.channel.notifyPinStateToServer();
-        },
-        /**
          * Called when current partner has explicitly stopped inserting some
          * input in composer. Useful to notify current partner has currently
          * stopped typing something in the composer of this thread to all other
@@ -963,7 +953,7 @@ registerModel({
         unsubscribe() {
             this.leaveCall();
             this.messaging.chatWindowManager.closeThread(this);
-            this.unpin();
+            this.channel.unpin();
         },
         /**
          * @private

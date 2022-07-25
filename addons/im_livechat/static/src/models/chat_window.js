@@ -17,7 +17,7 @@ patchRecordMethods('ChatWindow', {
             this.thread.messages.length === 0
         ) {
             notifyServer = true;
-            this.thread.unpin();
+            this.thread.channel.unpin();
         }
         this._super({ notifyServer });
     },

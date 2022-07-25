@@ -73,6 +73,15 @@ registerModel({
             });
         },
         /**
+         * Unpin this thread and notify server of the change.
+         */
+        async unpin() {
+            this.update({ isPendingPinned: false });
+            if (this.messaging.currentUser) {
+                await this.notifyPinStateToServer();
+            }
+        },
+        /**
          * @private
          * @returns {boolean}
          */
