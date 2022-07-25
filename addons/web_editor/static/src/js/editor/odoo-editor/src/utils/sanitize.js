@@ -123,7 +123,8 @@ class Sanitize {
                 node = nodeP;
             }
 
-            const anchor = this.root.ownerDocument.getSelection().anchorNode;
+            const selection = this.root.ownerDocument.getSelection();
+            const anchor = selection && selection.anchorNode;
             const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
             // content and the selection is not next to it.
