@@ -4749,6 +4749,8 @@ var BasicModel = AbstractModel.extend({
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
+                        // newGroup.offset = oldGroup.offset;
+                        // newGroup.groupsOffset = oldGroup.groupsOffset;
                         newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {

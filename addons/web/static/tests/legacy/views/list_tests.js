@@ -25,7 +25,7 @@ var _t = core._t;
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
-const { click, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { click, legacyExtraNextTick, getFixture} = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
 let serverData;
@@ -10072,7 +10072,74 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+    QUnit.debug('achraf', async function (assert) {
+        assert.expect(5);
 
+        this.data.foo.records.push({foo: 'record blabla', int_field: 10});
+
+        serverData.actions = {
+            11: {
+                id: 11,
+                name: 'Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list']],
+                search_view_id: [9, 'search'],
+                flags: {
+                    // context: { group_by: ['int_field'] },
+                },
+            },
+        };
+        const mockRPC = (route, args) =>  {
+            console.log(route, args, 'hhaaah')
+            if (args.method === 'web_read_group') {
+                // console.log(JSON.stringify(args.kwargs.domain))
+                assert.step(JSON.stringify(args.kwargs.domain));
+            }
+            if (args.method === "search_read" && args.model === "ir.model") {
+                console.log("a", args);
+                return Promise.resolve([{ name: "partner" }]);
+            }
+        };
+        serverData.views = {
+            'foo,3,list': '<tree expand="1"><field name="foo"/></tree>',
+            'foo,9,search': `
+                <search>
+                    <filter string="Not Bar" name="not bar" domain="[['foo','ilike','blabla']]"/>
+                    <filter name="group_by_name" context="{'group_by':'int_field'}"/>
+                </search>`,
+        };
+
+        const webClient = await createWebClient({serverData, mockRPC});
+
+        await doAction(webClient, 11);
+        debugger;
+        await testUtils.controlPanel.setPagerValue(webClient, "1-1");
+        await cpHelpers.toggleGroupByMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, 0);
+        debugger;
+        await testUtils.dom.click(webClient.el.querySelector('.o_content .o_pager_next'));
+        debugger
+        // const searchInput = webClient.el.querySelector(".o_searchview_input");
+        // await testUtils.fields.editInput(searchInput, "bla");
+        // await testUtils.dom.triggerEvent(searchInput, "keydown", { key: "Enter" });
+        await cpHelpers.editSearch(document.body, "A");
+        await cpHelpers.validateSearch(document.body);
+        await legacyExtraNextTick();
+        await testUtils.nextTick();
+        await new Promise(()=>{})
+        await cpHelpers.toggleFilterMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, 0);
+        debugger;
+        assert.strictEqual($(webClient.el).find('.o_pager_counter').text().trim(), '1-1 / 1');
+        assert.containsN(webClient, '.o_group_header', 1); // page 1
+        assert.verifySteps([
+            '[]',
+            '[["foo","ilike","blabla"]]',
+        ]);
+        // debugger;
+        // await new Promise(()=>{})
+    })
     QUnit.test('add filter in a grouped list with a pager', async function (assert) {
         assert.expect(11);
 
@@ -11768,6 +11835,7 @@ QUnit.module('Views', {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 2);
+        await new Promise(()=>{})
 
         assert.containsOnce(webClient, '.o_list_view',
             "should have rendered a list view");
