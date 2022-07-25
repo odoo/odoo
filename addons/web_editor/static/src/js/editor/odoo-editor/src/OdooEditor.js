@@ -307,7 +307,182 @@ export class OdooEditor extends EventTarget {
 
         this._pluginCall('sanitizeElement', [editable]);
 
-        this._createPowerbox();
+        // Create the Powerbox's table picker.
+        this.powerboxTablePicker = new TablePicker({
+            document: this.document,
+            floating: true,
+        });
+        document.body.appendChild(this.powerboxTablePicker.el);
+        this.powerboxTablePicker.addEventListener('cell-selected', ev => {
+            this.execCommand('insertTable', {
+                rowNumber: ev.detail.rowNumber,
+                colNumber: ev.detail.colNumber,
+            });
+        });
+        // Initialize the Powerbox.
+        let beforeStepIndex;
+        this.powerbox = new Powerbox({
+            editable: this.editable,
+            getContextFromParentRect: this.options.getContextFromParentRect,
+            commandFilters: this.options.powerboxFilters,
+            onShow: () => {
+                this.powerboxTablePicker.hide();
+            },
+            onOpen: () => {
+                // Undo input '/'.
+                beforeStepIndex = this._historySteps.length - 2;
+            },
+            beforeCommand: () => {
+                if (this._isPowerboxOpenOnInput) {
+                    this._historyRevertUntil(beforeStepIndex);
+                    this.historyStep(true);
+                    this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
+                    setTimeout(() => {
+                        ensureFocus(this.editable);
+                        getDeepRange(this.editable, { select: true });
+                    });
+                }
+            },
+            afterCommand: () => {
+                this.historyStep(true);
+                this._isPowerboxOpenOnInput = false;
+            },
+            categories: [
+                { name: this.options._t('Structure'), priority: 70 },
+                { name: this.options._t('Format'), priority: 60 },
+                { name: this.options._t('Widgets'), priority: 30 },
+                ...(this.options.categories || []),
+            ],
+            commands: [
+                {
+                    category: this.options._t('Structure'),
+                    name: this.options._t('Bulleted list'),
+                    priority: 110,
+                    description: this.options._t('Create a simple bulleted list.'),
+                    fontawesome: 'fa-list-ul',
+                    callback: () => {
+                        this.execCommand('toggleList', 'UL');
+                    },
+                },
+                {
+                    category: this.options._t('Structure'),
+                    name: this.options._t('Numbered list'),
+                    priority: 100,
+                    description: this.options._t('Create a list with numbering.'),
+                    fontawesome: 'fa-list-ol',
+                    callback: () => {
+                        this.execCommand('toggleList', 'OL');
+                    },
+                },
+                {
+                    category: this.options._t('Structure'),
+                    name: this.options._t('Checklist'),
+                    priority: 90,
+                    description: this.options._t('Track tasks with a checklist.'),
+                    fontawesome: 'fa-check-square-o',
+                    callback: () => {
+                        this.execCommand('toggleList', 'CL');
+                    },
+                },
+                {
+                    category: this.options._t('Structure'),
+                    name: this.options._t('Table'),
+                    priority: 80,
+                    description: this.options._t('Insert a table.'),
+                    fontawesome: 'fa-table',
+                    callback: () => {
+                        this.powerboxTablePicker.show();
+                    },
+                },
+                {
+                    category: this.options._t('Structure'),
+                    name: this.options._t('Separator'),
+                    priority: 40,
+                    description: this.options._t('Insert an horizontal rule separator.'),
+                    fontawesome: 'fa-minus',
+                    callback: () => {
+                        this.execCommand('insertHorizontalRule');
+                    },
+                },
+                {
+                    category: this.options._t('Format'),
+                    name: this.options._t('Heading 1'),
+                    priority: 50,
+                    description: this.options._t('Big section heading.'),
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H1');
+                    },
+                },
+                {
+                    category: this.options._t('Format'),
+                    name: this.options._t('Heading 2'),
+                    priority: 40,
+                    description: this.options._t('Medium section heading.'),
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H2');
+                    },
+                },
+                {
+                    category: this.options._t('Format'),
+                    name: this.options._t('Heading 3'),
+                    priority: 30,
+                    description: this.options._t('Small section heading.'),
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H3');
+                    },
+                },
+                {
+                    category: this.options._t('Format'),
+                    name: this.options._t('Switch direction'),
+                    priority: 20,
+                    description: this.options._t('Switch the text\'s direction.'),
+                    fontawesome: 'fa-exchange',
+                    callback: () => {
+                        this.execCommand('switchDirection');
+                    },
+                },
+                {
+                    category: this.options._t('Format'),
+                    name: this.options._t('Text'),
+                    priority: 10,
+                    description: this.options._t('Paragraph block.'),
+                    fontawesome: 'fa-paragraph',
+                    callback: () => {
+                        this.execCommand('setTag', 'P');
+                    },
+                },
+                {
+                    category: this.options._t('Widgets'),
+                    name: this.options._t('3 Stars'),
+                    priority: 20,
+                    description: this.options._t('Insert a rating over 3 stars.'),
+                    fontawesome: 'fa-star-o',
+                    callback: () => {
+                        let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
+                        html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
+                        html += '</span>';
+                        this.execCommand('insertHTML', html);
+                    },
+                },
+                {
+                    category: this.options._t('Widgets'),
+                    name: this.options._t('5 Stars'),
+                    priority: 10,
+                    description: this.options._t('Insert a rating over 5 stars.'),
+                    fontawesome: 'fa-star',
+                    callback: () => {
+                        let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
+                        html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
+                        html += '</span>';
+                        this.execCommand('insertHTML', html);
+                    },
+                },
+                ...(this.options.commands || []),
+            ],
+        });
 
         this.toolbarTablePicker = new TablePicker({ document: this.document });
         this.toolbarTablePicker.addEventListener('cell-selected', ev => {
@@ -1777,190 +1952,6 @@ export class OdooEditor extends EventTarget {
         }
         return -1;
     }
-
-    // COMMAND BAR
-    // ===========
-
-    _createPowerbox() {
-        this.powerboxTablePicker = new TablePicker({
-            document: this.document,
-            floating: true,
-        });
-
-        document.body.appendChild(this.powerboxTablePicker.el);
-
-        this.powerboxTablePicker.addEventListener('cell-selected', ev => {
-            this.execCommand('insertTable', {
-                rowNumber: ev.detail.rowNumber,
-                colNumber: ev.detail.colNumber,
-            });
-        });
-
-        const mainCategories = [
-            { name: this.options._t('Structure'), priority: 70 },
-            { name: this.options._t('Format'), priority: 60 },
-            { name: this.options._t('Widgets'), priority: 30 },
-        ];
-        const mainCommands = [
-            {
-                category: this.options._t('Structure'),
-                name: this.options._t('Bulleted list'),
-                priority: 110,
-                description: this.options._t('Create a simple bulleted list.'),
-                fontawesome: 'fa-list-ul',
-                callback: () => {
-                    this.execCommand('toggleList', 'UL');
-                },
-            },
-            {
-                category: this.options._t('Structure'),
-                name: this.options._t('Numbered list'),
-                priority: 100,
-                description: this.options._t('Create a list with numbering.'),
-                fontawesome: 'fa-list-ol',
-                callback: () => {
-                    this.execCommand('toggleList', 'OL');
-                },
-            },
-            {
-                category: this.options._t('Structure'),
-                name: this.options._t('Checklist'),
-                priority: 90,
-                description: this.options._t('Track tasks with a checklist.'),
-                fontawesome: 'fa-check-square-o',
-                callback: () => {
-                    this.execCommand('toggleList', 'CL');
-                },
-            },
-            {
-                category: this.options._t('Structure'),
-                name: this.options._t('Table'),
-                priority: 80,
-                description: this.options._t('Insert a table.'),
-                fontawesome: 'fa-table',
-                callback: () => {
-                    this.powerboxTablePicker.show();
-                },
-            },
-            {
-                category: this.options._t('Structure'),
-                name: this.options._t('Separator'),
-                priority: 40,
-                description: this.options._t('Insert an horizontal rule separator.'),
-                fontawesome: 'fa-minus',
-                callback: () => {
-                    this.execCommand('insertHorizontalRule');
-                },
-            },
-            {
-                category: this.options._t('Format'),
-                name: this.options._t('Heading 1'),
-                priority: 50,
-                description: this.options._t('Big section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H1');
-                },
-            },
-            {
-                category: this.options._t('Format'),
-                name: this.options._t('Heading 2'),
-                priority: 40,
-                description: this.options._t('Medium section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H2');
-                },
-            },
-            {
-                category: this.options._t('Format'),
-                name: this.options._t('Heading 3'),
-                priority: 30,
-                description: this.options._t('Small section heading.'),
-                fontawesome: 'fa-header',
-                callback: () => {
-                    this.execCommand('setTag', 'H3');
-                },
-            },
-            {
-                category: this.options._t('Format'),
-                name: this.options._t('Switch direction'),
-                priority: 20,
-                description: this.options._t('Switch the text\'s direction.'),
-                fontawesome: 'fa-exchange',
-                callback: () => {
-                    this.execCommand('switchDirection');
-                },
-            },
-            {
-                category: this.options._t('Format'),
-                name: this.options._t('Text'),
-                priority: 10,
-                description: this.options._t('Paragraph block.'),
-                fontawesome: 'fa-paragraph',
-                callback: () => {
-                    this.execCommand('setTag', 'P');
-                },
-            },
-            {
-                category: this.options._t('Widgets'),
-                name: this.options._t('3 Stars'),
-                priority: 20,
-                description: this.options._t('Insert a rating over 3 stars.'),
-                fontawesome: 'fa-star-o',
-                callback: () => {
-                    let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
-                    html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                    html += '</span>';
-                    this.execCommand('insertHTML', html);
-                },
-            },
-            {
-                category: this.options._t('Widgets'),
-                name: this.options._t('5 Stars'),
-                priority: 10,
-                description: this.options._t('Insert a rating over 5 stars.'),
-                fontawesome: 'fa-star',
-                callback: () => {
-                    let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
-                    html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                    html += '</span>';
-                    this.execCommand('insertHTML', html);
-                },
-            },
-        ];
-        let beforeStepIndex;
-        this.powerbox = new Powerbox({
-            editable: this.editable,
-            getContextFromParentRect: this.options.getContextFromParentRect,
-            commandFilters: this.options.powerboxFilters,
-            onShow: () => {
-                this.powerboxTablePicker.hide();
-            },
-            onOpen: () => {
-                // Undo input '/'.
-                beforeStepIndex = this._historySteps.length - 2;
-            },
-            beforeCommand: () => {
-                if (this._isPowerboxOpenOnInput) {
-                    this._historyRevertUntil(beforeStepIndex);
-                    this.historyStep(true);
-                    this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-                    setTimeout(() => {
-                        ensureFocus(this.editable);
-                        getDeepRange(this.editable, { select: true });
-                    });
-                }
-            },
-            afterCommand: () => {
-                this.historyStep(true);
-                this._isPowerboxOpenOnInput = false;
-            },
-            categories: [...mainCategories, ...(this.options.categories || [])],
-            commands: [...mainCommands, ...(this.options.commands || [])],
-        });
-    }
-
     _historyRevertUntil (toStepIndex) {
         const lastStep = this._currentStep;
         this.historyRevert(lastStep);
