@@ -34,7 +34,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
                 data: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.lastWelcomeStep,
             }),
         });
-        this._channelData = this.messaging.publicLivechatGlobal.livechatButtonView.testChatbotData.channel;
     },
 
     /**
@@ -45,31 +44,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      */
     willStart: function () {
         return this.messaging.publicLivechatGlobal.loadQWebTemplate();
-    },
-
-    /**
-     * Overridden to avoid calling the "get_session" endpoint as it requires a im_livechat.channel
-     * linked to work properly.
-     *
-     * Here, we already have a mail.channel created (see 'website_livechat_chatbot_test_script') so we
-     * use its configuration to create the 'WebsiteLivechat' Widget.
-     *
-     * @private
-     * @override
-     */
-    _openChat: function () {
-        this.messaging.publicLivechatGlobal.update({
-            publicLivechat: insertAndReplace({ data: this._channelData }),
-        });
-
-        return this._openChatWindow().then(() => {
-            this._sendWelcomeMessage();
-            this._renderMessages();
-            this.call('bus_service', 'addChannel', this.messaging.publicLivechatGlobal.publicLivechat.uuid);
-            this.call('bus_service', 'startPolling');
-            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ isOpeningChat: false });
-        });
     },
 });
 
