@@ -45,12 +45,14 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
  tour.register('im_livechat_chatbot_steps_sequence_tour', {
     test: true,
     url: '/web',
-}, [].concat(commonSteps, [{
+}, [
+    ...commonSteps, {
     trigger: 'button:contains("Save & Close")'
 }, {
     trigger: 'body.o_web_client:not(.modal-open)',
-    run: () => {}
-}]));
+    run() {},
+}, ...tour.stepUtils.discardForm()
+]);
 
 /**
  * Same as above, with an extra drag&drop at the end.
@@ -58,7 +60,8 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
 tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     test: true,
     url: '/web',
-}, [].concat(commonSteps, [{
+}, [
+    ...commonSteps, {
     trigger: 'button:contains("Save & New")'
 }, {
     trigger: 'tr:contains("Step 3")',
@@ -135,4 +138,5 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     trigger: 'tr:contains("Step 6")',
     in_modal: false,
     run: () => {}
-}]));
+}, ...tour.stepUtils.discardForm(),
+]);

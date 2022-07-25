@@ -48,4 +48,5 @@ tour.register('mass_mailing_snippets_menu_tabs', {
         trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
+    ...tour.stepUtils.discardForm(),
 ]);
