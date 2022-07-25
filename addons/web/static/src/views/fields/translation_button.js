@@ -21,21 +21,13 @@ export class TranslationButton extends Component {
     }
 
     async onClick() {
-        const result = await this.rpc("/web/dataset/call_button", {
-            model: "ir.translation",
-            method: "translate_fields",
-            args: [this.props.resModel, this.props.resId, this.props.fieldName],
-            kwargs: {},
-        });
 
         this.dialog.add(TranslationDialog, {
-            domain: result.domain,
-            searchName: result.context.search_default_name,
             fieldName: this.props.fieldName,
+            resId: this.props.resId,
             userLanguageValue: this.props.value || "",
+            resModel: this.props.resModel,
             isComingFromTranslationAlert: false,
-            isText: result.context.translation_type === "text",
-            showSource: result.context.translation_show_src,
             updateField: this.props.updateField,
         });
     }

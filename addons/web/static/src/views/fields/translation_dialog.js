@@ -21,33 +21,37 @@ export class TranslationDialog extends Component {
 
         onWillStart(async () => {
             const languages = await this.loadLanguages();
-            const translations = await this.loadTranslations(languages);
+            const [translations, context]= await this.loadTranslations(languages);
+            let id = 1;
+            translations.forEach((t) => t.id = id++);
+            this.props.isText = context.translation_type === 'text';
+            this.props.showSrc = context.translation_show_src;
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                if (!term.value && !this.props.showSource) {
+                if (!term.value && !this.props.showSrc) {
                     term.value = term.src;
                 }
                 return {
                     id: term.id,
                     lang: term.lang,
                     langName: relatedLanguage[1],
-                    source: term.src,
+                    src: term.src,
                     // we set the translation value coming from the database, except for the language
                     // the user is currently utilizing. Then we set the translation value coming
                     // from the value of the field in the form
                     value:
                         term.lang === this.user.lang &&
-                        !this.props.showSource &&
+                        !this.props.showSrc &&
                         !this.props.isComingFromTranslationAlert
                             ? this.props.userLanguageValue
                             : term.value || "",
                 };
             });
             this.terms.sort((a, b) =>
-                a.langName < b.langName || (a.langName === b.langName && a.source < b.source)
-                    ? -1
-                    : 1
+                (a.langName > b.langName || (a.langName === b.langName))
+                    ? 1
+                    : -1
             );
         });
     }
@@ -69,28 +73,44 @@ export class TranslationDialog extends Component {
      * Load the translation terms for the installed language, for the current model and res_id
      */
     async loadTranslations(languages) {
-        const domain = [...this.props.domain, ["lang", "in", languages.map((l) => l[0])]];
-        return this.orm.searchRead("ir.translation", domain, ["lang", "src", "value"]);
+        return this.orm.call(
+            this.props.resModel,
+            "get_field_translations",
+            [[this.props.resId], this.props.fieldName],
+        )
     }
 
     /**
      * Save all the terms that have been updated
      */
     async onSave() {
-        await Promise.all(
-            this.terms.map(async (term) => {
-                if (term.id in this.updatedTerms && term.value !== this.updatedTerms[term.id]) {
-                    await this.orm.write("ir.translation", [term.id], {
-                        value: this.updatedTerms[term.id],
-                    });
+        const translations = {};
+
+        this.terms.map((term) => {
+            const updatedTermValue = this.updatedTerms[term.id]
+            if (term.id in this.updatedTerms && term.value !== updatedTermValue) {
+                if (this.props.showSrc) {
+                    if (!translations[term.lang]) {
+                        translations[term.lang] = {};
+                    }
+                    translations[term.lang][term.src] = updatedTermValue;
                 }
-            })
+                else {
+                    translations[term.lang] = updatedTermValue
+                }
+            }
+        });
+
+        await this.orm.call(
+            this.props.resModel,
+            "update_field_translations",
+            [[this.props.resId], this.props.fieldName, translations]
         );
 
         // we might have to update the value of the field on the form
         // view that opened the translation dialog
         const currentTerm = this.terms.find(
-            (term) => term.lang === this.user.lang && !this.props.showSource
+            (term) => term.lang === this.user.lang && !this.props.showSrc
         );
         if (
             currentTerm &&

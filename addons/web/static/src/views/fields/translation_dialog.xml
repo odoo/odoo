@@ -9,13 +9,13 @@
                         <div
                             class="col-12"
                             t-att-class="{ o_language_current: term.lang === user.lang }"
-                            t-attf-class="col-lg-{{ props.showSource ? 2 : 3 }}"
+                            t-attf-class="col-lg-{{ props.showSrc ? 2 : 3 }}"
                         >
                             <t t-esc="term.langName" />
                         </div>
-                        <t t-if="props.showSource">
-                            <div class="col-12 col-lg-3 source" t-attf-class="col-lg-{{ props.showSource ? 7 : 9 }}">
-                                <t t-esc="term.source" />
+                        <t t-if="props.showSrc">
+                            <div class="col-12 col-lg-3 source" t-attf-class="col-lg-{{ props.showSrc ? 7 : 9 }}">
+                                <t t-esc="term.src" />
                             </div>
                         </t>
                         <div class="col-12 translation">
@@ -24,7 +24,7 @@
                                     class="o_field_text o_field_translate o_field_widget o_input"
                                     t-att-value="term.value"
                                     t-att-data-id="term.id"
-                                    t-att-rows="props.showSource ? 2 : 5"
+                                    t-att-rows="props.showSrc ? 2 : 5"
                                     t-on-change="(ev) => this.updatedTerms[term.id] = ev.target.value"
                                 />
                             </t>
