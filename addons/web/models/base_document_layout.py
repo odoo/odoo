@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from PIL import Image
-
 from odoo import api, fields, models, tools
 
 from odoo.modules import get_resource_path
@@ -11,6 +9,10 @@ except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
+try:
+    from PIL.Image import Resampling
+except ImportError:
+    from PIL import Image as Resampling
 
 DEFAULT_PRIMARY = '#000000'
 DEFAULT_SECONDARY = '#000000'
@@ -182,7 +184,7 @@ class BaseDocumentLayout(models.TransientModel):
 
         # Converts to RGBA (if already RGBA, this is a noop)
         image_converted = image.convert('RGBA')
-        image_resized = image_converted.resize((w, h), resample=Image.NEAREST)
+        image_resized = image_converted.resize((w, h), resample=Resampling.NEAREST)
 
         colors = []
         for color in image_resized.getcolors(w * h):
