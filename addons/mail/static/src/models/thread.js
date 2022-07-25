@@ -732,22 +732,6 @@ registerModel({
             return this.messaging.models['Thread'].performRpcChannelFold(this.id, state);
         },
         /**
-         * Notify server to leave the current channel. Useful for cross-tab
-         * and cross-device chat window state synchronization.
-         *
-         * Only makes sense if isPendingPinned is set to the desired value.
-         */
-        async notifyPinStateToServer() {
-            if (this.channel.channel_type === 'channel') {
-                await this.leave();
-                return;
-            }
-            await this.messaging.models['Channel'].performRpcChannelPin({
-                channelId: this.id,
-                pinned: this.channel.isPendingPinned,
-            });
-        },
-        /**
          * Opens this thread either as form view, in discuss app, or as a chat
          * window. The thread will be opened in an "active" matter, which will
          * interrupt current user flow.
@@ -803,7 +787,7 @@ registerModel({
             if (this.messaging.currentGuest) {
                 return;
             }
-            await this.notifyPinStateToServer();
+            await this.channel.notifyPinStateToServer();
         },
         /**
          * Refresh the typing status of the current partner.
@@ -926,7 +910,7 @@ registerModel({
             if (this.messaging.currentGuest) {
                 return;
             }
-            await this.notifyPinStateToServer();
+            await this.channel.notifyPinStateToServer();
         },
         /**
          * Called when current partner has explicitly stopped inserting some

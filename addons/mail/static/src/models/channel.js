@@ -57,6 +57,22 @@ registerModel({
             this.update(channelData);
         },
         /**
+         * Notify server to leave the current channel. Useful for cross-tab and
+         * cross-device chat window state synchronization.
+         *
+         * Only makes sense if isPendingPinned is set to the desired value.
+         */
+        async notifyPinStateToServer() {
+            if (this.channel_type === 'channel') {
+                await this.thread.leave();
+                return;
+            }
+            await this.messaging.models['Channel'].performRpcChannelPin({
+                channelId: this.id,
+                pinned: this.isPendingPinned,
+            });
+        },
+        /**
          * @private
          * @returns {boolean}
          */
