@@ -973,6 +973,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     content: _t("Validate"),
     position: "bottom",
 }, {
+    edition: "community",
+    content: "wait for payment registration to succeed",
+    trigger: "span.bg-success:contains('Paid')",
+    auto: true,
+    run() {}
+},{
     edition: "enterprise",
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
@@ -1055,5 +1061,31 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     trigger: "button[name='button_validate']",
     content: Markup(_t('<p><b>Click on Reconcile</p>')),
     position: "right",
+},
+{
+    mobile: false,
+    edition: "enterprise",
+    trigger: ".o_tag_badge_text:contains('Matched')",
+    auto: true,
+},
+// exit reconciliation widget
+{
+    ...tour.stepUtils.toggleHomeMenu(),
+    mobile: false,
+    auto: true,
+},
+{
+    trigger: `.o_app[data-menu-xmlid="account_accountant.menu_accounting"]`,
+    edition: 'enterprise',
+    mobile: false,
+    auto: true,
+},
+{
+    mobile: false,
+    edition: "enterprise",
+    content: "check that we're back on the dashboard",
+    trigger: 'a:contains("Customer Invoices")',
+    auto: true,
+    run() {}
 }]);
 });
