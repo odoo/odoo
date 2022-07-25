@@ -259,6 +259,7 @@ export class FormController extends Component {
         if (this.archiveEnabled) {
             if (this.model.root.isActive) {
                 otherActionItems.push({
+                    key: "archive",
                     description: this.env._t("Archive"),
                     callback: () => {
                         const dialogProps = {
@@ -273,6 +274,7 @@ export class FormController extends Component {
                 });
             } else {
                 otherActionItems.push({
+                    key: "unarchive",
                     description: this.env._t("Unarchive"),
                     callback: () => this.model.root.unarchive(),
                 });
@@ -280,12 +282,14 @@ export class FormController extends Component {
         }
         if (this.archInfo.activeActions.create && this.archInfo.activeActions.duplicate) {
             otherActionItems.push({
+                key: "duplicate",
                 description: this.env._t("Duplicate"),
                 callback: () => this.duplicateRecord(),
             });
         }
         if (this.archInfo.activeActions.delete) {
             otherActionItems.push({
+                key: "delete",
                 description: this.env._t("Delete"),
                 callback: () => this.deleteRecord(),
             });
