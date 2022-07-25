@@ -206,7 +206,7 @@ function matchCondition(record, condition) {
             return fieldValue === value;
         case "!=":
         case "<>":
-            return JSON.stringify(fieldValue) !== JSON.stringify(value);
+            return !matchCondition(record, [field, "==", value]);
         case "<":
             return fieldValue < value;
         case "<=":
