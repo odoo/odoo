@@ -113,7 +113,6 @@
 
             # Remove Longpolling bus and packages needed this bus
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
-            ('remove', 'mail/static/src/services/messaging_service.js'),
 
             ('remove', 'mail/static/src/components/dialog_manager/dialog_manager.js'),
             ('remove', 'mail/static/src/components/chat_window_manager/chat_window_manager.js'),
