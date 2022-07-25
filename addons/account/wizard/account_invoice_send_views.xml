@@ -8,6 +8,7 @@
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <form string="Invoice send &amp; Print">
+                    <field name="model" invisible="1"/>
                     <div class="alert alert-warning" role="alert"
                          attrs="{'invisible': [('move_types', '=', False)]}">
                         You have selected the following document types at the same time:

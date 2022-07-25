@@ -54,7 +54,7 @@
 </div>
             </field>
             <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="report_name">{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -127,7 +127,7 @@
 </div>
             </field>
             <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="report_name">{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>

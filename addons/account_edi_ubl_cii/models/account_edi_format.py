@@ -118,6 +118,8 @@ class AccountEdiFormat(models.Model):
                 'name': builder._export_invoice_filename(invoice),
                 'raw': xml_content,
                 'mimetype': 'application/xml',
+                'res_id': None,
+                'res_model': None,
             }
             # we don't want the Factur-X and E-FFF xml to appear in the attachment of the invoice when confirming it
             # E-FFF will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
@@ -132,19 +134,15 @@ class AccountEdiFormat(models.Model):
 
         return res
 
-    def _is_embedding_to_invoice_pdf_needed(self):
-        # EXTENDS account_edi
-        self.ensure_one()
-
-        if self.code == 'facturx_1_0_05':
-            return True
-        return super()._is_embedding_to_invoice_pdf_needed()
-
     def _prepare_invoice_report(self, pdf_writer, edi_document):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
+
+        # regenerate Facturx everytime a pdf is created
+        edi_document.filtered(lambda doc: doc.edi_format_id.code == 'facturx_1_0_05').state = 'to_send'
+        edi_document.filtered(lambda doc: doc.edi_format_id.code == 'facturx_1_0_05')._process_documents_no_web_services()
         if not edi_document.attachment_id:
             return
 
@@ -163,6 +161,13 @@ class AccountEdiFormat(models.Model):
                     'date': fields.Date.context_today(self),
                 })
                 pdf_writer.add_file_metadata(content.encode())
+
+    def _get_edi_attachments(self, document):
+        # EXTENDS account_edi
+        # do not attach the factur-x.xml in the 'send & print' wizard
+        if document.edi_format_id.code == 'facturx_1_0_05':
+            return {}
+        return super()._get_edi_attachments(document)
 
     ####################################################
     # Import: Account.edi.format override
