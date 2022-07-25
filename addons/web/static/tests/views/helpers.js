@@ -61,7 +61,7 @@ export async function makeView(params) {
         delete props.searchViewArch;
     }
 
-    const env = await makeTestEnv({ serverData, mockRPC, config });
+    const env = await makeTestEnv({ serverData, mockRPC });
     Object.assign(env, createDebugContext(env)); // This is needed if the views are in debug mode
 
     /** Legacy Environment, for compatibility sakes
@@ -81,7 +81,8 @@ export async function makeView(params) {
     await addLegacyMockEnvironment(env, legacyParams);
 
     const target = getFixture();
-    const view = await mount(View, target, { env, props });
+    const viewEnv = Object.assign(Object.create(env), { config });
+    const view = await mount(View, target, { env: viewEnv, props });
     await mount(MainComponentsContainer, target, { env, props });
 
     const viewNode = view.__owl__;
