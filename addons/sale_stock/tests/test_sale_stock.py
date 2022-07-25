@@ -1257,3 +1257,38 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         ret_pack_sm.picking_id.action_assign()
         self.assertEqual(ret_pack_sm.state, 'assigned')
         self.assertEqual(ret_pack_sm.move_line_ids.reserved_uom_qty, 2)
+
+    def test_mtso_and_qty_decreasing(self):
+        """
+        First, confirm a SO that has a line with the MTO route (the product
+        should already be available in stock). Then, decrease the qty on the SO
+        line:
+        - The delivery should be updated
+        - There should not be any other picking
+        """
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+
+        self.product_a.type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product_a, warehouse.lot_stock_id, 10)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 1,
+                'route_id': mto_route.id,
+            })],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
+
+        so.order_line.product_uom_qty = 8
+        self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
