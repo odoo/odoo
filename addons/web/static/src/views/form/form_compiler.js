@@ -144,11 +144,10 @@ export class FormCompiler extends ViewCompiler {
                         ? `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`
                         : true,
             });
-            const button = this.compileNode(child, params, false);
-            if (button.tagName === "ViewButton") {
-                button.setAttribute("defaultRank", "'oe_stat_button'");
+            if (child.tagName === "button") {
+                child.classList.add("oe_stat_button");
             }
-            append(mainSlot, button);
+            append(mainSlot, this.compileNode(child, params, false));
             append(buttonBox, mainSlot);
         }
 
@@ -364,6 +363,9 @@ export class FormCompiler extends ViewCompiler {
                 compiled.setAttribute("showTooltip", true);
                 others.push(compiled);
             } else {
+                if (compiled.tagName === "ViewButton") {
+                    compiled.setAttribute("defaultRank", "'btn-secondary'");
+                }
                 buttons.push(compiled);
             }
         }
