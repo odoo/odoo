@@ -400,7 +400,7 @@ const QWeb = core.qweb;
                 this.messaging.livechatButtonView.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
                     $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
                         'chatbotImageSrc': `/im_livechat/operator/${
-                            this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0]
+                            this.messaging.livechatButtonView.publicLivechat.operator.id
                         }/avatar`,
                         'chatbotName': this.messaging.livechatButtonView.chatbot.name,
                         'isWelcomeMessage': isWelcomeMessage,
@@ -444,7 +444,7 @@ const QWeb = core.qweb;
                 this.messaging.livechatButtonView.messages.length !== 0
             ) {
                 const lastMessage = this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1];
-                if (lastMessage.getAuthorID() !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0]) {
+                if (lastMessage.getAuthorID() !== this.messaging.livechatButtonView.publicLivechat.operator.id) {
                     // we are on the last step of the script, expect a user input and the user has
                     // already answered
                     // -> end the script
@@ -552,7 +552,7 @@ const QWeb = core.qweb;
      */
     _isLastMessageFromCustomer() {
         const lastMessage = this.messaging.livechatButtonView.messages.length !== 0 ? this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1] : null;
-        return lastMessage && lastMessage.getAuthorID() !== this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0];
+        return lastMessage && lastMessage.getAuthorID() !== this.messaging.livechatButtonView.publicLivechat.operator.id;
     },
 
      //--------------------------------------------------------------------------
@@ -752,7 +752,14 @@ const QWeb = core.qweb;
                 id: '_welcome_' + stepIndex,
                 is_discussion: true,  // important for css style -> we only want white background for chatbot
                 attachment_ids: [],
-                author_id: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID,
+                author_id: (
+                    this.messaging.livechatButtonView.publicLivechat.operator
+                    ? [
+                        this.messaging.livechatButtonView.publicLivechat.operator.id,
+                        this.messaging.livechatButtonView.publicLivechat.operator.name,
+                    ]
+                    : []
+                ),
                 body: utils.Markup(chatbotStep.chatbot_step_message),
                 chatbot_script_step_id: chatbotStep.chatbot_script_step_id,
                 chatbot_step_answers: chatbotStep.chatbot_step_answers,

@@ -164,7 +164,7 @@ const LivechatButton = Widget.extend({
                 const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
-                    pid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID[0],
+                    pid: this.messaging.livechatButtonView.publicLivechat.operator.id,
                     channel_uuid: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._uuid,
                     page_history: history,
                 });
@@ -277,10 +277,8 @@ const LivechatButton = Widget.extend({
 
                     utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
-                    if (livechatData.operator_pid[0]) {
-                        // livechatData.operator_pid contains a tuple (id, name)
-                        // we are only interested in the id
-                        const operatorPidId = livechatData.operator_pid[0];
+                    if (this.messaging.livechatButtonView.publicLivechat.operator) {
+                        const operatorPidId = this.messaging.livechatButtonView.publicLivechat.operator.id;
                         const oneWeek = 7 * 24 * 60 * 60;
                         utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
                     }
@@ -384,7 +382,10 @@ const LivechatButton = Widget.extend({
             this._addMessage({
                 id: '_welcome',
                 attachment_ids: [],
-                author_id: this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat._operatorPID,
+                author_id: [
+                    this.messaging.livechatButtonView.publicLivechat.operator.id,
+                    this.messaging.livechatButtonView.publicLivechat.operator.name,
+                ],
                 body: this.messaging.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",

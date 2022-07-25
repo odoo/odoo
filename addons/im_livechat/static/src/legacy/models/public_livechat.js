@@ -112,14 +112,16 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.on('message_added', this, this._onTypingMessageAdded);
         this.on('message_posted', this, this._onTypingMessagePosted);
 
-
-        this._operatorPID = params.data.operator_pid;
         // Necessary for thread typing mixin to display is typing notification
         // bar text (at least, for the operator in the members).
-        this._members = [{
-            id: this._operatorPID[0],
-            name: this._operatorPID[1]
-        }];
+        this._members = (
+            this.messaging.livechatButtonView.publicLivechat.operator
+            ? [{
+                id: this.messaging.livechatButtonView.publicLivechat.operator.id,
+                name: this.messaging.livechatButtonView.publicLivechat.operator.name,
+            }]
+            : []
+        );
         this._uuid = params.data.uuid;
 
         if (params.data.message_unread_counter !== undefined) {
@@ -305,7 +307,14 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             folded: this._folded,
             id: this._id,
             message_unread_counter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
-            operator_pid: this._operatorPID,
+            operator_pid: (
+                this.messaging.livechatButtonView.publicLivechat.operator
+                ? [
+                    this.messaging.livechatButtonView.publicLivechat.operator.id,
+                    this.messaging.livechatButtonView.publicLivechat.operator.name,
+                ]
+                : []
+            ),
             name: this._name,
             uuid: this._uuid,
         };
@@ -433,7 +442,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {mail.model.AbstractMessage} message
      */
     _onTypingMessageAdded(message) {
-        const operatorID = this._operatorPID[0];
+        const operatorID = this.messaging.livechatButtonView.publicLivechat.operator.id;
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }
