@@ -1,174 +1,124 @@
-odoo.define('base_setup.ResConfigInviteUsers', function (require) {
-    "use strict";
+/** @odoo-module */
 
-    var Widget = require('web.Widget');
-    var widget_registry = require('web.widget_registry');
-    var core = require('web.core');
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { unique } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 
-    var _t = core._t;
+const { Component, useState, onWillStart } = owl;
 
-    var ResConfigInviteUsers = Widget.extend({
-        template: 'res_config_invite_users',
+class ResConfigInviteUsers extends Component {
+    setup() {
+        this.orm = useService("orm");
+        this.invite = useService("user_invite");
+        this.action = useService("action");
+        this.notification = useService("notification");
 
-        events: {
-            'click .o_web_settings_invite': '_onClickInvite',
-            'click .o_web_settings_user': '_onClickUser',
-            'click .o_web_settings_more': '_onClickMore',
-            'keydown .o_user_emails': '_onKeydownUserEmails',
-        },
+        this.state = useState({
+            status: "idle", // idle, inviting
+            emails: "",
+            invite: null,
+        });
 
-        /**
-         * @override
-         */
-        init: function () {
-            this._super.apply(this, arguments);
-            this.emails = [];
-        },
+        onWillStart(async () => {
+            this.state.invite = await this.invite.fetchData();
+        });
+    }
 
-        willStart: function () {
-            var self = this;
+    /**
+     * @param {string} email
+     * @returns {boolean} true if the given email address is valid
+     */
+    validateEmail(email) {
+        const re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    }
 
-            return this._super.apply(this, arguments).then(function () {
-                return self.load();
-            });
-        },
+    get emails() {
+        return unique(
+            this.state.emails
+                .split(/[ ,;\n]+/)
+                .map((email) => email.trim())
+                .filter((email) => email.length)
+        );
+    }
 
-        load: function () {
-            var self = this;
-
-            return this._rpc({
-                route: '/base_setup/data',
-            }).then(function (data) {
-                self.active_users = data.active_users;
-                self.pending_users = data.pending_users;
-                self.action_pending_users = data.action_pending_users;
-                self.pending_count = data.pending_count;
-                self.resend_invitation = data.resend_invitation || false;
-            });
-        },
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @private
-         * @param {string} email
-         * @returns {boolean} true if the given email address is valid
-         */
-        _validateEmail: function (email) {
-            var re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
-            return re.test(email);
-        },
-
-        /**
-         * Send invitation for valid and unique email addresses
-         *
-         * @private
-         */
-        _invite: function () {
-            var self = this;
-
-            var $userEmails = this.$('.o_user_emails');
-            $userEmails.prop('disabled', true);
-            this.$('.o_web_settings_invite').prop('disabled', true);
-            var value = $userEmails.val().trim();
-            if (value) {
-                // filter out duplicates
-                var emails = _.uniq(value.split(/[ ,;\n]+/));
-
-                // filter out invalid email addresses
-                var invalidEmails = _.reject(emails, this._validateEmail);
-                if (invalidEmails.length) {
-                    this.displayNotification({ message: _.str.sprintf(
-                        _t('Invalid email addresses: %s.'),
-                        invalidEmails.join(', ')
-                    ), type: 'danger' });
-                }
-                emails = _.difference(emails, invalidEmails);
-
-                if (!this.resend_invitation) {
-                    // filter out already processed or pending addresses
-                    var pendingEmails = _.map(this.pending_users, function (info) {
-                        return info[1];
-                    });
-                    var existingEmails = _.intersection(emails, this.emails.concat(pendingEmails));
-                    if (existingEmails.length) {
-                        this.displayNotification({ message: _.str.sprintf(
-                            _t('Email addresses already existing: %s.'),
-                            existingEmails.join(', ')
-                        ), type: 'danger' });
-                    }
-                    emails = _.difference(emails, existingEmails);
-                }
-
-                if (emails.length) {
-                    $userEmails.val('');
-                    this._rpc({
-                        model: 'res.users',
-                        method: 'web_create_users',
-                        args: [emails],
-                    }).then(function () {
-                        return self.load().then(function () {
-                            self.renderElement();
-                            self.$('.o_user_emails').focus();
-                        });
-                    });
-                } else {
-                    $userEmails.prop('disabled', false);
-                    this.$('.o_web_settings_invite').prop('disabled', false);
-                    self.$('.o_user_emails').focus();
-                }
+    validate() {
+        if (!this.emails.length) {
+            throw new Error(_t("Empty email address"));
+        }
+        const invalidEmails = [];
+        for (const email of this.emails) {
+            if (!this.validateEmail(email)) {
+                invalidEmails.push(email);
             }
-        },
+        }
+        if (invalidEmails.length) {
+            throw new Error(`${_t("Invalid email address")}${ invalidEmails.length > 1 ? "es" : "" }: ${invalidEmails.join(", ")}`);
+        }
+    }
 
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
+    get inviteButtonText() {
+        if (this.state.status === "inviting") {
+            return _t("Inviting...");
+        }
+        return _t("Invite");
+    }
 
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
-        _onClickInvite: function (ev) {
-            if (this.$('.o_user_emails').val().length) {
-                var $button = $(ev.target);
-                $button.button('loading');
-                return this._invite();
+    onClickMore(ev) {
+        this.action.doAction(this.state.invite.action_pending_users);
+    }
+
+    onClickUser(ev, user) {
+        const action = Object.assign({}, this.state.invite.action_pending_users, {
+            res_id: user[0],
+        });
+        this.action.doAction(action);
+    }
+
+    onKeydownUserEmails(ev) {
+        const keys = ["Enter", "Tab", ","];
+        if (keys.includes(ev.key)) {
+            if (ev.key === "Tab" && !this.emails.length) {
+                return;
             }
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
-        _onClickMore: function (ev) {
             ev.preventDefault();
-            this.do_action(this.action_pending_users);
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
-        _onClickUser: function (ev) {
-            ev.preventDefault();
-            var user_id = $(ev.currentTarget).data('user-id');
+            this.sendInvite();
+        }
+    }
 
-            var action = Object.assign({}, this.action_pending_users, {res_id: user_id});
-            this.do_action(action);
-        },
-        /**
-         * @private
-         * @param {KeyboardEvent} ev
-         */
-        _onKeydownUserEmails: function (ev) {
-            var keyCodes = [$.ui.keyCode.TAB, $.ui.keyCode.COMMA, $.ui.keyCode.ENTER];
-            if (_.contains(keyCodes, ev.which)) {
-                ev.preventDefault();
-                this._invite();
+    /**
+     * Send invitation for valid and unique email addresses
+     *
+     * @private
+     */
+    async sendInvite() {
+        try {
+            this.validate();
+        } catch (e) {
+            this.notification.add(e.message, { type: "danger" });
+            return;
+        }
+
+        this.state.status = "inviting";
+
+        const pendingUserEmails = this.state.invite.pending_users.map((user) => user[1]);
+        const emailsLeftToProcess = this.emails.filter(
+            (email) => !pendingUserEmails.includes(email)
+        );
+
+        try {
+            if (emailsLeftToProcess) {
+                await this.orm.call("res.users", "web_create_users", [emailsLeftToProcess]);
+                this.state.invite = await this.invite.fetchData(true);
             }
-        },
-    });
+        } finally {
+            this.state.emails = "";
+            this.state.status = "idle";
+        }
+    }
+}
 
-   widget_registry.add('res_config_invite_users', ResConfigInviteUsers);
+ResConfigInviteUsers.template = "res_config_invite_users";
 
-});
+registry.category("view_widgets").add("res_config_invite_users", ResConfigInviteUsers);

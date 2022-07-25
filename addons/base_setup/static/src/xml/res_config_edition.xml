@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO See if this has to be editable in some way, see if it is easy for someone to change this -->
-<!-- TODO Also see what is done to override the (Community Edition) -->
 <template>
-    <div t-name='res_config_edition'>
+    <div t-name='res_config_edition' owl="1">
         <div class="col-12 o_setting_box" id="edition">
             <div class="o_setting_right_pane">
                 <div class="user-heading">
                     <h3 class="px-0">
-                        Odoo <t t-esc="widget.server_version"/>
+                        Odoo <t t-esc="serverVersion"/>
                         (Community Edition)
                     </h3>
                 </div>
