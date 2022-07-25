@@ -174,8 +174,8 @@ export class Many2ManyTagsField extends Component {
     }
 
     focusTag(index) {
-        const tagListEl = this.autoCompleteRef.el.previousElementSibling;
-        const tags = tagListEl.getElementsByClassName("badge");
+        const autoCompleteParent = this.autoCompleteRef.el.parentElement;
+        const tags = autoCompleteParent.getElementsByClassName("badge");
         if (tags.length) {
             if (index === undefined) {
                 tags[tags.length - 1].focus();
@@ -235,8 +235,8 @@ export class Many2ManyTagsField extends Component {
             return;
         }
         const hotkey = getActiveHotkey(ev);
-        const tagListEl = this.autoCompleteRef.el.previousElementSibling;
-        const tags = [...tagListEl.getElementsByClassName("badge")];
+        const autoCompleteParent = this.autoCompleteRef.el.parentElement;
+        const tags = [...autoCompleteParent.getElementsByClassName("badge")];
         const closestTag = ev.target.closest(".badge");
         const tagIndex = tags.indexOf(closestTag);
         const input = this.autoCompleteRef.el.querySelector(".o-autocomplete--input");

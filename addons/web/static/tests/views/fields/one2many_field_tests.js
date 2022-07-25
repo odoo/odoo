@@ -5947,7 +5947,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_field_many2many_tags .o_input",
+            ".o_field_many2many_tags .o_tags_input",
             "should display the line in editable mode"
         );
         assert.strictEqual(
@@ -6000,7 +6000,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_field_many2many_tags .o_input",
+            ".o_field_many2many_tags .o_tags_input",
             "should display the line in editable mode"
         );
         assert.strictEqual(
