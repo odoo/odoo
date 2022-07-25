@@ -196,7 +196,7 @@ class AccountMoveLine(models.Model):
         # Prevent unnecessary currency conversion that could be impacted by exchange rate
         # fluctuations
         if self.company_id.currency_id and amount and self.company_id.currency_id == order.currency_id:
-            return abs(amount / unit_amount)
+            return self.company_id.currency_id.round(abs(amount / unit_amount))
 
         price_unit = abs(amount / unit_amount)
         currency_id = self.company_id.currency_id
