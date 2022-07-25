@@ -322,6 +322,7 @@ QUnit.module("Search", (hooks) => {
 
         class Parent extends Component {
             setup() {
+                owl.useSubEnv({ config: {} });
                 this.searchState = useState({
                     resModel: "animal",
                     domain: [["type", "=", "carnivorous"]],
