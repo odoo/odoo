@@ -440,7 +440,7 @@
         }
 
         &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-            width: $o-kanban-small-record-width + 2*$o-kanban-group-padding;
+            flex-basis: $o-kanban-small-record-width + 2*$o-kanban-group-padding;
         }
     }
 
@@ -538,7 +538,7 @@
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
-        flex-basis: $o-kanban-small-record-width + 2*$o-kanban-group-padding;
+        flex: 0 0 $o-kanban-small-record-width + 2*$o-kanban-group-padding;
 
         .o_quick_create_folded {
             cursor: pointer;
