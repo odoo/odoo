@@ -80,6 +80,7 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: 'textarea[name="name"].tour_success_2',
     run: function () {} // check
-}]);
+}, ...tour.stepUtils.discardForm()
+]);
 
 });
