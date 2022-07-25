@@ -329,7 +329,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Enable Extra step",
-        trigger: 'a.dropdown-item label:contains("Extra Step Option")',
+        trigger: 'label.dropdown-item:contains("Extra Step Option")',
     },
     {
         content: "Open Dropdown for logout",

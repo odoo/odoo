@@ -187,12 +187,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         let action = await loadAction(3, actionParams);
         assert.verifySteps(["server loaded"]);
-        const baseContext = {
-            lang: "en",
-            tz: "taht",
-            uid: 7,
-        };
-        assert.deepEqual(action.context, { ...baseContext, ...actionParams });
+        assert.deepEqual(action.context, actionParams);
 
         // Modify the action in place
         action.context.additionalContext.some.deep.nested = "Nesta";
@@ -201,7 +196,7 @@ QUnit.module("ActionManager", (hooks) => {
         actionParams.additionalContext.some.deep.nested = "Marley";
         action = await loadAction(3, actionParams);
         assert.verifySteps([], "loaded from cache");
-        assert.deepEqual(action.context, { ...baseContext, ...actionParams });
+        assert.deepEqual(action.context, actionParams);
     });
 
     QUnit.test("no widget memory leaks when doing some action stuff", async function (assert) {

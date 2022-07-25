@@ -68,19 +68,29 @@
 
         .o_pivot_header_cell_closed {
             @include o-pivot-header-cell;
-            &::before {
+            &::after, &::before {
                 font-family: FontAwesome;
-                content: "";
                 margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
             }
         }
 
         .o_pivot_header_cell_opened {
             @include o-pivot-header-cell;
-            &::before {
+            &::after, &::before {
                 font-family: FontAwesome;
-                content: "";
                 margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
             }
         }
 

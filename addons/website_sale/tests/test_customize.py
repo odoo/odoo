@@ -54,6 +54,11 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             else:
                 ptav.price_extra = 50.4
 
+        # Update the pricelist currency regarding env.company_id currency_id in case company has changed currency with COA installation.
+        website = self.env['website'].get_current_website()
+        pricelist = website.get_current_pricelist()
+        pricelist.write({'currency_id': self.env.company.currency_id.id})
+
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
@@ -312,3 +317,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config.execute()
 
         self.start_tour("/", 'shop_list_view_b2c', login="admin")
+
+    def test_07_editor_shop(self):
+        self.start_tour("/", 'shop_editor', login="admin")

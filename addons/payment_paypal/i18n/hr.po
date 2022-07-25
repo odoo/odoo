@@ -3,18 +3,19 @@
 # 	* payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
+# Bole <bole@dajmi5.com>, 2022
+# Martin Trigaux, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,25 +32,15 @@ msgid ""
 msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
+#: code:addons/payment_paypal/models/payment_acquirer.py:0
 #, python-format
-msgid "Add your Paypal account to Odoo"
+msgid "Add your PayPal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Email"
 msgstr "E-pošta"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
-msgid "Fixed domestic fees"
-msgstr "Fiksne domaće naknade"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
-msgid "Fixed international fees"
-msgstr "Fiksne međunarodne naknade"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -62,18 +53,41 @@ msgid ""
 msgstr ""
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
 msgid "How to configure your paypal account?"
 msgstr "Kako podesiti vaš PayPal račun?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid "Merchant Account ID"
+msgstr "ID računa trgovca"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid "Notification data were not acknowledged."
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
+msgstr "PDT token identiteta"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
 msgstr ""
 
 #. module: payment_paypal
@@ -82,11 +96,9 @@ msgid "Payment Acquirer"
 msgstr "Stjecatelj plaćanja"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid ""
-"Payment Data Transfer allows you to receive notification of successful "
-"payments as they are made."
-msgstr ""
+#: model:ir.model,name:payment_paypal.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Načini plaćanja"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -94,6 +106,7 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_paypal
+#: model:account.payment.method,name:payment_paypal.payment_method_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr "Paypal"
@@ -104,16 +117,23 @@ msgid "Paypal Instant Payment Notification"
 msgstr "Paypal obavjest o trenutnom plaćanju"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
-#, python-format
-msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
-"Paypal: u primljenim podacima nedostaje referenca (%s) ili txn_id (%s)"
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Davatelj "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"Received unrecognized authentication check response code: received %s, "
+"expected VERIFIED or INVALID."
+msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -121,29 +141,22 @@ msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid ""
-"The Merchant ID is used to ensure communications coming from Paypal are "
-"valid and secured."
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
-"ID trgovca se koristi da osigura komunikaciju koja dolazi od PayPal-a "
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
-msgid "Transaction type"
-msgstr "Tip transakcije"
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
+msgid "This has no use in Odoo except for debugging."
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
 msgstr "Koristi IPN"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
-msgid "Variable domestic fees (in percents)"
-msgstr "Domaća varijabilna naknada (u postocima)"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
-msgid "Variable international fees (in percents)"
-msgstr "Međunarodna varijabilna naknada (u postocima)"

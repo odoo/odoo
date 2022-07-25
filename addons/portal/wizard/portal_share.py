@@ -62,7 +62,7 @@ class PortalShare(models.TransientModel):
         return self.env.ref('mail.mt_note')
 
     def _send_public_link(self, note, partners=None):
-        if not partners:
+        if partners is None:
             partners = self.partner_ids
         for partner in partners:
             share_link = self.resource_ref.get_base_url() + self.resource_ref._get_share_url(redirect=True, pid=partner.id)
@@ -79,7 +79,7 @@ class PortalShare(models.TransientModel):
             self = self.with_context(lang=saved_lang)
 
     def _send_signup_link(self, note, partners=None):
-        if not partners:
+        if partners is None:
             partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
         for partner in partners:
             #  prepare partner for signup and send singup url with redirect url

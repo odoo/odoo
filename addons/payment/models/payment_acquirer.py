@@ -157,7 +157,7 @@ class PaymentAcquirer(models.Model):
 
         :return: None
         """
-        self.write({
+        self.update({
             'show_credentials_page': True,
             'show_allow_tokenization': True,
             'show_payment_icon_ids': True,

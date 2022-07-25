@@ -207,6 +207,8 @@ class Page(models.Model):
             if not pages_linked_to_iruiview and not page.view_id.inherit_children_ids:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
                 page.view_id.unlink()
+        # Make sure website._get_menu_ids() will be recomputed
+        self.clear_caches()
         return super(Page, self).unlink()
 
     def write(self, vals):
@@ -218,6 +220,15 @@ class Page(models.Model):
     def get_website_meta(self):
         self.ensure_one()
         return self.view_id.get_website_meta()
+
+    @classmethod
+    def _get_cached_blacklist(cls):
+        return ('data-snippet="s_website_form"', 'data-no-page-cache=', )
+
+    def _can_be_cached(self, response):
+        """ return False if at least one blacklisted's word is present in content """
+        blacklist = self._get_cached_blacklist()
+        return not any(black in str(response) for black in blacklist)
 
     def _get_cache_key(self, req):
         # Always call me with super() AT THE END to have cache_key_expr appended as last element
@@ -254,7 +265,7 @@ class Page(models.Model):
         fetch_fields = ['id', 'name', 'url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'url', 'type': 'text'},
+            'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('arch_db')

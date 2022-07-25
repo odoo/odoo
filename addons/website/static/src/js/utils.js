@@ -351,6 +351,19 @@ async function svgToPNG(src) {
     }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
 }
 
+/**
+ * Generates a Google Maps URL based on the given parameter.
+ *
+ * @param {DOMStringMap} dataset
+ * @returns {string} a Google Maps URL
+ */
+function generateGMapLink(dataset) {
+    return 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
+            + '&t=' + encodeURIComponent(dataset.mapType)
+            + '&z=' + encodeURIComponent(dataset.mapZoom)
+            + '&ie=UTF8&iwloc=&output=embed';
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -359,5 +372,6 @@ return {
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
     svgToPNG: svgToPNG,
+    generateGMapLink: generateGMapLink,
 };
 });

@@ -352,6 +352,8 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -360,6 +362,8 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
 
@@ -371,6 +375,8 @@ class Import(models.TransientModel):
             if ext in EXTENSIONS:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
+                except ValueError as e:
+                    raise e
                 except Exception:
                     _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
 
@@ -1424,7 +1430,8 @@ class Import(models.TransientModel):
                 for field in split_fields:
                     if field != target_field:  # if not on the last hierarchy level, retarget the model
                         target_model = self.env[target_model][field]._name
-                field_type = self.env[target_model].fields_get().get(target_field, {}).get('type', '')
+                field = self.env[target_model]._fields.get(target_field)
+                field_type = field.type if field else ''
 
                 # merge data if necessary
                 if field_type == 'char':

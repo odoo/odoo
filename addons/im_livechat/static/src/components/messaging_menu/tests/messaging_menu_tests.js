@@ -15,12 +15,13 @@ QUnit.module('messaging_menu_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            let { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
-                hasMessagingMenu: true,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -38,7 +39,8 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         livechat_operator_id: this.data.currentPartnerId,
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
-    await this.start();
+    const { createMessagingMenuComponent } = await this.start();
+    await createMessagingMenuComponent();
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu',

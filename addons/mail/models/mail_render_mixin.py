@@ -127,6 +127,23 @@ class MailRenderMixin(models.AbstractModel):
         # allow specifying rendering options directly from field when using the render mixin
         return name in ['render_engine', 'render_options'] or super()._valid_field_parameter(field, name)
 
+    @api.model_create_multi
+    def create(self, values_list):
+        record = super().create(values_list)
+        if self._unrestricted_rendering:
+            # If the rendering is unrestricted (e.g. mail.template),
+            # check the user is part of the mail editor group to create a new template if the template is dynamic
+            record._check_access_right_dynamic_template()
+        return record
+
+    def write(self, vals):
+        super().write(vals)
+        if self._unrestricted_rendering:
+            # If the rendering is unrestricted (e.g. mail.template),
+            # check the user is part of the mail editor group to modify a template if the template is dynamic
+            self._check_access_right_dynamic_template()
+        return True
+
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
@@ -162,7 +179,14 @@ class MailRenderMixin(models.AbstractModel):
         _sub_relative2absolute.base_url = base_url
         html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
-        html = re.sub(r"""(<[^>]+\bstyle="[^"]+\burl\('?)(/[^/'][^'")]+)""", _sub_relative2absolute, html)
+        html = re.sub(re.compile(
+            r"""( # Group 1: element up to url in style
+                <[^>]+\bstyle=" # Element with a style attribute
+                [^"]+\burl\( # Style attribute contains "url(" style
+                (?:&\#34;|'|&quot;)?) # url style may start with (escaped) quote: capture it
+            ( # Group 2: url itself
+                /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
+        )""", re.VERBOSE), _sub_relative2absolute, html)
 
         return wrapper(html)
 
@@ -212,6 +236,46 @@ class MailRenderMixin(models.AbstractModel):
             """).format(preview_markup)
             return tools.prepend_html_content(html, html_preview)
         return html
+
+    # ------------------------------------------------------------
+    # SECURITY
+    # ------------------------------------------------------------
+
+    def _is_dynamic(self):
+        for template in self.sudo():
+            for fname, field in template._fields.items():
+                engine = getattr(field, 'render_engine', 'inline_template')
+                if engine in ('qweb', 'qweb_view'):
+                    if self._is_dynamic_template_qweb(template[fname]):
+                        return True
+                else:
+                    if self._is_dynamic_template_inline_template(template[fname]):
+                        return True
+        return False
+
+    @api.model
+    def _is_dynamic_template_qweb(self, template_src):
+        if template_src:
+            try:
+                node = html.fragment_fromstring(template_src, create_parent='div')
+                self.env["ir.qweb"]._compile(node, options={'raise_on_code': True})
+            except QWebCodeFound:
+                return True
+        return False
+
+    @api.model
+    def _is_dynamic_template_inline_template(self, template_txt):
+        if template_txt:
+            template_instructions = parse_inline_template(str(template_txt))
+            if len(template_instructions) > 1 or template_instructions[0][1]:
+                return True
+        return False
+
+    def _check_access_right_dynamic_template(self):
+        if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._is_dynamic():
+            group = self.env.ref('mail.group_mail_template_editor')
+            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
@@ -269,8 +333,11 @@ class MailRenderMixin(models.AbstractModel):
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = self.env['ir.qweb']._render(html.fragment_fromstring(
-                    template_src, create_parent='div'), variables, raise_on_code=is_restricted)
+                render_result = self.env['ir.qweb']._render(
+                    html.fragment_fromstring(template_src, create_parent='div'),
+                    variables,
+                    raise_on_code=is_restricted,
+                )
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
                 render_result = render_result[5:-6]
             except QWebCodeFound:

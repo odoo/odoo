@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { link } from '@mail/model/model_field_command';
+import { insertAndReplace, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
-    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
@@ -15,23 +14,14 @@ QUnit.module('thread_view_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        /**
-         * @param {mail.thread_view} threadView
-         * @param {Object} [otherProps={}]
-         */
-        this.createThreadViewComponent = async (threadView, otherProps = {}) => {
-            const target = this.widget.el;
-            const props = Object.assign({ threadViewLocalId: threadView.localId }, otherProps);
-            await createRootMessagingComponent(this, "ThreadView", { props, target });
-        };
-
         this.start = async params => {
-            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { afterEvent, components, env, widget } = res;
             this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -55,16 +45,17 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         id: 20,
         members: [this.data.currentPartnerId, 11],
     }];
-    await this.start();
+    const { createThreadViewComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
     const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
+        qunitTest: insertAndReplace(),
         thread: link(thread),
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    await createThreadViewComponent(threadViewer.threadView);
     assert.containsOnce(
         document.body,
         '.o_ThreadView_outOfOffice',

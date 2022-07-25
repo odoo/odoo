@@ -318,16 +318,12 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_livechat_open: false,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_livechat_open: false,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        }]);
     });
     assert.containsNone(
         document.body,
@@ -368,16 +364,12 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", "res.partner", this.messaging.currentPartner.id],
-            {
-                type: "res.users_settings_changed",
-                payload: {
-                    is_discuss_sidebar_category_livechat_open: true,
-                },
+        this.env.services.bus_service.trigger('notification', [{
+            type: "res.users.settings/changed",
+            payload: {
+                is_discuss_sidebar_category_livechat_open: true,
             },
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+        }]);
     });
     assert.containsOnce(
         document.body,

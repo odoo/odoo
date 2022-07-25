@@ -250,7 +250,7 @@ class PrinterDriver(Driver):
         title = commands['title'] % b'IoTBox Status'
         self.print_raw(commands['center'] + title + b'\n' + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + commands['cut'])
 
-    def open_cashbox(self):
+    def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:

@@ -64,14 +64,15 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
 
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() => {
-        const typingData = {
-            info: 'typing_status',
-            is_typing: true,
-            partner_id: this.messaging.publicPartners[0].id,
-            partner_name: this.messaging.publicPartners[0].name,
-        };
-        const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel.partner/typing_status',
+            payload: {
+                channel_id: 20,
+                is_typing: true,
+                partner_id: this.messaging.publicPartners[0].id,
+                partner_name: this.messaging.publicPartners[0].name,
+            },
+        }]);
     });
     assert.containsOnce(
         document.body,

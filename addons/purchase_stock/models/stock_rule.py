@@ -4,10 +4,11 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from itertools import groupby
+from odoo.tools import float_compare
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
-from odoo.tools import groupby
 
 
 class StockRule(models.Model):
@@ -48,7 +49,6 @@ class StockRule(models.Model):
 
             # Get the schedule date in order to find a valid seller
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
-            schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
             supplier = False
             if procurement.values.get('supplierinfo_id'):
@@ -57,7 +57,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=schedule_date.date(),
+                    date=procurement_date_planned.date(),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
@@ -93,15 +93,17 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
-                # We need a rule to generate the PO. However the rule generated
-                # the same domain for PO and the _prepare_purchase_order method
-                # should only uses the common rules's fields.
-                vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
-                # The company_id is the same for all procurements since
-                # _make_po_get_domain add the company in the domain.
-                # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
-                # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
-                po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
+                if positive_values:
+                    # We need a rule to generate the PO. However the rule generated
+                    # the same domain for PO and the _prepare_purchase_order method
+                    # should only uses the common rules's fields.
+                    vals = rules[0]._prepare_purchase_order(company_id, origins, positive_values)
+                    # The company_id is the same for all procurements since
+                    # _make_po_get_domain add the company in the domain.
+                    # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
+                    # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
+                    po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
@@ -115,9 +117,9 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id).sorted(lambda l: l.product_id.id), key=lambda l: l.product_id.id)
             for product, po_lines in grouped_po_lines:
-                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
+                po_lines_by_product[product] = self.env['purchase.order.line'].concat(*list(po_lines))
             po_line_values = []
             for procurement in procurements:
                 po_lines = po_lines_by_product.get(procurement.product_id.id, self.env['purchase.order.line'])
@@ -131,6 +133,9 @@ class StockRule(models.Model):
                         procurement.values, po_line)
                     po_line.write(vals)
                 else:
+                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                        # If procurement contains negative quantity, don't create a new line that would contain negative qty
+                        continue
                     # If it does not exist a PO line for current procurement.
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
@@ -139,6 +144,11 @@ class StockRule(models.Model):
                         procurement.product_id, procurement.product_qty,
                         procurement.product_uom, procurement.company_id,
                         procurement.values, po))
+                    # Check if we need to advance the order date for the new line
+                    order_date_planned = procurement.values['date_planned'] - relativedelta(
+                        days=procurement.values['supplier'].delay)
+                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
+                        po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
     def _get_lead_days(self, product, **values):
@@ -177,6 +187,12 @@ class StockRule(models.Model):
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
+    def _get_procurements_to_merge_sorted(self, procurement):
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_cancel'],\
+            procurement.values.get('product_description_variants'),\
+            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
+
+    @api.model
     def _get_procurements_to_merge(self, procurements):
         """ Get a list of procurements values and create groups of procurements
         that would use the same purchase order line.
@@ -184,7 +200,11 @@ class StockRule(models.Model):
         sorted).
         return list: procurements requests grouped by their product_id.
         """
-        return [pro_g for __, pro_g in groupby(procurements, key=self._get_procurements_to_merge_groupby)]
+        procurements_to_merge = []
+
+        for k, procurements in groupby(sorted(procurements, key=self._get_procurements_to_merge_sorted), key=self._get_procurements_to_merge_groupby):
+            procurements_to_merge.append(list(procurements))
+        return procurements_to_merge
 
     @api.model
     def _merge_procurements(self, procurements_to_merge):
@@ -255,7 +275,6 @@ class StockRule(models.Model):
         dates = [fields.Datetime.from_string(value['date_planned']) for value in values]
 
         procurement_date_planned = min(dates)
-        schedule_date = (procurement_date_planned - relativedelta(days=company_id.po_lead))
         supplier_delay = max([int(value['supplier'].delay) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
@@ -264,7 +283,7 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].name
-        purchase_date = schedule_date - relativedelta(days=supplier_delay)
+        purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
@@ -299,8 +318,8 @@ class StockRule(models.Model):
             ('user_id', '=', False),
         )
         if values.get('orderpoint_id'):
-            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
-            delta_days = int(self.env['ir.config_parameter'].get_param('purchase_stock.delta_days_merge') or 0)
+            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
+            delta_days = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge') or 0)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
                 ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))
@@ -313,3 +332,12 @@ class StockRule(models.Model):
         res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
         return res
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+        if values.get('supplierinfo_name'):
+            move_values['restrict_partner_id'] = values['supplierinfo_name'].id
+        elif values.get('supplierinfo_id'):
+            partner = values['supplierinfo_id'].name
+            move_values['restrict_partner_id'] = partner.id
+        return move_values

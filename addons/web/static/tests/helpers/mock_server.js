@@ -406,8 +406,6 @@ export class MockServer {
                 return this.mockLoadAction(args);
             case "/web/dataset/search_read":
                 return this.mockSearchReadController(args);
-            case "/web/dataset/search":
-                return this.mockSearchController(args);
         }
         if (
             route.indexOf("/web/image") >= 0 ||
@@ -1530,7 +1528,7 @@ export class MockServer {
             sort: kwargs.order || args[4],
             context: kwargs.context,
         });
-        return result.records;
+        return result.records.map((r) => r.id);
     }
 
     /**

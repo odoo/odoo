@@ -55,6 +55,7 @@
 <!--        </xpath>-->
 
         <xpath expr="//div[@class='pos-receipt-contact']" position="replace">
+
                 <div class="pos-receipt-contact" style="font-size: 75%;">
 <!--                    THE GOOD MEAT-->
 <!--Pilmico Animal Nutrition Corporation Suite 1-B PARC Plaza Bldg Libis QC-->
@@ -92,7 +93,10 @@
 <!--                        </div>-->
 <!--                    </t>-->
                 </div>
-
+                <t t-if="receipt.x_receipt_printed">
+                    <br/>
+                    <div style="text-align:center"><b>* * *  REPRINT  * * *</b></div>
+                </t>
                 <div class="date_and_time" style="font-size: 75%;">
                     <div style="margin-top: 2%;overflow: hidden;">========================================================</div>
                     <div style="width:100%;">

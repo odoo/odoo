@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.microsoft_outlook</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="emails" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box" id="microsoft_outlook_setting"
+                        attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Outlook Credentials</span>
+                            <div class="text-muted">
+                                Send and receive email with your Outlook account.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16" id="outlook_client_identifier">
+                                    <label string="Client ID" for="microsoft_outlook_client_identifier"
+                                        class="col-lg-3 o_light_label"/>
+                                    <field name="microsoft_outlook_client_identifier" class="ml-2"/>
+                                </div>
+                                <div class="row mt16" id="outlook_client_secret">
+                                    <label string="Client Secret" for="microsoft_outlook_client_secret"
+                                        class="col-lg-3 o_light_label"/>
+                                    <field name="microsoft_outlook_client_secret" class="ml-2"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

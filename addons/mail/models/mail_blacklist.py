@@ -96,7 +96,7 @@ class MailBlackList(models.Model):
 
     def mail_action_blacklist_remove(self):
         return {
-            'name': 'Are you sure you want to unblacklist this Email Address?',
+            'name': _('Are you sure you want to unblacklist this Email Address?'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.blacklist.remove',

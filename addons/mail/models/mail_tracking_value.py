@@ -71,7 +71,7 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'selection':
             values.update({
-                'old_value_char': initial_value and dict(col_info['selection'])[initial_value] or '',
+                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
                 'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
             })
         elif col_info['type'] == 'many2one':

@@ -44,6 +44,7 @@ var Tip = Widget.extend({
                 x: 50,
                 y: 50,
             },
+            content: _t("Click here to go to the next step."),
             scrollContent: _t("Scroll to reach the next step."),
         });
         this.position = {
@@ -58,7 +59,7 @@ var Tip = Widget.extend({
      * Attaches the tip to the provided $anchor and $altAnchor.
      * $altAnchor is an alternative trigger that can consume the step. The tip is
      * however only displayed on the $anchor.
-     * 
+     *
      * Note that the returned promise stays pending if the Tip widget was
      * destroyed in the meantime.
      *
@@ -115,6 +116,10 @@ var Tip = Widget.extend({
         this.$el.toggleClass('d-none', !!this.info.hidden);
         this.el.classList.add('o_tooltip_visible');
         core.bus.on("resize", this, _.debounce(function () {
+            if (this.isDestroyed()) {
+                // Because of the debounce, destroy() might have been called in the meantime.
+                return;
+            }
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             } else {
@@ -165,14 +170,25 @@ var Tip = Widget.extend({
             this._setupAnchor($anchor, $altAnchor);
         }
         this._bind_anchor_events();
-        this._delegateEvents();
         if (!this.$el) {
             // Ideally this case should not happen but this is still possible,
             // as update may be called before the `start` method is called.
             // The `start` method is calling _updatePosition too anyway.
             return;
         }
+        this._delegateEvents();
         this._updatePosition(true);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean} true if tip is visible
+     */
+    isShown() {
+        return this.el && !this.info.hidden;
     },
 
     //--------------------------------------------------------------------------
@@ -203,6 +219,11 @@ var Tip = Widget.extend({
      */
     _updatePosition: function (forceReposition = false) {
         if (this.info.hidden) {
+            return;
+        }
+        if (this.isDestroyed()) {
+            // TODO This should not be needed if the chain of events leading
+            // here was fully cancelled by destroy().
             return;
         }
         let halfHeight = 0;
@@ -321,7 +342,7 @@ var Tip = Widget.extend({
                     const {top} = props;
                     let {left} = props;
                     const anchorEl = this.$anchor[0];
-                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName)) {
+                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName) && anchorEl.hasChildNodes()) {
                         const textContainerWidth = anchorEl.getBoundingClientRect().width;
                         const textNode = anchorEl.firstChild;
                         const range = document.createRange();
@@ -430,6 +451,10 @@ var Tip = Widget.extend({
         }
         $consumeEventAnchors.on(consumeEvent + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
+                if (this.info.consumeVisibleOnly && !this.isShown()) {
+                    // Do not consume non-displayed tips.
+                    return;
+                }
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
             }

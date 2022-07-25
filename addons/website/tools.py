@@ -93,7 +93,7 @@ def MockRequest(
         env=env,
         httprequest=Mock(
             host='localhost',
-            path='/hello/',
+            path='/hello',
             app=odoo.http.root,
             environ={'REMOTE_ADDR': '127.0.0.1'},
             cookies=cookies or {},

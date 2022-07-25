@@ -7,6 +7,7 @@ from . import ir_asset
 from . import ir_attachment
 from . import ir_http
 from . import ir_model
+from . import ir_model_data
 from . import ir_module_module
 from . import ir_qweb
 from . import ir_qweb_fields

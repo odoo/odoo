@@ -36,7 +36,7 @@ class ResConfigSettings(models.TransientModel):
     ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_dhl = fields.Boolean("DHL USA Connector")
+    module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
@@ -75,6 +75,10 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
+
+        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
+        if send_invoice_cron:
+            send_invoice_cron.active = self.automatic_invoice
 
     @api.onchange('use_quotation_validity_days')
     def _onchange_use_quotation_validity_days(self):

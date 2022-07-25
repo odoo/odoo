@@ -46,6 +46,7 @@ class TestSessionInfo(common.HttpCase):
             str(company.id): {
                 'id': company.id,
                 'name': company.name,
+                'sequence': company.sequence,
             } for company in self.companies
         }
         expected_user_companies = {

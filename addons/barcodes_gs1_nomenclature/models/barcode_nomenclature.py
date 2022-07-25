@@ -15,8 +15,8 @@ class BarcodeNomenclature(models.Model):
         string="Is GS1 Nomenclature",
         help="This Nomenclature use the GS1 specification, only GS1-128 encoding rules is accepted is this kind of nomenclature.")
     gs1_separator_fnc1 = fields.Char(
-        string="FNC1 Seperator", trim=False,
-        help="Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS> ASCII 29 char). The seperator must not match the begin/end of any related rules pattern.")
+        string="FNC1 Separator", trim=False,
+        help="Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS> ASCII 29 char). The separator must not match the begin/end of any related rules pattern.")
 
     @api.constrains('gs1_separator_fnc1')
     def _check_pattern(self):
@@ -25,7 +25,7 @@ class BarcodeNomenclature(models.Model):
                 try:
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
-                    raise ValidationError(_("The FNC1 Seperator Alternative is not a valid Regex: ") + str(error))
+                    raise ValidationError(_("The FNC1 Separator Alternative is not a valid Regex: ") + str(error))
 
     @api.model
     def gs1_date_to_date(self, gs1_date):

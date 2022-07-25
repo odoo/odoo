@@ -26,6 +26,9 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.searchWordInput.el.value = '';
             this.trigger('clear-search');
         }
+        get displayCategImages() {
+            return this.env.pos.config.iface_display_categ_images && !this.env.isMobile;
+        }
         updateSearch(event) {
             this.trigger('update-search', event.target.value);
             if (event.key === 'Enter') {
@@ -39,6 +42,9 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.trigger('switch-category', 0);
             this.trigger('update-search', productName);
         }
+        _toggleMobileSearchbar() {
+            this.trigger('toggle-mobile-searchbar');
+        }
         async loadProductFromDB() {
             if(!this.searchWordInput.el.value)
                 return;
@@ -47,7 +53,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 let ProductIds = await this.rpc({
                     model: 'product.product',
                     method: 'search',
-                    args: [[['name', 'ilike', this.searchWordInput.el.value + "%"]]],
+                    args: [['&', ['name', 'ilike', this.searchWordInput.el.value + "%"], ['available_in_pos', '=', true]]],
                     context: this.env.session.user_context,
                 });
                 if(!ProductIds.length) {
@@ -56,7 +62,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                         body: this.env._t("No product found"),
                     });
                 } else {
-                    await this.env.pos._addProducts(ProductIds);
+                    await this.env.pos._addProducts(ProductIds, false);
                 }
                 this.trigger('update-product-list');
             } catch (error) {

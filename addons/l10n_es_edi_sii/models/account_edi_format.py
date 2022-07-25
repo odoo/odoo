@@ -5,7 +5,8 @@ from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
-from odoo import fields, models, _
+from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
 import math
@@ -13,8 +14,11 @@ import json
 import requests
 import zeep
 
+from odoo import models, _
+
 
 # Custom patches to perform the WSDL requests.
+
 EUSKADI_CIPHERS = f"{DEFAULT_CIPHERS}:!DH"
 
 
@@ -34,17 +38,16 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         # still made without checking temporary files exist.
         super().cert_verify(conn, url, verify, None)
         conn.cert_file = cert
-        conn.key_file = cert
+        conn.key_file = None
 
     def get_connection(self, url, proxies=None):
         # OVERRIDE
         # Patch the OpenSSLContext to decode the certificate in-memory.
         conn = super().get_connection(url, proxies=proxies)
-
         context = conn.conn_kw['ssl_context']
 
         def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):
-            cert_file, key_file, _certificate = l10n_es_odoo_certificate._decode_certificate()
+            cert_file, key_file, dummy = l10n_es_odoo_certificate.sudo()._decode_certificate()
             cert_obj = load_certificate(FILETYPE_PEM, cert_file)
             pkey_obj = load_privatekey(FILETYPE_PEM, key_file)
 
@@ -226,7 +229,7 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
-        elif partner.country_id.code in eu_country_codes:
+        elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
         else:
@@ -298,10 +301,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                if not com_partner.country_id or com_partner.country_id.code == 'ES':
+                country_code = com_partner.country_id.code
+                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
                 else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -348,6 +352,11 @@ class AccountEdiFormat(models.Model):
                         invoice_node.setdefault('TipoDesglose', {})
                         invoice_node['TipoDesglose'].setdefault('DesgloseTipoOperacion', {})
                         invoice_node['TipoDesglose']['DesgloseTipoOperacion']['Entrega'] = tax_details_info_consu_vals['tax_details_info']
+                    if not invoice_node.get('TipoDesglose'):
+                        raise UserError(_(
+                            "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                            "\n".join(invoice.line_ids.tax_ids.mapped('name'))
+                        ))
 
                     invoice_node['ImporteTotal'] = round(sign * (
                         tax_details_info_service_vals['tax_details']['base_amount']
@@ -468,24 +477,24 @@ class AccountEdiFormat(models.Model):
         if company.l10n_es_edi_test_env and connection_vals.get('test_url'):
             serv._binding_options['address'] = connection_vals['test_url']
 
-        error_msg = None
+        msg = ''
         try:
             if invoices[0].is_sale_document():
                 res = serv.SuministroLRFacturasEmitidas(header, info_list)
             else:
                 res = serv.SuministroLRFacturasRecibidas(header, info_list)
         except requests.exceptions.SSLError as error:
-            error_msg = _("The SSL certificate could not be validated.")
+            msg = _("The SSL certificate could not be validated.")
         except zeep.exceptions.Error as error:
-            error_msg = _("Networking error:\n%s", error)
+            msg = _("Networking error:\n%s") % error
         except Exception as error:
-            error_msg = str(error)
-
-        if error_msg:
-            return {inv: {
-                'error': error_msg,
-                'blocking_level': 'warning',
-            } for inv in invoices}
+            msg = str(error)
+        finally:
+            if msg:
+                return {inv: {
+                    'error': msg,
+                    'blocking_level': 'warning',
+                } for inv in invoices}
 
         # Process response.
 
@@ -559,6 +568,11 @@ class AccountEdiFormat(models.Model):
     # EDI OVERRIDDEN METHODS
     # -------------------------------------------------------------------------
 
+    def _get_invoice_edi_content(self, move):
+        if self.code != 'es_sii':
+            return super()._get_invoice_edi_content(move)
+        return json.dumps(self._l10n_es_edi_get_invoices_info(move)).encode()
+
     def _is_required_for_invoice(self, invoice):
         # OVERRIDE
         if self.code != 'es_sii':
@@ -592,8 +606,6 @@ class AccountEdiFormat(models.Model):
 
         if not move.company_id.vat:
             res.append(_("VAT number is missing on company %s", move.company_id.display_name))
-        if not move.partner_id.vat:
-            res.append(_("VAT number needs to be configured on the partner %s", move.partner_id.display_name))
         for line in move.invoice_line_ids.filtered(lambda line: not line.display_type):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
             recargo_count = taxes.mapped('l10n_es_type').count('recargo')
@@ -662,5 +674,5 @@ class AccountEdiFormat(models.Model):
                     'res_model': inv._name,
                     'res_id': inv.id,
                 })
-                res[inv] = {'attachment': attachment}
+                res[inv]['attachment'] = attachment
         return res

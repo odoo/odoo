@@ -47,7 +47,12 @@ tour.register('sale_timesheet_tour', {
     run: 'click',
 }, {
     trigger: 'button.o_form_button_save',
+    extra_trigger: '.o_form_view:not(:has(button[name="action_confirm"]:not(.o_invisible_modifier)))',
     content: 'Click on Save button to save the Sales Order.',
+    run: 'click',
+}, {
+    trigger: '.o_form_readonly',
+    content: 'Save is done and form is reloaded.',
     run: 'click',
 }, tour.stepUtils.toggleHomeMenu(),
 ...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),

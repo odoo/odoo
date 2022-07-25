@@ -354,4 +354,24 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/report/check_wkhtmltopdf", "/report/download"]);
         testUtils.mock.unpatch(ReportClientAction);
     });
+
+    QUnit.test("url is valid", async (assert) => {
+        assert.expect(2);
+
+        patchWithCleanup(ReportClientAction.prototype, {
+            init() {
+                this._super(...arguments);
+                this.report_url = "about:blank";
+            },
+        });
+
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, 12); // 12 is a html report action in serverData
+
+        const hash = webClient.router.current.hash;
+        // used to put report.client_action in the url
+        assert.strictEqual(hash.action === "report.client_action", false);
+        assert.strictEqual(hash.action === 12, true);
+    });
 });

@@ -16,17 +16,14 @@ from odoo.addons.base.models.res_partner import _tz_get
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
 
-def float_to_time(hours, moment='am', tz=None):
+def float_to_time(hours, moment='am'):
     """ Convert a number of hours into a time object. """
     if hours == 12.0 and moment == 'pm':
         return time.max
     fractional, integral = math.modf(hours)
     if moment == 'pm':
         integral += 12
-    res = time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
-    if tz:
-        res = res.replace(tzinfo=pytz.timezone(tz))
-    return res
+    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
 
 def time_to_float(t):
     return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
@@ -171,6 +168,14 @@ class LunchSupplier(models.Model):
             }
             for _ in range(len(vals_list))
         ])
+        self.env['ir.model.data'].sudo().create([{
+            'name': f'lunch_supplier_cron_sa_{cron.ir_actions_server_id.id}',
+            'module': 'lunch',
+            'res_id': cron.ir_actions_server_id.id,
+            'model': 'ir.actions.server',
+            # noupdate is set to true to avoid to delete record at module update
+            'noupdate': True,
+        } for cron in crons])
         for vals, cron in zip(vals_list, crons):
             vals['cron_id'] = cron.id
 
@@ -195,8 +200,10 @@ class LunchSupplier(models.Model):
 
     def unlink(self):
         crons = self.cron_id.sudo()
+        server_actions = crons.ir_actions_server_id
         super().unlink()
         crons.unlink()
+        server_actions.unlink()
 
     def toggle_active(self):
         """ Archiving related lunch product """

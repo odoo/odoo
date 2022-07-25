@@ -9,7 +9,7 @@ import time
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 import odoo
-from odoo.tools import topological_sort, unique
+from odoo.tools import config, topological_sort, unique
 from odoo.netsvc import init_logger
 from odoo.tests import standalone_tests
 import odoo.tests.loader
@@ -45,6 +45,12 @@ def cycle(db_name, module_id, module_name):
     install(db_name, module_id, module_name)
 
 
+class CheckAddons(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        self.values = namespace
+        config._check_addons_path(self, option_string, values, self)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Script for testing the install / uninstall / reinstall cycle of Odoo modules")
@@ -57,7 +63,7 @@ def parse_args():
         help="Comma-separated list of modules to skip (they will only be installed)")
     parser.add_argument("--resume-at", "-r", type=str,
         help="Skip modules (only install) up to the specified one in topological order")
-    parser.add_argument("--addons-path", "-p", type=str,
+    parser.add_argument("--addons-path", "-p", type=str, action=CheckAddons,
         help="Comma-separated list of paths to directories containing extra Odoo modules")
     parser.add_argument("--uninstall", "-U", type=str,
         help="Comma-separated list of modules to uninstall/reinstall")

@@ -46,7 +46,7 @@
 }
 
 .pos .close-pos-popup .payment-methods-overview {
-    max-height: 370px;
+    max-height: 320px;
     overflow: auto;
 }
 
@@ -104,7 +104,7 @@
     text-align: left;
 }
 
-.pos .close-pos-popup .accept-closing.invisible {
+.pos .close-pos-popup .invisible {
     visibility: hidden;
 }
 
@@ -112,9 +112,41 @@
     cursor: pointer;
 }
 
+.pos .close-pos-popup .accept-closing label.disabled {
+    cursor: default;
+    color: grey;
+}
+
 .pos .close-pos-popup #accept {
     all: revert;
     margin-right: 10px;
+}
+
+.pos .close-pos-popup .accept-closing .warning {
+    color: red;
+    font-style: italic;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .close-pos-popup {
+        overflow-y: auto;
+    }
+
+    .pos .close-pos-popup .footer {
+        display: flex;
+        flex-direction: column;
+        height: unset;
+    }
+
+    .pos .close-pos-popup .footer .button {
+        width: 90% !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pos .close-pos-popup .footer .button:last-of-type {
+        margin-bottom: 10px;
+    }
 }
 
 .pos .close-pos-popup .footer .button {

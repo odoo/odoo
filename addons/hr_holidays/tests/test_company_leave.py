@@ -297,7 +297,9 @@ class TestCompanyLeave(TransactionCase):
             'employee_id': employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 3, 29),
+            'date_from': datetime(2020, 3, 29, 7, 0, 0),
             'request_date_to': date(2020, 4, 1),
+            'date_to': datetime(2020, 4, 1, 19, 0, 0),
             'number_of_days': 3,
         } for employee in employees[0:15]])
         leaves._compute_date_from_to()
@@ -315,7 +317,7 @@ class TestCompanyLeave(TransactionCase):
         })
         company_leave._compute_date_from_to()
 
-        with self.assertQueryCount(__system__=870, admin=865):
+        with self.assertQueryCount(__system__=773, admin=867):  # 770 community
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()

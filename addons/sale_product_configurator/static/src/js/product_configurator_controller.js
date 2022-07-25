@@ -259,6 +259,16 @@ var ProductConfiguratorFormController = FormController.extend({
     },
 
     /**
+     * Remove "d-none" to allow other modals to display
+     *
+     * @override
+     */
+    destroy: function () {
+        $('.o_dialog_container').removeClass('d-none');
+        this._super.apply(this, arguments);
+    },
+
+    /**
      * Update product configurator form
      * when quantity is updated in the optional products window
      *

@@ -51,7 +51,7 @@ class AccountJournal(models.Model):
                 '99': []
             },
             'received': {
-                '1': ['A', 'B', 'C', 'M', 'I'],
+                '1': ['A', 'B', 'C', 'E', 'M', 'I'],
                 '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
@@ -83,7 +83,6 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
-        liq_product_codes = ['60', '61']
         if self.type != 'sale':
             return []
         elif self.l10n_ar_afip_pos_system == 'II_IM':
@@ -91,7 +90,7 @@ class AccountJournal(models.Model):
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
         elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
-            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + liq_product_codes
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
         elif self.l10n_ar_afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code

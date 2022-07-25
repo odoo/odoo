@@ -29,14 +29,15 @@ class AccountChartTemplate(models.Model):
     def _get_demo_data_move(self):
         ref = self.env.ref
         cid = self.env.company.id
-        foreign = ref('l10n_cl.dc_fe_dte').id
         model, data = super()._get_demo_data_move()
-        self.env['account.journal'].search([
-            ('type', '=', 'purchase'),
-            ('company_id', '=', self.env.company.id),
-        ]).l10n_latam_use_documents = False
-        data[f'{cid}_demo_invoice_1']['l10n_latam_document_type_id'] = foreign
-        data[f'{cid}_demo_invoice_2']['l10n_latam_document_type_id'] = foreign
-        data[f'{cid}_demo_invoice_3']['l10n_latam_document_type_id'] = foreign
-        data[f'{cid}_demo_invoice_followup']['l10n_latam_document_type_id'] = foreign
+        if self.env.company.account_fiscal_country_id.code == "CL":
+            foreign = ref('l10n_cl.dc_fe_dte').id
+            self.env['account.journal'].search([
+                ('type', '=', 'purchase'),
+                ('company_id', '=', self.env.company.id),
+            ]).l10n_latam_use_documents = False
+            data[f'{cid}_demo_invoice_1']['l10n_latam_document_type_id'] = foreign
+            data[f'{cid}_demo_invoice_2']['l10n_latam_document_type_id'] = foreign
+            data[f'{cid}_demo_invoice_3']['l10n_latam_document_type_id'] = foreign
+            data[f'{cid}_demo_invoice_followup']['l10n_latam_document_type_id'] = foreign
         return model, data

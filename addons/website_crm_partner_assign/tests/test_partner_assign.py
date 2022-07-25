@@ -61,7 +61,8 @@ class TestPartnerAssign(TransactionCase):
 
         # In order to test find nearest Partner functionality and assign to opportunity,
         # I Set Geo Lattitude and Longitude according to partner address.
-        partner_be.geo_localize()
+        # YTI Note: We should probably mock the call
+        partner_be.with_context(force_geo_localize=True).geo_localize()
 
         # I check Geo Latitude and Longitude of partner after set
         self.assertTrue(50 < partner_be.partner_latitude < 51, "Latitude is wrong: 50 < %s < 51" % partner_be.partner_latitude)

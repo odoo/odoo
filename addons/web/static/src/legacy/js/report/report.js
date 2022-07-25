@@ -13,7 +13,7 @@ $(document.body)
     .addClass('container-fluid')
     .removeClass('container');
 
-var web_base_url = $('html').attr('web-base-url');
+var web_base_url = window.origin;
 var trusted_host = utils.get_host_from_url(web_base_url);
 var trusted_protocol = utils.get_protocol_from_url(web_base_url);
 var trusted_origin = utils.build_origin(trusted_protocol, trusted_host);

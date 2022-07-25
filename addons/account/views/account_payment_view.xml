@@ -178,6 +178,7 @@
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
                         <field name="available_payment_method_line_ids" invisible="1"/>
+                        <field name="available_partner_bank_ids" invisible="1"/>
                         <field name="suitable_journal_ids" invisible="1"/>
                         <field name="country_code" invisible="1"/>
                         <field name="partner_type" invisible="1"/>
@@ -241,12 +242,10 @@
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
-                                             'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
-                                             'required': [('partner_type','=','customer')]}"/>
+                                             'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
-                                               'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
-                                               'required': [('partner_type','=','supplier')]}"/>
+                                               'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"
@@ -270,17 +269,27 @@
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
                                         attrs="{
-                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
+                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Vendor Bank Account"
                                         attrs="{
-                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
+                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
+
+                                <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
+                                fields readonly condition in the framework, preventing the modification of these fields -->
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account"
+                                        attrs="{
+                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
+                                            'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
+                                            'readonly': [('payment_type', '!=', 'outbound')],
+                                        }"/>
+
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"
                                        attrs="{'invisible': [('is_internal_transfer', '=', False)],
                                        'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True),('state', '=', 'draft')]}"/>

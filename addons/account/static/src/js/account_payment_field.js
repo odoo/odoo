@@ -12,6 +12,7 @@ var _t = core._t;
 var ShowPaymentLineWidget = AbstractField.extend({
     events: _.extend({
         'click .outstanding_credit_assign': '_onOutstandingCreditAssign',
+        'click .open_account_move': '_onOpenPayment',
     }, AbstractField.prototype.events),
     supportedFieldTypes: ['char'],
 
@@ -36,6 +37,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @override
      */
     _render: function() {
+        this.viewAlreadyOpened = false;
         var self = this;
         var info = JSON.parse(this.value);
         if (!info) {
@@ -88,20 +90,23 @@ var ShowPaymentLineWidget = AbstractField.extend({
     _onOpenPayment: function (event) {
         var paymentId = parseInt($(event.target).attr('payment-id'));
         var moveId = parseInt($(event.target).attr('move-id'));
-        var res_model;
+        var resModel;
         var id;
         if (paymentId !== undefined && !isNaN(paymentId)){
-            res_model = "account.payment";
+            resModel = "account.payment";
             id = paymentId;
         } else if (moveId !== undefined && !isNaN(moveId)){
-            res_model = "account.move";
+            resModel = "account.move";
             id = moveId;
         }
         //Open form view of account.move with id = move_id
-        if (res_model && id) {
+        //viewAlreadyopened is a flag to prevent the user from clicking on another account.move/account.payment
+        //while the first one he clicked on is loading
+        if (!this.viewAlreadyOpened && resModel && id) {
+            this.viewAlreadyOpened = true;
             this.do_action({
                 type: 'ir.actions.act_window',
-                res_model: res_model,
+                res_model: resModel,
                 res_id: id,
                 views: [[false, 'form']],
                 target: 'current'

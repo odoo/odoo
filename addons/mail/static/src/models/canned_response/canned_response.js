@@ -84,7 +84,10 @@ function factory(dependencies) {
     }
 
     CannedResponse.fields = {
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          *  The keyword to use a specific canned response.
          */
@@ -95,7 +98,7 @@ function factory(dependencies) {
          */
         substitution: attr(),
     };
-
+    CannedResponse.identifyingFields = ['id'];
     CannedResponse.modelName = 'mail.canned_response';
 
     return CannedResponse;

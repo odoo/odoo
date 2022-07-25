@@ -23,6 +23,11 @@
                     <filter string="Reference Working Time" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
                     <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="company_id" icon="fa-building" enable_counters="1"/>
+                    <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    <field name="state" icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

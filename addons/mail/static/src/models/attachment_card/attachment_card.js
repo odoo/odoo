@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
+import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -30,9 +31,13 @@ function factory(dependencies) {
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.messaging.models['mail.attachment'].view({
-                attachment: this.attachment,
-                attachments: this.attachmentList.viewableAttachments,
+            this.messaging.dialogManager.update({
+                dialogs: insert({
+                    attachmentViewer: insertAndReplace({
+                        attachment: replace(this.attachment),
+                        attachmentList: replace(this.attachmentList),
+                    }),
+                }),
             });
         }
 
@@ -46,7 +51,7 @@ function factory(dependencies) {
             if (!this.attachment) {
                 return;
             }
-            if (this.attachment.isLinkedToComposer) {
+            if (this.attachmentList.composerView) {
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
@@ -72,12 +77,15 @@ function factory(dependencies) {
          */
         attachment: many2one('mail.attachment', {
             inverse: 'attachmentCards',
+            readonly: true,
             required: true,
         }),
         /**
-         * Determines the attachmentList for this card.
+         * States the attachmentList displaying this card.
          */
         attachmentList: many2one('mail.attachment_list', {
+            inverse: 'attachmentCards',
+            readonly: true,
             required: true,
         }),
         /**
@@ -91,7 +99,7 @@ function factory(dependencies) {
             default: false,
         }),
     };
-
+    AttachmentCard.identifyingFields = ['attachmentList', 'attachment'];
     AttachmentCard.modelName = 'mail.attachment_card';
 
     return AttachmentCard;

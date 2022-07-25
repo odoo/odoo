@@ -23,7 +23,9 @@ class StockPicking(models.Model):
 
     def _action_generate_expired_wizard(self):
         expired_lot_ids = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
+        view_id = self.env.ref('product_expiry.confirm_expiry_view').id
         context = dict(self.env.context)
+
         context.update({
             'default_picking_ids': [(6, 0, self.ids)],
             'default_lot_ids': [(6, 0, expired_lot_ids)],
@@ -33,6 +35,8 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'expiry.picking.confirmation',
             'view_mode': 'form',
+            'views': [(view_id, 'form')],
+            'view_id': view_id,
             'target': 'new',
             'context': context,
         }

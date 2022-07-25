@@ -37,12 +37,9 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             }
 
             // Remove existing discounts
-            var i = 0;
-            while ( i < lines.length ) {
-                if (lines[i].get_product() === product) {
-                    order.remove_orderline(lines[i]);
-                } else {
-                    i++;
+            for (const line of lines) {
+                if (line.get_product() === product) {
+                    order.remove_orderline(line);
                 }
             }
 

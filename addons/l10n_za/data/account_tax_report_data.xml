@@ -22,10 +22,10 @@
     </record>
 
     <record id="total_input_tax" model="account.tax.report.line">
-        <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 16 + 17 + 18)</field>
+        <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 15A + 16 + 17 + 18)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="formula">VAT14 + VAT14A + VAT15 + VAT16 + VAT17 + VAT18</field>
+        <field name="formula">VAT14 + VAT14A + VAT15 + VAT15A + VAT16 + VAT17 + VAT18</field>
         <field name="parent_id" ref='total_vat_payable'/>
     </record>
 

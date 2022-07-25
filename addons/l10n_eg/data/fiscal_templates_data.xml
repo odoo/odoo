@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_fiscal_position_egypt" model="account.fiscal.position.template">
+            <field name="name">Egypt</field>
+            <field name="sequence">19</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.eg"/>
+            <field name="chart_template_id" ref="egypt_chart_template_standard"/>
+        </record>
+
+        <record id="account_fiscal_position_non_egypt" model="account.fiscal.position.template">
+            <field name="name">Non-Egypt</field>
+            <field name="sequence">20</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="chart_template_id" ref="egypt_chart_template_standard"/>
+        </record>
+
+        <record id="account_fiscal_position_tax_non_egypt_01" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="eg_standard_sale_14"/>
+            <field name="tax_dest_id" ref="eg_zero_sale_0"/>
+            <field name="position_id" ref="account_fiscal_position_non_egypt"/>
+        </record>
+
+        <record id="account_fiscal_position_tax_non_egypt_02" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="eg_standard_purchase_14"/>
+            <field name="tax_dest_id" ref="eg_zero_purchase_0"/>
+            <field name="position_id" ref="account_fiscal_position_non_egypt"/>
+        </record>
+    </data>
+</odoo>
