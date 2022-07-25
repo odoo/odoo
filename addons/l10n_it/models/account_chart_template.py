@@ -27,6 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_it_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
+        tags = self._get_tag_mapper(template_code)
         return {
             f'{cid}_22v': {
                 'description': '22v',
@@ -42,17 +43,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp2',
-                        ],
+                        'tag_ids': tags('+02'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp4',
-                        ],
+                        'tag_ids': tags('+04'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -82,17 +79,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp3',
-                        ],
+                        'tag_ids': tags('+03'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp5',
-                        ],
+                        'tag_ids': tags('+05'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -122,17 +115,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp2',
-                        ],
+                        'tag_ids': tags('+02'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp4',
-                        ],
+                        'tag_ids': tags('+04'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -162,17 +151,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp3',
-                        ],
+                        'tag_ids': tags('+03'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp5',
-                        ],
+                        'tag_ids': tags('+05'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -202,17 +187,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp2',
-                        ],
+                        'tag_ids': tags('+02'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp4',
-                        ],
+                        'tag_ids': tags('+04'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -242,17 +223,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp3',
-                        ],
+                        'tag_ids': tags('+03'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp5',
-                        ],
+                        'tag_ids': tags('+05'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -282,17 +259,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp2',
-                        ],
+                        'tag_ids': tags('+02'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp4',
-                        ],
+                        'tag_ids': tags('+04'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -322,17 +295,13 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp3',
-                        ],
+                        'tag_ids': tags('+03'),
                     }),
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp5',
-                        ],
+                        'tag_ids': tags('+05'),
                     }),
                 ],
                 'refund_repartition_line_ids': [
@@ -394,9 +363,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp2',
-                        ],
+                        'tag_ids': tags('+02'),
                     }),
                     Command.create({
                         'factor_percent': 100,
@@ -464,9 +431,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            f'account.{cid}_tax_report_line_vp3',
-                        ],
+                        'tag_ids': tags('+03'),
                     }),
                     Command.create({
                         'factor_percent': 100,
