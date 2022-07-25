@@ -21,6 +21,19 @@ class TestUi(odoo.tests.HttpCase):
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
         })
+        # Since the company's country might have changed with COA installation,
+        # must create a new Jounal with a lower sequence since journals linked
+        # to the company might not be compatible anymore.
+        user_type = self.env.ref('account.data_account_type_current_assets')
+        account = self.env['account.account'].create({'name': 'test', 'code': 'test', 'user_type_id': user_type.id})
+        self.env['account.journal'].create({
+            'sequence': 0,
+            'name': 'test_out_invoice_journal',
+            'code': 'XXXXX',
+            'type': 'sale',
+            'default_account_id': account.id,
+            'company_id':  self.env.company.id,
+        })
         # This tour doesn't work with demo data on runbot
         all_moves = self.env['account.move'].search([('move_type', '!=', 'entry')])
         all_moves.button_draft()
