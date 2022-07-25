@@ -12155,4 +12155,44 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".o_list_renderer");
         }
     );
+    QUnit.test("open a one2many record containing a one2many", async (assert) => {
+        serverData.views = {
+            "partner,1234,form": `<form><field name="turtles" >
+                <tree><field name="display_name" /></tree></field>
+                </form>`,
+        };
+
+        patchWithCleanup(browser.localStorage, {
+            setItem(args) {
+                assert.step(`localStorage setItem ${args}`);
+            },
+            getItem(args) {
+                assert.step(`localStorage getItem ${args}`);
+            },
+        });
+
+        const rec = serverData.models.partner.records.find(({ id }) => id === 2);
+        rec.p = [1];
+        await makeView({
+            type: "form",
+            arch: `<form>
+                <field name="p" context="{ 'form_view_ref': 1234 }">
+                    <tree><field name="display_name" /></tree>
+                </field>
+            </form>`,
+            serverData,
+            resModel: "partner",
+            resId: 2,
+        });
+
+        assert.verifySteps([
+            "localStorage getItem optional_fields,partner,form,100000001,p,list,display_name",
+        ]);
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".modal .o_data_row");
+        assert.verifySteps([
+            "localStorage getItem optional_fields,partner,form,100000001,turtles,list,display_name",
+        ]);
+    });
 });

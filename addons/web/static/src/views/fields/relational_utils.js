@@ -21,7 +21,7 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { useEffect } = owl;
+const { useEffect, useSubEnv } = owl;
 
 //
 // Commons
@@ -408,6 +408,7 @@ class X2ManyFieldDialog extends owl.Component {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
         this.title = this.props.title;
+        useSubEnv({ config: this.props.config });
 
         useBus(this.record.model, "update", () => this.render(true));
 
@@ -512,6 +513,7 @@ X2ManyFieldDialog.props = {
     save: Function,
     title: String,
     delete: { optional: true },
+    config: Object,
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
 
@@ -610,6 +612,7 @@ export function useOpenX2ManyRecord({
         addDialog(
             X2ManyFieldDialog,
             {
+                config: env.config,
                 archInfo: form,
                 record,
                 save: async (rec, { saveAndNew }) => {
