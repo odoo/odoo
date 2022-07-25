@@ -17,7 +17,7 @@ class SaleOrderTemplateLine(models.Model):
 
         ('non_accountable_fields_null',
             "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",
-            "Forbidden product, unit price, quantity, and UoM on non-accountable sale quote line"),
+            "Forbidden product, quantity and UoM on non-accountable sale quote line"),
     ]
 
     sale_order_template_id = fields.Many2one(
