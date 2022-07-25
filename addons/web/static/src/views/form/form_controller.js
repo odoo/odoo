@@ -5,7 +5,7 @@ import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useBus } from "@web/core/utils/hooks";
 import { createElement } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -15,6 +15,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { SIZES } from "@web/core/ui/ui_service";
 
 const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
 
@@ -93,6 +94,8 @@ export class FormController extends Component {
         this.router = useService("router");
         this.user = useService("user");
         this.viewService = useService("view");
+        this.ui = useService("ui");
+        useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
@@ -416,9 +419,16 @@ export class FormController extends Component {
     }
 
     get className() {
+        const { size } = this.ui;
+        let sizeClass = "";
+        if (size <= SIZES.XS) {
+            sizeClass = "o_xxs_form_view";
+        } else if (size === SIZES.XXL) {
+            sizeClass = "o_xxl_form_view";
+        }
         return {
             [this.props.className]: true,
-            o_xxs_form_view: this.env.isSmall,
+            [sizeClass]: true,
         };
     }
 }

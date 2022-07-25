@@ -255,7 +255,7 @@ export class ListRenderer extends Component {
     computeColumnWidthsFromContent() {
         const table = this.tableRef.el;
 
-        // Toggle a className used to remove style that could interfer with the ideal width
+        // Toggle a className used to remove style that could interfere with the ideal width
         // computation algorithm (e.g. prevent text fields from being wrapped during the
         // computation, to prevent them from being completely crushed)
         table.classList.add("o_list_computing_widths");
@@ -735,7 +735,7 @@ export class ListRenderer extends Component {
 
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
-        let optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+        const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
         if (optionalActiveFields) {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);

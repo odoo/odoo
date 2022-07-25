@@ -15,6 +15,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
+const { EventBus } = owl;
+
 let serverData;
 let target;
 
@@ -175,6 +177,7 @@ QUnit.module("Fields", (hooks) => {
                         value: true,
                     });
                     return {
+                        bus: new EventBus(),
                         size: 0,
                         isSmall: true,
                     };

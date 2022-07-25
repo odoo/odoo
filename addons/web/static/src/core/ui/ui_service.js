@@ -139,7 +139,11 @@ export const uiService = {
 
         // listen to media query status changes
         const updateSize = () => {
+            const prevSize = ui.size;
             ui.size = this.getSize();
+            if (ui.size !== prevSize) {
+                bus.trigger("resize");
+            }
         };
         browser.addEventListener("resize", debounce(updateSize, 100));
 

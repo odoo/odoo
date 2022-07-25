@@ -27,6 +27,12 @@ $o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%) !default;
 
 $o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%) !default;
 
+// Form
+
+// Safest for the next value would be map-get($container-max-widths, lg) as it
+// is the minimal width of the default form view design for md/lg sizes
+$o-form-sheet-min-width: 990px !default;
+
 // Kanban
 
 $o-kanban-record-margin: $o-horizontal-padding / 2 !default;
