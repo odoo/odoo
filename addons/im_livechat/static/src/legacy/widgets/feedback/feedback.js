@@ -28,10 +28,12 @@ const Feedback = Widget.extend({
 
     /**
      * @param {?} parent
+     * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} livechat
      */
-    init(parent, livechat) {
+    init(parent, messaging, livechat) {
         this._super(parent);
+        this.messaging = messaging;
         this._livechat = livechat;
         this.server_origin = session.origin;
         this.rating = undefined;

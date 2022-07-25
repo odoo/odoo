@@ -13,6 +13,7 @@ registerModel({
             this.update({
                 widget: new Feedback(
                     this.messaging.livechatButtonView.widget,
+                    this.messaging,
                     this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
                 ),
             });
