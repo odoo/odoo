@@ -380,7 +380,7 @@ const Wysiwyg = Widget.extend({
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        this.call('bus_service', 'onNotification', notifications => {
+        this.call('bus_service', 'addEventListener', 'notification', ({ detail: notifications}) => {
             for (const { payload, type } of notifications) {
                 if (
                     type === 'editor_collaboration' &&
