@@ -12,16 +12,13 @@ class IrHttp(models.AbstractModel):
         return request.httprequest.host
 
     @classmethod
-    def _set_utm(cls):
+    def _set_utm(cls, response):
         domain = cls.get_utm_domain_cookies()
         for url_parameter, __, cookie_name in request.env['utm.mixin'].tracking_fields():
             if url_parameter in request.params and request.httprequest.cookies.get(cookie_name) != request.params[url_parameter]:
-                request.future_response.set_cookie(cookie_name, request.params[url_parameter], domain=domain)
-
+                response.set_cookie(cookie_name, request.params[url_parameter], domain=domain)
 
     @classmethod
-    def _dispatch(cls, endpoint):
-        # cannot override _pre_dispatch() as _set_utm() requires the
-        # params from the request's body.
-        cls._set_utm()
-        return super()._dispatch(endpoint)
+    def _post_dispatch(cls, response):
+        cls._set_utm(response)
+        super()._post_dispatch(response)
