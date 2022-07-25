@@ -244,8 +244,12 @@ class StockRule(models.Model):
             if rule.procure_method == 'mts_else_mto':
                 qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
-                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
                     procure_method = 'make_to_order'
+                    for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
+                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                            procure_method = move.procure_method
+                            break
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
                 elif float_compare(qty_needed, forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id],
                                    precision_rounding=procurement.product_id.uom_id.rounding) > 0:
                     procure_method = 'make_to_order'
