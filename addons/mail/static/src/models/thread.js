@@ -761,7 +761,7 @@ registerModel({
             }
             await this.messaging.models['Thread'].performRpcChannelPin({
                 channelId: this.id,
-                pinned: this.isPendingPinned,
+                pinned: this.channel.isPendingPinned,
             });
         },
         /**
@@ -816,7 +816,7 @@ registerModel({
          * Pin this thread and notify server of the change.
          */
         async pin() {
-            this.update({ isPendingPinned: true });
+            this.channel.update({ isPendingPinned: true });
             if (this.messaging.currentGuest) {
                 return;
             }
@@ -939,7 +939,7 @@ registerModel({
          * Unpin this thread and notify server of the change.
          */
         async unpin() {
-            this.update({ isPendingPinned: false });
+            this.channel.update({ isPendingPinned: false });
             if (this.messaging.currentGuest) {
                 return;
             }
@@ -1756,15 +1756,6 @@ registerModel({
         isLoadingAttachments: attr({
             default: false,
         }),
-        /**
-         * Determine if there is a pending pin state change, which is a change
-         * of pin state requested by the client but not yet confirmed by the
-         * server.
-         *
-         * This field can be updated to immediately change the pin state on the
-         * interface and to notify the server of the new state.
-         */
-        isPendingPinned: attr(),
         isTemporary: attr({
             default: false,
         }),

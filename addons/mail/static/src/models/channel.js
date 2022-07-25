@@ -161,8 +161,8 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsPinned() {
-            if (this.thread.isPendingPinned) {
-                return this.thread.isPendingPinned;
+            if (this.isPendingPinned) {
+                return this.isPendingPinned;
             }
             return this.isServerPinned;
         },
@@ -219,8 +219,8 @@ registerModel({
          * @see isPendingPinned
          */
         _onIsServerPinnedChanged() {
-            if (this.isServerPinned === this.thread.isPendingPinned) {
-                this.thread.update({ isPendingPinned: clear() });
+            if (this.isServerPinned === this.isPendingPinned) {
+                this.update({ isPendingPinned: clear() });
             }
         },
         /**
@@ -318,6 +318,15 @@ registerModel({
         isDescriptionEditableByCurrentUser: attr({
             compute: '_computeIsDescriptionEditableByCurrentUser',
         }),
+        /**
+         * Determines if there is a pending pin state change, which is a change
+         * of pin state requested by the client but not yet confirmed by the
+         * server.
+         *
+         * This field can be updated to immediately change the pin state on the
+         * interface and to notify the server of the new state.
+         */
+        isPendingPinned: attr(),
         /**
          * Determines whether this channel is pinned in Discuss and present in
          * the messaging menu.
