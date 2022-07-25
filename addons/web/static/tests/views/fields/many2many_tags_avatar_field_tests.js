@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickEdit,
+    clickSave,
+    getFixture,
+    selectDropdownItem,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -290,7 +296,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_tags_list > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_tag",
             2,
             "should have 2 records"
         );
@@ -325,7 +331,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_tags_list > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_tag",
             2,
             "should have 2 records"
         );
@@ -356,6 +362,45 @@ QUnit.module("Fields", (hooks) => {
 
         await click(
             target.querySelector(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar")
+        );
+    });
+
+    QUnit.test("widget many2many_tags_avatar delete tag", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="partner_ids" widget="many2many_tags_avatar"/>
+                    </sheet>
+                </form>`,
+        });
+
+        await clickEdit(target);
+        assert.containsN(
+            target,
+            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            2,
+            "should have 2 records"
+        );
+
+        await click(
+            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .badge .o_delete")
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            "should have 1 record"
+        );
+
+        await clickSave(target);
+        assert.containsOnce(
+            target,
+            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            "should have 1 record"
         );
     });
 });
