@@ -1,49 +1,37 @@
-odoo.define('base_setup.ResConfigDevTool', function (require) {
-    "use strict";
+/** @odoo-module */
 
-    var config = require('web.config');
-    var Widget = require('web.Widget');
-    var widget_registry = require('web.widget_registry');
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
-    var ResConfigDevTool = Widget.extend({
-        template: 'res_config_dev_tool',
-        events: {
-            'click .o_web_settings_force_demo': '_onClickForceDemo',
-        },
+const { Component, onWillStart } = owl;
 
-        init: function () {
-            this._super.apply(this, arguments);
-            this.isDebug = config.isDebug();
-            this.isAssets = config.isDebug("assets");
-            this.isTests = config.isDebug("tests");
-        },
+/**
+ * Widget in the settings that handles the "Developer Tools" section.
+ * Can be used to enable/disable the debug modes.
+ * Can be used to load the demo data.
+ */
+class ResConfigDevTool extends Component {
+    setup() {
+        this.isDebug = Boolean(odoo.debug);
+        this.isAssets = odoo.debug.includes("assets");
+        this.isTests = odoo.debug.includes("tests");
 
-        willStart: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                return self._rpc({
-                    route: '/base_setup/demo_active',
-                }).then(function (demo_active) {
-                    self.demo_active = demo_active;
-                });
-            });
-        },
+        this.action = useService("action");
+        this.demo = useService("demo_data");
 
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
+        onWillStart(async () => {
+            this.isDemoDataActive = await this.demo.isDemoDataActive();
+        });
+    }
 
-        /**
-         * Forces demo data to be installed in a database without demo data installed.
-         *
-         * @private
-         * @param {MouseEvent} ev
-         */
-        _onClickForceDemo: function (ev) {
-            ev.preventDefault();
-            this.do_action('base.demo_force_install_action');
-        },
-    });
+    /**
+     * Forces demo data to be installed in a database without demo data installed.
+     */
+    onClickForceDemo() {
+        this.action.doAction("base.demo_force_install_action");
+    }
+}
 
-    widget_registry.add('res_config_dev_tool', ResConfigDevTool);
-});
+ResConfigDevTool.template = "res_config_dev_tool";
+
+registry.category("view_widgets").add("res_config_dev_tool", ResConfigDevTool);
