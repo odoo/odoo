@@ -172,10 +172,18 @@ function _protectMethod(component, fn) {
 }
 
 /**
+ * @typedef {"hotkey"|"command"} ServiceKey
+ * @typedef {{
+ *    hotkey: import("../hotkeys/hotkey_service").HotkeyService,
+ *    command: import("../commands/command_service").CommandService,
+ * }} ServicesTypes
+ */
+
+/**
  * Import a service into a component
  *
- * @param {string} serviceName
- * @returns {any}
+ * @param {ServiceKey} serviceName
+ * @returns {ServicesTypes[ServiceKey]} the service
  */
 export function useService(serviceName) {
     const component = useComponent();

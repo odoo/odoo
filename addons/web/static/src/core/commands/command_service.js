@@ -233,3 +233,4 @@ export const commandService = {
 };
 
 registry.category("services").add("command", commandService);
+/** @typedef {ReturnType<commandService["start"]>} CommandService */
