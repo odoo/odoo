@@ -107,17 +107,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.on('message_added', this, this._onTypingMessageAdded);
         this.on('message_posted', this, this._onTypingMessagePosted);
 
-        // Necessary for thread typing mixin to display is typing notification
-        // bar text (at least, for the operator in the members).
-        this._members = (
-            this.messaging.publicLivechatGlobal.publicLivechat.operator
-            ? [{
-                id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-            }]
-            : []
-        );
-
         if (params.data.message_unread_counter !== undefined) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
                 unreadCounter: params.data.message_unread_counter
@@ -178,9 +167,11 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     getTypingMembersToText() {
         const typingPartnerIDs = this._typingPartnerIDs;
-        const typingMembers = _.filter(this._members, function (member) {
-            return _.contains(typingPartnerIDs, member.id);
-        });
+        const typingMembers = (
+            this.messaging.publicLivechatGlobal.publicLivechat.operator && this._typingPartnerIDs.includes(this.messaging.publicLivechatGlobal.publicLivechat.operator.id)
+            ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
+            : []
+        );
         const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
             return _.indexOf(typingPartnerIDs, member.id);
         });
