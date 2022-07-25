@@ -68,7 +68,7 @@ const LivechatButton = Widget.extend({
                 });
             }
         }
-        this.call('bus_service', 'onNotification', this._onNotification.bind(this));
+        this.call('bus_service', 'addEventListener', 'notification', this._onNotification.bind(this));
         if (this.messaging.livechatButtonView.buttonBackgroundColor) {
             this.$el.css('background-color', this.messaging.livechatButtonView.buttonBackgroundColor);
         }
@@ -417,9 +417,10 @@ const LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Array[]} notifications
+     * @param {CustomEvent} ev
+     * @param {Array[]} [ev.detail] Notifications coming from the bus.
      */
-     _onNotification(notifications) {
+     _onNotification({ detail: notifications }) {
         for (let notification of notifications) {
             this._handleNotification(notification);
         }

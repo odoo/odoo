@@ -11,11 +11,11 @@ var SnailmailAccountNotificationManager =  AbstractService.extend({
     start: function () {
         this._super.apply(this, arguments);
         core.bus.on('web_client_ready', null, () => {
-            this.call('bus_service', 'onNotification', this._onNotification.bind(this));
+            this.call('bus_service', 'addEventListener', 'notification', this._onNotification.bind(this));
         });
     },
 
-    _onNotification: function(notifications) {
+    _onNotification: function({ detail: notifications }) {
         for (const { payload, type } of notifications) {
             if (type === "snailmail_invalid_address") {
                 this.displayNotification({ title: payload.title, message: payload.message, type: 'danger' });

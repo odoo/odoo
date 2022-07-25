@@ -11,7 +11,7 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        bus_service.onNotification(onNotification.bind(this));
+        bus_service.addEventListener('notification', onNotification.bind(this));
         bus_service.startPolling();
 
         /**
@@ -63,9 +63,10 @@ export const assetsWatchdogService = {
         /**
          * Reacts to bus's notification
          *
-         * @param {Array} notifications: list of received notifications
+         * @param {CustomEvent} ev
+         * @param {Array} [ev.detail] list of received notifications
          */
-        function onNotification(notifications) {
+        function onNotification({ detail: notifications }) {
             for (const { payload, type } of notifications) {
                 if (type === 'bundle_changed') {
                     if (payload.server_version !== session.server_version) {
