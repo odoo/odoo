@@ -70,7 +70,7 @@
 //
 // Given two colors, returns the one which has the most constrast with another
 // given color. Careful: if you want to find the text color which will suit the
-// most on a given background color, you should use the 'color-yiq' function.
+// most on a given background color, you should use the 'color-contrast' function.
 //
 @function o-get-most-contrast($color, $c1, $c2, $background: #FFFFFF, $threshold: false, $cross-mix: true) {
     $background: if($background == null, #FFFFFF, $background);

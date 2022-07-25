@@ -37,7 +37,7 @@
                 } @else {
                     &, &::after {
                         background-color: nth($o-colors, $size);
-                        color: color-yiq(nth($o-colors, $size));
+                        color: color-contrast(nth($o-colors, $size));
                     }
                     &:focus-within {
                         background-color: darken(nth($o-colors, $size), 20%);
