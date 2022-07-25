@@ -365,6 +365,9 @@ class WebsiteSearchableMixin(models.AbstractModel):
             for result, data in zip(self, results_data):
                 for html_field in html_fields:
                     if data[html_field]:
+                        if html_field == 'arch':
+                            # Undo second escape of text nodes from wywsiwyg.js _getEscapedElement.
+                            data[html_field] = re.sub(r'&amp;(?=\w+;)', '&', data[html_field])
                         text = text_from_html(data[html_field], True)
                         data[html_field] = text
         return results_data
