@@ -157,5 +157,43 @@ return Class.extend({
             },
         ].map(this.addDebugHelp(this._getHelpMessage('mobileKanbanSearchMany2X', modalTitle, valueSearched)));
     },
+    /**
+     * Utility steps to save a form and wait for the save to complete
+     *
+     * @param extra_trigger additional save-condition selector
+     */
+    saveForm(extra_trigger) {
+        return [{
+            content: "save form",
+            trigger: '.o_form_button_save:contains("Save")',
+            extra_trigger,
+            run: 'click',
+            auto: true,
+        }, {
+            content: "wait for save completion",
+            trigger: '.o_form_readonly',
+            run() {},
+            auto: true,
+        }];
+    },
+    /**
+     * Utility steps to cancel a form creation or edition.
+     *
+     * Supports creation/edition from either a form or a list view (so checks
+     * for both states).
+     */
+    discardForm() {
+        return [{
+            content: "exit the form",
+            trigger: ".o_form_button_cancel",
+            run: 'click',
+            auto: true,
+        }, {
+            content: "wait for cancellation to complete",
+            trigger: ".o_list_renderer, .o_form_readonly",
+            run() {},
+            auto: true,
+        }];
+    }
 });
 });
