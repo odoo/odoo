@@ -185,6 +185,12 @@ class AccountMove(models.Model):
             or (partner.country_id.code == 'IT' and '0000000')
             or 'XXXXXXX')
 
+        # Self-invoices are technically -100%/+100% repartitioned
+        # but functionally need to be exported as 100%
+        document_total = self.amount_total
+        if is_self_invoice:
+            document_total += sum([v['tax_amount_currency'] for k, v in tax_details['tax_details'].items()])
+
         # Create file content.
         template_values = {
             'record': self,
@@ -198,6 +204,7 @@ class AccountMove(models.Model):
             'seller': seller,
             'seller_partner': company.partner_id if not is_self_invoice else partner,
             'currency': self.currency_id or self.company_currency_id,
+            'document_total': document_total,
             'representative': company.l10n_it_tax_representative_partner_id,
             'codice_destinatario': codice_destinatario,
             'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF01',
