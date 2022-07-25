@@ -150,9 +150,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this._thread._folded;
+            folded = !this.messaging.livechatButtonView.publicLivechat.isFolded;
         }
-        this._updateThreadFoldState(folded);
+        this.messaging.livechatButtonView.publicLivechat.update({ isFolded: folded });
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -213,19 +213,6 @@ const PublicLivechatWindow = Widget.extend({
             .then(() => {
                 this._publicLivechatView.scrollToBottom();
             });
-    },
-    /**
-     * Update the fold state of the thread.
-     *
-     * This function is called when toggling the fold state of this window.
-     * If there is no thread linked to this window, it means this is the
-     * "blank" thread window, therefore we use the internal state 'folded'
-     *
-     * @private
-     * @param {boolean} folded
-     */
-    _updateThreadFoldState(folded) {
-        this._thread.fold(folded);
     },
 
     //--------------------------------------------------------------------------

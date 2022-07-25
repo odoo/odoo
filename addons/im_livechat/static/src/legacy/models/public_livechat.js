@@ -147,14 +147,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this.trigger('message_added', message);
     },
     /**
-     * Updates the folded state of the thread
-     *
-     * @param {boolean} folded
-     */
-    fold(folded) {
-        this.messaging.livechatButtonView.publicLivechat.update({ isFolded: folded });
-    },
-    /**
      * @override
      * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
