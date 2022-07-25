@@ -2235,6 +2235,7 @@ var TempusDominusBootstrap4 = function ($) {
 
         TempusDominusBootstrap4.prototype._doAction = function _doAction(e, action) {
             var lastPicked = this._getLastPickedDate();
+            const momentDate = this._parseInputDate($(e.target).text());
             if ($(e.currentTarget).is('.disabled')) {
                 return false;
             }
@@ -2427,7 +2428,7 @@ var TempusDominusBootstrap4 = function ($) {
                     break;
                 case 'selectHour':
                     {
-                        var hour = parseInt($(e.target).text(), 10);
+                        const hour = parseInt(momentDate._i, 10);
 
                         if (!this.use24Hours) {
                             if (lastPicked.hours() >= 12) {
@@ -2449,7 +2450,9 @@ var TempusDominusBootstrap4 = function ($) {
                         break;
                     }
                 case 'selectMinute':
-                    this._setValue(lastPicked.clone().minutes(parseInt($(e.target).text(), 10)), this._getLastPickedDateIndex());
+                    const minute = parseInt(momentDate._i, 10);
+
+                    this._setValue(lastPicked.clone().minutes(minute), this._getLastPickedDateIndex());
                     if (!this._isEnabled('a') && !this._isEnabled('s') && !this._options.keepOpen && !this._options.inline) {
                         this.hide();
                     } else {
@@ -2457,7 +2460,9 @@ var TempusDominusBootstrap4 = function ($) {
                     }
                     break;
                 case 'selectSecond':
-                    this._setValue(lastPicked.clone().seconds(parseInt($(e.target).text(), 10)), this._getLastPickedDateIndex());
+                    const second = parseInt(momentDate._i, 10);
+
+                    this._setValue(lastPicked.clone().seconds(second), this._getLastPickedDateIndex());
                     if (!this._isEnabled('a') && !this._options.keepOpen && !this._options.inline) {
                         this.hide();
                     } else {
