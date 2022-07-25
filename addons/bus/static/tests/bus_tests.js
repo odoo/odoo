@@ -46,7 +46,7 @@ QUnit.module('Bus', {
                 }
             },
         });
-        env.services['bus_service'].onNotification(notifications => {
+        env.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('notification - ' + notifications.toString());
         });
         env.services['bus_service'].addChannel('lambda');
@@ -163,7 +163,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        masterEnv.services['bus_service'].onNotification(notifications => {
+        masterEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('master - notification - ' + notifications.toString());
         });
         masterEnv.services['bus_service'].addChannel('lambda');
@@ -176,7 +176,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        slaveEnv.services['bus_service'].onNotification(notifications => {
+        slaveEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slaveEnv.services['bus_service'].addChannel('lambda');
@@ -213,7 +213,7 @@ QUnit.module('Bus', {
             }
         });
 
-        masterEnv.services['bus_service'].onNotification(notifications => {
+        masterEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('master - notification - ' + notifications.toString());
         });
         masterEnv.services['bus_service'].addChannel('lambda');
@@ -230,7 +230,7 @@ QUnit.module('Bus', {
                 }
             }
         });
-        slaveEnv.services['bus_service'].onNotification(notifications => {
+        slaveEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slaveEnv.services['bus_service'].addChannel('lambda');

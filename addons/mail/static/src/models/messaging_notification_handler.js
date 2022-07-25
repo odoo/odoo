@@ -16,7 +16,7 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _willDelete() {
-            this.env.services['bus_service'].offNotification(this._handleNotifications);
+            this.env.services['bus_service'].removeEventListener('notification', this._handleNotifications);
             this.env.services['bus_service'].stopPolling();
         },
     },
@@ -26,22 +26,23 @@ registerModel({
          * the current users. This includes pinned channels for instance.
          */
         start() {
-            this.env.services['bus_service'].onNotification(this._handleNotifications);
+            this.env.services['bus_service'].addEventListener('notification', this._handleNotifications);
             this.env.services['bus_service'].startPolling();
         },
         /**
          * @private
-         * @param {Object[]} notifications
-         * @param {Array|string} notifications[i][0] meta-data of the notification.
-         * @param {string} notifications[i][0][0] name of database this
+         * @param {CustomEvent} ev
+         * @param {Object[]} [ev.detail] Notifications coming from the bus.
+         * @param {Array|string} ev.detail[i][0] meta-data of the notification.
+         * @param {string} ev.detail[i][0][0] name of database this
          *   notification comes from.
-         * @param {string} notifications[i][0][1] type of notification.
-         * @param {integer} notifications[i][0][2] usually id of related type
+         * @param {string} ev.detail[i][0][1] type of notification.
+         * @param {integer} ev.detail[i][0][2] usually id of related type
          *   of notification. For instance, with `mail.channel`, this is the id
          *   of the channel.
-         * @param {Object} notifications[i][1] payload of the notification
+         * @param {Object} ev.detail[i][1] payload of the notification
          */
-        async _handleNotifications(notifications) {
+        async _handleNotifications({ detail: notifications }) {
             const channelsLeft = new Set(
                 notifications
                     .filter(notification => notification.type === 'mail.channel/leave')
