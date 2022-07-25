@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import PublicLivechatView from '@im_livechat/legacy/widgets/public_livechat_view/public_livechat_view';
-
 import config from 'web.config';
 import { _t, qweb } from 'web.core';
 import Widget from 'web.Widget';
@@ -46,13 +44,6 @@ const PublicLivechatWindow = Widget.extend({
     async start() {
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
-        const options = {
-            displayMarkAsRead: false,
-        };
-        if (this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._type === 'document_thread') {
-            options.displayDocumentLinks = false;
-        }
-        this._publicLivechatView = new PublicLivechatView(this, this.messaging, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
@@ -65,8 +56,8 @@ const PublicLivechatWindow = Widget.extend({
             const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
             this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        const def = this._publicLivechatView.replace(this.$('.o_thread_window_content')).then(() => {
-            this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
+        const def = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.replace(this.$('.o_thread_window_content')).then(() => {
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
         if (this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor) {
@@ -102,7 +93,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     render() {
         this.renderHeader();
-        this._publicLivechatView.render({ displayLoadMore: false });
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.render({ displayLoadMore: false });
     },
     /**
      * Render the header of this thread window.
@@ -128,7 +119,7 @@ const PublicLivechatWindow = Widget.extend({
      * @param {$.Element} $element
      */
     replaceContentWith($element) {
-        $element.replace(this._publicLivechatView.$el);
+        $element.replace(this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.$el);
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -155,7 +146,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     updateVisualFoldState() {
         if (!this.messaging.publicLivechatGlobal.publicLivechat.isFolded) {
-            this._publicLivechatView.scrollToBottom();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
             this._focusInput();
         }
         const height = this.messaging.publicLivechatGlobal.publicLivechat.isFolded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
@@ -203,7 +194,7 @@ const PublicLivechatWindow = Widget.extend({
         this.trigger_up('post_message_chat_window', { messageData });
         this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.postMessage(messageData)
             .then(() => {
-                this._publicLivechatView.scrollToBottom();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
             });
     },
 
@@ -301,7 +292,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onScroll() {
-        if (this._publicLivechatView.isAtBottom()) {
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
         }
     },
