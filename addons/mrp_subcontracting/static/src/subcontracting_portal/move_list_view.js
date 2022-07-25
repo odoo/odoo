@@ -1,12 +1,11 @@
-/** @odoo-module**/
+/** @odoo-module **/
 
-import ListView from 'web.ListView';
-import viewRegistry from 'web.view_registry';
+import { registry } from "@web/core/registry";
+import { listView } from "@web/views/list/list_view";
 
-const MoveListView = ListView.extend({
+const MoveListView = {
+    ...listView,
     searchMenuTypes: [],
-});
+};
 
-viewRegistry.add('subcontracting_portal_move_list_view', MoveListView);
-
-export default MoveListView;
+registry.category("views").add('subcontracting_portal_move_list_view', MoveListView);
