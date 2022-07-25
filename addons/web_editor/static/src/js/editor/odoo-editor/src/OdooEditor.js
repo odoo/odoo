@@ -1686,7 +1686,7 @@ export class OdooEditor extends EventTarget {
      */
     _computeHistorySelection() {
         const sel = this.document.getSelection();
-        if (!sel.anchorNode) {
+        if (!(sel && sel.anchorNode)) {
             return this._latestComputedSelection;
         }
         this._latestComputedSelection = {
