@@ -94,14 +94,18 @@ class ir_cron(models.Model):
             threading.current_thread().dbname = db_name
             with db.cursor() as cron_cr:
                 cls._check_version(cron_cr)
-                jobs = cls._get_all_ready_jobs(cron_cr)
+
+                cron_cr.execute("SELECT now() at time zone 'UTC'")
+                now = cron_cr.fetchone()[0]
+
+                jobs = cls._get_all_ready_jobs(cron_cr, now)
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
                 job_ids = tuple([job['id'] for job in jobs])
 
                 while True:
-                    job = cls._acquire_one_job(cron_cr, job_ids)
+                    job = cls._acquire_one_job(cron_cr, job_ids, now)
                     if not job:
                         break
                     _logger.debug("job %s acquired", job['id'])
@@ -170,26 +174,26 @@ class ir_cron(models.Model):
         odoo.modules.reset_modules_state(cr.dbname)
 
     @classmethod
-    def _get_all_ready_jobs(cls, cr):
+    def _get_all_ready_jobs(cls, cr, now):
         """ Return a list of all jobs that are ready to be executed """
         cr.execute("""
             SELECT *
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
-              AND (nextcall <= (now() at time zone 'UTC')
+              AND (nextcall <= (%(now)s)
                 OR id in (
                     SELECT cron_id
                     FROM ir_cron_trigger
-                    WHERE call_at <= (now() at time zone 'UTC')
+                    WHERE call_at <= (%(now)s)
                 )
               )
             ORDER BY priority
-        """)
+        """, {'now': now})
         return cr.dictfetchall()
 
     @classmethod
-    def _acquire_one_job(cls, cr, job_ids):
+    def _acquire_one_job(cls, cr, job_ids, now):
         """ Acquire one job for update from the job_ids tuple. """
 
         # We have to make sure ALL jobs are executed ONLY ONCE no matter
@@ -221,18 +225,18 @@ class ir_cron(models.Model):
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
-              AND (nextcall <= (now() at time zone 'UTC')
+              AND (nextcall <= (%(now)s)
                 OR EXISTS (
                     SELECT cron_id
                     FROM ir_cron_trigger
-                    WHERE call_at <= (now() at time zone 'UTC')
+                    WHERE call_at <= (%(now)s)
                       AND cron_id = ir_cron.id
                 )
               )
-              AND id in %s
+              AND id in %(job_ids)s
             ORDER BY priority
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
-        """, [job_ids])
+        """, {'job_ids': job_ids, 'now': now})
         return cr.dictfetchone()
 
     @classmethod
