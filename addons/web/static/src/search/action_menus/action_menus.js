@@ -33,6 +33,9 @@ export class ActionMenus extends Component {
     }
 
     get printItems() {
+        if (!this.props.actionMenuTypes.includes("print")) {
+            return [];
+        }
         const printActions = this.props.items.print || [];
         return printActions.map((action) => ({
             action,
@@ -46,6 +49,9 @@ export class ActionMenus extends Component {
     //---------------------------------------------------------------------
 
     async setActionItems(props) {
+        if (!this.props.actionMenuTypes.includes("action")) {
+            return [];
+        }
         // Callback based actions
         const callbackActions = (props.items.other || []).map((action) =>
             Object.assign({ key: `action-${action.description}` }, action)
@@ -141,5 +147,7 @@ ActionMenus.props = {
             other: { type: Array, optional: true },
         },
     },
+    actionMenuTypes: { type: Array, element: String, optional: true },
 };
+ActionMenus.defaultProps = { actionMenuTypes: ["print", "action"] };
 ActionMenus.template = "web.ActionMenus";

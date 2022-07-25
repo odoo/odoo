@@ -13,6 +13,7 @@ export const formView = {
     multiRecord: false,
     display: { controlPanel: { ["top-right"]: false } },
     searchMenuTypes: [],
+    actionMenuTypes: ["print", "action"],
     Controller: FormController,
     Renderer: FormRenderer,
     ArchParser: FormArchParser,
@@ -27,6 +28,7 @@ export const formView = {
 
         return {
             ...genericProps,
+            actionMenuTypes: view.actionMenuTypes,
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: genericProps.buttonTemplate || view.buttonTemplate,

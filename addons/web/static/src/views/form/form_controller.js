@@ -438,6 +438,7 @@ FormController.props = {
     Compiler: Function,
     archInfo: Object,
     buttonTemplate: String,
+    actionMenuTypes: { type: Array, element: String, optional: true },
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
 };
