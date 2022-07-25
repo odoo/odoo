@@ -268,8 +268,8 @@ tour.register('sale_timesheet_tour', {
     content: "Give a name to Project Update",
     run: 'text New update',
 }, {
-    trigger: ".o_field_widget[name=description] h3:contains('Sold')",
-    content: "Sold title must be in description in description",
+    trigger: ".o_field_widget[name=description] h3:contains('Sales')",
+    content: "Sales title must be in description in description",
     run: function () {},
     }, {
     trigger: ".o_field_widget[name=description] td:contains('Prepaid Hours')",

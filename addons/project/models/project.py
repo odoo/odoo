@@ -942,18 +942,6 @@ class Project(models.Model):
                 'show': True,
                 'sequence': 60,
             })
-            buttons.append({
-                'icon': 'users',
-                'text': _lt('Collaborators'),
-                'number': self.collaborator_count,
-                'action_type': 'action',
-                'action': 'project.project_collaborator_action',
-                'additional_context': json.dumps({
-                    'active_id': self.id,
-                }),
-                'show': self.privacy_visibility == "portal",
-                'sequence': 66,
-            })
         return buttons
 
     # ---------------------------------------------------

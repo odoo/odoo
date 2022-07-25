@@ -182,7 +182,7 @@
                                     <span class="badge rounded-pill text-bg-info mw-100 text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
                                 </td>
                                 <td t-if="groupby != 'stage'" class="text-end">
-                                    <span t-attf-class="badge #{'text-bg-primary' if task.stage_id.fold else 'text-bg-light'}" title="Current stage of the task" t-esc="task.stage_id.name"/>
+                                    <span t-attf-class="badge #{'text-bg-primary' if task.stage_id.fold else 'text-bg-light'} o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>

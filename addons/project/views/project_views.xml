@@ -701,6 +701,8 @@
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="date_start" string="Start Date" widget="daterange" options="{'related_end_date': 'date'}"/>
                     <field name="date" string="End Date" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" optional="hide"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -1518,7 +1520,10 @@
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]" options='{"no_quick_create": True}'/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" readonly="True"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="create_date" optional="hide"/>
+                    <field name="date_last_stage_update" optional="hide"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" optional="hide"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="rating_active" invisible="1"/>
