@@ -10,7 +10,6 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 import { clear, increment, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
-const QWeb = core.qweb;
 
 /**
  * Override of the LivechatButton to include chatbot capabilities.
@@ -107,7 +106,7 @@ const QWeb = core.qweb;
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
-        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
         }
 
@@ -131,10 +130,10 @@ const QWeb = core.qweb;
      */
     _chatbotAwaitUserInput() {
         if (this._isLastMessageFromCustomer()) {
-            if (this._chatbotShouldEndScript()) {
-                this._chatbotEndScript();
+            if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
             } else {
-                this._chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -225,54 +224,6 @@ const QWeb = core.qweb;
         }
     },
     /**
-     * Once the script ends, adds a visual element at the end of the chat window allowing to restart
-     * the whole script.
-     *
-     * @private
-     */
-    _chatbotEndScript() {
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed
-        ) {
-            // don't touch anything if the user has closed the conversation, let the chat window
-            // handle the display
-            return;
-        }
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click',
-            this._onChatbotRestartScript.bind(this));
-
-    },
-    /**
-     * Will display a "Restart script" button in the conversation toolbar.
-     *
-     * Side-case: if the conversation has been forwarded to a human operator, we don't want to
-     * display that restart button.
-     *
-     * @private
-     */
-    _chatbotDisplayRestartButton() {
-        return this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot && (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep ||
-            (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found));
-    },
-    /**
-     * Works as a hook since other modules can add their own step types.
-     *
-     * @private
-     */
-    _chatbotIsExpectingUserInput() {
-        return [
-            'question_phone',
-            'question_email',
-            'free_input_single',
-            'free_input_multi',
-        ].includes(this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type);
-    },
-    /**
      * Processes the step, depending on the current state of the script and the author of the last
      * message that was typed into the conversation.
      *
@@ -300,15 +251,15 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotProcessStep() {
-        if (this._chatbotShouldEndScript()) {
-            this._chatbotEndScript();
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
-        }  else if (this._chatbotIsExpectingUserInput()) {
+        }  else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput) {
             if (this._isLastMessageFromCustomer()) {
                 // user has already typed a message in -> trigger next step
-                this._chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -337,7 +288,7 @@ const QWeb = core.qweb;
                     // -> in that case, don't wait and trigger the next step immediately
                     nextStepDelay = 0;
                 } else {
-                    this._chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 }
 
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -349,7 +300,7 @@ const QWeb = core.qweb;
             }
         }
 
-        if (!this._chatbotDisplayRestartButton()) {
+        if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.hasRestartButton) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },
@@ -367,82 +318,6 @@ const QWeb = core.qweb;
             '_chatbot': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.data,
             '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data,
         }));
-    },
-    /**
-     * Adds a small "is typing" animation into the chat window.
-     *
-     * @private
-     */
-    _chatbotSetIsTyping(isWelcomeMessage=false) {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
-            clearTimeout(this.isTypingTimeout);
-        }
-
-        this._chatbotDisableInput('');
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
-            isTypingTimeout: setTimeout(() => {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
-                    $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                        'chatbotImageSrc': `/im_livechat/operator/${
-                            this.messaging.publicLivechatGlobal.publicLivechat.operator.id
-                        }/avatar`,
-                        'chatbotName': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.name,
-                        'isWelcomeMessage': isWelcomeMessage,
-                    }))
-                );
-
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
-            }, this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay / 3),
-        });
-    },
-    /**
-     * Helper method that checks if the script should be ended or not.
-     * If the user has closed the conversation -> script has ended.
-     *
-     * Otherwise, there are 2 use cases where we want to end the script:
-     *
-     * If the current step is the last one AND the conversation was not taken over by a human operator
-     *   1. AND we expect a user input (or we are on a selection)
-     *       AND the user has already answered
-     *   2. AND we don't expect a user input
-     *
-     * @returns {Boolean}
-     * @private
-     */
-    _chatbotShouldEndScript() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed) {
-            return true;
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last &&
-            (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found)
-        ) {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_email'
-                && !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.is_email_valid
-            ) {
-                // email is not (yet) valid, let the user answer / try again
-                return false;
-            } else if (
-                (this._chatbotIsExpectingUserInput() ||
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_selection') &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
-            ) {
-                const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-                if (lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
-                    // we are on the last step of the script, expect a user input and the user has
-                    // already answered
-                    // -> end the script
-                    return true;
-                }
-            } else if (!this._chatbotIsExpectingUserInput()) {
-                // we are on the last step of the script and we do not expect a user input
-                // -> end the script
-                return true;
-            }
-        }
-
-        return false;
     },
     /**
      * A special case is handled for email steps, where we first validate the email (server side)
@@ -512,7 +387,7 @@ const QWeb = core.qweb;
             // did not find next step -> end the script
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last = true;
             this._renderMessages();
-            this._chatbotEndScript();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         }
 
         this._chatbotSaveSession();
@@ -537,37 +412,13 @@ const QWeb = core.qweb;
      */
     _isLastMessageFromCustomer() {
         const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0 ? this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1] : null;
-        return lastMessage && lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
      //--------------------------------------------------------------------------
      // Private - LiveChat Overrides
      //--------------------------------------------------------------------------
 
-    /**
-     * When we enter the "ask feedback" process of the chat, we hide some elements that become
-     * unnecessary and irrelevant (restart / end messages, any text field values, ...).
-     *
-     * @override
-     * @private
-     */
-     _askFeedback() {
-        this._super(...arguments);
-
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-        ) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed = true;
-            this._chatbotSaveSession();
-        }
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field')
-            .removeClass('d-none')
-            .val('');
-     },
     /**
      * Resuming the chatbot script if we are currently running one.
      *
@@ -583,7 +434,7 @@ const QWeb = core.qweb;
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
                 if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
                 }
             });
 
@@ -681,8 +532,8 @@ const QWeb = core.qweb;
                     return;  // operator has taken over the conversation, let them speak
                 } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this._debouncedChatbotAwaitUserInput();
-                } else if (!this._chatbotShouldEndScript()) {
-                    this._chatbotSetIsTyping();
+                } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                     this.messaging.publicLivechatGlobal.livechatButtonView.update({
                         chatbotNextStepTimeout: setTimeout(
                             this._chatbotTriggerNextStep.bind(this),
@@ -690,7 +541,7 @@ const QWeb = core.qweb;
                         ),
                     });
                 } else {
-                    this._chatbotEndScript();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
                 }
 
                 this._chatbotSaveSession();
@@ -761,7 +612,7 @@ const QWeb = core.qweb;
 
         if (stepIndex + 1 < this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
-                this._chatbotSetIsTyping(true);
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping(true);
             }
 
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -817,7 +668,7 @@ const QWeb = core.qweb;
         }
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: clear() });
-        this._chatbotSetIsTyping();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
         this.messaging.publicLivechatGlobal.livechatButtonView.update({
             chatbotNextStepTimeout: setTimeout(
                 this._chatbotTriggerNextStep.bind(this),
