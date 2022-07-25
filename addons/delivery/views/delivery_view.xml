@@ -353,7 +353,11 @@
                     <xpath expr="//field[@name='order_line']/tree" position="attributes">
                         <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
                     </xpath>
+                    <field name="picking_policy" position="after">
+                        <field name="shipping_weight" readonly="True"/>
+                    </field>
                 </data>
+                
             </field>
         </record>
 
