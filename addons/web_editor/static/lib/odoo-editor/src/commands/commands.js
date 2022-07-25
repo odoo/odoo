@@ -819,7 +819,7 @@ export const editorCommands = {
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
-        const tdsHtml = new Array(colNumber).fill('<td><br></td>').join('');
+        const tdsHtml = new Array(colNumber).fill('<td><p><br></p></td>').join('');
         const trsHtml = new Array(rowNumber).fill(`<tr>${tdsHtml}</tr>`).join('');
         const tableHtml = `<table class="table table-bordered"><tbody>${trsHtml}</tbody></table>`;
         const sel = editor.document.getSelection();
