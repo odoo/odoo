@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LivechatButtonView',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['publicLivechatGlobalOwner'],
     recordMethods: {
         /**
          * @private
@@ -269,6 +269,11 @@ registerModel({
         publicLivechat: one('PublicLivechat', {
             inverse: 'livechatButtonOwner',
             isCausal: true,
+        }),
+        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            inverse: 'livechatButtonView',
+            readonly: true,
+            required: true,
         }),
         rule: attr(),
         serverUrl: attr({

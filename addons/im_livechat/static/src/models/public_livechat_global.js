@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import utils from 'web.utils';
 
@@ -26,6 +27,18 @@ registerModel({
             }
         },
     },
+    recordMethods: {
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeLivechatButtonView() {
+            if (this.isAvailable) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+    },
     fields: {
         HISTORY_LIMIT: attr({
             default: 15,
@@ -47,6 +60,11 @@ registerModel({
         }),
         isAvailable: attr({
             default: false,
+        }),
+        livechatButtonView: one('LivechatButtonView', {
+            compute: '_computeLivechatButtonView',
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
         }),
         notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
             inverse: 'publicLivechatGlobalOwner',
