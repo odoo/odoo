@@ -5,7 +5,7 @@
     <t t-set="allButtons" t-value="getButtons()" />
     <t t-set="visibleButtons" t-value="allButtons['visible']" />
     <t t-set="additionalButtons" t-value="allButtons['additional']" />
-    <div class="o-form-buttonbox oe_button_box" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full' }}">
+    <div class="o-form-buttonbox oe_button_box" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full'}} {{this.props.class}}">
         <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value" />
 
         <t t-if="additionalButtons.length" >

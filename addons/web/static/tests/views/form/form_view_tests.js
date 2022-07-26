@@ -5889,6 +5889,21 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o-form-buttonbox");
     });
 
+    QUnit.test("button box accepts extra classes", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <div class="oe_button_box my_class" name="button_box"><div/></div>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o-form-buttonbox.my_class");
+    });
+
     QUnit.test("one2many default value creation", async function (assert) {
         assert.expect(1);
 
