@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 
 
 class AccountAnalyticLine(models.Model):
@@ -13,10 +13,28 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True),"
         "('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]")
 
+    def _get_redirect_action(self):
+        leave_form_view_id = self.env.ref('hr_holidays.hr_leave_view_form').id
+        action_data = {
+           'name': _('Time Off'),
+           'type': 'ir.actions.act_window',
+           'res_model': 'hr.leave',
+           'views': [(self.env.ref('hr_holidays.hr_leave_view_tree_my').id, 'list'), (leave_form_view_id, 'form')],
+           'domain': [('id', 'in', self.holiday_id.ids)],
+        }
+        if len(self.holiday_id) == 1:
+            action_data['views'] = [(leave_form_view_id, 'form')]
+            action_data['res_id'] = self.holiday_id.id
+        return action_data
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_leave(self):
         if any(line.holiday_id for line in self):
-            raise UserError(_('You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead.'))
+            if not self.env.user.has_group('hr_holidays.group_hr_holidays_user') and self.env.user not in self.holiday_id.sudo().user_id:
+                raise UserError(_('You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead.'))
+            warning_msg = _('You cannot delete timesheets linked to time off. Please, cancel the time off instead.')
+            action = self._get_redirect_action()
+            raise RedirectWarning(warning_msg, action, _('View Time Off'))
 
     @api.model_create_multi
     def create(self, vals_list):
