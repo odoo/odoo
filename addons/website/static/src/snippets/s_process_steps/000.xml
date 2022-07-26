@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_process_steps.defs">
+    <defs>
+        <marker class="s_process_steps_arrow_head" markerWidth="15" markerHeight="10" refX="6" refY="6" orient="auto" t-att-id="id">
+            <path d="M 2,2 L10,6 L2,10 L6,6 L2,2" vector-effect="non-scaling-size" t-attf-style="fill: #{color};"></path>
+        </marker>
+    </defs>
+</t>
+
+<t t-name="website.s_process_steps.connectorPath">
+    <t t-if="arrowHeadId">
+        <path t-att-d="path" vector-effect="non-scaling-stroke" t-attf-marker-end="url(##{arrowHeadId})" t-attf-style="stroke: #{color};"></path>
+    </t>
+    <t t-else="">
+        <path t-att-d="path" vector-effect="non-scaling-stroke" t-attf-style="stroke: #{color};"></path>
+    </t>
+</t>
+
+</templates>

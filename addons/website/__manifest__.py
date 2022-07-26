@@ -135,6 +135,8 @@
             # to archive and not load that JS file if we have to create a 001.js
             # and the DB has no snippet using the 000.js left.
             'website/static/src/snippets/s_map/000.js',
+            'website/static/src/snippets/s_process_steps/000.js',
+            'website/static/src/snippets/s_process_steps/utils.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
