@@ -363,7 +363,10 @@ class Digest(models.Model):
         :return dict: key: kpi name (field name), value: an action that will be
           concatenated with /web#action={action}
         """
-        return {}
+        return {
+            'kpi_res_users_connected': 'base.action_res_users&menu_id=%s' % self.env.ref('base.menu_administration').id,
+            'kpi_mail_message_total': 'mail.action_discuss&menu_id=%s' % self.env.ref('mail.menu_root_discuss').id,
+        }
 
     def _compute_kpis_app_name(self):
         """Override this method if you define kpis on a technical module (non-app).
