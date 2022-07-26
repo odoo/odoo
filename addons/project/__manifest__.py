@@ -97,6 +97,7 @@
             'project/static/src/project_control_panel/**/*.xml',
         ],
         'web.qunit_suite_tests': [
+            'project/static/tests/project_test_utils.js',
             'project/static/tests/burndown_chart_tests.js',
             'project/static/tests/project_form_tests.js',
         ],
