@@ -25,8 +25,13 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     TipScreen: 'TIPPING',
                 });
             }
-            getTable(order) {
-                return `${order.table.floor.name} (${order.table.name})`;
+           getTable(order) {
+                if (typeof order.table != "undefined") {
+                    return `${order.table.floor.name} (${order.table.name})`;
+                    }
+                else {
+                    return this.env._t("The table was deleted")
+                }
             }
             //@override
             _getSearchFields() {
