@@ -31,4 +31,8 @@ ButtonBox.template = "web.Form.ButtonBox";
 ButtonBox.components = { Dropdown, DropdownItem };
 ButtonBox.props = {
     slots: Object,
+    class: { type: String, optional: true },
+};
+ButtonBox.defaultProps = {
+    class: "",
 };
