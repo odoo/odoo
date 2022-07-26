@@ -23,7 +23,7 @@
                             <div class="o_setting_right_pane border-left-0 ms-0 ps-0">
                                 <div class="content-group">
                                     <div class="row mt8">
-                                        <label class="col-lg-3 ps-0" string="Point of Sale" for="pos_config_id"/>
+                                        <label class="col align-self-center ml8" string="Point of Sale" for="pos_config_id"/>
                                         <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
                                         <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="col btn-link ms-2" style="line-height: 0.5;"/>
                                     </div>
@@ -46,7 +46,7 @@
                                 <!-- Wrap the warnings in an o_setting_box so that it doesn't show in the search. -->
                                 <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('pos_has_active_session','=', False)]}" role="alert">
                                     A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
-                                    <button class="btn" style="padding:0" name="pos_open_ui" type="object">Click here to close the session</button>
+                                    <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
                                 </div>
                                 <div class="o_notification_alert alert alert-warning" attrs="{'invisible': [('pos_company_has_template','=',True)]}" role="alert">
                                     There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
