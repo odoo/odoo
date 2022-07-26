@@ -14,7 +14,7 @@ registerModel({
                 widget: new Feedback(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
                 ),
             });
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(this.widget);

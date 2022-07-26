@@ -119,10 +119,10 @@ const PublicLivechatWindow = Widget.extend({
     renderHeader() {
         this.$header.html(
             qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.status,
+                status: this.messaging.publicLivechatGlobal.publicLivechat.status,
                 thread: this._thread,
-                title: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.name,
-                unreadCounter: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter,
+                title: this.messaging.publicLivechatGlobal.publicLivechat.name,
+                unreadCounter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
                 widget: this,
             })
         );
@@ -147,9 +147,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.isFolded;
+            folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
-        this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({ isFolded: folded });
+        this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -227,7 +227,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter > 0 &&
+            this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0 &&
             !this._thread._folded
         ) {
             this._thread.markAsRead();

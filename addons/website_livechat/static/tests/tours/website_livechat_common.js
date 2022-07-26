@@ -30,7 +30,7 @@ LivechatButton.include({
                         self.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
                             type: 'mail.channel/new_message',
                             payload: {
-                                id: self.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat._id,
+                                id: self.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._id,
                                 message: {
                                     id: self.messaging.publicLivechatGlobal.livechatButtonView.messages.length + 1,
                                     author_id: [0, 'Website Visitor Test'],

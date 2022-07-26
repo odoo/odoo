@@ -112,24 +112,24 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         // Necessary for thread typing mixin to display is typing notification
         // bar text (at least, for the operator in the members).
         this._members = (
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator
+            this.messaging.publicLivechatGlobal.publicLivechat.operator
             ? [{
-                id: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator.id,
-                name: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator.name,
+                id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
             }]
             : []
         );
 
         if (params.data.message_unread_counter !== undefined) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({
+            this.messaging.publicLivechatGlobal.publicLivechat.update({
                 unreadCounter: params.data.message_unread_counter
             });
         }
 
         if (_.isBoolean(params.data.folded)) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({ isFolded: params.data.folded });
+            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.folded });
         } else {
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({ isFolded: params.data.state === 'folded' });
+            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.state === 'folded' });
         }
     },
 
@@ -224,8 +224,8 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise}
      */
     markAsRead() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter > 0) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({ unreadCounter: 0 });
+        if (this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0) {
+            this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: 0 });
             this.trigger_up('updated_unread_counter');
             return Promise.resolve();
         }
@@ -292,19 +292,19 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
-            folded: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.isFolded,
+            folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
             id: this._id,
-            message_unread_counter: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter,
+            message_unread_counter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
             operator_pid: (
-                this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator
+                this.messaging.publicLivechatGlobal.publicLivechat.operator
                 ? [
-                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator.id,
-                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator.name,
+                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                    this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
                 ]
                 : []
             ),
-            name: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.name,
-            uuid: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.uuid,
+            name: this.messaging.publicLivechatGlobal.publicLivechat.name,
+            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
         };
     },
     /**
@@ -342,7 +342,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _notifyMyselfTyping(params) {
         return session.rpc('/im_livechat/notify_typing', {
-            uuid: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.uuid,
+            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
             is_typing: params.typing,
         }, { shadow: true });
     },
@@ -430,7 +430,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {mail.model.AbstractMessage} message
      */
     _onTypingMessageAdded(message) {
-        const operatorID = this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.operator.id;
+        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }

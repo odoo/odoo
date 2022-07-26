@@ -14,7 +14,7 @@ registerModel({
                 legacyChatWindow: new PublicLivechatWindow(
                     this.livechatButtonViewOwner.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
                     { titleColor: this.livechatButtonViewOwner.titleColor },
                 ),
             });
