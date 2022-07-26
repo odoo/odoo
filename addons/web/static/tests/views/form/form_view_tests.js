@@ -9131,11 +9131,17 @@ QUnit.module("Views", (hooks) => {
                     <div class="oe_title">
                         <field name="display_name"/>
                     </div>
+                    <notebook>
+                        <page name="a" string="A"></page>
+                    </notebook>
                 </form>`,
             resId: 1,
         });
 
         // in readonly
+        await click(target.querySelector(".nav-tabs .nav-item"));
+        assert.containsNone(target, ".o_catch_attention");
+
         await click(target.querySelector("div.oe_title"));
         assert.hasClass(target.querySelector(".o_form_button_edit"), "o_catch_attention");
 

@@ -31,8 +31,8 @@ export class FormRenderer extends Component {
             this.compileParams
         );
         useSubEnv({ model: record.model });
-        useBounceButton(useRef("compiled_view_root"), () => {
-            return !record.isInEdition;
+        useBounceButton(useRef("compiled_view_root"), (target) => {
+            return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
         });
         this.uiService = useService('ui');
         this.onResize = useDebounced(this.render, 200);
