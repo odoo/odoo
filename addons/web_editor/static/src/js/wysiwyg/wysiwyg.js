@@ -453,7 +453,7 @@ const Wysiwyg = Widget.extend({
                                 model: "res.users",
                                 method: "search_read",
                                 args: [
-                                    [['id', '=', this.getSession().user_id]],
+                                    [['id', '=', this.getSession().uid]],
                                     ['name']
                                 ],
                             }))[0].name;
