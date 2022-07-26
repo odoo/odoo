@@ -79,9 +79,9 @@
                     </div>
                 </main>
                 <footer class="footer">
-                    <div class="button highlight" t-on-click="onCloseSession">Close Session</div>
+                    <div class="button highlight" t-on-click="confirm">Close Session</div>
                     <div class="button" t-on-click="closePos" title="Visit the Backend but keep session open">Backend</div>
-                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup">Discard</div>
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</div>
                     <!-- Download Sale Details -->
                     <div class="small button icon" 
                         t-on-click="downloadSalesReport" 

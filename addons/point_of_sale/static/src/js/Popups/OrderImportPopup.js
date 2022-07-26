@@ -18,7 +18,7 @@ odoo.define('point_of_sale.OrderImportPopup', function(require) {
     OrderImportPopup.template = 'OrderImportPopup';
     OrderImportPopup.defaultProps = {
         confirmText: _lt('Ok'),
-        cancelText: _lt('Cancel'),
+        cancelKey: false,
         body: '',
     };
 
