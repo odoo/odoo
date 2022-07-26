@@ -46,11 +46,11 @@ odoo.define('point_of_sale.SelectionPopup', function (require) {
     }
     SelectionPopup.template = 'SelectionPopup';
     SelectionPopup.defaultProps = {
-        confirmText: _lt('Confirm'),
         cancelText: _lt('Cancel'),
         title: _lt('Select'),
         body: '',
         list: [],
+        confirmKey: false,
     };
 
     Registries.Component.add(SelectionPopup);

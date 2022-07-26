@@ -36,6 +36,13 @@ export class GiftCardPopup extends AbstractAwaitablePopup {
         this.useAutoFocus(this.state);
     }
 
+    //@override
+    async confirm() {
+        if (!this.state.showMenu) {
+            this.clickConfirm();
+        }
+    }
+
     clickConfirm() {
         this.confirmFunctions[this.state.context]();
     }
