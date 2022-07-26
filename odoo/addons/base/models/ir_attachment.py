@@ -400,7 +400,7 @@ class IrAttachment(models.Model):
     raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
     datas = fields.Binary(string='File Content (base64)', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data', attachment=False)
-    store_fname = fields.Char('Stored Filename')
+    store_fname = fields.Char('Stored Filename', index=True)
     file_size = fields.Integer('File Size', readonly=True)
     checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
@@ -647,7 +647,7 @@ class IrAttachment(models.Model):
                 ))
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when 
+            # We can group the values by model, res_id to make only one query when
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)
