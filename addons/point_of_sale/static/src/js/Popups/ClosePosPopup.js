@@ -64,6 +64,15 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 }
             }
         }
+        //@override
+        async confirm() {
+            await this.closeSession();
+            super.confirm();
+        }
+        //@override
+        async cancel() {
+            this.cancelPopup();
+        }
         openDetailsPopup() {
             this.state.payments[this.defaultCashDetails.id].counted = 0;
             this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;

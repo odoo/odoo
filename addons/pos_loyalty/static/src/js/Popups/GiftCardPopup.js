@@ -34,6 +34,13 @@ export class GiftCardPopup extends AbstractAwaitablePopup {
         }, true);
     }
 
+    //@override
+    async confirm() {
+        if (!this.state.showMenu) {
+            this.clickConfirm();
+        }
+    }
+
     clickConfirm() {
         this.confirmFunctions[this.state.context]();
     }
