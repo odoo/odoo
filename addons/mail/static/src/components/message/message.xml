@@ -10,6 +10,7 @@
                     'o-discussion': messageView.message.isDiscussionOrNotification,
                     'o-has-message-selection': messageView.messageListViewMessageViewItemOwner and messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
+                    'o-isReplyHighlighted bg-white shadow-lg': messageView.isHighlighted,
                     'o-isDeviceSmall': messaging.device.isSmall,
                     'o-not-discussion': !messageView.message.isDiscussionOrNotification,
                     'o-notification': messageView.message.message_type === 'notification',
@@ -25,9 +26,8 @@
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
-                <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
-                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute top-0 end-0 mt-n3 px-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
-                    <MessageActionList record="messageView.messageActionList"/>
+                <div class="o_Message_inReplyToWrap" t-att-class="{ 'me-5': messageView.isInDiscuss or messageView.isInChatWindowAndIsAlignedLeft, 'd-flex justify-content-end ms-5': messageView.isInChatWindowAndIsAlignedRight }">
+                    <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView" className="'mb-1'" classNameObj="{ 'me-5': messageView.isInChatWindowAndIsAlignedLeft, 'ms-5': messageView.isInChatWindowAndIsAlignedRight }"/>
                 </div>
                 <div class="position-relative d-flex flex-shrink-0" t-att-class="{ 'flex-row-reverse': messageView.isInChatWindowAndIsAlignedRight }">
                     <div class="o_Message_sidebar d-flex flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed, 'justify-content-center': messageView.isInChatWindow }">

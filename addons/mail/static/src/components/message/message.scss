@@ -50,10 +50,10 @@
 // ------------------------------------------------------------------
 
 .o_Message {
-    transition: background-color .5s ease-out;
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
-    &.o-not-discussion.o-selected {
-        border-bottom: 1px solid darken(map-get($grays, '400'), 5%);
+    &.o-isReplyHighlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
     }
 }
 
