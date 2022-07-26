@@ -365,7 +365,9 @@ registerModel({
         channel: one('Thread', {
             inverse: 'rtcSessions',
         }),
-        channelMember: one('ChannelMember'),
+        channelMember: one('ChannelMember', {
+            inverse: 'rtcSession',
+        }),
         connectionRecoveryTimeout: attr(),
         /**
          * State of the connection with this session, uses RTCPeerConnection.iceConnectionState

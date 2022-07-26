@@ -47,10 +47,21 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsStreaming() {
+            return Boolean(this.rtcSession && this.rtcSession.videoStream);
+        },
     },
     fields: {
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
+        }),
+        callParticipantCards: many('CallParticipantCard', {
+            inverse: 'channelMember',
+            isCausal: true,
         }),
         channel: one('Channel', {
             inverse: 'channelMembers',
@@ -73,10 +84,16 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        isStreaming: attr({
+            compute: '_computeIsStreaming',
+        }),
         persona: one('Persona', {
             inverse: 'channelMembers',
             readonly: true,
             required: true,
+        }),
+        rtcSession: one('RtcSession', {
+            inverse: 'channelMember',
         }),
     },
 });

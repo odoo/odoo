@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: [['rtcSession', 'invitedMember'], ['callViewAsMainCard', 'callViewAsTile']],
+    identifyingFields: ['channelMember', ['callViewAsMainCard', 'callViewAsTile']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -32,12 +32,12 @@ registerModel({
                 }
                 return;
             }
-            const channel = this.channel;
+            const channel = this.channelMember.channel.thread;
             const channelData = await this.messaging.rpc(({
                 route: '/mail/rtc/channel/cancel_call_invitation',
                 params: {
-                    channel_id: this.channel.id,
-                    member_ids: this.invitedMember && [this.invitedMember.id],
+                    channel_id: channel.id,
+                    member_ids: [this.channelMember.id],
                 },
             }));
             if (!channel.exists()) {
@@ -68,21 +68,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeAvatarUrl() {
-            if (!this.channel) {
-                return;
-            }
-            if (this.rtcSession) {
-                return this.rtcSession.channelMember.avatarUrl;
-            }
-            if (this.invitedMember) {
-                return this.invitedMember.avatarUrl;
-            }
-        },
-        /**
-         * @private
          * @returns {mail.callView}
          */
         _computeCallView() {
@@ -98,7 +83,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasConnectionInfo() {
-            return Boolean(this.rtcSession && this.env.debug && this.channel.rtc);
+            return Boolean(this.rtcSession && this.env.debug && this.channelMember.channel.thread.rtc);
         },
         /**
          * @private
@@ -106,12 +91,12 @@ registerModel({
          */
         _computeInboundConnectionTypeText() {
             if (!this.rtcSession || !this.rtcSession.remoteCandidateType) {
-                return sprintf(this.env._t('From %s: no connection'), this.name);
+                return sprintf(this.env._t('From %s: no connection'), this.channelMember.persona.name);
             }
             return sprintf(
                 this.env._t('From %(name)s: %(candidateType)s (%(protocol)s)'), {
                     candidateType: this.rtcSession.remoteCandidateType,
-                    name: this.name,
+                    name: this.channelMember.persona.name,
                     protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.remoteCandidateType],
                 },
             );
@@ -134,26 +119,14 @@ registerModel({
          * @private
          * @returns {string}
          */
-        _computeName() {
-            if (this.rtcSession) {
-                return this.rtcSession.channelMember.persona.name;
-            }
-            if (this.invitedMember) {
-                return this.invitedMember.name;
-            }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
         _computeOutboundConnectionTypeText() {
             if (!this.rtcSession || !this.rtcSession.localCandidateType) {
-                return sprintf(this.env._t('To %s: no connection'), this.name);
+                return sprintf(this.env._t('To %s: no connection'), this.channelMember.persona.name);
             }
             return sprintf(
                 this.env._t('To %(name)s: %(candidateType)s (%(protocol)s)'), {
                     candidateType: this.rtcSession.localCandidateType,
-                    name: this.name,
+                    name: this.channelMember.persona.name,
                     protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.localCandidateType],
                 },
             );
@@ -170,17 +143,10 @@ registerModel({
         },
     },
     fields: {
-        /**
-         * The relative url of the image that represents the card.
-         */
-        avatarUrl: attr({
-            compute: '_computeAvatarUrl',
-        }),
-        /**
-         * The channel of the call.
-         */
-        channel: one('Thread', {
+        channelMember: one('ChannelMember', {
+            inverse: 'callParticipantCards',
             required: true,
+            readonly: true,
         }),
         /**
          * Determines whether or not we show the connection info.
@@ -194,9 +160,6 @@ registerModel({
         inboundConnectionTypeText: attr({
             compute: '_computeInboundConnectionTypeText',
         }),
-        invitedMember: one('ChannelMember', {
-            readonly: true,
-         }),
         /**
          * Determines if this card has to be displayed in a minimized form.
          */
@@ -210,13 +173,6 @@ registerModel({
         isTalking: attr({
             default: false,
             compute: '_computeIsTalking',
-        }),
-        /**
-         * The name of the rtcSession or the invited partner.
-         */
-        name: attr({
-            default: 'Anonymous',
-            compute: '_computeName',
         }),
         /**
          * The text describing the outbound ice connection candidate type.
@@ -245,12 +201,9 @@ registerModel({
             inverse: 'tileParticipantCards',
             readonly: true,
         }),
-        /**
-         * If set, this card represents a rtcSession.
-         */
         rtcSession: one('RtcSession', {
+            related: 'channelMember.rtcSession',
             inverse: 'callParticipantCards',
-            readonly: true,
         }),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',
