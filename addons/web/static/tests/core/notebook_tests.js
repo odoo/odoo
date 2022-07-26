@@ -193,31 +193,35 @@ QUnit.module("Components", (hooks) => {
 
         class NotebookPageRenderer extends Component {}
         NotebookPageRenderer.template = xml`
-                <h3 t-esc="props.title"></h3>
+                <h3 t-esc="props.heading"></h3>
                 <p t-esc="props.text" />
             `;
+        NotebookPageRenderer.props = {
+            heading: String,
+            text: String,
+        };
 
         class Parent extends Component {
             setup() {
                 this.pages = [
                     {
                         Component: NotebookPageRenderer,
+                        index: 1,
+                        title: "Page 2",
                         props: {
-                            index: 1,
-                            isVisible: true,
-                            title: "Page 2",
+                            heading: "Page 2",
                             text: "Second page rendered by a template component",
                         },
                     },
                     {
                         Component: NotebookPageRenderer,
+                        id: "page_three", // required to be set as default page
+                        index: 2,
+                        title: "Page 3",
                         props: {
-                            index: 2,
-                            isVisible: true,
-                            title: "Page 3",
+                            heading: "Page 3",
                             text: "Third page rendered by a template component",
                         },
-                        id: "page_three", // required to be set as default page
                     },
                 ];
             }
@@ -261,19 +265,13 @@ QUnit.module("Components", (hooks) => {
                 this.pages = [
                     {
                         Component: Page,
-                        props: {
-                            index: 1,
-                            isVisible: true,
-                            title: "Page 1",
-                        },
+                        index: 1,
+                        title: "Page 1",
                     },
                     {
                         Component: Page,
-                        props: {
-                            index: 2,
-                            isVisible: true,
-                            title: "Page 2",
-                        },
+                        index: 2,
+                        title: "Page 2",
                     },
                 ];
             }

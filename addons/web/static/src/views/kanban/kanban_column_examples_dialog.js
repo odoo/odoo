@@ -35,11 +35,8 @@ export class KanbanColumnExamplesDialog extends Component {
         this.props.examples.forEach((eg) => {
             this.pages.push({
                 Component: KanbanExamplesNotebookTemplate,
-                props: {
-                    ...eg,
-                    isVisible: true,
-                    title: eg.name,
-                },
+                title: eg.name,
+                props: eg,
                 id: eg.name,
             });
         });
