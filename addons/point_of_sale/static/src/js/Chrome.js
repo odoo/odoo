@@ -245,7 +245,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         openCashControl() {
             if (this.shouldShowCashControl()) {
-                this.showPopup('CashOpeningPopup', { cancelKey: false });
+                this.showPopup('CashOpeningPopup');
             }
         }
 
