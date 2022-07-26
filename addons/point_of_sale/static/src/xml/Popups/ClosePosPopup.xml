@@ -93,9 +93,9 @@
                     </div>
                 </main>
                 <footer class="footer">
-                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup">Continue Selling</div>
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Continue Selling</div>
                     <div class="button" t-on-click="closePos">Keep Session Open</div>
-                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="closeSession">Close Session</div>
+                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="confirm">Close Session</div>
                 </footer>
             </div>
             <MoneyDetailsPopup
