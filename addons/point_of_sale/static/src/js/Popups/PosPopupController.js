@@ -62,7 +62,10 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
             }
         }
         _onWindowKeyup(event) {
-            if (!this.topPopup) return;
+            const eventIsFromInputField = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+            const shouldHandleKey = this.topPopup && !eventIsFromInputField;
+            if (!shouldHandleKey) return;
+
             if (event.key === this.topPopup.props.cancelKey) {
                 this.env.posbus.trigger(`cancel-popup-${this.topPopup.props.id}`);
             } else if (event.key === this.topPopup.props.confirmKey) {
