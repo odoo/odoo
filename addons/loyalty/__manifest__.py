@@ -26,7 +26,6 @@
     'assets': {
         'web.assets_backend': [
             'loyalty/static/src/js/loyalty_control_panel_widget.js',
-            'loyalty/static/src/js/loyalty_views.js',
             'loyalty/static/src/js/loyalty_list_view.js',
             'loyalty/static/src/scss/loyalty.scss',
         ],
