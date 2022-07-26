@@ -294,7 +294,8 @@ class LoyaltyProgram(models.Model):
             return False
         program = self.create(template_values[template_id])
         action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_action')
-        action['view_type'] = 'form'
+        action['views'] = [[False, 'form']]
+        action['view_mode'] = 'form'
         action['res_id'] = program.id
         return action
 
