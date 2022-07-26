@@ -129,6 +129,12 @@ class HrExpense(models.Model):
         for expense in self.filtered("product_has_cost"):
             expense.currency_id = expense.company_currency_id
 
+    @api.onchange('product_has_cost')
+    def _onchange_product_has_cost(self):
+        # Reset quantity to 1, in case of 0-cost product
+        if not self.product_has_cost:
+            self.quantity = 1
+
     @api.depends('date', 'currency_id', 'company_currency_id', 'company_id')
     def _compute_currency_rate(self):
         date_today = fields.Date.context_today(self.env.user)
