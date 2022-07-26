@@ -1247,7 +1247,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
 
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
