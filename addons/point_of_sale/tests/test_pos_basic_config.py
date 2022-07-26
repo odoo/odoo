@@ -288,6 +288,34 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertTrue(invoice_receivable_line.reconciled)
         self.assertTrue(receivable_line.reconciled)
 
+    def test_return_order_invoiced(self):
+        self.open_new_session()
+
+        # create order
+        orders = [
+            self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer,
+                                      is_invoiced=True, uid='666-666-666')]
+        self.env['pos.order'].create_from_ui(orders)
+        order = self.pos_session.order_ids.filtered(lambda order: '666-666-666' in order.pos_reference)
+
+        # refund
+        order.refund()
+        refund_order = self.pos_session.order_ids.filtered(lambda order: order.state == 'draft')
+
+        # pay the refund
+        context_make_payment = {"active_ids": [refund_order.id], "active_id": refund_order.id}
+        make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
+            'payment_method_id': self.cash_pm.id,
+            'amount': -100,
+        })
+        make_payment.check()
+
+        # invoice refund
+        refund_order.action_pos_order_invoice()
+
+        # close the session -- just verify, that there are no errors
+        self.pos_session.action_pos_session_validate()
+
     def test_return_order(self):
         """ Test return order
 

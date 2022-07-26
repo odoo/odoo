@@ -18,6 +18,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2021
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
 # Far Har <fhari1234@gmail.com>, 2021
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Far Har <fhari1234@gmail.com>, 2021\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgstr "تعداد سفارش کار"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr ""
+msgstr "# صورت مواد اولیه که در آنجا استفاده شده"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -106,7 +107,7 @@ msgstr "%s نمی‌تواند حذف شود. ابتدا حذف آن را امت
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Structure - %s' % object.display_name"
-msgstr ""
+msgstr "'ساختار صورت مواد اولیه - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -164,6 +165,11 @@ msgid ""
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                         فایل ها را در محصول خود آپلود کنید\n"
+"                     </p><p>\n"
+"                         از این ویژگی برای ذخیره هر فایلی مانند نقشه ها یا مشخصات استفاده کنید.\n"
+"                     </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -345,6 +351,7 @@ msgstr "<strong>مرکز کار: </strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"یک کیت نوع صورت مواد اولیه برای تقسیم محصول به قطعات آن استفاده می شود."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -358,6 +365,7 @@ msgstr "یک سفارش تولید از قبل انجام شده یا لغو ش�
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"یک محصول با صورتحساب مواد از نوع کیت نمی تواند قانون سفارش مجدد داشته باشد."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -465,6 +473,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"تمام مقادیر محصول باید بزرگتر یا مساوی 0 باشد.\n"
+"سطرها با 0 کمیت را می توان به عنوان خطوط اختیاری استفاده کرد.\n"
+"اگر می خواهید محصولات اضافی را روی BoM ها مدیریت کنید، باید ماژول mrp_byproduct را نصب کنید!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_abstract_workorder__use_create_components_lots
@@ -472,7 +483,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr ""
+msgstr "اجازه ایجاد شماره‌های سریال/سری ساخت جدید برای قطعات"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allowed_lots_domain
@@ -507,11 +518,12 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"سفارش ساخته نشده برای تجزیه یک محصول نهایی به قطعات آن استفاده می شود."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
-msgstr ""
+msgstr "اعمال روی گونه ها"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -540,12 +552,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "در ایجاد یک سفارش ساخت."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Stock Transfer."
-msgstr ""
+msgstr "در ایجاد انتقال موجودی."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -582,7 +594,7 @@ msgstr "موجود بودن"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr ""
+msgstr "تلفات در دسترس بودن"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -601,26 +613,28 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"میانگین زمان تحویل در روز برای تولید این محصول. در مورد صورت مواد اولیه چند "
+"سطحی، زمان تولید قطعات اضافه خواهد شد."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr ""
+msgstr "صورت مواد اولیه گونه های محصول"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr ""
+msgstr "صورت مواد اولیه گونه های محصول برای اعمال این سطر مورد نیاز است."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr ""
+msgstr "گزارش ساختار صورت مواد اولیه"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "سطرهای صورت مواد اولیه از صورت مواد اولیه ارجاع شده"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -668,6 +682,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required components to "
 "make a finished product."
 msgstr ""
+"صورت مواد اولیه به شما این امکان را می دهد که لیستی از قطعات مورد نیاز برای "
+"ساخت محصول نهایی را تعریف کنید."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -682,6 +698,9 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"صورت مواد اولیه به شما این امکان را می دهد که لیستی از\n"
+"               مواد اولیه مورد نیاز برای ساخت محصول نهایی را \n"
+"               مشخص کنید. از طریق سفارش ساخت یا بسته ای از محصولات."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -709,7 +728,7 @@ msgstr "زمان مسدود شده"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hours over the last month"
-msgstr ""
+msgstr "ساعات مسدود شده در ماه گذشته"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
@@ -728,17 +747,17 @@ msgstr "صورت مواد اولیه"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr ""
+msgstr "قطعات صورت مواد اولیه"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Cost"
-msgstr ""
+msgstr "هزینه صورت مواد اولیه"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr ""
+msgstr "سطر صورت مواد اولیه"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
@@ -751,7 +770,7 @@ msgstr "سطرهای صورت مواد اولیه"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #, python-format
 msgid "BoM Structure"
-msgstr ""
+msgstr "ساختار صورت مواد اولیه"
 
 #. module: mrp
 #. openerp-web
@@ -759,7 +778,7 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
+msgstr "ساختار و هزینه صورت مواد اولیه"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -789,7 +808,7 @@ msgstr "جزئیات صورت مواد اولیه"
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
-msgstr ""
+msgstr "سطر صورت مواد اولیه محصول %s نباید همانند صورت مواد اولیه محصول باشد."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -1019,12 +1038,12 @@ msgstr "مصرف شده"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr ""
+msgstr "سطرهای دمونتاژ قطعات مصرف شده"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr ""
+msgstr "سفارش دمونتاژ قطعات مصرف شده"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1080,7 +1099,7 @@ msgstr "اطلاعات هزینه‌ای"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr ""
+msgstr "ایجاد سری ساخت/ شماره سریال برای قطعات"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1166,7 +1185,7 @@ msgstr "ایجاد شده در"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Creates a new serial/lot number"
-msgstr ""
+msgstr "ایجاد یک شماره سریال/ سری ساخت جدید"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1188,13 +1207,13 @@ msgstr "داده پایگاه داده"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_finished
 msgid "Date at which you plan to finish the production."
-msgstr ""
+msgstr "تاریخی که در آن قصد دارید تولید را به پایان برسانید."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_start
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid "Date at which you plan to start the production."
-msgstr ""
+msgstr "تاریخی که در آن قصد دارید تولید را شروع کنید."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1209,7 +1228,7 @@ msgstr "مدت پیشفرض"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "زمان پیش‌فرض تولید"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -1233,7 +1252,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom__ready_to_produce
 msgid ""
 "Defines when a Manufacturing Order is considered as ready to be started"
-msgstr ""
+msgstr "تعیین می کند که چه زمانی یک سفارش ساخت آماده شروع در نظر گرفته شود"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -1269,7 +1288,7 @@ msgstr "مکان مقصد"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
 msgid "Disassembly Order"
-msgstr ""
+msgstr "سفارش دمونتاژ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -1408,6 +1427,7 @@ msgstr "تاریخ پایان"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_line__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
+"از قابلیت ردیابی یک محصول قابل نگهداری در انبار خود اطمینان حاصل کنید."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1463,7 +1483,7 @@ msgstr "تمام شد"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_ids
 msgid "Finished Lot/Serial Number"
-msgstr ""
+msgstr "سری ساخت/ شماره سریال تمام شده"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__finished_lots_exist
@@ -1473,7 +1493,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr ""
+msgstr "انتقالات پایان یافته"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -1484,12 +1504,12 @@ msgstr "محصول ساخته شده"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
 msgid "Finished Product Label (PDF)"
-msgstr ""
+msgstr "برچسب محصول نهایی (PDF)"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_manufacture_template
 msgid "Finished Product Label (ZPL)"
-msgstr ""
+msgstr "برچسب محصول نهایی (ZPL)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__finished_workorder_id
@@ -1722,6 +1742,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"اگر فیلد فعال روی False تنظیم شود، به شما این امکان را می دهد که صورتحساب "
+"های مطالب را بدون حذف آن پنهان کنید."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__active
@@ -1757,13 +1779,13 @@ msgstr "عرض تصویر"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "انتقال(های) تاثیرگذار:"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
-msgstr ""
+msgstr "قالب ورود برای صورت مواد اولیه"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -1772,6 +1794,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
+"برنامه ریزی برای دستور کار غیرممکن است. لطفاً در دسترس بودن مرکز کار را "
+"بررسی کنید."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -1796,6 +1820,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"تاریخ مفیدی که به شما امکان می دهد تعیین کنید که سفارش تولید حداکثر چه زمانی"
+" باید پردازش شود تا تحویل به موقع انجام شود."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -1861,6 +1887,14 @@ msgstr "آیا کاربر فعلی در حال کار است"
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
 
 #. module: mrp
@@ -1941,7 +1975,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__last_working_user_id
 msgid "Last user that worked on this work order."
-msgstr ""
+msgstr "آخرین کاربری که روی این سفارش کار کار کرده است."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2066,12 +2100,12 @@ msgstr "پایین"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
 msgid "MRP Work Orders"
-msgstr ""
+msgstr "سفارشات کاری MRP"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "MRP Workorder productivity losses"
-msgstr ""
+msgstr "کاهش بهره وری سفارش کار MRP"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_main_attachment_id
@@ -2134,7 +2168,7 @@ msgstr "تولید این محصول"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid "Manufacture to Resupply"
-msgstr ""
+msgstr "تولید تا تامین مجدد"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
@@ -2170,7 +2204,7 @@ msgstr "تولید"
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "زمان تولید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -2320,7 +2354,7 @@ msgstr "انتقال‌ها برای رهگیری"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: طرح سفارشات تولید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
@@ -2706,7 +2740,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "نوع برداشت"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
@@ -2736,7 +2770,7 @@ msgstr "برنامه ریزی سفارش‌ها"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
+msgstr "بر اساس پیش بینی ها، سفارشات ساخت یا خرید را برنامه ریزی کنید"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__planned
@@ -2851,7 +2885,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_procurement_group
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "گروه تدارکات"
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -2872,12 +2906,12 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
 msgid "Produce residual products"
-msgstr ""
+msgstr "تولید محصولات باقیمانده"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr ""
+msgstr "تولید محصولات باقیمانده (A + B -&gt; C + D)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2890,7 +2924,7 @@ msgstr "تولید شده"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
 msgid "Produced in Operation"
-msgstr ""
+msgstr "تولید شده در عملیات"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -2938,7 +2972,7 @@ msgstr "انتقال محصولات"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "انتقال محصول (سطر انتقال کوجودی)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
@@ -2995,12 +3029,12 @@ msgstr "سفارش تولید"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
 msgid "Production Order for components"
-msgstr ""
+msgstr "سفارش تولید برای قطعات"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
-msgstr ""
+msgstr "سفارش تولید برای محصولات نهایی"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3126,7 +3160,7 @@ msgstr "تعداد رزرو شد"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
 msgid "Quantity To Be Produced"
-msgstr ""
+msgstr "تعداد برای تولید شدن"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
@@ -3346,7 +3380,7 @@ msgstr "ذخیره"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr ""
+msgstr "برای جلوگیری از تاخیر، سفارشات تولید را زودتر برنامه ریزی کنید"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3430,7 +3464,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr ""
+msgstr "زمان تحویل مطمئن"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -3494,7 +3528,7 @@ msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل �
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "پس از برنامه ریزی، در تقویم مرکز کار قرار بگیرید"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3523,6 +3557,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"برخی از محصولات جانبی شما ردیابی می شوند، برای بازیابی محصولات جانبی صحیح "
+"باید سفارش ساخت را مشخص کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3531,6 +3567,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"برخی از قطعات شما ردیابی می شوند، برای بازیابی قطعات صحیح باید سفارش ساخت را"
+" مشخص کنید."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3546,6 +3584,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"برخی از سفارش‌های کاری قبلاً انجام شده‌اند، نمی‌توانید این سفارش ساخت را لغو"
+" برنامه‌ریزی کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3554,6 +3594,8 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"برخی از سفارش‌های کاری قبلاً شروع شده‌اند، نمی‌توانید این سفارش ساخت را لغو "
+"برنامه‌ریزی کنید."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3639,12 +3681,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
 msgid "Stock After Manufacturing Operation Type"
-msgstr ""
+msgstr "موجودی پس از نوع عملیات ساخت"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr ""
+msgstr "موجودی پس از قانون ساخت"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -3669,7 +3711,7 @@ msgstr "قانون موجودی انبار"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr ""
+msgstr "انبار پس از محل تولید"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -3680,7 +3722,7 @@ msgstr "گزارش قانون موجودی انبار"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr ""
+msgstr "فروشگاه محصول نهایی"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -3708,12 +3750,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr ""
+msgstr "قرارداد پیمانکاری تولید برخی از محصولات"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
-msgstr ""
+msgstr "پیمانکاری"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
@@ -3749,12 +3791,12 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_move__is_done
 #: model:ir.model.fields,help:mrp.field_stock_move_line__done_move
 msgid "Technical Field to order moves"
-msgstr ""
+msgstr "فیلد فنی برای سفارش انتقال"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
 msgid "Technical field indicating whether the current user is working. "
-msgstr ""
+msgstr "فیلد فنی که نشان می دهد کاربر فعلی کار می کند یا خیر. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__post_visible
@@ -3764,22 +3806,22 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "فیلد فنی برای بررسی اینکه چه زمانی می‌توانیم رزرو کنیم"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
 msgid "Technical: used in views and domains only."
-msgstr ""
+msgstr "فنی: فقط در نماها و دامنه ها استفاده می شود."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__working_state
 msgid "Technical: used in views only"
-msgstr ""
+msgstr "فنی: فقط در نماها استفاده می شود"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid "Technical: used in views only."
-msgstr ""
+msgstr "فنی: فقط در نماها استفاده می شود."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
@@ -3834,14 +3876,14 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
 msgid "The number of products already handled by this work order"
-msgstr ""
+msgstr "تعداد محصولاتی که قبلا توسط این سفارش کار انجام شده است"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__operation_id
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
-msgstr ""
+msgstr "عملیاتی که در آن قطعات مصرف می شوند یا محصولات نهایی ایجاد می شوند."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__routing_id
@@ -3858,6 +3900,17 @@ msgstr ""
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
+msgstr ""
+"تاریخ پایان برنامه ریزی شده سفارش کاری نمی تواند قبل از تاریخ شروع برنامه "
+"ریزی شده باشد، لطفاً برای ذخیره سفارش کار این را اصلاح کنید."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
 msgstr ""
 
 #. module: mrp
@@ -3892,6 +3945,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -3910,7 +3971,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
 msgid "There's no product move yet"
-msgstr ""
+msgstr "هنوز هیچ انتقال محصولی انجام نشده است"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__tz
@@ -3934,7 +3995,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr ""
+msgstr "این یک BoM از نوع کیت است!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -3942,11 +4003,13 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"این هزینه بر اساس BoM محصول است. با جمع کردن هزینه های قطعات و عملیات مورد "
+"نیاز برای ساخت محصول محاسبه می شود."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "This is the cost defined on the product."
-msgstr ""
+msgstr "این هزینه ای است که روی محصول تعریف شده است."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -4128,7 +4191,7 @@ msgstr "قابلیت رهگیری"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "گزارش رهگیری"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__product_tracking
@@ -4172,7 +4235,7 @@ msgstr "نوع فعالیت استثنایی برای رکورد."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Unblock"
-msgstr ""
+msgstr "رفع انسداد"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
@@ -4190,7 +4253,7 @@ msgstr "سفارش ساخته نشده"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr ""
+msgstr "مقدار محصول سفارش ساخته نشده باید کاملاً مثبت باشد."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
@@ -4311,7 +4374,7 @@ msgstr "بروزرسانی"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "فایل PDF خود را بارگذاری کنید."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__2
@@ -4350,6 +4413,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"استفاده از گزارش MPS برای برنامه‌ریزی عملیات‌های تولید و سفارش مجدد، در "
+"صورتی مفید است که زمان طولانی دارید و بر اساس پیش‌بینی‌های فروش تولید "
+"می‌کنید."
 
 #. module: mrp
 #. openerp-web
@@ -4399,7 +4465,7 @@ msgstr "در انتظار قطعه"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr ""
+msgstr "در انتظار WO دیگر"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -4409,7 +4475,7 @@ msgstr "انبار"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "هشدار مقدار ناکافی ساخته نشده"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4454,17 +4520,22 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"هنگامی که یک خرید دارای یک مسیر \"تولید\" با مجموعه نوع عملیات است، سعی می "
+"کند با استفاده از یک BoM از همان نوع عملیات، یک سفارش ساخت برای آن محصول "
+"ایجاد کند. این اجازه می دهد تا قوانین موجودی را تعریف کنید که باعث ایجاد "
+"سفارش های تولید مختلف با BoM های مختلف می شود."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
 msgid "When components for 1st operation are available"
-msgstr ""
+msgstr "وقتی قطعات عملیات اول در دسترس هستند"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
+"هنگامی که محصولات تولید می شوند، می توان آنها را در این انبار تولید کرد."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -4473,6 +4544,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"هنگامی که محصولات در <b>%s</b> مورد نیاز است، <br/> یک سفارش ساخت برای "
+"برآورده کردن نیاز ایجاد می‌شود."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -4569,11 +4642,14 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"عملیات سفارش کار به شما این امکان را می دهد که عملیات تولیدی را ایجاد و "
+"مدیریت کنید که باید در مراکز کاری خود به منظور تولید محصول دنبال شود. آنها "
+"به صورت های مواد اولیه متصل می شوند که قطعات مورد نیاز را مشخص می کنند."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
 msgid "Work Order To Consume"
-msgstr ""
+msgstr "دستور کار برای مصرف"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -4605,7 +4681,7 @@ msgstr "عملکرد سفارشات کاری"
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "برنامه ریزی سفارشات کاری"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
@@ -4633,7 +4709,7 @@ msgstr "سفارش کار %s هنوز در حال اجراست"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr ""
+msgstr "دستورات کاری در حال انجام است برای مسدود کردن مرکز کار کلیک کنید."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start_wo
@@ -4666,7 +4742,7 @@ msgstr "ثبت رویداد تولیدات مرکز کار"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr ""
+msgstr "کاهش بهره وری مرکز کار"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
@@ -4682,7 +4758,7 @@ msgstr "وضعیت مرکز کار"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr ""
+msgstr "مرکز کار مسدود شده، برای رفع انسداد کلیک کنید."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -4692,7 +4768,7 @@ msgstr "ساعت های کاری"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
 msgid "Working user on this work order."
-msgstr ""
+msgstr "کاربر فعال در این سفارش کاری."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder_line
@@ -4718,6 +4794,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"شما مجاز به ایجاد یا ویرایش سری ساخت یا شماره سریال برای قطعات با نوع عملیات"
+" «ساخت» نیستید. برای تغییر این مورد، به نوع عملیات بروید و کادر «ایجاد سری "
+"ساخت/شماره سریال جدید برای قطعات» را علامت بزنید."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4725,6 +4804,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"می توانید یک فایل را از رایانه خود آپلود کنید یا یک پیوند اینترنتی را در "
+"فایل خود کپی/پیست کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4745,6 +4826,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"نمی توانید برای محصولاتی که حداقل یک قانون سفارش مجدد دارند، صورت مواد اولیه"
+" از نوع کیت ایجاد کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4753,6 +4836,8 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
+"شما نمی توانید یک صورت مواد اولیه را با دستورات تولیدی در حال اجرا حذف کنید.\n"
+"لطفا ابتدا آن را ببندید یا لغو کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4767,6 +4852,8 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
+"شما نمی توانید مرکز کاری یک سفارش کاری را که در حال انجام است یا انجام شده "
+"است تغییر دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4780,31 +4867,32 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr ""
+msgstr "از اینجا نمی‌توانید یک صورت مواد اولیه جدید ایجاد کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
+msgstr "اگر حالت «انجام شده»، نمی‌توانید سفارش ساخته نشده را حذف کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot have %s  as the finished product and in the Byproducts"
 msgstr ""
+"شما نمی توانید %s را به عنوان محصول نهایی و در محصولات فرعی داشته باشید"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
+msgstr "شما نمی توانید این سفارش کاری را به سفارش تولید دیگری لینک دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
-msgstr ""
+msgstr "شما نمی توانید یک سفارش تولید را پس از لغو یا انجام آن جابجا کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4822,13 +4910,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr ""
+msgstr "شما نمی توانید یک شماره سریال را دو بار تولید کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "شما نمی توانید یک سفارش تولید انجام نشده را لغو کنید."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -4857,6 +4945,7 @@ msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
 msgstr ""
+"شما باید مقدار غیر صفر مصرف شده برای حداقل یکی از قطعات خود را مشخص کنید"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4866,6 +4955,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"شما باید حداقل یک کاهش بهره وری را در دسته «عملکرد» تعریف کنید. یکی از "
+"برنامه تولید، منو ایجاد کنید: پیکربندی / ضررهای بهره وری."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4875,6 +4966,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"شما باید حداقل یک کاهش بهره وری را در دسته «بهره وری» تعریف کنید. یکی از "
+"برنامه ساخت، منو ایجاد کنید: پیکربندی / ضررهای بهره وری."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4884,12 +4977,14 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"شما باید حداقل یک کاهش بهره‌وری غیرفعال را در دسته «عملکرد» تعریف کنید. یکی "
+"از برنامه ساخت، منو ایجاد کنید: پیکربندی / ضررهای بهره وری."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
+msgstr "شما باید سری ساخت برای محصول نهایی ارائه دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4903,7 +4998,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr ""
+msgstr "شما باید سری ساخت برای محصول نهایی ارائه دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
