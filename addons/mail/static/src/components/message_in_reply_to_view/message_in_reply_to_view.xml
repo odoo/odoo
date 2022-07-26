@@ -2,18 +2,23 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessageInReplyToView" owl="1">
         <t t-if="messageInReplyToView">
-            <small class="o_MessageInReplyToView position-relative d-block pt-1 pe-2 text-small text-truncate" t-attf-class="{{ className }}" t-ref="root">
-                <span class="o_MessageInReplyToView_corner position-absolute bottom-0 mb-1 pe-4 pb-2 opacity-50"/>
+            <small class="o_MessageInReplyToView position-relative d-block text-small" t-attf-class="{{ className }} {{ messageInReplyToView.messageView.isInChatWindowAndIsAlignedRight ? 'justify-content-end pe-5': 'ps-5' }}" t-ref="root">
+                <span class="o_MessageInReplyToView_corner position-absolute bottom-0 top-50 pe-4 border-top text-300" t-attf-class="{{  messageInReplyToView.messageView.isInChatWindowAndIsAlignedRight ? 'o-isRightAlign border-end' : 'o-isLeftAlign border-start' }}" t-att-class="{ 'ms-n2': messageInReplyToView.messageView.isInDiscuss }"/>
                 <t t-if="!messageInReplyToView.messageView.message.parentMessage.isEmpty">
-                    <b class="o_MessageInReplyToView_author text-muted ms-2">@<t t-esc="messageInReplyToView.messageView.message.parentMessage.authorName"/></b>
-                    <span class="o_MessageInReplyToView_body ms-1 o_cursor_pointer" t-on-click="messageInReplyToView.onClickReply">
-                        <t t-if="messageInReplyToView.hasBodyBackLink">
-                            <t t-out="messageInReplyToView.messageView.message.parentMessage.prettyBodyAsMarkup"/>
-                        </t>
-                        <t t-if="messageInReplyToView.hasAttachmentBackLink">
-                            <span class="fst-italic me-2">Click to see the attachments</span>
-                            <i class="fa fa-image"/>
-                        </t>
+                    <span class="o_MessageInReplyToView_wrapOuter d-flex align-items-center text-muted opacity-75 opacity-100-hover o_cursor_pointer"  t-attf-class="{{ messageInReplyToView.messageView.isInChatWindowAndIsAlignedRight ? 'pe-3': 'ps-3' }}" t-on-click="messageInReplyToView.onClickReply">
+                        <img class="o_MessageInReplyToView_avatar me-2 rounded-circle" t-att-src="messageInReplyToView.messageView.message.parentMessage.avatarUrl" t-att-title="messageInReplyToView.messageView.message.parentMessage.authorName" alt="Avatar"/>
+                        <span class="o_MessageInReplyToView_wrapInner overflow-hidden">
+                            <b class="o_MessageInReplyToView_author">@<t t-out="messageInReplyToView.messageView.message.parentMessage.authorName"/></b>
+                            <span class="o_MessageInReplyToView_body text-break">
+                                <t t-if="messageInReplyToView.hasBodyBackLink">
+                                    <t t-out="messageInReplyToView.messageView.message.parentMessage.prettyBodyAsMarkup"/>
+                                </t>
+                                <t t-if="messageInReplyToView.hasAttachmentBackLink">
+                                    <span class="me-2 fst-italic">Click to see the attachments</span>
+                                    <i class="fa fa-image"/>
+                                </t>
+                            </span>
+                        </span>
                     </span>
                 </t>
                 <t t-if="messageInReplyToView.messageView.message.parentMessage.isEmpty">
