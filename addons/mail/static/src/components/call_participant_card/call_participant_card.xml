@@ -6,10 +6,10 @@
             <div class="o_CallParticipantCard position-relative o_cursor_pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
                 t-att-class="{
                     'o-isTalking': !callParticipantCard.isMinimized and callParticipantCard.isTalking,
-                    'o-isInvitation opacity-50': callParticipantCard.invitedMember,
+                    'o-isInvitation opacity-50': !callParticipantCard.rtcSession,
                 }"
-                t-att-title="callParticipantCard.name"
-                t-att-aria-label="callParticipantCard.name"
+                t-att-title="callParticipantCard.channelMember.persona.name"
+                t-att-aria-label="callParticipantCard.channelMember.persona.name"
                 t-attf-class="{{ className }}"
                 t-on-click="callParticipantCard.onClick"
                 t-on-contextmenu="callParticipantCard.onContextMenu"
@@ -24,10 +24,10 @@
                         <img alt="Avatar"
                              t-att-class="{
                                 'o-isTalking': callParticipantCard.isTalking,
-                                'o-isInvitation': callParticipantCard.invitedMember,
+                                'o-isInvitation': !callParticipantCard.rtcSession,
                              }"
                              class="o_CallParticipantCard_avatarImage h-100 rounded-circle border-5 o_object_fit_cover"
-                             t-att-src="callParticipantCard.avatarUrl"
+                             t-att-src="callParticipantCard.channelMember.avatarUrl"
                              draggable="false"
                         />
                     </div>
@@ -37,7 +37,7 @@
                     <!-- overlay -->
                     <span class="o_CallParticipantCard_overlay o_CallParticipantCard_overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
                         <t t-if="!callParticipantCard.isMinimized">
-                            <span class="o_CallParticipantCard_name p-1 rounded-1 bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
+                            <span class="o_CallParticipantCard_name p-1 rounded-1 bg-black-75 text-white text-truncate" t-esc="callParticipantCard.channelMember.persona.name"/>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
                             <small class="o_CallParticipantCard_liveIndicator o-isMinimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
