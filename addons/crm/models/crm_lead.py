@@ -104,7 +104,7 @@ class Lead(models.Model):
         compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
-        domain="['&', ('share', '=', False), ('company_ids', 'in', user_company_ids)]",
+        domain="['&', ('share', '=', True), ('company_ids', 'in', user_company_ids)]",
         check_company=True, index=True, tracking=True)
     user_company_ids = fields.Many2many(
         'res.company', compute='_compute_user_company_ids',
