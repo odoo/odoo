@@ -28,9 +28,9 @@ odoo.define('pos_mercury.PaymentTransactionPopup', function(require) {
     PaymentTransactionPopup.template = 'PaymentTransactionPopup';
     PaymentTransactionPopup.defaultProps = {
         confirmText: _lt('Ok'),
-        cancelText: _lt('Cancel'),
         title: _lt('Online Payment'),
         body: '',
+        cancelKey: false,
     };
 
     Registries.Component.add(PaymentTransactionPopup);

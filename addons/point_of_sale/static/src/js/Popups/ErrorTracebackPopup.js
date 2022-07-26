@@ -32,6 +32,7 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
     ErrorTracebackPopup.defaultProps = {
         confirmText: _lt('Ok'),
         cancelText: _lt('Cancel'),
+        confirmKey: false,
         title: _lt('Error with Traceback'),
         body: '',
         exitButtonIsShown: false,

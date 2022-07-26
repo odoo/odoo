@@ -18,7 +18,8 @@ odoo.define('point_of_sale.ControlButtonPopup', function(require) {
     ControlButtonPopup.template = 'ControlButtonPopup';
     ControlButtonPopup.defaultProps = {
         cancelText: _lt('Back'),
-        controlButtons: []
+        controlButtons: [],
+        confirmKey: false,
     };
 
     Registries.Component.add(ControlButtonPopup);
