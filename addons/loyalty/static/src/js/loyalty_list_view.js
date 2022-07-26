@@ -1,23 +1,46 @@
 /** @odoo-module **/
 
-import { LoyaltyModelMixin, LoyaltyRendererMixin } from "@loyalty/js/loyalty_views";
-import ListModel from 'web.ListModel';
-import ListRenderer from 'web.ListRenderer';
-import ListView from 'web.ListView';
-import viewRegistry from 'web.view_registry';
+import { registry } from "@web/core/registry";
+import { listView } from "@web/views/list/list_view";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { useService } from "@web/core/utils/hooks";
 
-export const LoyaltyListModel = ListModel.extend(LoyaltyModelMixin);
-export const LoyaltyListRenderer = ListRenderer.extend(LoyaltyRendererMixin, {
-    events: _.extend({}, ListRenderer.prototype.events, {
-        'click .loyalty-template': '_onTemplateClick',
-    }),
-});
+const { Component, onWillStart } = owl;
 
-export const LoyaltyListView = ListView.extend({
-    config: _.extend({}, ListView.prototype.config, {
-        Model: LoyaltyListModel,
-        Renderer: LoyaltyListRenderer,
-    })
-});
+export class LoyaltyActionHelper extends Component {
+    setup() {
+        this.orm = useService("orm");
+        this.action = useService("action");
 
-viewRegistry.add('loyalty_program_list_view', LoyaltyListView);
+        onWillStart(async () => {
+            this.loyaltyTemplateData = await this.orm.call(
+                "loyalty.program",
+                "get_program_templates",
+            );
+        });
+    }
+
+    async onTemplateClick(templateId) {
+        const action = await this.orm.call(
+            "loyalty.program",
+            "create_from_template",
+            [templateId],
+        );
+        if (!action) {
+            return;
+        }
+        this.action.doAction(action);
+    }
+};
+LoyaltyActionHelper.template = "loyalty.LoyaltyActionHelper";
+
+export class LoyaltyListRenderer extends ListRenderer {};
+LoyaltyListRenderer.template = "loyalty.LoyaltyListRenderer";
+LoyaltyListRenderer.components.LoyaltyActionHelper = LoyaltyActionHelper;
+
+export const LoyaltyListView = {
+    ...listView,
+    Renderer: LoyaltyListRenderer,
+};
+
+registry.category("views").add("loyalty_program_list_view", LoyaltyListView);
