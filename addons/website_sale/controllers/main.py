@@ -1289,11 +1289,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
+
+        if order_sudo.state == "cancel":
+            raise ValidationError(_("The order has been canceled."))
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
