@@ -49,21 +49,6 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ],
                 },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
-                        },
-                    ],
-                },
             },
         };
 
@@ -372,7 +357,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("text field translatable", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -393,19 +378,16 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (route === "/web/dataset/call_button" && method === "translate_fields") {
-                    assert.deepEqual(
-                        args,
-                        ["partner", 1, "txt"],
-                        `should call "call_button" route`
-                    );
-                    return Promise.resolve({
-                        domain: [],
-                        context: { search_default_name: "partnes,foo" },
-                    });
-                }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US"], ["fr_BE"]]);
+                }
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            { lang: "en_US", src: "yop", value: "yop"},
+                            { lang: "fr_BE", src: "yop", value: "valeur français"},
+                        ],
+                        { "translation_type": "text", "translation_show_src": false }]);
                 }
             },
         });

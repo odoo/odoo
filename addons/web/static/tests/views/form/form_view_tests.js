@@ -167,21 +167,6 @@ QUnit.module("Views", (hooks) => {
                         { id: 14, display_name: "silver", color: 5 },
                     ],
                 },
-                "ir.translation": {
-                    fields: {
-                        lang_code: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 12,
-                            value: "",
-                            lang_code: "en_US",
-                        },
-                    ],
-                },
                 user: {
                     fields: {
                         name: { string: "Name", type: "char" },
@@ -7777,22 +7762,11 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("translation alerts preserved on reverse breadcrumb", async function (assert) {
-        serverData.models["ir.translation"] = {
-            fields: {
-                name: { string: "name", type: "char" },
-                source: { string: "Source", type: "char" },
-                value: { string: "Value", type: "char" },
-            },
-            records: [],
-        };
-
         serverData.models.partner.fields.foo.translate = true;
 
         serverData.views = {
             "partner,false,form": `<form><sheet><field name="foo"/></sheet></form>`,
             "partner,false,search": "<search></search>",
-            "ir.translation,false,list": `<tree><field name="name"/><field name="source"/><field name="value"/></tree>`,
-            "ir.translation,false,search": "<search></search>",
         };
 
         serverData.actions = {
@@ -7802,15 +7776,6 @@ QUnit.module("Views", (hooks) => {
                 res_model: "partner",
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
-            },
-            2: {
-                id: 2,
-                name: "Translate",
-                res_model: "ir.translation",
-                type: "ir.actions.act_window",
-                views: [[false, "list"]],
-                target: "current",
-                flags: { search_view: true, action_buttons: true },
             },
         };
 
@@ -7825,17 +7790,12 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
 
         assert.containsOnce(target, ".alert .o_field_translate", "should have a translation alert");
-
-        await doAction(webClient, 2);
-
-        await click(target.querySelector(".o_control_panel .breadcrumb a:nth-child(1)"));
-        assert.containsOnce(target, ".alert .o_field_translate", "should have a translation alert");
     });
 
     QUnit.test(
         "translate event correctly handled with multiple controllers",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(2);
 
             serverData.models.product.fields.name.translate = true;
             serverData.models.partner.records[0].product_id = 37;
@@ -7875,23 +7835,17 @@ QUnit.module("Views", (hooks) => {
                     if (route === "/web/dataset/call_kw/product/get_formview_id") {
                         return false;
                     }
-                    if (
-                        route === "/web/dataset/call_button" &&
-                        args.method === "translate_fields"
-                    ) {
-                        assert.deepEqual(
-                            args.args,
-                            ["product", 37, "name"],
-                            'should call "call_button" route'
-                        );
-                        nbTranslateCalls++;
-                        return {
-                            domain: [],
-                            context: { search_default_name: "partnes,foo" },
-                        };
-                    }
                     if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                         return [["en_US"], ["fr_BE"]];
+                    }
+                    if (route === "/web/dataset/call_kw/product/get_field_translations") {
+                        nbTranslateCalls++;
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", src: "yop", value: "yop"},
+                                { lang: "fr_BE", src: "yop", value: "valeur français"},
+                            ],
+                            { "translation_type": "char", "translation_show_src": false }]);
                     }
                 },
             });
