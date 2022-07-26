@@ -213,9 +213,7 @@ msgstr "(使用できる用途は"
 msgid ""
 "(see e.g. Opinion\n"
 "            04/2012 on Cookie Consent Exemption by the EU Art.29 WP)."
-msgstr ""
-"(参照 e.g. Opinion\n"
-"            04/2012 on Cookie Consent Exemption by the EU Art.29 WP)."
+msgstr "(例：EU Art.29 WPによるクッキー同意の免除に関する意見04/2012を参照ください)。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -3073,7 +3071,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "Cookie bars may significantly impair the experience"
-msgstr ""
+msgstr "クッキーバーは、訪問者の体験を著しく損なう可能性があります。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
@@ -3803,7 +3801,7 @@ msgstr "ユーザがこのドメインを訪問する際にこのウェブサイ
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Do not activate"
-msgstr ""
+msgstr "有効化しない"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4575,7 +4573,7 @@ msgstr "フッター表示"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics,"
-msgstr ""
+msgstr "セッションクッキー、認証、分析については、"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4844,6 +4842,18 @@ msgstr "GoogleマップAPIキー"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
 msgstr ""
 
 #. module: website
@@ -6714,6 +6724,15 @@ msgstr "新規"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #, python-format
 msgid "New Page"
@@ -7432,7 +7451,7 @@ msgstr ""
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Please confirm"
-msgstr ""
+msgstr "ご確認ください"
 
 #. module: website
 #. openerp-web
@@ -9410,6 +9429,15 @@ msgid "This view arch has been modified"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
@@ -11292,7 +11320,7 @@ msgid ""
 "            your visitors. We recommend you avoid them unless you have\n"
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
-msgstr ""
+msgstr "あなたの国でクッキーの同意が絶対に必要であることを法律顧問に確認した場合を除き、これらを避けることをお勧めします。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -11448,7 +11476,7 @@ msgstr "はい"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "you do not need to ask for the consent"
-msgstr ""
+msgstr "同意を求める必要はありません"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
