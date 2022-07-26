@@ -183,6 +183,7 @@ class AccountPayment(models.Model):
         self.action_cancel()
 
     def do_print_checks(self):
+        # TODO JUVR, when clicking on the button to print the checks, it triggers this function
         check_layout = self.company_id.account_check_printing_layout
         redirect_action = self.env.ref('account.action_account_config')
         if not check_layout or check_layout == 'disabled':

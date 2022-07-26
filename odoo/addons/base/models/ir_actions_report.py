@@ -686,6 +686,7 @@ class IrActionsReport(models.Model):
 
             html = self_sudo.with_context(**additional_context)._render_qweb_html(res_ids_wo_stream, data=data)[0]
 
+            # TODO JUVR add watermark
             bodies, html_ids, header, footer, specific_paperformat_args = self._prepare_html(html, report_model=self_sudo.model)
 
             if self_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
@@ -795,6 +796,7 @@ class IrActionsReport(models.Model):
 
                 attachment_vals_list.append({
                     'name': attachment_name,
+                    # TODO JUVR here: add watermark if duplicated, in the _render_qweb_pdf in account ?
                     'raw': stream_data['stream'].getvalue(),
                     'res_model': self.model,
                     'res_id': record.id,
