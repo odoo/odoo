@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.osv import expression
 
@@ -77,6 +77,10 @@ class MrpUnbuild(models.Model):
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft')
 
+    _sql_constraints = [
+        ('qty_positive', 'check (product_qty > 0)', 'The quantity to unbuild must be positive!'),
+    ]
+
     @api.depends('mo_id', 'product_id')
     def _compute_product_uom_id(self):
         for record in self:
@@ -113,12 +117,6 @@ class MrpUnbuild(models.Model):
         if self.product_id:
             self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
             self.product_uom_id = self.mo_id.product_id == self.product_id and self.mo_id.product_uom_id.id or self.product_id.uom_id.id
-
-    @api.constrains('product_qty')
-    def _check_qty(self):
-        for unbuild in self:
-            if unbuild.product_qty <= 0:
-                raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model_create_multi
     def create(self, vals_list):
