@@ -58,7 +58,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      * @override
      */
     _openChat: function () {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
+        this.messaging.publicLivechatGlobal.update({
             publicLivechat: insertAndReplace({ data: this._channelData }),
         });
 

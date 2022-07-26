@@ -266,10 +266,6 @@ registerModel({
         messages: attr({
             default: [],
         }),
-        publicLivechat: one('PublicLivechat', {
-            inverse: 'livechatButtonOwner',
-            isCausal: true,
-        }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             inverse: 'livechatButtonView',
             readonly: true,

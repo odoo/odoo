@@ -73,6 +73,10 @@ registerModel({
         options: attr({
             default: {},
         }),
+        publicLivechat: one('PublicLivechat', {
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
+        }),
         serverUrl: attr({
             default: '',
         }),

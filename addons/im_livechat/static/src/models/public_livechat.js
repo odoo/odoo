@@ -8,12 +8,12 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechat',
-    identifyingFields: ['livechatButtonOwner'],
+    identifyingFields: ['publicLivechatGlobalOwner'],
     lifecycleHooks: {
         _created() {
             this.update({
                 legacyPublicLivechat: new PublicLivechat(this.messaging, {
-                    parent: this.livechatButtonOwner.widget,
+                    parent: this.publicLivechatGlobalOwner.livechatButtonView.widget,
                     data: this.data,
                 }),
             });
@@ -79,7 +79,7 @@ registerModel({
             default: false,
         }),
         legacyPublicLivechat: attr(),
-        livechatButtonOwner: one('LivechatButtonView', {
+        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             inverse: 'publicLivechat',
             readonly: true,
             required: true,

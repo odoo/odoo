@@ -187,7 +187,7 @@ const LivechatButton = Widget.extend({
                     console.warn(_t("No available collaborator, please try again later."));
                 }
             } else {
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                this.messaging.publicLivechatGlobal.update({
                     publicLivechat: insertAndReplace({ data: livechatData }),
                 });
                 return this._openChatWindow().then(() => {
