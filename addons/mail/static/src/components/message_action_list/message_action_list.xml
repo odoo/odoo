@@ -2,7 +2,7 @@
 <templates>
     <t t-name="mail.MessageActionList" owl="1">
         <t t-if="messageActionList">
-            <div class="o_MessageActionList d-flex border rounded-1 bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
+            <div class="o_MessageActionList d-flex rounded-1 bg-white shadow-sm" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
                 <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-3 py-3 pe-2' : 'ps-2 py-2 pe-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
                 <t t-if="!messageActionList.isCompact || !messageActionList.hasCompactIcon">
                     <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar o_cursor_pointer"  t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" t-att-class="{

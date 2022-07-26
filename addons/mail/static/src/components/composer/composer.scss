@@ -13,7 +13,7 @@
     grid-template-rows: auto 1fr auto;
 
     &.o-has-current-partner-avatar {
-        grid-template-columns: 50px 1fr;
+        grid-template-columns: $o-mail-message-sidebar-width 1fr;
     }
 }
 
@@ -67,8 +67,4 @@
 
 .o_Composer_buttonDiscard {
     border: $border-width solid lighten($gray-400, 5%);
-}
-
-.o_Composer_toolButtons:last-child:not(.o-composer-has-current-partner-avatar) {
-    border-right: $border-width solid lighten($gray-400, 5%);
 }

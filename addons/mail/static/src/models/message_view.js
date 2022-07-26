@@ -271,6 +271,82 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeIsInDiscuss() {
+            return Boolean(
+                this.messageListViewMessageViewItemOwner &&
+                (
+                    this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
+                    this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
+                )
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsInChatWindow() {
+            return Boolean(
+                this.messageListViewMessageViewItemOwner &&
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsInChatter() {
+            return Boolean(
+                this.messageListViewMessageViewItemOwner &&
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsInChatWindowAndIsAlignedRight() {
+            return Boolean(
+                this.isInChatWindow &&
+                this.message &&
+                this.message.isCurrentUserOrGuestAuthor
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+         _computeIsInChatWindowAndIsAlignedLeft() {
+            return Boolean(
+                this.isInChatWindow &&
+                this.message &&
+                !this.message.isCurrentUserOrGuestAuthor
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsShowingAuthorName() {
+            return Boolean(
+                !(
+                    this.isInChatWindow &&
+                    (
+                        (
+                            this.message &&
+                            this.message.isCurrentUserOrGuestAuthor
+                        ) ||
+                        (
+                            this.messageListViewMessageViewItemOwner &&
+                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel_type === 'chat'
+                        )
+                    )
+                )
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsSelected() {
             return Boolean(
                 this.messageListViewMessageViewItemOwner &&
@@ -437,6 +513,42 @@ registerModel({
          */
         isHovered: attr({
             default: false,
+        }),
+        /**
+         * Determines if we are in the Discuss view.
+         */
+        isInDiscuss: attr({
+            compute: '_computeIsInDiscuss',
+        }),
+        /**
+         * Determines if we are in the ChatWindow view.
+         */
+        isInChatWindow: attr({
+            compute: '_computeIsInChatWindow',
+        }),
+        /**
+         * Determines if we are in the Chatter view.
+         */
+        isInChatter: attr({
+            compute: '_computeIsInChatter',
+        }),
+        /**
+         * Determines if we are in the ChatWindow view AND if the message is right aligned
+         */
+        isInChatWindowAndIsAlignedRight: attr({
+            compute: '_computeIsInChatWindowAndIsAlignedRight',
+        }),
+        /**
+         * Determines if we are in the ChatWindow view AND if the message is left aligned
+         */
+        isInChatWindowAndIsAlignedLeft: attr({
+            compute: '_computeIsInChatWindowAndIsAlignedLeft',
+        }),
+        /**
+         * Determines if the author name is displayed.
+         */
+        isShowingAuthorName: attr({
+            compute: '_computeIsShowingAuthorName',
         }),
         /**
          * Tells whether the message is selected in the current thread viewer.

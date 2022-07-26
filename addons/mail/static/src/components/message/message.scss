@@ -33,14 +33,12 @@
     min-width: 0; // allows this flex child to shrink more than its content
 }
 
-.o_Message_highlightIndicator {
-    width: $o-mail-discuss-message-highlight-indicator-width;
-    transition: background-color .5s ease-out;
-}
-
-.o_Message_prettyBody > p {
-    margin-bottom: 0;
-}
+.o_Message_prettyBody {
+    p:last-child,
+    > p {
+        margin-bottom: 0;
+    }
+} 
 
 .o_Message_sidebar {
     flex-basis: $o-mail-message-sidebar-width;
@@ -57,14 +55,24 @@
     &.o-not-discussion.o-selected {
         border-bottom: 1px solid darken(map-get($grays, '400'), 5%);
     }
+}
 
-    &.o-highlighted {
-        background-color: rgba($o-brand-primary, .1);
-
-        &.o_Message_active {
-            background-color: rgba($o-brand-primary, .2);
-        }
+.o_Message_background {
+    &.o-isAuthorNotCurrentUserOrGuest {
+        opacity: .15;
     }
+}
+
+.o_Message_prettyBody {
+    a.o_mail_redirect {
+        padding: map-get($spacers, 1);
+        border-radius: $border-radius;
+        background: rgba($primary, .2);
+    }
+}
+
+.o_Message_background {
+    transition: opacity .5s ease-out;
 }
 
 // Used to hide buttons on rating emails in chatter

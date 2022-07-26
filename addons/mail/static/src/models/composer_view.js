@@ -909,6 +909,36 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsInDiscuss() {
+            return Boolean(
+                (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
+                (this.messageViewInEditing && (this.messageViewInEditing.discuss || this.messageViewInEditing.discussPublicView))
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsInChatWindow() {
+            return Boolean(
+                (this.threadView && this.threadView.threadViewer.chatWindow) ||
+                (this.messageViewInEditing && this.messageViewInEditing.chatWindow)
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsInChatter() {
+            return Boolean(
+                (this.threadView && this.threadView.threadViewer.chatter) ||
+                (this.messageViewInEditing && this.messageViewInEditing.isInChatter)
+            );
+        },
+        /**
+         * @private
          * @returns {boolean|FieldCommand}
          */
         _computeHasSendButton() {
@@ -1479,6 +1509,24 @@ registerModel({
         }),
         isFocused: attr({
             default: false,
+        }),
+        /**
+         * Determines if we are in the Discuss view.
+         */
+        isInDiscuss: attr({
+            compute: '_computeIsInDiscuss',
+        }),
+        /**
+         * Determines if we are in the ChatWindow view.
+         */
+        isInChatWindow: attr({
+            compute: '_computeIsInChatWindow',
+        }),
+        /**
+         * Determines if we are in the Chatter view.
+         */
+        isInChatter: attr({
+            compute: '_computeIsInChatter',
         }),
         /**
          * Last content of textarea from input event. Useful to determine

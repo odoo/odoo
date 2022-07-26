@@ -7,7 +7,7 @@
                 <t t-if="threadView.topbar">
                     <ThreadViewTopbar className="'border-bottom'" record="threadView.topbar"/>
                 </t>
-                <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
+                <div class="o_ThreadView_bottomPart d-flex flex-grow-1" t-att-class="{ 'border-start border-end': threadView.threadViewer.chatWindow }">
                     <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
                         <t t-if="threadView.callView">
                             <CallView record="threadView.callView"/>
