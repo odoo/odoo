@@ -345,7 +345,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 destination_move_offset += 2
                 accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
                 accrual_move_offsets[accrual_move] += 2
-                (accrual_move_lines + destination_move_lines).reconcile()
+                (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
             move.message_post(body=self._format_strings(_('Adjusting Entries have been created for this invoice:<ul><li>%(link1)s cancelling '
                                                           '{percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
                                                           link0=self._format_move_link(destination_move),
