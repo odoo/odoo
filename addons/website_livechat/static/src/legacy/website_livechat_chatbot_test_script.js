@@ -87,7 +87,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         utils.set_cookie('im_livechat_auto_popup', '', -1);
         utils.set_cookie('im_livechat_history', '', -1);
         utils.set_cookie('im_livechat_previous_operator_pid', '', -1);
-        const messaging = this.env.services.messaging.get();
+        const messaging = await this.env.services.messaging.get();
         return this._super(...arguments).then(() => {
             messaging.update({
                 publicLivechatGlobal: insertAndReplace({ isAvailable: true, chatbotServerUrl: this.$el.data().serverUrl }),
