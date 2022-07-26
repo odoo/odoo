@@ -25,7 +25,8 @@ class MailTemplate(models.Model):
             OR
             {'attachment_ids': list containing the id of the attachment}
         """
-        if not document.attachment_id:
+        # TODO put it in a file mail_template in ubl_cii
+        if not document.attachment_id or document.edi_format_id.code == 'facturx_1_0_05':
             return {}
         return {'attachment_ids': [document.attachment_id.id]}
 

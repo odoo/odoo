@@ -162,13 +162,6 @@ class AccountEdiFormat(models.Model):
                 })
                 pdf_writer.add_file_metadata(content.encode())
 
-    def _get_edi_attachments(self, document):
-        # EXTENDS account_edi
-        # do not attach the factur-x.xml in the 'send & print' wizard
-        if document.edi_format_id.code == 'facturx_1_0_05':
-            return {}
-        return super()._get_edi_attachments(document)
-
     ####################################################
     # Import: Account.edi.format override
     ####################################################
