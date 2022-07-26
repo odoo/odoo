@@ -31,7 +31,12 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 });
             }
             getTable(order) {
-                return `${order.table.floor.name} (${order.table.name})`;
+                if (typeof order.table != "undefined") {
+                    return `${order.table.floor.name} (${order.table.name})`;
+                    }
+                else {
+                    return this.env._t("The table was deleted")
+                }
             }
             //@override
             _getSearchFields() {
